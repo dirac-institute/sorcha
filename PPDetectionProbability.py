@@ -36,10 +36,10 @@ class Error(Exception):
     pass
 
 #-----------------------------------------------------------------------------------------------
-def probdetect(self, filtermag, limmag, fillfactor, w=0.1):
+def calcDetectionProbability(self, filtermag, limmag, fillfactor, w=0.1):
         """ Find the probability of a detection given a visual magnitude, 
         limiting magnitude, and fillfactor, 
-        determined by the fading function from Veres & Chesley (2017)
+        determined by the fading function from Veres & Chesley (2017).
 
         Parameters
         ----------
