@@ -45,10 +45,19 @@ def addFilterMag( ephemsdf, obsdf, popdf, transforms=None,
         """Translate visual magnitude to other bands
         Parameters
         ----------
-            
+        ephemsdf   ... Pandas DataFrame containing output of JPL ephemeris generator
+        obsdf      ... Pandas DataFrame containing simulated observing run
+        popdf      ... Pandas DataFrame containing orbital elements and color type
+        *Name      ... corresponding column name in obsdf
+        *NameEph   ... corresponding column name in ephemsdf
+        *NamePop   ... corresponding column name in popdf
+        transforms ... Pandas table or other dictionary containing filter transformations
+                       defaults to SDSS filters 
             
         Returns
         -------
+        ephemOut ... Pandas DataFrame containing JPL ephemeris output and magnitudes 
+                     in observation filters
             
 
         """
