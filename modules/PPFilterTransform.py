@@ -1,4 +1,3 @@
- 
 # Developed for the Vera C. Rubin Observatory/LSST Data Management System.
 # This product includes software developed by the 
 # Vera C. Rubin Observatory/LSST Project (https://www.lsst.org).
@@ -23,7 +22,7 @@
 Transform Johnson V-band magnitudes to other filter systems
 """
 
-__all__ = ['filtermag']
+__all__ = ['addFilterMag']
 
 ############################################
 # MODULE SPECIFIC EXCEPTION
@@ -35,26 +34,22 @@ class Error(Exception):
 
 #-----------------------------------------------------------------------------------------------
 
-def filtermag(vismag, filtercolor, asteroidcolor, transforms=None):
+def addFilterMag( ephemsdf, obsdf, popdf, transforms=None,
+                  objectIDNameEph='ObjID', obsIdNameEph='FieldID', vMagNameEph='V',
+                  filterName='filter', obsIdName='observationId',
+                  objectIDNamePop='!!OID', colorNamePop='color',
+                  newFilterMagName='Filtermag'
+                  ):
+  #  vismag, filtercolor, asteroidcolor, transforms=None):
 
         """Translate visual magnitude to other bands
         Parameters
         ----------
-            filtercolor : string
-                key to filter in transform dictionary
-            asteroidcolor : string
-                key to asteroid color in transform dictionary
-            vismag : float
-                apparent visual magnitude of the asteroid
-            transforms: float dictionary
-                dictionary or pandas table with transformations for filter-color combinations
-                filter should be the first key
-                defaults to S and C types using SDSS filters 
+            
             
         Returns
         -------
-            V : float
-                Apparent magnitude in specified filter
+            
 
         """
 
@@ -67,7 +62,19 @@ def filtermag(vismag, filtercolor, asteroidcolor, transforms=None):
                           'y': {'C':  0.303, 'S':  0.406}
                           }
 
-        V = vismag - transforms[filtercolor][asteroidcolor]
-        return V
+        filterMags = []
+
+        for _, row in ephemsdf.iterrows():
+            asteroidColor = popdf[colorNamePop][popdf[objectIDNamePop] == row[objectIDNameEph]]
+            obsFilter     = obsdf[filterName][obsdf[obsIdName] == row[obsIdNameEph]]
+
+            newMag        = row[vMagNameEph] - transforms[obsFilter[obsFilter.index[0]]][asteroidColor[asteroidColor.index[0]]]
+              
+            filterMags.append(newMag)
+
+        ephemOut = ephemsdf
+        ephemOut[newFilterMagName] = filterMags
+
+        return ephemOut
 
 #-----------------------------------------------------------------------------------------------
