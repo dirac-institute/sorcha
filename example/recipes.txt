@@ -1,0 +1,15 @@
+RECIPES FOR POSTPROCESSING
+
+The main pointing simulation is done by the oif (objectsInField) programme.
+
+Each postprocessing task is separate, done within a single pandas dataframe.
+
+The recipe is a python file containing a sequence of post-processing tasks. Each 
+post-processing task is documented. You can write your own post-processing tasks.
+
+The first task in the recipe ('read') is compulsory. Besides the output from oif, it can
+include additional data fields, such as magnitudes and colours.
+
+All other tasks in the recipe are optional, and are called in the order they appear in the recipe.
+
+Sample recipes are included in the 'recipes' folder.
