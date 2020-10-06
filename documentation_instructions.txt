@@ -1,0 +1,18 @@
+How to document functions:
+
+Each function should be in the python docstring format, i.e. between two sets of triple hyphens
+
+TBD: The goal is for all documentation is to be automatically compiled to readthedoc format
+with sphinx. So some hooks need to be checked and added.
+
+Each function should contain the following information:
+
+
+1. Name of the function
+2. Author: [NAME OF AUTHOR]
+3. Usage: A self-contained brief description of what the function is supposed to do. It should
+include the information of input/output, what data is manipulated and how.
+4. Input: Description of mandatory and optional input
+5. Output: Description of output
+6. Usage: Example usage of the function in a recipe.
+
