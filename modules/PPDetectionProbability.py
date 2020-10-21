@@ -18,11 +18,17 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 """
-Calculate Astrometric and Photometric Uncertainties for ground based observations.
+Calculate probability of detection due to fading
 
 """
 # Numpy 
 import numpy as np
+# Pandas
+import pandas as pd
+#Counter
+from collections import Counter
+
+from . import PPTrailingLoss
 
 __all__ = ['calcDetectionProbability']
 
@@ -36,19 +42,17 @@ class Error(Exception):
     pass
 
 #-----------------------------------------------------------------------------------------------
-def calcDetectionProbability(self, filtermag, limmag, fillfactor, w=0.1):
+def calcDetectionProbability(mag, limmag, w):
         """ Find the probability of a detection given a visual magnitude, 
         limiting magnitude, and fillfactor, 
         determined by the fading function from Veres & Chesley (2017).
 
         Parameters
         ----------
-        filtermag: float
+        mag: float
                 magnitude of object in filter used for that field
         limmag: float
                 limiting magnitude of the field
-        fillfactor: float
-                fraction of the field detectable due to ccd seperations
 	w: float
 	        distribution parameter
         
@@ -58,6 +62,93 @@ def calcDetectionProbability(self, filtermag, limmag, fillfactor, w=0.1):
             Probability of detection
         """
    
-        P = fillfactor / (1 + np.exp((filtermag - limmag) / w))
+        P = 1 / (1 + np.exp((mag - limmag) / w))
+
         return P
+
 #-----------------------------------------------------------------------------------------------
+
+def filterFadingFunction(ephemsdf, obsdf,
+                        magNameEph='Filtermag', obsIDNameEph='FieldID',
+                        dRaNameEph='AstRARate(deg/sec)', dDecNameEph='AstDecRate(deg/sec)',
+                        limMagName='fiveSigmaDepth', obsIDName='observationId', 
+                        seeingName='seeingFwhmEff',
+                        w=0.1):
+
+        """Removes pointings from observation table based on a probabilistic 
+        fading function, and adjusts magnitudes to reflect fading and trailing
+        losses.
+
+        Parameters
+        ----------
+        ephemsdf        ... Pandas dataFrame containing output of JPL ephemeris simulator
+        obsdf           ... Pandas dataFrame containing survey simulator output such as LSST opsim
+        *Name           ... relevant column names in obsdf
+        *NameEph        ... relevant column names in ephemsdf
+        fillFactor      ... fraction of FOV covered by the detector
+        w               ... fading function width
+        
+        Returns
+        -------
+        ephemsOut       ... Pandas dataFrame containing JPL ephemeris with faded magnitudes
+
+        """
+
+        ephemsOut = ephemsdf.sort_values(by=[obsIDNameEph])
+        fieldIDs = set(ephemsOut[obsIDNameEph])
+        fields   = obsdf.loc[obsdf[obsIDName].isin(fieldIDs)]
+
+        limMag = []
+        seeing = []
+        count = Counter(ephemsOut[obsIDNameEph])
+        for _, row in fields.iterrows():
+                n = count[row[obsIDName]]
+                limMag += n * [row[limMagName]]
+                seeing += n * [row[seeingName]]
+        
+        limMag = np.array(limMag)
+        seeing = np.array(seeing)
+
+        #apply trailing losses
+        obsMag = ephemsOut[magNameEph] + PPTrailingLoss.calcTrailingLoss(ephemsOut[dRaNameEph], ephemsOut[dDecNameEph], seeing)
+        ephemsOut[magNameEph] = obsMag
+
+        #calculate probability of detection
+        probability = calcDetectionProbability(obsMag, limMag, w)
+
+        #remove observations below limiting magnitude
+        randomNum = np.random.random(len(ephemsOut))
+        badObs = np.where(probability < randomNum)
+        
+        ephemsOut = ephemsOut.drop(badObs[0])
+        ephemsOut = ephemsOut.reset_index(drop=True)
+
+        return ephemsOut
+
+#------------------------------------------------------------------------------
+
+def filterSimpleSensorArea(ephemsdf, fillfactor=0.9):
+
+        '''Randomly removes a number of observations proportional to the
+        fraction of the field not covered by the detector.
+
+        Parameters
+        ----------
+        ephemsdf   ... pandas dataFrame containing observations
+        fillfactor ... fraction of FOV covered by the sensor
+
+        Returns
+        -------
+        ephemsOut  ... pandas dataFrame
+
+        '''
+        n = len(ephemsdf)
+        ramdomNum = np.random.random(n)
+        fillArray = np.zeros(n) + fillfactor
+        dropObs = np.where(ramdomNum > fillArray)[0]
+
+        ephemsOut = ephemsdf.drop(dropObs)
+        ephemsOut = ephemsOut.reset_index(drop=True)
+
+        return ephemsOut
+#------------------------------------------------------------------------------

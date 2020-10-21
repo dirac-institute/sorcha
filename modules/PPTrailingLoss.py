@@ -38,7 +38,7 @@ class Error(Exception):
 
 #-----------------------------------------------------------------------------------------------
 
-    def calcTrailingLoss(self, dRa, dDec, seeing, texp=30.0, a_trail=0.761, b_trail=1.162, a_det=0.420, b_det=0.003):
+def calcTrailingLoss(dRa, dDec, seeing, texp=30.0, a_trail=0.761, b_trail=1.162, a_det=0.420, b_det=0.003):
         """ Find the trailing loss from trailing and detection (Veres & Chesley 2017)
 
         Parameters
@@ -52,7 +52,7 @@ class Error(Exception):
             texp: float
                 exposure length, defaults to 30 seconds
 	    *_trail: float 
-		trail fit dmag parameters
+        trail fit dmag parameters
             *_det: float 
 		detection dmag parameters
 

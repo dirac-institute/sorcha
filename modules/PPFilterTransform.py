@@ -22,6 +22,10 @@
 Transform Johnson V-band magnitudes to other filter systems
 """
 
+import numpy as np
+import pandas as pd
+from collections import Counter
+
 __all__ = ['addFilterMag']
 
 ############################################
@@ -45,19 +49,10 @@ def addFilterMag( ephemsdf, obsdf, popdf, transforms=None,
         """Translate visual magnitude to other bands
         Parameters
         ----------
-        ephemsdf   ... Pandas DataFrame containing output of JPL ephemeris generator
-        obsdf      ... Pandas DataFrame containing simulated observing run
-        popdf      ... Pandas DataFrame containing orbital elements and color type
-        *Name      ... corresponding column name in obsdf
-        *NameEph   ... corresponding column name in ephemsdf
-        *NamePop   ... corresponding column name in popdf
-        transforms ... Pandas table or other dictionary containing filter transformations
-                       defaults to SDSS filters 
+            
             
         Returns
         -------
-        ephemOut ... Pandas DataFrame containing JPL ephemeris output and magnitudes 
-                     in observation filters
             
 
         """
@@ -70,20 +65,59 @@ def addFilterMag( ephemsdf, obsdf, popdf, transforms=None,
                           'z': {'C':  0.298, 'S':  0.401},
                           'y': {'C':  0.303, 'S':  0.406}
                           }
-
-        filterMags = []
-
-        for _, row in ephemsdf.iterrows():
-            asteroidColor = popdf[colorNamePop][popdf[objectIDNamePop] == row[objectIDNameEph]]
-            obsFilter     = obsdf[filterName][obsdf[obsIdName] == row[obsIdNameEph]]
-
-            newMag        = row[vMagNameEph] - transforms[obsFilter[obsFilter.index[0]]][asteroidColor[asteroidColor.index[0]]]
-              
-            filterMags.append(newMag)
-
-        ephemOut = ephemsdf
-        ephemOut[newFilterMagName] = filterMags
+            transforms = pd.DataFrame(transforms)
+        
+        # get observation filters
+        
+        ephemOut = ephemsdf.sort_values(by=[obsIdNameEph])
+        fieldIDs = set(ephemOut[obsIdNameEph])
+        fields   = obsdf.loc[obsdf[obsIdName].isin(fieldIDs)]
+        
+        filtersC  = []
+        filtersS  = []
+        obsFilter = []
+        count = Counter(ephemOut[obsIdNameEph])
+        
+        for _, row in fields.iterrows():
+            n = count[row[obsIdName]]
+            filtersC  += n * [transforms[row[filterName]]['C']]
+            filtersS  += n * [transforms[row[filterName]]['S']]
+            obsFilter += n * [row[filterName]]
+            
+        ephemOut['obsFilter'] = obsFilter
+        
+        #filters = np.array(filters)
+        ephemOut['C'] = filtersC
+        ephemOut['S'] = filtersS
+        
+        #get asteroid colors
+        ephemOut = ephemOut.sort_values(by=[objectIDNameEph])
+        objIDs = set(ephemOut[objectIDNameEph])
+        objs = popdf.loc[popdf[objectIDNamePop].isin(objIDs)]
+        
+        colors = []
+        count = Counter(ephemOut[objectIDNameEph])
+        
+        for _, row in objs.iterrows():
+            n = count[row[objectIDNamePop]]
+            colors += n * [row[colorNamePop]]
+            
+        colors = np.array(colors)
+        ephemOut['colors'] = colors
+        
+        ephemOut['correction'] = ephemOut['C'].where(ephemOut['colors'] == 'C', ephemOut['S'])
+        ephemOut.drop(labels=['C', 'S', 'colors'], axis=1, inplace=True)
+        
+        #ephemOut[newFilterMagName] = obsMagnitude(ephemOut[vMagNameEph], colors, filters, transforms)
+        ephemOut[newFilterMagName] = ephemOut[vMagNameEph] - ephemOut['correction']
+        ephemOut.drop(labels=['correction'], axis=1, inplace=True)
 
         return ephemOut
 
 #-----------------------------------------------------------------------------------------------
+
+def obsMagnitude(vMag, objColor, obsFilter, transforms):
+    
+    newMag = vMag - transforms[obsFilter][objColor]
+    
+    return newMag

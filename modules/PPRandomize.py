@@ -63,7 +63,7 @@ def randomizeAstrometry(ephemsdf,
 
     ephemsOut = ephemsdf
 
-    ephemsOut[newRAName] = np.random.normal( ephemsdf[raName],  ephemsdf[raSigName] / 3600000)
+    ephemsOut[newRAName]  = np.random.normal(ephemsdf[raName],  ephemsdf[raSigName] / 3600000)
     ephemsOut[newDecName] = np.random.normal(ephemsdf[decName], ephemsdf[decSigName] / 3600000)
 
     return ephemsOut
