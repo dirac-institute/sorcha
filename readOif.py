@@ -3,7 +3,7 @@
 import pandas as pd
 
 """
-read_oif.py
+readOif.py
 
 Author: Grigori Fedorets
 
@@ -23,11 +23,11 @@ Mandatory input:      Output from objectsInField (oif) in text file
 Output:               pandas dataframe
 
 
-usage: padafr=read_oif(oif_output)
+usage: padafr=readOif(oif_output)
 """
 
 
-def read_oif(oif_output):
+def readOif(oif_output):
 
     padafr=pd.read_csv(oif_output, sep='\s+')
     
