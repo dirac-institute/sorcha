@@ -41,7 +41,7 @@ usage: padafr=PPreadColoursUser(oif_out, 'g-X', 0.33, 0.01)
 
 def PPreadColoursUser(oif_out, colour, mean, stdev, indataf=None):
     
-    nr=len(oif_out.index())
+    nr=oif_out.shape[0]
     
     new_padafr=oif_out[['ObjID']]
         
