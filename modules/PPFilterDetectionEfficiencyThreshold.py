@@ -4,7 +4,7 @@ import pandas as pd
 import random
 import sys
 
-def PPfilterDetectionEfficiencyThreshold(padain, threshold):
+def PPFilterDetectionEfficiencyThreshold(padain, threshold):
     """
     Task: PPFilterDetectionEfficiencyThreshold
     
@@ -28,7 +28,9 @@ def PPfilterDetectionEfficiencyThreshold(padain, threshold):
          if (randn>threshold):
              padain.drop(index=i, axis=0, inplace=True)
          i=i+1
-        
+    
+    # After drooping some lines, the indices should be updated.
+    padain=padain.reset_index(drop=True)    
     return padain
     
     
