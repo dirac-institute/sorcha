@@ -44,12 +44,16 @@ def addFilterMag( ephemsdf, obsdf, popdf, transforms=None,
                   objectIDNamePop='!!OID', colorNamePop='color',
                   newFilterMagName='Filtermag'
                   ):
-  #  vismag, filtercolor, asteroidcolor, transforms=None):
 
-        """Translate visual magnitude to other bands
+        """Adds magnitude in observation filter to oif table
         Parameters
         ----------
-            
+            ephemsdf    ... 
+            obsdf       ... 
+            popdf       ...
+            *NameEph    ... 
+            *Name       ...
+            *NamePop    ...
             
         Returns
         -------
@@ -67,52 +71,38 @@ def addFilterMag( ephemsdf, obsdf, popdf, transforms=None,
                           }
             transforms = pd.DataFrame(transforms)
         
-        # get observation filters
-        
-        ephemOut = ephemsdf.sort_values(by=[obsIdNameEph])
-        fieldIDs = set(ephemOut[obsIdNameEph])
-        fields   = obsdf.loc[obsdf[obsIdName].isin(fieldIDs)]
-        
-        filtersC  = []
-        filtersS  = []
-        obsFilter = []
-        count = Counter(ephemOut[obsIdNameEph])
-        
-        for _, row in fields.iterrows():
-            n = count[row[obsIdName]]
-            filtersC  += n * [transforms[row[filterName]]['C']]
-            filtersS  += n * [transforms[row[filterName]]['S']]
-            obsFilter += n * [row[filterName]]
-            
-        ephemOut['obsFilter'] = obsFilter
-        
-        #filters = np.array(filters)
-        ephemOut['C'] = filtersC
-        ephemOut['S'] = filtersS
-        
         #get asteroid colors
-        ephemOut = ephemOut.sort_values(by=[objectIDNameEph])
-        objIDs = set(ephemOut[objectIDNameEph])
-        objs = popdf.loc[popdf[objectIDNamePop].isin(objIDs)]
-        
-        colors = []
-        count = Counter(ephemOut[objectIDNameEph])
+        ephemsdf.sort_values(by=[objectIDNameEph], inplace=True)
+        objIDs = set(ephemsdf[objectIDNameEph])
+        objs   = popdf.loc[popdf[objectIDNamePop].isin(objIDs)]
+
+        objTypes = []
+        count = Counter(ephemsdf[objectIDNameEph])
         
         for _, row in objs.iterrows():
             n = count[row[objectIDNamePop]]
-            colors += n * [row[colorNamePop]]
+            objTypes += n * [row[colorNamePop]]
             
-        colors = np.array(colors)
-        ephemOut['colors'] = colors
+        ephemsdf["objType"] = objTypes
         
-        ephemOut['correction'] = ephemOut['C'].where(ephemOut['colors'] == 'C', ephemOut['S'])
-        ephemOut.drop(labels=['C', 'S', 'colors'], axis=1, inplace=True)
+        #get field filters
+        ephemsdf.sort_values(by=[obsIdNameEph], inplace=True)
+        fieldIDs = set(ephemsdf[obsIdNameEph])
+        fields   = obsdf.loc[obsdf[obsIdName].isin(fieldIDs)]
         
-        #ephemOut[newFilterMagName] = obsMagnitude(ephemOut[vMagNameEph], colors, filters, transforms)
-        ephemOut[newFilterMagName] = ephemOut[vMagNameEph] - ephemOut['correction']
-        ephemOut.drop(labels=['correction'], axis=1, inplace=True)
+        filters = []
+        count = Counter(ephemsdf[obsIdNameEph])
+        
+        for _, row in fields.iterrows():
+            n = count[row[obsIdName]]
+            filters += n * [row[filterName]]
+            
+        ephemsdf["obsFilter"] = filters
+        
+        correction = ephemsdf.apply(lambda x: transforms[x["obsFilter"]][x["objType"]], axis=1)
+        ephemsdf[newFilterMagName] = ephemsdf[vMagNameEph] - correction
 
-        return ephemOut
+        ephemsdf.reset_index(drop=True, inplace=True)
 
 #-----------------------------------------------------------------------------------------------
 

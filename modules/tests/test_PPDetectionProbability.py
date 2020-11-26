@@ -43,6 +43,6 @@ def test_filterFadingFunction():
         "AstDecRate(deg/sec)" : [0.000035, 0.000028]
     })
 
-    result = filterFadingFunction(ephemsdf, obsdf)
+    filterFadingFunction(ephemsdf, obsdf)
 
-    assert result == nominal_result
+    assert ephemsdf == nominal_result

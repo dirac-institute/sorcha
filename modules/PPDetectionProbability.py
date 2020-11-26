@@ -90,17 +90,16 @@ def filterFadingFunction(ephemsdf, obsdf,
         
         Returns
         -------
-        ephemsOut       ... Pandas dataFrame containing JPL ephemeris with faded magnitudes
-
+        ephemsOut       ... Pandas dataFrame containing rejected observations
         """
 
-        ephemsOut = ephemsdf.sort_values(by=[obsIDNameEph])
-        fieldIDs = set(ephemsOut[obsIDNameEph])
+        ephemsdf.sort_values(by=[obsIDNameEph], inplace=True)
+        fieldIDs = set(ephemsdf[obsIDNameEph])
         fields   = obsdf.loc[obsdf[obsIDName].isin(fieldIDs)]
 
         limMag = []
         seeing = []
-        count = Counter(ephemsOut[obsIDNameEph])
+        count = Counter(ephemsdf[obsIDNameEph])
         for _, row in fields.iterrows():
                 n = count[row[obsIDName]]
                 limMag += n * [row[limMagName]]
@@ -110,19 +109,19 @@ def filterFadingFunction(ephemsdf, obsdf,
         seeing = np.array(seeing)
 
         #apply trailing losses
-        obsMag = ephemsOut[magNameEph] + PPTrailingLoss.calcTrailingLoss(ephemsOut[dRaNameEph], ephemsOut[dDecNameEph], seeing)
-        ephemsOut[magNameEph] = obsMag
+        obsMag = ephemsdf[magNameEph] + PPTrailingLoss.calcTrailingLoss(ephemsOut[dRaNameEph], ephemsOut[dDecNameEph], seeing)
+        ephemsdf[magNameEph] = obsMag
 
         #calculate probability of detection
         probability = calcDetectionProbability(obsMag, limMag, w)
 
         #remove observations below limiting magnitude
-        randomNum = np.random.random(len(ephemsOut))
+        randomNum = np.random.random(len(ephemsdf))
         badObs = np.where(probability < randomNum)
         
-        ephemsOut = ephemsOut.drop(badObs[0])
-        ephemsOut = ephemsOut.reset_index(drop=True)
-
+        ephemsOut = ephemsdf.iloc[badObs[0]]
+        ephemsdf.drop(badObs[0], inplace=True)
+        
         return ephemsOut
 
 #------------------------------------------------------------------------------

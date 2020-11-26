@@ -27,8 +27,8 @@ def test_addFilterMag():
         "Filtermag" : [19.302]
     })
 
-    result = addFilterMag(ephemsdf, obsdf, popdf)
+    addFilterMag(ephemsdf, obsdf, popdf)
 
-    assert  result == result_nominal
+    assert  ephemsdf == result_nominal
 
     return

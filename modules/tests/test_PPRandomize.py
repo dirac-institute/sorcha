@@ -10,24 +10,24 @@ def test_randomizeAstrometry():
     np.random.seed(4077)
 
     ephemsdf = pd.DataFrame({
-        "AstRA(deg)"       : [45.0],
-        "AstDec(deg)"       : [15.0],
+        "AstRA(mas)"       : [162000000.0],
+        "AstDec(mas)"       : [54000000.0],
         "AstRASigma(mas)"  : [10 ** 5],
         "AstDecSigma(mas)" : [10 ** 5]
     })
 
-    result = randomizeAstrometry(ephemsdf)
+    randomizeAstrometry(ephemsdf, raSigName="AstRASigma(mas)", decSigName="AstDecSigma(mas)")
 
     result_nominal = pd.DataFrame({
-        "AstRA(deg)"          : [45.0],
-        "AstDec(deg"          : [15.0],
+        "AstRA(mas)"          : [162000000.0],
+        "AstDec(mas)"          : [54000000.0],
         "AstRASigma(mas)"     : [10 ** 5],
         "AstDecSigma(mas)"    : [10 ** 5],
         "randAstRASigma(mas)" : [45.007163],
         "randDecSigma(mas)"   : [15.017063]
     })
 
-    assert result == result_nominal
+    assert ephemsdf == result_nominal
 
     return
 
@@ -41,7 +41,7 @@ def test_randomizePhotometry():
         "PhotometricSigma(mag)" : [0.1]
     })
 
-    result = randomizePhotometry(ephemsdf)
+    randomizePhotometry(ephemsdf, photSigName="PhotometricSigma(mag)")
 
     nominal_result = pd.DataFrame({
         "Filtermag"             : [20.0],
@@ -49,4 +49,4 @@ def test_randomizePhotometry():
         "randFilterMag"         : [20.025785]
     })
 
-    assert result == nominal_result
+    assert ephemsdf == nominal_result
