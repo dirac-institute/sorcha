@@ -1,7 +1,7 @@
 import pandas as pd
 
 
-def PPresolveFilters
+
 
 """
     Task: PPresolveFilters
@@ -23,7 +23,7 @@ def PPresolveFilters
     usage: df=PPresolveFilters(df)
 """
 
-    
+def PPresolveFilters(padain):    
     padain['magInFilter']== padain.apply(lambda x: x[x['filter']], axis=1)
     return padain
 
