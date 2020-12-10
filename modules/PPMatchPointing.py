@@ -22,7 +22,7 @@ usage: padafr=PPMatchPointing(bsdbname)
 def PPMatchPointing(bsdbname):
 
     con = sqlite3.connect(bsdbname)
-    df = pd.read_sql_query('SELECT observationId, filter FROM SummaryAllProps order by ObservationID', con)
+    df = pd.read_sql_query('SELECT observationId, filter FROM SummaryAllProps order by observationId', con)
     df=df.rename(columns={'observationId': 'FieldID'})
     df=df.rename(columns={'filter': 'optFilter'}) # not to confuse with the pandas filter command   
     return df

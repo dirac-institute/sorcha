@@ -6,6 +6,9 @@ import pandas as pd
 
 from ..readOif import readOif
 from ..PPhookBrightnessWithColour import PPhookBrightnessWithColour
+from ..PPreadColours import PPreadColours
+from ..PPJoinColourPointing import PPJoinColourPointing
+
 
 """
 test_PPresolveFilters.py
@@ -27,11 +30,19 @@ Author: Grigori Fedorets
 def test_PPhookBrightnessWithColour():
 
     padafr=readOif('oiftestoutput')
-    ncols=len(padafr.columns)
+    padacl=PPreadColours('testcolour')
+
+    resdf=PPJoinColourPointing(padafr,padacl)
+    
+    
+    resdf1=PPhookBrightnessWithColour(resdf, 'V', 'i-r', 'i')
+    ncols1=len(resdf1.columns)
+
+    ncols=len(resdf.columns)
     ncolscomp=ncols+1
     
-    pada1=PPhookBrightnessWithColour(padafr, 'V', 'i-r', 'Vi')
-    ncols1=len(pada1.columns)
+
+
     
     assert ncolscomp == ncols1
     return
