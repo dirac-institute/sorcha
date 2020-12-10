@@ -13,7 +13,7 @@ from ..PPMatchPointing import PPMatchPointing
 
 
 
-def PPMatchPointingAndColours():
+def test_PPMatchPointingAndColours():
 
     padafr=readOif('oiftestoutput')
     padacl=PPreadColours.PPreadColours('testcolour')

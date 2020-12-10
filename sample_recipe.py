@@ -4,7 +4,9 @@
 import os,sys
 import pandas as pd
 #from filtering import PPFilterDetectionEfficiencyThreshold
-from modules import PPFilterDetectionEfficiencyThreshold, PPreadColoursUser, PPreadColours, PPhookBrightnessWithColour, PPJoinColourPointing, PPMatchPointing, PPMatchPointingsAndColours
+from modules import PPFilterDetectionEfficiencyThreshold, PPreadColoursUser, PPreadColours
+from modules import PPhookBrightnessWithColour, PPJoinColourPointing, PPMatchPointing 
+from modules import PPMatchPointingsAndColours, PPFilterSSPCriterionEfficiency
 
 
 import readOif, PPConfig
@@ -71,4 +73,11 @@ pada5=PPMatchPointing.PPMatchPointing(pointingdatabase)
 if (PPConfig.verbosity>0):
     print('Matching pointings with filters...')
 pada6=PPMatchPointingsAndColours.PPMatchPointingsAndColours(resdf3,pada5)
-print(pada6)
+#print(pada6.columns)
+
+
+#print(pada6)
+
+
+pada7=PPFilterSSPCriterionEfficiency.PPFilterSSPCriterionEfficiency(pada6)
+print(pada7)
