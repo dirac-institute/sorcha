@@ -2,16 +2,17 @@
 
 import pytest
 import pandas as pd
+import sqlite3
 
 from ..PPMatchPointing import PPMatchPointing
 
 def test_PPMatchPointing():
     
-    padapo=PPMatchPointing('baseline_10yrs_10klines.db')
+    padapo=PPMatchPointing('./baseline_10yrs_10klines.db')
     
-    nlines=10000
+    nlines=10001
     
-    nlinessdb=len(padapo.index)
+    nlinesdb=len(padapo.index)
     
     assert nlines==nlinesdb
     return

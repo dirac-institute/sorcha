@@ -33,7 +33,7 @@ def PPhookBrightnessWithColour(padain, initfilter, colour, resfilter):
 
     Usage: pphookbrightnesswithcolour(combdf, 'r', 'i-r', 'i')
     """
-
-    padain[resfilter] = padain[colour] + padain[initfilter]
-    return padain
+    padaout=padain
+    padaout[resfilter] = padain[colour] + padain[initfilter]
+    return padaout
     

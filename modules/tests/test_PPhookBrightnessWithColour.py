@@ -33,12 +33,12 @@ def test_PPhookBrightnessWithColour():
     padacl=PPreadColours('testcolour')
 
     resdf=PPJoinColourPointing(padafr,padacl)
-    
+    ncols=len(resdf.columns)    
     
     resdf1=PPhookBrightnessWithColour(resdf, 'V', 'i-r', 'i')
     ncols1=len(resdf1.columns)
 
-    ncols=len(resdf.columns)
+
     ncolscomp=ncols+1
     
 
