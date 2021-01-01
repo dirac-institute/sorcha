@@ -349,6 +349,36 @@ pointing and filter dataframe (pandas dataframe)</p>
 <div class="section" id="module-modules.PPTrailingLoss">
 <span id="modules-pptrailingloss-module"></span><h2>modules.PPTrailingLoss module<a class="headerlink" href="#module-modules.PPTrailingLoss" title="Permalink to this headline">¶</a></h2>
 <p>Calculate Astrometric and Photometric Uncertainties for ground based observations.</p>
+<dl class="py function">
+<dt id="modules.PPTrailingLoss.calcTrailingLoss">
+<code class="sig-prename descclassname">modules.PPTrailingLoss.</code><code class="sig-name descname">calcTrailingLoss</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">dRa</span></em>, <em class="sig-param"><span class="n">dDec</span></em>, <em class="sig-param"><span class="n">seeing</span></em>, <em class="sig-param"><span class="n">texp</span><span class="o">=</span><span class="default_value">30.0</span></em>, <em class="sig-param"><span class="n">a_trail</span><span class="o">=</span><span class="default_value">0.761</span></em>, <em class="sig-param"><span class="n">b_trail</span><span class="o">=</span><span class="default_value">1.162</span></em>, <em class="sig-param"><span class="n">a_det</span><span class="o">=</span><span class="default_value">0.42</span></em>, <em class="sig-param"><span class="n">b_det</span><span class="o">=</span><span class="default_value">0.003</span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.PPTrailingLoss.calcTrailingLoss" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><p>Find the trailing loss from trailing and detection (Veres &amp; Chesley 2017)</p>
+</div></blockquote>
+<blockquote>
+<div><dl class="simple">
+<dt>dRa: float</dt><dd><p>rate of change of RA on the sky, deg/sec</p>
+</dd>
+<dt>dDec: float</dt><dd><p>rate of change of Dec on the sky, deg/sec</p>
+</dd>
+<dt>seeing: float</dt><dd><p>Fwhm of the seeing disk, arcseconds</p>
+</dd>
+<dt>texp: float</dt><dd><p>exposure length, defaults to 30 seconds</p>
+</dd>
+<dt><a href="#id13"><span class="problematic" id="id14">*</span></a>_trail: float </dt><dd><p>trail fit dmag parameters</p>
+</dd>
+<dt><a href="#id15"><span class="problematic" id="id16">*</span></a>_det: float </dt><dd><p>detection dmag parameters</p>
+</dd>
+</dl>
+</div></blockquote>
+<blockquote>
+<div><dl class="simple">
+<dt>dmag: float</dt><dd><p>loss in detection magnitude</p>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
 </div>
 <div class="section" id="module-modules.PPhookBrightnessWithColour">
 <span id="modules-pphookbrightnesswithcolour-module"></span><h2>modules.PPhookBrightnessWithColour module<a class="headerlink" href="#module-modules.PPhookBrightnessWithColour" title="Permalink to this headline">¶</a></h2>
