@@ -54,8 +54,8 @@ def randomizeAstrometry(ephemsdf,
     Returns
     -------
     ephemsOut  ... ephems Pandas dataFrame with astrometric values modifed 
-    
     """
+
     if newRAName == None:
         newRAName  = 'rand'+raName
     if newDecName == None:
