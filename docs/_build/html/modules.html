@@ -284,7 +284,7 @@ transforms … Pandas table or other dictionary containing filter transformation
 <dt>ephemsdf   … Pandas dataFrame containing output of JPL ephemeris </dt><dd><p>generator and astrometric uncertainties</p>
 </dd>
 </dl>
-<p><a href="#id13"><span class="problematic" id="id14">*</span></a>Name      … relevant column names in ephemsdf</p>
+<p>Name      … relevant column names in ephemsdf</p>
 <p>ephemsOut  … ephems Pandas dataFrame with astrometric values modifed</p>
 </dd></dl>
 
@@ -296,7 +296,7 @@ transforms … Pandas table or other dictionary containing filter transformation
 <dt>ephemsdf   … Pandas dataFrame containing output of JPL ephemeris </dt><dd><p>generator and astrometric uncertainties</p>
 </dd>
 </dl>
-<p><a href="#id15"><span class="problematic" id="id16">*</span></a>Name      … relevant column names in ephemsdf</p>
+<p>Name      … relevant column names in ephemsdf</p>
 <p>ephemsOut  … ephems Pandas dataFrame with photometric values modifed</p>
 </dd></dl>
 
@@ -350,7 +350,31 @@ the apparent brightnesses in the given ‘resfilter’ filter.</p>
 <dl class="py function">
 <dt id="modules.PPreadColoursUser.PPreadColoursUser">
 <code class="sig-prename descclassname">modules.PPreadColoursUser.</code><code class="sig-name descname">PPreadColoursUser</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">oif_out</span></em>, <em class="sig-param"><span class="n">colour</span></em>, <em class="sig-param"><span class="n">mean</span></em>, <em class="sig-param"><span class="n">stdev</span></em>, <em class="sig-param"><span class="n">indataf</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.PPreadColoursUser.PPreadColoursUser" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>PPreadColoursUser.py</p>
+<p>Description: This task assigns a designated colour to each object in the
+input file and puts it into a
+single pandas dataframe for further use downstream by other tasks.
+Only one colour is assigned, for more colours, the user may run this
+function several times with different parameters.</p>
+<p>The user may decide to give a single colour, or a uniform distribution of 
+colours.
+In case of a single colour, the stdev parameter should be given as zero.</p>
+<p>The format of the colours is:</p>
+<p>id   colour1 colour2 etc</p>
+<p>The also may also wish to amend the existing dataFrame with colours with 
+another colour. In that case, duplicate ObjID columns will be removed.</p>
+<p>Mandatory input:      
+Output from objectsInField (oif) in text file
+colour (string)
+mean colour (float)
+standard deviation (float)
+existing colour dataframe (pandas dataFrame, optional)</p>
+<p>Output:               pandas dataframe</p>
+<dl class="simple">
+<dt>usage: padafr=PPreadColoursUser(oif_out, ‘g-X’, 0.33, 0.01)</dt><dd><p>pada3=PPreadColoursUser(pada1, ‘r-X’, 0.25, 0.00, indataf=pada2)</p>
+</dd>
+</dl>
+</dd></dl>
 
 </div>
 <div class="section" id="module-modules.PPresolveFilters">
@@ -361,21 +385,18 @@ the apparent brightnesses in the given ‘resfilter’ filter.</p>
 <dl class="py function">
 <dt id="modules.readOif.readOif">
 <code class="sig-prename descclassname">modules.readOif.</code><code class="sig-name descname">readOif</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">oif_output</span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.readOif.readOif" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>readOif.py</p>
-<p>Description: This task reads in the output of oif (objectsInField) and puts it into a</p>
-</div></blockquote>
-<p>single pandas dataframe for further use downstream by other tasks.</p>
-<blockquote>
-<div><p>This task should be used as the first one in the collection of subsequent tasks</p>
-</div></blockquote>
-<p>called recipes.</p>
-<blockquote>
-<div><p>Any other relevant data (e.g. magnitudes and colours) are read and amended to the main pandas dataframe by separate tasks.</p>
+<dd><p>readOif.py</p>
+<p>Description: This task reads in the output of oif (objectsInField) and puts it into a
+single pandas dataframe for further use downstream by other tasks.</p>
+<p>This task should be used as the first one in the collection of subsequent tasks
+called recipes.</p>
+<dl class="simple">
+<dt>Any other relevant data (e.g. magnitudes and colours) are read and amended to the</dt><dd><p>main pandas dataframe by separate tasks.</p>
+</dd>
+</dl>
 <p>Mandatory input:      Output from objectsInField (oif) in text file</p>
 <p>Output:               pandas dataframe</p>
 <p>usage: padafr=readOif(oif_output)</p>
-</div></blockquote>
 </dd></dl>
 
 </div>
