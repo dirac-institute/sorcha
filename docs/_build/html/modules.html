@@ -336,8 +336,7 @@ the apparent brightnesses in the given ‘resfilter’ filter.</p>
 <dt id="modules.PPreadColours.PPreadColours">
 <code class="sig-prename descclassname">modules.PPreadColours.</code><code class="sig-name descname">PPreadColours</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">clr_datafile</span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.PPreadColours.PPreadColours" title="Permalink to this definition">¶</a></dt>
 <dd><p>PPreadColours.py</p>
-<p>Description: This task reads in the colours file and puts it into a
-single pandas dataframe for further use downstream by other tasks.</p>
+<p>Description: This task reads in the colours file and puts it into a single pandas dataframe for further use downstream by other tasks.</p>
 <p>The format of the colours is:</p>
 <p>id   colour1 colour2 etc</p>
 <p>Mandatory input:      Output from colour file in text file</p>
@@ -362,7 +361,22 @@ single pandas dataframe for further use downstream by other tasks.</p>
 <dl class="py function">
 <dt id="modules.readOif.readOif">
 <code class="sig-prename descclassname">modules.readOif.</code><code class="sig-name descname">readOif</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">oif_output</span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.readOif.readOif" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><blockquote>
+<div><p>readOif.py</p>
+<p>Description: This task reads in the output of oif (objectsInField) and puts it into a</p>
+</div></blockquote>
+<p>single pandas dataframe for further use downstream by other tasks.</p>
+<blockquote>
+<div><p>This task should be used as the first one in the collection of subsequent tasks</p>
+</div></blockquote>
+<p>called recipes.</p>
+<blockquote>
+<div><p>Any other relevant data (e.g. magnitudes and colours) are read and amended to the main pandas dataframe by separate tasks.</p>
+<p>Mandatory input:      Output from objectsInField (oif) in text file</p>
+<p>Output:               pandas dataframe</p>
+<p>usage: padafr=readOif(oif_output)</p>
+</div></blockquote>
+</dd></dl>
 
 </div>
 <div class="section" id="module-modules">
