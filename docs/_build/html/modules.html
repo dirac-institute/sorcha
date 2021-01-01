@@ -276,7 +276,13 @@ transforms … Pandas table or other dictionary containing filter transformation
 <dl class="py function">
 <dt id="modules.PPJoinColourPointing.PPJoinColourPointing">
 <code class="sig-prename descclassname">modules.PPJoinColourPointing.</code><code class="sig-name descname">PPJoinColourPointing</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">padafr</span></em>, <em class="sig-param"><span class="n">padacl</span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.PPJoinColourPointing.PPJoinColourPointing" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Description: This task  joins the pointing pandas database with the
+colour pandas database. Each database has to have same ObjID:s: NaN:s will
+be populate the fields for the missing objects.</p>
+<p>Mandatory input:      oif pandas database and colour database</p>
+<p>Output:               new joined pandas dataframe</p>
+<p>usage: padafr1=PPJoinColourPointing(padafr,padacl)</p>
+</dd></dl>
 
 </div>
 <div class="section" id="module-modules.PPMatchPointing">
@@ -284,7 +290,12 @@ transforms … Pandas table or other dictionary containing filter transformation
 <dl class="py function">
 <dt id="modules.PPMatchPointing.PPMatchPointing">
 <code class="sig-prename descclassname">modules.PPMatchPointing.</code><code class="sig-name descname">PPMatchPointing</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">bsdbname</span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.PPMatchPointing.PPMatchPointing" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Description: This task reads in the main baseline database, and extracts observationID
+and used filter at a given pointing and outputs a 2*n pandas dataframe.</p>
+<p>Mandatory input:      name of database</p>
+<p>Output:               2*n pandas dataframe</p>
+<p>usage: padafr=PPMatchPointing(bsdbname)</p>
+</dd></dl>
 
 </div>
 <div class="section" id="module-modules.PPMatchPointingsAndColours">
@@ -292,7 +303,20 @@ transforms … Pandas table or other dictionary containing filter transformation
 <dl class="py function">
 <dt id="modules.PPMatchPointingsAndColours.PPMatchPointingsAndColours">
 <code class="sig-prename descclassname">modules.PPMatchPointingsAndColours.</code><code class="sig-name descname">PPMatchPointingsAndColours</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">padain</span></em>, <em class="sig-param"><span class="n">pointfildb</span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.PPMatchPointingsAndColours.PPMatchPointingsAndColours" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Description: This task takes two pandas dataframes: one is output that includes all
+relevant colours, the other is a two-column database that includes all the fieldId:s
+and the filters at the given pointing.</p>
+<p>The task cross-matches the two databases, matches the pre-calculated colour in each
+pointing with the relevant filter. Then it leaves only the relevant colour and the
+filter, and erases all the obsolete colours.</p>
+<dl class="simple">
+<dt>Mandatory input:      Output from objectsInField (oif) with additional relevant colour</dt><dd><p>columns (pandas dataframes)
+pointing and filter dataframe (pandas dataframe)</p>
+</dd>
+</dl>
+<p>Output:               pandas dataframe</p>
+<p>usage: padafr=PPMatchPointingsAndColours(padain,pointfildb)</p>
+</dd></dl>
 
 </div>
 <div class="section" id="module-modules.PPRandomize">
