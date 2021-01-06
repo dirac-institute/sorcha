@@ -111,14 +111,16 @@ def filterFadingFunction(ephemsdf, obsdf,
 
         #apply trailing losses
         obsMag = ephemsdf[magNameEph] + PPTrailingLoss.calcTrailingLoss(ephemsdf[dRaNameEph]/86400, ephemsdf[dDecNameEph]/86400, seeing)
+        ephemsdf[magNameEph] = obsMag
 
         #calculate probability of detection
         probability = calcDetectionProbability(obsMag, limMag, w)
 
         #remove observations below limiting magnitude
         randomNum = np.random.random(len(ephemsdf))
-        ephemsOut = ephemsdf[probability < randomNum]
+        badObs = np.where(probability < randomNum)
         
+        ephemsOut = ephemsdf.iloc[badObs[0]]
         ephemsdf.drop(badObs[0], inplace=True)
         
         return ephemsOut
