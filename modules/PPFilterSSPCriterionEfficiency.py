@@ -2,30 +2,28 @@
 
 import pandas as pd
 
-"""
-PPFilterSSPCriterionEfficiency.py
-
-Author: Grigori Fedorets
-
-Description: This task reads in the modified pandas dataframe
-(including colours), checks against the SSP detection criterion
-(three detections over 15 nights), and outputs only the objects
-that satisfy that criterion.
-
-Generally, to be applied after detection threshold.
-
-
-Mandatory input:      modified pandas dataframe
-
-Output:               pandas dataframe
-
-
-usage: padafr=PPFilterSSPCriterionEfficiency(padain)
-"""
-
+#Author: Grigori Fedorets
 
 def PPFilterSSPCriterionEfficiency(padain):
-
+    """
+    PPFilterSSPCriterionEfficiency.py
+    
+    
+    Description: This task reads in the modified pandas dataframe
+    (including colours), checks against the SSP detection criterion
+    (three detections over 15 nights), and outputs only the objects
+    that satisfy that criterion.
+    
+    Generally, to be applied after detection threshold.
+    
+    
+    Mandatory input:      modified pandas dataframe
+    
+    Output:               pandas dataframe
+    
+    
+    usage: pa
+    """
 
     objid_list = padain['ObjID'].unique().tolist() 
     
