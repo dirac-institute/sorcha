@@ -6,13 +6,13 @@
 # When full pipeline will work, here will be the orbit input file [des format]
 
 # intermediate input file (oif output file)
-oifoutput='oiftestoutput'
+oifoutput='./data/test/oiftestoutput'
 
 # colour input file
-colourinput='testcolour'
+colourinput='./data/test/testcolour'
 
 # pointing database
-pointingdatabase='baseline_10yrs_10klines.db' #'baseline_v1.3_10yrs.db'
+pointingdatabase='./data/baseline_10yrs_10klines.db' #'baseline_v1.3_10yrs.db'
 
 #### GENERAL PARAMETERS ####
 

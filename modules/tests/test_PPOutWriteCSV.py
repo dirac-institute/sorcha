@@ -16,8 +16,8 @@ from ..PPOutWriteCSV import PPOutWriteCSV
 
 def test_PPOutWriteCSV():
 
-    padafr=readOif('oiftestoutput')
-    padacl=PPreadColours('testcolour')
+    padafr=readOif('./data/test/oiftestoutput')
+    padacl=PPreadColours('./data/test/testcolour')
     
     resdf=PPJoinColourPointing(padafr,padacl)
     
@@ -26,7 +26,7 @@ def test_PPOutWriteCSV():
     resdf3=PPhookBrightnessWithColour(resdf1, 'V', 'g-X', 'g')
     
     
-    pada5=PPMatchPointing('baseline_10yrs_10klines.db')
+    pada5=PPMatchPointing('./data/baseline_10yrs_10klines.db')
     pada6=PPMatchPointingsAndColours(resdf3,pada5)
     
     
