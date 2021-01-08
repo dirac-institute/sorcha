@@ -10,8 +10,8 @@ from ..PPreadColours import PPreadColours
 
 def test_PPJoinColourPointing():
 
-    padafr=readOif('oiftestoutput')
-    padacl=PPreadColours('testcolour')
+    padafr=readOif('./data/test/oiftestoutput')
+    padacl=PPreadColours('./data/test/testcolour')
     
     padare=PPJoinColourPointing(padafr,padacl)
     

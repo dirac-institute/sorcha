@@ -29,8 +29,8 @@ Author: Grigori Fedorets
 
 def test_PPhookBrightnessWithColour():
 
-    padafr=readOif('oiftestoutput')
-    padacl=PPreadColours('testcolour')
+    padafr=readOif('./data/test/oiftestoutput')
+    padacl=PPreadColours('./data/test/testcolour')
 
     resdf=PPJoinColourPointing(padafr,padacl)
     ncols=len(resdf.columns)    

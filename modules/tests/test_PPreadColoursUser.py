@@ -11,7 +11,7 @@ def test_PPreadColoursUser():
      
      resval=0.6
      
-     padain=readOif('oiftestoutput')
+     padain=readOif('./data/test/oiftestoutput')
      padafr=PPreadColoursUser(padain, 'r-X', 0.6, 0.0)
      
      val=padafr.at[0,'r-X']
