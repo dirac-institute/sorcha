@@ -12,7 +12,7 @@ from ..PPFilterSSPCriterionEfficiency import PPFilterSSPCriterionEfficiency
 def test_PPFilterSSPCriterionEfficiency():
 
     padafr=readOif('./data/test/oiftestoutput')
-    padaout=PPFilterSSPCriterionEfficiency(padafr)
+    padaout=PPFilterSSPCriterionEfficiency(padafr,1,1,15.0)
     
     nlc=3
     nlco=len(padaout.index)
