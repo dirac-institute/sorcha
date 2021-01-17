@@ -119,7 +119,7 @@ def filterFadingFunction(ephemsdf, obsdf,
         randomNum = np.random.random(len(ephemsdf))
         ephemsOut = ephemsdf[probability < randomNum]
         
-        ephemsdf.drop(badObs[0], inplace=True)
+        ephemsdf.drop(ephemsdf.index[probability < randomNum], inplace=True)
         
         return ephemsOut
 
