@@ -48,12 +48,12 @@ def randomizeAstrometry(ephemsdf,
     ----------
     ephemsdf   ... Pandas dataFrame containing output of JPL ephemeris 
                    generator and astrometric uncertainties
-    *Name      ... relevant column names in ephemsdf
+    Name      ... relevant column names in ephemsdf
 
     Returns
     -------
     ephemsOut  ... ephems Pandas dataFrame with astrometric values modifed 
-    
+
     """
 
     ephemsdf[raName]  = np.random.normal(ephemsdf[raName],  ephemsdf[raSigName])
@@ -65,17 +65,17 @@ def randomizePhotometry(ephemsdf,
                         photName='Filtermag'):
 
     """ Randomize photometric values for simulated observations
-
+    
     Parameters
     ----------
     ephemsdf   ... Pandas dataFrame containing output of JPL ephemeris 
-                   generator and astrometric uncertainties
-    *Name      ... relevant column names in ephemsdf
-
+                       generator and astrometric uncertainties
+    Name      ... relevant column names in ephemsdf
+        
     Returns
     -------
     ephemsOut  ... ephems Pandas dataFrame with photometric values modifed 
-
+        
     """
 
     newPhot = np.random.normal(ephemsdf[photName], ephemsdf[photSigName])
