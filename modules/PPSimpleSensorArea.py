@@ -10,7 +10,7 @@ import pandas as pd
 
 #------------------------------------------------------------------------------
 
-def filterSimpleSensorArea(ephemsdf, fillfactor=0.9):
+def PPSimpleSensorArea(ephemsdf, fillfactor=0.9):
 
         '''Randomly removes a number of observations proportional to the
         fraction of the field not covered by the detector.
