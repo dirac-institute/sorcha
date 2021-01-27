@@ -38,7 +38,7 @@ class Error(Exception):
 
 #-----------------------------------------------------------------------------------------------
 
-def calcTrailingLoss(self, dRa, dDec, seeing, texp=30.0, a_trail=0.761, b_trail=1.162, a_det=0.420, b_det=0.003):
+def PPTrailingLoss(self, dRa, dDec, seeing, texp=30.0, a_trail=0.761, b_trail=1.162, a_det=0.420, b_det=0.003):
         """
          Find the trailing loss from trailing and detection (Veres & Chesley 2017)
 
