@@ -3,11 +3,13 @@
 import os,sys
 import pandas as pd
 import logging
+import argparse
+import configparser
 #from filtering import PPFilterDetectionEfficiencyThreshold
 from modules import PPFilterDetectionEfficiencyThreshold, PPreadColoursUser, PPreadColours
 from modules import PPhookBrightnessWithColour, PPJoinColourPointing, PPMatchPointing 
 from modules import PPMatchPointingsAndColours, PPFilterSSPCriterionEfficiency
-from modules import PPOutWriteCSV
+from modules import PPOutWriteCSV, PPReadOrbitFile, PPCheckOrbitAndColoursMatching
 from modules import readOif, PPConfig, PPReadConfigFile
 
 
@@ -19,6 +21,15 @@ from modules import readOif, PPConfig, PPReadConfigFile
 #logging.basicConfig(filename=PPConfig.logloc, encoding='utf-8', level=PPConfig.verbosity)
 
 # Read config file
+
+
+def get_or_exit(config, section, key, message):
+    # from Shantanu Naidu, objectInField
+    try:
+        return config[section][key]
+    except KeyError:
+        logging.error(message)
+        sys.exit(message)
 
 def runPostProcessing():
 
@@ -52,22 +63,58 @@ def runPostProcessing():
     Output:               csv datafile
     
     
-    usage: [from command line] python sample_recipe.py
+    usage: [from command line]                        python sample_recipe.py -c $CONFIGURATION_FILE
+    usage: [from command line, default config file]   python sample_recipe.py
     
     """
-    
-    logging.info('Reading configuration file...')
-    testvalue,oifoutput,colourinput,pointingdatabase,SSPDetectionEfficiency, \
-    minTracklet,noTracklets,trackletInterval \
-    =PPReadConfigFile.PPReadConfigFile()
-    
 
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-c", help="Input configuration filename", type=str, default='./PPConfig.ini')
+
+    args = parser.parse_args()
+    
+    configfile=args.c
+
+  
+    logging.info('Reading configuration file...')
+    
+    config = configparser.ConfigParser()
+    config.read(configfile)
+    
+    testvalue=int(config["GENERAL"]['testvalue'])
+    orbinfile=get_or_exit(config, 'INPUTFILES', 'orbinfile', 'ERROR: no orbit file (DES) provided.')    
+    oifoutput=get_or_exit(config, 'INPUTFILES', 'oifoutput', 'ERROR: no ObjectInField output file provided.')
+    colourinput=get_or_exit(config, 'INPUTFILES', 'colourinput', 'ERROR: no colour input file provided.')
+    pointingdatabase=get_or_exit(config, 'INPUTFILES', 'pointingdatabase', 'ERROR: no pointing database provided.')
+    SSPDetectionEfficiency=float(config["FILTERINGPARAMETERS"]['SSPDetectionEfficiency'])
+    minTracklet=int(config["FILTERINGPARAMETERS"]['minTracklet'])
+    if minTracklet < 1:
+        logging.error('ERROR: minimum length of tracklet is zero or negative.')
+        sys.exit()
+    noTracklets=int(config["FILTERINGPARAMETERS"]['noTracklets'])
+    if noTracklets < 1:
+        logging.error('ERROR: number of tracklets is zero or negative.')
+        sys.exit()
+    trackletInterval=float(config["FILTERINGPARAMETERS"]['trackletInterval'])
+    if trackletInterval <= 0.0:
+        logging.error('ERROR: tracklet interval is negative.')
+        sys.exit()        
+
+    #testvalue,oifoutput,colourinput,pointingdatabase,SSPDetectionEfficiency, \
+    #minTracklet,noTracklets,trackletInterval \
+    #=PPReadConfigFile.PPReadConfigFile()
+    
+    logging.info('Reading input orbit file: ', orbinfile)
+    padaor=PPReadOrbitFile.PPReadOrbitFile(orbinfile)
     
     logging.info('Reading input pointing history: ', oifoutput)
     padafr=readOif.readOif(oifoutput)
     
     logging.info('Reading input colours: ', colourinput)
     padacl=PPreadColours.PPreadColours(colourinput)
+    
+    logging.info('Checking if orbit and colour input files match...')
+    PPCheckOrbitAndColoursMatching.PPCheckOrbitAndColoursMatching(padaor,padacl)
     
     logging.info('Joining colour data with pointing data...')
     resdf=PPJoinColourPointing.PPJoinColourPointing(padafr,padacl)
