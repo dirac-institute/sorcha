@@ -68,59 +68,17 @@ def calcDetectionProbability(mag, limmag, w):
 
 #-----------------------------------------------------------------------------------------------
 
-def PPDetectionProbability(ephemsdf, obsdf,
-                        magNameEph='Filtermag', obsIDNameEph='FieldID',
-                        dRaNameEph='AstRARate(deg/day)', dDecNameEph='AstDecRate(deg/day)',
-                        limMagName='fiveSigmaDepth', obsIDName='observationId', 
-                        seeingName='seeingFwhmEff',
-                        w=0.1):
+def PPDetectionProbability(oif_df, limiting_magnitude_df, magnitude_name="ColinFil", limiting_magnitude_name="limiting magnitude",
+                           field_id_name="FieldID", trailing_loss_name="trailing loss", w=0.1):
 
-        """Removes pointings from observation table based on a probabilistic 
-        fading function, and adjusts magnitudes to reflect fading and trailing
-        losses.
-
-        Parameters
-        ----------
-        ephemsdf        ... Pandas dataFrame containing output of JPL ephemeris simulator
-        obsdf           ... Pandas dataFrame containing survey simulator output such as LSST opsim
-        *Name           ... relevant column names in obsdf
-        *NameEph        ... relevant column names in ephemsdf
-        fillFactor      ... fraction of FOV covered by the detector
-        w               ... fading function width
-        
-        Returns
-        -------
-        ephemsOut       ... Pandas dataFrame containing rejected observations
+        """
+        Adds column with probability of an observation being observable
         """
 
-        ephemsdf.sort_values(by=[obsIDNameEph], inplace=True)
-        ephemsdf.reset_index(drop=True, inplace=True)
-        fieldIDs = set(ephemsdf[obsIDNameEph])
-        fields   = obsdf.loc[obsdf[obsIDName].isin(fieldIDs)]
+        out_df = oif_df.join(limiting_magnitude_df.set_index(field_id_name), on=field_id_name)
+        out_df["detection probability"] = calcDetectionProbability(out_df[magnitude_name] + out_df[trailing_loss_name],
+                                                                  out_df[limiting_magnitude_name], 
+                                                                  w)
+        out_df.drop(columns=[limiting_magnitude_name], inplace=True)
 
-        limMag = []
-        seeing = []
-        count = Counter(ephemsdf[obsIDNameEph])
-        for _, row in fields.iterrows():
-                n = count[row[obsIDName]]
-                limMag += n * [row[limMagName]]
-                seeing += n * [row[seeingName]]
-        
-        limMag = np.array(limMag)
-        seeing = np.array(seeing)
-
-        #apply trailing losses
-        obsMag = ephemsdf[magNameEph] + PPTrailingLoss.calcTrailingLoss(ephemsdf[dRaNameEph]/86400, ephemsdf[dDecNameEph]/86400, seeing)
-
-        #calculate probability of detection
-        probability = calcDetectionProbability(obsMag, limMag, w)
-
-        #remove observations below limiting magnitude
-        randomNum = np.random.random(len(ephemsdf))
-        ephemsOut = ephemsdf[probability < randomNum]
-        
-        ephemsdf.drop(ephemsdf.index[probability < randomNum], inplace=True)
-        
-        return ephemsOut
-
-#------------------------------------------------------------------------------
+        return out_df

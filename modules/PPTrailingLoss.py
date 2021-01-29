@@ -24,7 +24,7 @@ Calculate Astrometric and Photometric Uncertainties for ground based observation
 # Numpy 
 import numpy as np
 
-__all__ = ['calcTrailingLoss']
+__all__ = ['PPTrailingLoss']
 
 
 ############################################
@@ -38,7 +38,7 @@ class Error(Exception):
 
 #-----------------------------------------------------------------------------------------------
 
-def PPTrailingLoss(self, dRa, dDec, seeing, texp=30.0, a_trail=0.761, b_trail=1.162, a_det=0.420, b_det=0.003):
+def calcTrailingLoss(dRa, dDec, seeing, texp=30.0, a_trail=0.761, b_trail=1.162, a_det=0.420, b_det=0.003):
         """
          Find the trailing loss from trailing and detection (Veres & Chesley 2017)
 
@@ -79,3 +79,16 @@ def PPTrailingLoss(self, dRa, dDec, seeing, texp=30.0, a_trail=0.761, b_trail=1.
         dmag = dmagDetect + dmagTrail
 
         return dmag
+
+#-----------------------------------------------------------------------------------------------
+
+def PPTrailingLoss(oif_df, seeing_df, dra_name='AstRARate(deg/day)',
+                   ddec_name='AstDecRate(deg/day)', seeing_name="seeing", field_id_name="FieldID"):
+
+    out_df = oif_df.join(seeing_df.set_index(field_id_name), on=field_id_name)
+    out_df["trailing loss"] = calcTrailingLoss(out_df[dra_name], out_df[ddec_name], out_df[seeing_name])
+    out_df.drop(columns=[seeing_name], inplace=True)
+
+    return out_df
+
+#-----------------------------------------------------------------------------------------------
