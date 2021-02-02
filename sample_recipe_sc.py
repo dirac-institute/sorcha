@@ -106,8 +106,7 @@ def runPostProcessing():
 
     logging.info('Dropping observations below detection threshold...')
     observations=PPDropObservations.PPDropObservations(observations)
-    #current test observations are all too faint to be detected, so output ends up being a blank file
-
+    
     logging.info('Output to CSV file...')
     #pada7=PPFilterSSPCriterionEfficiency.PPFilterSSPCriterionEfficiency(pada6,1,1,15.0)
     pada8=PPOutWriteCSV.PPOutWriteCSV(observations,'out.csv')
