@@ -4,12 +4,14 @@ import os,sys
 import pandas as pd
 import logging
 #from filtering import PPFilterDetectionEfficiencyThreshold
+from modules import PPDropObservations
 from modules import PPFilterDetectionEfficiencyThreshold, PPreadColoursUser, PPreadColours
 from modules import PPhookBrightnessWithColour, PPJoinColourPointing, PPMatchPointing 
 from modules import PPMatchPointingsAndColours, PPFilterSSPCriterionEfficiency
 from modules import PPOutWriteCSV
 from modules import readOif, PPConfig, PPReadConfigFile
 from modules import PPDetectionProbability, PPSimpleSensorArea, PPTrailingLoss, PPMatchFieldConditions
+
 
 
 
@@ -77,6 +79,7 @@ def runPostProcessing():
     #pada1=PPFilterDetectionEfficiencyThreshold.PPFilterDetectionEfficiencyThreshold(padafr,SSPDetectionEfficiency)  
      
     logging.info('Applying simple sensor area losses...')  
+    observations=PPSimpleSensorArea.PPSimpleSensorArea(observations)
 
     logging.info('Hooking colour and brightness information...')
     observations = PPhookBrightnessWithColour.PPhookBrightnessWithColour(observations, 'V', 'V-u', 'u')
@@ -99,10 +102,11 @@ def runPostProcessing():
     observations=PPTrailingLoss.PPTrailingLoss(observations, seeing)
 
     logging.info('Calculating probabilities of detections...')
-    observations=PPDetectionProbability(observations,limiting_magnitude)
+    observations=PPDetectionProbability.PPDetectionProbability(observations,limiting_magnitude)
 
     logging.info('Dropping observations below detection threshold...')
-
+    #observations=PPDropObservations.PPDropObservations(observations)
+    #current test observations are all too faint to be detected, so output ends up being a blank file
 
     logging.info('Output to CSV file...')
     #pada7=PPFilterSSPCriterionEfficiency.PPFilterSSPCriterionEfficiency(pada6,1,1,15.0)
