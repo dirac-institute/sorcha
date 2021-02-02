@@ -45,9 +45,9 @@ def calcTrailingLoss(dRa, dDec, seeing, texp=30.0, a_trail=0.761, b_trail=1.162,
         Parameters
         ----------
             dRa: float
-                rate of change of RA on the sky, deg/sec
+                rate of change of RA on the sky, deg/day
             dDec: float
-                rate of change of Dec on the sky, deg/sec
+                rate of change of Dec on the sky, deg/day
             seeing: float
                 Fwhm of the seeing disk, arcseconds
             texp: float
@@ -65,7 +65,7 @@ def calcTrailingLoss(dRa, dDec, seeing, texp=30.0, a_trail=0.761, b_trail=1.162,
         """
 
         vel = np.sqrt(dRa ** 2 + dDec ** 2)
-        vel = vel * 3600 # convert to arcsec / sec
+        vel = vel / 24  # convert to arcsec / sec
 
         a_trail = 0.761
         b_trail = 1.162

@@ -21,6 +21,7 @@ def PPDropObservations(observations, probability="detection probability"):
     num_obs = len(observations.index)
 
     uniform_distr = np.random.random(num_obs)
-    out = observations.drop(observations.loc[observations[probability] - uniform_distr < 0], axis=1)
+    drop = observations.loc[observations[probability] - uniform_distr < 0].index
+    out = observations.drop(drop)
 
     return out
