@@ -9,7 +9,7 @@
 oifoutput='./data/test/oiftestoutput'
 
 # colour input file
-colourinput='./data/test/testcolour'
+colourinput='./data/test/testcolour_sdss'
 
 # pointing database
 pointingdatabase='./data/baseline_10yrs_10klines.db' #'baseline_v1.3_10yrs.db'
