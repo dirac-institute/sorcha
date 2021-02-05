@@ -2,16 +2,17 @@ import pytest
 import numpy as np
 import pandas as pd 
 
-from ..PPTrailingLoss import calcTrailingLoss
+from ..PPMatchFieldConditions import PPMatchFieldConditions
+from ..PPTrailingLoss import PPTrailingLoss
 
-def test_calcTrailingLoss():
+def test_PPTrailingLoss():
     #Test calcTrailingLoss function
 
-    dRa = 5.0
-    dDec = 7.0
-    seeing = 1.0
-    nominal_result = 17.372787897241796
+    test_oif=pd.read_csv('./data/test/oiftestoutput', delim_whitespace=True)
+    seeing,_=PPMatchFieldConditions('./data/baseline_10yrs_10klines.db')
 
-    result = calcTrailingLoss(dRa, dDec, seeing)
+    test_out=PPTrailingLoss(test_oif, seeing)
+    print(test_out)
 
-    assert result == nominal_result
+    #assert test_out['trailing loss'][0]==
+    return

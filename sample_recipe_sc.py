@@ -79,7 +79,7 @@ def runPostProcessing():
     #pada1=PPFilterDetectionEfficiencyThreshold.PPFilterDetectionEfficiencyThreshold(padafr,SSPDetectionEfficiency)  
      
     logging.info('Applying simple sensor area losses...')  
-    observations=PPSimpleSensorArea.PPSimpleSensorArea(observations)
+    #observations=PPSimpleSensorArea.PPSimpleSensorArea(observations)
 
     logging.info('Hooking colour and brightness information...')
     observations = PPhookBrightnessWithColour.PPhookBrightnessWithColour(observations, 'V', 'V-u', 'u')
@@ -102,14 +102,14 @@ def runPostProcessing():
     observations=PPTrailingLoss.PPTrailingLoss(observations, seeing)
 
     logging.info('Calculating probabilities of detections...')
-    observations=PPDetectionProbability.PPDetectionProbability(observations,limiting_magnitude)
+    #observations=PPDetectionProbability.PPDetectionProbability(observations,limiting_magnitude)
 
     logging.info('Dropping observations below detection threshold...')
-    observations=PPDropObservations.PPDropObservations(observations)
+    #observations=PPDropObservations.PPDropObservations(observations)
     
     logging.info('Output to CSV file...')
     #pada7=PPFilterSSPCriterionEfficiency.PPFilterSSPCriterionEfficiency(pada6,1,1,15.0)
-    pada8=PPOutWriteCSV.PPOutWriteCSV(observations,'out.csv')
+    pada8=PPOutWriteCSV.PPOutWriteCSV(observations,'data/test/test_output_PPDetectionProbabilty')
     
     logging.info('Post processing completed.')
 

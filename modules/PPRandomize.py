@@ -56,8 +56,11 @@ def randomizeAstrometry(ephemsdf,
 
     """
 
-    ephemsdf[raName]  = np.random.normal(ephemsdf[raName],  ephemsdf[raSigName])
-    ephemsOut[decName] = np.random.normal(ephemsdf[decName], ephemsdf[decSigName])
+    ephemsOut=ephemsdf
+    ephemsOut["randAstRA(deg)"]  = np.random.normal(ephemsdf[raName],  ephemsdf[raSigName]) / (3600000)
+    ephemsOut["randAstDec(deg)"] = np.random.normal(ephemsdf[decName], ephemsdf[decSigName]) / (3600000)
+
+    return ephemsOut
 
 
 def randomizePhotometry(ephemsdf,
@@ -77,7 +80,8 @@ def randomizePhotometry(ephemsdf,
     ephemsOut  ... ephems Pandas dataFrame with photometric values modifed 
         
     """
-
+    ephemsOut=ephemsdf
     newPhot = np.random.normal(ephemsdf[photName], ephemsdf[photSigName])
 
-    ephemsdf[photName] = newPhot
+    ephemsOut["randFilterMag"] = newPhot
+    return ephemsOut

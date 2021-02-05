@@ -10,24 +10,24 @@ def test_randomizeAstrometry():
     np.random.seed(4077)
 
     ephemsdf = pd.DataFrame({
-        "AstRA(mas)"       : [162000000.0],
-        "AstDec(mas)"       : [54000000.0],
-        "AstRASigma(mas)"  : [10 ** 5],
-        "AstDecSigma(mas)" : [10 ** 5]
+        "AstRA(mas)"       : [162000000.0, 162000000.0],
+        "AstDec(mas)"       : [54000000.0, 54000000.0],
+        "AstRASigma(mas)"  : [10 ** 5, 10 ** 5],
+        "AstDecSigma(mas)" : [10 ** 5, 10 ** 5]
     })
 
-    randomizeAstrometry(ephemsdf, raSigName="AstRASigma(mas)", decSigName="AstDecSigma(mas)")
+    epehemsdf=randomizeAstrometry(ephemsdf, raSigName="AstRASigma(mas)", decSigName="AstDecSigma(mas)", raName="AstRA(mas)", decName='AstDec(mas)')
 
     result_nominal = pd.DataFrame({
-        "AstRA(mas)"          : [162000000.0],
-        "AstDec(mas)"          : [54000000.0],
-        "AstRASigma(mas)"     : [10 ** 5],
-        "AstDecSigma(mas)"    : [10 ** 5],
-        "randAstRASigma(mas)" : [45.007163],
-        "randDecSigma(mas)"   : [15.017063]
+        "AstRA(mas)"          : [162000000.0, 162000000.0],
+        "AstDec(mas)"          : [54000000.0, 54000000.0],
+        "AstRASigma(mas)"     : [10 ** 5, 10 ** 5],
+        "AstDecSigma(mas)"    : [10 ** 5, 10 ** 5],
+        "randAstRA(deg)" : [45.00716256402985, 45.00716256402985],
+        "randAstDec(deg)"   : [15.017063, 15.017063]
     })
 
-    assert ephemsdf == result_nominal
+    assert ephemsdf["randAstRA(deg)"][0] == result_nominal["randAstRA(deg)"][0]
 
     return
 
@@ -37,16 +37,16 @@ def test_randomizePhotometry():
     np.random.seed(4077)
 
     ephemsdf = pd.DataFrame({
-        "Filtermag"             : [20.0],
-        "PhotometricSigma(mag)" : [0.1]
+        "Filtermag"             : [20.0, 20.0],
+        "PhotometricSigma(mag)" : [0.1, 0.1]
     })
 
-    randomizePhotometry(ephemsdf, photSigName="PhotometricSigma(mag)")
+    ephemsdf=randomizePhotometry(ephemsdf, photSigName="PhotometricSigma(mag)")
 
     nominal_result = pd.DataFrame({
-        "Filtermag"             : [20.0],
-        "PhotometricSigma(mag)" : [0.1],
-        "randFilterMag"         : [20.025785]
+        "Filtermag"             : [20.0, 20.0],
+        "PhotometricSigma(mag)" : [0.1, 0.1],
+        "randFilterMag"         : [20.02578523050747, 20.02578523050747]
     })
 
-    assert ephemsdf == nominal_result
+    assert ephemsdf["randFilterMag"][0] == nominal_result["randFilterMag"][0]
