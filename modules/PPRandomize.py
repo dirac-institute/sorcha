@@ -39,9 +39,8 @@ class Error(Exception):
 ############################################
 
 def randomizeAstrometry(ephemsdf, 
-                        raName='AstRA(deg)', decName='AstDec(deg)',
-                        raSigName='AstRASigma(mas)', decSigName='AstDecSigma(mas)',
-                        newRAName=None, newDecName=None):
+                        raSigName, decSigName,
+                        raName='AstRA(deg)', decName='AstDec(deg)'):
 
     """Randomize astrometric values (in degrees) for simulated observations
 
@@ -57,21 +56,16 @@ def randomizeAstrometry(ephemsdf,
 
     """
 
-    if newRAName == None:
-        newRAName  = 'rand'+raName
-    if newDecName == None:
-        newDecName = 'rand'+decName 
-
-    ephemsOut = ephemsdf
-
-    ephemsOut[newRAName] = np.random.normal( ephemsdf[raName],  ephemsdf[raSigName] / 3600000)
-    ephemsOut[newDecName] = np.random.normal(ephemsdf[decName], ephemsdf[decSigName] / 3600000)
+    ephemsOut=ephemsdf
+    ephemsOut["randAstRA(deg)"]  = np.random.normal(ephemsdf[raName],  ephemsdf[raSigName]) / (3600000)
+    ephemsOut["randAstDec(deg)"] = np.random.normal(ephemsdf[decName], ephemsdf[decSigName]) / (3600000)
 
     return ephemsOut
 
+
 def randomizePhotometry(ephemsdf,
-                        photName='Filtermag',
-                        photSigName='PhotometricSigma(mag)', newPhotName='randFilterMag'):
+                        photSigName,
+                        photName='Filtermag'):
 
     """ Randomize photometric values for simulated observations
     
@@ -86,11 +80,8 @@ def randomizePhotometry(ephemsdf,
     ephemsOut  ... ephems Pandas dataFrame with photometric values modifed 
         
     """
-
+    ephemsOut=ephemsdf
     newPhot = np.random.normal(ephemsdf[photName], ephemsdf[photSigName])
 
-    ephemsOut = ephemsdf
-
-    ephemsOut[newPhotName] = newPhot
-
+    ephemsOut["randFilterMag"] = newPhot
     return ephemsOut

@@ -24,7 +24,7 @@ Calculate Astrometric and Photometric Uncertainties for ground based observation
 # Numpy 
 import numpy as np
 
-__all__ = ['calcTrailingLoss']
+__all__ = ['PPTrailingLoss']
 
 
 ############################################
@@ -38,22 +38,22 @@ class Error(Exception):
 
 #-----------------------------------------------------------------------------------------------
 
-def calcTrailingLoss(self, dRa, dDec, seeing, texp=30.0, a_trail=0.761, b_trail=1.162, a_det=0.420, b_det=0.003):
+def calcTrailingLoss(dRa, dDec, seeing, texp=30.0, a_trail=0.761, b_trail=1.162, a_det=0.420, b_det=0.003):
         """
          Find the trailing loss from trailing and detection (Veres & Chesley 2017)
 
         Parameters
         ----------
             dRa: float
-                rate of change of RA on the sky, deg/sec
+                rate of change of RA on the sky, deg/day
             dDec: float
-                rate of change of Dec on the sky, deg/sec
+                rate of change of Dec on the sky, deg/day
             seeing: float
                 Fwhm of the seeing disk, arcseconds
             texp: float
                 exposure length, defaults to 30 seconds
 	    *_trail: float 
-		trail fit dmag parameters
+        trail fit dmag parameters
             *_det: float 
 		detection dmag parameters
 
@@ -65,7 +65,7 @@ def calcTrailingLoss(self, dRa, dDec, seeing, texp=30.0, a_trail=0.761, b_trail=
         """
 
         vel = np.sqrt(dRa ** 2 + dDec ** 2)
-        vel = vel * 3600 # convert to arcsec / sec
+        vel = vel / 24  # convert to arcsec / sec
 
         a_trail = 0.761
         b_trail = 1.162
@@ -79,3 +79,16 @@ def calcTrailingLoss(self, dRa, dDec, seeing, texp=30.0, a_trail=0.761, b_trail=
         dmag = dmagDetect + dmagTrail
 
         return dmag
+
+#-----------------------------------------------------------------------------------------------
+
+def PPTrailingLoss(oif_df, seeing_df, dra_name='AstRARate(deg/day)',
+                   ddec_name='AstDecRate(deg/day)', seeing_name="seeing", field_id_name="FieldID"):
+
+    out_df = oif_df.join(seeing_df.set_index(field_id_name), on=field_id_name)
+    out_df["trailing loss"] = calcTrailingLoss(out_df[dra_name], out_df[ddec_name], out_df[seeing_name])
+    out_df.drop(columns=[seeing_name], inplace=True)
+
+    return out_df
+
+#-----------------------------------------------------------------------------------------------

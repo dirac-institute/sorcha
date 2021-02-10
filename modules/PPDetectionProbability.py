@@ -18,13 +18,19 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 """
-Calculate Astrometric and Photometric Uncertainties for ground based observations.
+Calculate probability of detection due to fading
 
 """
 # Numpy 
 import numpy as np
+# Pandas
+import pandas as pd
+#Counter
+from collections import Counter
 
-__all__ = ['calcDetectionProbability']
+from . import PPTrailingLoss
+
+__all__ = ['PPDetectionProbability']
 
 
 ############################################
@@ -36,19 +42,17 @@ class Error(Exception):
     pass
 
 #-----------------------------------------------------------------------------------------------
-def calcDetectionProbability(self, filtermag, limmag, fillfactor, w=0.1):
+def calcDetectionProbability(mag, limmag, w):
         """ Find the probability of a detection given a visual magnitude, 
         limiting magnitude, and fillfactor, 
         determined by the fading function from Veres & Chesley (2017).
 
         Parameters
         ----------
-        filtermag: float
+        mag: float
                 magnitude of object in filter used for that field
         limmag: float
                 limiting magnitude of the field
-        fillfactor: float
-                fraction of the field detectable due to ccd seperations
 	w: float
 	        distribution parameter
         
@@ -58,6 +62,23 @@ def calcDetectionProbability(self, filtermag, limmag, fillfactor, w=0.1):
             Probability of detection
         """
    
-        P = fillfactor / (1 + np.exp((filtermag - limmag) / w))
+        P = 1 / (1 + np.exp((mag - limmag) / w))
+
         return P
+
 #-----------------------------------------------------------------------------------------------
+
+def PPDetectionProbability(oif_df, limiting_magnitude_df, magnitude_name="ColinFil", limiting_magnitude_name="limiting magnitude",
+                           field_id_name="FieldID", trailing_loss_name="trailing loss", w=0.1):
+
+        """
+        Adds column with probability of an observation being observable
+        """
+
+        out_df = oif_df.join(limiting_magnitude_df.set_index(field_id_name), on=field_id_name)
+        out_df["detection probability"] = calcDetectionProbability(out_df[magnitude_name] + out_df[trailing_loss_name],
+                                                                  out_df[limiting_magnitude_name], 
+                                                                  w)
+        out_df.drop(columns=[limiting_magnitude_name], inplace=True)
+
+        return out_df
