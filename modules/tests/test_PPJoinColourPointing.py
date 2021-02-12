@@ -15,7 +15,7 @@ def test_PPJoinColourPointing():
     
     padare=PPJoinColourPointing(padafr,padacl)
     
-    ncol=28
+    ncol=27
     ncolre=len(padare.columns)
     
     assert ncol==ncolre
