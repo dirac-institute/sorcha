@@ -6,7 +6,7 @@ import sys
 
 # Author: Grigori Fedorets
 
-def PPCheckOrbitAndColoursMatching(orbin,colin):
+def PPCheckOrbitAndColoursMatching(orbin,colin,poiin):
 
 
    """
@@ -20,18 +20,25 @@ def PPCheckOrbitAndColoursMatching(orbin,colin):
 
    Mandatory input:   pandas dataframe: orbin -- orbits
                       pandas dataframe: colin -- colours
+                      pandas dataframe: poiin -- pointing database
    
 
    Output:            None; return if there is a match, throw error and quit if mismatch.
                       
 
 
-   Usage: PPCheckOrbitAndColoursMatching(orbin,colin)
+   Usage: PPCheckOrbitAndColoursMatching(orbin,colin,poiin)
 
    """
-
+   poi=pd.unique(poiin['ObjID'])
+   poiobjs=pd.Series(poi, dtype=object)
+   
    if orbin['!!OID'].equals(colin['ObjID']):
-        return
+        if orbin['!!OID'].equals(poiobjs):
+            return
+        else:
+            logging.error('ERROR: PPCheckOrbitAndColourMatching: input pointing and orbit files do not match.')
+            sys.exit('ERROR: PPCheckOrbitAndColourMatching: input pointing and orbit files do not match.')
    else:
       logging.error('ERROR: PPCheckOrbitAndColourMatching: input colour and orbit files do not match.')
       sys.exit('ERROR: PPCheckOrbitAndColourMatching: input colour and orbit files do not match.')

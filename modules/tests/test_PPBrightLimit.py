@@ -2,7 +2,6 @@
 
 import pytest
 import pandas as pd
-import os, sys
 
 from ..PPJoinColourPointing import PPJoinColourPointing
 from ..PPhookBrightnessWithColour import PPhookBrightnessWithColour
@@ -10,11 +9,11 @@ from ..readOif import readOif
 from ..PPreadColours import PPreadColours
 from ..PPMatchPointing import PPMatchPointing
 from ..PPMatchPointingsAndColours import PPMatchPointingsAndColours
-from ..PPOutWriteCSV import PPOutWriteCSV
+from ..PPBrightLimit import PPBrightLimit
 
 
 
-def test_PPOutWriteCSV():
+def test_PPBrightLimit():
 
     padafr=readOif('./data/test/oiftestoutput')
     padacl=PPreadColours('./data/test/testcolour')
@@ -29,18 +28,14 @@ def test_PPOutWriteCSV():
     pada5=PPMatchPointing('./data/baseline_10yrs_10klines.db')
     pada6=PPMatchPointingsAndColours(resdf3,pada5)
     
+    print(pada6)
     
-    pada7=PPOutWriteCSV(pada6,'./outtest.csv')
-    ncols=10
+    pada7=PPBrightLimit(pada6,18.2)
     
-    tpt=os.popen("wc -l ./outtest.csv | awk '{print $1}'")
-    cmp=tpt.read()
-    cmp.strip()
-    cmp1=int(cmp)
-    os.system("rm ./outtest.csv")
+    nros=7
+    nrosre=len(pada7.index)
     
-    #ncolsre=len(pada6.columns)
-    
-    assert ncols==cmp1
+    assert nros==nrosre
     return     
-         
+     
+     

@@ -10,8 +10,9 @@ from modules import PPFilterDetectionEfficiencyThreshold, PPreadColoursUser, PPr
 from modules import PPhookBrightnessWithColour, PPJoinColourPointing, PPMatchPointing 
 from modules import PPMatchPointingsAndColours, PPFilterSSPCriterionEfficiency
 from modules import PPOutWriteCSV, PPReadOrbitFile, PPCheckOrbitAndColoursMatching
-from modules import readOif, PPConfig, PPReadConfigFile
-
+from modules import readOif
+from modules import PPDetectionProbability, PPSimpleSensorArea, PPTrailingLoss, PPMatchFieldConditions
+from modules import PPDropObservations, PPBrightLimit
 
 
 #oifoutput=sys.argv[1]
@@ -21,6 +22,37 @@ from modules import readOif, PPConfig, PPReadConfigFile
 #logging.basicConfig(filename=PPConfig.logloc, encoding='utf-8', level=PPConfig.verbosity)
 
 # Read config file
+
+
+def get_logger(    
+        LOG_FORMAT     = '%(asctime)s %(name)-12s %(levelname)-8s %(message)s ',
+        LOG_NAME       = '',
+        LOG_FILE_INFO  = 'postprocessing.log',
+        LOG_FILE_ERROR = 'postprocessing.err'):
+
+
+    #LOG_FORMAT     = '',
+    log           = logging.getLogger(LOG_NAME)
+    log_formatter = logging.Formatter(LOG_FORMAT)
+
+    # comment this to suppress console output
+    #stream_handler = logging.StreamHandler()
+    #stream_handler.setFormatter(log_formatter)
+    #log.addHandler(stream_handler)
+
+    file_handler_info = logging.FileHandler(LOG_FILE_INFO, mode='w')
+    file_handler_info.setFormatter(log_formatter)
+    file_handler_info.setLevel(logging.INFO)
+    log.addHandler(file_handler_info)
+
+    file_handler_error = logging.FileHandler(LOG_FILE_ERROR, mode='w')
+    file_handler_error.setFormatter(log_formatter)
+    file_handler_error.setLevel(logging.ERROR)
+    log.addHandler(file_handler_error)
+
+    log.setLevel(logging.INFO)
+
+    return log
 
 
 def get_or_exit(config, section, key, message):
@@ -68,15 +100,15 @@ def runPostProcessing():
     
     """
 
-    parser = argparse.ArgumentParser()
-    parser.add_argument("-c", help="Input configuration filename", type=str, default='./PPConfig.ini')
-
+    
     args = parser.parse_args()
     
     configfile=args.c
 
-  
-    logging.info('Reading configuration file...')
+    pplogger = get_logger()
+    
+    
+    pplogger.info('Reading configuration file...')
     
     config = configparser.ConfigParser()
     config.read(configfile)
@@ -86,7 +118,23 @@ def runPostProcessing():
     oifoutput=get_or_exit(config, 'INPUTFILES', 'oifoutput', 'ERROR: no ObjectInField output file provided.')
     colourinput=get_or_exit(config, 'INPUTFILES', 'colourinput', 'ERROR: no colour input file provided.')
     pointingdatabase=get_or_exit(config, 'INPUTFILES', 'pointingdatabase', 'ERROR: no pointing database provided.')
+    
+    mainfilter=get_or_exit(config,'FILTERS', 'mainfilter', 'ERROR: main filter not defined.')
+    othercolours= [e.strip() for e in config.get('FILTERS', 'othercolours').split(',')]
+    resfilters=[e.strip() for e in config.get('FILTERS', 'resfilters').split(',')]
+    
+    if (len(othercolours) != len(resfilters)-1):
+         logging.error('ERROR: mismatch in input config colours and filters: len(othercolours) != len(resfilters) + 1')
+         sys.exit()
+    if mainfilter != resfilters[0]:
+         logging.error('ERROR: main filter should be the first among resfilters.')
+         sys.exit() 
+    
     SSPDetectionEfficiency=float(config["FILTERINGPARAMETERS"]['SSPDetectionEfficiency'])
+    fillfactor=float(config["FILTERINGPARAMETERS"]['fillfactor'])
+    brightLimit=float(config["FILTERINGPARAMETERS"]['brightLimit'])
+    
+    
     minTracklet=int(config["FILTERINGPARAMETERS"]['minTracklet'])
     if minTracklet < 1:
         logging.error('ERROR: minimum length of tracklet is zero or negative.')
@@ -104,43 +152,89 @@ def runPostProcessing():
     #minTracklet,noTracklets,trackletInterval \
     #=PPReadConfigFile.PPReadConfigFile()
     
-    logging.info('Reading input orbit file: ', orbinfile)
+    # Due to the restriction of ther logger object, the parsing is done in a weird way
+    # when taking arguments
+    str1='Reading input orbit file: ' + orbinfile
+    pplogger.info(str1)
     padaor=PPReadOrbitFile.PPReadOrbitFile(orbinfile)
     
-    logging.info('Reading input pointing history: ', oifoutput)
+    str2='Reading input pointing history: ' + oifoutput
+    pplogger.info(str2)
     padafr=readOif.readOif(oifoutput)
     
-    logging.info('Reading input colours: ', colourinput)
+    str3='Reading input colours: ' + colourinput
+    pplogger.info(str3)
     padacl=PPreadColours.PPreadColours(colourinput)
     
-    logging.info('Checking if orbit and colour input files match...')
-    PPCheckOrbitAndColoursMatching.PPCheckOrbitAndColoursMatching(padaor,padacl)
+    pplogger.info('Checking if orbit, colour and pointing simulation input files match...')
+    PPCheckOrbitAndColoursMatching.PPCheckOrbitAndColoursMatching(padaor,padacl,padafr)
     
-    logging.info('Joining colour data with pointing data...')
+    pplogger.info('Joining colour data with pointing data...')
     resdf=PPJoinColourPointing.PPJoinColourPointing(padafr,padacl)
     
-    logging.info('Applying detection efficiency threshold...')
+    pplogger.info('Applying detection efficiency threshold...')
     pada1=PPFilterDetectionEfficiencyThreshold.PPFilterDetectionEfficiencyThreshold(padafr,SSPDetectionEfficiency)
     
+    print(pada1)
+    
+    logging.info('Applying simple sensor area losses...')  
+    pada1=PPSimpleSensorArea.PPSimpleSensorArea(pada1, fillfactor)
+    
+    print(pada1)
     
     
-    logging.info('Hooking colour and brightness information...')
-    resdf1=PPhookBrightnessWithColour.PPhookBrightnessWithColour(resdf, 'V', 'i-r', 'i')
-    resdf3=PPhookBrightnessWithColour.PPhookBrightnessWithColour(resdf1, 'V', 'g-X', 'g')
+    pplogger.info('Hooking colour and brightness information...')
+    i=0
+    while (i<len(othercolours)):
+         resdf1=PPhookBrightnessWithColour.PPhookBrightnessWithColour(resdf, mainfilter, othercolours[i], resfilters[i+1])
+         i=i+1
+    #resdf1=PPhookBrightnessWithColour.PPhookBrightnessWithColour(resdf, 'V', 'i-r', 'i')
+    #resdf3=PPhookBrightnessWithColour.PPhookBrightnessWithColour(resdf1, 'V', 'g-X', 'g')
+    
+    resdf3=resdf1
+    #print(resdf3)
     
     
-    logging.info('Matching observationID with appropriate optical filter...')
-    pada5=PPMatchPointing.PPMatchPointing(pointingdatabase)
+    pplogger.info('Matching observationID with appropriate optical filter...')
+    pada5=PPMatchPointing.PPMatchPointing(pointingdatabase,resfilters)
+    #print(pada5)
     
-    logging.info('Resolving the apparent brightness in a given optical filter corresponding to the pointing...')
+    pplogger.info('Resolving the apparent brightness in a given optical filter corresponding to the pointing...')
     pada6=PPMatchPointingsAndColours.PPMatchPointingsAndColours(resdf3,pada5)
     
+    pplogger.info('Dropping observations that are too bright...')
+    pada6=PPBrightLimit.PPBrightLimit(pada6,brightLimit)
+    
+    #-----------------------------------------------
+    
+    logging.info('Matching observationId with limiting magnitude and seeing...')
+    seeing, limiting_magnitude=PPMatchFieldConditions.PPMatchFieldConditions(pointingdatabase)
+    
+    print(pada6)
+    logging.info('Calculating trailing losses...')
+    observations=PPTrailingLoss.PPTrailingLoss(pada6, seeing)
+    print(observations)
+    
+    logging.info('Calculating probabilities of detections...')
+    observations=PPDetectionProbability.PPDetectionProbability(observations,limiting_magnitude)
+    print(observations)
 
-    logging.info('Output to CSV file...')
+    logging.info('Dropping observations below detection threshold...')
+    observations=PPDropObservations.PPDropObservations(observations)
+    print(observations)
+    
+    #----------------------------------------------
+    
+    pplogger.info('Output to CSV file...')
     pada7=PPFilterSSPCriterionEfficiency.PPFilterSSPCriterionEfficiency(pada6,1,1,15.0)
     pada8=PPOutWriteCSV.PPOutWriteCSV(pada6,'out.csv')
     
-    logging.info('Post processing completed.')
+    pplogger.info('Post processing completed.')
 
 if __name__=='__main__':
+
+     parser = argparse.ArgumentParser()
+     parser.add_argument("-c", help="Input configuration filename", type=str, default='./PPConfig.ini')
+
+
      runPostProcessing()

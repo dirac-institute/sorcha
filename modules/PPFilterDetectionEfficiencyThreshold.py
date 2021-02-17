@@ -4,6 +4,8 @@ import pandas as pd
 import random
 import sys
 
+# Author: Grigori Fedorets
+
 def PPFilterDetectionEfficiencyThreshold(padain, threshold):
     """
     Task: PPFilterDetectionEfficiencyThreshold
@@ -16,10 +18,11 @@ def PPFilterDetectionEfficiencyThreshold(padain, threshold):
     
     Output: pandas dataframe (modified)
     
-    Author: Grigori Fedorets
+    
     """
     if (threshold > 1.0 or threshold < 0.0):
-         sys.exit('ERROR: PP')
+         logging.error('ERROR: PPFilterDetectionEfficiencyThreshold: threshold out of bounds.')
+         sys.exit('ERROR: PPFilterDetectionEfficiencyThreshold: threshold out of bounds.')
     
     nrows=len(padain.index)
     i=0
