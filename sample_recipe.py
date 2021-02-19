@@ -9,7 +9,7 @@ import configparser
 from modules import PPFilterDetectionEfficiencyThreshold, PPreadColoursUser, PPreadColours
 from modules import PPhookBrightnessWithColour, PPJoinColourPointing, PPMatchPointing 
 from modules import PPMatchPointingsAndColours, PPFilterSSPCriterionEfficiency
-from modules import PPOutWriteCSV, PPReadOrbitFile, PPCheckOrbitAndColoursMatching
+from modules import PPOutWriteCSV, PPOutWriteSqlite3, PPReadOrbitFile, PPCheckOrbitAndColoursMatching
 from modules import readOif
 from modules import PPDetectionProbability, PPSimpleSensorArea, PPTrailingLoss, PPMatchFieldConditions
 from modules import PPDropObservations, PPBrightLimit
@@ -86,11 +86,11 @@ def runPostProcessing():
     7. matching observationID with a given optical filter
     8. Resolving the apparent brightness in a given optical filter corresponding to the pointing
     [here should be detection efficency function
-    9. outputs to a csv fileq]
+    9. outputs to a csv file
     
     
     Mandatory input:      orbit file and colour file (designated in the config file)
-                          The parameters are defined in the config file (./modules/PPConfig.py) 
+                          The parameters are defined in the config file (./PPConfig.ini) 
     
     Output:               csv datafile
     
@@ -133,6 +133,7 @@ def runPostProcessing():
     SSPDetectionEfficiency=float(config["FILTERINGPARAMETERS"]['SSPDetectionEfficiency'])
     fillfactor=float(config["FILTERINGPARAMETERS"]['fillfactor'])
     brightLimit=float(config["FILTERINGPARAMETERS"]['brightLimit'])
+    inSepThreshold=float(config["FILTERINGPARAMETERS"]['inSepThreshold'])
     
     
     minTracklet=int(config["FILTERINGPARAMETERS"]['minTracklet'])
@@ -147,6 +148,14 @@ def runPostProcessing():
     if trackletInterval <= 0.0:
         logging.error('ERROR: tracklet interval is negative.')
         sys.exit()        
+
+    outpath=get_or_exit(config, 'OUTPUTFORMAT', 'outpath', 'ERROR: out path not specified.')   
+    outfilestem=get_or_exit(config, 'OUTPUTFORMAT', 'outfilestem', 'ERROR: name of output file stem not specified.')    
+    outputformat=get_or_exit(config, 'OUTPUTFORMAT', 'outputformat', 'ERROR: output format not specified.')   
+    if (outputformat != 'csv') and (outputformat != 'sqlite3'):
+         sys.exit('ERROR: output format should be either csv or sqlite3.')
+
+
 
     #testvalue,oifoutput,colourinput,pointingdatabase,SSPDetectionEfficiency, \
     #minTracklet,noTracklets,trackletInterval \
@@ -175,12 +184,12 @@ def runPostProcessing():
     pplogger.info('Applying detection efficiency threshold...')
     pada1=PPFilterDetectionEfficiencyThreshold.PPFilterDetectionEfficiencyThreshold(padafr,SSPDetectionEfficiency)
     
-    print(pada1)
+    #print(pada1)
     
     logging.info('Applying simple sensor area losses...')  
     pada1=PPSimpleSensorArea.PPSimpleSensorArea(pada1, fillfactor)
     
-    print(pada1)
+    #print(pada1)
     
     
     pplogger.info('Hooking colour and brightness information...')
@@ -200,34 +209,51 @@ def runPostProcessing():
     #print(pada5)
     
     pplogger.info('Resolving the apparent brightness in a given optical filter corresponding to the pointing...')
-    pada6=PPMatchPointingsAndColours.PPMatchPointingsAndColours(resdf3,pada5)
+    pada5=PPMatchPointingsAndColours.PPMatchPointingsAndColours(resdf3,pada5)
     
+    #print(pada6)
     pplogger.info('Dropping observations that are too bright...')
-    pada6=PPBrightLimit.PPBrightLimit(pada6,brightLimit)
+    pada6=PPBrightLimit.PPBrightLimit(pada5,brightLimit)
+    #print(pada6)
     
     #-----------------------------------------------
     
     logging.info('Matching observationId with limiting magnitude and seeing...')
     seeing, limiting_magnitude=PPMatchFieldConditions.PPMatchFieldConditions(pointingdatabase)
     
-    print(pada6)
+    #print(pada6)
     logging.info('Calculating trailing losses...')
     observations=PPTrailingLoss.PPTrailingLoss(pada6, seeing)
-    print(observations)
+    #print(observations)
     
     logging.info('Calculating probabilities of detections...')
     observations=PPDetectionProbability.PPDetectionProbability(observations,limiting_magnitude)
-    print(observations)
+    #print(observations)
 
     logging.info('Dropping observations below detection threshold...')
     observations=PPDropObservations.PPDropObservations(observations)
-    print(observations)
+    #print(observations)
     
     #----------------------------------------------
     
-    pplogger.info('Output to CSV file...')
-    pada7=PPFilterSSPCriterionEfficiency.PPFilterSSPCriterionEfficiency(pada6,1,1,15.0)
-    pada8=PPOutWriteCSV.PPOutWriteCSV(pada6,'out.csv')
+    pplogger.info('Applying SSP criterion efficiency...')
+    pada7=PPFilterSSPCriterionEfficiency.PPFilterSSPCriterionEfficiency(pada5,1,1,15.0,inSepThreshold)
+
+    
+    pplogger.info('Constructing output path...')
+    if (outputformat == 'csv'):
+        outputsuffix='.csv'
+        out=outpath + outfilestem + outputsuffix
+        pplogger.info('Output to CSV file...')
+        pada8=PPOutWriteCSV.PPOutWriteCSV(pada6,out)
+    elif (outputformat == 'sqlite3'):
+        outputsuffix='.db'
+        out=outpath + outfilestem + outputsuffix
+        pplogger.info('Output to sqlite3 database...')
+        pada8=PPOutWriteSqlite3.PPOutWriteSqlite3(pada6,out)       
+    else:
+        pplogger.error('ERROR: unknown output format.')
+        sys.exit('ERROR: unknown output format.')
     
     pplogger.info('Post processing completed.')
 
