@@ -2,13 +2,12 @@
 
 import pandas as pd
 
-
+#     Author: Grigori Fedorets
 
 def PPOutWriteCSV(padain, outf):
     """
     PPOutWriteCSV.py
 
-    Author: Grigori Fedorets
 
     Description: This task reads in the pandas database, and writes out a CSV file by a name given by the user. 
 
