@@ -38,22 +38,26 @@ class Error(Exception):
 
 #-----------------------------------------------------------------------------------------------
 
-def calcTrailingLoss(dRa, dDec, seeing, texp=30.0, a_trail=0.761, b_trail=1.162, a_det=0.420, b_det=0.003):
+def calcTrailingLoss(dRaCosDec, dDec, seeing, texp=30.0, a_trail=0.761, b_trail=1.162, a_det=0.420, b_det=0.003):
         """
          Find the trailing loss from trailing and detection (Veres & Chesley 2017)
 
         Parameters
         ----------
             dRa: float
-                rate of change of RA on the sky, deg/day
+                on sky velocity component in RA*Cos(Dec), deg/day
+            
             dDec: float
-                rate of change of Dec on the sky, deg/day
+                on sky velocity component in Dec, deg/day
+            
             seeing: float
                 Fwhm of the seeing disk, arcseconds
+            
             texp: float
                 exposure length, defaults to 30 seconds
 	    *_trail: float 
-        trail fit dmag parameters
+       
+            trail fit dmag parameters
             *_det: float 
 		detection dmag parameters
 
@@ -64,17 +68,18 @@ def calcTrailingLoss(dRa, dDec, seeing, texp=30.0, a_trail=0.761, b_trail=1.162,
         
         """
 
-        vel = np.sqrt(dRa ** 2 + dDec ** 2)
-        vel = vel / 24  # convert to arcsec / sec
+        vel = np.sqrt(dRaCosDec ** 2 + dDec ** 2)
+        vel = vel / 24.  # convert to arcsec / sec
 
-        a_trail = 0.761
-        b_trail = 1.162
-        a_det = 0.420
-        b_det = 0.003
+        # stanadard parameters from (Veres & Chesley 2017)
+        # a_trail = 0.761
+        # b_trail = 1.162
+        # a_det = 0.420
+        # b_det = 0.003
 
         x = vel * texp / seeing 
-        dmagTrail = 1.25 * np.log10(1 + a_trail * x ** 2 / (1 + b_trail * x))
-        dmagDetect = 1.25 * np.log10(1 + a_det * x ** 2 / (1 + b_det * x))
+        dmagTrail = 1.25 * np.log10(1. + a_trail * x ** 2 / (1. + b_trail * x))
+        dmagDetect = 1.25 * np.log10(1. + a_det * x ** 2 / (1. + b_det * x))
 
         dmag = dmagDetect + dmagTrail
 
