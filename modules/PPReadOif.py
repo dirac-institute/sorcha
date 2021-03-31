@@ -4,9 +4,9 @@ import pandas as pd
 
 #Author: Grigori Fedorets
 
-def readOif(oif_output):
+def PPReadOif(oif_output):
    """
-   readOif.py
+   PPReadOif.py
 
 
 
@@ -26,11 +26,12 @@ def readOif(oif_output):
    Output:               pandas dataframe
 
 
-   usage: padafr=readOif(oif_output)
+   usage: padafr=PPReadOif(oif_output)
    """
 
 
    padafr=pd.read_csv(oif_output, sep='\s+')
+   padafr=padafr.rename(columns=lambda x: x.strip())
     
    return padafr
 

@@ -6,14 +6,14 @@ import logging
 import argparse
 import configparser
 #from filtering import PPFilterDetectionEfficiencyThreshold
-from modules import PPFilterDetectionEfficiencyThreshold, PPreadColoursUser, PPreadColours
+from modules import PPFilterDetectionEfficiencyThreshold, PPreadColoursUser, PPReadColours
 from modules import PPhookBrightnessWithColour, PPJoinColourPointing, PPMatchPointing 
 from modules import PPMatchPointingsAndColours, PPFilterSSPCriterionEfficiency
 from modules import PPOutWriteCSV, PPOutWriteSqlite3, PPReadOrbitFile, PPCheckOrbitAndColoursMatching
-from modules import readOif
+from modules import PPReadOif
 from modules import PPDetectionProbability, PPSimpleSensorArea, PPTrailingLoss, PPMatchFieldConditions
 from modules import PPDropObservations, PPBrightLimit
-
+from modules import PPMakeIntermediatePointingDatabase, PPReadIntermDatabase
 
 #oifoutput=sys.argv[1]
 
@@ -104,6 +104,8 @@ def runPostProcessing():
     args = parser.parse_args()
     
     configfile=args.c
+    makeIntermediatePointingDatabase=bool(args.d)
+
 
     pplogger = get_logger()
     
@@ -139,121 +141,195 @@ def runPostProcessing():
     minTracklet=int(config["FILTERINGPARAMETERS"]['minTracklet'])
     if minTracklet < 1:
         logging.error('ERROR: minimum length of tracklet is zero or negative.')
-        sys.exit()
+        sys.exit('ERROR: minimum length of tracklet is zero or negative.')
     noTracklets=int(config["FILTERINGPARAMETERS"]['noTracklets'])
     if noTracklets < 1:
         logging.error('ERROR: number of tracklets is zero or negative.')
-        sys.exit()
+        sys.exit('ERROR: number of tracklets is zero or negative')
     trackletInterval=float(config["FILTERINGPARAMETERS"]['trackletInterval'])
     if trackletInterval <= 0.0:
         logging.error('ERROR: tracklet interval is negative.')
-        sys.exit()        
+        sys.exit('ERROR: tracklet interval is negative.')        
 
     outpath=get_or_exit(config, 'OUTPUTFORMAT', 'outpath', 'ERROR: out path not specified.')   
     outfilestem=get_or_exit(config, 'OUTPUTFORMAT', 'outfilestem', 'ERROR: name of output file stem not specified.')    
     outputformat=get_or_exit(config, 'OUTPUTFORMAT', 'outputformat', 'ERROR: output format not specified.')   
     if (outputformat != 'csv') and (outputformat != 'sqlite3'):
          sys.exit('ERROR: output format should be either csv or sqlite3.')
+    separatelyCSV=bool(config["OUTPUTFORMAT"]['separatelyCSV'])
+    sizeSerialChunk = int(config["GENERAL"]['sizeSerialChunk'])
 
+    
+    if (makeIntermediatePointingDatabase == True):
+         PPMakeIntermediatePointingDatabase.PPMakeIntermediatePointingDatabase(oifoutput,'./data/interm.db', 100)
 
 
     #testvalue,oifoutput,colourinput,pointingdatabase,SSPDetectionEfficiency, \
     #minTracklet,noTracklets,trackletInterval \
     #=PPReadConfigFile.PPReadConfigFile()
     
-    # Due to the restriction of ther logger object, the parsing is done in a weird way
+    # Due to the restriction of the logger object, the parsing is done in a weird way
     # when taking arguments
-    str1='Reading input orbit file: ' + orbinfile
-    pplogger.info(str1)
-    padaor=PPReadOrbitFile.PPReadOrbitFile(orbinfile)
-    
-    str2='Reading input pointing history: ' + oifoutput
-    pplogger.info(str2)
-    padafr=readOif.readOif(oifoutput)
-    
-    str3='Reading input colours: ' + colourinput
-    pplogger.info(str3)
-    padacl=PPreadColours.PPreadColours(colourinput)
-    
-    pplogger.info('Checking if orbit, colour and pointing simulation input files match...')
-    PPCheckOrbitAndColoursMatching.PPCheckOrbitAndColoursMatching(padaor,padacl,padafr)
-    
-    pplogger.info('Joining colour data with pointing data...')
-    resdf=PPJoinColourPointing.PPJoinColourPointing(padafr,padacl)
-    
-    pplogger.info('Applying detection efficiency threshold...')
-    pada1=PPFilterDetectionEfficiencyThreshold.PPFilterDetectionEfficiencyThreshold(padafr,SSPDetectionEfficiency)
-    
-    #print(pada1)
-    
-    logging.info('Applying simple sensor area losses...')  
-    pada1=PPSimpleSensorArea.PPSimpleSensorArea(pada1, fillfactor)
-    
-    #print(pada1)
-    
-    
-    pplogger.info('Hooking colour and brightness information...')
-    i=0
-    while (i<len(othercolours)):
-         resdf1=PPhookBrightnessWithColour.PPhookBrightnessWithColour(resdf, mainfilter, othercolours[i], resfilters[i+1])
-         i=i+1
-    #resdf1=PPhookBrightnessWithColour.PPhookBrightnessWithColour(resdf, 'V', 'i-r', 'i')
-    #resdf3=PPhookBrightnessWithColour.PPhookBrightnessWithColour(resdf1, 'V', 'g-X', 'g')
-    
-    resdf3=resdf1
-    #print(resdf3)
     
     
     pplogger.info('Matching observationID with appropriate optical filter...')
-    pada5=PPMatchPointing.PPMatchPointing(pointingdatabase,resfilters)
+    filterpointing=PPMatchPointing.PPMatchPointing(pointingdatabase,resfilters)
     #print(pada5)
     
-    pplogger.info('Resolving the apparent brightness in a given optical filter corresponding to the pointing...')
-    pada5=PPMatchPointingsAndColours.PPMatchPointingsAndColours(resdf3,pada5)
     
-    #print(pada6)
-    pplogger.info('Dropping observations that are too bright...')
-    pada6=PPBrightLimit.PPBrightLimit(pada5,brightLimit)
-    #print(pada6)
+    # Here, add loop which reads only a portion of input file to avoid memory overflow
+    startChunk=0
+    endChunk=0
+    # number of rows in an entire orbit file
     
-    #-----------------------------------------------
+    ii=-1
+    with open(orbinfile) as f:
+        for ii, l in enumerate(f):
+            pass
+    lenf=ii
     
-    logging.info('Matching observationId with limiting magnitude and seeing...')
-    seeing, limiting_magnitude=PPMatchFieldConditions.PPMatchFieldConditions(pointingdatabase)
-    
-    #print(pada6)
-    logging.info('Calculating trailing losses...')
-    observations=PPTrailingLoss.PPTrailingLoss(pada6, seeing)
-    #print(observations)
-    
-    logging.info('Calculating probabilities of detections...')
-    observations=PPDetectionProbability.PPDetectionProbability(observations,limiting_magnitude)
-    #print(observations)
+    while(endChunk <= lenf):
+        endChunk=startChunk + sizeSerialChunk 
+        if (lenf-startChunk > sizeSerialChunk):
+             incrStep=sizeSerialChunk
+        else:
+             incrStep=lenf-startChunk
+        #print(lenf,startChunk,endChunk,incrStep)
+        
+        str1='Reading input orbit file: ' + orbinfile
+        pplogger.info(str1)
+        padaor=PPReadOrbitFile.PPReadOrbitFile(orbinfile, startChunk, incrStep)
+        
+        str3='Reading input colours: ' + colourinput
+        pplogger.info(str3)
+        padacl=PPReadColours.PPReadColours(colourinput, startChunk, incrStep)
+        
+        
+        
+        objid_list = padacl['ObjID'].unique().tolist() 
 
-    logging.info('Dropping observations below detection threshold...')
-    observations=PPDropObservations.PPDropObservations(observations)
-    #print(observations)
+        
+        # write pointing history to d
+        # select obj_id rows from tables 
+        
+        if (makeIntermediatePointingDatabase == True):
+            # read from intermediate database
+            padafr=PPReadIntermDatabase.PPReadIntermDatabase('./data/interm.db', objid_list)
+        else:   
+            try: 
+                str2='Reading input pointing history: ' + oifoutput
+                pplogger.info(str2)
+                padafr=PPReadOif.PPReadOif(oifoutput)
+                
+                padafr=padafr[padafr['ObjID'].isin(objid_list)]
+
+            except MemoryError:
+                pplogger.error('ERROR: insufficient memory. Try to run with -d True or reduce sizeSerialChunk.')
+                sys.exit('ERROR: insufficient memory. Try to run with -d True or reduce sizeSerialChunk.')
+        
     
-    #----------------------------------------------
+        
+        pplogger.info('Checking if orbit, colour and pointing simulation input files match...')
+        PPCheckOrbitAndColoursMatching.PPCheckOrbitAndColoursMatching(padaor,padacl,padafr)
+        
+        pplogger.info('Joining colour data with pointing data...')
+        observations=PPJoinColourPointing.PPJoinColourPointing(padafr,padacl)
+        
+        
+        pplogger.info('Applying detection efficiency threshold...')
+        observations=PPFilterDetectionEfficiencyThreshold.PPFilterDetectionEfficiencyThreshold(observations,SSPDetectionEfficiency)
+        
+        
+        #print(pada1)
+        
+        pplogger.info('Applying simple sensor area losses...')  
+        observations=PPSimpleSensorArea.PPSimpleSensorArea(observations, fillfactor)
+        
+        
+        #print(pada1)
+        
+        
+        pplogger.info('Hooking colour and brightness information...')
+        i=0
+        while (i<len(othercolours)):
+             observations=PPhookBrightnessWithColour.PPhookBrightnessWithColour(observations, mainfilter, othercolours[i], resfilters[i+1])         
+             i=i+1
+        #resdf1=PPhookBrightnessWithColour.PPhookBrightnessWithColour(resdf, 'V', 'i-r', 'i')
+        #resdf3=PPhookBrightnessWithColour.PPhookBrightnessWithColour(resdf1, 'V', 'g-X', 'g')
+        
+        #resdf3=resdf1
+        #print(resdf3)
+        
     
-    pplogger.info('Applying SSP criterion efficiency...')
-    pada7=PPFilterSSPCriterionEfficiency.PPFilterSSPCriterionEfficiency(pada5,1,1,15.0,inSepThreshold)
+
+        
+        pplogger.info('Resolving the apparent brightness in a given optical filter corresponding to the pointing...')
+        observations=PPMatchPointingsAndColours.PPMatchPointingsAndColours(observations,filterpointing)
+        
+        
+        #print(pada6)
+
+        #print(pada6)
+        
+        #-----------------------------------------------
+        
+        logging.info('Matching observationId with limiting magnitude and seeing...')
+        seeing, limiting_magnitude=PPMatchFieldConditions.PPMatchFieldConditions(pointingdatabase)
+        
+        #print(pada6)
+        logging.info('Calculating trailing losses...')
+        observations=PPTrailingLoss.PPTrailingLoss(observations, seeing)
+        
+        pplogger.info('Dropping observations that are too bright...')
+        observations=PPBrightLimit.PPBrightLimit(observations,brightLimit)
+        
+        
+        
+        
+        logging.info('Calculating probabilities of detections...')
+        observations=PPDetectionProbability.PPDetectionProbability(observations,limiting_magnitude)
+    
+        logging.info('Dropping observations below detection threshold...')
+        observations=PPDropObservations.PPDropObservations(observations)
+    
+        
+        #----------------------------------------------
+        #print(pada6)
+        
+        pplogger.info('Applying SSP criterion efficiency...')
+
+        observations=PPFilterSSPCriterionEfficiency.PPFilterSSPCriterionEfficiency(observations,2,3,15.0,inSepThreshold)
 
     
-    pplogger.info('Constructing output path...')
-    if (outputformat == 'csv'):
-        outputsuffix='.csv'
-        out=outpath + outfilestem + outputsuffix
-        pplogger.info('Output to CSV file...')
-        pada8=PPOutWriteCSV.PPOutWriteCSV(pada6,out)
-    elif (outputformat == 'sqlite3'):
-        outputsuffix='.db'
-        out=outpath + outfilestem + outputsuffix
-        pplogger.info('Output to sqlite3 database...')
-        pada8=PPOutWriteSqlite3.PPOutWriteSqlite3(pada6,out)       
-    else:
-        pplogger.error('ERROR: unknown output format.')
-        sys.exit('ERROR: unknown output format.')
+        pplogger.info('Constructing output path...')
+        if (outputformat == 'csv'):
+            outputsuffix='.csv'
+            if (separatelyCSV == True):
+                objid_list = observations['ObjID'].unique().tolist() 
+                pplogger.info('Output to ' + str(len(objid_list)) + ' separate output CSV files...')
+                i=0
+                while(i<len(objid_list)):
+                         single_object_df=pd.DataFrame(observations[observations['ObjID'] == objid_list[i]])
+                         out=outpath + str(objid_list[i]) + '_' + outfilestem + outputsuffix
+                         obsi=PPOutWriteCSV.PPOutWriteCSV(single_object_df,out)
+                         i=i+1
+            else:
+                out=outpath + outfilestem + outputsuffix
+                pplogger.info('Output to CSV file...')
+                observations=PPOutWriteCSV.PPOutWriteCSV(observations,out)
+            
+        elif (outputformat == 'sqlite3'):
+            outputsuffix='.db'
+            out=outpath + outfilestem + outputsuffix
+            pplogger.info('Output to sqlite3 database...')
+            #pada8=PPOutWriteSqlite3.PPOutWriteSqlite3(pada6,out)   
+            observations=PPOutWriteSqlite3.PPOutWriteSqlite3(observations,out)               
+        else:
+            pplogger.error('ERROR: unknown output format.')
+            sys.exit('ERROR: unknown output format.')
+        
+        startChunk = startChunk + sizeSerialChunk
+        # end for
     
     pplogger.info('Post processing completed.')
 
@@ -261,6 +337,7 @@ if __name__=='__main__':
 
      parser = argparse.ArgumentParser()
      parser.add_argument("-c", help="Input configuration filename", type=str, default='./PPConfig.ini')
+     parser.add_argument("-d", help="Make intermediate pointing database", type=str, default=False)
 
 
      runPostProcessing()

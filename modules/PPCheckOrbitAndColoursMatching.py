@@ -33,6 +33,10 @@ def PPCheckOrbitAndColoursMatching(orbin,colin,poiin):
    poi=pd.unique(poiin['ObjID'])
    poiobjs=pd.Series(poi, dtype=object)
    
+   orbin = orbin.astype({'!!OID': object})
+   colin = colin.astype({'ObjID': object})
+   
+   
    if orbin['!!OID'].equals(colin['ObjID']):
         if orbin['!!OID'].equals(poiobjs):
             return

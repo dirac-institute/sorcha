@@ -20,6 +20,9 @@ def PPFilterDetectionEfficiencyThreshold(padain, threshold):
     
     
     """
+    
+    padain=padain.reset_index(drop=True)
+
     if (threshold > 1.0 or threshold < 0.0):
          logging.error('ERROR: PPFilterDetectionEfficiencyThreshold: threshold out of bounds.')
          sys.exit('ERROR: PPFilterDetectionEfficiencyThreshold: threshold out of bounds.')
@@ -29,11 +32,12 @@ def PPFilterDetectionEfficiencyThreshold(padain, threshold):
     while(i<nrows):
          randn=random.random()
          if (randn>threshold):
-             padain.drop(index=i, axis=0, inplace=True)
+             padain = padain[padain.index != i]
          i=i+1
     
     # After drooping some lines, the indices should be updated.
     padain=padain.reset_index(drop=True)    
+
     return padain
     
     

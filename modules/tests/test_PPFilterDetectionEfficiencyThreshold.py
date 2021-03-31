@@ -4,7 +4,7 @@ import pytest
 import pandas as pd
 #from filtering import PPFilterDetectionEfficiencyThreshold
 
-from ..readOif import readOif
+from ..PPReadOif import PPReadOif
 from ..PPFilterDetectionEfficiencyThreshold import PPFilterDetectionEfficiencyThreshold
 
 """
@@ -23,7 +23,7 @@ Author: Grigori Fedorets
 
 def test_filterDetectionEfficiencyThreshold():
 
-    padafr=readOif('./data/test/oiftestoutput')
+    padafr=PPReadOif('./data/test/oiftestoutput')
     nrows=len(padafr.index)
     pada1=PPFilterDetectionEfficiencyThreshold(padafr,1.00)
     nr1=len(pada1.index)

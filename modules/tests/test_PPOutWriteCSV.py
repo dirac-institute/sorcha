@@ -6,8 +6,8 @@ import os, sys
 
 from ..PPJoinColourPointing import PPJoinColourPointing
 from ..PPhookBrightnessWithColour import PPhookBrightnessWithColour
-from ..readOif import readOif
-from ..PPreadColours import PPreadColours
+from ..PPReadOif import PPReadOif
+from ..PPReadColours import PPReadColours
 from ..PPMatchPointing import PPMatchPointing
 from ..PPMatchPointingsAndColours import PPMatchPointingsAndColours
 from ..PPOutWriteCSV import PPOutWriteCSV
@@ -16,8 +16,8 @@ from ..PPOutWriteCSV import PPOutWriteCSV
 
 def test_PPOutWriteCSV():
 
-    padafr=readOif('./data/test/oiftestoutput')
-    padacl=PPreadColours('./data/test/testcolour')
+    padafr=PPReadOif('./data/test/oiftestoutput')
+    padacl=PPReadColours('./data/test/testcolour', 0, 5)
     
     resdf=PPJoinColourPointing(padafr,padacl)
     
