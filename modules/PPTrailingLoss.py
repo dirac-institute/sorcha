@@ -18,13 +18,13 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 """
-Calculate Astrometric and Photometric Uncertainties for ground based observations.
+Calculate Trailing Losses for moving objects.
 
 """
 # Numpy 
 import numpy as np
 
-__all__ = ['PPTrailingLoss']
+__all__ = ['PPTrailingLoss','calcTrailingLoss']
 
 
 ############################################
@@ -35,10 +35,9 @@ class Error(Exception):
     
     pass
 
-
 #-----------------------------------------------------------------------------------------------
 
-def calcTrailingLoss(dRaCosDec, dDec, seeing, texp=30.0, a_trail=0.761, b_trail=1.162, a_det=0.420, b_det=0.003):
+def calcTrailingLoss(dRaCosDec, dDec, seeing, texp=30.0, model='circularPSF', a_trail=0.761, b_trail=1.162, a_det=0.420, b_det=0.003):
         """
          Find the trailing loss from trailing and detection (Veres & Chesley 2017)
 
@@ -56,15 +55,22 @@ def calcTrailingLoss(dRaCosDec, dDec, seeing, texp=30.0, a_trail=0.761, b_trail=
             texp: float
                 exposure length, defaults to 30 seconds
 	    *_trail: float 
+
+            model: str
+                'circularPSF'   ... Trailing loss due to the DM detection algorithm. 
+                                    Limit SNR: 5 sigma in a PSF-convolved image with a circular PSF (no trail fitting). 
+                                    Peak fluxes will be lower due to motion of the object. 
+                'trailedSource' ... Unavoidable trailing loss due to spreading the PSF over more pixels lowering the SNR in each pixel.
+                                    See https://github.com/rhiannonlynne/318-proceedings/blob/master/Trailing%20Losses.ipynb for details. 
        
-            trail fit dmag parameters
-            *_det: float 
-		detection dmag parameters
+            trail fit dmag parameters (model: 'cicularPSF': a_det, b_det, model: 'trailedSource':a_trail,b_trail)
+            *_det, *_trail: float 
+		detection dmag parameters for trailing losses
 
         Returns
         -------
             dmag: float
-                loss in detection magnitude
+                loss in detection magnitude due to trailing
         
         """
 
@@ -78,10 +84,15 @@ def calcTrailingLoss(dRaCosDec, dDec, seeing, texp=30.0, a_trail=0.761, b_trail=
         # b_det = 0.003
 
         x = vel * texp / seeing 
-        dmagTrail = 1.25 * np.log10(1. + a_trail * x ** 2 / (1. + b_trail * x))
-        dmagDetect = 1.25 * np.log10(1. + a_det * x ** 2 / (1. + b_det * x))
 
-        dmag = dmagDetect + dmagTrail
+        if (model=='trailedSource'):
+            dmagTrail = 1.25 * np.log10(1. + a_trail * x ** 2 / (1. + b_trail * x))
+            dmag=dmagTrail
+        elif (model=='circularPSF'):
+            dmagDetect = 1.25 * np.log10(1. + a_det * x ** 2 / (1. + b_det * x))
+            dmag=dmagDetect
+        else:
+            raise Error("Error in calcTrailingLoss: model unknown")
 
         return dmag
 
