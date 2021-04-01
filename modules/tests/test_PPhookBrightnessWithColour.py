@@ -4,9 +4,9 @@ import pytest
 import pandas as pd
 #from filtering import PPFilterDetectionEfficiencyThreshold
 
-from ..readOif import readOif
+from ..PPReadOif import PPReadOif
 from ..PPhookBrightnessWithColour import PPhookBrightnessWithColour
-from ..PPreadColours import PPreadColours
+from ..PPReadColours import PPReadColours
 from ..PPJoinColourPointing import PPJoinColourPointing
 
 
@@ -29,8 +29,8 @@ Author: Grigori Fedorets
 
 def test_PPhookBrightnessWithColour():
 
-    padafr=readOif('./data/test/oiftestoutput')
-    padacl=PPreadColours('./data/test/testcolour')
+    padafr=PPReadOif('./data/test/oiftestoutput')
+    padacl=PPReadColours('./data/test/testcolour', 0, 5)
 
     resdf=PPJoinColourPointing(padafr,padacl)
     ncols=len(resdf.columns)    

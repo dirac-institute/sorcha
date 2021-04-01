@@ -3,14 +3,14 @@
 import pytest
 import pandas as pd
 
-from ..PPreadColours import PPreadColours
+from ..PPReadColours import PPReadColours
 
 
-def test_PPreadColours():
+def test_PPReadColours():
      
      rescol=0.3
      
-     padafr=PPreadColours('./data/test/testcolour')
+     padafr=PPReadColours('./data/test/testcolour', 0, 3)
      val=padafr.at[0,'g-r']
      
      assert rescol==val
