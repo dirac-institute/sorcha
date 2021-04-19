@@ -22,11 +22,12 @@ def PPOutWriteSqlite3(pp_results,outf):
 
     usage: padafr=PPOutWriteSqlite3(padain,outf)
     """
+    pp_results=pp_results.drop('level_0', 1, errors='ignore')
     
     #cnx = sqlite3.connect(':memory:')
     cnx = sqlite3.connect(outf)
 
-    pp_results.to_sql("pp_results", con=cnx, if_exists="replace")
+    pp_results.to_sql("pp_results", con=cnx, if_exists="append")
     
     #cnx.execute(
     #"""

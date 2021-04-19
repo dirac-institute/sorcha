@@ -5,8 +5,8 @@ import pandas as pd
 
 from ..PPJoinColourPointing import PPJoinColourPointing
 from ..PPhookBrightnessWithColour import PPhookBrightnessWithColour
-from ..readOif import readOif
-from ..PPreadColours import PPreadColours
+from ..PPReadOif import PPReadOif
+from ..PPReadColours import PPReadColours
 from ..PPMatchPointing import PPMatchPointing
 from ..PPMatchPointingsAndColours import PPMatchPointingsAndColours
 from ..PPBrightLimit import PPBrightLimit
@@ -15,8 +15,8 @@ from ..PPBrightLimit import PPBrightLimit
 
 def test_PPBrightLimit():
 
-    padafr=readOif('./data/test/oiftestoutput')
-    padacl=PPreadColours('./data/test/testcolour')
+    padafr=PPReadOif('./data/test/oiftestoutput')
+    padacl=PPReadColours('./data/test/testcolour', 0, 5)
     
     resdf=PPJoinColourPointing(padafr,padacl)
     

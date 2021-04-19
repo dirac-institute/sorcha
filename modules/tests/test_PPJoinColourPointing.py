@@ -4,14 +4,14 @@ import pytest
 import pandas as pd
 
 from ..PPJoinColourPointing import PPJoinColourPointing
-from ..readOif import readOif
-from ..PPreadColours import PPreadColours
+from ..PPReadOif import PPReadOif
+from ..PPReadColours import PPReadColours
 
 
 def test_PPJoinColourPointing():
 
-    padafr=readOif('./data/test/oiftestoutput')
-    padacl=PPreadColours('./data/test/testcolour')
+    padafr=PPReadOif('./data/test/oiftestoutput')
+    padacl=PPReadColours('./data/test/testcolour', 0, 5)
     
     padare=PPJoinColourPointing(padafr,padacl)
     
