@@ -42,7 +42,7 @@ class Error(Exception):
     pass
 
 #-----------------------------------------------------------------------------------------------
-def calcDetectionProbability(mag, limmag, w):
+def calcDetectionProbability(mag, limmag, fillFactor=1.0, w=0.1):
         """ Find the probability of a detection given a visual magnitude, 
         limiting magnitude, and fillfactor, 
         determined by the fading function from Veres & Chesley (2017).
@@ -52,33 +52,39 @@ def calcDetectionProbability(mag, limmag, w):
         mag: float
                 magnitude of object in filter used for that field
         limmag: float
-                limiting magnitude of the field
-	w: float
-	        distribution parameter
+             limiting magnitude of the field
+        fillfactor: float
+             fraction of FOV covered by the camera sensor   
+        w: float
+             distribution parameter
         
-	Returns
+        Returns
         -------
         P: float
             Probability of detection
         """
    
-        P = 1 / (1 + np.exp((mag - limmag) / w))
+        P = fillFactor / (1. + np.exp((mag - limmag) / w))
 
         return P
 
 #-----------------------------------------------------------------------------------------------
 
-def PPDetectionProbability(oif_df, limiting_magnitude_df, magnitude_name="ColinFil", limiting_magnitude_name="limiting magnitude",
-                           field_id_name="FieldID", trailing_loss_name="trailing loss", w=0.1):
+def PPDetectionProbability(oif_df, survey_df, trailing_losses=False, trailing_loss_name='dmagDetect', 
+                           magnitude_name="MaginFil", 
+                           limiting_magnitude_name="limiting magnitude",
+                           field_id_name="FieldID", fillFactor=0.9, w=0.1):
 
         """
-        Adds column with probability of an observation being observable
+        probability probability of observations being observable for objectInField output
         """
-
-        out_df = oif_df.join(limiting_magnitude_df.set_index(field_id_name), on=field_id_name)
-        out_df["detection probability"] = calcDetectionProbability(out_df[magnitude_name] + out_df[trailing_loss_name],
-                                                                  out_df[limiting_magnitude_name], 
-                                                                  w)
-        out_df.drop(columns=[limiting_magnitude_name], inplace=True)
-
-        return out_df
+        
+        l=len(oif_df.index)
+        limMag = survey_df.lookup(oif_df[field_id_name], ['fiveSigmaDepth']*l)
+        
+        if (trailing_losses==False):
+            return calcDetectionProbability(oif_df[magnitude_name], limMag, fillFactor, w)
+        elif (trailing_losses==True):
+            return calcDetectionProbability(oif_df[magnitude_name] + oif_df[trailing_loss_name], limMag, fillFactor, w)
+        else:
+            print('trailing_loss has to be True or False')
