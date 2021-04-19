@@ -48,8 +48,8 @@ def addUncertainties(ephemsdf,obsdf,raName='fieldRA',decName='fieldDec',obsIdNam
                      obsEpochName='observationStartMJD',
                      raNameEph='AstRA(deg)',decNameEph='AstDec(deg)',
                      obsIdNameEph='observationId',ephEpochName='FieldMJD',
-                     limMagName='fiveSigmaDepth',seeingName='seeingFwhmEff',
-                     filterMagName='Filtermag'):
+                     limMagName='fiveSigmaDepth',seeingName='seeingFwhmGeom',
+                     filterMagName='MaginFil'):
 
     """Add astrometric and photometric uncertainties to observations generated through JPL ephemeris simulator.
     
@@ -78,28 +78,46 @@ def addUncertainties(ephemsdf,obsdf,raName='fieldRA',decName='fieldDec',obsIdNam
         raise Exception('Observations do not cover the entire ephemeris timespan.')
         
     # Preselect only those observations mentioned in the ephemeris dataframe
-    obsdfSel=obsdf[obsdf[obsIdName].isin(ephemsdf[obsIdNameEph])]
+    #obsdfSel=obsdf[obsdf[obsIdName].isin(ephemsdf[obsIdNameEph])][[obsIdName, limMagName, seeingName]]
     
-    ephemsFiltered=[]
+    #ephemsFiltered=[]
     # Iterate over all selected observations from opsim database
-    for index, row in obsdfSel.iterrows(): 
+    #for index, row in obsdfSel.iterrows(): 
 
-        selection=ephemsdf[ephemsdf[obsIdNameEph] == row[obsIdName]].reset_index(drop=True)
+    #    selection=ephemsdf[ephemsdf[obsIdNameEph] == row[obsIdName]].reset_index(drop=True)
         
         #Add astrometric and photometric 1 sigma uncertainties
-        astrSig,SNR,rndError = calcAstrometricUncertainty(selection[filterMagName], row[limMagName], 
-                                                    FWHMeff=row[seeingName]*1000, output_units='mas')
-        photSig = magErrorFromSNR(SNR)
+    #    astrSig,SNR,rndError = calcAstrometricUncertainty(selection[filterMagName], row[limMagName], 
+    #                                               FWHMeff=row[seeingName]*1000, output_units='mas')
+    #    photSig = magErrorFromSNR(SNR)
         
-        selection['AstRASigma(mas)'] = astrSig
-        selection['AstDecSigma(mas)'] = astrSig
-        selection['PhotometricSigma(mag)'] = photSig
+    #    selection['AstRASigma(mas)'] = astrSig
+    #    selection['AstDecSigma(mas)'] = astrSig
+    #    selection['PhotometricSigma(mag)'] = photSig
         
-        ephemsFiltered.append(selection)
+    #    ephemsFiltered.append(selection)
     
-    ephemsOut=pd.concat(ephemsFiltered).reset_index(drop=True)
+    #ephemsOut=pd.concat(ephemsFiltered).reset_index(drop=True)
     
-    return ephemsOut    
+    #hopefully faster way to do this
+    #ephemsdf=ephemsdf.join(obsdfSel.set_index(obsIdName), on=obsIdNameEph)
+    #astrSig,SNR,_=calcAstrometricUncertainty(ephemsdf[filterMagName], ephemsdf[limMagName], 
+    #                                                FWHMeff=ephemsdf[seeingName]*1000, output_units='mas')
+    #ephemsdf.drop(columns=[limMagName, seeingName])
+    #ephemsdf['AstRASigma(mas)']=astrSig
+    #ephemsdf['AstDecSigma(mas)']=astrSig
+    #ephemsdf['PhotometricSigma(mag)']=magErrorFromSNR(SNR)
+    
+    #a more memory efficient way
+    l = len(ephemsdf.index)
+    limMag = obsdf.lookup(ephemsdf[obsIdNameEph], [limMagName]*l)
+    seeing = obsdf.lookup(ephemsdf[obsIdNameEph], [seeingName]*l)
+    
+    astrSig,SNR,_=calcAstrometricUncertainty(ephemsdf[filterMagName], limMag,
+                                            FWHMeff=seeing*1000, output_units='mas')
+    photometric_sigma = magErrorFromSNR(SNR)
+    
+    return (astrSig, photometric_sigma)
 
 
 def calcAstrometricUncertainty(mag, m5, nvisit=1, FWHMeff=700.0, error_sys = 10.0, 
