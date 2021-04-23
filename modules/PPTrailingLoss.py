@@ -98,7 +98,7 @@ def calcTrailingLoss(dRaCosDec, dDec, seeing, texp=30.0, model='circularPSF', a_
 
 #-----------------------------------------------------------------------------------------------
 
-def PPTrailingLoss(oif_df, survey_df, dra_name='AstRARate(deg/day)',
+def PPTrailingLoss(oif_df, survey_df, model='circularPSF', dra_name='AstRARate(deg/day)',
                    ddec_name='AstDecRate(deg/day)', dec_name='AstDec(deg)',
                    seeing_name_oif="seeing", field_id_name_oif="FieldID",
                    seeing_name_survey='seeingFwhmGeom'):
@@ -112,8 +112,8 @@ def PPTrailingLoss(oif_df, survey_df, dra_name='AstRARate(deg/day)',
 
     l = len(oif_df.index)
     seeing = survey_df.lookup(oif_df[field_id_name_oif], [seeing_name_survey]*l)
-    dmagDetect, dmagTrail = calcTrailingLoss(oif_df[dra_name] * np.cos(oif_df[dec_name]*np.pi/180), oif_df[ddec_name], seeing)
+    dmag = calcTrailingLoss(oif_df[dra_name] * np.cos(oif_df[dec_name]*np.pi/180), oif_df[ddec_name], seeing, model=model)
     
-    return (dmagDetect, dmagTrail)
+    return dmag
 
 #-----------------------------------------------------------------------------------------------

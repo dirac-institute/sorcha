@@ -10,6 +10,7 @@ def test_PPTrailingLoss():
 
     test_oif=pd.read_csv('./data/test/oiftestoutput', delim_whitespace=True)
     seeing,_=PPMatchFieldConditions('./data/baseline_10yrs_10klines.db')
+    seeing.rename(columns={'seeing': 'seeingFwhmGeom'}, inplace=True)
 
     test_out=PPTrailingLoss(test_oif, seeing)
     print(test_out)
