@@ -10,11 +10,10 @@ def test_calcDetectionProbability():
 
     mag    = 21.9
     limmag = 22.0
-    w      = 0.1
 
     nominal_result = 0.7310585786300077
 
-    result = calcDetectionProbability(mag, limmag, w)
+    result = calcDetectionProbability(mag, limmag)
 
     assert result == nominal_result
 

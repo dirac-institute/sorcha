@@ -73,7 +73,7 @@ def calcDetectionProbability(mag, limmag, fillFactor=1.0, w=0.1):
 def PPDetectionProbability(oif_df, survey_df, trailing_losses=False, trailing_loss_name='dmagDetect', 
                            magnitude_name="MaginFil", 
                            limiting_magnitude_name="limiting magnitude",
-                           field_id_name="FieldID", fillFactor=0.9, w=0.1):
+                           field_id_name="FieldID", fillFactor=1.0, w=0.1):
 
         """
         probability probability of observations being observable for objectInField output
