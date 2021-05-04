@@ -98,13 +98,22 @@ def calcTrailingLoss(dRaCosDec, dDec, seeing, texp=30.0, model='circularPSF', a_
 
 #-----------------------------------------------------------------------------------------------
 
-def PPTrailingLoss(oif_df, seeing_df, dra_name='AstRARate(deg/day)',
-                   ddec_name='AstDecRate(deg/day)', seeing_name="seeing", field_id_name="FieldID"):
+def PPTrailingLoss(oif_df, survey_df, model='circularPSF', dra_name='AstRARate(deg/day)',
+                   ddec_name='AstDecRate(deg/day)', dec_name='AstDec(deg)',
+                   seeing_name_oif="seeing", field_id_name_oif="FieldID",
+                   seeing_name_survey='seeingFwhmGeom'):
+    """
+    Calculates Detection trailing loss for objectInField output.
+    """
 
-    out_df = oif_df.join(seeing_df.set_index(field_id_name), on=field_id_name)
-    out_df["trailing loss"] = calcTrailingLoss(out_df[dra_name], out_df[ddec_name], out_df[seeing_name])
-    out_df.drop(columns=[seeing_name], inplace=True)
+    #out_df = oif_df.join(seeing_df.set_index(field_id_name), on=field_id_name)
+    #out_df["dmagDetect"], out_df['dmagTrail'] = calcTrailingLoss(out_df[dra_name]*np.cos(out_df['AstDec(deg)']*np.pi/180.), out_df[ddec_name], out_df[seeing_name])
+    #out_df.drop(columns=[seeing_name], inplace=True)
 
-    return out_df
+    l = len(oif_df.index)
+    seeing = survey_df.lookup(oif_df[field_id_name_oif], [seeing_name_survey]*l)
+    dmag = calcTrailingLoss(oif_df[dra_name] * np.cos(oif_df[dec_name]*np.pi/180), oif_df[ddec_name], seeing, model=model)
+    
+    return dmag
 
 #-----------------------------------------------------------------------------------------------
