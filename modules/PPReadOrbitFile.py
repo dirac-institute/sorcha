@@ -31,12 +31,17 @@ def PPReadOrbitFile(orbin, beginLoc, chunkSize):
 
    padafr=pd.read_csv(orbin, sep='\s+', skiprows=range(1,beginLoc+1), nrows=chunkSize, header=0)
    padafr=padafr.rename(columns=lambda x: x.strip())
+      # rename i to incl to avoid confusion with the colour i
+   padafr=padafr.rename(columns={"i" : "incl"})
 
+   if (len(padafr.columns) != 14):
+        pplogger.error('ERROR: PPReadOrbitFile: invalid input orbit DES file: not 14 columns.')
+        sys.exit('ERROR: PPReadOrbitFile: invalid input orbit DES file: not 14 columns.')
    # Check for nans or nulls
    
    if padafr.isnull().values.any():
          pdt=padafr[padafr.isna().any(axis=1)]
-         inds=str(pdt['ObjID'].values)
+         inds=str(pdt['!!OID'].values)
          outstr="ERROR: uninitialised values when reading orbit file. ObjID: " + str(inds)
          sys.exit(outstr)
          logger.info(outstr)
