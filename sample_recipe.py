@@ -5,6 +5,7 @@ import pandas as pd
 import logging
 import argparse
 import configparser
+from lsstcomet import *
 #from filtering import PPFilterDetectionEfficiencyThreshold
 from modules import PPFilterDetectionEfficiencyThreshold, PPreadColoursUser, PPReadColours
 from modules import PPhookBrightnessWithColour, PPJoinColourPointing, PPMatchPointing 
@@ -14,6 +15,7 @@ from modules import PPReadOif
 from modules import PPDetectionProbability, PPSimpleSensorArea, PPTrailingLoss, PPMatchFieldConditions
 from modules import PPDropObservations, PPBrightLimit
 from modules import PPMakeIntermediatePointingDatabase, PPReadIntermDatabase
+from modules import PPReadCometaryInput, PPJoinCometaryWithOrbits, PPCalculateSimpleCometaryMagnitude
 
 #oifoutput=sys.argv[1]
 
@@ -95,7 +97,7 @@ def runPostProcessing():
     Output:               csv datafile
     
     
-    usage: [from command line]                        python sample_recipe.py -c $CONFIGURATION_FILE
+    usage: [from command line]                        python sample_recipe.py -c $CONFIGURATION_FILE --colour $COLOURFILE [--comet $COMETPARAMFILE]
     usage: [from command line, default config file]   python sample_recipe.py
     
     """
@@ -105,6 +107,10 @@ def runPostProcessing():
     
     configfile=args.c
     makeIntermediatePointingDatabase=bool(args.d)
+    
+    colourinput=args.l  
+    orbinfile=args.o  
+    oifoutput=args.p
 
 
     pplogger = get_logger()
@@ -116,9 +122,21 @@ def runPostProcessing():
     config.read(configfile)
     
     testvalue=int(config["GENERAL"]['testvalue'])
-    orbinfile=get_or_exit(config, 'INPUTFILES', 'orbinfile', 'ERROR: no orbit file (DES) provided.')    
-    oifoutput=get_or_exit(config, 'INPUTFILES', 'oifoutput', 'ERROR: no ObjectInField output file provided.')
-    colourinput=get_or_exit(config, 'INPUTFILES', 'colourinput', 'ERROR: no colour input file provided.')
+    objecttype=get_or_exit(config, 'OBJECTS', 'objecttype', 'ERROR: no object type provided.')
+    #objecttype.strip()
+    if (objecttype != 'asteroid' and objecttype != 'comet'):
+         logging.error('ERROR: objecttype is neither an asteroid or a comet.') 
+         sys.exit('ERROR: objecttype is neither an asteroid or a comet.')
+    #orbinfile=get_or_exit(config, 'INPUTFILES', 'orbinfile', 'ERROR: no orbit file (DES) provided.')    
+    #oifoutput=get_or_exit(config, 'INPUTFILES', 'oifoutput', 'ERROR: no ObjectInField output file provided.')
+    if (objecttype == 'asteroid'):
+        colourinput=get_or_exit(config, 'INPUTFILES', 'colourinput', 'ERROR: no colour input file provided.')
+    elif (objecttype == 'comet'):
+        #cometinput=args.comet
+        cometinput=args.m 
+        #if (cometinput == 'cometplaceholder'):
+            # is not defined as flag but rather in input file
+            #cometinput=get_or_exit(config, 'INPUTFILES', 'cometinput', 'ERROR: no comet input file provided.')
     pointingdatabase=get_or_exit(config, 'INPUTFILES', 'pointingdatabase', 'ERROR: no pointing database provided.')
     
     mainfilter=get_or_exit(config,'FILTERS', 'mainfilter', 'ERROR: main filter not defined.')
@@ -127,10 +145,10 @@ def runPostProcessing():
     
     if (len(othercolours) != len(resfilters)-1):
          logging.error('ERROR: mismatch in input config colours and filters: len(othercolours) != len(resfilters) + 1')
-         sys.exit()
+         sys.exit('ERROR: mismatch in input config colours and filters: len(othercolours) != len(resfilters) + 1')
     if mainfilter != resfilters[0]:
          logging.error('ERROR: main filter should be the first among resfilters.')
-         sys.exit() 
+         sys.exit('ERROR: main filter should be the first among resfilters.') 
     
     SSPDetectionEfficiency=float(config["FILTERINGPARAMETERS"]['SSPDetectionEfficiency'])
     fillfactor=float(config["FILTERINGPARAMETERS"]['fillfactor'])
@@ -200,10 +218,14 @@ def runPostProcessing():
         pplogger.info(str1)
         padaor=PPReadOrbitFile.PPReadOrbitFile(orbinfile, startChunk, incrStep)
         
-        str3='Reading input colours: ' + colourinput
-        pplogger.info(str3)
-        padacl=PPReadColours.PPReadColours(colourinput, startChunk, incrStep)
-        
+        if (objecttype == 'asteroid'):
+            str3='Reading input colours: ' + colourinput
+            pplogger.info(str3)
+            padacl=PPReadColours.PPReadColours(colourinput, startChunk, incrStep)
+        elif (objecttype == 'comet'):
+            str4='Reading cometary parameters: ' + cometinput
+            padaco=PPReadCometaryInput.PPReadCometaryInput(cometinput, startChunk, incrStep)
+            padacl=PPReadColours.PPReadColours(colourinput, startChunk, incrStep)
         
         
         objid_list = padacl['ObjID'].unique().tolist() 
@@ -229,11 +251,26 @@ def runPostProcessing():
         
     
         
-        pplogger.info('Checking if orbit, colour and pointing simulation input files match...')
-        PPCheckOrbitAndColoursMatching.PPCheckOrbitAndColoursMatching(padaor,padacl,padafr)
+        pplogger.info('Checking if orbit, colour/cometary and pointing simulation input files match...')
+        if (objecttype == 'asteroid'):
+            PPCheckOrbitAndColoursMatching.PPCheckOrbitAndColoursMatching(padaor,padacl,padafr)
+        elif (objecttype == 'comet'):
+            PPCheckOrbitAndColoursMatching.PPCheckOrbitAndColoursMatching(padaor,padaco,padafr)
+            
         
-        pplogger.info('Joining colour data with pointing data...')
-        observations=PPJoinColourPointing.PPJoinColourPointing(padafr,padacl)
+        pplogger.info('Joining colour/cometary data with pointing data...')
+        if (objecttype == 'asteroid'):
+            observations=PPJoinColourPointing.PPJoinColourPointing(padafr,padacl)
+        elif (objecttype == 'comet'):
+            
+            observations=PPJoinColourPointing.PPJoinColourPointing(padafr,padaco)
+            observations=PPJoinColourPointing.PPJoinColourPointing(observations,padacl)
+
+            pplogger.info('Joining orbital data with cometary data...')
+            observations=PPJoinCometaryWithOrbits.PPJoinCometaryWithOrbits(observations,padaor)
+ 
+        print('THIS NEEDS TO BE REDONE: for now, mainfilter is converted from V magnitude')
+        observations[mainfilter] = observations['V']
         
         
         pplogger.info('Applying detection efficiency threshold...')
@@ -247,6 +284,13 @@ def runPostProcessing():
         
         
         #print(pada1)
+
+        print(len(observations.columns))
+        if (objecttype=='comet'):
+             pplogger.info('Calculating cometary magnitude using a simple model...')
+             observations=PPCalculateSimpleCometaryMagnitude.PPCalculateSimpleCometaryMagnitude(observations, mainfilter)
+                    
+             print(len(observations.columns))
         
         
         pplogger.info('Hooking colour and brightness information...')
@@ -260,13 +304,11 @@ def runPostProcessing():
         #resdf3=resdf1
         #print(resdf3)
         
-    
-
         
         pplogger.info('Resolving the apparent brightness in a given optical filter corresponding to the pointing...')
         observations=PPMatchPointingsAndColours.PPMatchPointingsAndColours(observations,filterpointing)
         
-        
+
         #print(pada6)
 
         #print(pada6)
@@ -296,10 +338,21 @@ def runPostProcessing():
         #----------------------------------------------
         #print(pada6)
         
+        
         pplogger.info('Applying SSP criterion efficiency...')
 
-        observations=PPFilterSSPCriterionEfficiency.PPFilterSSPCriterionEfficiency(observations,2,3,15.0,inSepThreshold)
-
+        observations=PPFilterSSPCriterionEfficiency.PPFilterSSPCriterionEfficiency(observations,minTracklet,noTracklets,trackletInterval,inSepThreshold)
+        observations=observations.drop(['index'], axis='columns')
+        
+        #print(observations['FieldID'].to_string())
+        
+        
+        # comets may have dashes in their names that mix things up
+        observations['ObjID'] = observations['ObjID'].str.replace('/','')
+        
+        #print(observations['FieldMJD'].to_string())
+        #print(observations.columns.to_string())
+        
     
         pplogger.info('Constructing output path...')
         if (outputformat == 'csv'):
@@ -336,8 +389,14 @@ def runPostProcessing():
 if __name__=='__main__':
 
      parser = argparse.ArgumentParser()
-     parser.add_argument("-c", help="Input configuration filename", type=str, default='./PPConfig.ini')
-     parser.add_argument("-d", help="Make intermediate pointing database", type=str, default=False)
+     parser.add_argument("-c", "--config", help="Input configuration filename", type=str, dest='c', default='./PPConfig.ini')
+     parser.add_argument("-d", help="Make intermediate pointing database", type=str, dest='d', default=False)
+     parser.add_argument("-m", "--comet", help="Comet parameter filename", type=str, dest='m', default='./data/comet')
+     parser.add_argument("-l", "--colour", "--color", help="Colour file name", type=str, dest='l', default='./data/colour')
+     parser.add_argument("-o", "--orbit", help="Orbit file name", type=str, dest='o', default='./data/orbit.des')
+     parser.add_argument("-p", "--pointing", help="Pointing simulation file name", type=str, dest='p', default='./data/oiftestoutput')
+
+
 
 
      runPostProcessing()

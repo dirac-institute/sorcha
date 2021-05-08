@@ -96,6 +96,7 @@ def PPFilterSSPCriterionEfficiency(padain,minintracklets,nooftracklets,intervalt
 
                        padaouttracklet=padaouttracklet.append(subs.loc[k:s], sort=False) 
                        padaouttracklet['counter']=counter
+                       
 
                        if (s==subidx):
                             break
@@ -103,6 +104,9 @@ def PPFilterSSPCriterionEfficiency(padain,minintracklets,nooftracklets,intervalt
                        s=s+1
                   
                   #if(subs.at[j,'FieldMJD']-subs.at[k,'FieldMJD'] < 11/24.):
+                  
+                  #print(s, k, j)
+                  #print(padaouttracklet)
                   
                   if((j-k+1)>=minintracklets and len(padaouttracklet.index.values)>1):
 
@@ -138,7 +142,7 @@ def PPFilterSSPCriterionEfficiency(padain,minintracklets,nooftracklets,intervalt
                        padaouttracklet=pd.DataFrame()
                        #else:
                        #j=j+1
-                  elif (len(padaouttracklet.index.values)<=1):
+                  elif ((len(padaouttracklet.index.values)<=1) and s!=j):
                        pass
                   else:
                        k=j
@@ -155,18 +159,25 @@ def PPFilterSSPCriterionEfficiency(padain,minintracklets,nooftracklets,intervalt
              padaouttrackletcoll=padaouttrackletcoll.drop(['index'], axis=1)
              padaouttrackletcoll=padaouttrackletcoll.drop_duplicates(subset=['FieldID']).reset_index(drop=True)
              
-             
+             #print(padaouttrackletcoll['FieldMJD'].to_string())
+             ms = pd.unique(padaouttrackletcoll['counter'])
+
              m=0
-             while(m<=counter-nooftracklets):
-                  #print('m: ', m, ' nooftracklets: ', nooftracklets, ' m+nooftracklets: ', m+nooftracklets)
-                  flindex=padaouttrackletcoll.loc[padaouttrackletcoll['counter'] == m].head(1).index[0]
-                  llindex=padaouttrackletcoll.loc[padaouttrackletcoll['counter'] == m+nooftracklets-1].tail(1).index[0]
-                  #print('Indices: flindex: ', flindex, ' llindex: ', llindex)
-                  #print(padaouttrackletcoll[flindex:llindex+1])
-                  if (padaouttrackletcoll.at[llindex,'FieldMJD'] - padaouttrackletcoll.at[flindex,'FieldMJD'] < intervaltime):
-                        #print(llindex,flindex, padaouttrackletcoll.at[llindex,'FieldMJD'] - padaouttrackletcoll.at[flindex,'FieldMJD'], intervaltime)
-                        #print(padaouttrackletcoll[flindex:llindex])
-                        padaout=padaout.append(padaouttrackletcoll[flindex:llindex+1], ignore_index=True, sort=False)
+             g=0
+             #print()
+             #while(m<=counter-nooftracklets):
+             while(m<=ms[-nooftracklets]):
+                  if (m in padaouttrackletcoll['counter'].values):
+                      #print('m: ', m, ' nooftracklets: ', nooftracklets, ' m+nooftracklets: ', m+nooftracklets)
+                      flindex=padaouttrackletcoll.loc[padaouttrackletcoll['counter'] == m].head(1).index[0]
+                      llindex=padaouttrackletcoll.loc[padaouttrackletcoll['counter'] == ms[g+nooftracklets-1]].tail(1).index[0]
+                      #print('Indices: flindex: ', flindex, ' llindex: ', llindex)
+                      #print(padaouttrackletcoll[flindex:llindex+1])
+                      if (padaouttrackletcoll.at[llindex,'FieldMJD'] - padaouttrackletcoll.at[flindex,'FieldMJD'] < intervaltime):
+                            #print(llindex,flindex, padaouttrackletcoll.at[llindex,'FieldMJD'] - padaouttrackletcoll.at[flindex,'FieldMJD'], intervaltime)
+                            #print(padaouttrackletcoll[flindex:llindex])
+                            padaout=padaout.append(padaouttrackletcoll[flindex:llindex+1], ignore_index=True, sort=False)
+                      g=g+1
                   m=m+1
              #trkcntahead=0
              #trkcntbhind=0
