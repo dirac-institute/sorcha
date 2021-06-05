@@ -53,7 +53,7 @@ def cameraFootprintFilter(observations,pointings,raPointings='fieldRA',decPointi
     
     if(tobsmin<tpointmin or tobsmax>tpointmax):
         print('observations tmin, pointings tmin:',tobsmin, tpointmin)
-        print('observations tmax, pointings tmax:',tobsmax, tpointax)
+        print('observations tmax, pointings tmax:',tobsmax, tpointmax)
         raise ValueError('Observations do not cover the entire ephemeris timespan.')
     
     camera = lsst_camera()
