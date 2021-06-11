@@ -16,8 +16,8 @@ from ..PPOutWriteCSV import PPOutWriteCSV
 
 def test_PPOutWriteCSV():
 
-    padafr=PPReadOif('./data/test/oiftestoutput')
-    padacl=PPReadColours('./data/test/testcolour', 0, 5)
+    padafr=PPReadOif('./data/test/oiftestoutput', " ")
+    padacl=PPReadColours('./data/test/testcolour', 0, 5, " ")
     
     resdf=PPJoinColourPointing(padafr,padacl)
     

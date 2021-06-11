@@ -6,41 +6,42 @@ import os, sys
 # Author: Grigori Fedorets
 
 
-def PPReadCometaryInput(comet_datafile, beginLoc, chunkSize,filesep):
+def PPReadBrightness(br_datafile, beginLoc, chunkSize,filesep):
 
     """
-    PPReadCometaryInput.py
+    PPReadBrightness.py
     
     
-    Description: This task reads in the cometary data file and puts it into a 
+    Description: This task reads in the brightness file and puts it into a 
     single pandas dataframe for further use downstream by other tasks.
     
-    The format of the colours is:
+    The format of the colours is one of the following:
     
-    ObjID   afrho k
+    ObjID H G
+    ObjID H G1 G2
+    ObjID H G12
+    ObjID H S
     
-    NB, the R parameter is not given explicitly, but rather calculated through
-    the absolute magnitude, assuming geometric albedo pv=0.04
     
     
-    Mandatory input:      string, comet_datafile, name of comet data file
+    
+    
+    Mandatory input:      string, br_datafile, name of brightn data file
                           integer, beginLoc, location in file where reading begins
                           integer, chunkSize, length of chunk to be read in 
                           string, filesep, separator used in input file, blank or comma
-
     
     Output:               pandas dataframe
     
     
     
-    usage: padafr=PPReadCometaryInput(comet_datafile, beginLoc, chunkSize)
+    usage: padafr=PPReadBrightness(br_datafile, beginLoc, chunkSize,filesep)
     """
-
-    if (filesep==" "):
-        padafr=pd.read_csv(comet_datafile, sep='\s+', skiprows=range(1,beginLoc+1), nrows=chunkSize, header=0)
-    elif (filesep==","):
-        padafr=pd.read_csv(comet_datafile, delimiter=',', skiprows=range(1,beginLoc+1), nrows=chunkSize, header=0)    
     
+    if (filesep==" "):
+        padafr=pd.read_csv(br_datafile, sep='\s+', skiprows=range(1,beginLoc+1), nrows=chunkSize, header=0)
+    elif (filesep==","):
+        padafr=pd.read_csv(br_datafile, delimiter=',', skiprows=range(1,beginLoc+1), nrows=chunkSize, header=0)
     padafr=padafr.rename(columns=lambda x: x.strip())
     
     # check for nans or nulls
@@ -50,7 +51,7 @@ def PPReadCometaryInput(comet_datafile, beginLoc, chunkSize,filesep):
          pdt=padafr[padafr.isna().any(axis=1)]
          print(pdt)
          inds=str(pdt['ObjID'].values)
-         outstr="ERROR: uninitialised values when reading comet data file. ObjID: " + str(inds)
+         outstr="ERROR: uninitialised values when reading brightness file. ObjID: " + str(inds)
          sys.exit(outstr)
     
     return padafr

@@ -4,7 +4,7 @@ import pandas as pd
 
 #Author: Grigori Fedorets
 
-def PPReadOif(oif_output):
+def PPReadOif(oif_output, filesep):
    """
    PPReadOif.py
 
@@ -21,16 +21,22 @@ def PPReadOif(oif_output):
 
 
 
-   Mandatory input:      Output from objectsInField (oif) in text file
+   Mandatory input:      string, oif_output, name of text file including Output from objectsInField (oif) 
+                         string, filesep, separator used in input file, blank or comma
+
+   
 
    Output:               pandas dataframe
 
 
-   usage: padafr=PPReadOif(oif_output)
+   usage: padafr=PPReadOif(oif_output,filesep)
    """
 
+   if (filesep==" "):
+       padafr=pd.read_csv(oif_output, sep='\s+')
+   elif (filesep==","):
+       padafr=pd.read_csv(oif_output, delimiter=',')    
 
-   padafr=pd.read_csv(oif_output, sep='\s+')
    padafr=padafr.rename(columns=lambda x: x.strip())
     
    return padafr

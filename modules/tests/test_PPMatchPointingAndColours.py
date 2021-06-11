@@ -15,8 +15,8 @@ from ..PPMatchPointingsAndColours import PPMatchPointingsAndColours
 
 def test_PPMatchPointingAndColours():
 
-    padafr=PPReadOif('./data/test/oiftestoutput')
-    padacl=PPReadColours('./data/test/testcolour', 0, 5)
+    padafr=PPReadOif('./data/test/oiftestoutput', ' ')
+    padacl=PPReadColours('./data/test/testcolour', 0, 5, ' ')
     
     resdf=PPJoinColourPointing(padafr,padacl)
     

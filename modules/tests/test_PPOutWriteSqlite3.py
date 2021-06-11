@@ -17,8 +17,8 @@ from ..PPOutWriteSqlite3 import PPOutWriteSqlite3
 
 def test_PPOutWriteSqlite3():
 
-    padafr=PPReadOif('./data/test/oiftestoutput')
-    padacl=PPReadColours('./data/test/testcolour', 0, 5)
+    padafr=PPReadOif('./data/test/oiftestoutput', " ")
+    padacl=PPReadColours('./data/test/testcolour', 0, 5, " ")
     
     resdf=PPJoinColourPointing(padafr,padacl)
     
