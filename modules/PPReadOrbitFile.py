@@ -5,7 +5,7 @@ import os, sys
 
 # Author: Grigori Fedorets
 
-def PPReadOrbitFile(orbin, beginLoc, chunkSize):
+def PPReadOrbitFile(orbin, beginLoc, chunkSize, filesep):
 
 
    """
@@ -20,16 +20,22 @@ def PPReadOrbitFile(orbin, beginLoc, chunkSize):
    Mandatory input:   string, orbin (name of input orbit file)
                       integer, beginLoc, location in file where reading begins
                       integer, chunkSize, length of chunk to be read in 
-   
+                      string, filesep, separator used in input file, blank or comma
+
 
    Output:            pandas dataframe
 
 
-   Usage: padafr=PPreadOrbitFile(orbin, beginLoc, chunkSize) 
+   Usage: padafr=PPreadOrbitFile(orbin, beginLoc, chunkSize, filesep) 
 
    """
+   
+   if (filesep==" "):
+       padafr=pd.read_csv(orbin, sep='\s+', skiprows=range(1,beginLoc+1), nrows=chunkSize, header=0)
+   elif (filesep==","):
+       padafr=pd.read_csv(orbin, delimiter=',', skiprows=range(1,beginLoc+1), nrows=chunkSize, header=0)    
 
-   padafr=pd.read_csv(orbin, sep='\s+', skiprows=range(1,beginLoc+1), nrows=chunkSize, header=0)
+   
    padafr=padafr.rename(columns=lambda x: x.strip())
       # rename i to incl to avoid confusion with the colour i
    padafr=padafr.rename(columns={"i" : "incl"})
@@ -46,6 +52,9 @@ def PPReadOrbitFile(orbin, beginLoc, chunkSize):
          sys.exit(outstr)
          logger.info(outstr)
    
+   padafr=padafr.drop(['H', 'INDEX', 'N_PAR', 'MOID', 'COMPCODE'], axis = 1)
+   
+    
    return padafr
 
    

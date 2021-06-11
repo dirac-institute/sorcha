@@ -11,11 +11,12 @@ from modules import PPFilterDetectionEfficiencyThreshold, PPreadColoursUser, PPR
 from modules import PPhookBrightnessWithColour, PPJoinColourPointing, PPMatchPointing 
 from modules import PPMatchPointingsAndColours, PPFilterSSPCriterionEfficiency
 from modules import PPOutWriteCSV, PPOutWriteSqlite3, PPReadOrbitFile, PPCheckOrbitAndColoursMatching
-from modules import PPReadOif
+from modules import PPReadOif, PPReadBrightness
 from modules import PPDetectionProbability, PPSimpleSensorArea, PPTrailingLoss, PPMatchFieldConditions
 from modules import PPDropObservations, PPBrightLimit
 from modules import PPMakeIntermediatePointingDatabase, PPReadIntermDatabase
 from modules import PPReadCometaryInput, PPJoinCometaryWithOrbits, PPCalculateSimpleCometaryMagnitude
+from modules import PPCalculateApparentMagnitude
 
 #oifoutput=sys.argv[1]
 
@@ -111,7 +112,7 @@ def runPostProcessing():
     colourinput=args.l  
     orbinfile=args.o  
     oifoutput=args.p
-
+    brightnessfile=args.b
 
     pplogger = get_logger()
     
@@ -122,6 +123,14 @@ def runPostProcessing():
     config.read(configfile)
     
     testvalue=int(config["GENERAL"]['testvalue'])
+    fileseparator=get_or_exit(config, 'INPUTFILES', 'fileseparator', 'ERROR: no file separator specified.')
+    if (fileseparator=='comma'):
+        filesep=','
+    elif (fileseparator=='blank'):
+        filesep=' '
+    else:
+        pplogger.error('ERROR: file separator should be comma or blank.')
+        sys.exit('ERROR: file separator should be comma or blank.')
     objecttype=get_or_exit(config, 'OBJECTS', 'objecttype', 'ERROR: no object type provided.')
     #objecttype.strip()
     if (objecttype != 'asteroid' and objecttype != 'comet'):
@@ -129,9 +138,9 @@ def runPostProcessing():
          sys.exit('ERROR: objecttype is neither an asteroid or a comet.')
     #orbinfile=get_or_exit(config, 'INPUTFILES', 'orbinfile', 'ERROR: no orbit file (DES) provided.')    
     #oifoutput=get_or_exit(config, 'INPUTFILES', 'oifoutput', 'ERROR: no ObjectInField output file provided.')
-    if (objecttype == 'asteroid'):
-        colourinput=get_or_exit(config, 'INPUTFILES', 'colourinput', 'ERROR: no colour input file provided.')
-    elif (objecttype == 'comet'):
+    #if (objecttype == 'asteroid'):
+        #colourinput=get_or_exit(config, 'INPUTFILES', 'colourinput', 'ERROR: no colour input file provided.')
+    if (objecttype == 'comet'):
         #cometinput=args.comet
         cometinput=args.m 
         #if (cometinput == 'cometplaceholder'):
@@ -149,6 +158,8 @@ def runPostProcessing():
     if mainfilter != resfilters[0]:
          logging.error('ERROR: main filter should be the first among resfilters.')
          sys.exit('ERROR: main filter should be the first among resfilters.') 
+    
+    phasefunction=get_or_exit(config,'PHASE', 'phasefunction', 'ERROR: phase function not defined.')
     
     SSPDetectionEfficiency=float(config["FILTERINGPARAMETERS"]['SSPDetectionEfficiency'])
     fillfactor=float(config["FILTERINGPARAMETERS"]['fillfactor'])
@@ -216,16 +227,18 @@ def runPostProcessing():
         
         str1='Reading input orbit file: ' + orbinfile
         pplogger.info(str1)
-        padaor=PPReadOrbitFile.PPReadOrbitFile(orbinfile, startChunk, incrStep)
+        # The H given in the orbital DEX file is omitted and erased; it is given a separate brightness file
+        padaor=PPReadOrbitFile.PPReadOrbitFile(orbinfile, startChunk, incrStep, filesep)
+        padabr=PPReadBrightness.PPReadBrightness(brightnessfile,  startChunk, incrStep, filesep)
         
         if (objecttype == 'asteroid'):
             str3='Reading input colours: ' + colourinput
             pplogger.info(str3)
-            padacl=PPReadColours.PPReadColours(colourinput, startChunk, incrStep)
+            padacl=PPReadColours.PPReadColours(colourinput, startChunk, incrStep, filesep)
         elif (objecttype == 'comet'):
             str4='Reading cometary parameters: ' + cometinput
-            padaco=PPReadCometaryInput.PPReadCometaryInput(cometinput, startChunk, incrStep)
-            padacl=PPReadColours.PPReadColours(colourinput, startChunk, incrStep)
+            padaco=PPReadCometaryInput.PPReadCometaryInput(cometinput, startChunk, incrStep, filesep)
+            padacl=PPReadColours.PPReadColours(colourinput, startChunk, incrStep, filesep)
         
         
         objid_list = padacl['ObjID'].unique().tolist() 
@@ -241,7 +254,13 @@ def runPostProcessing():
             try: 
                 str2='Reading input pointing history: ' + oifoutput
                 pplogger.info(str2)
-                padafr=PPReadOif.PPReadOif(oifoutput)
+                padafr=PPReadOif.PPReadOif(oifoutput, filesep)
+                
+                # Here, we drop the magnitudes calculated by oif as they are calculated elsewhere
+                # as they can be calculated with a variety of phase functions, and in different filters
+                # Maybe needs to be moved to the PPReadOif function?
+                
+                padafr=padafr.drop(['V', 'V(H=0)'], axis = 1, errors='ignore')
                 
                 padafr=padafr[padafr['ObjID'].isin(objid_list)]
 
@@ -251,27 +270,34 @@ def runPostProcessing():
         
     
         
-        pplogger.info('Checking if orbit, colour/cometary and pointing simulation input files match...')
+        pplogger.info('Checking if orbit, brightness, colour/cometary and pointing simulation input files match...')
         if (objecttype == 'asteroid'):
             PPCheckOrbitAndColoursMatching.PPCheckOrbitAndColoursMatching(padaor,padacl,padafr)
+            PPCheckOrbitAndColoursMatching.PPCheckOrbitAndColoursMatching(padaor,padabr,padafr)
         elif (objecttype == 'comet'):
+            PPCheckOrbitAndColoursMatching.PPCheckOrbitAndColoursMatching(padaor,padacl,padafr)
+            PPCheckOrbitAndColoursMatching.PPCheckOrbitAndColoursMatching(padaor,padabr,padafr)
             PPCheckOrbitAndColoursMatching.PPCheckOrbitAndColoursMatching(padaor,padaco,padafr)
             
         
         pplogger.info('Joining colour/cometary data with pointing data...')
         if (objecttype == 'asteroid'):
             observations=PPJoinColourPointing.PPJoinColourPointing(padafr,padacl)
+            observations=PPJoinColourPointing.PPJoinColourPointing(observations,padabr)
         elif (objecttype == 'comet'):
             
             observations=PPJoinColourPointing.PPJoinColourPointing(padafr,padaco)
+            observations=PPJoinColourPointing.PPJoinColourPointing(observations,padabr)
             observations=PPJoinColourPointing.PPJoinColourPointing(observations,padacl)
 
             pplogger.info('Joining orbital data with cometary data...')
             observations=PPJoinCometaryWithOrbits.PPJoinCometaryWithOrbits(observations,padaor)
  
-        print('THIS NEEDS TO BE REDONE: for now, mainfilter is converted from V magnitude')
-        observations[mainfilter] = observations['V']
+        #print('THIS NEEDS TO BE REDONE: for now, mainfilter is converted from V magnitude')
+        #observations[mainfilter] = observations['V']
         
+        pplogger.info('Calculating apparent magnitudes...')
+        observations=PPCalculateApparentMagnitude.PPCalculateApparentMagnitude(observations, phasefunction, mainfilter)        
         
         pplogger.info('Applying detection efficiency threshold...')
         observations=PPFilterDetectionEfficiencyThreshold.PPFilterDetectionEfficiencyThreshold(observations,SSPDetectionEfficiency)
@@ -285,13 +311,9 @@ def runPostProcessing():
         
         #print(pada1)
 
-        print(len(observations.columns))
         if (objecttype=='comet'):
              pplogger.info('Calculating cometary magnitude using a simple model...')
-             observations=PPCalculateSimpleCometaryMagnitude.PPCalculateSimpleCometaryMagnitude(observations, mainfilter)
-                    
-             print(len(observations.columns))
-        
+             observations=PPCalculateSimpleCometaryMagnitude.PPCalculateSimpleCometaryMagnitude(observations, mainfilter)        
         
         pplogger.info('Hooking colour and brightness information...')
         i=0
@@ -395,6 +417,7 @@ if __name__=='__main__':
      parser.add_argument("-l", "--colour", "--color", help="Colour file name", type=str, dest='l', default='./data/colour')
      parser.add_argument("-o", "--orbit", help="Orbit file name", type=str, dest='o', default='./data/orbit.des')
      parser.add_argument("-p", "--pointing", help="Pointing simulation file name", type=str, dest='p', default='./data/oiftestoutput')
+     parser.add_argument("-b", "--brightness", "--phase", help="Brightness and phase parameter file name", type=str, dest='b', default='./data/HG')
 
 
 

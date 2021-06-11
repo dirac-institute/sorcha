@@ -8,9 +8,9 @@ from ..PPReadOrbitFile import PPReadOrbitFile
 
 def test_PPReadOrbitFile():
      
-     rescol=14
+     rescol=9
      
-     padafr=PPReadOrbitFile('./data/test/testorb.des', 0, 14)
+     padafr=PPReadOrbitFile('./data/test/testorb.des', 0, 14, " ")
      val=len(padafr.columns)
      
      assert rescol==val
