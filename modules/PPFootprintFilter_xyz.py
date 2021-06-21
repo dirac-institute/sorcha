@@ -12,7 +12,20 @@ __all__=['footprintFilter','plotFootprintFiltering']
 def footprintFilter(observations, survey, detectors,
                          ra_name="AstRA(deg)", dec_name="AstDec(deg)", field_name="FieldID", field_name_survey="observationId",
                          ra_name_field='fieldRA', dec_name_field="fieldDec", rot_name_field="rotSkyPos"):
-    #no distortion, aberration, etc.
+    """Applies camera footpint to remove observations that do not fall on
+    detector chips.
+
+    Input
+    -----
+    observations        ... pandas dataframe containing ra, dec, and fieldID.
+    survey              ... pandas dataframe containing fieldID, field center ra
+                            and dec, and field rotation.
+    detectors           ... list of lists containing detectors corners as angles
+                            from x and y axes.
+    Output
+    ------
+    detectedObs         ... mask for observations that will return detected observations.
+    """
 
     #convert ra, dec to xyz on the unit sphere
     ra=deg2rad(observations[ra_name])
@@ -108,41 +121,26 @@ def footprintFilter(observations, survey, detectors,
 
     return pd.concat(detectedObs).reset_index(drop=True)
 
-def plotFootprintFiltering(df_old, df_new, ra='AstRA(deg)', dec='AstDec(deg)'):
-    """Plot difference between camera footprint filtered and unfiltered LSST observations.
-
-    Parameters:
-    -----------
-    df_old ... Pandas dataFrame of unfiltered observations
-    df_new ... Pandas dataFrame of filtered observations
-
-    """
-    xmax=df_old[ra].max()
-    xmin=df_old[ra].min()
-    ymax=df_old[dec].max()
-    ymin=df_old[dec].min()
-
-    scale=(xmax-xmin)/(ymax-ymin)
-
-    label1='dropped: '+str(len(df_old.index)-len(df_new.index))
-    label2='kept: '+str(len(df_new.index))
-    plt.figure(dpi=300, figsize=(scale*6,6))
-    plt.scatter(df_old[ra],df_old[dec],s=0.5, color='r',label=label1)
-    plt.scatter(df_new[ra],df_new[dec],s=0.5, color='b',label=label2)
-    plt.xlabel(ra)
-    plt.ylabel( dec)
-    plt.title('LSST Camera Footprint Filtering')
-    plt.legend()
-    plt.show()
-
 def polygonArea(corners):
-    """
+    """Calculates the area of a convex polygon.
+    Input
+    -----
+    corners         ... list containing [x, y] pairs for each corner.
     """
     cornersRolled=np.roll(corners, 1, axis=0)
     return .5*np.sum(np.sum(corners[:,0]*cornersRolled[:,1] - corners[:,1]*cornersRolled[:,0]))
 
-    def isinPolygon(point, corners, error=10**-10, sigfigs=6):
-    """
+def isinPolygon(point, corners, error=10**-10):
+    """Determines whether a point is inside a polygon by comparing the area of
+    the polygon to the sum of the areas of the triangles formed by the point and
+    each pair of adjacent corners.
+
+    Input
+    -----
+    point           ... [x, y] pair
+    corners         ... list containing [x, y] pairs for each corner.
+    error           ... sensitivity of the area difference
+
     """
     cornersRolled=np.roll(corners, -1, axis=0)
     trueArea=polygonArea(corners)
@@ -163,7 +161,7 @@ def polygonArea(corners):
 
         return ((.5*areas - trueArea)/trueArea <= error)
 
-        def detectorCircle(detector):
+def detectorCircle(detector):
     """
     calculates a radius for a circle containing the detector
     assumes the detector is a convex quadrilateral
