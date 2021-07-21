@@ -6,10 +6,13 @@ import pandas as pd
 # matplotlib
 import matplotlib.pyplot as plt
 
+deg2rad = np.radians
+sin = np.sin
+cos = np.cos
 
 __all__=['footprintFilter','plotFootprintFiltering']
 
-def footprintFilter(observations, survey, detectors,
+def footPrintFilter(observations, survey, detectors,
                          ra_name="AstRA(deg)", dec_name="AstDec(deg)", field_name="FieldID", field_name_survey="observationId",
                          ra_name_field='fieldRA', dec_name_field="fieldDec", rot_name_field="rotSkyPos"):
     """Applies camera footpint to remove observations that do not fall on
@@ -85,6 +88,7 @@ def footprintFilter(observations, survey, detectors,
     cos_rot = cos(-rotSkyPos)
     sin_rot = sin(-rotSkyPos)
 
+    x6 = x5
     y6 = y5*cos_rot - z5*sin_rot
     z6 = y5*sin_rot + z5*cos_rot
 
@@ -111,9 +115,11 @@ def footprintFilter(observations, survey, detectors,
         r, detector_center=detectorCircle(np.array((yd, zd)).T)
         obsSelIndex=np.where((y-detector_center[0])**2 + (z-detector_center[1])**2 < r**2 )[0]
 
+
         ySel=y[obsSelIndex]
         zSel=z[obsSelIndex]
 
+        print(len(ySel), len(zSel))
         points=np.array((ySel, zSel)).T
         detected=isinPolygon(points, sortCorners(detector))
 

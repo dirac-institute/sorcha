@@ -71,8 +71,8 @@ def run():
 
     #set some reasonable defaults
     config.read_dict({
-        "INPUTFILES" : {"oifoutput": "test.csv",
-                        "colourinput" : "test_colors.csv",
+        "INPUTFILES" : {"oifoutput": "test-oif.csv",
+                        "colourinput" : "test-colors.csv",
                         "camerafootprint": "detectors_corners.csv",
                         "pointingdatabase" : "baseline_nexp2_v1.7.1_10yrs.db"   #current opsim file as of 6/11/21
         },
@@ -91,7 +91,7 @@ def run():
                                        # but leaving them in in case needed in future
         "OUTPUTFORMAT" : {"outpath": "./",
                             "outfilestem": "testout",
-                            "outputformat": "hdf5"
+                            "outputformat": "csv"
         }
     })
 
@@ -148,7 +148,12 @@ def run():
 
     str2='Reading input pointing history: ' + oifoutput
     pplogger.info(str2)
-    oif=pd.read_hdf(oifoutput).reset_index(drop=True)
+
+    file_ext = oifoutput.split('.')[-1]
+    if file_ext == 'h5':
+        oif=pd.read_hdf(oifoutput).reset_index(drop=True)
+    elif file_ext == 'csv':
+        oif = pd.read_csv(oifoutput, delim_whitespace=True)
 
     pplogger.info('Reading pointing database')
     con=sql.connect(pointingdatabase)
