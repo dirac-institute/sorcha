@@ -236,7 +236,7 @@ def randomizePhotometry(df,magName='Filtermag',magRndName='FiltermagRnd',sigName
 
     s = normal(0, 1, len(df.index))
 
-    df[magRndName] = df[magName] + s*df[sigName]
+    #df[magRndName] = df[magName] + s*df[sigName]
 
 
     # THIS IS AN ATTEMPT TO USE FLUX. DOESN'T WORK.
@@ -262,7 +262,7 @@ def randomizePhotometry(df,magName='Filtermag',magRndName='FiltermagRnd',sigName
 #    df['s']=s
     #df['sigflux']=sigflux
 
-    return
+    return df[magName] + s*df[sigName]
 
 def flux2mag(f,  f0=3631):
     """AB ugriz system (f0 = 3631 Jy) to magnitude conversion
