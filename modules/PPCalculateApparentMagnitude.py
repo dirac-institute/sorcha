@@ -134,7 +134,7 @@ def PPCalculateApparentMagnitude(padain, function, mainfilter):
               i=0
               phfarr=[]
               while(i<len(padain.index)):
-                  HGm=LinearPhaseFunc(H=Harr[i]*u.mag, G=Sarr[i]*u.mag/u.deg)
+                  HGm=LinearPhaseFunc(H=Harr[i]*u.mag, S=Sarr[i]*u.mag/u.deg)
                   phf=HGm(pharr[i]*u.deg)
                   phfarr.append(phf.value)
                   i=i+1
@@ -146,6 +146,18 @@ def PPCalculateApparentMagnitude(padain, function, mainfilter):
         else:
               pplogger.error('ERROR: PPCalculateApparentMagnitude: linear function requires the following input data columns: H, S.')
               sys.exit('ERROR: PPCalculateApparentMagnitude: linear function requires the following input data columns: H, S.')
+
+
+    elif (function=='none'):
+        # Assuming only H
+        if set(['H']).issubset(padain.columns):
+             padain[mainfilter] =  5.*log10(padain['delta']) + 5.*log10(padain['rho']) + padain['H']
+             padain=padain.drop(['delta', 'rho', 'phase'], axis = 1)
+
+        else:
+              pplogger.error('ERROR: PPCalculateApparentMagnitude: none function requires the following input data columns: H.')
+              sys.exit('ERROR: PPCalculateApparentMagnitude: none function requires the following input data columns: S.')
+
 
     else:
          pplogger.error('ERROR: PPCalculateApparentMagnitude: unknown phase function. Should be HG1G2, HG, HG12 or linear.')

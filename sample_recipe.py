@@ -10,7 +10,8 @@ from lsstcomet import *
 from modules import PPFilterDetectionEfficiencyThreshold, PPreadColoursUser, PPReadColours
 from modules import PPhookBrightnessWithColour, PPJoinColourPointing, PPMatchPointing 
 from modules import PPMatchPointingsAndColours, PPFilterSSPCriterionEfficiency
-from modules import PPOutWriteCSV, PPOutWriteSqlite3, PPReadOrbitFile, PPCheckOrbitAndColoursMatching
+from modules import PPOutWriteCSV, PPOutWriteSqlite3, PPOutWriteHDF5
+from modules import PPReadOrbitFile, PPCheckOrbitAndColoursMatching
 from modules import PPReadOif, PPReadBrightness
 from modules import PPDetectionProbability, PPSimpleSensorArea, PPTrailingLoss, PPMatchFieldConditions
 from modules import PPDropObservations, PPBrightLimit
@@ -162,23 +163,27 @@ def runPostProcessing():
     phasefunction=get_or_exit(config,'PHASE', 'phasefunction', 'ERROR: phase function not defined.')
     
     SSPDetectionEfficiency=float(config["FILTERINGPARAMETERS"]['SSPDetectionEfficiency'])
+    if (SSPDetectionEfficiency > 1.0 or SSPDetectionEfficiency > 1.0 or isinstance(SSPDetectionEfficiency,(float,int))==False):
+        pplogger.error('ERROR: SSP detection efficiency out of bounds (should be between 0 and 1.), or not a number.')
+        sys.exit('ERROR: SSP detection efficiency out of bounds (should be between 0 and 1.), or not a number.')
     fillfactor=float(config["FILTERINGPARAMETERS"]['fillfactor'])
     brightLimit=float(config["FILTERINGPARAMETERS"]['brightLimit'])
     inSepThreshold=float(config["FILTERINGPARAMETERS"]['inSepThreshold'])
     
     
-    minTracklet=int(config["FILTERINGPARAMETERS"]['minTracklet'])
-    if minTracklet < 1:
-        logging.error('ERROR: minimum length of tracklet is zero or negative.')
-        sys.exit('ERROR: minimum length of tracklet is zero or negative.')
+    minTracklet=int(config["FILTERINGPARAMETERS"]['minTracklet'])    
+    if (minTracklet < 1 or isinstance(minTracklet,int)==False):
+        pplogger.error('ERROR: minimum length of tracklet is zero or negative, or not an integer.')
+        sys.exit('ERROR: minimum length of tracklet is zero or negative, or not an integer.')
     noTracklets=int(config["FILTERINGPARAMETERS"]['noTracklets'])
-    if noTracklets < 1:
-        logging.error('ERROR: number of tracklets is zero or negative.')
-        sys.exit('ERROR: number of tracklets is zero or negative')
+    if (noTracklets  < 1 or isinstance(noTracklets, int)== False):
+        pplogger.error('ERROR: number of tracklets is zero or less, or not an integer.')
+        sys.exit('ERROR: number of tracklets is zero or less, or not an integer.')
     trackletInterval=float(config["FILTERINGPARAMETERS"]['trackletInterval'])
-    if trackletInterval <= 0.0:
-        logging.error('ERROR: tracklet interval is negative.')
-        sys.exit('ERROR: tracklet interval is negative.')        
+    if (trackletInterval <= 0.0 or isinstance(trackletInterval,(float,int))==False):
+        logging.error('ERROR: tracklet appearance interval is negative, or not a number.')
+        sys.exit('ERROR: tracklet appearance interval is negative, or not a number.')
+      
 
     outpath=get_or_exit(config, 'OUTPUTFORMAT', 'outpath', 'ERROR: out path not specified.')   
     outfilestem=get_or_exit(config, 'OUTPUTFORMAT', 'outfilestem', 'ERROR: name of output file stem not specified.')    
@@ -239,7 +244,6 @@ def runPostProcessing():
             str4='Reading cometary parameters: ' + cometinput
             padaco=PPReadCometaryInput.PPReadCometaryInput(cometinput, startChunk, incrStep, filesep)
             padacl=PPReadColours.PPReadColours(colourinput, startChunk, incrStep, filesep)
-        
         
         objid_list = padacl['ObjID'].unique().tolist() 
 
@@ -398,7 +402,15 @@ def runPostProcessing():
             out=outpath + outfilestem + outputsuffix
             pplogger.info('Output to sqlite3 database...')
             #pada8=PPOutWriteSqlite3.PPOutWriteSqlite3(pada6,out)   
-            observations=PPOutWriteSqlite3.PPOutWriteSqlite3(observations,out)               
+            observations=PPOutWriteSqlite3.PPOutWriteSqlite3(observations,out)   
+        elif (outputformat == 'hdf5' or outputformat=='HDF5'):
+            outputsuffix=".hdf5"   
+            out=outpath + outfilestem + outputsuffix
+            pplogger.info('Output to HDF5 binary file...')
+            #pada8=PPOutWriteSqlite3.PPOutWriteSqlite3(pada6,out)   
+            observations=PPOutWriteHDF5.PPOutWriteHDF5(observations,out)    
+            
+                        
         else:
             pplogger.error('ERROR: unknown output format.')
             sys.exit('ERROR: unknown output format.')
@@ -411,12 +423,12 @@ def runPostProcessing():
 if __name__=='__main__':
 
      parser = argparse.ArgumentParser()
-     parser.add_argument("-c", "--config", help="Input configuration filename", type=str, dest='c', default='./PPConfig.ini')
+     parser.add_argument("-c", "--config", help="Input configuration file name", type=str, dest='c', default='./PPConfig.ini')
      parser.add_argument("-d", help="Make intermediate pointing database", type=str, dest='d', default=False)
-     parser.add_argument("-m", "--comet", help="Comet parameter filename", type=str, dest='m', default='./data/comet')
+     parser.add_argument("-m", "--comet", help="Comet parameter file name", type=str, dest='m', default='./data/comet')
      parser.add_argument("-l", "--colour", "--color", help="Colour file name", type=str, dest='l', default='./data/colour')
      parser.add_argument("-o", "--orbit", help="Orbit file name", type=str, dest='o', default='./data/orbit.des')
-     parser.add_argument("-p", "--pointing", help="Pointing simulation file name", type=str, dest='p', default='./data/oiftestoutput')
+     parser.add_argument("-p", "--pointing", help="Pointing simulation output file name", type=str, dest='p', default='./data/oiftestoutput')
      parser.add_argument("-b", "--brightness", "--phase", help="Brightness and phase parameter file name", type=str, dest='b', default='./data/HG')
 
 
