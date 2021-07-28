@@ -33,10 +33,17 @@ def footPrintFilter(observations, survey, detectors,
     #convert ra, dec to xyz on the unit sphere
     ra=deg2rad(observations[ra_name])
     dec=deg2rad(observations[dec_name])
-    #fieldra=deg2rad(field[ra_name_field])
-    fieldra=deg2rad(survey.set_index(field_name_survey).lookup(observations[field_name], [ra_name_field]*len(observations.index)))
-    fielddec=deg2rad(survey.set_index(field_name_survey).lookup(observations[field_name], [dec_name_field]*len(observations.index)))
-    rotSkyPos=deg2rad(survey.set_index(field_name_survey).lookup(observations[field_name], [rot_name_field]*len(observations.index)))
+
+    field_df = pd.merge(
+        observations[[field_name]],
+        survey[[field_name_survey, ra_name_field, dec_name_field, rot_name_field]],
+        left_on=field_name,
+        right_on=field_name_survey
+    )
+
+    fieldra   = deg2rad(field_df[ra_name_field])
+    fielddec  = deg2rad(field_df[dec_name_field])
+    rotSkyPos = deg2rad(field_df[rot_name_field])
 
     z=sin(dec)
     z_2=cos(dec)
@@ -119,7 +126,6 @@ def footPrintFilter(observations, survey, detectors,
         ySel=y[obsSelIndex]
         zSel=z[obsSelIndex]
 
-        print(len(ySel), len(zSel))
         points=np.array((ySel, zSel)).T
         detected=isinPolygon(points, sortCorners(detector))
 
