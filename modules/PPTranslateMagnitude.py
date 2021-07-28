@@ -25,11 +25,6 @@ def PPTranslateMagnitude(oif_output, survey_db, colors,
     MaginFil     ...   pandas series containing translated magnitudes
     """
 
-    #l = len(oif_output.index)
-    #obs_filter = survey_db.lookup(oif_output[oifFieldIDName], [surveyFilterName]*l)
-    #obs_color  = colors.set_index(colorsObjIDName).lookup(oif_output[colorsObjIDName], oif_filter+'-'+obs_filter)
-
-    #return (oif_output[oif_filter] - obs_color)
     df = pd.merge(
         oif_output[[oifObjIDName, oifFieldIDName]],
         survey_db[[surveyFieldIDName, surveyFilterName]],
