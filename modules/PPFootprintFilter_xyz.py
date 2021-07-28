@@ -119,7 +119,6 @@ def footPrintFilter(observations, survey, detectors,
         ySel=y[obsSelIndex]
         zSel=z[obsSelIndex]
 
-        print(len(ySel), len(zSel))
         points=np.array((ySel, zSel)).T
         detected=isinPolygon(points, sortCorners(detector))
 
