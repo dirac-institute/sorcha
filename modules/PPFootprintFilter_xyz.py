@@ -10,7 +10,7 @@ deg2rad = np.radians
 sin = np.sin
 cos = np.cos
 
-__all__=['footprintFilter','plotFootprintFiltering']
+__all__=['footPrintFilter','plotFootprintFiltering']
 
 def footPrintFilter(observations, survey, detectors,
                          ra_name="AstRA(deg)", dec_name="AstDec(deg)", field_name="FieldID", field_name_survey="observationId",

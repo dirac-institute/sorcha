@@ -184,7 +184,12 @@ def run():
     logging.info('Calculating trailing losses...')
     oif['dmagDetect']=PPTrailingLoss.PPTrailingLoss(oif, surveydb)
 
-    lim_mag = surveydb.lookup(oif["FieldID"], ['fiveSigmaDepth']*len(oif.index))
+    lim_mag = pd.merge(
+        oif["FieldID"],
+        surveydb[["observationId", "fiveSigmaDepth"]],
+        left_on="FieldID",
+        right_on="observationId"
+    )["fiveSigmaDepth"]
 
     logging.info("Dropping faint detections ... ")
     oif.drop( np.where(oif["MaginFilter"] + oif["dmagDetect"] >= lim_mag)[0], inplace=True)
@@ -201,7 +206,12 @@ def run():
     oif=oif.iloc[on_sensor]
 
     oif=oif.astype({"FieldID": int})
-    oif["Filter"] = surveydb.lookup(oif["FieldID"], ["filter"]*len(oif.index))
+    oif["Filter"] = pd.merge(
+        oif["FieldID"],
+        surveydb[["observationId", 'filter']],
+        left_on="FieldID",
+        right_on="observationId"
+    )['filter']
     oif.drop(columns=["AstrometricSigma(mas)"])
 
     #oif["fiveSigmadepth"]=surveydb.lookup(oif["FieldID"], ['fiveSigmaDepth']*len(oif.index))

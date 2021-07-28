@@ -109,12 +109,18 @@ def addUncertainties(ephemsdf,obsdf,raName='fieldRA',decName='fieldDec',obsIdNam
     #ephemsdf['PhotometricSigma(mag)']=magErrorFromSNR(SNR)
 
     #a more memory efficient way
-    l = len(ephemsdf.index)
-    limMag = obsdf.lookup(ephemsdf[obsIdNameEph], [limMagName]*l)
-    seeing = obsdf.lookup(ephemsdf[obsIdNameEph], [seeingName]*l)
+    #l = len(ephemsdf.index)
+    #limMag = obsdf.lookup(ephemsdf[obsIdNameEph], [limMagName]*l)
+    #seeing = obsdf.lookup(ephemsdf[obsIdNameEph], [seeingName]*l)
+    tempdf = pd.merge(
+        ephemsdf[[obsIdNameEph]],
+        obsdf[[obsIdName, limMagName, seeingName]],
+        left_on=obsIdNameEph,
+        right_on=obsIdName
+    )
 
-    astrSig,SNR,_=calcAstrometricUncertainty(ephemsdf[filterMagName], limMag,
-                                            FWHMeff=seeing*1000, output_units='mas')
+    astrSig,SNR,_=calcAstrometricUncertainty(ephemsdf[filterMagName], tempdf[limMagName],
+                                            FWHMeff=tempdf[seeingName]*1000, output_units='mas')
     photometric_sigma = magErrorFromSNR(SNR)
 
     return (astrSig, photometric_sigma, SNR)
