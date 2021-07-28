@@ -93,7 +93,6 @@ def randomizeObservations(ephemsdf,obsdf,raName='fieldRA',decName='fieldDec',obs
         selection['PhotometricSigma(mag)'] = photSig
         selection['AstometrySigma(deg)'] = astrSig/1000/3600/180
 
-
         randomizeAstrometry(selection,raName=raNameEph,decName=decNameEph,
                             raRndName='AstRARnd(deg)',decRndName='AstDecRnd(deg)',
                             sigName='AstometrySigma(deg)',units='deg')
