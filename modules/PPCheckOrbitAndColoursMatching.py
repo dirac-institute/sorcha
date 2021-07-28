@@ -14,12 +14,13 @@ def PPCheckOrbitAndColoursMatching(orbin,colin,poiin):
    
    
    
-   Description: Read orbit file, and store in a pandas dataframe. Note, that here, no
-   orbit class is initialised
+   Description: Checks whether orbit and colour files contain the same object id:s, and
+               additionally checks if the pointing database object id:s is a subset of 
+               all the object id:s found in the orbit/physical parameter files.
 
 
    Mandatory input:   pandas dataframe: orbin -- orbits
-                      pandas dataframe: colin -- colours
+                      pandas dataframe: colin -- colours/cometary parameters
                       pandas dataframe: poiin -- pointing database
    
 
@@ -36,13 +37,14 @@ def PPCheckOrbitAndColoursMatching(orbin,colin,poiin):
    orbin = orbin.astype({'!!OID': object})
    colin = colin.astype({'ObjID': object})
    
-   
+
    if orbin['!!OID'].equals(colin['ObjID']):
-        if orbin['!!OID'].equals(poiobjs):
+        if poiobjs.isin(orbin['!!OID']).all():
+        #if orbin['!!OID'].equals(poiobjs):
             return
         else:
             logging.error('ERROR: PPCheckOrbitAndColourMatching: input pointing and orbit files do not match.')
             sys.exit('ERROR: PPCheckOrbitAndColourMatching: input pointing and orbit files do not match.')
    else:
-      logging.error('ERROR: PPCheckOrbitAndColourMatching: input colour and orbit files do not match.')
-      sys.exit('ERROR: PPCheckOrbitAndColourMatching: input colour and orbit files do not match.')
+      logging.error('ERROR: PPCheckOrbitAndColourMatching: input colour/cometary parameter and orbit files do not match.')
+      sys.exit('ERROR: PPCheckOrbitAndColourMatching: input colour/cometary parameter and orbit files do not match.')
