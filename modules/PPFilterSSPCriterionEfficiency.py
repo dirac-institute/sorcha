@@ -1,5 +1,7 @@
 #!/usr/bin/python
 
+import os, sys
+import logging
 import pandas as pd
 from astropy import units as u
 from astropy.coordinates import SkyCoord
@@ -36,12 +38,17 @@ def PPFilterSSPCriterionEfficiency(padain,minintracklets,nooftracklets,intervalt
    usage: padafr=PPFilterSSPCriterionEfficiency(padain,minintracklet,nooftracklets,intervaltime, inSepThresHoldAsec)
    """
    
+      
+    
+   pplogger = logging.getLogger(__name__)
+
+   
    if (minintracklets<2):
-       logger.error('ERROR: PPFilterSSPCriterionEfficiency: minimum number of observations in tracklet should be at least 2.')
+       pplogger.error('ERROR: PPFilterSSPCriterionEfficiency: minimum number of observations in tracklet should be at least 2.')
        sys.exit('ERROR: PPFilterSSPCriterionEfficiency: minimum number of observations in tracklet should be at least 2.')
        
    if (nooftracklets<1):
-       logger.error('ERROR: PPFilterSSPCriterionEfficiency: minimum number of tracklets should be at least 1.')
+       pplogger.error('ERROR: PPFilterSSPCriterionEfficiency: minimum number of tracklets should be at least 1.')
        sys.exit('ERROR: PPFilterSSPCriterionEfficiency: minimum number of tracklets should be at least 1.')
    
    padain.reset_index(inplace=True)
@@ -164,10 +171,11 @@ def PPFilterSSPCriterionEfficiency(padain,minintracklets,nooftracklets,intervalt
 
              m=0
              g=0
-             #print()
+
              #while(m<=counter-nooftracklets):
-             while(m<=ms[-nooftracklets]):
-                  if (m in padaouttrackletcoll['counter'].values):
+             if (counter+1>=nooftracklets):
+                 while(m<=ms[-nooftracklets]):
+                   if (m in padaouttrackletcoll['counter'].values):
                       #print('m: ', m, ' nooftracklets: ', nooftracklets, ' m+nooftracklets: ', m+nooftracklets)
                       flindex=padaouttrackletcoll.loc[padaouttrackletcoll['counter'] == m].head(1).index[0]
                       llindex=padaouttrackletcoll.loc[padaouttrackletcoll['counter'] == ms[g+nooftracklets-1]].tail(1).index[0]
@@ -178,7 +186,7 @@ def PPFilterSSPCriterionEfficiency(padain,minintracklets,nooftracklets,intervalt
                             #print(padaouttrackletcoll[flindex:llindex])
                             padaout=padaout.append(padaouttrackletcoll[flindex:llindex+1], ignore_index=True, sort=False)
                       g=g+1
-                  m=m+1
+                   m=m+1
              #trkcntahead=0
              #trkcntbhind=0
              #while(trkcntahead<len(padaouttrackletcoll.index)):

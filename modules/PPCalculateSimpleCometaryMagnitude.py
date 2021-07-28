@@ -39,7 +39,7 @@ def PPCalculateSimpleCometaryMagnitude(padain, mainfilter):
                + padain['Ast-Sun(J2000z)(km)']*padain['Ast-Sun(J2000z)(km)']).pow(1./2)/1.495978707e8 
 
 
-    com=Comet(Hv=padain.V, afrho1=padain.afrho1, q=padain.q, k=padain.k)
+    com=Comet(Hv=padain[mainfilter], afrho1=padain.afrho1, q=padain.q, k=padain.k)
 
     #padain['gcom'] = {'rh': padain['rho'], 'delta': padain['delta'], 'phase': padain['Sun-Ast-Obs(deg)']}
     g = {'rh': padain['rho'], 'delta': padain['delta'], 'phase': padain['Sun-Ast-Obs(deg)']}

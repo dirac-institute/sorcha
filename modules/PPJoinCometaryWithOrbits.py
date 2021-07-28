@@ -2,6 +2,7 @@
 
 import pandas as pd
 import os, sys
+import logging
 
 # Author: Grigori Fedorets
 
@@ -25,7 +26,7 @@ def PPJoinCometaryWithOrbits(padafr,padaor):
    usage: padafr1=PPPJoinCometaryWithOrbits(padafr,padaor)
    """
 
-
+   pplogger = logging.getLogger(__name__)
 
    resdf=padafr.join(padaor.set_index('!!OID'), on='ObjID')
    

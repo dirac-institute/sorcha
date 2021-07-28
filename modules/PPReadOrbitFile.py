@@ -2,6 +2,7 @@
 
 import pandas as pd
 import os, sys
+import logging 
 
 # Author: Grigori Fedorets
 
@@ -30,6 +31,8 @@ def PPReadOrbitFile(orbin, beginLoc, chunkSize, filesep):
 
    """
    
+   pplogger = logging.getLogger(__name__)
+   
    if (filesep==" "):
        padafr=pd.read_csv(orbin, sep='\s+', skiprows=range(1,beginLoc+1), nrows=chunkSize, header=0)
    elif (filesep==","):
@@ -40,9 +43,9 @@ def PPReadOrbitFile(orbin, beginLoc, chunkSize, filesep):
       # rename i to incl to avoid confusion with the colour i
    padafr=padafr.rename(columns={"i" : "incl"})
 
-   if (len(padafr.columns) != 14):
-        pplogger.error('ERROR: PPReadOrbitFile: invalid input orbit DES file: not 14 columns.')
-        sys.exit('ERROR: PPReadOrbitFile: invalid input orbit DES file: not 14 columns.')
+   #if (len(padafr.columns) != 14):
+   #     pplogger.error('ERROR: PPReadOrbitFile: invalid input orbit DES file: not 14 columns.')
+   #     sys.exit('ERROR: PPReadOrbitFile: invalid input orbit DES file: not 14 columns.')
    # Check for nans or nulls
    
    if padafr.isnull().values.any():
@@ -50,9 +53,9 @@ def PPReadOrbitFile(orbin, beginLoc, chunkSize, filesep):
          inds=str(pdt['!!OID'].values)
          outstr="ERROR: uninitialised values when reading orbit file. ObjID: " + str(inds)
          sys.exit(outstr)
-         logger.info(outstr)
+         pplogger.info(outstr)
    
-   padafr=padafr.drop(['H', 'INDEX', 'N_PAR', 'MOID', 'COMPCODE'], axis = 1)
+   padafr=padafr.drop(['H', 'INDEX', 'N_PAR', 'MOID', 'COMPCODE'], axis = 1, errors='ignore')
    
     
    return padafr

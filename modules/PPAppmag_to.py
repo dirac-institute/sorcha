@@ -25,7 +25,7 @@ def appMagFitterHG12(mag_list,a,weights):
 
     var.H.value: float
             The fitted H-magnitude value
-    v.G12.value: float
+    var.G12.value: float
             The G12 parameter from the fit
     H_err: float
             Error in fitting the H value
@@ -42,7 +42,7 @@ def appMagFitterHG12(mag_list,a,weights):
     H_err = np.sqrt(param_cov[0][0])
     G12_err = np.sqrt(param_cov[1][1])
     H_G12_cov = param_cov[0][1]
-    return np.array([var.H.value,v.G12.value,H_err,G12_err,H_G12_cov])
+    return np.array([var.H.value,var.G12.value,H_err,G12_err,H_G12_cov])
 
 def appMagFitterHG(mag_list,a,weights):
     '''
@@ -63,7 +63,7 @@ def appMagFitterHG(mag_list,a,weights):
 
     var.H.value: float
             The fitted H-magnitude value
-    v.G.value: float
+    var.G.value: float
             The G parameter from the fit
     H_err: float
             Error in fitting the H value
@@ -80,7 +80,7 @@ def appMagFitterHG(mag_list,a,weights):
     H_err = np.sqrt(param_cov[0][0])
     G_err = np.sqrt(param_cov[1][1])
     H_G_cov = param_cov[0][1]
-    return np.array([var.H.value,v.G.value,H_err,G_err,H_G_cov])
+    return np.array([var.H.value,var.G.value,H_err,G_err,H_G_cov])
 
 def appMagFitterHG1G2(mag_list,a,weights):
     '''
@@ -101,9 +101,9 @@ def appMagFitterHG1G2(mag_list,a,weights):
 
     var.H.value: float
             The fitted H-magnitude value
-    v.G1.value: float
+    var.G1.value: float
             The G1 parameter from the fit
-    v.G2.value: float
+    var.G2.value: float
             The G2 parameter from the fit
     H_err: float
             Error in fitting the H value
@@ -123,4 +123,4 @@ def appMagFitterHG1G2(mag_list,a,weights):
     G1_err = np.sqrt(param_cov[1][1])
     G2_err = np.sqrt(param_cov[2][2])
     H_G1G2_cov = param_cov[0][2] # assuming this is the correct index for the covariance
-    return np.array([var.H.value,v.G1.value,v.G2.value,H_err,G1_err,G2_err,H_G1G2_cov])
+    return np.array([var.H.value,var.G1.value,var.G2.value,H_err,G1_err,G2_err,H_G1G2_cov])
