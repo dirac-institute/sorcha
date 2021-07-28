@@ -3,6 +3,7 @@
 import pandas as pd
 import random
 import sys
+import logging
 
 # Author: Grigori Fedorets
 
@@ -21,10 +22,12 @@ def PPFilterDetectionEfficiencyThreshold(padain, threshold):
     
     """
     
+    pplogger = logging.getLogger(__name__)
+    
     padain=padain.reset_index(drop=True)
 
     if (threshold > 1.0 or threshold < 0.0):
-         logging.error('ERROR: PPFilterDetectionEfficiencyThreshold: threshold out of bounds.')
+         pplogger.error('ERROR: PPFilterDetectionEfficiencyThreshold: threshold out of bounds.')
          sys.exit('ERROR: PPFilterDetectionEfficiencyThreshold: threshold out of bounds.')
     
     nrows=len(padain.index)

@@ -232,12 +232,12 @@ def runPostProcessing():
         outputsuffix='.csv'
         out=outpath + outfilestem + outputsuffix
         pplogger.info('Output to CSV file...')
-        pada8=PPOutWriteCSV.PPOutWriteCSV(pada6,out)
+        oif=PPOutWriteCSV.PPOutWriteCSV(oif,out)
     elif (outputformat == 'sqlite3'):
         outputsuffix='.db'
         out=outpath + outfilestem + outputsuffix
         pplogger.info('Output to sqlite3 database...')
-        pada8=PPOutWriteSqlite3.PPOutWriteSqlite3(pada6,out)     
+        oif=PPOutWriteSqlite3.PPOutWriteSqlite3(oif,out)     
     elif (outputformat=='hdf5'):
         outputsuffix='.h5'
         out=outpath + outfilestem + outputsuffix

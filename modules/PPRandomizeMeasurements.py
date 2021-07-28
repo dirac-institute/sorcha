@@ -84,19 +84,21 @@ def randomizeObservations(ephemsdf,obsdf,raName='fieldRA',decName='fieldDec',obs
         selection=ephemsdf[ephemsdf[obsIdNameEph] == row[obsIdName]].reset_index(drop=True)
 
         #Add astrometric and photometric 1 sigma uncertainties
-        astrSig,SNR,rndError = calcAstrometricUncertainty(selection[filterMagName], row[limMagName],
+        astrSig,SNR,rndError = uc.calcAstrometricUncertainty(selection[filterMagName], row[limMagName], 
                                                     FWHMeff=row[seeingName]*1000, output_units='mas')
-        photSig = magErrorFromSNR(SNR)
-
+        photSig = uc.magErrorFromSNR(SNR)
+        
         selection['AstRASigma(mas)'] = astrSig
         selection['AstDecSigma(mas)'] = astrSig
         selection['PhotometricSigma(mag)'] = photSig
         selection['AstometrySigma(deg)'] = astrSig/1000/3600/180
 
-
-        randomizeAstrometry(df,raName=raNameEph,decName=decNameEph,
+        randomizeAstrometry(selection,raName=raNameEph,decName=decNameEph,
                             raRndName='AstRARnd(deg)',decRndName='AstDecRnd(deg)',
                             sigName='AstometrySigma(deg)',units='deg')
+        #randomizeAstrometry(df,raName=raNameEph,decName=decNameEph,
+        #                    raRndName='AstRARnd(deg)',decRndName='AstDecRnd(deg)',
+        #                    sigName='AstometrySigma(deg)',units='deg')
 
         randomizePhotometry(selection,magName=filterMagName,magRndName='FiltermagRnd',sigName='PhotometricSigma(mag)')
 
