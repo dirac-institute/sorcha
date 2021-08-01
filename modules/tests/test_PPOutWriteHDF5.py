@@ -10,14 +10,15 @@ from ..PPReadOif import PPReadOif
 from ..PPReadColours import PPReadColours
 from ..PPMatchPointing import PPMatchPointing
 from ..PPMatchPointingsAndColours import PPMatchPointingsAndColours
-from ..PPOutWriteCSV import PPOutWriteCSV
+from ..PPOutWriteHDF5 import PPOutWriteHDF5
 
 
 
-def test_PPOutWriteCSV():
+def test_PPOutWriteHDF5():
+
 
     padafr=PPReadOif('./data/test/oiftestoutput', " ")
-    padacl=PPReadColours('./data/test/testcolour', 0, 5, " ")
+    padacl=PPReadColours('./data/test/testcolour', 0, 20, " ")
     
     resdf=PPJoinColourPointing(padafr,padacl)
     
@@ -26,21 +27,28 @@ def test_PPOutWriteCSV():
     resdf3=PPhookBrightnessWithColour(resdf1, 'r', 'g-r', 'g')
     
     
-    pada5=PPMatchPointing('./data/baseline_10yrs_10klines.db', ['u', 'g', 'r', 'i', 'z'])
+    pada5=PPMatchPointing('./data/baseline_10yrs_10klines.db', ['r', 'g', 'i'])
     pada6=PPMatchPointingsAndColours(resdf3,pada5)
     
     
-    pada7=PPOutWriteCSV(pada6,'./outtest.csv')
-    ncols=5
+    pada7=PPOutWriteHDF5(pada6,'outtest.h5',str(1))
     
-    tpt=os.popen("wc -l ./outtest.csv | awk '{print $1}'")
-    cmp=tpt.read()
-    cmp.strip()
-    cmp1=int(cmp)
-    os.system("rm ./outtest.csv")
+    pd.read_hdf('outtest.h5', str(1)).dtypes
+
+    
+    ncols=4
+    
+    print(pada6)
+    
+    rer=pd.read_hdf('outtest.h5')
+    
+    nrs=len(rer.index)
+
+    os.system("rm outtest.h5")
+
     
     #ncolsre=len(pada6.columns)
     
-    assert ncols==cmp1
+    assert ncols==nrs
     return     
          

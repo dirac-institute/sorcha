@@ -188,8 +188,8 @@ def runPostProcessing():
     outpath=get_or_exit(config, 'OUTPUTFORMAT', 'outpath', 'ERROR: out path not specified.')   
     outfilestem=get_or_exit(config, 'OUTPUTFORMAT', 'outfilestem', 'ERROR: name of output file stem not specified.')    
     outputformat=get_or_exit(config, 'OUTPUTFORMAT', 'outputformat', 'ERROR: output format not specified.')   
-    if (outputformat != 'csv') and (outputformat != 'sqlite3'):
-         sys.exit('ERROR: output format should be either csv or sqlite3.')
+    if (outputformat != 'csv') and (outputformat != 'sqlite3') and (outputformat != 'hdf5') and (outputformat != 'HDF5') :
+         sys.exit('ERROR: output format should be either csv, sqlite3 or hdf5.')
     separatelyCSV=bool(config["OUTPUTFORMAT"]['separatelyCSV'])
     sizeSerialChunk = int(config["GENERAL"]['sizeSerialChunk'])
 
@@ -408,7 +408,7 @@ def runPostProcessing():
             out=outpath + outfilestem + outputsuffix
             pplogger.info('Output to HDF5 binary file...')
             #pada8=PPOutWriteSqlite3.PPOutWriteSqlite3(pada6,out)   
-            observations=PPOutWriteHDF5.PPOutWriteHDF5(observations,out)    
+            observations=PPOutWriteHDF5.PPOutWriteHDF5(observations,out,str(endChunk))    
             
                         
         else:
