@@ -25,10 +25,10 @@ def test_PPMatchPointingAndColours():
     resdf3=PPhookBrightnessWithColour(resdf1, 'r', 'g-r', 'g')
     
     
-    pada5=PPMatchPointing('./data/baseline_10yrs_10klines.db')
+    pada5=PPMatchPointing('./data/baseline_10yrs_10klines.db', ['u', 'g', 'r', 'i', 'z'])
     pada6=PPMatchPointingsAndColours(resdf3,pada5)
     
-    ncols=28
+    ncols=31
     ncolsre=len(pada6.columns)
     
     assert ncols==ncolsre

@@ -27,12 +27,12 @@ def test_PPOutWriteSqlite3():
     resdf3=PPhookBrightnessWithColour(resdf1, 'r', 'g-r', 'g')
     
     
-    pada5=PPMatchPointing('./data/baseline_10yrs_10klines.db')
+    pada5=PPMatchPointing('./data/baseline_10yrs_10klines.db', ['u', 'g', 'r', 'i', 'z'])
     pada6=PPMatchPointingsAndColours(resdf3,pada5)
     
     
     pada7=PPOutWriteSqlite3(pada6,'./outtest.db')
-    nrows=9
+    nrows=4
     
     con = sqlite3.connect('./outtest.db')
     cur = con.cursor()
