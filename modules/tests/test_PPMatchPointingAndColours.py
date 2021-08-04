@@ -28,7 +28,7 @@ def test_PPMatchPointingAndColours():
     pada5=PPMatchPointing('./data/baseline_10yrs_10klines.db', ['u', 'g', 'r', 'i', 'z'])
     pada6=PPMatchPointingsAndColours(resdf3,pada5)
     
-    ncols=31
+    ncols=32
     ncolsre=len(pada6.columns)
     
     assert ncols==ncolsre
