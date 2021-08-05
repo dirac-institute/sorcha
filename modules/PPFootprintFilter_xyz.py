@@ -45,93 +45,95 @@ def footPrintFilter(observations, survey, detectors,
     fielddec  = deg2rad(field_df[dec_name_field])
     rotSkyPos = deg2rad(field_df[rot_name_field])
 
-    z=sin(dec)
-    z_2=cos(dec)
-
-    x=z_2*cos(ra)
-    y=z_2*sin(ra)
-    del(z_2)
-
-    z_field=sin(fielddec)
-    z_field_2=cos(fielddec)
-
-    x_field=z_field_2*sin(fieldra)
-    y_field=z_field_2*cos(fieldra)
-    del(z_field_2)
-
-    #align field rotations
-    #do this before projecting onto detector plane
-    #rotate every point onto the same great circle, (i.e. along the x axis)
-
-    cos_ra = cos(ra)
-    sin_ra = sin(ra)
-
-    x2 =  x*cos_ra + y*sin_ra
-    y2 = -x*sin_ra + y*cos_ra
-    z2 = z
-
-    #rotate around the y axis
-    cos_dec_f = cos(fielddec)
-    sin_dec_f = sin(fielddec)
-
-    x3 =  x2*cos_dec_f + z2*sin_dec_f
-    y3 =  y2
-    z3 = -x2*sin_dec_f + z2*cos_dec_f
-
-    #rotate back to original ra
-    x4 =  x3*cos_ra - y3*sin_ra
-    y4 =  x3*sin_ra + y3*cos_ra
-    z4 =  z3
-
-    #rotate to ra for focal plane
-    cos_ra_f = cos(fieldra)
-    sin_ra_f = sin(fieldra)
-
-    x5 =  x4*cos_ra_f + y4*sin_ra_f
-    y5 = -x4*sin_ra_f + y4*cos_ra_f
-    z5 = z4
-
-    #align rotSkyPos
-    cos_rot = cos(-rotSkyPos)
-    sin_rot = sin(-rotSkyPos)
-
-    x6 = x5
-    y6 = y5*cos_rot - z5*sin_rot
-    z6 = y5*sin_rot + z5*cos_rot
-
-    x=x6
-    y=y6
-    z=z6
-
-    #get vector from field center to obs in plane
-    x/=x
-    y/=x
-    z/=x
+    #get coords on focal plane
+    x, y, z = RADEC2fovXYZ(ra, dec, fieldra, fielddec, rotSkyPos) # y,z in 3d -> x, y in focal plane
+    y *= 2. / (1.+x)
+    z *= 2. / (1.+x)
 
     #check if obs fall in detectors
     detectedObs=[]
     for detector in detectors:
-        xd=cos(detector[:,1])*cos(detector[:,0])
-        yd=cos(detector[:,1])*sin(detector[:,0])
-        zd=sin(detector[:,1])
+        corners = sortCorners(detector)
+        #project corners to plane
+        xd = np.cos(corners[:,0]) * np.cos(corners[:,1])
+        yd = np.sin(corners[:,0]) * np.cos(corners[:,1])
+        zd = np.sin(corners[:,1])
 
-        xd/=xd
-        yd/=xd
-        zd/=xd
+        yd *= 2. / (1.+xd)
+        zd *= 2. / (1.+xd)
+        corners = np.array((yd, zd)).T
 
-        r, detector_center=detectorCircle(np.array((yd, zd)).T)
+        r, detector_center=detectorCircle(corners)
         obsSelIndex=np.where((y-detector_center[0])**2 + (z-detector_center[1])**2 < r**2 )[0]
-
 
         ySel=y[obsSelIndex]
         zSel=z[obsSelIndex]
 
         points=np.array((ySel, zSel)).T
-        detected=isinPolygon(points, sortCorners(detector))
+        detected=isinPolygon(points, corners)
+        #print(detected)
 
         detectedObs.append(pd.Series(obsSelIndex[detected]))
 
     return pd.concat(detectedObs).reset_index(drop=True)
+
+def detectors2fovXY(detectors):
+
+    detectors_out = []
+    for detector in detectors:
+        xd=cos(detector[:,1])*cos(detector[:,0])
+        yd=cos(detector[:,1])*sin(detector[:,0])
+        zd=sin(detector[:,1])
+        #print(xd)
+        #yd/=xd
+        #zd/=xd
+        #xd/=xd
+        detectors_out += [np.array([yd, zd]).T]
+
+    return np.array(detectors_out)
+
+def xyz_xrot(x, y, z, theta):
+    #xf =
+    yf = y*cos(theta) - z*sin(theta)
+    zf = y*sin(theta) + z*cos(theta)
+    return x, yf, zf
+
+def xyz_yrot(x, y, z, theta):
+    xf =  x*cos(theta) + z*sin(theta)
+    #yf =
+    zf = -x*sin(theta) + z*cos(theta)
+    return xf, y, zf
+
+def xyz_zrot(x, y, z, theta):
+    xf = x*cos(theta) - y*sin(theta)
+    yf = x*sin(theta) + y*cos(theta)
+    #zf =
+    return xf, yf, z
+
+def RADEC2fovXYZ(RA, Dec, fieldRA, fieldDec, rotSkyPos):
+    x=cos(Dec)*cos(RA)
+    y=cos(Dec)*sin(RA)
+    z=sin(Dec)
+
+    fieldx = cos(fieldDec) * cos(fieldRA)
+    fieldy = cos(fieldDec) * sin(fieldRA)
+    fieldz = sin(fieldDec)
+
+    phi = np.arctan2(fieldz, fieldx)
+    x, y, z = xyz_yrot(x, y, z, phi)
+    fieldx, fieldy, fieldz = xyz_yrot(fieldx, fieldy, fieldz, phi)
+
+    phi = np.arctan2(fieldy, fieldx)
+    x, y, z = xyz_zrot(x, y, z, -phi)
+
+    x, y, z = xyz_xrot(x, y, z, -rotSkyPos)
+
+    #project y, z onto distant plane
+    #x*=()
+    #y*= 2 / (1+x)
+    #z*= 2 / (1+x)
+
+    return x, y, z
 
 def polygonArea(corners):
     """Calculates the area of a convex polygon.
