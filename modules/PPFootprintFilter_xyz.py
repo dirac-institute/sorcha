@@ -38,7 +38,8 @@ def footPrintFilter(observations, survey, detectors,
         observations[[field_name]],
         survey[[field_name_survey, ra_name_field, dec_name_field, rot_name_field]],
         left_on=field_name,
-        right_on=field_name_survey
+        right_on=field_name_survey,
+        how="left"
     )
 
     fieldra   = deg2rad(field_df[ra_name_field])
@@ -76,6 +77,15 @@ def footPrintFilter(observations, survey, detectors,
         detectedObs.append(pd.Series(obsSelIndex[detected]))
 
     return pd.concat(detectedObs).reset_index(drop=True)
+
+def readFootPrintFile(path2file):
+    #currently requires a specific header
+    detectors_df=pd.read_csv(path2file)
+    detectors=[]
+    for i in range(len(detectors_df["detector"].unique())):
+        detectors+=[ np.array([detectors_df.loc[detectors_df["detector"]==i]['x'], detectors_df.loc[detectors_df["detector"]==i]['y']]).T ]
+    return np.array(detectors)
+
 
 def detectors2fovXY(detectors):
 

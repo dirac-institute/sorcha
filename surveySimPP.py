@@ -154,6 +154,8 @@ def run():
         oif=pd.read_hdf(oifoutput).reset_index(drop=True)
     elif file_ext == 'csv':
         oif = pd.read_csv(oifoutput, delim_whitespace=True)
+    else:
+        oif=pd.read_hdf(oifoutput).reset_index(drop=True)
 
     pplogger.info('Reading pointing database')
     con=sql.connect(pointingdatabase)
@@ -164,11 +166,7 @@ def run():
     colors=pd.read_csv(colourinput, delim_whitespace=True)
 
     logging.info("loading camera footprint ...")
-    detectors_df=pd.read_csv('detectors_corners.csv')
-    detectors=[]
-    for i in range(len(detectors_df["detector"].unique())):
-        detectors+=[ np.array([detectors_df.loc[detectors_df["detector"]==i]['x'], detectors_df.loc[detectors_df["detector"]==i]['y']]).T ]
-    detectors=np.array(detectors)
+    detectors=PPFootprintFilter_xyz.readFootPrintFile('detectors_corners.csv')
 
     logging.info('Translating magnitudes to appropriate filters...')
     oif["MaginFilterTrue"]=PPTranslateMagnitude.PPTranslateMagnitude(oif, surveydb, colors)
@@ -188,7 +186,8 @@ def run():
         oif["FieldID"],
         surveydb[["observationId", "fiveSigmaDepth"]],
         left_on="FieldID",
-        right_on="observationId"
+        right_on="observationId",
+        how="left"
     )["fiveSigmaDepth"]
 
     logging.info("Dropping faint detections ... ")
@@ -202,7 +201,8 @@ def run():
 
     logging.info('Applying sensor footprint filter...')
     pointings=pd.read_sql_query('SELECT fieldRA, fieldDec, observationStartMJD, observationId, rotSkyPos FROM SummaryAllProps ORDER BY observationId', con)
-    on_sensor=PPFootprintFilter_xyz.footPrintFilter(oif, pointings, detectors)
+    pointings=pd.read_sql_query('SELECT * FROM SummaryAllProps ORDER BY observationId', con)
+    on_sensor=PPFootprintFilter_xyz.footPrintFilter(oif, pointings, detectors)#, ra_name="AstRATrue(deg)", dec_name="AstDecTrue(deg)")
     oif=oif.iloc[on_sensor]
 
     oif=oif.astype({"FieldID": int})
@@ -210,7 +210,8 @@ def run():
         oif["FieldID"],
         surveydb[["observationId", 'filter']],
         left_on="FieldID",
-        right_on="observationId"
+        right_on="observationId",
+        how="left"
     )['filter']
     oif.drop(columns=["AstrometricSigma(mas)"])
 

@@ -117,7 +117,8 @@ def PPTrailingLoss(oif_df, survey_df, model='circularPSF', dra_name='AstRARate(d
         oif_df[[field_id_name_oif]],
         survey_df[[field_id_name_survey, seeing_name_survey]],
         left_on=field_id_name_oif,
-        right_on=field_id_name_survey
+        right_on=field_id_name_survey,
+        how="left"
     )
 
     dmag = calcTrailingLoss(oif_df[dra_name] * np.cos(oif_df[dec_name]*np.pi/180), oif_df[ddec_name], tempdf[seeing_name_survey], model=model)

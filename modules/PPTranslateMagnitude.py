@@ -29,14 +29,16 @@ def PPTranslateMagnitude(oif_output, survey_db, colors,
         oif_output[[oifObjIDName, oifFieldIDName]],
         survey_db[[surveyFieldIDName, surveyFilterName]],
         left_on=oifFieldIDName,
-        right_on=surveyFieldIDName
+        right_on=surveyFieldIDName,
+        how="left"
     ).drop(columns=[surveyFieldIDName])
 
     df = pd.merge(
         df,
         colors,
         left_on=oifObjIDName,
-        right_on=colorsObjIDName
+        right_on=colorsObjIDName,
+        how="left"
     )
 
     df['filter diff name'] = oif_filter + '-' + df[surveyFilterName]
