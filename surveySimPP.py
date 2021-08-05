@@ -174,7 +174,7 @@ def run():
     oif['AstrometricSigma(mas)'], oif['PhotometricSigma(mag)'], oif["SNR"] = PPAddUncertainties.addUncertainties(oif, surveydb, obsIdNameEph='FieldID')
     oif["AstrometricSigma(deg)"] = oif['AstrometricSigma(mas)'] / 3600 / 1000
 
-    oif.drop( np.where(oif["SNR"] <= 2.)[0], inplace=True)
+    #oif.drop( np.where(oif["SNR"] <= 2.)[0], inplace=True)
     oif.reset_index(drop=True, inplace=True)
 
     oif["MaginFilter"] = PPRandomizeMeasurements.randomizePhotometry(oif, magName="MaginFilterTrue", sigName="PhotometricSigma(mag)")
@@ -191,17 +191,18 @@ def run():
     )["fiveSigmaDepth"]
 
     logging.info("Dropping faint detections ... ")
-    oif.drop( np.where(oif["MaginFilter"] + oif["dmagDetect"] >= lim_mag)[0], inplace=True)
-    oif.reset_index(drop=True, inplace=True)
+    #oif.drop( np.where(oif["MaginFilter"] + oif["dmagDetect"] >= lim_mag)[0], inplace=True)
+    #oif.reset_index(drop=True, inplace=True)
 
-    logging.info('Calculating astrometric uncertainties ...')
-    oif["AstRATrue(deg)"] = oif["AstRA(deg)"]
-    oif["AstDecTrue(deg)"] = oif["AstDec(deg)"]
-    oif["AstRA(deg)"], oif["AstDec(deg)"] = PPRandomizeMeasurements.randomizeAstrometry(oif, sigName='AstrometricSigma(deg)')
+    #This might be bugged, investigating...
+    #logging.info('Calculating astrometric uncertainties ...')
+    #oif["AstRATrue(deg)"] = oif["AstRA(deg)"]
+    #oif["AstDecTrue(deg)"] = oif["AstDec(deg)"]
+    #oif["AstRA(deg)"], oif["AstDec(deg)"] = PPRandomizeMeasurements.randomizeAstrometry(oif, sigName='AstrometricSigma(deg)')
 
     logging.info('Applying sensor footprint filter...')
     pointings=pd.read_sql_query('SELECT fieldRA, fieldDec, observationStartMJD, observationId, rotSkyPos FROM SummaryAllProps ORDER BY observationId', con)
-    pointings=pd.read_sql_query('SELECT * FROM SummaryAllProps ORDER BY observationId', con)
+    #pointings=pd.read_sql_query('SELECT * FROM SummaryAllProps ORDER BY observationId', con)
     on_sensor=PPFootprintFilter_xyz.footPrintFilter(oif, pointings, detectors)#, ra_name="AstRATrue(deg)", dec_name="AstDecTrue(deg)")
     oif=oif.iloc[on_sensor]
 
