@@ -70,35 +70,9 @@ def run():
 
     config = configparser.ConfigParser()
 
-    #set some reasonable defaults
-    config.read_dict({
-        "INPUTFILES" : {"oifoutput": "test-oif.csv",
-                        "colourinput" : "test-colors.csv",
-                        "camerafootprint": "detectors_corners.csv",
-                        "pointingdatabase" : "baseline_nexp2_v1.7.1_10yrs.db"   #current opsim file as of 6/11/21
-        },
-        "FILTERS" : {"mainfilter": 'V',
-                     "othercolours": "V-u, V-g, V-r, V-i, V-z, V-y",
-                     "resfilters": "V, u, g, r, i, z, y"
-        },
-        "FILTERINGPARAMETERS" : {"SSPDetectionEfficiency": 1.0, # not using
-                                 "fillfactor": 1.0,   #not using
-                                 "minTracklet": 2,    #not using
-                                 "noTracklets": 3,       # not using
-                                 "trackletInterval": 15.0,     # not using
-                                 "brightLimit": 16.0,      # not using
-                                 "inSepThreshold": 0.5
-        },
-                                       # but leaving them in in case needed in future
-        "OUTPUTFORMAT" : {"outpath": "./",
-                            "outfilestem": "testout",
-                            "outputformat": "csv"
-        }
-    })
-
-    #in the config file there should be a test value, I'm leaving it there since
-    #moving it to the defaults would defeat the purpose
-
+    #load defaults and specified config file
+    defaults = './configs/defaults.ini'
+    config.read(defaults)
     config.read(configfile)
 
     testvalue=int(config["GENERAL"]['testvalue'])
