@@ -6,7 +6,7 @@ from ..PPMatchFieldConditions import PPMatchFieldConditions
 from ..PPTrailingLoss import calcTrailingLoss, PPTrailingLoss
 
 def test_calcTrailingLoss():
-    assert 0.45347433560262890 == PPTrailingLoss.calcTrailingLoss(1.0, 1.0, 1.0)
+    assert 0.45347433560262895 == calcTrailingLoss(1.0, 1.0, 1.0)
     return
 
 def test_PPTrailingLoss():
@@ -27,4 +27,4 @@ def test_PPTrailingLoss():
                                        0.97841924, 0.54296975, 0.99666377, 0.95417028,
                                        0.41872633, 0.85249683]
     })
-    assert 0.25893924959480374 == PPTrailingLoss.PPTrailingLoss(testoifdf, testsurveydf)[5]
+    assert 0.25893924959480374 == PPTrailingLoss(testoifdf, testsurveydf)[5]
