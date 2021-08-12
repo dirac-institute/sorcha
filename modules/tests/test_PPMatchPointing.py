@@ -8,7 +8,7 @@ from ..PPMatchPointing import PPMatchPointing
 
 def test_PPMatchPointing():
     
-    padapo=PPMatchPointing('./data/baseline_10yrs_10klines.db', ['u', 'g', 'r', 'i', 'z', 'y'])
+    padapo=PPMatchPointing('./data/test/baseline_10yrs_10klines.db', ['u', 'g', 'r', 'i', 'z', 'y'])
     
     nlines=10001
     

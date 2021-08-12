@@ -8,7 +8,7 @@ from ..PPMakeIntermediatePointingDatabase import PPMakeIntermediatePointingDatab
 
 def test_PPMakeIntermediatePointingDatabase():
     
-    daba=PPMakeIntermediatePointingDatabase('./data/test/oiftestoutput','./data/unittest.db', 10)
+    daba=PPMakeIntermediatePointingDatabase('./data/test/oiftestoutput.txt','./data/test/testdb_PPIntermDB.db', 10)
     
 
     
