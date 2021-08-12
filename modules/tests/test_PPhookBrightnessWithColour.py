@@ -12,8 +12,8 @@ from ..PPJoinColourPointing import PPJoinColourPointing
 
 def test_PPhookBrightnessWithColour():
 
-    padafr=PPReadOif('./data/test/oiftestoutput', ' ')
-    padacl=PPReadColours('./data/test/testcolour', 0, 5, ' ')
+    padafr=PPReadOif('./data/test/oiftestoutput.txt', ' ')
+    padacl=PPReadColours('./data/test/testcolour.txt', 0, 5, ' ')
 
     resdf=PPJoinColourPointing(padafr,padacl)
     ncols=len(resdf.columns)    

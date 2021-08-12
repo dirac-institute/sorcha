@@ -21,9 +21,9 @@ Action: 1. count lines from raw output
 Author: Grigori Fedorets
 """
 
-def test_filterDetectionEfficiencyThreshold():
+def test_PPFilterDetectionEfficiencyThreshold():
 
-    padafr=PPReadOif('./data/test/oiftestoutput', ' ')
+    padafr=PPReadOif('./data/test/oiftestoutput.txt', ' ')
     nrows=len(padafr.index)
     pada1=PPFilterDetectionEfficiencyThreshold(padafr,1.00)
     nr1=len(pada1.index)

@@ -13,7 +13,7 @@ from ..PPFilterSSPCriterionEfficiency import PPFilterSSPCriterionEfficiency
 
 def test_PPFilterSSPCriterionEfficiency():
 
-    padafr=PPReadOif('./data/test/oiftestoutput', " ")
+    padafr=PPReadOif('./data/test/oiftestoutput.txt', " ")
     print(padafr)
     padaout=PPFilterSSPCriterionEfficiency(padafr,2,1,15.0,1.0)
     print(padaout)

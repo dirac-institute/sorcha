@@ -15,8 +15,8 @@ from ..PPBrightLimit import PPBrightLimit
 
 def test_PPBrightLimit():
 
-    padafr=PPReadOif('./data/test/oiftestoutput', ' ')
-    padacl=PPReadColours('./data/test/testcolour', 0, 5, ' ')
+    padafr=PPReadOif('./data/test/oiftestoutput.txt', ' ')
+    padacl=PPReadColours('./data/test/testcolour.txt', 0, 5, ' ')
     
     resdf=PPJoinColourPointing(padafr,padacl)
     
@@ -25,7 +25,7 @@ def test_PPBrightLimit():
     resdf3=PPhookBrightnessWithColour(resdf1, 'r', 'g-r', 'g')
     
     
-    pada5=PPMatchPointing('./data/baseline_10yrs_10klines.db', ['r', 'g', 'i', 'z'])
+    pada5=PPMatchPointing('./data/test/baseline_10yrs_10klines.db', ['r', 'g', 'i', 'z'])
     pada6=PPMatchPointingsAndColours(resdf3,pada5)
     
     print(pada6)

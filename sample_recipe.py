@@ -352,14 +352,17 @@ def runPostProcessing():
         observations=PPBrightLimit.PPBrightLimit(observations,brightLimit)
         
         
-        
+        #print(limiting_magnitude)
         
         logging.info('Calculating probabilities of detections...')
-        observations=PPDetectionProbability.PPDetectionProbability(observations,limiting_magnitude)
+        #observations=PPDetectionProbability.PPDetectionProbability(observations,filterpointing)
+        observations["detection_probability"] = PPDetectionProbability.PPDetectionProbability(observations, filterpointing)
+        #observations=PPDetectionProbability.PPDetectionProbability(observations,limiting_magnitude)
     
         logging.info('Dropping observations below detection threshold...')
-        observations=PPDropObservations.PPDropObservations(observations)
-    
+        #observations=PPDropObservations.PPDropObservations(observations)
+        observations=PPDropObservations.PPDropObservations(observations, "detection_probability")
+        
         
         #----------------------------------------------
         #print(pada6)
