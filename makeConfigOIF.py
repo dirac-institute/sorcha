@@ -4,6 +4,7 @@ import pandas as pd
 import numpy as np
 import os
 import sqlite3 as sql
+import sys
 
 def makeConfig():
     #grab defaults from a template config file
@@ -11,18 +12,24 @@ def makeConfig():
     config = configparser.ConfigParser()
 
     #get database info
-    con = sql.connect(args.opsim)
+    con = sql.connect(args.pointing)
     database = pd.read_sql_query("SELECT observationStartMJD, observationId FROM SummaryAllProps ORDER BY observationStartMJD", con)
     maxFields = len(database.index)
 
     #get what dates to check in database
     survey_days = database["observationStartMJD"].astype(int).unique()
+    print(survey_days)
+
     day1 = survey_days[args.day1 - 1]
     if (args.ndays == -1) or (args.ndays + args.day1 >= survey_days.iloc[-1]):
         dayf = survey_days[-1]
+        ndays= int(np.floor(survey_days[-1]-day1)+1)
     else:
         dayf = day1 + args.ndays
+        ndays= args.ndays
 
+    print(dayf)
+    print(ndays)
     #get range of fields for those days
     field1 = database.loc[(database["observationStartMJD"] - day1) < 1.0]["observationId"].iloc[0]
     fieldf = database.loc[(database["observationStartMJD"] - dayf) < 2.0]["observationId"].iloc[-1] #this will likely overshoot a little bit
@@ -51,20 +58,23 @@ def makeConfig():
         else:
             nOrbits = nOrbitsPerFile
 
+
         config.read_dict({
             'CONF': {
-                'Cache dir':        '_cache' + "/" + orbitsName + "/" + str(startingOrbits[i]) + '-' + str(nOrbits),       # Directory where to place generated temporary files
+                'Cache dir':       args.cache+"/" + orbitsName + "/" + str(startingOrbits[i]) + '-' + str(nOrbits),       # Directory where to place generated temporary files
             },
             'ASTEROID' : {
+                'population model':  args.o, 
                 'SPK T0':            str(day1-30),
-                'nDays':             str(args.ndays + 30),
+                'nDays':             str(ndays + 30),
                 'Object1':           str(startingOrbits[i]),
                 'nObjects':          str(nOrbits),
-                'SPK step':          '30'
-
+                'SPK step':          '30',
+                'nbody':             'T',
+                'input format':       args.inputformat
             },
             'SURVEY': {
-                'Survey database':   args.opsim,
+                'Survey database':   args.pointing,
                 'Field1':            str(field1 + 1),
                 'nFields':           str(fieldf - field1),
                 'MPCobscode file':   'obslist.dat',
@@ -73,7 +83,8 @@ def makeConfig():
             },
             'CAMERA': {
                 'Threshold': '5',
-                'SPICE IK':  'camera.ti',
+                'Camera': args.camerafov, 
+#                'SPICE IK':  'camera.ti',
             },
             'OUTPUT': {
                 'Output file':           'stdout',
@@ -82,7 +93,7 @@ def makeConfig():
         })
 
         ndigits = len(str(len(orbits.index)))
-        with open(os.path.join(args.prefix, orbitsName + "-" + str(startingOrbits[i]).zfill(ndigits) + '-' + str(startingOrbits[i] + nOrbits).zfill(ndigits) + '.ini'), 'w') as file:
+        with open(os.path.join(args.prefix, orbitsName + "-" + str(startingOrbits[i]).zfill(ndigits) + '-' + str(startingOrbits[i] + nOrbits-1).zfill(ndigits) + '.ini'), 'w') as file:
             config.write(file)
 
 if (__name__=='__main__'):
@@ -92,7 +103,30 @@ if (__name__=='__main__'):
     parser.add_argument("-no", help="number of orbits per config file", type=int, default=-1)
     parser.add_argument("-ndays", help="number of days in survey to run, -1 runs entire survey", type=int, default=-1)
     parser.add_argument("-day1", help="first day in survey to run", type=int, default=1)
-    parser.add_argument("-opsim", help="path to opsim file", type=str)
+    parser.add_argument("-pointing", help="path to pointing database", type=str)
     parser.add_argument("-prefix", help="config file name prefix", type=str, default='')
+    parser.add_argument("-camerafov", help='path and file name of the camera fov', type=str, default='instrument_polygon.dat')
+    parser.add_argument("-inputformat", help='input format (CSV or whitespace)', type=str, default='whitespace')
+    parser.add_argument("-cache", help='base cache directory name.', type=str, default='_cache')
+
+
+    args = parser.parse_args()
+    if (args.o == None):
+       sys.exit('ERROR: orbit file not specified. Try --help to see the command line options')
+    else:
+       if (os.path.exists(args.o)) == False:
+         sys.exit('ERROR: orbits file does not exist.')
+
+    if (args.pointing == None):
+       sys.exit('ERROR: pointing database file not specified. Try --help to see the command line options')
+    else:
+       if (os.path.exists(args.pointing)) == False:
+         sys.exit('ERROR: pointing databaae file does not exist.')
+
+    if (args.o == None):
+       sys.exit('ERROR: orbit file not specified. Try --help to see the command line options')
+
+    if (args.inputformat != 'whitespace') and (args.inputformat != 'CSV'):
+       sys.exit('ERROR: Invalid option for input format of the orbits file.  Try --help to see the command line options')
 
     makeConfig()
