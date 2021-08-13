@@ -81,7 +81,7 @@ def makeConfig():
                 'Survey database':   args.pointing,
                 'Field1':            str(field1 + 1),
                 'nFields':           str(fieldf - field1),
-                'MPCobscode file':   'obslist.dat',
+                'MPCobscode file':   args.mpcfile,
                 'Telescope':         'I11',
                 'Surveydbquery':     'SELECT observationId,observationStartMJD,fieldRA,fieldDEC,rotSkyPos FROM SummaryAllProps order by observationStartMJD'
             },
@@ -112,6 +112,7 @@ if (__name__=='__main__'):
     parser.add_argument("-camerafov", help='path and file name of the camera fov', type=str, default='instrument_polygon.dat')
     parser.add_argument("-inputformat", help='input format (CSV or whitespace)', type=str, default='whitespace')
     parser.add_argument("-cache", help='base cache directory name.', type=str, default='_cache')
+    parser.add_argument("-mpcfile", help='name of the file containing the MPC observatory codes', type=str, default='obslist.dat')
 
 
     args = parser.parse_args()
