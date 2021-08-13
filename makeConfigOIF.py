@@ -18,24 +18,28 @@ def makeConfig():
 
     #get what dates to check in database
     survey_days = database["observationStartMJD"].astype(int).unique()
-    print(survey_days)
 
     day1 = survey_days[args.day1 - 1]
+
+    # get the final day and the total number of days to run over 
     if (args.ndays == -1) or (args.ndays + args.day1 >= survey_days.iloc[-1]):
         dayf = survey_days[-1]
         ndays= int(np.floor(survey_days[-1]-day1)+1)
     else:
         dayf = day1 + args.ndays
         ndays= args.ndays
-
-    print(dayf)
-    print(ndays)
+    
     #get range of fields for those days
     field1 = database.loc[(database["observationStartMJD"] - day1) < 1.0]["observationId"].iloc[0]
     fieldf = database.loc[(database["observationStartMJD"] - dayf) < 2.0]["observationId"].iloc[-1] #this will likely overshoot a little bit
 
     #do stuff for parellizing
-    orbits=pd.read_csv(args.o, delim_whitespace=True)
+   
+    if (args.inputformat == 'whitespace'):
+        orbits=pd.read_csv(args.o, delim_whitespace=True)
+    else:
+        orbits=pd.read_csv(args.o) 
+      
     nOrbitsTotal = len(orbits.index)
     nOrbitsPerFile = args.no
     remainder = nOrbitsTotal % nOrbitsPerFile
