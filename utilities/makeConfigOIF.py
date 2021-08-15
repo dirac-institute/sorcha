@@ -6,9 +6,10 @@ import os
 import sqlite3 as sql
 import sys
 
-def makeConfig():
+
+def makeConfig(args):
+
     #grab defaults from a template config file
-    args = parser.parse_args()
     config = configparser.ConfigParser()
 
     #get database info
@@ -116,6 +117,9 @@ if (__name__=='__main__'):
 
     args = parser.parse_args()
 
+
+    # error checks that optional inputs are within the right range 
+
     if (args.inputformat != 'whitespace') and (args.inputformat != 'CSV'):
        sys.exit('ERROR: Invalid option for input format of the orbits file.  Try --help to see the command line options')
 
@@ -127,4 +131,6 @@ if (__name__=='__main__'):
 
     if (args.ndays ==0) or (args.ndays < -1):
        sys.exit('ERROR: Invalid option for number of days in survey to run.  Try --help to see the command line options')
-    makeConfig()
+
+    # make config file 
+    makeConfig(args)
