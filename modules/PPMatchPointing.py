@@ -27,7 +27,7 @@ def PPMatchPointing(bsdbname,resfilters):
 
 
     con = sqlite3.connect(bsdbname)
-    df = pd.read_sql_query('SELECT observationId, filter, seeingFwhmGeom FROM SummaryAllProps order by observationId', con)
+    df = pd.read_sql_query('SELECT observationId, observationStartMJD, filter, seeingFwhmGeom, seeingFwhmEff, fiveSigmaDepth FROM SummaryAllProps order by observationId', con)
     df=df.rename(columns={'observationId': 'FieldID'})
     df=df.rename(columns={'filter': 'optFilter'}) # not to confuse with the pandas filter command   
     #print(df)

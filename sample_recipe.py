@@ -18,6 +18,7 @@ from modules import PPDropObservations, PPBrightLimit
 from modules import PPMakeIntermediatePointingDatabase, PPReadIntermDatabase
 from modules import PPReadCometaryInput, PPJoinCometaryWithOrbits, PPCalculateSimpleCometaryMagnitude
 from modules import PPCalculateApparentMagnitude
+from modules.PPDetectionProbability import calcDetectionProbability, PPDetectionProbability
 
 #oifoutput=sys.argv[1]
 
@@ -353,10 +354,11 @@ def runPostProcessing():
         
         
         #print(limiting_magnitude)
+        print(observations)
         
         logging.info('Calculating probabilities of detections...')
         #observations=PPDetectionProbability.PPDetectionProbability(observations,filterpointing)
-        observations["detection_probability"] = PPDetectionProbability.PPDetectionProbability(observations, filterpointing)
+        observations["detection_probability"] = PPDetectionProbability(observations, filterpointing)
         #observations=PPDetectionProbability.PPDetectionProbability(observations,limiting_magnitude)
     
         logging.info('Dropping observations below detection threshold...')
