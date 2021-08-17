@@ -353,8 +353,6 @@ def runPostProcessing():
         observations=PPBrightLimit.PPBrightLimit(observations,brightLimit)
         
         
-        #print(limiting_magnitude)
-        print(observations)
         
         logging.info('Calculating probabilities of detections...')
         #observations=PPDetectionProbability.PPDetectionProbability(observations,filterpointing)
