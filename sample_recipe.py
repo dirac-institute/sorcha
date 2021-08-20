@@ -67,6 +67,26 @@ def get_or_exit(config, section, key, message):
     except KeyError:
         logging.error(message)
         sys.exit(message)
+        
+        
+def to_bool(value):
+    valid = {'true': True, 't': True, '1': True, 'True': True,
+             'false': False, 'f': False, '0': False, 'False': False
+             }   
+
+    if isinstance(value, bool):
+        return value
+
+    if not isinstance(value, str):
+        raise ValueError('invalid literal for boolean. Not a string.')
+
+    lower_value = value.lower()
+    if lower_value in valid:
+        return valid[lower_value]
+    else:
+        raise ValueError('invalid literal for boolean: "%s"' % value)
+
+
 
 def runPostProcessing():
 
@@ -191,9 +211,8 @@ def runPostProcessing():
     outputformat=get_or_exit(config, 'OUTPUTFORMAT', 'outputformat', 'ERROR: output format not specified.')   
     if (outputformat != 'csv') and (outputformat != 'sqlite3') and (outputformat != 'hdf5') and (outputformat != 'HDF5') :
          sys.exit('ERROR: output format should be either csv, sqlite3 or hdf5.')
-    separatelyCSV=bool(config["OUTPUTFORMAT"]['separatelyCSV'])
+    separatelyCSV=to_bool(config["OUTPUTFORMAT"]['separatelyCSV'])
     sizeSerialChunk = int(config["GENERAL"]['sizeSerialChunk'])
-
     
     if (makeIntermediatePointingDatabase == True):
          PPMakeIntermediatePointingDatabase.PPMakeIntermediatePointingDatabase(oifoutput,'./data/interm.db', 100)
@@ -265,7 +284,7 @@ def runPostProcessing():
                 # as they can be calculated with a variety of phase functions, and in different filters
                 # Maybe needs to be moved to the PPReadOif function?
                 
-                padafr=padafr.drop(['V', 'V(H=0)'], axis = 1, errors='ignore')
+                #padafr=padafr.drop(['V', 'V(H=0)'], axis = 1, errors='ignore')
                 
                 padafr=padafr[padafr['ObjID'].isin(objid_list)]
 
@@ -303,6 +322,10 @@ def runPostProcessing():
         
         pplogger.info('Calculating apparent magnitudes...')
         observations=PPCalculateApparentMagnitude.PPCalculateApparentMagnitude(observations, phasefunction, mainfilter)        
+        
+        #print(observations)
+        #print(observations[mainfilter], observations['V'])
+        
         
         pplogger.info('Applying detection efficiency threshold...')
         observations=PPFilterDetectionEfficiencyThreshold.PPFilterDetectionEfficiencyThreshold(observations,SSPDetectionEfficiency)
@@ -342,30 +365,37 @@ def runPostProcessing():
         
         #-----------------------------------------------
         
-        logging.info('Matching observationId with limiting magnitude and seeing...')
+        pplogger.info('Matching observationId with limiting magnitude and seeing...')
         seeing, limiting_magnitude=PPMatchFieldConditions.PPMatchFieldConditions(pointingdatabase)
         
         #print(pada6)
-        logging.info('Calculating trailing losses...')
+        pplogger.info('Calculating trailing losses...')
         observations=PPTrailingLoss.PPTrailingLoss(observations, seeing)
         
         pplogger.info('Dropping observations that are too bright...')
         observations=PPBrightLimit.PPBrightLimit(observations,brightLimit)
         
         
+        #print(limiting_magnitude)
         
-        logging.info('Calculating probabilities of detections...')
+        
+        pplogger.info('Calculating probabilities of detections...')
         #observations=PPDetectionProbability.PPDetectionProbability(observations,filterpointing)
         observations["detection_probability"] = PPDetectionProbability(observations, filterpointing)
         #observations=PPDetectionProbability.PPDetectionProbability(observations,limiting_magnitude)
+        
+        pplogger.info('Number of rows BEFORE applying detection probability threshold: ' + str(len(observations.index)))
     
-        logging.info('Dropping observations below detection threshold...')
+        pplogger.info('Dropping observations below detection threshold...')
         #observations=PPDropObservations.PPDropObservations(observations)
         observations=PPDropObservations.PPDropObservations(observations, "detection_probability")
         
+        pplogger.info('Number of rows AFTER applying detection probability threshold: ' + str(len(observations.index)))
+
         
         #----------------------------------------------
         #print(pada6)
+        
         
         
         pplogger.info('Applying SSP criterion efficiency...')
@@ -373,10 +403,14 @@ def runPostProcessing():
         observations=PPFilterSSPCriterionEfficiency.PPFilterSSPCriterionEfficiency(observations,minTracklet,noTracklets,trackletInterval,inSepThreshold)
         observations=observations.drop(['index'], axis='columns')
         
+        pplogger.info('Number of rows AFTER applying SSP criterion threshold: ' + str(len(observations.index)))
+
+        
         #print(observations['FieldID'].to_string())
         
         
         # comets may have dashes in their names that mix things up
+        observations['ObjID'] = observations['ObjID'].astype(str)
         observations['ObjID'] = observations['ObjID'].str.replace('/','')
         
         #print(observations['FieldMJD'].to_string())
