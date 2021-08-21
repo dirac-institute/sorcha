@@ -173,7 +173,8 @@ def PPFilterSSPCriterionEfficiency(padain,minintracklets,nooftracklets,intervalt
              g=0
 
              #while(m<=counter-nooftracklets):
-             if (counter+1>=nooftracklets):
+             #if (counter+1>=nooftracklets):
+             if (len(ms)>=nooftracklets):
                  while(m<=ms[-nooftracklets]):
                    if (m in padaouttrackletcoll['counter'].values):
                       #print('m: ', m, ' nooftracklets: ', nooftracklets, ' m+nooftracklets: ', m+nooftracklets)
