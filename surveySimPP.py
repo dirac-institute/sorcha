@@ -134,8 +134,7 @@ def run():
 
     pplogger.info('Reading pointing database')
     con=sql.connect(pointingdatabase)
-    surveydb=pd.read_sql_query('SELECT observationId, observationStartMJD, filter, seeingFwhmGeom, seeingFwhmEff, fiveSigmaDepth FROM SummaryAllProps order by observationId', con)
-    pointings=pd.read_sql_query('SELECT fieldRA, fieldDec, observationStartMJD, observationId, rotSkyPos FROM SummaryAllProps ORDER BY observationId', con)
+    surveydb=pd.read_sql_query('SELECT observationId, observationStartMJD, filter, seeingFwhmGeom, seeingFwhmEff, fiveSigmaDepth, fieldRA, fieldDec, rotSkyPos FROM SummaryAllProps order by observationId', con)
 
     str3='Reading input colours: ' + colourinput
     pplogger.info(str3)
@@ -147,53 +146,40 @@ def run():
     logging.info('Translating magnitudes to appropriate filters...')
     oif["MaginFilterTrue"]=PPTranslateMagnitude.PPTranslateMagnitude(oif, surveydb, colors)
 
+    logging.info('Calculating astromentric and photometric uncertainties...')
     oif['AstrometricSigma(mas)'], oif['PhotometricSigma(mag)'], oif["SNR"] = PPAddUncertainties.addUncertainties(oif, surveydb, obsIdNameEph='FieldID')
     oif["AstrometricSigma(deg)"] = oif['AstrometricSigma(mas)'] / 3600 / 1000
 
+    logging.info('Dropping observations with signal to noise ratio less than 2...')
     oif.drop( np.where(oif["SNR"] <= 2.)[0], inplace=True)
     oif.reset_index(drop=True, inplace=True)
 
+    logging.info('Applying uncertainty to photometry...')
     oif["MaginFilter"] = PPRandomizeMeasurements.randomizePhotometry(oif, magName="MaginFilterTrue", sigName="PhotometricSigma(mag)")
 
     logging.info('Calculating trailing losses...')
     oif['dmagDetect']=PPTrailingLoss.PPTrailingLoss(oif, surveydb)
 
     logging.info('Calculating vignetting losses...')
-    oif['dmagVignet']=PPVignetting.vignettingLosses(oif, pointings)
+    oif['dmagVignet']=PPVignetting.vignettingLosses(oif, surveydb)
 
-    lim_mag = pd.merge(
-        oif["FieldID"],
-        surveydb[["observationId", "fiveSigmaDepth"]],
-        left_on="FieldID",
-        right_on="observationId",
-        how="left"
-    )["fiveSigmaDepth"]
-
-    logging.info("Dropping faint detections ... ")
+    logging.info("Dropping faint detections... ")
+    lim_mag = pd.merge(oif["FieldID"], surveydb[["observationId", "fiveSigmaDepth"]], left_on="FieldID", right_on="observationId", how="left")["fiveSigmaDepth"]
     oif.drop( np.where(oif["MaginFilter"] + oif["dmagDetect"] + oif['dmagVignet'] >= lim_mag)[0], inplace=True)
     oif.reset_index(drop=True, inplace=True)
 
-    logging.info('Calculating astrometric uncertainties ...')
+    logging.info('Calculating astrometric uncertainties...')
     oif["AstRATrue(deg)"] = oif["AstRA(deg)"]
     oif["AstDecTrue(deg)"] = oif["AstDec(deg)"]
     oif["AstRA(deg)"], oif["AstDec(deg)"] = PPRandomizeMeasurements.randomizeAstrometry(oif, sigName='AstrometricSigma(deg)')
 
     logging.info('Applying sensor footprint filter...')
-    on_sensor=PPFootprintFilter_xyz.footPrintFilter(oif, pointings, detectors)#, ra_name="AstRATrue(deg)", dec_name="AstDecTrue(deg)")
+    on_sensor=PPFootprintFilter_xyz.footPrintFilter(oif, surveydb, detectors)#, ra_name="AstRATrue(deg)", dec_name="AstDecTrue(deg)")
     oif=oif.iloc[on_sensor]
 
     oif=oif.astype({"FieldID": int})
-    oif["Filter"] = pd.merge(
-        oif["FieldID"],
-        surveydb[["observationId", 'filter']],
-        left_on="FieldID",
-        right_on="observationId",
-        how="left"
-    )['filter']
+    oif["Filter"] = pd.merge(oif["FieldID"], surveydb[["observationId", 'filter']], left_on="FieldID", right_on="observationId", how="left")['filter']
     oif.drop(columns=["AstrometricSigma(mas)"])
-
-    #oif["fiveSigmadepth"]=surveydb.lookup(oif["FieldID"], ['fiveSigmaDepth']*len(oif.index))
-    #oif["seeingFWHMGeom"]=surveydb.lookup(oif["FieldID"], ['seeingFwhmGeom']*len(oif.index))
 
 #------------------------------------------------------------------------------
 
