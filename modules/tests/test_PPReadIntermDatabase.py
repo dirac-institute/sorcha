@@ -11,14 +11,14 @@ from ..PPReadColours import PPReadColours
 def test_PPReadIntermDatabase():
     
     
-    padacl=PPReadColours('./data/test/testcolour', 0, 5, ' ')      
+    padacl=PPReadColours('./data/test/testcolour.txt', 0, 5, ' ')      
     print(padacl)  
     objid_list = padacl['ObjID'].unique().tolist() 
     
     
-    daba=PPMakeIntermediatePointingDatabase('./data/test/oiftestoutput','./data/unittest.db', 10)
+    daba=PPMakeIntermediatePointingDatabase('./data/test/oiftestoutput.txt','./data/test/testdb_PPIntermDB.db', 10)
     
-    padafr=PPReadIntermDatabase('./data/unittest.db', objid_list)
+    padafr=PPReadIntermDatabase('./data/test/testdb_PPIntermDB.db', objid_list)
     
     
     nlines=9

@@ -21,7 +21,7 @@ def PPBrightLimit(padain, brlimit):
     
    
    """
-   padain = padain.drop(padain[padain.ColinFil < brlimit].index)
+   padain = padain.drop(padain[padain.MaginFil < brlimit].index)
    
    
    return padain

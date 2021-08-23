@@ -3,7 +3,7 @@ import pandas as pd
 
 __all__=['PPDropObservations']
 
-def PPDropObservations(observations, probability):
+def PPDropObservations(observations, probability="detection probability"):
     """
     Drops rows where the probabilty of detection is less than sample drawn
     from a uniform distribution.
@@ -15,14 +15,13 @@ def PPDropObservations(observations, probability):
 
     Returns
     -------
-    dropped      ... observations that were droppped
+    out ... new dataframe without observations that could not be observed
     """
 
     num_obs = len(observations.index)
-    chance  = np.random.random(num_obs)
-    
-    drop = np.where(probability < chance)[0]
-    observations.drop(drop, inplace=True)
-    observations.reset_index(drop=True, inplace=True)
-    
-    #return observations.iloc[drop]
+
+    uniform_distr = np.random.random(num_obs)
+    drop = observations.loc[observations[probability] - uniform_distr < 0].index
+    out = observations.drop(drop)
+
+    return out

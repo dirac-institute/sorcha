@@ -13,8 +13,8 @@ def test_PPCalculateApparentMagnitude():
      
      rescol=17.599933
      
-     padafr=PPReadOif('./data/test/oiftestoutput', " ")
-     padabr=PPReadBrightness('./data/test/testbrightness', 0, 3, " ")
+     padafr=PPReadOif('./data/test/oiftestoutput.txt', " ")
+     padabr=PPReadBrightness('./data/test/testbrightness.txt', 0, 3, " ")
      
      padain=PPJoinColourPointing(padafr,padabr)
      

@@ -9,3 +9,4 @@ setuptools_scm>=3.4
 astropy
 scipy
 sbpy
+tables

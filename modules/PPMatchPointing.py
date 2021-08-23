@@ -2,28 +2,36 @@
 import sqlite3
 import pandas as pd
 
+#Author: Grigori Fedorets
 
-# Author: Grigori Fedorets
-
-def PPMatchPointing(bsdbname):
+def PPMatchPointing(bsdbname,resfilters):
 
     """
-        
-    Description: This task reads in the main baseline database, and extracts observationID
-    and used filter at a given pointing and outputs a 2*n pandas dataframe.
-    
-    
-    Mandatory input:      name of database
-    
-    Output:               2*n pandas dataframe
-    
-    
-    usage: padafr=PPMatchPointing(bsdbname)
+    PPMatchPointing.py
+
+
+
+    Description: This task reads in the main baseline database, and extracts observationID,
+    used filter and seeing at a given pointing and outputs a 3*n pandas dataframe. 
+
+
+    Mandatory input:      bsdbname:   name of database
+                          resfilters: filters required for output
+
+    Output:               3*n pandas dataframe
+
+
+    usage: padafr=PPMatchPointing(bsdbname,resfilters)
     """
+
+
 
     con = sqlite3.connect(bsdbname)
-    df = pd.read_sql_query('SELECT observationId, filter FROM SummaryAllProps order by observationId', con)
+    df = pd.read_sql_query('SELECT observationId, observationStartMJD, filter, seeingFwhmGeom, seeingFwhmEff, fiveSigmaDepth FROM SummaryAllProps order by observationId', con)
     df=df.rename(columns={'observationId': 'FieldID'})
     df=df.rename(columns={'filter': 'optFilter'}) # not to confuse with the pandas filter command   
-    return df
+    #print(df)
+    dfo=df[df.optFilter.isin(resfilters)]
+    #print(dfo)
+    return dfo
     
