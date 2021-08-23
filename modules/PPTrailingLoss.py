@@ -23,6 +23,7 @@ Calculate Astrometric and Photometric Uncertainties for ground based observation
 """
 # Numpy 
 import numpy as np
+import pandas as pd
 
 __all__ = ['PPTrailingLoss']
 
@@ -82,8 +83,13 @@ def calcTrailingLoss(dRa, dDec, seeing, texp=30.0, a_trail=0.761, b_trail=1.162,
 
 #-----------------------------------------------------------------------------------------------
 
-def PPTrailingLoss(oif_df, seeing_df, dra_name='AstRARate(deg/day)',
-                   ddec_name='AstDecRate(deg/day)', seeing_name="seeing", field_id_name="FieldID"):
+def PPTrailingLoss(oif_df, survey_df, model='circularPSF', dra_name='AstRARate(deg/day)',
+                   ddec_name='AstDecRate(deg/day)', dec_name='AstDec(deg)',
+                   seeing_name_oif="seeing", field_id_name_oif="FieldID",
+                   seeing_name_survey='seeingFwhmGeom', field_id_name_survey='observationId'):
+    """
+    Calculates Detection trailing loss for objectInField output.
+    """
 
     tempdf = pd.merge(
         oif_df[[field_id_name_oif]],
