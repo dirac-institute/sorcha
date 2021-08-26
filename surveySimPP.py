@@ -147,7 +147,7 @@ def run():
     colors=pd.read_csv(colourinput, delim_whitespace=True)
 
     logging.info("loading camera footprint ...")
-    detectors=PPFootprintFilter_xyz.readFootPrintFile('detectors_corners.csv')
+    detectors=PPFootprintFilter.readFootPrintFile('detectors_corners.csv')
 
     logging.info('Translating magnitudes to appropriate filters...')
     oif["MaginFilterTrue"]=PPTranslateMagnitude.PPTranslateMagnitude(oif, surveydb, colors)
