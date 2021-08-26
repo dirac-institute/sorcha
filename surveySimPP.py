@@ -136,10 +136,11 @@ def run():
     con=sql.connect(pointingdatabase)
     surveydb=pd.read_sql_query('SELECT observationId, observationStartMJD, filter, seeingFwhmGeom, seeingFwhmEff, fiveSigmaDepth, fieldRA, fieldDec, rotSkyPos FROM SummaryAllProps order by observationId', con)
 
-    logging.info("Joining pointing data to objects observations...")
-    surveydb_join= pd.merge(oif["FieldID"], surveydb, left_on="FieldID", right_on="observationId", how="left")
-    for name in surveydb.columns:
-        oif[name] = surveydb_join
+    #logging.info("Joining pointing data to objects observations...")
+    #This will get moved to a function once I get it to work
+    #surveydb_join= pd.merge(oif["FieldID"], surveydb, left_on="FieldID", right_on="observationId", how="left")
+    #for name in surveydb.columns:
+    #    oif[name] = surveydb_join
 
     str3='Reading input colours: ' + colourinput
     pplogger.info(str3)
