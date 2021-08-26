@@ -136,11 +136,16 @@ def run():
     con=sql.connect(pointingdatabase)
     surveydb=pd.read_sql_query('SELECT observationId, observationStartMJD, filter, seeingFwhmGeom, seeingFwhmEff, fiveSigmaDepth, fieldRA, fieldDec, rotSkyPos FROM SummaryAllProps order by observationId', con)
 
-    #logging.info("Joining pointing data to objects observations...")
+    logging.info("Joining pointing data to objects observations...")
     #This will get moved to a function once I get it to work
-    #surveydb_join= pd.merge(oif["FieldID"], surveydb, left_on="FieldID", right_on="observationId", how="left")
+    #currently only grabs the limiting magnitude (fiveSigmaDepth)
+    #eventually it will grab all the columns from the surveydb table
+    #Which will improve performance a bit, but it also requires overhauling a bunch of functions, 
+    #so i'm leaving it as a todo.
+    surveydb_join= pd.merge(oif["FieldID"], surveydb, left_on="FieldID", right_on="observationId", how="left")
     #for name in surveydb.columns:
-    #    oif[name] = surveydb_join
+    for name in ["fiveSigmaDepth"]:
+        oif[name] = surveydb_join[name]
 
     str3='Reading input colours: ' + colourinput
     pplogger.info(str3)
@@ -170,7 +175,7 @@ def run():
     oif['dmagVignet']=PPVignetting.vignettingLosses(oif, surveydb)
 
     logging.info("Dropping faint detections... ")
-    oif.drop( np.where(oif["MaginFilter"] + oif["dmagDetect"] + oif['dmagVignet'] >= oif["fiveSigmadepth"])[0], inplace=True)
+    oif.drop( np.where(oif["MaginFilter"] + oif["dmagDetect"] + oif['dmagVignet'] >= oif["fiveSigmaDepth"])[0], inplace=True)
     oif.reset_index(drop=True, inplace=True)
 
     logging.info('Calculating astrometric uncertainties...')
