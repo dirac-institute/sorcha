@@ -15,7 +15,7 @@ from modules import PPTranslateMagnitude
 from modules import PPAddUncertainties
 from modules import PPRandomizeMeasurements
 from modules import PPTrailingLoss
-from modules import PPFootprintFilter_xyz
+from modules import PPFootprintFilter
 from modules import PPOutWriteCSV
 from modules import PPOutWriteSqlite3
 from modules import PPVignetting
@@ -136,6 +136,11 @@ def run():
     con=sql.connect(pointingdatabase)
     surveydb=pd.read_sql_query('SELECT observationId, observationStartMJD, filter, seeingFwhmGeom, seeingFwhmEff, fiveSigmaDepth, fieldRA, fieldDec, rotSkyPos FROM SummaryAllProps order by observationId', con)
 
+    logging.info("Joining pointing data to objects observations...")
+    surveydb_join= pd.merge(oif["FieldID"], surveydb, left_on="FieldID", right_on="observationId", how="left")
+    for name in surveydb.columns:
+        oif[name] = surveydb_join
+
     str3='Reading input colours: ' + colourinput
     pplogger.info(str3)
     colors=pd.read_csv(colourinput, delim_whitespace=True)
@@ -164,8 +169,7 @@ def run():
     oif['dmagVignet']=PPVignetting.vignettingLosses(oif, surveydb)
 
     logging.info("Dropping faint detections... ")
-    lim_mag = pd.merge(oif["FieldID"], surveydb[["observationId", "fiveSigmaDepth"]], left_on="FieldID", right_on="observationId", how="left")["fiveSigmaDepth"]
-    oif.drop( np.where(oif["MaginFilter"] + oif["dmagDetect"] + oif['dmagVignet'] >= lim_mag)[0], inplace=True)
+    oif.drop( np.where(oif["MaginFilter"] + oif["dmagDetect"] + oif['dmagVignet'] >= oif["fiveSigmadepth"])[0], inplace=True)
     oif.reset_index(drop=True, inplace=True)
 
     logging.info('Calculating astrometric uncertainties...')
@@ -174,7 +178,7 @@ def run():
     oif["AstRA(deg)"], oif["AstDec(deg)"] = PPRandomizeMeasurements.randomizeAstrometry(oif, sigName='AstrometricSigma(deg)')
 
     logging.info('Applying sensor footprint filter...')
-    on_sensor=PPFootprintFilter_xyz.footPrintFilter(oif, surveydb, detectors)#, ra_name="AstRATrue(deg)", dec_name="AstDecTrue(deg)")
+    on_sensor=PPFootprintFilter.footPrintFilter(oif, surveydb, detectors)#, ra_name="AstRATrue(deg)", dec_name="AstDecTrue(deg)")
     oif=oif.iloc[on_sensor]
 
     oif=oif.astype({"FieldID": int})
