@@ -15,9 +15,10 @@ from modules import PPTranslateMagnitude
 from modules import PPAddUncertainties
 from modules import PPRandomizeMeasurements
 from modules import PPTrailingLoss
-from modules import PPFootprintFilter_xyz
+from modules import PPFootprintFilter
 from modules import PPOutWriteCSV
 from modules import PPOutWriteSqlite3
+from modules import PPVignetting
 
 def get_logger(
         LOG_FORMAT     = '%(asctime)s %(name)-12s %(levelname)-8s %(message)s ',
@@ -69,35 +70,9 @@ def run():
 
     config = configparser.ConfigParser()
 
-    #set some reasonable defaults
-    config.read_dict({
-        "INPUTFILES" : {"oifoutput": "test-oif.csv",
-                        "colourinput" : "test-colors.csv",
-                        "camerafootprint": "detectors_corners.csv",
-                        "pointingdatabase" : "baseline_nexp2_v1.7.1_10yrs.db"   #current opsim file as of 6/11/21
-        },
-        "FILTERS" : {"mainfilter": 'V',
-                     "othercolours": "V-u, V-g, V-r, V-i, V-z, V-y",
-                     "resfilters": "V, u, g, r, i, z, y"
-        },
-        "FILTERINGPARAMETERS" : {"SSPDetectionEfficiency": 1.0, # not using
-                                 "fillfactor": 1.0,   #not using
-                                 "minTracklet": 2,    #not using
-                                 "noTracklets": 3,       # not using
-                                 "trackletInterval": 15.0,     # not using
-                                 "brightLimit": 16.0,      # not using
-                                 "inSepThreshold": 0.5
-        },
-                                       # but leaving them in in case needed in future
-        "OUTPUTFORMAT" : {"outpath": "./",
-                            "outfilestem": "testout",
-                            "outputformat": "csv"
-        }
-    })
-
-    #in the config file there should be a test value, I'm leaving it there since
-    #moving it to the defaults would defeat the purpose
-
+    #load defaults and specified config file
+    defaults = './configs/defaults.ini'
+    config.read(defaults)
     config.read(configfile)
 
     testvalue=int(config["GENERAL"]['testvalue'])
@@ -154,68 +129,67 @@ def run():
         oif=pd.read_hdf(oifoutput).reset_index(drop=True)
     elif file_ext == 'csv':
         oif = pd.read_csv(oifoutput, delim_whitespace=True)
+    else:
+        oif=pd.read_hdf(oifoutput).reset_index(drop=True)
 
     pplogger.info('Reading pointing database')
     con=sql.connect(pointingdatabase)
-    surveydb=pd.read_sql_query('SELECT observationId, observationStartMJD, filter, seeingFwhmGeom, seeingFwhmEff, fiveSigmaDepth FROM SummaryAllProps order by observationId', con)
+    surveydb=pd.read_sql_query('SELECT observationId, observationStartMJD, filter, seeingFwhmGeom, seeingFwhmEff, fiveSigmaDepth, fieldRA, fieldDec, rotSkyPos FROM SummaryAllProps order by observationId', con)
+
+    logging.info("Joining pointing data to objects observations...")
+    #This will get moved to a function once I get it to work
+    #currently only grabs the limiting magnitude (fiveSigmaDepth)
+    #eventually it will grab all the columns from the surveydb table
+    #Which will improve performance a bit, but it also requires overhauling a bunch of functions, 
+    #so i'm leaving it as a todo.
+    surveydb_join= pd.merge(oif["FieldID"], surveydb, left_on="FieldID", right_on="observationId", how="left")
+    #for name in surveydb.columns:
+    for name in ["fiveSigmaDepth"]:
+        oif[name] = surveydb_join[name]
 
     str3='Reading input colours: ' + colourinput
     pplogger.info(str3)
     colors=pd.read_csv(colourinput, delim_whitespace=True)
 
     logging.info("loading camera footprint ...")
-    detectors_df=pd.read_csv('detectors_corners.csv')
-    detectors=[]
-    for i in range(len(detectors_df["detector"].unique())):
-        detectors+=[ np.array([detectors_df.loc[detectors_df["detector"]==i]['x'], detectors_df.loc[detectors_df["detector"]==i]['y']]).T ]
-    detectors=np.array(detectors)
+    detectors=PPFootprintFilter.readFootPrintFile('detectors_corners.csv')
 
     logging.info('Translating magnitudes to appropriate filters...')
     oif["MaginFilterTrue"]=PPTranslateMagnitude.PPTranslateMagnitude(oif, surveydb, colors)
 
+    logging.info('Calculating astromentric and photometric uncertainties...')
     oif['AstrometricSigma(mas)'], oif['PhotometricSigma(mag)'], oif["SNR"] = PPAddUncertainties.addUncertainties(oif, surveydb, obsIdNameEph='FieldID')
     oif["AstrometricSigma(deg)"] = oif['AstrometricSigma(mas)'] / 3600 / 1000
 
+    logging.info('Dropping observations with signal to noise ratio less than 2...')
     oif.drop( np.where(oif["SNR"] <= 2.)[0], inplace=True)
     oif.reset_index(drop=True, inplace=True)
 
+    logging.info('Applying uncertainty to photometry...')
     oif["MaginFilter"] = PPRandomizeMeasurements.randomizePhotometry(oif, magName="MaginFilterTrue", sigName="PhotometricSigma(mag)")
 
     logging.info('Calculating trailing losses...')
     oif['dmagDetect']=PPTrailingLoss.PPTrailingLoss(oif, surveydb)
 
-    lim_mag = pd.merge(
-        oif["FieldID"],
-        surveydb[["observationId", "fiveSigmaDepth"]],
-        left_on="FieldID",
-        right_on="observationId"
-    )["fiveSigmaDepth"]
+    logging.info('Calculating vignetting losses...')
+    oif['dmagVignet']=PPVignetting.vignettingLosses(oif, surveydb)
 
-    logging.info("Dropping faint detections ... ")
-    oif.drop( np.where(oif["MaginFilter"] + oif["dmagDetect"] >= lim_mag)[0], inplace=True)
+    logging.info("Dropping faint detections... ")
+    oif.drop( np.where(oif["MaginFilter"] + oif["dmagDetect"] + oif['dmagVignet'] >= oif["fiveSigmaDepth"])[0], inplace=True)
     oif.reset_index(drop=True, inplace=True)
 
-    logging.info('Calculating astrometric uncertainties ...')
+    logging.info('Calculating astrometric uncertainties...')
     oif["AstRATrue(deg)"] = oif["AstRA(deg)"]
     oif["AstDecTrue(deg)"] = oif["AstDec(deg)"]
     oif["AstRA(deg)"], oif["AstDec(deg)"] = PPRandomizeMeasurements.randomizeAstrometry(oif, sigName='AstrometricSigma(deg)')
 
     logging.info('Applying sensor footprint filter...')
-    pointings=pd.read_sql_query('SELECT fieldRA, fieldDec, observationStartMJD, observationId, rotSkyPos FROM SummaryAllProps ORDER BY observationId', con)
-    on_sensor=PPFootprintFilter_xyz.footPrintFilter(oif, pointings, detectors)
+    on_sensor=PPFootprintFilter.footPrintFilter(oif, surveydb, detectors)#, ra_name="AstRATrue(deg)", dec_name="AstDecTrue(deg)")
     oif=oif.iloc[on_sensor]
 
     oif=oif.astype({"FieldID": int})
-    oif["Filter"] = pd.merge(
-        oif["FieldID"],
-        surveydb[["observationId", 'filter']],
-        left_on="FieldID",
-        right_on="observationId"
-    )['filter']
+    oif["Filter"] = pd.merge(oif["FieldID"], surveydb[["observationId", 'filter']], left_on="FieldID", right_on="observationId", how="left")['filter']
     oif.drop(columns=["AstrometricSigma(mas)"])
-
-    #oif["fiveSigmadepth"]=surveydb.lookup(oif["FieldID"], ['fiveSigmaDepth']*len(oif.index))
-    #oif["seeingFWHMGeom"]=surveydb.lookup(oif["FieldID"], ['seeingFwhmGeom']*len(oif.index))
 
 #------------------------------------------------------------------------------
 
