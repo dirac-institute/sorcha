@@ -136,6 +136,11 @@ def run():
     con=sql.connect(pointingdatabase)
     surveydb=pd.read_sql_query('SELECT observationId, observationStartMJD, filter, seeingFwhmGeom, seeingFwhmEff, fiveSigmaDepth, fieldRA, fieldDec, rotSkyPos FROM SummaryAllProps order by observationId', con)
 
+    #Should probably add options to the config file to specify seed
+    #or to use a random seed
+    logging.info('Instantiating random number generator ... ')
+    rng = np.random.default_rng(2021)
+
     logging.info("Joining pointing data to objects observations...")
     #This will get moved to a function once I get it to work
     #currently only grabs the limiting magnitude (fiveSigmaDepth)
@@ -166,7 +171,7 @@ def run():
     oif.reset_index(drop=True, inplace=True)
 
     logging.info('Applying uncertainty to photometry...')
-    oif["MaginFilter"] = PPRandomizeMeasurements.randomizePhotometry(oif, magName="MaginFilterTrue", sigName="PhotometricSigma(mag)")
+    oif["MaginFilter"] = PPRandomizeMeasurements.randomizePhotometry(oif, magName="MaginFilterTrue", sigName="PhotometricSigma(mag)", rng=rng)
 
     logging.info('Calculating trailing losses...')
     oif['dmagDetect']=PPTrailingLoss.PPTrailingLoss(oif, surveydb)
@@ -181,7 +186,7 @@ def run():
     logging.info('Calculating astrometric uncertainties...')
     oif["AstRATrue(deg)"] = oif["AstRA(deg)"]
     oif["AstDecTrue(deg)"] = oif["AstDec(deg)"]
-    oif["AstRA(deg)"], oif["AstDec(deg)"] = PPRandomizeMeasurements.randomizeAstrometry(oif, sigName='AstrometricSigma(deg)')
+    oif["AstRA(deg)"], oif["AstDec(deg)"] = PPRandomizeMeasurements.randomizeAstrometry(oif, sigName='AstrometricSigma(deg)', rng=rng)
 
     logging.info('Applying sensor footprint filter...')
     on_sensor=PPFootprintFilter.footPrintFilter(oif, surveydb, detectors)#, ra_name="AstRATrue(deg)", dec_name="AstDecTrue(deg)")
