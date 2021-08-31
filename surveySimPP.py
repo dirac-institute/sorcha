@@ -149,7 +149,7 @@ def run():
     #so i'm leaving it as a todo.
     surveydb_join= pd.merge(oif["FieldID"], surveydb, left_on="FieldID", right_on="observationId", how="left")
     #for name in surveydb.columns:
-    for name in ["fiveSigmaDepth"]:
+    for name in ["fiveSigmaDepth", 'filter']:
         oif[name] = surveydb_join[name]
 
     str3='Reading input colours: ' + colourinput
@@ -192,9 +192,13 @@ def run():
     on_sensor=PPFootprintFilter.footPrintFilter(oif, surveydb, detectors)#, ra_name="AstRATrue(deg)", dec_name="AstDecTrue(deg)")
     oif=oif.iloc[on_sensor]
 
-    oif=oif.astype({"FieldID": int})
-    oif["Filter"] = pd.merge(oif["FieldID"], surveydb[["observationId", 'filter']], left_on="FieldID", right_on="observationId", how="left")['filter']
+    #oif=oif.astype({"FieldID": int})
+    #surveydb=surveydb.astype({"observationId": int})
+    #oif["Filter"] = pd.merge(oif["FieldID"], surveydb, left_on="FieldID", right_on="observationId", how="left")['filter']
+    logging.info('Dropping column with astrometric sigma in milliarcseconds ...')
     oif.drop(columns=["AstrometricSigma(mas)"])
+
+    #print(surveydb.iloc[418589])
 
 #------------------------------------------------------------------------------
 
