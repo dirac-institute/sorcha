@@ -73,7 +73,7 @@ def makeConfig(args):
                 'nDays':             str(ndays + 30),
                 'Object1':           str(startingOrbits[i]),
                 'nObjects':          str(nOrbits),
-                'SPK step':          '30',
+                'SPK step':          str(args.spkstep),
                 'nbody':             'T',
                 'input format':       args.inputformat
             },
@@ -82,7 +82,7 @@ def makeConfig(args):
                 'Field1':            str(field1 + 1),
                 'nFields':           str(fieldf - field1),
                 'MPCobscode file':   args.mpcfile,
-                'Telescope':         'I11',
+                'Telescope':         args.telescope, 
                 'Surveydbquery':     'SELECT observationId,observationStartMJD,fieldRA,fieldDEC,rotSkyPos FROM SummaryAllProps order by observationStartMJD'
             },
             'CAMERA': {
@@ -113,6 +113,8 @@ if (__name__=='__main__'):
     parser.add_argument("-inputformat", help='input format (CSV or whitespace). Default value = whitespace', type=str, default='whitespace')
     parser.add_argument("-cache", help='base cache directory name. Default value = _cache', type=str, default='_cache')
     parser.add_argument("-mpcfile", help='name of the file containing the MPC observatory codes. Default value = obslist.dat', type=str, default='obslist.dat')
+    parser.add_argument("-spkstep", help="Integration step in days. Default value = 30", type=int, default=30)
+    parser.add_argument("-telescope", help="Observatory MPC Code. Default value = I11 (Gemini South to be changed to Rubin Observatory)", type=str, default='I11')
 
 
     args = parser.parse_args()
