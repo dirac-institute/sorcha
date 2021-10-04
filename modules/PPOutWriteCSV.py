@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
 import pandas as pd
+import os
 
 #     Author: Grigori Fedorets
 
@@ -21,5 +22,6 @@ def PPOutWriteCSV(padain, outf):
     """
 
 
-    padain=padain.to_csv(path_or_buf=outf, index=False)
+    padain=padain.to_csv(path_or_buf=outf, mode='a', header=not os.path.exists(outf), index=False)
+
     return

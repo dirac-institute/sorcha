@@ -116,7 +116,8 @@ def addUncertainties(ephemsdf,obsdf,raName='fieldRA',decName='fieldDec',obsIdNam
         ephemsdf[[obsIdNameEph]],
         obsdf[[obsIdName, limMagName, seeingName]],
         left_on=obsIdNameEph,
-        right_on=obsIdName
+        right_on=obsIdName,
+        how="left"
     )
 
     astrSig,SNR,_=calcAstrometricUncertainty(ephemsdf[filterMagName], tempdf[limMagName],

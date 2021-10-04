@@ -1,5 +1,5 @@
 # Developed for the Vera C. Rubin Observatory/LSST Data Management System.
-# This product includes software developed by the 
+# This product includes software developed by the
 # Vera C. Rubin Observatory/LSST Project (https://www.lsst.org).
 #
 # Copyright 2020 University of Washington
@@ -21,7 +21,7 @@
 Calculate probability of detection due to fading
 
 """
-# Numpy 
+# Numpy
 import numpy as np
 # Pandas
 import pandas as pd
@@ -38,13 +38,13 @@ __all__ = ['PPDetectionProbability']
 ###########################################
 class Error(Exception):
     """Vector module specific exception."""
-    
+
     pass
 
 #-----------------------------------------------------------------------------------------------
 def calcDetectionProbability(mag, limmag, fillFactor=1.0, w=0.1):
-        """ Find the probability of a detection given a visual magnitude, 
-        limiting magnitude, and fillfactor, 
+        """ Find the probability of a detection given a visual magnitude,
+        limiting magnitude, and fillfactor,
         determined by the fading function from Veres & Chesley (2017).
 
         Parameters
@@ -54,37 +54,51 @@ def calcDetectionProbability(mag, limmag, fillFactor=1.0, w=0.1):
         limmag: float
              limiting magnitude of the field
         fillfactor: float
-             fraction of FOV covered by the camera sensor   
+             fraction of FOV covered by the camera sensor
         w: float
              distribution parameter
-        
+
         Returns
         -------
         P: float
             Probability of detection
         """
-   
+
         P = fillFactor / (1. + np.exp((mag - limmag) / w))
 
         return P
 
 #-----------------------------------------------------------------------------------------------
 
-def PPDetectionProbability(oif_df, survey_df, trailing_losses=False, trailing_loss_name='dmagDetect', 
-                           magnitude_name="MaginFil", 
-                           limiting_magnitude_name="limiting magnitude",
-                           field_id_name="FieldID", fillFactor=1.0, w=0.1):
+def PPDetectionProbability(oif_df, survey_df, trailing_losses=False, trailing_loss_name='dmagDetect',
+                           magnitude_name="MaginFil",
+                           limiting_magnitude_name_survey="fiveSigmaDepth",
+                           field_id_name="FieldID", field_id_name_survey="observationId",
+                           fillFactor=1.0, w=0.1):
 
         """
-        probability probability of observations being observable for objectInField output
+        Probability of observations being observable for objectInField output.
+
+        Input
+        -----
+        oif_df          ... pandas dataframe containing objectsInField output.
+        survey_df       ... pandas dataframe containing observation data (i.e., field limiting magnitudes).
+        *_name          ... names of columns in oif_df
+        *name_survey    ... names of columns in survey_df
+        fillFactor      ... fraction of the field of view covered by sensors.
+        w               ... distribution parameter
         """
-        
-        l=len(oif_df.index)
-        limMag = survey_df.lookup(oif_df[field_id_name], ['fiveSigmaDepth']*l)
-        
+
+        fielddf = pd.merge(oif_df[[field_id_name]],
+                        survey_df[[field_id_name_survey, limiting_magnitude_name_survey]],
+                        left_on=field_id_name,
+                        right_on=field_id_name_survey,
+                        how="left"
+        )
+
         if (trailing_losses==False):
-            return calcDetectionProbability(oif_df[magnitude_name], limMag, fillFactor, w)
+            return calcDetectionProbability(oif_df[magnitude_name], fielddf[limiting_magnitude_name_survey], fillFactor, w)
         elif (trailing_losses==True):
-            return calcDetectionProbability(oif_df[magnitude_name] + oif_df[trailing_loss_name], limMag, fillFactor, w)
+            return calcDetectionProbability(oif_df[magnitude_name] + oif_df[trailing_loss_name],fielddf[limiting_magnitude_name_survey], fillFactor, w)
         else:
             print('trailing_loss has to be True or False')

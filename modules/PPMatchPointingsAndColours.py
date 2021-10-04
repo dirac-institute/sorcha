@@ -45,7 +45,7 @@ def PPMatchPointingsAndColours(padain,pointfildb):
     
     
     resdf=resdf.dropna(subset=['optFilter'])
-    resdf['ColinFil']=resdf.lookup(resdf.index,resdf['optFilter']) 
+    resdf['MaginFil']=resdf.lookup(resdf.index,resdf['optFilter']) 
     
 
 
