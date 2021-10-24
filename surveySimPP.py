@@ -190,7 +190,11 @@ def run():
 
     logging.info('Applying sensor footprint filter...')
     on_sensor=PPFootprintFilter.footPrintFilter(oif, surveydb, detectors)#, ra_name="AstRATrue(deg)", dec_name="AstDecTrue(deg)")
-    oif=oif.iloc[on_sensor]
+    on_sensor_concat = pd.concat(on_sensor).reset_index(drop=True)
+    for i in range(len(on_sensor)):
+        #print(oif.iloc[on_sensor[i]])
+        oif.loc[np.isin(oif.index, on_sensor[i]), "raft"] = int(i)
+    oif=oif.iloc[on_sensor_concat]
 
     #oif=oif.astype({"FieldID": int})
     #surveydb=surveydb.astype({"observationId": int})

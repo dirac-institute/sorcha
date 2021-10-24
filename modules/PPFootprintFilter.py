@@ -53,8 +53,9 @@ def footPrintFilter(observations, survey, detectors,
 
     #check if obs fall in detectors
     detectedObs=[]
+    
     for detector in detectors:
-        corners = sortCorners(detector.T)
+        corners = sortCorners(detector)
         #project corners to plane
         xd = np.cos(corners[:,0]) * np.cos(corners[:,1])
         yd = np.sin(corners[:,0]) * np.cos(corners[:,1])
@@ -76,7 +77,7 @@ def footPrintFilter(observations, survey, detectors,
 
         detectedObs.append(pd.Series(obsSelIndex[detected]))
 
-    return pd.concat(detectedObs).reset_index(drop=True)
+    return detectedObs#pd.concat(detectedObs).reset_index(drop=True)
 
 def readFootPrintFile(path2file):
     #currently requires a specific header
