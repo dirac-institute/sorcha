@@ -193,7 +193,7 @@ def run():
     on_sensor_concat = pd.concat(on_sensor).reset_index(drop=True)
     for i in range(len(on_sensor)):
         #print(oif.iloc[on_sensor[i]])
-        oif.loc[np.isin(oif.index, on_sensor[i]), "raft"] = int(i)
+        oif.loc[np.isin(oif.index, on_sensor[i]), "detector"] = int(i)
     oif=oif.iloc[on_sensor_concat]
 
     #oif=oif.astype({"FieldID": int})
