@@ -105,15 +105,18 @@ def PPTrailingLoss(oif_df, survey_df, model='circularPSF', dra_name='AstRARate(d
     Calculates Detection trailing loss for objectInField output.
     """
 
-    tempdf = pd.merge(
-        oif_df[[field_id_name_oif]],
-        survey_df[[field_id_name_survey, seeing_name_survey]],
-        left_on=field_id_name_oif,
-        right_on=field_id_name_survey,
-        how="left"
-    )
-    
-    dmag = calcTrailingLoss(oif_df[dra_name] * np.cos(oif_df[dec_name]*np.pi/180), oif_df[ddec_name], tempdf[seeing_name_survey], model=model)
+    #tempdf = pd.merge(
+    #    oif_df[[field_id_name_oif]],
+    #    survey_df[[field_id_name_survey, seeing_name_survey]],
+    #    left_on=field_id_name_oif,
+    #    right_on=field_id_name_survey,
+    #    how="left"
+    #)
+    #
+    #dmag = calcTrailingLoss(oif_df[dra_name] * np.cos(oif_df[dec_name]*np.pi/180), oif_df[ddec_name], tempdf[seeing_name_survey], model=model)
+
+    dmag = calcTrailingLoss(oif_df[dra_name] * np.cos(oif_df[dec_name]*np.pi/180), oif_df[ddec_name], oif_df[seeing_name_survey], model=model)
+
 
     return dmag
 #-----------------------------------------------------------------------------------------------

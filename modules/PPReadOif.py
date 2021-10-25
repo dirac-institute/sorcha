@@ -4,7 +4,7 @@ import pandas as pd
 
 #Author: Grigori Fedorets
 
-def PPReadOif(oif_output, filesep):
+def PPReadOif(oif_output, filesep, suffix):
    """
    PPReadOif.py
 
@@ -23,6 +23,7 @@ def PPReadOif(oif_output, filesep):
 
    Mandatory input:      string, oif_output, name of text file including Output from objectsInField (oif) 
                          string, filesep, separator used in input file, blank or comma
+                         string, suffix, file extension of input file, either csv, txt or h5 (hdf5, HDF5)
 
    
 
@@ -32,10 +33,13 @@ def PPReadOif(oif_output, filesep):
    usage: padafr=PPReadOif(oif_output,filesep)
    """
 
-   if (filesep==" "):
+   if (filesep==" ") and ((suffix=='csv') or (suffix=='txt')):
        padafr=pd.read_csv(oif_output, sep='\s+')
-   elif (filesep==","):
-       padafr=pd.read_csv(oif_output, delimiter=',')    
+   elif (filesep==",")  and ((suffix=='csv') or (suffix=='txt')):
+       padafr=pd.read_csv(oif_output, delimiter=',')   
+   elif (suffix=='h5') or (suffix=='hdf5') or (suffix=='HDF5'):
+       padafr=pd.read_hdf(oif_output).reset_index(drop=True)
+  
 
    padafr=padafr.rename(columns=lambda x: x.strip())
     

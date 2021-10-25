@@ -4,6 +4,8 @@
 import pandas as pd
 import numpy as np
 import random
+import logging
+import os, sys
 
 # Author: Grigori Fedorets
 
@@ -44,9 +46,16 @@ def PPMatchPointingsAndColours(padain,pointfildb):
     #resdf['ColinFil']=resdf.optFilter.isin(resdf.columns) # on track, gives true to correct values
     
     
-    resdf=resdf.dropna(subset=['optFilter'])
+    resdf=resdf.dropna(subset=['optFilter']).reset_index(drop=True)
     resdf['MaginFil']=resdf.lookup(resdf.index,resdf['optFilter']) 
     
+    # Check if observation dates in joined dataframes match
+    
+    chktrue=np.isclose(resdf['observationStartMJD'], resdf['FieldMJD'])
+    
+    if not chktrue.all():
+           logging.error('ERROR: PPMatchPointingsAndColours: mismatch in pointing database and pointing output times.')
+           sys.exit('ERROR: PPMatchPointingsAndColours: mismatch in pointing database and pointing output times.')
 
 
     #resdf.melt(id_vars=['FieldID'], value_vars=['optFilter'], var_name='ColinFil')

@@ -66,7 +66,7 @@ def PPFilterSSPCriterionEfficiency(padain,minintracklets,nooftracklets,intervalt
    i=0
    while(i<len(objid_list)):
         subs=padain[padain['ObjID']==objid_list[i]]
-
+        subs=subs.drop_duplicates(subset='FieldID').reset_index(drop=True)
         # The absolute minimum number of observations is two
         if len(subs.index) >= 2:
              counter=0 # of number of tracklets per object
@@ -85,7 +85,6 @@ def PPFilterSSPCriterionEfficiency(padain,minintracklets,nooftracklets,intervalt
              padaouttracklet=pd.DataFrame()
              #subidx=subs['index'].max()
              subidx=subs.index.values.max()
-             #print('subs')
              
              while(j<=r[-1]):
 
@@ -113,10 +112,12 @@ def PPFilterSSPCriterionEfficiency(padain,minintracklets,nooftracklets,intervalt
                   #if(subs.at[j,'FieldMJD']-subs.at[k,'FieldMJD'] < 11/24.):
                   
                   #print(s, k, j)
-                  #print(padaouttracklet)
+                  #padaouttracklet=padaouttracklet.drop_duplicates(subset=['FieldID'])#.reset_index(drop=True)
+
                   
                   if((j-k+1)>=minintracklets and len(padaouttracklet.index.values)>1):
-
+                       #print('r: ', r)
+                       #print(j,k,s,r[-1])
                        #j=j-1
                        
                        # see comment above why this is done weirdly
@@ -130,7 +131,7 @@ def PPFilterSSPCriterionEfficiency(padain,minintracklets,nooftracklets,intervalt
                        #lastCoordTracklet=SkyCoord(padaouttracklet['AstRA(deg)'].iloc[-1]*u.degree, padaouttracklet['AstDec(deg)'].iloc[-1]*u.degree)
                        firstCoordTracklet=SkyCoord(padaouttracklet.at[k,'AstRA(deg)']*u.degree, padaouttracklet.at[k,'AstDec(deg)']*u.degree)
                        lastCoordTracklet=SkyCoord(padaouttracklet.at[j,'AstRA(deg)']*u.degree, padaouttracklet.at[j,'AstDec(deg)']*u.degree)
-                                              
+            
                        sep=firstCoordTracklet.separation(lastCoordTracklet).degree
                        if not isinstance(sep,float):
                            # sometimes, the output of astropy SkyCoord.separation is a size 2 ndarray wth identical values, and not a float
@@ -138,6 +139,7 @@ def PPFilterSSPCriterionEfficiency(padain,minintracklets,nooftracklets,intervalt
                        #if (counter>0):
                        #    print(counter, padaouttrackletcoll.at[counter,'FieldMJD']-padaouttrackletcoll.at[0,'FieldMJD'], intervaltime)
                        #print(padaouttrackletcoll)
+
                        #print(j,k, j-k, minintracklets)
                        #print(padaouttracklet)
                        if (sep>sepThreshold):

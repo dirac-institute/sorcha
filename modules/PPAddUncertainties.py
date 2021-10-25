@@ -43,13 +43,20 @@ class Error(Exception):
 
 ############################################
 
-
-def addUncertainties(ephemsdf,obsdf,raName='fieldRA',decName='fieldDec',obsIdName='observationId',
+def addUncertainties(ephemsdf,obsdf,raName='fieldRA',decName='fieldDec',obsIdName='FieldID',
                      obsEpochName='observationStartMJD',
                      raNameEph='AstRA(deg)',decNameEph='AstDec(deg)',
                      obsIdNameEph='observationId',ephEpochName='FieldMJD',
                      limMagName='fiveSigmaDepth',seeingName='seeingFwhmGeom',
-                     filterMagName='MaginFilterTrue'):
+                     filterMagName='MaginFil'):
+
+
+#ef addUncertainties(ephemsdf,obsdf,raName='fieldRA',decName='fieldDec',obsIdName='observationId',
+#                    obsEpochName='observationStartMJD',
+#                    raNameEph='AstRA(deg)',decNameEph='AstDec(deg)',
+#                    obsIdNameEph='observationId',ephEpochName='FieldMJD',
+#                    limMagName='fiveSigmaDepth',seeingName='seeingFwhmGeom',
+#                    filterMagName='MaginFilterTrue'):
 
     """Add astrometric and photometric uncertainties to observations generated through JPL ephemeris simulator.
 
