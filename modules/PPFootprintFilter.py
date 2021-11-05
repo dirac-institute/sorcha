@@ -62,6 +62,7 @@ def footPrintFilter(observations, survey, detectors,
     
     #check if obs fall in detectors
     detectedObs=[]
+    
     for detector in detectors:
         corners = sortCorners(detector)
         #project corners to plane
@@ -93,7 +94,7 @@ def footPrintFilter(observations, survey, detectors,
 
         detectedObs.append(pd.Series(obsSelIndex[detected]))
 
-    return pd.concat(detectedObs).reset_index(drop=True)
+    return detectedObs#pd.concat(detectedObs).reset_index(drop=True)
 
 def readFootPrintFile(path2file):
     #currently requires a specific header
@@ -119,48 +120,32 @@ def detectors2fovXY(detectors):
 
     return np.array(detectors_out)
 
-def xyz_xrot(x, y, z, theta):
-    #xf =
-    yf = y*cos(theta) - z*sin(theta)
-    zf = y*sin(theta) + z*cos(theta)
-    return x, yf, zf
-
-def xyz_yrot(x, y, z, theta):
-    xf =  x*cos(theta) + z*sin(theta)
-    #yf =
-    zf = -x*sin(theta) + z*cos(theta)
-    return xf, y, zf
-
-def xyz_zrot(x, y, z, theta):
-    xf = x*cos(theta) - y*sin(theta)
-    yf = x*sin(theta) + y*cos(theta)
-    #zf =
-    return xf, yf, z
+def xrot(p, θ):
+    #rotation of a 3d vector around the x-axis
+    p_out = np.zeros(p.shape)
+    cosθ = cos(θ)
+    sinθ = sin(θ)
+    #m = np.array([[cosθ, -sinθ], [sinθ, cosθ]])
+    p_out[0] = p[0] 
+    p_out[1] = cosθ * p[1] - sinθ * p[2]
+    p_out[2] = sinθ * p[1] + cosθ * p[2]
+    return p_out
 
 def RADEC2fovXYZ(RA, Dec, fieldRA, fieldDec, rotSkyPos):
     x=cos(Dec)*cos(RA)
     y=cos(Dec)*sin(RA)
     z=sin(Dec)
+    p = np.array([x, y, z])
 
     fieldx = cos(fieldDec) * cos(fieldRA)
     fieldy = cos(fieldDec) * sin(fieldRA)
     fieldz = sin(fieldDec)
+    pf = np.array([fieldx, fieldy, fieldz])
+    
+    p_out = rotateField2XAxis(p, pf)
+    p_out = xrot(p_out, -rotSkyPos)
 
-    phi = np.arctan2(fieldz, fieldx)
-    x, y, z = xyz_yrot(x, y, z, phi)
-    fieldx, fieldy, fieldz = xyz_yrot(fieldx, fieldy, fieldz, phi)
-
-    phi = np.arctan2(fieldy, fieldx)
-    x, y, z = xyz_zrot(x, y, z, -phi)
-
-    x, y, z = xyz_xrot(x, y, z, -rotSkyPos)
-
-    #project y, z onto distant plane
-    #x*=()
-    #y*= 2 / (1+x)
-    #z*= 2 / (1+x)
-
-    return x, y, z
+    return p_out
 
 def polygonArea(corners):
     """Calculates the area of a convex polygon.
@@ -224,3 +209,79 @@ def sortCorners(points):
     #print(corner_rays[:,0], corner_rays[:,1])
     angles=np.arctan2(corner_rays[:,0], corner_rays[:,1])
     return np.array([x for x, y in sorted(zip(points, angles), key=lambda pair: pair[1])])
+
+def HamiltonProduct(q1, q2):
+    """where q1 and q2 are arrays of length 4 representing quaternions
+    Not commutative."""
+    #assert (q1.size[2] == 4) and (q2.size[2] == 4)
+    assert (q1.shape == q2.shape), "q1 and q2 must be the same length"
+    
+    a1, b1, c1, d1 = q1
+    a2, b2, c2, d2 = q2
+    
+    return np.array([
+        a1*a2 - b1*b2 - c1*c2 - d1*d2,
+        a1*b2 + b1*a2 + c1*d2 - d1*c2,
+        a1*c2 - b1*d2 + c1*a2 + d1*b2,
+        a1*d2 + b1*c2 - c1*b2 + d1*a2
+    ]).reshape(q1.shape)
+
+def quatRotate2XAxis(p, pf):
+    """Rotates a 3d vector p such that the vector pf is aligned with the x-axis"""
+    #where p is the point and pf is the center of the field
+    #assert p.shape[0] == 3
+    #print(p)
+    
+    #get rotation angle
+    yzf = np.sqrt(pf[1]*pf[1] + pf[2]*pf[2])
+    ρ = -np.arctan2(yzf, pf[0]) * 0.5
+    
+    #convert p to a quaternion
+    P = np.zeros((4, p.shape[1]))
+    P[1:4] = p
+    
+    #get rotation quaternion  
+    # since this is a special case we can disregard the i component for some operations
+    Q = np.zeros(P.shape)
+    Q[0] = np.cos(ρ)
+    Q[2] = -pf[2] 
+    Q[3] = pf[1] 
+    Q[2:4] *= (np.sin(ρ) / yzf)
+    Qinv = Q.copy()
+    Qinv[2:4] *= -1.
+    #print(HamiltonProduct(Q, Qinv))
+    #do rotation
+    P_out = HamiltonProduct(Q, HamiltonProduct(P, Qinv))
+    #P_out = HamiltonProduct(HamiltonProduct(Q, P), Qinv)
+    return P_out[1:4]
+
+def quatRotate(p, u, θ):
+    """Rotate a point p around u by θ ."""
+    #convert p to a quaternion
+    P = np.zeros((4, p.shape[1]))
+    P[1:4] = p
+    
+    #Construct rotation vector
+    Q = np.zeros(P.shape)
+    Q[0] = np.cos(0.5*θ)
+    Q[1:4] = np.sin(0.5*θ) * u
+    
+    #construct conjugate quaternion
+    Qc = Q.copy()
+    Qc[1:4] *= -1.
+    
+    #do quaternion multiplication
+    return HamiltonProduct(Q, HamiltonProduct(P, Qc))[1:4]
+
+def rotateField2XAxis(p, pf):
+    u = np.cross(np.array([1., 0., 0.]), pf,  axisa=0, axisb=0).T
+    u /= np.linalg.norm(u, axis=0)
+    θ = -np.arctan2(np.sqrt(1. - pf[0]*pf[0]), pf[0])
+    p2 = quatRotate(p, u, θ)
+    #calculate angle to undo precession
+    zh = np.zeros(p.shape)
+    zh[2] += 1.
+    zh2 = quatRotate(zh, u, θ)
+    ϕ = -np.arctan2(zh2[2], zh2[1])
+    
+    return xrot(p2, ϕ)

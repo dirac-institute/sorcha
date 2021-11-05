@@ -136,6 +136,11 @@ def run():
     con=sql.connect(pointingdatabase)
     surveydb=pd.read_sql_query('SELECT observationId, observationStartMJD, filter, seeingFwhmGeom, seeingFwhmEff, fiveSigmaDepth, fieldRA, fieldDec, rotSkyPos FROM SummaryAllProps order by observationId', con)
 
+    #Should probably add options to the config file to specify seed
+    #or to use a random seed
+    logging.info('Instantiating random number generator ... ')
+    rng = np.random.default_rng(2021)
+
     logging.info("Joining pointing data to objects observations...")
     #This will get moved to a function once I get it to work
     #currently only grabs the limiting magnitude (fiveSigmaDepth)
@@ -144,7 +149,7 @@ def run():
     #so i'm leaving it as a todo.
     surveydb_join= pd.merge(oif["FieldID"], surveydb, left_on="FieldID", right_on="observationId", how="left")
     #for name in surveydb.columns:
-    for name in ["fiveSigmaDepth"]:
+    for name in ["fiveSigmaDepth", 'filter']:
         oif[name] = surveydb_join[name]
 
     str3='Reading input colours: ' + colourinput
@@ -166,7 +171,7 @@ def run():
     oif.reset_index(drop=True, inplace=True)
 
     logging.info('Applying uncertainty to photometry...')
-    oif["MaginFilter"] = PPRandomizeMeasurements.randomizePhotometry(oif, magName="MaginFilterTrue", sigName="PhotometricSigma(mag)")
+    oif["MaginFilter"] = PPRandomizeMeasurements.randomizePhotometry(oif, magName="MaginFilterTrue", sigName="PhotometricSigma(mag)", rng=rng)
 
     logging.info('Calculating trailing losses...')
     oif['dmagDetect']=PPTrailingLoss.PPTrailingLoss(oif, surveydb)
@@ -181,15 +186,23 @@ def run():
     logging.info('Calculating astrometric uncertainties...')
     oif["AstRATrue(deg)"] = oif["AstRA(deg)"]
     oif["AstDecTrue(deg)"] = oif["AstDec(deg)"]
-    oif["AstRA(deg)"], oif["AstDec(deg)"] = PPRandomizeMeasurements.randomizeAstrometry(oif, sigName='AstrometricSigma(deg)')
+    oif["AstRA(deg)"], oif["AstDec(deg)"] = PPRandomizeMeasurements.randomizeAstrometry(oif, sigName='AstrometricSigma(deg)', rng=rng)
 
     logging.info('Applying sensor footprint filter...')
     on_sensor=PPFootprintFilter.footPrintFilter(oif, surveydb, detectors)#, ra_name="AstRATrue(deg)", dec_name="AstDecTrue(deg)")
-    oif=oif.iloc[on_sensor]
+    on_sensor_concat = pd.concat(on_sensor).reset_index(drop=True)
+    for i in range(len(on_sensor)):
+        #print(oif.iloc[on_sensor[i]])
+        oif.loc[np.isin(oif.index, on_sensor[i]), "detector"] = int(i)
+    oif=oif.iloc[on_sensor_concat]
 
-    oif=oif.astype({"FieldID": int})
-    oif["Filter"] = pd.merge(oif["FieldID"], surveydb[["observationId", 'filter']], left_on="FieldID", right_on="observationId", how="left")['filter']
+    #oif=oif.astype({"FieldID": int})
+    #surveydb=surveydb.astype({"observationId": int})
+    #oif["Filter"] = pd.merge(oif["FieldID"], surveydb, left_on="FieldID", right_on="observationId", how="left")['filter']
+    logging.info('Dropping column with astrometric sigma in milliarcseconds ...')
     oif.drop(columns=["AstrometricSigma(mas)"])
+
+    #print(surveydb.iloc[418589])
 
 #------------------------------------------------------------------------------
 

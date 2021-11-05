@@ -29,6 +29,8 @@ import pandas as pd
 
 from . import PPAddUncertainties as uc
 
+#set a default random number generator
+default_rng = np.random.default_rng(2021)
 
 __all__ = ['randomizeObservations','flux2mag','mag2flux','radec2icrf','icrf2radec',
            'sampleNormalFOV','randomizeAstrometry','randomizePhotometry']
@@ -108,7 +110,7 @@ def randomizeObservations(ephemsdf,obsdf,raName='fieldRA',decName='fieldDec',obs
 
     return ephemsOut
 
-def randomizeAstrometry(df,raName='AstRA(deg)',decName='AstDec(deg)',
+def randomizeAstrometry(df, rng=default_rng, raName='AstRA(deg)',decName='AstDec(deg)',
                          raRndName='AstRARnd(deg)',decRndName='AstDecRnd(deg)',
                          sigName='AstSig(deg)',units='deg'):
 
@@ -118,6 +120,7 @@ def randomizeAstrometry(df,raName='AstRA(deg)',decName='AstDec(deg)',
     Parameters:
     ----------
     df    ... pandas DataFrame containing astrometry and sigma.
+    rng
     xName ... column names for right ascension, declination,
               randomized right ascension, randomized declination
               standard deviation
@@ -151,7 +154,7 @@ def randomizeAstrometry(df,raName='AstRA(deg)',decName='AstDec(deg)',
     n = len(df.index)
     xyz = zeros([n,3])
 
-    xyz = sampleNormalFOV(center, sigmarad, ndim=3, seed=2021)
+    xyz = sampleNormalFOV(center, sigmarad, ndim=3, rng=rng)
 
     if (units=='deg'):
         [ra, dec] = icrf2radec(xyz[:,0], xyz[:,1], xyz[:,2], deg=True)
@@ -165,7 +168,7 @@ def randomizeAstrometry(df,raName='AstRA(deg)',decName='AstDec(deg)',
     return ra, dec
 
 
-def sampleNormalFOV(center, sigma, ndim=3, seed=2021):
+def sampleNormalFOV(center, sigma, ndim=3, rng=default_rng):
     """Sample n points randomly (normal distribution) on a region on the unit (hyper-)sphere.
 
     Parameters:
@@ -181,9 +184,8 @@ def sampleNormalFOV(center, sigma, ndim=3, seed=2021):
     vec ... numpy array [npoints, ndim]
     """
 
-    np.random.seed(seed)
     array = np.array
-    normaln = np.random.multivariate_normal
+    normaln = rng.multivariate_normal
     norm = np.linalg.norm
     zeros = np.zeros
 
@@ -210,7 +212,7 @@ def sampleNormalFOV(center, sigma, ndim=3, seed=2021):
     return vec
 
 
-def randomizePhotometry(df,magName='Filtermag',magRndName='FiltermagRnd',sigName='FiltermagSig'):
+def randomizePhotometry(df,magName='Filtermag',magRndName='FiltermagRnd',sigName='FiltermagSig', rng=default_rng):
 
     """Randomize photometry with normal distribution around magName value.
 
@@ -234,7 +236,7 @@ def randomizePhotometry(df,magName='Filtermag',magRndName='FiltermagRnd',sigName
 
     """
 
-    normal = np.random.normal
+    normal = rng.normal
 
     s = normal(0, 1, len(df.index))
 
