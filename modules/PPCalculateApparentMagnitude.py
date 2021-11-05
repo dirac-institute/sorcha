@@ -162,5 +162,6 @@ def PPCalculateApparentMagnitude(padain, function, mainfilter):
          pplogger.error('ERROR: PPCalculateApparentMagnitude: unknown phase function. Should be HG1G2, HG, HG12 or linear.')
          sys.exit('ERROR: PPCalculateApparentMagnitude: unknown phase function. Should be HG1G2, HG, HG12 or linear.')
 
+    padain=padain.reset_index(drop=True)
 
     return padain

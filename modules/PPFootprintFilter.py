@@ -13,8 +13,9 @@ cos = np.cos
 __all__=['footPrintFilter']
 
 def footPrintFilter(observations, survey, detectors,
-                         ra_name="AstRA(deg)", dec_name="AstDec(deg)", field_name="FieldID", field_name_survey="observationId",
+                         ra_name="AstRA(deg)", dec_name="AstDec(deg)", field_name="FieldID", 
                          ra_name_field='fieldRA', dec_name_field="fieldDec", rot_name_field="rotSkyPos"):
+                         # field_name_survey="observationId",
     """Applies camera footpint to remove observations that do not fall on
     detector chips.
 
@@ -34,23 +35,31 @@ def footPrintFilter(observations, survey, detectors,
     ra=deg2rad(observations[ra_name])
     dec=deg2rad(observations[dec_name])
 
-    field_df = pd.merge(
-        observations[[field_name]],
-        survey[[field_name_survey, ra_name_field, dec_name_field, rot_name_field]],
-        left_on=field_name,
-        right_on=field_name_survey,
-        how="left"
-    )
-
-    fieldra   = deg2rad(field_df[ra_name_field])
-    fielddec  = deg2rad(field_df[dec_name_field])
-    rotSkyPos = deg2rad(field_df[rot_name_field])
+    #field_df = pd.merge(
+    #    observations[[field_name]],
+    #    survey[[field_name_survey, ra_name_field, dec_name_field, rot_name_field]],
+    #    left_on=field_name,
+    #    right_on=field_name_survey,
+    #    how="left"
+    #)
+    #
+    #fieldra   = deg2rad(field_df[ra_name_field])
+    #fielddec  = deg2rad(field_df[dec_name_field])
+    #rotSkyPos = deg2rad(field_df[rot_name_field])
+    #
+    fieldra   = deg2rad(observations[ra_name_field])
+    fielddec  = deg2rad(observations[dec_name_field])
+    rotSkyPos = deg2rad(observations[rot_name_field])
+    
 
     #get coords on focal plane
     x, y, z = RADEC2fovXYZ(ra, dec, fieldra, fielddec, rotSkyPos) # y,z in 3d -> x, y in focal plane
     y *= 2. / (1.+x)
     z *= 2. / (1.+x)
-
+    
+    print('y: ', y)
+    print('z: ', z)
+    
     #check if obs fall in detectors
     detectedObs=[]
     for detector in detectors:
@@ -66,9 +75,17 @@ def footPrintFilter(observations, survey, detectors,
 
         r, detector_center=detectorCircle(corners)
         obsSelIndex=np.where((y-detector_center[0])**2 + (z-detector_center[1])**2 < r**2 )[0]
-
+        
+        
         ySel=y[obsSelIndex]
         zSel=z[obsSelIndex]
+        
+        #print(ySel)
+        #print(zSel)
+        #print('wait')
+        print(obsSelIndex)
+        print(np.array((ySel, zSel)))
+        print(len(y), len(z))
 
         points=np.array((ySel, zSel)).T
         detected=isinPolygon(points, corners)

@@ -23,7 +23,7 @@ def PPMatchFieldConditions(dbname):
     """
 
     con = sql.connect(dbname)
-    fieldConditions = pd.read_sql("""SELECT observationId, seeingFwhmEff, fiveSigmaDepth FROM SummaryAllProps order by observationId""", con)
+    fieldConditions = pd.read_sql("""SELECT observationId, seeingFwhmEff, fiveSigmaDepth, seeingFwhmGeom FROM SummaryAllProps order by observationId""", con)
     fieldConditions.rename(columns={"seeingFwhmEff" : "seeing"}, inplace=True)
     fieldConditions.rename(columns={"fiveSigmaDepth": "limiting magnitude"}, inplace=True)
     fieldConditions.rename(columns={"observationId" : "FieldID"}, inplace=True)

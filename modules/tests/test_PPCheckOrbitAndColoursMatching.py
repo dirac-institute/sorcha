@@ -15,7 +15,7 @@ def test_PPCheckOrbitAndColoursMatching():
      
      padaor=PPReadOrbitFile('./data/test/testorb.des', 0, 10, ' ')
      padacl=PPReadColours('./data/test/testcolour.txt', 0, 10, ' ')
-     padapo=PPReadOif('./data/test/oiftestoutput.txt', ' ')
+     padapo=PPReadOif('./data/test/oiftestoutput.txt', ' ', 'txt')
      
      print(padaor)
      print(padacl)

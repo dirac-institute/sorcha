@@ -2,6 +2,7 @@
 
 import os,sys
 import pandas as pd
+import numpy as np
 import logging
 import argparse
 import configparser
@@ -18,6 +19,7 @@ from modules import PPDropObservations, PPBrightLimit
 from modules import PPMakeIntermediatePointingDatabase, PPReadIntermDatabase
 from modules import PPReadCometaryInput, PPJoinCometaryWithOrbits, PPCalculateSimpleCometaryMagnitude
 from modules import PPCalculateApparentMagnitude
+from modules import PPFootprintFilter, PPAddUncertainties, PPRandomizeMeasurements, PPVignetting
 from modules.PPDetectionProbability import calcDetectionProbability, PPDetectionProbability
 
 #oifoutput=sys.argv[1]
@@ -93,7 +95,7 @@ def runPostProcessing():
     """
     runPostProcessing()
     
-    Author: Grigori Fedorets
+    Author: Grigori Fedorets, Samuel Cornwall
     
     Description: This is the main file. Its purpose is to illustrate the workflow of the 
     post-processing tools, and to perform a suite of tasks such as filtering and colour manipulation.
@@ -156,7 +158,7 @@ def runPostProcessing():
     objecttype=get_or_exit(config, 'OBJECTS', 'objecttype', 'ERROR: no object type provided.')
     #objecttype.strip()
     if (objecttype != 'asteroid' and objecttype != 'comet'):
-         logging.error('ERROR: objecttype is neither an asteroid or a comet.') 
+         pplogger.error('ERROR: objecttype is neither an asteroid or a comet.') 
          sys.exit('ERROR: objecttype is neither an asteroid or a comet.')
     #orbinfile=get_or_exit(config, 'INPUTFILES', 'orbinfile', 'ERROR: no orbit file (DES) provided.')    
     #oifoutput=get_or_exit(config, 'INPUTFILES', 'oifoutput', 'ERROR: no ObjectInField output file provided.')
@@ -175,13 +177,20 @@ def runPostProcessing():
     resfilters=[e.strip() for e in config.get('FILTERS', 'resfilters').split(',')]
     
     if (len(othercolours) != len(resfilters)-1):
-         logging.error('ERROR: mismatch in input config colours and filters: len(othercolours) != len(resfilters) + 1')
+         pplogger.error('ERROR: mismatch in input config colours and filters: len(othercolours) != len(resfilters) + 1')
          sys.exit('ERROR: mismatch in input config colours and filters: len(othercolours) != len(resfilters) + 1')
     if mainfilter != resfilters[0]:
-         logging.error('ERROR: main filter should be the first among resfilters.')
+         pplogger.error('ERROR: main filter should be the first among resfilters.')
          sys.exit('ERROR: main filter should be the first among resfilters.') 
     
     phasefunction=get_or_exit(config,'PHASE', 'phasefunction', 'ERROR: phase function not defined.')
+    
+    trailingLossesOn = to_bool(config["PERFORMANCE"]["trailingLossesOn"])
+    cameraModel=get_or_exit(config, 'PERFORMANCE', 'cameraModel', 'ERROR: camera model not defined.')
+    if (cameraModel != 'surfacearea') and (cameraModel != 'footprint'):
+        pplogger.error('ERROR: cameraModel should be either surfacearea or footprint.')
+        sys.exit('ERROR: cameraModel should be either surfacearea or footprint.')        
+         
     
     SSPDetectionEfficiency=float(config["FILTERINGPARAMETERS"]['SSPDetectionEfficiency'])
     if (SSPDetectionEfficiency > 1.0 or SSPDetectionEfficiency > 1.0 or isinstance(SSPDetectionEfficiency,(float,int))==False):
@@ -209,7 +218,7 @@ def runPostProcessing():
     outpath=get_or_exit(config, 'OUTPUTFORMAT', 'outpath', 'ERROR: out path not specified.')   
     outfilestem=get_or_exit(config, 'OUTPUTFORMAT', 'outfilestem', 'ERROR: name of output file stem not specified.')    
     outputformat=get_or_exit(config, 'OUTPUTFORMAT', 'outputformat', 'ERROR: output format not specified.')   
-    if (outputformat != 'csv') and (outputformat != 'sqlite3') and (outputformat != 'hdf5') and (outputformat != 'HDF5') :
+    if (outputformat != 'csv') and (outputformat != 'sqlite3') and (outputformat != 'hdf5') and (outputformat != 'HDF5') and (outputformat != 'h5') :
          sys.exit('ERROR: output format should be either csv, sqlite3 or hdf5.')
     separatelyCSV=to_bool(config["OUTPUTFORMAT"]['separatelyCSV'])
     sizeSerialChunk = int(config["GENERAL"]['sizeSerialChunk'])
@@ -225,8 +234,12 @@ def runPostProcessing():
     # Due to the restriction of the logger object, the parsing is done in a weird way
     # when taking arguments
     
+    pplogger.info("loading camera footprint ...")
+    detectors=PPFootprintFilter.readFootPrintFile('./data/detectors_corners.csv')
+
     
-    pplogger.info('Matching observationID with appropriate optical filter...')
+    
+    pplogger.info('Reading pointing database and Matching observationID with appropriate optical filter...')
     filterpointing=PPMatchPointing.PPMatchPointing(pointingdatabase,resfilters)
     #print(pada5)
     
@@ -278,7 +291,8 @@ def runPostProcessing():
             try: 
                 str2='Reading input pointing history: ' + oifoutput
                 pplogger.info(str2)
-                padafr=PPReadOif.PPReadOif(oifoutput, filesep)
+                oifoutputsuffix = oifoutput.split('.')[-1]
+                padafr=PPReadOif.PPReadOif(oifoutput, filesep, oifoutputsuffix)
                 
                 # Here, we drop the magnitudes calculated by oif as they are calculated elsewhere
                 # as they can be calculated with a variety of phase functions, and in different filters
@@ -327,15 +341,7 @@ def runPostProcessing():
         #print(observations[mainfilter], observations['V'])
         
         
-        pplogger.info('Applying detection efficiency threshold...')
-        observations=PPFilterDetectionEfficiencyThreshold.PPFilterDetectionEfficiencyThreshold(observations,SSPDetectionEfficiency)
-        
-        
-        #print(pada1)
-        
-        pplogger.info('Applying simple sensor area losses...')  
-        observations=PPSimpleSensorArea.PPSimpleSensorArea(observations, fillfactor)
-        
+ 
         
         #print(pada1)
 
@@ -353,7 +359,7 @@ def runPostProcessing():
         
         #resdf3=resdf1
         #print(resdf3)
-        
+        observations=observations.reset_index(drop=True)
         
         pplogger.info('Resolving the apparent brightness in a given optical filter corresponding to the pointing...')
         observations=PPMatchPointingsAndColours.PPMatchPointingsAndColours(observations,filterpointing)
@@ -369,20 +375,81 @@ def runPostProcessing():
         seeing, limiting_magnitude=PPMatchFieldConditions.PPMatchFieldConditions(pointingdatabase)
         
         #print(pada6)
-        pplogger.info('Calculating trailing losses...')
-        observations=PPTrailingLoss.PPTrailingLoss(observations, seeing)
-        
+        if (trailingLossesOn == True):
+           pplogger.info('Calculating trailing losses...')
+           observations['dmagDetect']=PPTrailingLoss.PPTrailingLoss(observations, seeing)
+               
         pplogger.info('Dropping observations that are too bright...')
         observations=PPBrightLimit.PPBrightLimit(observations,brightLimit)
         
+        if (cameraModel == "surfacearea"):
+            pplogger.info('Applying detection efficiency threshold...')
+            observations=PPFilterDetectionEfficiencyThreshold.PPFilterDetectionEfficiencyThreshold(observations,SSPDetectionEfficiency)
+        
+                    
+        # This is essentially the same as the applying detection efficiency thershold
+        #pplogger.info('Applying simple sensor area losses...')  
+        #observations=PPSimpleSensorArea.PPSimpleSensorArea(observations, fillfactor)
+          
         
         #print(limiting_magnitude)
         
+        elif (cameraModel == "footprint"):
         
-        pplogger.info('Calculating probabilities of detections...')
-        #observations=PPDetectionProbability.PPDetectionProbability(observations,filterpointing)
-        observations["detection_probability"] = PPDetectionProbability(observations, filterpointing)
-        #observations=PPDetectionProbability.PPDetectionProbability(observations,limiting_magnitude)
+            #print('observations')
+            #print(observations)
+            #print('filterpointing')
+            #print(filterpointing)
+            #print(list(observations.columns))
+        
+        ######### TEST THE CODE STARTING HERE ########
+            
+            pplogger.info('Calculating probabilities of detections...')
+            #observations=PPDetectionProbability.PPDetectionProbability(observations,filterpointing)
+            observations["detection_probability"] = PPDetectionProbability(observations, filterpointing)
+            #observations=PPDetectionProbability.PPDetectionProbability(observations,limiting_magnitude)
+           
+        
+            logging.info('Calculating astrometric and photometric uncertainties...')
+            observations['AstrometricSigma(mas)'], observations['PhotometricSigma(mag)'], observations["SNR"] = PPAddUncertainties.addUncertainties(observations, filterpointing, obsIdNameEph='FieldID')
+            observations["AstrometricSigma(deg)"] = observations['AstrometricSigma(mas)'] / 3600 / 1000
+        
+            logging.info('Dropping observations with signal to noise ratio less than 2...')
+            observations.drop( np.where(observations["SNR"] <= 2.)[0], inplace=True)
+            observations.reset_index(drop=True, inplace=True)
+        
+            logging.info('Applying uncertainty to photometry...')
+            observations["MaginFilter"] = PPRandomizeMeasurements.randomizePhotometry(observations, magName="MaginFil", sigName="PhotometricSigma(mag)")
+        
+            logging.info('Calculating trailing losses...')
+            observations['dmagDetect']=PPTrailingLoss.PPTrailingLoss(observations, filterpointing)
+        
+            logging.info('Calculating vignetting losses...')
+            observations['dmagVignet']=PPVignetting.vignettingLosses(observations, filterpointing)
+        
+            logging.info("Dropping faint detections... ")
+            observations.drop( np.where(observations["MaginFilter"] + observations["dmagDetect"] + observations['dmagVignet'] >= observations["fiveSigmaDepth"])[0], inplace=True)
+            observations.reset_index(drop=True, inplace=True)
+        
+            logging.info('Calculating astrometric uncertainties...')
+            observations["AstRATrue(deg)"] = observations["AstRA(deg)"]
+            observations["AstDecTrue(deg)"] = observations["AstDec(deg)"]
+            observations["AstRA(deg)"], observations["AstDec(deg)"] = PPRandomizeMeasurements.randomizeAstrometry(observations, sigName='AstrometricSigma(deg)')
+                    
+            logging.info('Applying sensor footprint filter...')
+            on_sensor=PPFootprintFilter.footPrintFilter(observations, filterpointing, detectors)#, ra_name="AstRATrue(deg)", dec_name="AstDecTrue(deg)")
+            observations=observations.iloc[on_sensor]
+        
+            observations=observations.astype({"FieldID": int})
+            #observations["Filter"] = pd.merge(observations["FieldID"], filterpointing[["observationId", 'filter']], left_on="FieldID", right_on="observationId", how="left")['filter']
+            observations.drop(columns=["AstrometricSigma(mas)"])
+            
+            ############### END TEST ###########################
+        
+        
+        
+        
+        
         
         pplogger.info('Number of rows BEFORE applying detection probability threshold: ' + str(len(observations.index)))
     
