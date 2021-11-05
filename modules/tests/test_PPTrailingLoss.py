@@ -19,12 +19,14 @@ def test_PPTrailingLoss():
                            0.38174909, 0.03332251],
                           "AstDec(deg)":         [0.45697193, 0.39612113, 0.91493552,
                            0.21664349, 0.2001591, 0.8722614,  0.08539993, 0.07318935,
-                           0.74395827, 0.47139718]
-    })
-    testsurveydf = pd.DataFrame({
-                    "observationId": np.arange(0, 10),
-                    "seeingFwhmGeom": [0.96801413, 0.35969965, 0.33634724, 0.43889922,
+                           0.74395827, 0.47139718],
+                           "seeingFwhmGeom": [0.96801413, 0.35969965, 0.33634724, 0.43889922,
                                        0.97841924, 0.54296975, 0.99666377, 0.95417028,
                                        0.41872633, 0.85249683]
+                           
+    })
+    testsurveydf = pd.DataFrame({
+                    "observationId": np.arange(0, 10)
+                    
     })
     assert 0.25893924959480374 == PPTrailingLoss(testoifdf, testsurveydf)[5]

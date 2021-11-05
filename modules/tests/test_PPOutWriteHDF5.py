@@ -17,7 +17,7 @@ from ..PPOutWriteHDF5 import PPOutWriteHDF5
 def test_PPOutWriteHDF5():
 
 
-    padafr=PPReadOif('./data/test/oiftestoutput.txt', " ")
+    padafr=PPReadOif('./data/test/oiftestoutput.txt', " ", 'txt')
     padacl=PPReadColours('./data/test/testcolour.txt', 0, 20, " ")
     
     resdf=PPJoinColourPointing(padafr,padacl)
@@ -36,7 +36,7 @@ def test_PPOutWriteHDF5():
     pd.read_hdf('outtest.h5', str(1)).dtypes
 
     
-    ncols=4
+    ncols=5
     
     print(pada6)
     

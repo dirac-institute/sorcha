@@ -400,7 +400,7 @@ def runPostProcessing():
             #print(observations)
             #print('filterpointing')
             #print(filterpointing)
-            print(list(observations.columns))
+            #print(list(observations.columns))
         
         ######### TEST THE CODE STARTING HERE ########
             
@@ -435,15 +435,13 @@ def runPostProcessing():
             observations["AstRATrue(deg)"] = observations["AstRA(deg)"]
             observations["AstDecTrue(deg)"] = observations["AstDec(deg)"]
             observations["AstRA(deg)"], observations["AstDec(deg)"] = PPRandomizeMeasurements.randomizeAstrometry(observations, sigName='AstrometricSigma(deg)')
-        
-            print(observations)
-            
+                    
             logging.info('Applying sensor footprint filter...')
             on_sensor=PPFootprintFilter.footPrintFilter(observations, filterpointing, detectors)#, ra_name="AstRATrue(deg)", dec_name="AstDecTrue(deg)")
             observations=observations.iloc[on_sensor]
         
             observations=observations.astype({"FieldID": int})
-            observations["Filter"] = pd.merge(oif["FieldID"], filterpointing[["observationId", 'filter']], left_on="FieldID", right_on="observationId", how="left")['filter']
+            #observations["Filter"] = pd.merge(observations["FieldID"], filterpointing[["observationId", 'filter']], left_on="FieldID", right_on="observationId", how="left")['filter']
             observations.drop(columns=["AstrometricSigma(mas)"])
             
             ############### END TEST ###########################

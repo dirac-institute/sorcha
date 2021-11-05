@@ -23,7 +23,7 @@ Author: Grigori Fedorets
 
 def test_PPFilterDetectionEfficiencyThreshold():
 
-    padafr=PPReadOif('./data/test/oiftestoutput.txt', ' ')
+    padafr=PPReadOif('./data/test/oiftestoutput.txt', ' ', 'txt')
     nrows=len(padafr.index)
     pada1=PPFilterDetectionEfficiencyThreshold(padafr,1.00)
     nr1=len(pada1.index)

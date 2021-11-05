@@ -16,7 +16,7 @@ from ..PPOutWriteCSV import PPOutWriteCSV
 
 def test_PPOutWriteCSV():
 
-    padafr=PPReadOif('./data/test/oiftestoutput.txt', " ")
+    padafr=PPReadOif('./data/test/oiftestoutput.txt', " ", 'txt')
     padacl=PPReadColours('./data/test/testcolour.txt', 0, 5, " ")
     
     resdf=PPJoinColourPointing(padafr,padacl)
@@ -26,12 +26,12 @@ def test_PPOutWriteCSV():
     resdf3=PPhookBrightnessWithColour(resdf1, 'r', 'g-r', 'g')
     
     
-    pada5=PPMatchPointing('./data/test/baseline_10yrs_10klines.db', ['u', 'g', 'r', 'i', 'z'])
+    pada5=PPMatchPointing('./data/test/baseline_10yrs_10klines.db', [ 'g', 'r', 'i'])
     pada6=PPMatchPointingsAndColours(resdf3,pada5)
     
     
     pada7=PPOutWriteCSV(pada6,'./outtest.csv')
-    ncols=5
+    ncols=6
     
     tpt=os.popen("wc -l ./outtest.csv | awk '{print $1}'")
     cmp=tpt.read()

@@ -10,7 +10,7 @@ def test_PPMatchPointing():
     
     padapo=PPMatchPointing('./data/test/baseline_10yrs_10klines.db', ['u', 'g', 'r', 'i', 'z', 'y'])
     
-    nlines=10001
+    nlines=10007
     
     nlinesdb=len(padapo.index)
     

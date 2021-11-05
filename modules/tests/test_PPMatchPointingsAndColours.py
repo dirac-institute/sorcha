@@ -15,7 +15,7 @@ from ..PPMatchPointingsAndColours import PPMatchPointingsAndColours
 
 def test_PPMatchPointingsAndColours():
 
-    padafr=PPReadOif('./data/test/oiftestoutput.txt', ' ')
+    padafr=PPReadOif('./data/test/oiftestoutput.txt', ' ', 'txt')
     padacl=PPReadColours('./data/test/testcolour.txt', 0, 5, ' ')
     
     resdf=PPJoinColourPointing(padafr,padacl)
@@ -25,10 +25,10 @@ def test_PPMatchPointingsAndColours():
     resdf3=PPhookBrightnessWithColour(resdf1, 'r', 'g-r', 'g')
     
     
-    pada5=PPMatchPointing('./data/test/baseline_10yrs_10klines.db', ['u', 'g', 'r', 'i', 'z'])
+    pada5=PPMatchPointing('./data/test/baseline_10yrs_10klines.db', ['g', 'r', 'i'])
     pada6=PPMatchPointingsAndColours(resdf3,pada5)
     
-    ncols=35
+    ncols=38
     ncolsre=len(pada6.columns)
     
     assert ncols==ncolsre
