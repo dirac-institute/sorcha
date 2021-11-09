@@ -56,10 +56,7 @@ def footPrintFilter(observations, survey, detectors,
     x, y, z = RADEC2fovXYZ(ra, dec, fieldra, fielddec, rotSkyPos) # y,z in 3d -> x, y in focal plane
     y *= 2. / (1.+x)
     z *= 2. / (1.+x)
-    
-    print('y: ', y)
-    print('z: ', z)
-    
+
     #check if obs fall in detectors
     detectedObs=[]
     
@@ -81,12 +78,7 @@ def footPrintFilter(observations, survey, detectors,
         ySel=y[obsSelIndex]
         zSel=z[obsSelIndex]
         
-        #print(ySel)
-        #print(zSel)
-        #print('wait')
-        print(obsSelIndex)
-        print(np.array((ySel, zSel)))
-        print(len(y), len(z))
+
 
         points=np.array((ySel, zSel)).T
         detected=isinPolygon(points, corners)
@@ -94,7 +86,8 @@ def footPrintFilter(observations, survey, detectors,
 
         detectedObs.append(pd.Series(obsSelIndex[detected]))
 
-    return detectedObs#pd.concat(detectedObs).reset_index(drop=True)
+    #return detectedObs#
+    return pd.concat(detectedObs).reset_index(drop=True)
 
 def readFootPrintFile(path2file):
     #currently requires a specific header
