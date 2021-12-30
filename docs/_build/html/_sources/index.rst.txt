@@ -11,7 +11,7 @@ Welcome to Solar System Survey Simulator Post Processing's documentation!
    :caption: Contents:
 
    modules
-
+   lsstcomet
 
 Indices and tables
 ==================
@@ -19,3 +19,4 @@ Indices and tables
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
+

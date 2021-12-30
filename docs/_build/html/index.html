@@ -4,12 +4,13 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>Welcome to Solar System Survey Simulator Post Processing’s documentation! &#8212; Solar System Survey Simulator Post Processing 0.0.1 documentation</title>
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/classic.css" />
     
-    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
     <script src="_static/doctools.js"></script>
@@ -40,43 +41,72 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="welcome-to-solar-system-survey-simulator-post-processing-s-documentation">
+  <section id="welcome-to-solar-system-survey-simulator-post-processing-s-documentation">
 <h1>Welcome to Solar System Survey Simulator Post Processing’s documentation!<a class="headerlink" href="#welcome-to-solar-system-survey-simulator-post-processing-s-documentation" title="Permalink to this headline">¶</a></h1>
 <div class="toctree-wrapper compound">
-<p class="caption"><span class="caption-text">Contents:</span></p>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="modules.html">modules package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="modules.html#subpackages">Subpackages</a></li>
 <li class="toctree-l2"><a class="reference internal" href="modules.html#submodules">Submodules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="modules.html#module-modules.PPAddUncertainties">modules.PPAddUncertainties module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#modules-ppappmag-to-module">modules.PPAppmag_to module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#module-modules.PPBrightLimit">modules.PPBrightLimit module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#modules-ppcalculateapparentmagnitude-module">modules.PPCalculateApparentMagnitude module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#module-modules.PPCalculateSimpleCometaryMagnitude">modules.PPCalculateSimpleCometaryMagnitude module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#module-modules.PPCheckOrbitAndColoursMatching">modules.PPCheckOrbitAndColoursMatching module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="modules.html#module-modules.PPDetectionProbability">modules.PPDetectionProbability module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#module-modules.PPDropObservations">modules.PPDropObservations module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="modules.html#module-modules.PPFilterDetectionEfficiencyThreshold">modules.PPFilterDetectionEfficiencyThreshold module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="modules.html#module-modules.PPFilterSSPCriterionEfficiency">modules.PPFilterSSPCriterionEfficiency module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules.html#module-modules.PPFilterTransform">modules.PPFilterTransform module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#module-modules.PPFootprintFilter">modules.PPFootprintFilter module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="modules.html#module-modules.PPJoinColourPointing">modules.PPJoinColourPointing module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#module-modules.PPJoinCometaryWithOrbits">modules.PPJoinCometaryWithOrbits module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#module-modules.PPMakeIntermediatePointingDatabase">modules.PPMakeIntermediatePointingDatabase module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#module-modules.PPMatchFieldConditions">modules.PPMatchFieldConditions module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="modules.html#module-modules.PPMatchPointing">modules.PPMatchPointing module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="modules.html#module-modules.PPMatchPointingsAndColours">modules.PPMatchPointingsAndColours module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#module-modules.PPOutWriteCSV">modules.PPOutWriteCSV module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#module-modules.PPOutWriteHDF5">modules.PPOutWriteHDF5 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#module-modules.PPOutWriteSqlite3">modules.PPOutWriteSqlite3 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="modules.html#module-modules.PPRandomize">modules.PPRandomize module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#module-modules.PPRandomizeMeasurements">modules.PPRandomizeMeasurements module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#module-modules.PPReadBrightness">modules.PPReadBrightness module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#module-modules.PPReadColours">modules.PPReadColours module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#module-modules.PPReadCometaryInput">modules.PPReadCometaryInput module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#module-modules.PPReadIntermDatabase">modules.PPReadIntermDatabase module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#module-modules.PPReadOif">modules.PPReadOif module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#module-modules.PPReadOrbitFile">modules.PPReadOrbitFile module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#module-modules.PPSimpleSensorArea">modules.PPSimpleSensorArea module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="modules.html#module-modules.PPTrailingLoss">modules.PPTrailingLoss module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#module-modules.PPTranslateMagnitude">modules.PPTranslateMagnitude module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#module-modules.PPVignetting">modules.PPVignetting module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="modules.html#module-modules.PPhookBrightnessWithColour">modules.PPhookBrightnessWithColour module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules.html#module-modules.PPreadColours">modules.PPreadColours module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="modules.html#module-modules.PPreadColoursUser">modules.PPreadColoursUser module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules.html#module-modules.PPresolveFilters">modules.PPresolveFilters module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules.html#module-modules.readOif">modules.readOif module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="modules.html#module-modules">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="lsstcomet.html">lsstcomet package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="lsstcomet.html#subpackages">Subpackages</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lsstcomet.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lsstcomet.html#module-lsstcomet.model">lsstcomet.model module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lsstcomet.html#module-lsstcomet.phase">lsstcomet.phase module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lsstcomet.html#module-lsstcomet.setup">lsstcomet.setup module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lsstcomet.html#module-lsstcomet.util">lsstcomet.util module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lsstcomet.html#module-lsstcomet">Module contents</a></li>
 </ul>
 </li>
 </ul>
 </div>
-</div>
-<div class="section" id="indices-and-tables">
+</section>
+<section id="indices-and-tables">
 <h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
 <ul class="simple">
 <li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
 <li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
 <li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
 </ul>
-</div>
+</section>
 
 
             <div class="clearer"></div>
@@ -105,7 +135,7 @@
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
@@ -133,7 +163,7 @@
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2021, Siegfried Eggl, Mario Juric, Meg Schwamb, Grigori Fedorets, Shantanu Naidu, Sam Cornwall, Aidan Berres.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.1.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.2.0.
     </div>
   </body>
 </html>
