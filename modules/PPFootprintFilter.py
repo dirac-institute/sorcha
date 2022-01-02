@@ -282,6 +282,6 @@ def rotateField2XAxis(p, pf):
     zh = np.zeros(p.shape)
     zh[2] += 1.
     zh2 = quatRotate(zh, u, θ)
-    ϕ = -np.arctan2(zh2[2], zh2[1])
+    ϕ = -np.arctan2(zh2[2], zh2[1]) + 0.5 * np.pi
     
     return xrot(p2, ϕ)
