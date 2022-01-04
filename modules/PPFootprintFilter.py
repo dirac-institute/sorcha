@@ -15,19 +15,19 @@ __all__=['footPrintFilter']
 class Detector:
 
     def __init__(self, points, ID=0, units='radians'):
-    """ initiates a detector object.
+        """ initiates a detector object.
 
-    INPUT
-    -----
-    points      ... array of shape (2, n) describing the corners of the sensor
-    ID          ... An integer ID for the sensor
-    units       ... units that points is provided in, radians or degrees from 
-                    center of the focal plane.
+        INPUT
+        -----
+        points      ... array of shape (2, n) describing the corners of the sensor
+        ID          ... An integer ID for the sensor
+        units       ... units that points is provided in, radians or degrees from 
+                        center of the focal plane.
 
-    RETURNS
-    -------
-    detector    ...a detector instance
-    """
+        RETURNS
+        -------
+        detector    ...a detector instance
+        """
     #points  --->   should be shape dims, n points
         self.ID = ID
         self.ra = points[0]
