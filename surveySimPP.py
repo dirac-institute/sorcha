@@ -134,7 +134,7 @@ def run():
 
     pplogger.info('Reading pointing database')
     con=sql.connect(pointingdatabase)
-    surveydb=pd.read_sql_query('SELECT observationId, observationStartMJD, filter, seeingFwhmGeom, seeingFwhmEff, fiveSigmaDepth, fieldRA, fieldDec, rotSkyPos FROM SummaryAllProps order by observationId', con)
+    surveydb=pd.read_sql_query('SELECT observationId, observationStartMJD, filter, seeingFwhmGeom, seeingFwhmEff, fiveSigmaDepth, fieldRA, fieldDec, rotSkyPos FROM observations order by observationId', con)
 
     #Should probably add options to the config file to specify seed
     #or to use a random seed
