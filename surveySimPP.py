@@ -203,7 +203,7 @@ def run():
         #print(oif.iloc[on_sensor[i]])
     #    oif.loc[np.isin(oif.index, on_sensor[i]), "detector"] = int(i)
 
-    oif=oif.iloc[on_sensor_concat]
+    oif=oif.iloc[onSensor]
     oif["detectorID"] = detectorIDs
 
 
