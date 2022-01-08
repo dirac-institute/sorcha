@@ -12,6 +12,438 @@ cos = np.cos
 
 __all__=['footPrintFilter']
 
+class Detector:
+
+    def __init__(self, points, ID=0, units='radians'):
+        """ initiates a detector object.
+
+        INPUT
+        -----
+        points      ... array of shape (2, n) describing the corners of the sensor
+        ID          ... An integer ID for the sensor
+        units       ... units that points is provided in, radians or degrees from 
+                        center of the focal plane.
+
+        RETURNS
+        -------
+        detector    ...a detector instance
+        """
+    #points  --->   should be shape dims, n points
+        self.ID = ID
+        self.ra = points[0]
+        self.dec = points[1]
+        #self.rax = np.sum(self.x) / len(self.x)
+        #self.centery = np.sum(self.y) / len(self.y)
+        self.units = units
+        
+        if units == 'degrees' or units == 'deg':
+            self.deg2rad()
+        
+        # generate focal plane coordinates
+        # convert to xyz on unit sphere
+        z = np.cos(self.ra)*np.cos(self.dec) #x
+        self.x = sin(self.ra)*np.cos(self.dec) #y
+        self.y = sin(self.dec)
+        
+        # project to focal plane
+        self.x /= z
+        self.y /= z
+        
+        # calculate centroid
+        self.centerx = np.sum(self.x) / len(self.x)
+        self.centery = np.sum(self.y) / len(self.y)
+        
+    def ison(self, point, ϵ=10.**(-11), plot=False):
+        """ Determines whether a point (or array of points) falls on the 
+        detector.
+
+        INPUT
+        -----
+        point   ... array of shape (2, n) for n points
+        plot    ... whether to plot the detector and the point
+
+        RETURNS
+        -------
+        ison    ... indices of points in point array that fall on the sensor.
+        """
+        #points needs to be shape 2,n
+        #if single point, needs to be an array of single element arrays
+        
+        #check whether point is in circle bounding the detector
+        r2 = np.max((self.x - self.centerx)**2 + (self.y - self.centery)**2)
+        selectedidx = np.where((point[0] - self.centerx)**2 + (point[1] - self.centery)**2 <= r2)[0]
+
+        selected = point[:, selectedidx]
+        xselected = point[0][selectedidx]
+        yselected = point[1][selectedidx]
+        
+        #check whether selected fall on the detector
+        #compare true area to the segmented area
+        
+        detectedidx = np.where(
+            np.abs(self.segmentedArea(selected) - self.trueArea()) <= ϵ
+        )[0]
+        
+        if plot:
+            x = xselected[detectedidx]
+            y = yselected[detectedidx]
+        
+            plt.scatter(x, y, color='red', s=3.)
+        
+        return selectedidx[detectedidx]
+        
+    def trueArea(self):
+        """ Uses the same method as segmented area, but the test point is the
+        mean of the corner coordinates. Will probably fail if the sensor is 
+        not convex.
+        """        
+        x = self.x - self.centerx
+        y = self.y - self.centery
+        
+        xrolled = np.roll(x, 1)
+        yrolled = np.roll(y, 1)
+        
+        area = 0.5*np.sum(
+            np.abs(x*yrolled - y*xrolled)
+        )
+                
+        return area
+        
+    def segmentedArea(self, point):
+        """ Returns the area of the detector by calculating the area of each
+        triangle segment defined by each pair of adjacent corners and a point
+        inside the sensor.
+        Fails if the point is not inside the sensor or if the sensor is not 
+        convex.
+
+        INPUT
+        -----
+        point       ... a point inside the sensor
+
+        RETURNS
+        area        ... area of the sensor
+        """
+        #so that poth a single and many points work
+        ncorners = self.x.shape[0]
+        
+        if len(point.shape) == 1:
+            x = self.x - point[0]
+            y = self.y - point[1]
+            
+        else:
+            x = ((np.zeros((ncorners, point.shape[1])).T + self.x).T - point[0])
+            y = ((np.zeros((ncorners, point.shape[1])).T + self.y).T - point[1]) #copy over an array to make broadcasting work
+        
+        xrolled = np.roll(x, 1, axis=0)
+        yrolled = np.roll(y, 1, axis=0)
+        area = []
+        
+        for i in range(len(self.x)):
+            area.append(
+                np.abs(x[i] * yrolled[i] - y[i]*xrolled[i])
+            )
+        
+        return 0.5*(np.sum(area, axis=0))
+        
+    def sortCorners(self):
+        """ Sorts the corners to be counterclockwise by angle from center of 
+        the detector. Modifies self.
+        """        
+        #convert corners to angles (radians)
+        θ = np.arctan2(self.y - self.centery / self.x - self.centerx)
+        
+        neworder = np.argsort(θ)
+        self.x = self.x[neworder]
+        self.y = self.y[neworder]
+        
+    def rotateDetector(self, θ):
+        """ Rotates a sensor around the origin of the coordinate system its
+        corner locations are provided in.
+
+        INPUT
+        -----
+        θ   ... Angle to rotate by, in radians.
+
+        RETURNS
+        -------
+        Detector    ... New Detector instance
+        """
+        #convert rotation angle to complex number
+        q = cos(θ) + sin(θ)*1.0j
+        
+        #convert points to complex numbers
+        coords = self.x + self.y*1.0j
+        
+        #rotate
+        newcoords = coords * q
+        return Detector(np.array((np.real(newcoords), np.imag(newcoords))), self.ID)
+    
+    def rad2deg(self):
+        """ Converts corners from radians to degrees.
+        """
+        if self.units == 'radians':
+            self.x = np.degrees(self.x)
+            self.y = np.degrees(self.y)
+            self.centerx = np.degrees(self.centerx)
+            self.centery = np.degrees(self.centery)
+            self.units = 'degrees'
+        else:
+            print("Units are already degrees")
+        
+    def deg2rad(self):
+        """ Converts corners from degrees to radians.
+        """
+        if self.units == "degrees":
+            self.x = np.radians(self.x)
+            self.y = np.radians(self.y)
+            self.centerx = np.radians(self.centerx)
+            self.centery = np.radians(self.centery)
+            self.units = "radians"
+        else:
+            print("Units are already radians")
+            
+    def plot(self, θ=0.0, color='gray', units='rad', annotate=False):
+        """ Plots the footprint for an individual sensor. Currently not on the 
+        focal plane, just the sky coordinates. Relatively minor difference 
+        (width of footprint for LSST is <2.1 degrees), so should be fine for
+        internal demonstration purposes, but not for confirming algorithms or 
+        for offical plots.
+
+        INPUT
+        -----
+        θ           ... Angle to rotate footprint by, radians or degrees
+        color       ... line color
+        units       ... units θ is provided in
+        annote      ... whether to annotate each sensor with its index in 
+                        self.detectors
+        """    
+        detector = self.rotateDetector(θ)
+        if units=='deg':
+            detector.rad2deg()
+        nd = len(self.x)
+        x = np.zeros(nd+1)
+        x[0:nd] = detector.x
+        x[-1] = x[0]
+        y = np.zeros(nd+1)
+        y[0:nd] = detector.y
+        y[-1] = y[0]
+        plt.plot(x, y, color=color)
+        #plt.scatter(self.centerx, self.centery, color="black")
+        
+        if annotate == True:
+            plt.annotate(str(detector.ID), (detector.centerx, detector.centery))
+        
+        #def isDetected(points):
+        #    return 0
+        
+                
+class Footprint:
+
+    def __init__(self, path, detectorName="detector"):
+        """ Initiates a Footprint object.
+
+        INPUT
+        -----
+        path            ... path to a .csv file containing detector corners
+        detectorName    ... name of column in detector file inidicating to 
+                            which sensor a corner belongs.
+
+        RETURNS
+        -------
+        Footprint       ... Footprint object for the provided sensors.
+        """
+        #file should be a .csv (and should be actually comma seperated)
+        #the center of the camera should be the origin
+        allcornersdf = pd.read_csv(path)
+        
+        self.detectors = [Detector( np.array( (
+            allcornersdf.loc[allcornersdf[detectorName]==i, 'x'], 
+            allcornersdf.loc[allcornersdf[detectorName]==i, 'y']) ), i ) 
+            for i in range(len(allcornersdf[detectorName].unique())) ]
+        
+        self.N = len(self.detectors)
+        
+        #sort the corners of each detector
+        for i in range(self.N):
+            self.detectors[i].sortCorners            
+        
+    def plot(self, θ=0., color='gray', units='rad', annotate=False):    
+        """ Plots the footprint. Currently not on the focal plane, just the sky
+        coordinates. Relatively minor difference (width of footprint for LSST
+        is <2.1 degrees), so should be fine for internal demonstration 
+        purposes, but not for confirming algorithms or for offical plots.
+
+        INPUT
+        -----
+        θ           ... Angle to rotate footprint by, radians or degrees
+        color       ... line color
+        units       ... units θ is provided in
+        annote      ... whether to annotate each sensor with its index in 
+                        self.detectors
+        """    
+        for i in range(self.N):
+            self.detectors[i].plot(θ=θ, color=color, units=units, annotate=annotate)
+            
+    #def plotXY(): #need to add
+    
+    def applyFootprint(
+        self, oifDF, pointings,
+        ra_name="AstRA(deg)", 
+        dec_name="AstDec(deg)", 
+        field_name="FieldID", 
+        field_name_survey="observationId",
+        ra_name_field='fieldRA', 
+        dec_name_field="fieldDec", 
+        rot_name_field="rotSkyPos",
+        method="direct projection",
+        ):
+        """ Determine whether detections fall on the sensors defined by the 
+        footprint. Also returns the an ID for the sensor a detection is made 
+        on.
+
+        Includes option to use old algorithm, for testing purposes.
+
+        INPUT
+        -----
+        oifDF           ... Pandas DataFrame containing detection information
+        pointings       ... Pandas DataFrame containing field pointing information
+        *_name          ... column names for oifDF
+        *_name_field    ... column names for pointings
+        method          ... which algorthim to use to convert on sky location
+                            to focal plane coordinates
+
+        RETURNS
+        -------
+        detected        ... Indices of rows in oifDF which fall on the sensor(s)
+        detecorID       ... Index corresponding to a detector in 
+                            self.detectors for each entry in detected
+        """
+        # TODO: only grab pointings that have detections in oifDF
+        
+        # convert detections to xyz on unit sphere
+        ra=deg2rad(oifDF[ra_name])
+        dec=deg2rad(oifDF[dec_name])
+        
+        #
+        field_df = pd.merge(
+            oifDF[[field_name]],
+            pointings[[field_name_survey, ra_name_field, dec_name_field, rot_name_field]],
+            left_on=field_name,
+            right_on=field_name_survey,
+            how="left"
+        )
+        
+        # convert field pointings to xyz on unit sphere
+        fieldra   = deg2rad(field_df[ra_name_field])
+        fielddec  = deg2rad(field_df[dec_name_field])
+        rotSkyPos = deg2rad(field_df[rot_name_field])
+        
+        # convert detections to x, y in focal plane
+        if method == "Quaternion" or method == "quaternion": #rotation on 3d unit sphere
+            x, y, z = RADEC2fovXYZ(ra, dec, fieldra, fielddec, np.zeros(rotSkyPos.shape))#rotSkyPos) # y,z in 3d -> x, y in focal plane
+            y /= x #*= 2. / (1.+x)
+            z /= x #*= 2. / (1.+x)
+            
+            #x = y
+            #y = z
+            #del(z)
+            plt.scatter(y, z, s=3.0)
+            points = np.array((y, z))
+            
+        else: # use direct projection method (no rotation on 3d unit sphere)
+            x, y = radec2focalplane(ra, dec, fieldra, fielddec)
+        
+        # apply field rotation
+        # first convert to complex numbers
+        # maybe do this in the focal plane function?
+        observations_complex = x + y*1.0j
+        rotation = np.exp(-rotSkyPos*1.0j)
+
+        #observations_complex *= rotation
+        x = np.real(observations_complex)
+        y = np.imag(observations_complex)
+        
+        plt.scatter(x, y, s=3.0)
+        points = np.array((x, y))
+        
+        #print(points.dtype)
+        #check whether they land on any of the detectors
+        i = 0
+        detected = []
+        detectorId = []
+        for detector in self.detectors:
+            if True:#method2 == "new":
+                stuff = detector.ison(points)
+                detected.append(stuff)
+                detectorId.append([i]*len(stuff))
+                i+=1
+            
+        return np.concatenate(detected), np.concatenate(detectorId)
+        
+    
+def radec2focalplane(ra, dec, fieldra, fielddec, fieldID=None):
+    """ Converts ra and dec to xy on the focal plane. Projects all pointings to
+    the same focal plane, but does not account for field rotation. Maintains 
+    alignment with the meridian passing through the field center.
+
+    INPUT
+    -----
+    ra          ... Observation Right Ascension, radians
+    dec         ... Observation Declination, radians
+    fieldra     ... Field Pointing Right Ascension, radians
+    fielddec    ... Field Pointing Declination, radians
+    fieldID     ... Field ID, Integer, optional.
+
+    RETURNS
+    -------
+    x, y        ... Coordinates on the focal plane, radians projected
+                    to the plane tangent to the unit sphere.
+    """
+
+    #print("ra: ", ra.dtype)
+    # convert to cartesian coordiantes on unit sphere
+    observation_vectors = np.array(
+        [cos(ra)*np.cos(dec), #x
+         sin(ra)*np.cos(dec), #y
+         sin(dec)])           #z
+        
+    field_vectors = np.array(
+        [cos(fieldra)*np.cos(fielddec), #x
+         sin(fieldra)*np.cos(fielddec), #y
+         sin(fielddec)])                #z
+    
+    # make the basis vectors for the fields of view
+    # the "x" basis is easy, 90 d rotation of the x, y components
+    focalx = np.zeros(field_vectors.shape)
+    focalx[0] = -field_vectors[1]
+    focalx[1] = field_vectors[0]
+
+    # "y" by taking cross product of field vector and "x"
+    focaly = np.cross(field_vectors, focalx, axis=0)
+
+    # normalize
+    focalx /= np.linalg.norm(focalx, axis=0)
+    focaly /= np.linalg.norm(focaly, axis=0)
+    
+    # TODO: if fieldIDs are provided, match detections to field pointings
+    # may or may not add, benefits are likely negligible
+
+    # extend observation vectors to plane tangent to field pointings
+    k = 1. / np.sum(field_vectors * observation_vectors, axis=0)
+    #np.sum(field_vectors * field_vectors, axis=0) / np.sum(field_vectors * observation_vectors, axis=0)
+    observation_vectors *= k
+    
+    observation_vectors -= field_vectors #
+
+    # get observation vectors as combinations of focal vectors
+    x = np.sum(observation_vectors * focalx, axis=0)
+    y = np.sum(observation_vectors * focaly, axis=0)
+            
+    return x, y
+
+#------------------------------------------------------------------------------
+# DEPRECATED: will be removed in future update. 
+
 def footPrintFilter(observations, survey, detectors,
                          ra_name="AstRA(deg)", dec_name="AstDec(deg)", field_name="FieldID", 
                          ra_name_field='fieldRA', dec_name_field="fieldDec", rot_name_field="rotSkyPos"):
@@ -282,6 +714,6 @@ def rotateField2XAxis(p, pf):
     zh = np.zeros(p.shape)
     zh[2] += 1.
     zh2 = quatRotate(zh, u, θ)
-    ϕ = -np.arctan2(zh2[2], zh2[1])
+    ϕ = -np.arctan2(zh2[2], zh2[1]) + 0.5 * np.pi
     
     return xrot(p2, ϕ)

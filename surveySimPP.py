@@ -134,7 +134,7 @@ def run():
 
     pplogger.info('Reading pointing database')
     con=sql.connect(pointingdatabase)
-    surveydb=pd.read_sql_query('SELECT observationId, observationStartMJD, filter, seeingFwhmGeom, seeingFwhmEff, fiveSigmaDepth, fieldRA, fieldDec, rotSkyPos FROM SummaryAllProps order by observationId', con)
+    surveydb=pd.read_sql_query('SELECT observationId, observationStartMJD, filter, seeingFwhmGeom, seeingFwhmEff, fiveSigmaDepth, fieldRA, fieldDec, rotSkyPos FROM observations order by observationId', con)
 
     #Should probably add options to the config file to specify seed
     #or to use a random seed
@@ -156,8 +156,9 @@ def run():
     pplogger.info(str3)
     colors=pd.read_csv(colourinput, delim_whitespace=True)
 
-    logging.info("loading camera footprint ...")
-    detectors=PPFootprintFilter.readFootPrintFile('detectors_corners.csv')
+    # Moved to new routine, file loaded when instantiating footprint object
+    #logging.info("loading camera footprint ...")
+    #detectors=PPFootprintFilter.readFootPrintFile('detectors_corners.csv')
 
     logging.info('Translating magnitudes to appropriate filters...')
     oif["MaginFilterTrue"]=PPTranslateMagnitude.PPTranslateMagnitude(oif, surveydb, colors)
@@ -189,12 +190,22 @@ def run():
     oif["AstRA(deg)"], oif["AstDec(deg)"] = PPRandomizeMeasurements.randomizeAstrometry(oif, sigName='AstrometricSigma(deg)', rng=rng)
 
     logging.info('Applying sensor footprint filter...')
-    on_sensor=PPFootprintFilter.footPrintFilter(oif, surveydb, detectors)#, ra_name="AstRATrue(deg)", dec_name="AstDecTrue(deg)")
-    on_sensor_concat = pd.concat(on_sensor).reset_index(drop=True)
-    for i in range(len(on_sensor)):
+    # new routine
+    #-------------------------------------------
+    footprint = PPFootprintFilter.Footprint("detectors_corners.csv")
+    onSensor, detectorIDs = footprint.applyFootprint(oif, surveydb)
+
+    # old routine
+    #-------------------------------------------
+    #on_sensor=PPFootprintFilter.footPrintFilter(oif, surveydb, detectors)#, ra_name="AstRATrue(deg)", dec_name="AstDecTrue(deg)")
+    #on_sensor_concat = pd.concat(on_sensor).reset_index(drop=True)
+    #for i in range(len(on_sensor)):
         #print(oif.iloc[on_sensor[i]])
-        oif.loc[np.isin(oif.index, on_sensor[i]), "detector"] = int(i)
-    oif=oif.iloc[on_sensor_concat]
+    #    oif.loc[np.isin(oif.index, on_sensor[i]), "detector"] = int(i)
+
+    oif=oif.iloc[onSensor]
+    oif["detectorID"] = detectorIDs
+
 
     #oif=oif.astype({"FieldID": int})
     #surveydb=surveydb.astype({"observationId": int})
