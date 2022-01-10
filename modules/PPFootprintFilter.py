@@ -359,7 +359,7 @@ class Footprint:
         observations_complex = x + y*1.0j
         rotation = np.exp(-rotSkyPos*1.0j)
 
-        #observations_complex *= rotation
+        observations_complex *= rotation
         x = np.real(observations_complex)
         y = np.imag(observations_complex)
         
