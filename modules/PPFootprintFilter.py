@@ -1,4 +1,3 @@
-
 # numpy
 import numpy as np
 # pandas
@@ -291,7 +290,7 @@ class Footprint:
         ra_name="AstRA(deg)", 
         dec_name="AstDec(deg)", 
         field_name="FieldID", 
-        field_name_survey="observationId",
+        field_name_survey="FieldID",
         ra_name_field='fieldRA', 
         dec_name_field="fieldDec", 
         rot_name_field="rotSkyPos",
@@ -450,7 +449,6 @@ def footPrintFilter(observations, survey, detectors,
                          # field_name_survey="observationId",
     """Applies camera footpint to remove observations that do not fall on
     detector chips.
-
     Input
     -----
     observations        ... pandas dataframe containing ra, dec, and fieldID.
@@ -489,9 +487,6 @@ def footPrintFilter(observations, survey, detectors,
     y *= 2. / (1.+x)
     z *= 2. / (1.+x)
     
-    print('y: ', y)
-    print('z: ', z)
-    
     #check if obs fall in detectors
     detectedObs=[]
     
@@ -516,9 +511,7 @@ def footPrintFilter(observations, survey, detectors,
         #print(ySel)
         #print(zSel)
         #print('wait')
-        print(obsSelIndex)
-        print(np.array((ySel, zSel)))
-        print(len(y), len(z))
+
 
         points=np.array((ySel, zSel)).T
         detected=isinPolygon(points, corners)
@@ -592,13 +585,11 @@ def isinPolygon(point, corners, error=10**-10):
     """Determines whether a point is inside a polygon by comparing the area of
     the polygon to the sum of the areas of the triangles formed by the point and
     each pair of adjacent corners.
-
     Input
     -----
     point           ... [x, y] pair
     corners         ... list containing [x, y] pairs for each corner.
     error           ... sensitivity of the area difference
-
     """
     cornersRolled=np.roll(corners, -1, axis=0)
     trueArea=polygonArea(corners)
