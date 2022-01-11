@@ -73,7 +73,7 @@ def calcDetectionProbability(mag, limmag, fillFactor=1.0, w=0.1):
 def PPDetectionProbability(oif_df, survey_df, trailing_losses=False, trailing_loss_name='dmagDetect',
                            magnitude_name="MaginFil",
                            limiting_magnitude_name_survey="fiveSigmaDepth",
-                           field_id_name="FieldID", field_id_name_survey="observationId",
+                           field_id_name="FieldID", field_id_name_survey="FieldID",
                            fillFactor=1.0, w=0.1):
 
         """
@@ -89,16 +89,16 @@ def PPDetectionProbability(oif_df, survey_df, trailing_losses=False, trailing_lo
         w               ... distribution parameter
         """
 
-        fielddf = pd.merge(oif_df[[field_id_name]],
-                        survey_df[[field_id_name_survey, limiting_magnitude_name_survey]],
-                        left_on=field_id_name,
-                        right_on=field_id_name_survey,
-                        how="left"
-        )
+        #fielddf = pd.merge(oif_df[[field_id_name]],
+        #                survey_df[[field_id_name_survey, limiting_magnitude_name_survey]],
+        #                left_on=field_id_name,
+        #                right_on=field_id_name_survey,
+        #                how="left"
+        #)
 
         if (trailing_losses==False):
-            return calcDetectionProbability(oif_df[magnitude_name], fielddf[limiting_magnitude_name_survey], fillFactor, w)
+            return calcDetectionProbability(oif_df[magnitude_name],oif_df[limiting_magnitude_name_survey], fillFactor, w)
         elif (trailing_losses==True):
-            return calcDetectionProbability(oif_df[magnitude_name] + oif_df[trailing_loss_name],fielddf[limiting_magnitude_name_survey], fillFactor, w)
+            return calcDetectionProbability(oif_df[magnitude_name] + oif_df[trailing_loss_name],oif_df[limiting_magnitude_name_survey], fillFactor, w)
         else:
             print('trailing_loss has to be True or False')
