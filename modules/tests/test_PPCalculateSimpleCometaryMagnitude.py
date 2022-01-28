@@ -15,7 +15,7 @@ from ..PPCalculateSimpleCometaryMagnitude import PPCalculateSimpleCometaryMagnit
 
 def test_PPCalculateSimpleCometaryMagnitude():
 
-    padafr=PPReadOif('./data/test/67P.out', ' ', 'txt')
+    padafr=PPReadOif('./data/test/67P.out', 'whitespace')
     padacl=PPReadColours('./data/test/testcometcolour.txt', 0, 3, ' ')
     padaco=PPReadCometaryInput('./data/test/testcomet.txt', 0, 3, ' ')
     padaor=PPReadOrbitFile('./data/test/67P.orb.des', 0, 3, ' ')

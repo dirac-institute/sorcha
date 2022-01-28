@@ -1,10 +1,12 @@
 #!/bin/python
 
+import os,sys
 import pandas as pd
+import logging
 
 #Author: Grigori Fedorets
 
-def PPReadOif(oif_output, filesep, suffix):
+def PPReadOif(oif_output, inputformat):
    """
    PPReadOif.py
 
@@ -22,24 +24,27 @@ def PPReadOif(oif_output, filesep, suffix):
 
 
    Mandatory input:      string, oif_output, name of text file including Output from objectsInField (oif) 
-                         string, filesep, separator used in input file, blank or comma
-                         string, suffix, file extension of input file, either csv, txt or h5 (hdf5, HDF5)
+                         string, inputformat, input format of pointing putput (csv, whitespace, hdf5)
 
    
 
    Output:               pandas dataframe
 
 
-   usage: padafr=PPReadOif(oif_output,filesep)
+   usage: padafr=PPReadOif(oif_output,inputformat)
    """
+   
+   pplogger = logging.getLogger(__name__)
 
-   if (filesep==" ") and ((suffix=='csv') or (suffix=='txt')):
+   if (inputformat=="whitespace"):
        padafr=pd.read_csv(oif_output, sep='\s+')
-   elif (filesep==",")  and ((suffix=='csv') or (suffix=='txt')):
+   elif (inputformat=="comma") or (inputformat=='csv'):
        padafr=pd.read_csv(oif_output, delimiter=',')   
-   elif (suffix=='h5') or (suffix=='hdf5') or (suffix=='HDF5'):
+   elif (inputformat=='h5') or (inputformat=='hdf5') or (inputformat=='HDF5'):
        padafr=pd.read_hdf(oif_output).reset_index(drop=True)
-  
+   else:
+       pplogger.error("ERROR: PPReadOif: unknown format for pointing simulation results.")
+       sys.exit("ERROR: PPReadOif: unknown format for pointing simulation results.")
 
    padafr=padafr.rename(columns=lambda x: x.strip())
     

@@ -20,7 +20,9 @@ def test_makeConfigOIF():
 
    # python makeConfigOIF.py ../data/test/testorb.des ../data/test/baseline_10yrs_10klines.db 
 
-   argv=args('../../data/test/testorb.des','../../data/test/baseline_10yrs_10klines.db', -1)
+   #argv=args('../../data/test/testorb.des','../../data/test/baseline_10yrs_10klines.db', -1)
+   argv=args('./data/test/testorb.des','./data/test/baseline_10yrs_10klines.db', -1)
+
 
    makeConfig(argv)
 
@@ -36,7 +38,9 @@ def test_makeConfigOIF():
 
    #  python makeConfigOIF.py ../data/test/testorb.des ../data/test/baseline_10yrs_10klines.db -no 3
  
-   argv=args('../../data/test/testorb.des','../../data/test/baseline_10yrs_10klines.db',3)
+   #argv=args('../../data/test/testorb.des','../../data/test/baseline_10yrs_10klines.db',3)
+   argv=args('./data/test/testorb.des','./data/test/baseline_10yrs_10klines.db',3)
+
 
    makeConfig(argv)
 

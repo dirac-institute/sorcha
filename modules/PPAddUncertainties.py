@@ -48,7 +48,7 @@ def addUncertainties(ephemsdf,obsdf,raName='fieldRA',decName='fieldDec',obsIdNam
                      raNameEph='AstRA(deg)',decNameEph='AstDec(deg)',
                      obsIdNameEph='observationId',ephEpochName='FieldMJD',
                      limMagName='fiveSigmaDepth',seeingName='seeingFwhmGeom',
-                     filterMagName='MaginFil'):
+                     filterMagName='MagnitudeinFilter'):
 
 
 #ef addUncertainties(ephemsdf,obsdf,raName='fieldRA',decName='fieldDec',obsIdName='observationId',

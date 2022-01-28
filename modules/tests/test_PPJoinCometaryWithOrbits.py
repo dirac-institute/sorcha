@@ -12,7 +12,7 @@ from ..PPReadOrbitFile import PPReadOrbitFile
 
 def test_PPJoinCometaryWithOrbits():
 
-    padafr=PPReadOif('./data/test/oiftestoutput.txt', " ", 'txt')
+    padafr=PPReadOif('./data/test/oiftestoutput.txt', "whitespace")
     padacl=PPReadColours('./data/test/testcolour.txt', 0, 5, " ")
     padaor=PPReadOrbitFile('./data/test/testorb.des', 0, 5, " ")
     

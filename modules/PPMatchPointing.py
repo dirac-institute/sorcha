@@ -4,7 +4,7 @@ import pandas as pd
 
 #Author: Grigori Fedorets
 
-def PPMatchPointing(bsdbname,resfilters):
+def PPMatchPointing(bsdbname,resfilters, dbquery):
 
     """
     PPMatchPointing.py
@@ -15,13 +15,14 @@ def PPMatchPointing(bsdbname,resfilters):
     observationsStartMJD, used filter and three seeing parameters at a given pointing and outputs a 6*n pandas dataframe. 
 
 
-    Mandatory input:      bsdbname:   name of database
-                          resfilters: filters required for output
+    Mandatory input:      bsdbname:   string, name of database
+                          resfilters: array of strings, filters required for output
+                          dbquery:    string, SQLite3 query for querying the pointing database (defined in configuration file)
 
     Output:               8*n pandas dataframe
 
 
-    usage: padafr=PPMatchPointing(bsdbname,resfilters)
+    usage: padafr=PPMatchPointing(bsdbname,resfilters,dbquery)
     """
 
 

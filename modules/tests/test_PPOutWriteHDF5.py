@@ -17,7 +17,7 @@ from ..PPOutWriteHDF5 import PPOutWriteHDF5
 def test_PPOutWriteHDF5():
 
 
-    padafr=PPReadOif('./data/test/oiftestoutput.txt', " ", 'txt')
+    padafr=PPReadOif('./data/test/oiftestoutput.txt',  "whitespace")
     padacl=PPReadColours('./data/test/testcolour.txt', 0, 20, " ")
     
     resdf=PPJoinColourPointing(padafr,padacl)
@@ -26,8 +26,9 @@ def test_PPOutWriteHDF5():
     resdf1=PPhookBrightnessWithColour(resdf, 'r', 'i-r', 'i')
     resdf3=PPhookBrightnessWithColour(resdf1, 'r', 'g-r', 'g')
     
+    dbq='SELECT observationId, observationStartMJD, filter, seeingFwhmGeom, seeingFwhmEff, fiveSigmaDepth, fieldRA, fieldDec, rotSkyPos FROM SummaryAllProps order by observationId'
     
-    pada5=PPMatchPointing('./data/test/baseline_10yrs_10klines.db', ['r', 'g', 'i'])
+    pada5=PPMatchPointing('./data/test/baseline_10yrs_10klines.db', ['r', 'g', 'i'], dbq)
     pada6=PPMatchPointingsAndColours(resdf3,pada5)
     
     

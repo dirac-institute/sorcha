@@ -10,7 +10,7 @@ from ..PPReadColours import PPReadColours
 
 def test_PPJoinColourPointing():
 
-    padafr=PPReadOif('./data/test/oiftestoutput.txt', ' ', 'txt')
+    padafr=PPReadOif('./data/test/oiftestoutput.txt', 'whitespace')
     padacl=PPReadColours('./data/test/testcolour.txt', 0, 5, ' ')
     
     padare=PPJoinColourPointing(padafr,padacl)
