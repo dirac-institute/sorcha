@@ -145,7 +145,8 @@ def runPostProcessing():
     config.read(configfile)
     
     testvalue=int(config["GENERAL"]['testvalue'])
-    pointingFormat=get_or_exit(config, 'INPUTFILES', 'pointingFormat', 'ERROR: no pointing format specified.')
+    pointingFormat=get_or_exit(config, 'INPUTFILES', 'pointingFormat', 'ERROR: no pointing simulation format is specified.')
+    filesep=get_or_exit(config, 'INPUTFILES', 'auxFormat', 'ERROR: no auxilliary data (e.g. colour) format specified.')    
     objecttype=get_or_exit(config, 'OBJECTS', 'objecttype', 'ERROR: no object type provided.')
     if (objecttype != 'asteroid' and objecttype != 'comet'):
          pplogger.error('ERROR: objecttype is neither an asteroid or a comet.') 
@@ -154,13 +155,13 @@ def runPostProcessing():
     if (objecttype == 'comet'):
         cometinput=args.m 
     pointingdatabase=get_or_exit(config, 'INPUTFILES', 'pointingdatabase', 'ERROR: no pointing database provided.')
-    ppdbquery=get_or_exit(config, 'INPUTFILES', 'ppsqldbquery', 'ERROR: no pointing database SQLite3 query provided.'
+    ppdbquery=get_or_exit(config, 'INPUTFILES', 'ppsqldbquery', 'ERROR: no pointing database SQLite3 query provided.')
     
-    pplogger.info('Object type is ', objecttype)
+    pplogger.info('Object type is ' + str(objecttype))
     
-    pplogger.info('Pointing simulation result format is: ', pointingFormat) 
-    pplogger.info('Pointing simulation result path is: '. pointingdatabase)
-    pplogger.info('Pointing simulation result required query is: ', ppdbquery) 
+    pplogger.info('Pointing simulation result format is: ' + pointingFormat) 
+    pplogger.info('Pointing simulation result path is: ' + pointingdatabase)
+    pplogger.info('Pointing simulation result required query is: ' +  ppdbquery) 
 
     
     mainfilter=get_or_exit(config,'FILTERS', 'mainfilter', 'ERROR: main filter not defined.')
@@ -176,13 +177,15 @@ def runPostProcessing():
          pplogger.error('ERROR: main filter should be the first among resfilters.')
          sys.exit('ERROR: main filter should be the first among resfilters.') 
          
-    pplogger.info('The main filter in which brightness is defined is ', mainfilter)
-    pplogger.info('The colour indices included in the simulation are ', othercolours)
-    pplogger.info('Hence, the filters included in the post-processing results are ', resfilters)    
+    pplogger.info('The main filter in which brightness is defined is ' + mainfilter)
+    othcs=' '.join(str(e) for e in othercolours)
+    pplogger.info('The colour indices included in the simulation are ' + othcs)
+    rescs=' '.join(str(f) for f in resfilters)
+    pplogger.info('Hence, the filters included in the post-processing results are ' + rescs)    
     
     phasefunction=get_or_exit(config,'PHASE', 'phasefunction', 'ERROR: phase function not defined.')
     
-    pplogger.info('The apparent brightness is calculated using the following phase function model: ', phasefunction)
+    pplogger.info('The apparent brightness is calculated using the following phase function model: ' + phasefunction)
     
     trailingLossesOn = to_bool(config["PERFORMANCE"]["trailingLossesOn"])
     
@@ -197,10 +200,11 @@ def runPostProcessing():
         pplogger.error('ERROR: cameraModel should be either surfacearea or footprint.')
         sys.exit('ERROR: cameraModel should be either surfacearea or footprint.')        
     elif (cameraModel == 'footprint'):
+        footprintPath=get_or_exit(config, 'INPUTFILES', 'footprintPath', 'ERROR: no camera footprint provided.')
         pplogger.info('Footprint is modelled after the actual camera footprint.')
         #detectors=PPFootprintFilter.readFootPrintFile('./data/detectors_corners.csv')         
-        footprint = PPFootprintFilter.Footprint("./data/detectors_corners.csv")
-        pplogger.info("loading camera footprint from ", footprint)
+        footprintf = PPFootprintFilter.Footprint(footprintPath)
+        pplogger.info("loading camera footprint from " + footprintPath)
     else:
         pplogger.info('Footprint is circular')
     
@@ -226,13 +230,13 @@ def runPostProcessing():
         logging.error('ERROR: tracklet appearance interval is negative, or not a number.')
         sys.exit('ERROR: tracklet appearance interval is negative, or not a number.')
     
-    pplogger.info('Simulated SSP detection efficienxy is ', SSPDetectionEfficiency)
-    pplogger.info('The filling factor for the circular footprint is ', fillfactor)
-    pplogger.info('The upper (saturation) limit is ', brightLimit)
-    pplogger.info('For Solar System Processing, the minimum required number of observatrions in a tracklet is ', minTracklet)
-    pplogger.info('For Solar System Processing, the minimum required number of tracklets is', noTracklets)
-    pplogger.info('Fos Solar System Processing, the maximum interval of time in days of tracklets to be contained in is '. trackletInterval)
-    pplogger.info('For Solar System Processing, the minimum angular separation between observations in arcseconds is ', inSepThreshold)
+    pplogger.info('Simulated SSP detection efficienxy is ' + str(SSPDetectionEfficiency))
+    pplogger.info('The filling factor for the circular footprint is ' + str(fillfactor))
+    pplogger.info('The upper (saturation) limit is ' + str(brightLimit))
+    pplogger.info('For Solar System Processing, the minimum required number of observatrions in a tracklet is ' + str(minTracklet))
+    pplogger.info('For Solar System Processing, the minimum required number of tracklets is' + str(noTracklets))
+    pplogger.info('Fos Solar System Processing, the maximum interval of time in days of tracklets to be contained in is ' + str(trackletInterval))
+    pplogger.info('For Solar System Processing, the minimum angular separation between observations in arcseconds is ' + str(inSepThreshold))
 
 
 
@@ -370,7 +374,7 @@ def runPostProcessing():
         observations=observations.reset_index(drop=True)
         
         pplogger.info('Resolving the apparent brightness in a given optical filter corresponding to the pointing...')
-        observations=PPMatchPointingsAndColours.PPMatchPointingsAndColours(observations,filterpointing,ppdbquery)
+        observations=PPMatchPointingsAndColours.PPMatchPointingsAndColours(observations,filterpointing)
         
                 
         pplogger.info('Matching observationId with limiting magnitude and seeing...')
@@ -435,7 +439,7 @@ def runPostProcessing():
                     
             pplogger.info('Applying sensor footprint filter...')
             #on_sensor=PPFootprintFilter.footPrintFilter(observations, filterpointing, detectors)#, ra_name="AstRATrue(deg)", dec_name="AstDecTrue(deg)")
-            onSensor, detectorIDs = footprint.applyFootprint(observations, filterpointing)
+            onSensor, detectorIDs = footprintf.applyFootprint(observations, filterpointing)
             #observations=observations.iloc[on_sensor]       
             #observations=observations.astype({"FieldID": int})
             

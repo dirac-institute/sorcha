@@ -36,9 +36,9 @@ def PPReadCometaryInput(comet_datafile, beginLoc, chunkSize,filesep):
     usage: padafr=PPReadCometaryInput(comet_datafile, beginLoc, chunkSize)
     """
 
-    if (filesep==" "):
+    if (filesep=="whitespace"):
         padafr=pd.read_csv(comet_datafile, sep='\s+', skiprows=range(1,beginLoc+1), nrows=chunkSize, header=0)
-    elif (filesep==","):
+    elif (filesep=="csv" or filesep=="comma"):
         padafr=pd.read_csv(comet_datafile, delimiter=',', skiprows=range(1,beginLoc+1), nrows=chunkSize, header=0)    
     
     padafr=padafr.rename(columns=lambda x: x.strip())

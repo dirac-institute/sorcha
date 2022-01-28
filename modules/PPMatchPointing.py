@@ -28,7 +28,8 @@ def PPMatchPointing(bsdbname,resfilters, dbquery):
 
 
     con = sqlite3.connect(bsdbname)
-    df = pd.read_sql_query('SELECT observationId, observationStartMJD, filter, seeingFwhmGeom, seeingFwhmEff, fiveSigmaDepth, fieldRA, fieldDec, rotSkyPos FROM SummaryAllProps order by observationId', con)
+    df = pd.read_sql_query(dbquery, con)
+    #df = pd.read_sql_query('SELECT observationId, observationStartMJD, filter, seeingFwhmGeom, seeingFwhmEff, fiveSigmaDepth, fieldRA, fieldDec, rotSkyPos FROM SummaryAllProps order by observationId', con)
     df['observationId_'] = df['observationId']
     df=df.rename(columns={'observationId': 'FieldID'})
     df=df.rename(columns={'observationId': 'FieldID'}) 

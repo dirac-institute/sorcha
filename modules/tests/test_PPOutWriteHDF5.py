@@ -18,7 +18,7 @@ def test_PPOutWriteHDF5():
 
 
     padafr=PPReadOif('./data/test/oiftestoutput.txt',  "whitespace")
-    padacl=PPReadColours('./data/test/testcolour.txt', 0, 20, " ")
+    padacl=PPReadColours('./data/test/testcolour.txt', 0, 20, "whitespace")
     
     resdf=PPJoinColourPointing(padafr,padacl)
     

@@ -11,7 +11,7 @@ from ..PPReadColours import PPReadColours
 def test_PPReadIntermDatabase():
     
     
-    padacl=PPReadColours('./data/test/testcolour.txt', 0, 5, ' ')      
+    padacl=PPReadColours('./data/test/testcolour.txt', 0, 5, 'whitespace')      
     print(padacl)  
     objid_list = padacl['ObjID'].unique().tolist() 
     
