@@ -10,8 +10,17 @@ Welcome to Solar System Survey Simulator Post Processing's documentation!
    :maxdepth: 2
    :caption: Contents:
 
+   installation
+   support
+   
+   
+.. toctree::
+   :maxdepth: 2
+   :caption: Documentation:
+
    modules
    lsstcomet
+
 
 Indices and tables
 ==================
