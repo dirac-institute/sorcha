@@ -10,7 +10,7 @@ def test_PPReadBrightness():
      
      rescol=0.15
      
-     padafr=PPReadBrightness('./data/test/testbrightness.txt', 0, 3, " ")
+     padafr=PPReadBrightness('./data/test/testbrightness.txt', 0, 3, "whitespace")
      val=padafr.at[0,'G']
      
      assert rescol==val

@@ -10,7 +10,7 @@ def test_PPReadOrbitFile():
      
      rescol=9
      
-     padafr=PPReadOrbitFile('./data/test/testorb.des', 0, 14, " ")
+     padafr=PPReadOrbitFile('./data/test/testorb.des', 0, 14, "whitespace")
      val=len(padafr.columns)
      
      assert rescol==val

@@ -38,9 +38,9 @@ def PPReadBrightness(br_datafile, beginLoc, chunkSize,filesep):
     usage: padafr=PPReadBrightness(br_datafile, beginLoc, chunkSize,filesep)
     """
     
-    if (filesep==" "):
+    if (filesep=="whitespace"):
         padafr=pd.read_csv(br_datafile, sep='\s+', skiprows=range(1,beginLoc+1), nrows=chunkSize, header=0)
-    elif (filesep==","):
+    elif (filesep=="comma" or filesep=="csv"):
         padafr=pd.read_csv(br_datafile, delimiter=',', skiprows=range(1,beginLoc+1), nrows=chunkSize, header=0)
     padafr=padafr.rename(columns=lambda x: x.strip())
     

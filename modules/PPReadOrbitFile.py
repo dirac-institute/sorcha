@@ -21,7 +21,7 @@ def PPReadOrbitFile(orbin, beginLoc, chunkSize, filesep):
    Mandatory input:   string, orbin (name of input orbit file)
                       integer, beginLoc, location in file where reading begins
                       integer, chunkSize, length of chunk to be read in 
-                      string, filesep, separator used in input file, blank or comma
+                      string, filesep, separator used in input file, whitespace or csv 
 
 
    Output:            pandas dataframe
@@ -33,9 +33,9 @@ def PPReadOrbitFile(orbin, beginLoc, chunkSize, filesep):
    
    pplogger = logging.getLogger(__name__)
    
-   if (filesep==" "):
+   if (filesep=="whitespace"):
        padafr=pd.read_csv(orbin, sep='\s+', skiprows=range(1,beginLoc+1), nrows=chunkSize, header=0)
-   elif (filesep==","):
+   elif (filesep=="csv" or filesep=="comma"):
        padafr=pd.read_csv(orbin, delimiter=',', skiprows=range(1,beginLoc+1), nrows=chunkSize, header=0)    
 
    

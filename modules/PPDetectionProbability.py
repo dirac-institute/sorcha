@@ -71,7 +71,7 @@ def calcDetectionProbability(mag, limmag, fillFactor=1.0, w=0.1):
 #-----------------------------------------------------------------------------------------------
 
 def PPDetectionProbability(oif_df, survey_df, trailing_losses=False, trailing_loss_name='dmagDetect',
-                           magnitude_name="MaginFil",
+                           magnitude_name="MagnitudeInFilter",
                            limiting_magnitude_name_survey="fiveSigmaDepth",
                            field_id_name="FieldID", field_id_name_survey="FieldID",
                            fillFactor=1.0, w=0.1):
