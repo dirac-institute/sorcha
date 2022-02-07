@@ -46,9 +46,7 @@ def PPReadCometaryInput(comet_datafile, beginLoc, chunkSize,filesep):
     # check for nans or nulls
 
     if padafr.isnull().values.any():
-         #inds = pd.isnull(padafr).any('ObjID').to_numpy().nonzero()[0]
          pdt=padafr[padafr.isna().any(axis=1)]
-         print(pdt)
          inds=str(pdt['ObjID'].values)
          outstr="ERROR: uninitialised values when reading comet data file. ObjID: " + str(inds)
          sys.exit(outstr)

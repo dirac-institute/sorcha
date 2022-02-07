@@ -40,7 +40,6 @@ def PPCheckOrbitAndColoursMatching(orbin,colin,poiin):
 
    if orbin['!!OID'].equals(colin['ObjID']):
         if poiobjs.isin(orbin['!!OID']).all():
-        #if orbin['!!OID'].equals(poiobjs):
             return
         else:
             logging.error('ERROR: PPCheckOrbitAndColourMatching: input pointing and orbit files do not match.')

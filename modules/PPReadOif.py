@@ -47,6 +47,12 @@ def PPReadOif(oif_output, inputformat):
        sys.exit("ERROR: PPReadOif: unknown format for pointing simulation results.")
 
    padafr=padafr.rename(columns=lambda x: x.strip())
+   
+   # Here, we drop the magnitudes calculated by oif as they are calculated elsewhere
+   # as they can be calculated with a variety of phase functions, and in different filters
+                
+   padafr=padafr.drop(['V', 'V(H=0)'], axis = 1, errors='ignore')
+
     
    return padafr
 

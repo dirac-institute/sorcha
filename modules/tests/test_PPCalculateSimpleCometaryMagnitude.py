@@ -7,7 +7,7 @@ from ..PPReadOif import PPReadOif
 from ..PPReadColours import PPReadColours
 from ..PPReadCometaryInput import PPReadCometaryInput
 from ..PPJoinColourPointing import PPJoinColourPointing
-from ..PPJoinCometaryWithOrbits import PPJoinCometaryWithOrbits
+from ..PPJoinOrbitalData import PPJoinOrbitalData
 from ..PPReadOrbitFile import PPReadOrbitFile 
 from ..PPCalculateSimpleCometaryMagnitude import PPCalculateSimpleCometaryMagnitude
 
@@ -22,9 +22,9 @@ def test_PPCalculateSimpleCometaryMagnitude():
 
     resdf1=PPJoinColourPointing(padafr,padacl)
     resdf2=PPJoinColourPointing(resdf1,padaco)
-    resdf3=PPJoinCometaryWithOrbits(resdf2,padaor)
+    resdf3=PPJoinOrbitalData(resdf2,padaor)
     
-    resdf3['r'] = resdf3['V']
+    #resdf3['r'] = resdf3['V']
 
     ncols1=len(resdf3.columns) + 3
     

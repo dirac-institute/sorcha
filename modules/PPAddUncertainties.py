@@ -51,13 +51,6 @@ def addUncertainties(ephemsdf,obsdf,raName='fieldRA',decName='fieldDec',obsIdNam
                      filterMagName='MagnitudeInFilter'):
 
 
-#ef addUncertainties(ephemsdf,obsdf,raName='fieldRA',decName='fieldDec',obsIdName='observationId',
-#                    obsEpochName='observationStartMJD',
-#                    raNameEph='AstRA(deg)',decNameEph='AstDec(deg)',
-#                    obsIdNameEph='observationId',ephEpochName='FieldMJD',
-#                    limMagName='fiveSigmaDepth',seeingName='seeingFwhmGeom',
-#                    filterMagName='MaginFilterTrue'):
-
     """Add astrometric and photometric uncertainties to observations generated through JPL ephemeris simulator.
 
     Parameters:
@@ -84,41 +77,6 @@ def addUncertainties(ephemsdf,obsdf,raName='fieldRA',decName='fieldDec',obsIdNam
         print('observations tmax, ephemeris tmax:',tobsmax, tephmax)
         raise Exception('Observations do not cover the entire ephemeris timespan.')
 
-    # Preselect only those observations mentioned in the ephemeris dataframe
-    #obsdfSel=obsdf[obsdf[obsIdName].isin(ephemsdf[obsIdNameEph])][[obsIdName, limMagName, seeingName]]
-
-    #ephemsFiltered=[]
-    # Iterate over all selected observations from opsim database
-    #for index, row in obsdfSel.iterrows():
-
-    #    selection=ephemsdf[ephemsdf[obsIdNameEph] == row[obsIdName]].reset_index(drop=True)
-
-        #Add astrometric and photometric 1 sigma uncertainties
-    #    astrSig,SNR,rndError = calcAstrometricUncertainty(selection[filterMagName], row[limMagName],
-    #                                               FWHMeff=row[seeingName]*1000, output_units='mas')
-    #    photSig = magErrorFromSNR(SNR)
-
-    #    selection['AstRASigma(mas)'] = astrSig
-    #    selection['AstDecSigma(mas)'] = astrSig
-    #    selection['PhotometricSigma(mag)'] = photSig
-
-    #    ephemsFiltered.append(selection)
-
-    #ephemsOut=pd.concat(ephemsFiltered).reset_index(drop=True)
-
-    #hopefully faster way to do this
-    #ephemsdf=ephemsdf.join(obsdfSel.set_index(obsIdName), on=obsIdNameEph)
-    #astrSig,SNR,_=calcAstrometricUncertainty(ephemsdf[filterMagName], ephemsdf[limMagName],
-    #                                                FWHMeff=ephemsdf[seeingName]*1000, output_units='mas')
-    #ephemsdf.drop(columns=[limMagName, seeingName])
-    #ephemsdf['AstRASigma(mas)']=astrSig
-    #ephemsdf['AstDecSigma(mas)']=astrSig
-    #ephemsdf['PhotometricSigma(mag)']=magErrorFromSNR(SNR)
-
-    #a more memory efficient way
-    #l = len(ephemsdf.index)
-    #limMag = obsdf.lookup(ephemsdf[obsIdNameEph], [limMagName]*l)
-    #seeing = obsdf.lookup(ephemsdf[obsIdNameEph], [seeingName]*l)
     tempdf = pd.merge(
         ephemsdf[[obsIdNameEph]],
         obsdf[[obsIdName, limMagName, seeingName]],

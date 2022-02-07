@@ -16,7 +16,7 @@ from modules import PPReadOif, PPReadBrightness
 from modules import PPDetectionProbability, PPSimpleSensorArea, PPTrailingLoss, PPMatchFieldConditions
 from modules import PPDropObservations, PPBrightLimit
 from modules import PPMakeIntermediatePointingDatabase, PPReadIntermDatabase
-from modules import PPReadCometaryInput, PPJoinCometaryWithOrbits, PPCalculateSimpleCometaryMagnitude
+from modules import PPReadCometaryInput, PPJoinOrbitalData, PPCalculateSimpleCometaryMagnitude
 from modules import PPCalculateApparentMagnitude
 from modules import PPFootprintFilter, PPAddUncertainties, PPRandomizeMeasurements, PPVignetting
 from modules.PPDetectionProbability import calcDetectionProbability, PPDetectionProbability
@@ -134,7 +134,6 @@ def runPostProcessing():
     colourinput=args.l  
     orbinfile=args.o  
     oifoutput=args.p
-    brightnessfile=args.b
 
     pplogger = get_logger()
     
@@ -202,7 +201,6 @@ def runPostProcessing():
     elif (cameraModel == 'footprint'):
         footprintPath=get_or_exit(config, 'INPUTFILES', 'footprintPath', 'ERROR: no camera footprint provided.')
         pplogger.info('Footprint is modelled after the actual camera footprint.')
-        #detectors=PPFootprintFilter.readFootPrintFile('./data/detectors_corners.csv')         
         footprintf = PPFootprintFilter.Footprint(footprintPath)
         pplogger.info("loading camera footprint from " + footprintPath)
     else:
@@ -281,21 +279,15 @@ def runPostProcessing():
         
         ### Processing begins, all processing is done for chunks
         
-        
-        str1='Reading input orbit file: ' + orbinfile
-        pplogger.info(str1)
+        pplogger.info('Reading input orbit file: ' + orbinfile)
         # The H given in the orbital DES file is omitted and erased; it is given in a separate brightness file instead
         padaor=PPReadOrbitFile.PPReadOrbitFile(orbinfile, startChunk, incrStep, filesep)
-        padabr=PPReadBrightness.PPReadBrightness(brightnessfile,  startChunk, incrStep, filesep)
         
-        if (objecttype == 'asteroid'):
-            str3='Reading input colours: ' + colourinput
-            pplogger.info(str3)
-            padacl=PPReadColours.PPReadColours(colourinput, startChunk, incrStep, filesep)
-        elif (objecttype == 'comet'):
-            str4='Reading cometary parameters: ' + cometinput
+        pplogger.info('Reading input colours: ' + colourinput)
+        padacl=PPReadColours.PPReadColours(colourinput, startChunk, incrStep, filesep)
+        if (objecttype == 'comet'):
+            pplogger.info('Reading cometary parameters: ' + cometinput)
             padaco=PPReadCometaryInput.PPReadCometaryInput(cometinput, startChunk, incrStep, filesep)
-            padacl=PPReadColours.PPReadColours(colourinput, startChunk, incrStep, filesep)
         
         objid_list = padacl['ObjID'].unique().tolist() 
 
@@ -308,15 +300,10 @@ def runPostProcessing():
             padafr=PPReadIntermDatabase.PPReadIntermDatabase('./data/interm.db', objid_list)
         else:   
             try: 
-                str2='Reading input pointing history: ' + oifoutput
-                pplogger.info(str2)
+                pplogger.info('Reading input pointing history: ' + oifoutput)
                 oifoutputsuffix = oifoutput.split('.')[-1]
                 padafr=PPReadOif.PPReadOif(oifoutput, pointingFormat)
                 
-                # Here, we drop the magnitudes calculated by oif as they are calculated elsewhere
-                # as they can be calculated with a variety of phase functions, and in different filters
-                
-                padafr=padafr.drop(['V', 'V(H=0)'], axis = 1, errors='ignore')
                 
                 padafr=padafr[padafr['ObjID'].isin(objid_list)]
 
@@ -327,35 +314,27 @@ def runPostProcessing():
     
         
         pplogger.info('Checking if orbit, brightness, colour/cometary and pointing simulation input files match...')
-        if (objecttype == 'asteroid'):
-            PPCheckOrbitAndColoursMatching.PPCheckOrbitAndColoursMatching(padaor,padacl,padafr)
-            PPCheckOrbitAndColoursMatching.PPCheckOrbitAndColoursMatching(padaor,padabr,padafr)
-        elif (objecttype == 'comet'):
-            PPCheckOrbitAndColoursMatching.PPCheckOrbitAndColoursMatching(padaor,padacl,padafr)
-            PPCheckOrbitAndColoursMatching.PPCheckOrbitAndColoursMatching(padaor,padabr,padafr)
+
+        PPCheckOrbitAndColoursMatching.PPCheckOrbitAndColoursMatching(padaor,padacl,padafr)
+        ###PPCheckOrbitAndColoursMatching.PPCheckOrbitAndColoursMatching(padaor,padabr,padafr)
+        
+        if (objecttype == 'comet'):
             PPCheckOrbitAndColoursMatching.PPCheckOrbitAndColoursMatching(padaor,padaco,padafr)
             
         
-        pplogger.info('Joining colour/cometary data with pointing data...')
-        if (objecttype == 'asteroid'):
-            observations=PPJoinColourPointing.PPJoinColourPointing(padafr,padacl)
-            observations=PPJoinColourPointing.PPJoinColourPointing(observations,padabr)
-        elif (objecttype == 'comet'):
-            
-            observations=PPJoinColourPointing.PPJoinColourPointing(padafr,padaco)
-            observations=PPJoinColourPointing.PPJoinColourPointing(observations,padabr)
-            observations=PPJoinColourPointing.PPJoinColourPointing(observations,padacl)
+        pplogger.info('Joining physical parameters and orbital data with pointing data...')
+        
+        observations=PPJoinColourPointing.PPJoinColourPointing(padafr,padacl)
+        observations=PPJoinOrbitalData.PPJoinOrbitalData(observations,padaor)
+        if (objecttype == 'comet'):
+            pplogger.info('Joining cometary data...')
+            observations=PPJoinColourPointing.PPJoinColourPointing(observations,padaco)
 
-            pplogger.info('Joining orbital data with cometary data...')
-            observations=PPJoinCometaryWithOrbits.PPJoinCometaryWithOrbits(observations,padaor)
  
         
         # comets may have dashes in their names that mix things up
         observations['ObjID'] = observations['ObjID'].astype(str)
         #observations['ObjID'] = observations['ObjID'].str.replace('/','')
-        #observations=observations.update(observations[['ObjID']].applymap('"{}"'.format))
-
-        print(list(observations.columns.values))
         
         pplogger.info('Calculating apparent magnitudes...')
         observations=PPCalculateApparentMagnitude.PPCalculateApparentMagnitude(observations, phasefunction, mainfilter)        
@@ -530,7 +509,7 @@ if __name__=='__main__':
      parser.add_argument("-l", "--colour", "--color", help="Colour file name", type=str, dest='l', default='./data/colour')
      parser.add_argument("-o", "--orbit", help="Orbit file name", type=str, dest='o', default='./data/orbit.des')
      parser.add_argument("-p", "--pointing", help="Pointing simulation output file name", type=str, dest='p', default='./data/oiftestoutput')
-     parser.add_argument("-b", "--brightness", "--phase", help="Brightness and phase parameter file name", type=str, dest='b', default='./data/HG')
+     ###parser.add_argument("-b", "--brightness", "--phase", help="Brightness and phase parameter file name", type=str, dest='b', default='./data/HG')
 
 
 

@@ -29,9 +29,6 @@ def PPCalculateSimpleCometaryMagnitude(padain, mainfilter):
     
     
     """
-    
-    # check if q
-    
     # calculate rho and delta in au
     padain['delta']=padain['AstRange(km)']/1.495978707e8
     padain['rho']=(padain['Ast-Sun(J2000x)(km)']*padain['Ast-Sun(J2000x)(km)'] 
@@ -41,24 +38,15 @@ def PPCalculateSimpleCometaryMagnitude(padain, mainfilter):
 
     com=Comet(Hv=padain[mainfilter], afrho1=padain.afrho1, q=padain.q, k=padain.k)
 
-    #padain['gcom'] = {'rh': padain['rho'], 'delta': padain['delta'], 'phase': padain['Sun-Ast-Obs(deg)']}
     g = {'rh': padain['rho'], 'delta': padain['delta'], 'phase': padain['Sun-Ast-Obs(deg)']}
     # Here, only the coma contribution is calculated in the main filter
-    padain['coma']=com.mag(g, mainfilter, rap=1, nucleus=False)
-    # Thew contribution of the nucleus is taken from the absolute brightness
+    try:
+        padain['coma']=com.mag(g, mainfilter, rap=1, nucleus=False)
+    except:
+        print(g)
+    # The contribution of the nucleus is taken from the absolute brightness
     padain[mainfilter] = -2.5 * np.log10(10**(-0.4 * padain['coma']) + 10**(-0.4 * padain[mainfilter]))
-    # at this point, all of this data are already read in
 
-    # for each pointing: calculate magnitude as in lsstcomet example
-    # we already know to which filter each pointing is hooked
-
-
-    # >>> comet_cg = Comet(R=2, afrho_q=1500, q=1.29, k=-3.35)
-    # >>> g = {'rh': 1.5, 'delta': 1.0, 'phase': 30}
-    # >>> print(comet_cg.mag(g, 'r', rap=1))
-
-
-    # apply photometric colours
     return padain
 
 
