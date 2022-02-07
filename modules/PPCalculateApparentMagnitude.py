@@ -56,8 +56,6 @@ def PPCalculateApparentMagnitude(padain, function, mainfilter):
         
 
     if (function=='HG1G2'):
-        #logger.error('ERROR: PPCalculateApparentMagnitude: HG1G2 treatment still under construction.')
-        #sys.exit('ERROR: PPCalculateApparentMagnitude: HG1G2 treatment still under construction.')
         if set(['H','G1','G2']).issubset(padain.columns):        
               Harr=padain['H'].values
               G1arr = padain['G1'].values
@@ -80,9 +78,9 @@ def PPCalculateApparentMagnitude(padain, function, mainfilter):
            sys.exit('ERROR: PPCalculateApparentMagnitude: HG1G2 function requires the following input data columns: H, G1, G2.')
            
     elif (function=='HG'):
-         if set(['H', 'G']).issubset(padain.columns):
+         if set(['H', 'GS']).issubset(padain.columns):
               Harr=padain['H'].values
-              Garr = padain['G'].values
+              Garr = padain['GS'].values
               pharr= padain['phase'].values
               i=0
               phfarr=[]
@@ -97,8 +95,8 @@ def PPCalculateApparentMagnitude(padain, function, mainfilter):
               padain=padain.drop(['delta', 'rho', 'phase', 'phase_function'], axis = 1)
               
          else:
-              pplogger.error('ERROR: PPCalculateApparentMagnitude: HG function requires the following input data columns: H, G.')
-              sys.exit('ERROR: PPCalculateApparentMagnitude: HG function requires the following input data columns: H, G.')
+              pplogger.error('ERROR: PPCalculateApparentMagnitude: HG function requires the following input data columns: H, GS.')
+              sys.exit('ERROR: PPCalculateApparentMagnitude: HG function requires the following input data columns: H, GS.')
            
 
     
@@ -155,7 +153,7 @@ def PPCalculateApparentMagnitude(padain, function, mainfilter):
 
         else:
               pplogger.error('ERROR: PPCalculateApparentMagnitude: none function requires the following input data columns: H.')
-              sys.exit('ERROR: PPCalculateApparentMagnitude: none function requires the following input data columns: S.')
+              sys.exit('ERROR: PPCalculateApparentMagnitude: none function requires the following input data columns: H.')
              
     
     else:

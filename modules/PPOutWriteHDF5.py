@@ -21,9 +21,6 @@ def PPOutWriteHDF5(pp_results,outf,keyin):
 
     usage: padafr=PPOutWriteHDF5(padain,outf)
     """
-    #pp_results=pp_results.drop('level_0', 1, errors='ignore')
-    
-    #pp_results=pp_results.applymap(str)
     
     of=pp_results.astype(str).to_hdf(outf, mode='a', format='table', append=True, key=keyin)
     

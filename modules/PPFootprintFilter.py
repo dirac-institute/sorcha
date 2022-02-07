@@ -31,8 +31,6 @@ class Detector:
         self.ID = ID
         self.ra = points[0]
         self.dec = points[1]
-        #self.rax = np.sum(self.x) / len(self.x)
-        #self.centery = np.sum(self.y) / len(self.y)
         self.units = units
         
         if units == 'degrees' or units == 'deg':
@@ -227,13 +225,9 @@ class Detector:
         y[0:nd] = detector.y
         y[-1] = y[0]
         plt.plot(x, y, color=color)
-        #plt.scatter(self.centerx, self.centery, color="black")
         
         if annotate == True:
             plt.annotate(str(detector.ID), (detector.centerx, detector.centery))
-        
-        #def isDetected(points):
-        #    return 0
         
                 
 class Footprint:
@@ -283,7 +277,6 @@ class Footprint:
         for i in range(self.N):
             self.detectors[i].plot(θ=θ, color=color, units=units, annotate=annotate)
             
-    #def plotXY(): #need to add
     
     def applyFootprint(
         self, oifDF, pointings,
@@ -365,13 +358,12 @@ class Footprint:
         plt.scatter(x, y, s=3.0)
         points = np.array((x, y))
         
-        #print(points.dtype)
         #check whether they land on any of the detectors
         i = 0
         detected = []
         detectorId = []
         for detector in self.detectors:
-            if True:#method2 == "new":
+            if True:
                 stuff = detector.ison(points)
                 detected.append(stuff)
                 detectorId.append([i]*len(stuff))
@@ -399,7 +391,6 @@ def radec2focalplane(ra, dec, fieldra, fielddec, fieldID=None):
                     to the plane tangent to the unit sphere.
     """
 
-    #print("ra: ", ra.dtype)
     # convert to cartesian coordiantes on unit sphere
     observation_vectors = np.array(
         [cos(ra)*np.cos(dec), #x
@@ -465,18 +456,7 @@ def footPrintFilter(observations, survey, detectors,
     ra=deg2rad(observations[ra_name])
     dec=deg2rad(observations[dec_name])
 
-    #field_df = pd.merge(
-    #    observations[[field_name]],
-    #    survey[[field_name_survey, ra_name_field, dec_name_field, rot_name_field]],
-    #    left_on=field_name,
-    #    right_on=field_name_survey,
-    #    how="left"
-    #)
-    #
-    #fieldra   = deg2rad(field_df[ra_name_field])
-    #fielddec  = deg2rad(field_df[dec_name_field])
-    #rotSkyPos = deg2rad(field_df[rot_name_field])
-    #
+    
     fieldra   = deg2rad(observations[ra_name_field])
     fielddec  = deg2rad(observations[dec_name_field])
     rotSkyPos = deg2rad(observations[rot_name_field])
@@ -508,19 +488,14 @@ def footPrintFilter(observations, survey, detectors,
         ySel=y[obsSelIndex]
         zSel=z[obsSelIndex]
         
-        #print(ySel)
-        #print(zSel)
-        #print('wait')
-
 
         points=np.array((ySel, zSel)).T
         detected=isinPolygon(points, corners)
-        #print(detected)
 
         detectedObs.append(pd.Series(obsSelIndex[detected]))
 
-    return detectedObs#pd.concat(detectedObs).reset_index(drop=True)
-
+    return detectedObs
+    
 def readFootPrintFile(path2file):
     #currently requires a specific header
     detectors_df=pd.read_csv(path2file)
@@ -537,10 +512,7 @@ def detectors2fovXY(detectors):
         xd=cos(detector[:,1])*cos(detector[:,0])
         yd=cos(detector[:,1])*sin(detector[:,0])
         zd=sin(detector[:,1])
-        #print(xd)
-        #yd/=xd
-        #zd/=xd
-        #xd/=xd
+
         detectors_out += [np.array([yd, zd]).T]
 
     return np.array(detectors_out)
@@ -550,7 +522,7 @@ def xrot(p, θ):
     p_out = np.zeros(p.shape)
     cosθ = cos(θ)
     sinθ = sin(θ)
-    #m = np.array([[cosθ, -sinθ], [sinθ, cosθ]])
+
     p_out[0] = p[0] 
     p_out[1] = cosθ * p[1] - sinθ * p[2]
     p_out[2] = sinθ * p[1] + cosθ * p[2]
@@ -629,14 +601,14 @@ def sortCorners(points):
     points=np.array(points)
     centroid=np.array([np.sum(points[:,0]), np.sum(points[:,1])])/4
     corner_rays=points-centroid
-    #print(corner_rays[:,0], corner_rays[:,1])
+
     angles=np.arctan2(corner_rays[:,0], corner_rays[:,1])
     return np.array([x for x, y in sorted(zip(points, angles), key=lambda pair: pair[1])])
 
 def HamiltonProduct(q1, q2):
     """where q1 and q2 are arrays of length 4 representing quaternions
     Not commutative."""
-    #assert (q1.size[2] == 4) and (q2.size[2] == 4)
+
     assert (q1.shape == q2.shape), "q1 and q2 must be the same length"
     
     a1, b1, c1, d1 = q1
@@ -652,8 +624,6 @@ def HamiltonProduct(q1, q2):
 def quatRotate2XAxis(p, pf):
     """Rotates a 3d vector p such that the vector pf is aligned with the x-axis"""
     #where p is the point and pf is the center of the field
-    #assert p.shape[0] == 3
-    #print(p)
     
     #get rotation angle
     yzf = np.sqrt(pf[1]*pf[1] + pf[2]*pf[2])
@@ -672,10 +642,8 @@ def quatRotate2XAxis(p, pf):
     Q[2:4] *= (np.sin(ρ) / yzf)
     Qinv = Q.copy()
     Qinv[2:4] *= -1.
-    #print(HamiltonProduct(Q, Qinv))
     #do rotation
     P_out = HamiltonProduct(Q, HamiltonProduct(P, Qinv))
-    #P_out = HamiltonProduct(HamiltonProduct(Q, P), Qinv)
     return P_out[1:4]
 
 def quatRotate(p, u, θ):

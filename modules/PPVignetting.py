@@ -9,19 +9,11 @@ cos = np.cos
 def vignettingLosses(oifdf, surveydf,
                      raNameOIF="AstRA(deg)", decNameOIF="AstDec(deg)", fieldNameOIF="FieldID",
                      raNameSurvey="fieldRA", decNameSurvey="fieldDec"):
-                     # fieldNameSurvey="observationId"):
     """Takes dataframes containg observation and field positions and calculates
     the magnitude losses due to vignetting."""
 
-    #fielddf = pd.merge(oifdf[[fieldNameOIF]],
-    #                surveydf[[fieldNameSurvey, raNameSurvey, decNameSurvey]],
-    #                left_on=fieldNameOIF,
-    #                right_on=fieldNameSurvey,
-    #                how="left"
-    #            )
 
     losses = calcVignettingLosses(oifdf[raNameOIF], oifdf[decNameOIF], oifdf[raNameSurvey], oifdf[decNameSurvey])
-    #losses = calcVignettingLosses(oifdf[raNameOIF], oifdf[decNameOIF], fielddf[raNameSurvey], fielddf[decNameSurvey])
     
     return losses
 

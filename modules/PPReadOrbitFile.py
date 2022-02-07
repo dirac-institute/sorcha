@@ -43,9 +43,6 @@ def PPReadOrbitFile(orbin, beginLoc, chunkSize, filesep):
       # rename i to incl to avoid confusion with the colour i
    padafr=padafr.rename(columns={"i" : "incl"})
 
-   #if (len(padafr.columns) != 14):
-   #     pplogger.error('ERROR: PPReadOrbitFile: invalid input orbit DES file: not 14 columns.')
-   #     sys.exit('ERROR: PPReadOrbitFile: invalid input orbit DES file: not 14 columns.')
    # Check for nans or nulls
    
    if padafr.isnull().values.any():
@@ -55,7 +52,7 @@ def PPReadOrbitFile(orbin, beginLoc, chunkSize, filesep):
          sys.exit(outstr)
          pplogger.info(outstr)
    
-   padafr=padafr.drop(['H', 'INDEX', 'N_PAR', 'MOID', 'COMPCODE'], axis = 1, errors='ignore')
+   padafr=padafr.drop([ 'INDEX', 'N_PAR', 'MOID', 'COMPCODE'], axis = 1, errors='ignore')
    
     
    return padafr

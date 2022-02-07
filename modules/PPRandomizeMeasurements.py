@@ -98,9 +98,6 @@ def randomizeObservations(ephemsdf,obsdf,raName='fieldRA',decName='fieldDec',obs
         randomizeAstrometry(selection,raName=raNameEph,decName=decNameEph,
                             raRndName='AstRARnd(deg)',decRndName='AstDecRnd(deg)',
                             sigName='AstometrySigma(deg)',units='deg')
-        #randomizeAstrometry(df,raName=raNameEph,decName=decNameEph,
-        #                    raRndName='AstRARnd(deg)',decRndName='AstDecRnd(deg)',
-        #                    sigName='AstometrySigma(deg)',units='deg')
 
         randomizePhotometry(selection,magName=filterMagName,magRndName='FiltermagRnd',sigName='PhotometricSigma(mag)')
 
@@ -161,9 +158,6 @@ def randomizeAstrometry(df, rng=default_rng, raName='AstRA(deg)',decName='AstDec
 
     else:
         [ra, dec] = icrf2radec(xyz[:,0], xyz[:,1], xyz[:,2], deg=False)
-
-    #df[raRndName] = ra
-    #df[decRndName] = dec
 
     return ra, dec
 
@@ -239,32 +233,6 @@ def randomizePhotometry(df,magName='Filtermag',magRndName='FiltermagRnd',sigName
     normal = rng.normal
 
     s = normal(0, 1, len(df.index))
-
-    #df[magRndName] = df[magName] + s*df[sigName]
-
-
-    # THIS IS AN ATTEMPT TO USE FLUX. DOESN'T WORK.
-    #f = mag2flux(df[magName])
-    #fdf = mag2flux(df[magName]-df[sigName])
-    #fdf = 10**(0.4*df[sigName])*f
-
-    #sigflux = abs(fdf-f)
-
-    #n = len(df.index)
-
-    #s = normal(0, 1, n)
-
-    #fnew = f + s*sigflux
-
-    #fnew2 = np.where(fnew < 0, 1e-15, fnew)
-
-    #df[magRndName] = flux2mag(fnew2)
-
-#   debug
-    #df['f']=f
-    #df['fnew']=fnew
-#    df['s']=s
-    #df['sigflux']=sigflux
 
     return df[magName] + s*df[sigName]
 

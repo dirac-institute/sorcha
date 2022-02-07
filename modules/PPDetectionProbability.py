@@ -89,12 +89,6 @@ def PPDetectionProbability(oif_df, survey_df, trailing_losses=False, trailing_lo
         w               ... distribution parameter
         """
 
-        #fielddf = pd.merge(oif_df[[field_id_name]],
-        #                survey_df[[field_id_name_survey, limiting_magnitude_name_survey]],
-        #                left_on=field_id_name,
-        #                right_on=field_id_name_survey,
-        #                how="left"
-        #)
 
         if (trailing_losses==False):
             return calcDetectionProbability(oif_df[magnitude_name],oif_df[limiting_magnitude_name_survey], fillFactor, w)

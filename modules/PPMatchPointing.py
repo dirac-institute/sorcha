@@ -34,8 +34,6 @@ def PPMatchPointing(bsdbname,resfilters, dbquery):
     df=df.rename(columns={'observationId': 'FieldID'})
     df=df.rename(columns={'observationId': 'FieldID'}) 
     df=df.rename(columns={'filter': 'optFilter'}) # not to confuse with the pandas filter command   
-    #print(df)
     dfo=df[df.optFilter.isin(resfilters)]
-    #print(dfo)
     return dfo
     
