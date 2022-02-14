@@ -12,7 +12,7 @@ from modules import PPhookBrightnessWithColour, PPJoinColourPointing, PPMatchPoi
 from modules import PPMatchPointingsAndColours, PPFilterSSPCriterionEfficiency
 from modules import PPOutWriteCSV, PPOutWriteSqlite3, PPOutWriteHDF5
 from modules import PPReadOrbitFile, PPCheckOrbitAndColoursMatching
-from modules import PPReadOif, PPReadBrightness
+from modules import PPReadOif
 from modules import PPDetectionProbability, PPSimpleSensorArea, PPTrailingLoss, PPMatchFieldConditions
 from modules import PPDropObservations, PPBrightLimit
 from modules import PPMakeIntermediatePointingDatabase, PPReadIntermDatabase
