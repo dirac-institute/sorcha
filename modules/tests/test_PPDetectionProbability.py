@@ -30,10 +30,10 @@ def test_PPDetectionProbabilty():
     survey=pd.DataFrame({'observationId': [0] })
 
     test_target=pd.DataFrame({'FieldID': [0, 0], 'MagnitudeInFilter': [21.9, 21.9], 
-                              'detection probability': [0.7310585786300077, 0.7310585786300077]})
+                              'detection_probability': [0.7310585786300077, 0.7310585786300077]})
 
     test_out=test_in.copy()
-    test_out['detection probability']=PPDetectionProbability(test_in, survey)
+    test_out['detection_probability']=PPDetectionProbability(test_in, survey)
 
-    assert test_out['detection probability'][0]==test_target['detection probability'][0]
+    assert test_out['detection_probability'][0]==test_target['detection_probability'][0]
     return
