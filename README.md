@@ -8,6 +8,8 @@ LSST stack based post-processing modules in python for the JPL survey simulator:
 
 Currently tested with the following fork: https://github.com/eggls6/objectsInField
 
+Currently requires latest development version of sbpy: https://github.com/NASA-Planetary-Science/sbpy.git
+
 Documentation: https://survey-simulator-post-processing.readthedocs.io/en/latest/
 
 ## developer best practices
