@@ -189,9 +189,9 @@ def runPostProcessing():
     trailingLossesOn = to_bool(config["PERFORMANCE"]["trailingLossesOn"])
     
     if (trailingLossesOn == True):
-             pplogger.info('Computation of railing losses is switched ON.')
+             pplogger.info('Computation of trailing losses is switched ON.')
     else:
-             pplogger.info('Computation of railing losses is switched OFF.')
+             pplogger.info('Computation of trailing losses is switched OFF.')
 
     
     cameraModel=get_or_exit(config, 'PERFORMANCE', 'cameraModel', 'ERROR: camera model not defined.')
@@ -509,8 +509,6 @@ if __name__=='__main__':
      parser.add_argument("-l", "--colour", "--color", help="Colour file name", type=str, dest='l', default='./data/colour')
      parser.add_argument("-o", "--orbit", help="Orbit file name", type=str, dest='o', default='./data/orbit.des')
      parser.add_argument("-p", "--pointing", help="Pointing simulation output file name", type=str, dest='p', default='./data/oiftestoutput')
-     ###parser.add_argument("-b", "--brightness", "--phase", help="Brightness and phase parameter file name", type=str, dest='b', default='./data/HG')
-
 
 
 
