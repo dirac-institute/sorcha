@@ -20,70 +20,7 @@ from modules import PPReadCometaryInput, PPJoinOrbitalData, PPCalculateSimpleCom
 from modules import PPCalculateApparentMagnitude
 from modules import PPFootprintFilter, PPAddUncertainties, PPRandomizeMeasurements, PPVignetting
 from modules.PPDetectionProbability import calcDetectionProbability, PPDetectionProbability
-
-
-def get_logger(    
-        LOG_FORMAT     = '%(asctime)s %(name)-12s %(levelname)-8s %(message)s ',
-        LOG_NAME       = '',
-        LOG_FILE_INFO  = 'postprocessing.log',
-        LOG_FILE_ERROR = 'postprocessing.err'):
-
-
-    #LOG_FORMAT     = '',
-    log           = logging.getLogger(LOG_NAME)
-    log_formatter = logging.Formatter(LOG_FORMAT)
-
-    # comment this to suppress console output
-    #stream_handler = logging.StreamHandler()
-    #stream_handler.setFormatter(log_formatter)
-    #log.addHandler(stream_handler)
-
-    file_handler_info = logging.FileHandler(LOG_FILE_INFO, mode='w')
-    file_handler_info.setFormatter(log_formatter)
-    file_handler_info.setLevel(logging.INFO)
-    log.addHandler(file_handler_info)
-
-    file_handler_error = logging.FileHandler(LOG_FILE_ERROR, mode='w')
-    file_handler_error.setFormatter(log_formatter)
-    file_handler_error.setLevel(logging.ERROR)
-    log.addHandler(file_handler_error)
-
-    log.setLevel(logging.INFO)
-
-    return log
-
-
-def get_or_exit(config, section, key, message):
-    # from Shantanu Naidu, objectInField
-    try:
-        return config[section][key]
-    except KeyError:
-        logging.error(message)
-        sys.exit(message)
-        
-        
-#def initialisePostProcessing():
-    
-
-        
-        
-def to_bool(value):
-    valid = {'true': True, 't': True, '1': True, 'True': True,
-             'false': False, 'f': False, '0': False, 'False': False
-             }   
-
-    if isinstance(value, bool):
-        return value
-
-    if not isinstance(value, str):
-        raise ValueError('invalid literal for boolean. Not a string.')
-
-    lower_value = value.lower()
-    if lower_value in valid:
-        return valid[lower_value]
-    else:
-        raise ValueError('invalid literal for boolean: "%s"' % value)
-
+from modules.PPRunUtilities import PPGetLogger, PPGetOrExit, PPToBool
 
 
 def runPostProcessing():
@@ -135,7 +72,7 @@ def runPostProcessing():
     orbinfile=args.o  
     oifoutput=args.p
 
-    pplogger = get_logger()
+    pplogger = PPGetLogger()
     
     ### Read, assign and error-handle the configuration file
     pplogger.info('Reading configuration file...')
@@ -144,17 +81,17 @@ def runPostProcessing():
     config.read(configfile)
     
     testvalue=int(config["GENERAL"]['testvalue'])
-    pointingFormat=get_or_exit(config, 'INPUTFILES', 'pointingFormat', 'ERROR: no pointing simulation format is specified.')
-    filesep=get_or_exit(config, 'INPUTFILES', 'auxFormat', 'ERROR: no auxilliary data (e.g. colour) format specified.')    
-    objecttype=get_or_exit(config, 'OBJECTS', 'objecttype', 'ERROR: no object type provided.')
+    pointingFormat=PPGetOrExit(config, 'INPUTFILES', 'pointingFormat', 'ERROR: no pointing simulation format is specified.')
+    filesep=PPGetOrExit(config, 'INPUTFILES', 'auxFormat', 'ERROR: no auxilliary data (e.g. colour) format specified.')    
+    objecttype=PPGetOrExit(config, 'OBJECTS', 'objecttype', 'ERROR: no object type provided.')
     if (objecttype != 'asteroid' and objecttype != 'comet'):
          pplogger.error('ERROR: objecttype is neither an asteroid or a comet.') 
          sys.exit('ERROR: objecttype is neither an asteroid or a comet.')
     # Names of input files are given as flags
     if (objecttype == 'comet'):
         cometinput=args.m 
-    pointingdatabase=get_or_exit(config, 'INPUTFILES', 'pointingdatabase', 'ERROR: no pointing database provided.')
-    ppdbquery=get_or_exit(config, 'INPUTFILES', 'ppsqldbquery', 'ERROR: no pointing database SQLite3 query provided.')
+    pointingdatabase=PPGetOrExit(config, 'INPUTFILES', 'pointingdatabase', 'ERROR: no pointing database provided.')
+    ppdbquery=PPGetOrExit(config, 'INPUTFILES', 'ppsqldbquery', 'ERROR: no pointing database SQLite3 query provided.')
     
     pplogger.info('Object type is ' + str(objecttype))
     
@@ -163,7 +100,7 @@ def runPostProcessing():
     pplogger.info('Pointing simulation result required query is: ' +  ppdbquery) 
 
     
-    mainfilter=get_or_exit(config,'FILTERS', 'mainfilter', 'ERROR: main filter not defined.')
+    mainfilter=PPGetOrExit(config,'FILTERS', 'mainfilter', 'ERROR: main filter not defined.')
     othercolours= [e.strip() for e in config.get('FILTERS', 'othercolours').split(',')]
     resfilters=[e.strip() for e in config.get('FILTERS', 'resfilters').split(',')]
     
@@ -182,11 +119,11 @@ def runPostProcessing():
     rescs=' '.join(str(f) for f in resfilters)
     pplogger.info('Hence, the filters included in the post-processing results are ' + rescs)    
     
-    phasefunction=get_or_exit(config,'PHASE', 'phasefunction', 'ERROR: phase function not defined.')
+    phasefunction=PPGetOrExit(config,'PHASE', 'phasefunction', 'ERROR: phase function not defined.')
     
     pplogger.info('The apparent brightness is calculated using the following phase function model: ' + phasefunction)
     
-    trailingLossesOn = to_bool(config["PERFORMANCE"]["trailingLossesOn"])
+    trailingLossesOn = PPToBool(config["PERFORMANCE"]["trailingLossesOn"])
     
     if (trailingLossesOn == True):
              pplogger.info('Computation of trailing losses is switched ON.')
@@ -194,12 +131,12 @@ def runPostProcessing():
              pplogger.info('Computation of trailing losses is switched OFF.')
 
     
-    cameraModel=get_or_exit(config, 'PERFORMANCE', 'cameraModel', 'ERROR: camera model not defined.')
+    cameraModel=PPGetOrExit(config, 'PERFORMANCE', 'cameraModel', 'ERROR: camera model not defined.')
     if (cameraModel != 'circle') and (cameraModel != 'footprint'):
         pplogger.error('ERROR: cameraModel should be either surfacearea or footprint.')
         sys.exit('ERROR: cameraModel should be either surfacearea or footprint.')        
     elif (cameraModel == 'footprint'):
-        footprintPath=get_or_exit(config, 'INPUTFILES', 'footprintPath', 'ERROR: no camera footprint provided.')
+        footprintPath=PPGetOrExit(config, 'INPUTFILES', 'footprintPath', 'ERROR: no camera footprint provided.')
         pplogger.info('Footprint is modelled after the actual camera footprint.')
         footprintf = PPFootprintFilter.Footprint(footprintPath)
         pplogger.info("loading camera footprint from " + footprintPath)
@@ -238,12 +175,12 @@ def runPostProcessing():
 
 
 
-    outpath=get_or_exit(config, 'OUTPUTFORMAT', 'outpath', 'ERROR: out path not specified.')   
-    outfilestem=get_or_exit(config, 'OUTPUTFORMAT', 'outfilestem', 'ERROR: name of output file stem not specified.')    
-    outputformat=get_or_exit(config, 'OUTPUTFORMAT', 'outputformat', 'ERROR: output format not specified.')   
+    outpath=PPGetOrExit(config, 'OUTPUTFORMAT', 'outpath', 'ERROR: out path not specified.')   
+    outfilestem=PPGetOrExit(config, 'OUTPUTFORMAT', 'outfilestem', 'ERROR: name of output file stem not specified.')    
+    outputformat=PPGetOrExit(config, 'OUTPUTFORMAT', 'outputformat', 'ERROR: output format not specified.')   
     if (outputformat != 'csv') and (outputformat != 'sqlite3') and (outputformat != 'hdf5') and (outputformat != 'HDF5') and (outputformat != 'h5') :
          sys.exit('ERROR: output format should be either csv, sqlite3 or hdf5.')
-    separatelyCSV=to_bool(config["OUTPUTFORMAT"]['separatelyCSV'])
+    separatelyCSV=PPToBool(config["OUTPUTFORMAT"]['separatelyCSV'])
     sizeSerialChunk = int(config["GENERAL"]['sizeSerialChunk'])
     
     if (makeIntermediatePointingDatabase == True):
