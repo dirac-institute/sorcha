@@ -10,7 +10,6 @@ from lsstcomet import *
 from modules import PPFilterDetectionEfficiencyThreshold, PPreadColoursUser, PPReadColours
 from modules import PPhookBrightnessWithColour, PPJoinColourPointing, PPMatchPointing 
 from modules import PPMatchPointingsAndColours, PPFilterSSPCriterionEfficiency
-from modules import PPOutWriteCSV, PPOutWriteSqlite3, PPOutWriteHDF5
 from modules import PPReadOrbitFile, PPCheckOrbitAndColoursMatching
 from modules import PPReadOif
 from modules import PPDetectionProbability, PPSimpleSensorArea, PPTrailingLoss, PPMatchFieldConditions
@@ -20,7 +19,7 @@ from modules import PPReadCometaryInput, PPJoinOrbitalData, PPCalculateSimpleCom
 from modules import PPCalculateApparentMagnitude
 from modules import PPFootprintFilter, PPAddUncertainties, PPRandomizeMeasurements, PPVignetting
 from modules.PPDetectionProbability import calcDetectionProbability, PPDetectionProbability
-from modules.PPRunUtilities import PPGetLogger, PPGetOrExit, PPToBool
+from modules.PPRunUtilities import PPGetLogger, PPConfigFileParser, PPPrintConfigsToLog, PPCMDLineParser, PPWriteOutput
 
 
 def runPostProcessing():
@@ -60,141 +59,33 @@ def runPostProcessing():
     
     """
 
-    ### Initialise argument parser
-    args = parser.parse_args()
+    ### Initialise argument parser and assign command line arguments
     
-    
-    ### Read arguments defined in the __main__ function
-    configfile=args.c
-    makeIntermediatePointingDatabase=bool(args.d)
-    
-    colourinput=args.l  
-    orbinfile=args.o  
-    oifoutput=args.p
+    cmd_args = PPCMDLineParser(parser)
 
     pplogger = PPGetLogger()
     
     ### Read, assign and error-handle the configuration file
     pplogger.info('Reading configuration file...')
     
-    config = configparser.ConfigParser()
-    config.read(configfile)
+    configs = PPConfigFileParser(cmd_args['configfile'], pplogger)
+   
+    pplogger.info('Configuration file successfully read.')
+        
+    PPPrintConfigsToLog(configs, pplogger)
     
-    testvalue=int(config["GENERAL"]['testvalue'])
-    pointingFormat=PPGetOrExit(config, 'INPUTFILES', 'pointingFormat', 'ERROR: no pointing simulation format is specified.')
-    filesep=PPGetOrExit(config, 'INPUTFILES', 'auxFormat', 'ERROR: no auxilliary data (e.g. colour) format specified.')    
-    objecttype=PPGetOrExit(config, 'OBJECTS', 'objecttype', 'ERROR: no object type provided.')
-    if (objecttype != 'asteroid' and objecttype != 'comet'):
-         pplogger.error('ERROR: objecttype is neither an asteroid or a comet.') 
-         sys.exit('ERROR: objecttype is neither an asteroid or a comet.')
-    # Names of input files are given as flags
-    if (objecttype == 'comet'):
-        cometinput=args.m 
-    pointingdatabase=PPGetOrExit(config, 'INPUTFILES', 'pointingdatabase', 'ERROR: no pointing database provided.')
-    ppdbquery=PPGetOrExit(config, 'INPUTFILES', 'ppsqldbquery', 'ERROR: no pointing database SQLite3 query provided.')
+    ### End of config parsing
     
-    pplogger.info('Object type is ' + str(objecttype))
-    
-    pplogger.info('Pointing simulation result format is: ' + pointingFormat) 
-    pplogger.info('Pointing simulation result path is: ' + pointingdatabase)
-    pplogger.info('Pointing simulation result required query is: ' +  ppdbquery) 
-
-    
-    mainfilter=PPGetOrExit(config,'FILTERS', 'mainfilter', 'ERROR: main filter not defined.')
-    othercolours= [e.strip() for e in config.get('FILTERS', 'othercolours').split(',')]
-    resfilters=[e.strip() for e in config.get('FILTERS', 'resfilters').split(',')]
-    
-
-    
-    if (len(othercolours) != len(resfilters)-1):
-         pplogger.error('ERROR: mismatch in input config colours and filters: len(othercolours) != len(resfilters) + 1')
-         sys.exit('ERROR: mismatch in input config colours and filters: len(othercolours) != len(resfilters) + 1')
-    if mainfilter != resfilters[0]:
-         pplogger.error('ERROR: main filter should be the first among resfilters.')
-         sys.exit('ERROR: main filter should be the first among resfilters.') 
-         
-    pplogger.info('The main filter in which brightness is defined is ' + mainfilter)
-    othcs=' '.join(str(e) for e in othercolours)
-    pplogger.info('The colour indices included in the simulation are ' + othcs)
-    rescs=' '.join(str(f) for f in resfilters)
-    pplogger.info('Hence, the filters included in the post-processing results are ' + rescs)    
-    
-    phasefunction=PPGetOrExit(config,'PHASE', 'phasefunction', 'ERROR: phase function not defined.')
-    
-    pplogger.info('The apparent brightness is calculated using the following phase function model: ' + phasefunction)
-    
-    trailingLossesOn = PPToBool(config["PERFORMANCE"]["trailingLossesOn"])
-    
-    if (trailingLossesOn == True):
-             pplogger.info('Computation of trailing losses is switched ON.')
-    else:
-             pplogger.info('Computation of trailing losses is switched OFF.')
-
-    
-    cameraModel=PPGetOrExit(config, 'PERFORMANCE', 'cameraModel', 'ERROR: camera model not defined.')
-    if (cameraModel != 'circle') and (cameraModel != 'footprint'):
-        pplogger.error('ERROR: cameraModel should be either surfacearea or footprint.')
-        sys.exit('ERROR: cameraModel should be either surfacearea or footprint.')        
-    elif (cameraModel == 'footprint'):
-        footprintPath=PPGetOrExit(config, 'INPUTFILES', 'footprintPath', 'ERROR: no camera footprint provided.')
-        pplogger.info('Footprint is modelled after the actual camera footprint.')
-        footprintf = PPFootprintFilter.Footprint(footprintPath)
-        pplogger.info("loading camera footprint from " + footprintPath)
-    else:
-        pplogger.info('Footprint is circular')
-    
-    SSPDetectionEfficiency=float(config["FILTERINGPARAMETERS"]['SSPDetectionEfficiency'])
-    if (SSPDetectionEfficiency > 1.0 or SSPDetectionEfficiency > 1.0 or isinstance(SSPDetectionEfficiency,(float,int))==False):
-        pplogger.error('ERROR: SSP detection efficiency out of bounds (should be between 0 and 1.), or not a number.')
-        sys.exit('ERROR: SSP detection efficiency out of bounds (should be between 0 and 1.), or not a number.')
-    fillfactor=float(config["FILTERINGPARAMETERS"]['fillfactor'])
-    brightLimit=float(config["FILTERINGPARAMETERS"]['brightLimit'])
-    inSepThreshold=float(config["FILTERINGPARAMETERS"]['inSepThreshold'])
-    
-    
-    minTracklet=int(config["FILTERINGPARAMETERS"]['minTracklet'])    
-    if (minTracklet < 1 or isinstance(minTracklet,int)==False):
-        pplogger.error('ERROR: minimum length of tracklet is zero or negative, or not an integer.')
-        sys.exit('ERROR: minimum length of tracklet is zero or negative, or not an integer.')
-    noTracklets=int(config["FILTERINGPARAMETERS"]['noTracklets'])
-    if (noTracklets  < 1 or isinstance(noTracklets, int)== False):
-        pplogger.error('ERROR: number of tracklets is zero or less, or not an integer.')
-        sys.exit('ERROR: number of tracklets is zero or less, or not an integer.')
-    trackletInterval=float(config["FILTERINGPARAMETERS"]['trackletInterval'])
-    if (trackletInterval <= 0.0 or isinstance(trackletInterval,(float,int))==False):
-        logging.error('ERROR: tracklet appearance interval is negative, or not a number.')
-        sys.exit('ERROR: tracklet appearance interval is negative, or not a number.')
-    
-    pplogger.info('Simulated SSP detection efficienxy is ' + str(SSPDetectionEfficiency))
-    pplogger.info('The filling factor for the circular footprint is ' + str(fillfactor))
-    pplogger.info('The upper (saturation) limit is ' + str(brightLimit))
-    pplogger.info('For Solar System Processing, the minimum required number of observatrions in a tracklet is ' + str(minTracklet))
-    pplogger.info('For Solar System Processing, the minimum required number of tracklets is' + str(noTracklets))
-    pplogger.info('Fos Solar System Processing, the maximum interval of time in days of tracklets to be contained in is ' + str(trackletInterval))
-    pplogger.info('For Solar System Processing, the minimum angular separation between observations in arcseconds is ' + str(inSepThreshold))
-
-
-
-    outpath=PPGetOrExit(config, 'OUTPUTFORMAT', 'outpath', 'ERROR: out path not specified.')   
-    outfilestem=PPGetOrExit(config, 'OUTPUTFORMAT', 'outfilestem', 'ERROR: name of output file stem not specified.')    
-    outputformat=PPGetOrExit(config, 'OUTPUTFORMAT', 'outputformat', 'ERROR: output format not specified.')   
-    if (outputformat != 'csv') and (outputformat != 'sqlite3') and (outputformat != 'hdf5') and (outputformat != 'HDF5') and (outputformat != 'h5') :
-         sys.exit('ERROR: output format should be either csv, sqlite3 or hdf5.')
-    separatelyCSV=PPToBool(config["OUTPUTFORMAT"]['separatelyCSV'])
-    sizeSerialChunk = int(config["GENERAL"]['sizeSerialChunk'])
-    
-    if (makeIntermediatePointingDatabase == True):
-         PPMakeIntermediatePointingDatabase.PPMakeIntermediatePointingDatabase(oifoutput,'./data/interm.db', 100)
+    if (cmd_args['makeIntermediatePointingDatabase'] == True):
+         PPMakeIntermediatePointingDatabase.PPMakeIntermediatePointingDatabase(cmd_args['oifoutput'],'./data/interm.db', 100)
      
-    
     pplogger.info('Reading pointing database and Matching observationID with appropriate optical filter...')
-    filterpointing=PPMatchPointing.PPMatchPointing(pointingdatabase,resfilters,ppdbquery)
+    filterpointing=PPMatchPointing.PPMatchPointing(configs['pointingdatabase'],configs['resfilters'],configs['ppdbquery'])
     
-    logging.info('Instantiating random number generator ... ')
+    pplogger.info('Instantiating random number generator ... ')
     rng = np.random.default_rng(2021)
     
-    
-    ### In case of a large input file, the data is read in chunks. The "sizeSerialChunk" parameter in PPConfig.ini assigns the  chunk
+    ### In case of a large input file, the data is read in chunks. The "sizeSerialChunk" parameter in PPConfig.ini assigns the chunk.
     
     # Here, add loop which reads only a portion of input file to avoid memory overflow
     startChunk=0
@@ -202,29 +93,29 @@ def runPostProcessing():
     # number of rows in an entire orbit file
     
     ii=-1
-    with open(orbinfile) as f:
+    with open(cmd_args['orbinfile']) as f:
         for ii, l in enumerate(f):
             pass
     lenf=ii
     
     while(endChunk <= lenf):
-        endChunk=startChunk + sizeSerialChunk 
-        if (lenf-startChunk > sizeSerialChunk):
-             incrStep=sizeSerialChunk
+        endChunk=startChunk + configs['sizeSerialChunk'] 
+        if (lenf-startChunk > configs['sizeSerialChunk']):
+             incrStep=configs['sizeSerialChunk']
         else:
              incrStep=lenf-startChunk
         
         ### Processing begins, all processing is done for chunks
         
-        pplogger.info('Reading input orbit file: ' + orbinfile)
+        pplogger.info('Reading input orbit file: ' + cmd_args['orbinfile'])
         # The H given in the orbital DES file is omitted and erased; it is given in a separate brightness file instead
-        padaor=PPReadOrbitFile.PPReadOrbitFile(orbinfile, startChunk, incrStep, filesep)
+        padaor=PPReadOrbitFile.PPReadOrbitFile(cmd_args['orbinfile'], startChunk, incrStep, configs['filesep'])
         
-        pplogger.info('Reading input colours: ' + colourinput)
-        padacl=PPReadColours.PPReadColours(colourinput, startChunk, incrStep, filesep)
-        if (objecttype == 'comet'):
-            pplogger.info('Reading cometary parameters: ' + cometinput)
-            padaco=PPReadCometaryInput.PPReadCometaryInput(cometinput, startChunk, incrStep, filesep)
+        pplogger.info('Reading input colours: ' + cmd_args['colourinput'])
+        padacl=PPReadColours.PPReadColours(cmd_args['colourinput'], startChunk, incrStep, configs['filesep'])
+        if (configs['objecttype'] == 'comet'):
+            pplogger.info('Reading cometary parameters: ' + cmd_args['cometinput'])
+            padaco=PPReadCometaryInput.PPReadCometaryInput(cmd_args['cometinput'], startChunk, incrStep, configs['filesep'])
         
         objid_list = padacl['ObjID'].unique().tolist() 
 
@@ -232,14 +123,14 @@ def runPostProcessing():
         # write pointing history to database
         # select obj_id rows from tables 
         
-        if (makeIntermediatePointingDatabase == True):
+        if (cmd_args['makeIntermediatePointingDatabase'] == True):
             # read from intermediate database
             padafr=PPReadIntermDatabase.PPReadIntermDatabase('./data/interm.db', objid_list)
         else:   
             try: 
-                pplogger.info('Reading input pointing history: ' + oifoutput)
-                oifoutputsuffix = oifoutput.split('.')[-1]
-                padafr=PPReadOif.PPReadOif(oifoutput, pointingFormat)
+                pplogger.info('Reading input pointing history: ' + cmd_args['oifoutput'])
+                oifoutputsuffix = cmd_args['oifoutput'].split('.')[-1]
+                padafr=PPReadOif.PPReadOif(cmd_args['oifoutput'], configs["pointingFormat"])
                 
                 
                 padafr=padafr[padafr['ObjID'].isin(objid_list)]
@@ -248,14 +139,13 @@ def runPostProcessing():
                 pplogger.error('ERROR: insufficient memory. Try to run with -d True or reduce sizeSerialChunk.')
                 sys.exit('ERROR: insufficient memory. Try to run with -d True or reduce sizeSerialChunk.')
         
-    
         
         pplogger.info('Checking if orbit, brightness, colour/cometary and pointing simulation input files match...')
 
         PPCheckOrbitAndColoursMatching.PPCheckOrbitAndColoursMatching(padaor,padacl,padafr)
         ###PPCheckOrbitAndColoursMatching.PPCheckOrbitAndColoursMatching(padaor,padabr,padafr)
         
-        if (objecttype == 'comet'):
+        if (configs['objecttype'] == 'comet'):
             PPCheckOrbitAndColoursMatching.PPCheckOrbitAndColoursMatching(padaor,padaco,padafr)
             
         
@@ -263,28 +153,27 @@ def runPostProcessing():
         
         observations=PPJoinColourPointing.PPJoinColourPointing(padafr,padacl)
         observations=PPJoinOrbitalData.PPJoinOrbitalData(observations,padaor)
-        if (objecttype == 'comet'):
+        if (configs['objecttype'] == 'comet'):
             pplogger.info('Joining cometary data...')
             observations=PPJoinColourPointing.PPJoinColourPointing(observations,padaco)
 
- 
         
         # comets may have dashes in their names that mix things up
         observations['ObjID'] = observations['ObjID'].astype(str)
         #observations['ObjID'] = observations['ObjID'].str.replace('/','')
         
         pplogger.info('Calculating apparent magnitudes...')
-        observations=PPCalculateApparentMagnitude.PPCalculateApparentMagnitude(observations, phasefunction, mainfilter)        
+        observations=PPCalculateApparentMagnitude.PPCalculateApparentMagnitude(observations, configs['phasefunction'], configs['mainfilter'])        
         
 
-        if (objecttype=='comet'):
+        if (configs['objecttype']=='comet'):
              pplogger.info('Calculating cometary magnitude using a simple model...')
-             observations=PPCalculateSimpleCometaryMagnitude.PPCalculateSimpleCometaryMagnitude(observations, mainfilter)        
+             observations=PPCalculateSimpleCometaryMagnitude.PPCalculateSimpleCometaryMagnitude(observations, configs['mainfilter'])        
         
         pplogger.info('Hooking colour and brightness information...')
         i=0
-        while (i<len(othercolours)):
-             observations=PPhookBrightnessWithColour.PPhookBrightnessWithColour(observations, mainfilter, othercolours[i], resfilters[i+1])         
+        while (i<len(configs['othercolours'])):
+             observations=PPhookBrightnessWithColour.PPhookBrightnessWithColour(observations, configs['mainfilter'], configs['othercolours'][i], configs['resfilters'][i+1])         
              i=i+1
 
         observations=observations.reset_index(drop=True)
@@ -294,18 +183,18 @@ def runPostProcessing():
         
                 
         pplogger.info('Matching observationId with limiting magnitude and seeing...')
-        seeing, limiting_magnitude=PPMatchFieldConditions.PPMatchFieldConditions(pointingdatabase,ppdbquery)
+        seeing, limiting_magnitude=PPMatchFieldConditions.PPMatchFieldConditions(configs['pointingdatabase'],configs['ppdbquery'])
         
                
         pplogger.info('Dropping observations that are too bright...')
-        observations=PPBrightLimit.PPBrightLimit(observations,brightLimit)
+        observations=PPBrightLimit.PPBrightLimit(observations,configs['brightLimit'])
         
         ### The treatment is further divided by cameraModel: surfaceArea is a much simpler model, mimicking the fraction of the surface
         ### area not covered by chip gaps, whereas footprint takes into account the actual footprints
         
-        if (cameraModel == "circle"):
+        if (configs['cameraModel'] == "circle"):
             pplogger.info('Applying detection efficiency threshold...')
-            observations=PPFilterDetectionEfficiencyThreshold.PPFilterDetectionEfficiencyThreshold(observations,SSPDetectionEfficiency)
+            observations=PPFilterDetectionEfficiencyThreshold.PPFilterDetectionEfficiencyThreshold(observations,configs['SSPDetectionEfficiency'])
         
             if (trailingLossesOn == True):
                 pplogger.info('Calculating trailing losses...')
@@ -314,12 +203,12 @@ def runPostProcessing():
             else:
                 observations['dmagDetect']=0.0
                 
-            logging.info("Dropping faint detections... ")
+            pplogger.info("Dropping faint detections... ")
             observations.drop( np.where(observations["MagnitudeInFilter"] + observations["dmagDetect"] >= observations["fiveSigmaDepth"])[0], inplace=True)
             observations.reset_index(drop=True, inplace=True)
           
                 
-        elif (cameraModel == "footprint"):
+        elif (configs['cameraModel'] == "footprint"):
                     
             pplogger.info('Calculating probabilities of detections...')
             observations["detection_probability"] = PPDetectionProbability(observations, filterpointing)
@@ -335,8 +224,8 @@ def runPostProcessing():
             pplogger.info('Applying uncertainty to photometry...')
             observations["MagnitudeInFilter"] = PPRandomizeMeasurements.randomizePhotometry(observations, magName="MagnitudeInFilter", sigName="PhotometricSigma(mag)", rng=rng)
             
-            if (trailingLossesOn == True):
-                 logging.info('Calculating trailing losses...')
+            if (configs['trailingLossesOn'] == True):
+                 pplogger.info('Calculating trailing losses...')
                  observations['dmagDetect']=PPTrailingLoss.PPTrailingLoss(observations, filterpointing)
             else:
                 observations['dmagDetect']=0.0                 
@@ -355,6 +244,7 @@ def runPostProcessing():
                     
             pplogger.info('Applying sensor footprint filter...')
             #on_sensor=PPFootprintFilter.footPrintFilter(observations, filterpointing, detectors)#, ra_name="AstRATrue(deg)", dec_name="AstDecTrue(deg)")
+            footprintf = PPFootprintFilter.Footprint(configs['footprintPath'])
             onSensor, detectorIDs = footprintf.applyFootprint(observations, filterpointing)
             #observations=observations.iloc[on_sensor]       
             #observations=observations.astype({"FieldID": int})
@@ -376,8 +266,6 @@ def runPostProcessing():
                     
             observations.drop(columns=["AstrometricSigma(mas)"])
             
-        
-        
             pplogger.info('Number of rows BEFORE applying detection probability threshold: ' + str(len(observations.index)))
         
             pplogger.info('Dropping observations below detection threshold...')
@@ -389,50 +277,15 @@ def runPostProcessing():
         
         pplogger.info('Applying SSP criterion efficiency...')
 
-        observations=PPFilterSSPCriterionEfficiency.PPFilterSSPCriterionEfficiency(observations,minTracklet,noTracklets,trackletInterval,inSepThreshold)
+        observations=PPFilterSSPCriterionEfficiency.PPFilterSSPCriterionEfficiency(observations,configs['minTracklet'],configs['noTracklets'],configs['trackletInterval'],configs['inSepThreshold'])
         observations=observations.drop(['index'], axis='columns')
         
         pplogger.info('Number of rows AFTER applying SSP criterion threshold: ' + str(len(observations.index)))
 
+		# write output
+        PPWriteOutput(configs, observations, pplogger)
                 
-        
-        
-        
-    
-        pplogger.info('Constructing output path...')
-        if (outputformat == 'csv'):
-            outputsuffix='.csv'
-            if (separatelyCSV == True):
-                objid_list = observations['ObjID'].unique().tolist() 
-                pplogger.info('Output to ' + str(len(objid_list)) + ' separate output CSV files...')
-                i=0
-                while(i<len(objid_list)):
-                         single_object_df=pd.DataFrame(observations[observations['ObjID'] == objid_list[i]])
-                         out=outpath + str(objid_list[i]) + '_' + outfilestem + outputsuffix
-                         obsi=PPOutWriteCSV.PPOutWriteCSV(single_object_df,out)
-                         i=i+1
-            else:
-                out=outpath + outfilestem + outputsuffix
-                pplogger.info('Output to CSV file...')
-                observations=PPOutWriteCSV.PPOutWriteCSV(observations,out)
-            
-        elif (outputformat == 'sqlite3'):
-            outputsuffix='.db'
-            out=outpath + outfilestem + outputsuffix
-            pplogger.info('Output to sqlite3 database...')
-            observations=PPOutWriteSqlite3.PPOutWriteSqlite3(observations,out)   
-        elif (outputformat == 'hdf5' or outputformat=='HDF5'):
-            outputsuffix=".h5"   
-            out=outpath + outfilestem + outputsuffix
-            pplogger.info('Output to HDF5 binary file...')
-            observations=PPOutWriteHDF5.PPOutWriteHDF5(observations,out,str(endChunk))    
-            
-                        
-        else:
-            pplogger.error('ERROR: unknown output format.')
-            sys.exit('ERROR: unknown output format.')
-        
-        startChunk = startChunk + sizeSerialChunk
+        startChunk = startChunk + configs['sizeSerialChunk']
         # end for
     
     pplogger.info('Post processing completed.')
@@ -441,8 +294,8 @@ if __name__=='__main__':
 
      parser = argparse.ArgumentParser()
      parser.add_argument("-c", "--config", help="Input configuration file name", type=str, dest='c', default='./PPConfig.ini')
-     parser.add_argument("-d", help="Make intermediate pointing database", type=str, dest='d', default=False)
-     parser.add_argument("-m", "--comet", help="Comet parameter file name", type=str, dest='m', default='./data/comet')
+     parser.add_argument("-d", help="Make intermediate pointing database", dest='d', action='store_true')
+     parser.add_argument("-m", "--comet", help="Comet parameter file name", type=str, dest='m')
      parser.add_argument("-l", "--colour", "--color", help="Colour file name", type=str, dest='l', default='./data/colour')
      parser.add_argument("-o", "--orbit", help="Orbit file name", type=str, dest='o', default='./data/orbit.des')
      parser.add_argument("-p", "--pointing", help="Pointing simulation output file name", type=str, dest='p', default='./data/oiftestoutput')
