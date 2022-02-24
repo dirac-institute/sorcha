@@ -20,4 +20,4 @@ Documentation: https://survey-simulator-post-processing.readthedocs.io/en/latest
 
 
 ## Collaboration
-This effort is a collaboration between the University of Washington, Queen's University Belfast, and the University of Illinois at Urbana-Champaign
+This effort is a collaboration between the University of Washington's DIRAC Institute, Queen's University Belfast, and the University of Illinois at Urbana-Champaign
