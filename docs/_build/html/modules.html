@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
-
+  <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>modules package &mdash; Solar System Survey Simulator Post Processing 0.0.1 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -19,7 +18,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="modules.tests package" href="modules.tests.html" />
-    <link rel="prev" title="Support" href="support.html" /> 
+    <link rel="prev" title="Acknowledgements" href="acknowledgements.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -39,8 +38,13 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usingoif.html">Using Objects In Field</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gettingstarted.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
 <li class="toctree-l1"><a class="reference internal" href="support.html">Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="acknowledgements.html">Acknowledgements</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Documentation:</span></p>
 <ul class="current">
@@ -51,9 +55,9 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-modules.PPAddUncertainties">modules.PPAddUncertainties module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#modules-ppappmag-to-module">modules.PPAppmag_to module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-modules.PPAppmag_to">modules.PPAppmag_to module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-modules.PPBrightLimit">modules.PPBrightLimit module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#modules-ppcalculateapparentmagnitude-module">modules.PPCalculateApparentMagnitude module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-modules.PPCalculateApparentMagnitude">modules.PPCalculateApparentMagnitude module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-modules.PPCalculateSimpleCometaryMagnitude">modules.PPCalculateSimpleCometaryMagnitude module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-modules.PPCheckOrbitAndColoursMatching">modules.PPCheckOrbitAndColoursMatching module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-modules.PPDetectionProbability">modules.PPDetectionProbability module</a></li>
@@ -114,9 +118,9 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="modules-package">
+  <div class="section" id="modules-package">
 <h1>modules package<a class="headerlink" href="#modules-package" title="Permalink to this headline"></a></h1>
-<section id="subpackages">
+<div class="section" id="subpackages">
 <h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline"></a></h2>
 <div class="toctree-wrapper compound">
 <ul>
@@ -153,11 +157,11 @@
 </li>
 </ul>
 </div>
-</section>
-<section id="submodules">
+</div>
+<div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline"></a></h2>
-</section>
-<section id="module-modules.PPAddUncertainties">
+</div>
+<div class="section" id="module-modules.PPAddUncertainties">
 <span id="modules-ppadduncertainties-module"></span><h2>modules.PPAddUncertainties module<a class="headerlink" href="#module-modules.PPAddUncertainties" title="Permalink to this headline"></a></h2>
 <p>Calculate Astrometric and Photometric Uncertainties for ground based observations.</p>
 <dl class="py function">
@@ -270,11 +274,96 @@ practice to empirically account for other error sources.</p>
 <p>numpy as np</p>
 </dd></dl>
 
-</section>
-<section id="modules-ppappmag-to-module">
-<h2>modules.PPAppmag_to module<a class="headerlink" href="#modules-ppappmag-to-module" title="Permalink to this headline"></a></h2>
-</section>
-<section id="module-modules.PPBrightLimit">
+</div>
+<div class="section" id="module-modules.PPAppmag_to">
+<span id="modules-ppappmag-to-module"></span><h2>modules.PPAppmag_to module<a class="headerlink" href="#module-modules.PPAppmag_to" title="Permalink to this headline"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="modules.PPAppmag_to.appMagFitterHG">
+<span class="sig-prename descclassname"><span class="pre">modules.PPAppmag_to.</span></span><span class="sig-name descname"><span class="pre">appMagFitterHG</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mag_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weights</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.PPAppmag_to.appMagFitterHG" title="Permalink to this definition"></a></dt>
+<dd><p>Fit visual apparent magnitude values to H-magnitude values using the HG system and LevMarLSQFitter</p>
+<dl class="simple">
+<dt>mag_list: array</dt><dd><p>visual color corrected (all the same band color/filter) apparent magnitudes to be fitted</p>
+</dd>
+<dt>a: array</dt><dd><p>corresponding phase angles to the apparent magnitude observations in radians</p>
+</dd>
+<dt>weights: array</dt><dd><p>weights to be used in the fitting process, used (magSigma)^-2 before, can be optional</p>
+</dd>
+</dl>
+<p>numpy array of values returned by the fit, Values listed in order,</p>
+<dl class="simple">
+<dt>var.H.value: float</dt><dd><p>The fitted H-magnitude value</p>
+</dd>
+<dt>var.G.value: float</dt><dd><p>The G parameter from the fit</p>
+</dd>
+<dt>H_err: float</dt><dd><p>Error in fitting the H value</p>
+</dd>
+<dt>G_err: float</dt><dd><p>Error in fitting the G value</p>
+</dd>
+<dt>H_G_cov: float</dt><dd><p>Covariance of the HG fit</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="modules.PPAppmag_to.appMagFitterHG12">
+<span class="sig-prename descclassname"><span class="pre">modules.PPAppmag_to.</span></span><span class="sig-name descname"><span class="pre">appMagFitterHG12</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mag_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weights</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.PPAppmag_to.appMagFitterHG12" title="Permalink to this definition"></a></dt>
+<dd><p>Fit visual apparent magnitude values to H-magnitude values using the HG12 system and LevMarLSQFitter</p>
+<dl class="simple">
+<dt>mag_list: array</dt><dd><p>visual color corrected (all the same band color/filter) apparent magnitudes to be fitted</p>
+</dd>
+<dt>a: array</dt><dd><p>corresponding phase angles to the apparent magnitude observations in radians</p>
+</dd>
+<dt>weights: array</dt><dd><p>weights to be used in the fitting process, used (magSigma)^-2 before, can be optional</p>
+</dd>
+</dl>
+<p>numpy array of values returned by the fit, Values listed in order,</p>
+<dl class="simple">
+<dt>var.H.value: float</dt><dd><p>The fitted H-magnitude value</p>
+</dd>
+<dt>var.G12.value: float</dt><dd><p>The G12 parameter from the fit</p>
+</dd>
+<dt>H_err: float</dt><dd><p>Error in fitting the H value</p>
+</dd>
+<dt>G12_err: float</dt><dd><p>Error in fitting the G12 value</p>
+</dd>
+<dt>H_G12_cov: float</dt><dd><p>Covariance of the HG12 fit</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="modules.PPAppmag_to.appMagFitterHG1G2">
+<span class="sig-prename descclassname"><span class="pre">modules.PPAppmag_to.</span></span><span class="sig-name descname"><span class="pre">appMagFitterHG1G2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mag_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weights</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.PPAppmag_to.appMagFitterHG1G2" title="Permalink to this definition"></a></dt>
+<dd><p>Fit visual apparent magnitude values to H-magnitude values using the HG1G2 system and LevMarLSQFitter</p>
+<dl class="simple">
+<dt>mag_list: array</dt><dd><p>visual color corrected (all the same band color/filter) apparent magnitudes to be fitted</p>
+</dd>
+<dt>a: array</dt><dd><p>corresponding phase angles to the apparent magnitude observations in radians</p>
+</dd>
+<dt>weights: array</dt><dd><p>weights to be used in the fitting process, used (magSigma)^-2 before, can be optional</p>
+</dd>
+</dl>
+<p>numpy array of values returned by the fit, Values listed in order,</p>
+<dl class="simple">
+<dt>var.H.value: float</dt><dd><p>The fitted H-magnitude value</p>
+</dd>
+<dt>var.G1.value: float</dt><dd><p>The G1 parameter from the fit</p>
+</dd>
+<dt>var.G2.value: float</dt><dd><p>The G2 parameter from the fit</p>
+</dd>
+<dt>H_err: float</dt><dd><p>Error in fitting the H value</p>
+</dd>
+<dt>G1_err: float</dt><dd><p>Error in fitting the G1 value</p>
+</dd>
+<dt>G2_err: float</dt><dd><p>Error in fitting the G2 value</p>
+</dd>
+<dt>H_G1G2_cov: float</dt><dd><p>Covariance of the HG1G2 fit</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-modules.PPBrightLimit">
 <span id="modules-ppbrightlimit-module"></span><h2>modules.PPBrightLimit module<a class="headerlink" href="#module-modules.PPBrightLimit" title="Permalink to this headline"></a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="modules.PPBrightLimit.PPBrightLimit">
@@ -287,11 +376,40 @@ upperlimit: float, upper limit for ColinFil column value in padain dataframe</p>
 <p>Output: pandas dataframe (modified)</p>
 </dd></dl>
 
-</section>
-<section id="modules-ppcalculateapparentmagnitude-module">
-<h2>modules.PPCalculateApparentMagnitude module<a class="headerlink" href="#modules-ppcalculateapparentmagnitude-module" title="Permalink to this headline"></a></h2>
-</section>
-<section id="module-modules.PPCalculateSimpleCometaryMagnitude">
+</div>
+<div class="section" id="module-modules.PPCalculateApparentMagnitude">
+<span id="modules-ppcalculateapparentmagnitude-module"></span><h2>modules.PPCalculateApparentMagnitude module<a class="headerlink" href="#module-modules.PPCalculateApparentMagnitude" title="Permalink to this headline"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="modules.PPCalculateApparentMagnitude.PPCalculateApparentMagnitude">
+<span class="sig-prename descclassname"><span class="pre">modules.PPCalculateApparentMagnitude.</span></span><span class="sig-name descname"><span class="pre">PPCalculateApparentMagnitude</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">padain</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">function</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mainfilter</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.PPCalculateApparentMagnitude.PPCalculateApparentMagnitude" title="Permalink to this definition"></a></dt>
+<dd><p>PPCalculateApparentMagnitude.py</p>
+<p>Description: This task calculates the apparent brightness of an 
+object in the mail filter (as defined in the config file) at a given pointing
+according to one of the following photometric phase function models:</p>
+<blockquote>
+<div><p>HG:                Bowell et al. (1989) Asteroids II book.
+HG1G2:             Muinonen et al. (2010) Icarus 209 542.
+HG12:              Penttilä et al. (2016) PSS 123 117.
+linear             (as implemented in sbpy)</p>
+</div></blockquote>
+<p>The brightness is here calculated in the main filter, and the colour offset is
+applied later using the PPhookBrightnessWithColour function.</p>
+<p>The function makes use of the implementations in the sbpy library.</p>
+<dl class="simple">
+<dt>Mandatory input:      string, padain, name of input pandas daraframe  </dt><dd><dl class="simple">
+<dt>string, function, selected photometric phase function</dt><dd><p>(HG, HG1G2, HG12, linear)</p>
+</dd>
+<dt>string, mainfilter, name of the main filter in which</dt><dd><p>the brightness is calculated</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p>Output:        updated padain</p>
+<p>usage: padaout=PPCalculateApparentMagnitude(padain, function, mainfilter):</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-modules.PPCalculateSimpleCometaryMagnitude">
 <span id="modules-ppcalculatesimplecometarymagnitude-module"></span><h2>modules.PPCalculateSimpleCometaryMagnitude module<a class="headerlink" href="#module-modules.PPCalculateSimpleCometaryMagnitude" title="Permalink to this headline"></a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="modules.PPCalculateSimpleCometaryMagnitude.PPCalculateSimpleCometaryMagnitude">
@@ -312,8 +430,8 @@ applied later using the PPhookBrightnessWithColour function.</p>
 <p>usage: padaout=PPCalculateSimpleCometaryMagnitude(padain)</p>
 </dd></dl>
 
-</section>
-<section id="module-modules.PPCheckOrbitAndColoursMatching">
+</div>
+<div class="section" id="module-modules.PPCheckOrbitAndColoursMatching">
 <span id="modules-ppcheckorbitandcoloursmatching-module"></span><h2>modules.PPCheckOrbitAndColoursMatching module<a class="headerlink" href="#module-modules.PPCheckOrbitAndColoursMatching" title="Permalink to this headline"></a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="modules.PPCheckOrbitAndColoursMatching.PPCheckOrbitAndColoursMatching">
@@ -330,8 +448,8 @@ pandas dataframe: poiin – pointing database</p>
 <p>Usage: PPCheckOrbitAndColoursMatching(orbin,colin,poiin)</p>
 </dd></dl>
 
-</section>
-<section id="module-modules.PPDetectionProbability">
+</div>
+<div class="section" id="module-modules.PPDetectionProbability">
 <span id="modules-ppdetectionprobability-module"></span><h2>modules.PPDetectionProbability module<a class="headerlink" href="#module-modules.PPDetectionProbability" title="Permalink to this headline"></a></h2>
 <p>Calculate probability of detection due to fading</p>
 <dl class="py function">
@@ -346,8 +464,8 @@ fillFactor      … fraction of the field of view covered by sensors.
 w               … distribution parameter</p>
 </dd></dl>
 
-</section>
-<section id="module-modules.PPDropObservations">
+</div>
+<div class="section" id="module-modules.PPDropObservations">
 <span id="modules-ppdropobservations-module"></span><h2>modules.PPDropObservations module<a class="headerlink" href="#module-modules.PPDropObservations" title="Permalink to this headline"></a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="modules.PPDropObservations.PPDropObservations">
@@ -359,8 +477,8 @@ probability  … name of the column containing the probability of detection</p>
 <p>out … new dataframe without observations that could not be observed</p>
 </dd></dl>
 
-</section>
-<section id="module-modules.PPFilterDetectionEfficiencyThreshold">
+</div>
+<div class="section" id="module-modules.PPFilterDetectionEfficiencyThreshold">
 <span id="modules-ppfilterdetectionefficiencythreshold-module"></span><h2>modules.PPFilterDetectionEfficiencyThreshold module<a class="headerlink" href="#module-modules.PPFilterDetectionEfficiencyThreshold" title="Permalink to this headline"></a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="modules.PPFilterDetectionEfficiencyThreshold.PPFilterDetectionEfficiencyThreshold">
@@ -375,8 +493,8 @@ pre-determined acceptance threshold (between 0 and 1).</p>
 <p>Output: pandas dataframe (modified)</p>
 </dd></dl>
 
-</section>
-<section id="module-modules.PPFilterSSPCriterionEfficiency">
+</div>
+<div class="section" id="module-modules.PPFilterSSPCriterionEfficiency">
 <span id="modules-ppfiltersspcriterionefficiency-module"></span><h2>modules.PPFilterSSPCriterionEfficiency module<a class="headerlink" href="#module-modules.PPFilterSSPCriterionEfficiency" title="Permalink to this headline"></a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="modules.PPFilterSSPCriterionEfficiency.PPFilterSSPCriterionEfficiency">
@@ -406,8 +524,8 @@ between images</p>
 <p>usage: padafr=PPFilterSSPCriterionEfficiency(padain,minintracklet,nooftracklets,intervaltime, inSepThresHoldAsec)</p>
 </dd></dl>
 
-</section>
-<section id="module-modules.PPFootprintFilter">
+</div>
+<div class="section" id="module-modules.PPFootprintFilter">
 <span id="modules-ppfootprintfilter-module"></span><h2>modules.PPFootprintFilter module<a class="headerlink" href="#module-modules.PPFootprintFilter" title="Permalink to this headline"></a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="modules.PPFootprintFilter.footPrintFilter">
@@ -428,8 +546,8 @@ survey              … pandas dataframe containing fieldID, field center ra</p>
 <p>detectedObs         … mask for observations that will return detected observations.</p>
 </dd></dl>
 
-</section>
-<section id="module-modules.PPJoinColourPointing">
+</div>
+<div class="section" id="module-modules.PPJoinColourPointing">
 <span id="modules-ppjoincolourpointing-module"></span><h2>modules.PPJoinColourPointing module<a class="headerlink" href="#module-modules.PPJoinColourPointing" title="Permalink to this headline"></a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="modules.PPJoinColourPointing.PPJoinColourPointing">
@@ -443,8 +561,8 @@ be populate the fields for the missing objects.</p>
 <p>usage: padafr1=PPJoinColourPointing(padafr,padacl)</p>
 </dd></dl>
 
-</section>
-<section id="module-modules.PPJoinCometaryWithOrbits">
+</div>
+<div class="section" id="module-modules.PPJoinCometaryWithOrbits">
 <span id="modules-ppjoincometarywithorbits-module"></span><h2>modules.PPJoinCometaryWithOrbits module<a class="headerlink" href="#module-modules.PPJoinCometaryWithOrbits" title="Permalink to this headline"></a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="modules.PPJoinCometaryWithOrbits.PPJoinCometaryWithOrbits">
@@ -458,8 +576,8 @@ be populate the fields for the missing objects.</p>
 <p>usage: padafr1=PPPJoinCometaryWithOrbits(padafr,padaor)</p>
 </dd></dl>
 
-</section>
-<section id="module-modules.PPMakeIntermediatePointingDatabase">
+</div>
+<div class="section" id="module-modules.PPMakeIntermediatePointingDatabase">
 <span id="modules-ppmakeintermediatepointingdatabase-module"></span><h2>modules.PPMakeIntermediatePointingDatabase module<a class="headerlink" href="#module-modules.PPMakeIntermediatePointingDatabase" title="Permalink to this headline"></a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="modules.PPMakeIntermediatePointingDatabase.PPMakeIntermediatePointingDatabase">
@@ -478,8 +596,8 @@ int, chunkSize,</p>
 </div></blockquote>
 </dd></dl>
 
-</section>
-<section id="module-modules.PPMatchFieldConditions">
+</div>
+<div class="section" id="module-modules.PPMatchFieldConditions">
 <span id="modules-ppmatchfieldconditions-module"></span><h2>modules.PPMatchFieldConditions module<a class="headerlink" href="#module-modules.PPMatchFieldConditions" title="Permalink to this headline"></a></h2>
 <p>Extracts observation ID, limiting magnitude, and seeing from survey database, 
 returing them as a 3*n pandas database.</p>
@@ -493,8 +611,8 @@ returing them as a 3*n pandas database.</p>
 </dl>
 </dd></dl>
 
-</section>
-<section id="module-modules.PPMatchPointing">
+</div>
+<div class="section" id="module-modules.PPMatchPointing">
 <span id="modules-ppmatchpointing-module"></span><h2>modules.PPMatchPointing module<a class="headerlink" href="#module-modules.PPMatchPointing" title="Permalink to this headline"></a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="modules.PPMatchPointing.PPMatchPointing">
@@ -510,8 +628,8 @@ observationsStartMJD, used filter and three seeing parameters at a given pointin
 <p>usage: padafr=PPMatchPointing(bsdbname,resfilters)</p>
 </dd></dl>
 
-</section>
-<section id="module-modules.PPMatchPointingsAndColours">
+</div>
+<div class="section" id="module-modules.PPMatchPointingsAndColours">
 <span id="modules-ppmatchpointingsandcolours-module"></span><h2>modules.PPMatchPointingsAndColours module<a class="headerlink" href="#module-modules.PPMatchPointingsAndColours" title="Permalink to this headline"></a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="modules.PPMatchPointingsAndColours.PPMatchPointingsAndColours">
@@ -532,8 +650,8 @@ pointing and filter dataframe (pandas dataframe)</p>
 <p>usage: padafr=PPMatchPointingsAndColours(padain,pointfildb)</p>
 </dd></dl>
 
-</section>
-<section id="module-modules.PPOutWriteCSV">
+</div>
+<div class="section" id="module-modules.PPOutWriteCSV">
 <span id="modules-ppoutwritecsv-module"></span><h2>modules.PPOutWriteCSV module<a class="headerlink" href="#module-modules.PPOutWriteCSV" title="Permalink to this headline"></a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="modules.PPOutWriteCSV.PPOutWriteCSV">
@@ -545,8 +663,8 @@ pointing and filter dataframe (pandas dataframe)</p>
 <p>usage: padafr=PPOutWriteCSV(padain,outf)</p>
 </dd></dl>
 
-</section>
-<section id="module-modules.PPOutWriteHDF5">
+</div>
+<div class="section" id="module-modules.PPOutWriteHDF5">
 <span id="modules-ppoutwritehdf5-module"></span><h2>modules.PPOutWriteHDF5 module<a class="headerlink" href="#module-modules.PPOutWriteHDF5" title="Permalink to this headline"></a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="modules.PPOutWriteHDF5.PPOutWriteHDF5">
@@ -558,8 +676,8 @@ pointing and filter dataframe (pandas dataframe)</p>
 <p>usage: padafr=PPOutWriteHDF5(padain,outf)</p>
 </dd></dl>
 
-</section>
-<section id="module-modules.PPOutWriteSqlite3">
+</div>
+<div class="section" id="module-modules.PPOutWriteSqlite3">
 <span id="modules-ppoutwritesqlite3-module"></span><h2>modules.PPOutWriteSqlite3 module<a class="headerlink" href="#module-modules.PPOutWriteSqlite3" title="Permalink to this headline"></a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="modules.PPOutWriteSqlite3.PPOutWriteSqlite3">
@@ -571,8 +689,8 @@ pointing and filter dataframe (pandas dataframe)</p>
 <p>usage: padafr=PPOutWriteSqlite3(padain,outf)</p>
 </dd></dl>
 
-</section>
-<section id="module-modules.PPRandomize">
+</div>
+<div class="section" id="module-modules.PPRandomize">
 <span id="modules-pprandomize-module"></span><h2>modules.PPRandomize module<a class="headerlink" href="#module-modules.PPRandomize" title="Permalink to this headline"></a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="modules.PPRandomize.randomizeAstrometry">
@@ -598,8 +716,8 @@ pointing and filter dataframe (pandas dataframe)</p>
 <p>ephemsOut  … ephems Pandas dataFrame with photometric values modifed</p>
 </dd></dl>
 
-</section>
-<section id="module-modules.PPRandomizeMeasurements">
+</div>
+<div class="section" id="module-modules.PPRandomizeMeasurements">
 <span id="modules-pprandomizemeasurements-module"></span><h2>modules.PPRandomizeMeasurements module<a class="headerlink" href="#module-modules.PPRandomizeMeasurements" title="Permalink to this headline"></a></h2>
 <p>Calculate Astrometric and Photometric Uncertainties for ground based observations and randomize OIF measurements accordingly.</p>
 <dl class="py function">
@@ -646,7 +764,7 @@ deg … True: angles in degrees, False: angles in radians</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="modules.PPRandomizeMeasurements.randomizeAstrometry">
-<span class="sig-prename descclassname"><span class="pre">modules.PPRandomizeMeasurements.</span></span><span class="sig-name descname"><span class="pre">randomizeAstrometry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">df</span></em>, <em class="sig-param"><span class="pre">rng=Generator(PCG64)</span> <span class="pre">at</span> <span class="pre">0x7F9688FCDE40</span></em>, <em class="sig-param"><span class="pre">raName='AstRA(deg)'</span></em>, <em class="sig-param"><span class="pre">decName='AstDec(deg)'</span></em>, <em class="sig-param"><span class="pre">raRndName='AstRARnd(deg)'</span></em>, <em class="sig-param"><span class="pre">decRndName='AstDecRnd(deg)'</span></em>, <em class="sig-param"><span class="pre">sigName='AstSig(deg)'</span></em>, <em class="sig-param"><span class="pre">units='deg'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.PPRandomizeMeasurements.randomizeAstrometry" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">modules.PPRandomizeMeasurements.</span></span><span class="sig-name descname"><span class="pre">randomizeAstrometry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">df</span></em>, <em class="sig-param"><span class="pre">rng=Generator(PCG64)</span> <span class="pre">at</span> <span class="pre">0x7FA76C23D9E0</span></em>, <em class="sig-param"><span class="pre">raName='AstRA(deg)'</span></em>, <em class="sig-param"><span class="pre">decName='AstDec(deg)'</span></em>, <em class="sig-param"><span class="pre">raRndName='AstRARnd(deg)'</span></em>, <em class="sig-param"><span class="pre">decRndName='AstDecRnd(deg)'</span></em>, <em class="sig-param"><span class="pre">sigName='AstSig(deg)'</span></em>, <em class="sig-param"><span class="pre">units='deg'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.PPRandomizeMeasurements.randomizeAstrometry" title="Permalink to this definition"></a></dt>
 <dd><p>Randomize astrometry with a normal distribution around the actual RADEC pointing.
 The randomized values are added to the input pandas data frame.</p>
 <p>df    … pandas DataFrame containing astrometry and sigma.
@@ -676,7 +794,7 @@ obsdf    … Pandas dataFrame containing survey simulator output such as LSST op
 
 <dl class="py function">
 <dt class="sig sig-object py" id="modules.PPRandomizeMeasurements.randomizePhotometry">
-<span class="sig-prename descclassname"><span class="pre">modules.PPRandomizeMeasurements.</span></span><span class="sig-name descname"><span class="pre">randomizePhotometry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">df</span></em>, <em class="sig-param"><span class="pre">magName='Filtermag'</span></em>, <em class="sig-param"><span class="pre">magRndName='FiltermagRnd'</span></em>, <em class="sig-param"><span class="pre">sigName='FiltermagSig'</span></em>, <em class="sig-param"><span class="pre">rng=Generator(PCG64)</span> <span class="pre">at</span> <span class="pre">0x7F9688FCDE40</span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.PPRandomizeMeasurements.randomizePhotometry" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">modules.PPRandomizeMeasurements.</span></span><span class="sig-name descname"><span class="pre">randomizePhotometry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">df</span></em>, <em class="sig-param"><span class="pre">magName='Filtermag'</span></em>, <em class="sig-param"><span class="pre">magRndName='FiltermagRnd'</span></em>, <em class="sig-param"><span class="pre">sigName='FiltermagSig'</span></em>, <em class="sig-param"><span class="pre">rng=Generator(PCG64)</span> <span class="pre">at</span> <span class="pre">0x7FA76C23D9E0</span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.PPRandomizeMeasurements.randomizePhotometry" title="Permalink to this definition"></a></dt>
 <dd><p>Randomize photometry with normal distribution around magName value.</p>
 <p>df         … pandas DataFrame containing photometric data
 magName    … column name of photometric data [mag]
@@ -689,7 +807,7 @@ Should be fixed at some point.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="modules.PPRandomizeMeasurements.sampleNormalFOV">
-<span class="sig-prename descclassname"><span class="pre">modules.PPRandomizeMeasurements.</span></span><span class="sig-name descname"><span class="pre">sampleNormalFOV</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">center</span></em>, <em class="sig-param"><span class="pre">sigma</span></em>, <em class="sig-param"><span class="pre">ndim=3</span></em>, <em class="sig-param"><span class="pre">rng=Generator(PCG64)</span> <span class="pre">at</span> <span class="pre">0x7F9688FCDE40</span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.PPRandomizeMeasurements.sampleNormalFOV" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">modules.PPRandomizeMeasurements.</span></span><span class="sig-name descname"><span class="pre">sampleNormalFOV</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">center</span></em>, <em class="sig-param"><span class="pre">sigma</span></em>, <em class="sig-param"><span class="pre">ndim=3</span></em>, <em class="sig-param"><span class="pre">rng=Generator(PCG64)</span> <span class="pre">at</span> <span class="pre">0x7FA76C23D9E0</span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.PPRandomizeMeasurements.sampleNormalFOV" title="Permalink to this definition"></a></dt>
 <dd><p>Sample n points randomly (normal distribution) on a region on the unit (hyper-)sphere.</p>
 <p>center  … center of hpyer-sphere (float, ndim); can be an [n, ndim] dimensional array, but only if n == npoints</p>
 <p>sigma   … 1 sigma distance on unit sphere [radians], [n] dimensional array
@@ -698,8 +816,8 @@ seed    … random seed (int)</p>
 <p>vec … numpy array [npoints, ndim]</p>
 </dd></dl>
 
-</section>
-<section id="module-modules.PPReadBrightness">
+</div>
+<div class="section" id="module-modules.PPReadBrightness">
 <span id="modules-ppreadbrightness-module"></span><h2>modules.PPReadBrightness module<a class="headerlink" href="#module-modules.PPReadBrightness" title="Permalink to this headline"></a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="modules.PPReadBrightness.PPReadBrightness">
@@ -722,8 +840,8 @@ string, filesep, separator used in input file, blank or comma</p>
 <p>usage: padafr=PPReadBrightness(br_datafile, beginLoc, chunkSize,filesep)</p>
 </dd></dl>
 
-</section>
-<section id="module-modules.PPReadColours">
+</div>
+<div class="section" id="module-modules.PPReadColours">
 <span id="modules-ppreadcolours-module"></span><h2>modules.PPReadColours module<a class="headerlink" href="#module-modules.PPReadColours" title="Permalink to this headline"></a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="modules.PPReadColours.PPReadColours">
@@ -743,8 +861,8 @@ string, filesep, separator used in input file, blank or comma</p>
 <p>usage: padafr=PPReadColours(clr_datafile, beginLoc, chunkSize,filesep)</p>
 </dd></dl>
 
-</section>
-<section id="module-modules.PPReadCometaryInput">
+</div>
+<div class="section" id="module-modules.PPReadCometaryInput">
 <span id="modules-ppreadcometaryinput-module"></span><h2>modules.PPReadCometaryInput module<a class="headerlink" href="#module-modules.PPReadCometaryInput" title="Permalink to this headline"></a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="modules.PPReadCometaryInput.PPReadCometaryInput">
@@ -766,8 +884,8 @@ string, filesep, separator used in input file, blank or comma</p>
 <p>usage: padafr=PPReadCometaryInput(comet_datafile, beginLoc, chunkSize)</p>
 </dd></dl>
 
-</section>
-<section id="module-modules.PPReadIntermDatabase">
+</div>
+<div class="section" id="module-modules.PPReadIntermDatabase">
 <span id="modules-ppreadintermdatabase-module"></span><h2>modules.PPReadIntermDatabase module<a class="headerlink" href="#module-modules.PPReadIntermDatabase" title="Permalink to this headline"></a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="modules.PPReadIntermDatabase.PPReadIntermDatabase">
@@ -783,8 +901,8 @@ by a subset of object ids, and outputs a pandas dataframe.</p>
 <p>usage: padafr=PPReadIntermDatabase(intermdb,part_objid_list)</p>
 </dd></dl>
 
-</section>
-<section id="module-modules.PPReadOif">
+</div>
+<div class="section" id="module-modules.PPReadOif">
 <span id="modules-ppreadoif-module"></span><h2>modules.PPReadOif module<a class="headerlink" href="#module-modules.PPReadOif" title="Permalink to this headline"></a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="modules.PPReadOif.PPReadOif">
@@ -805,8 +923,8 @@ string, suffix, file extension of input file, either csv, txt or h5 (hdf5, HDF5)
 <p>usage: padafr=PPReadOif(oif_output,filesep)</p>
 </dd></dl>
 
-</section>
-<section id="module-modules.PPReadOrbitFile">
+</div>
+<div class="section" id="module-modules.PPReadOrbitFile">
 <span id="modules-ppreadorbitfile-module"></span><h2>modules.PPReadOrbitFile module<a class="headerlink" href="#module-modules.PPReadOrbitFile" title="Permalink to this headline"></a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="modules.PPReadOrbitFile.PPReadOrbitFile">
@@ -823,8 +941,8 @@ string, filesep, separator used in input file, blank or comma</p>
 <p>Usage: padafr=PPreadOrbitFile(orbin, beginLoc, chunkSize, filesep)</p>
 </dd></dl>
 
-</section>
-<section id="module-modules.PPSimpleSensorArea">
+</div>
+<div class="section" id="module-modules.PPSimpleSensorArea">
 <span id="modules-ppsimplesensorarea-module"></span><h2>modules.PPSimpleSensorArea module<a class="headerlink" href="#module-modules.PPSimpleSensorArea" title="Permalink to this headline"></a></h2>
 <p>Remove a portion of the observations to simulate the losses due to gaps between
 CCD chips and rafts on the sensor.</p>
@@ -838,8 +956,8 @@ fillfactor … fraction of FOV covered by the sensor</p>
 <p>ephemsOut  … pandas dataFrame</p>
 </dd></dl>
 
-</section>
-<section id="module-modules.PPTrailingLoss">
+</div>
+<div class="section" id="module-modules.PPTrailingLoss">
 <span id="modules-pptrailingloss-module"></span><h2>modules.PPTrailingLoss module<a class="headerlink" href="#module-modules.PPTrailingLoss" title="Permalink to this headline"></a></h2>
 <p>Calculate Astrometric and Photometric Uncertainties for ground based observations.</p>
 <dl class="py function">
@@ -848,8 +966,8 @@ fillfactor … fraction of FOV covered by the sensor</p>
 <dd><p>Calculates Detection trailing loss for objectInField output.</p>
 </dd></dl>
 
-</section>
-<section id="module-modules.PPTranslateMagnitude">
+</div>
+<div class="section" id="module-modules.PPTranslateMagnitude">
 <span id="modules-pptranslatemagnitude-module"></span><h2>modules.PPTranslateMagnitude module<a class="headerlink" href="#module-modules.PPTranslateMagnitude" title="Permalink to this headline"></a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="modules.PPTranslateMagnitude.PPTranslateMagnitude">
@@ -865,8 +983,8 @@ colors       …   pandas table containing color difference between V band</p>
 <p>MaginFil     …   pandas series containing translated magnitudes</p>
 </dd></dl>
 
-</section>
-<section id="module-modules.PPVignetting">
+</div>
+<div class="section" id="module-modules.PPVignetting">
 <span id="modules-ppvignetting-module"></span><h2>modules.PPVignetting module<a class="headerlink" href="#module-modules.PPVignetting" title="Permalink to this headline"></a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="modules.PPVignetting.calcVignettingLosses">
@@ -897,8 +1015,8 @@ returns the magnitudes of dimming caused by the vingetting relative to the cente
 the magnitude losses due to vignetting.</p>
 </dd></dl>
 
-</section>
-<section id="module-modules.PPhookBrightnessWithColour">
+</div>
+<div class="section" id="module-modules.PPhookBrightnessWithColour">
 <span id="modules-pphookbrightnesswithcolour-module"></span><h2>modules.PPhookBrightnessWithColour module<a class="headerlink" href="#module-modules.PPhookBrightnessWithColour" title="Permalink to this headline"></a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="modules.PPhookBrightnessWithColour.PPhookBrightnessWithColour">
@@ -922,8 +1040,8 @@ the apparent brightnesses in the given ‘resfilter’ filter.</p>
 <p>Usage: pphookbrightnesswithcolour(combdf, ‘r’, ‘i-r’, ‘i’)</p>
 </dd></dl>
 
-</section>
-<section id="module-modules.PPreadColoursUser">
+</div>
+<div class="section" id="module-modules.PPreadColoursUser">
 <span id="modules-ppreadcoloursuser-module"></span><h2>modules.PPreadColoursUser module<a class="headerlink" href="#module-modules.PPreadColoursUser" title="Permalink to this headline"></a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="modules.PPreadColoursUser.PPreadColoursUser">
@@ -954,17 +1072,17 @@ existing colour dataframe (pandas dataFrame, optional)</p>
 </dl>
 </dd></dl>
 
-</section>
-<section id="module-modules">
+</div>
+<div class="section" id="module-modules">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-modules" title="Permalink to this headline"></a></h2>
-</section>
-</section>
+</div>
+</div>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="support.html" class="btn btn-neutral float-left" title="Support" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="acknowledgements.html" class="btn btn-neutral float-left" title="Acknowledgements" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="modules.tests.html" class="btn btn-neutral float-right" title="modules.tests package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
