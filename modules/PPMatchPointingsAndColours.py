@@ -36,14 +36,12 @@ def PPMatchPointingsAndColours(padain,pointfildb):
 
 
     resdf=padain.join(pointfildb.set_index('FieldID'), on='FieldID')
-        
+            
     colour_values=resdf.optFilter.unique()
     colour_values=pd.Series(colour_values).dropna()
         
     resdf=resdf.dropna(subset=['optFilter']).reset_index(drop=True)
-    
     resdf['MagnitudeInFilter'] = resdf.melt(id_vars='optFilter', value_vars=colour_values, ignore_index=False).query('optFilter == variable').loc[resdf.index, 'value']
-        
     # Check if observation dates in joined dataframes match
     
     chktruemjd=np.isclose(resdf['observationStartMJD'], resdf['FieldMJD'])
@@ -59,7 +57,7 @@ def PPMatchPointingsAndColours(padain,pointfildb):
     
 
     resdf=resdf.drop(columns='observationId_')
-    
+
     return resdf
 
         

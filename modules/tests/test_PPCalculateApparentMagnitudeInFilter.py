@@ -8,10 +8,10 @@ from ..PPReadOrbitFile import PPReadOrbitFile
 from ..PPReadColours import PPReadColours
 from ..PPJoinOrbitalData import PPJoinOrbitalData
 from ..PPJoinColourPointing import PPJoinColourPointing
-from ..PPCalculateApparentMagnitude import PPCalculateApparentMagnitude
+from ..PPCalculateApparentMagnitudeInFilter import PPCalculateApparentMagnitudeInFilter
 
 
-def test_PPCalculateApparentMagnitude():
+def test_PPCalculateApparentMagnitudeInFilter():
      
      rescol=24.001402
      
@@ -23,7 +23,7 @@ def test_PPCalculateApparentMagnitude():
      resdf1=PPJoinColourPointing(padafr,padacl)
      resdf2=PPJoinOrbitalData(resdf1,padaor)
           
-     padaw=PPCalculateApparentMagnitude(resdf2, 'HG', 'r')
+     padaw=PPCalculateApparentMagnitudeInFilter(resdf2, 'HG', 'r')
      
      val=padaw.at[0,'r']
      
