@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
-
+  <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Installation &mdash; Solar System Survey Simulator Post Processing 0.0.1 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -18,8 +17,8 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="modules package" href="modules.html" />
-    <link rel="prev" title="Welcome to Solar System Survey Simulator Post Processing’s documentation!" href="index.html" /> 
+    <link rel="next" title="Using Objects In Field" href="usingoif.html" />
+    <link rel="prev" title="Overview" href="overview.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -39,10 +38,23 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#requirements">Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#installing-objects-in-field">Installing Objects in Field</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#installing-the-survey-simulator-post-processing">Installing the Survey Simulator Post Processing</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="usingoif.html">Using Objects In Field</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gettingstarted.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="support.html">Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="acknowledgements.html">Acknowledgements</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Documentation:</span></p>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="modules.html">modules package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="lsstcomet.html">lsstcomet package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="support.html">Support</a></li>
 </ul>
 
         </div>
@@ -69,17 +81,70 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="installation">
+  <div class="section" id="installation">
 <h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline"></a></h1>
-<p>This is where the installation goes.</p>
-</section>
+<p>In order to use the Solar System survey simulator, we must first install
+<a class="reference external" href="https://github.com/eggls6/objectsInField">Objects in Field</a>.
+This is used to generate candidate detections for an input population of
+moving objects in a specified list of field pointings.</p>
+<div class="section" id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline"></a></h2>
+<ul class="simple">
+<li><p>python 3</p></li>
+<li><p>spiceypy python library</p></li>
+<li><p>pyoorb python library</p></li>
+<li><p>other standard python libraries like numpy, pandas, etc.</p></li>
+<li><p>NAIF SPICE Utilities</p></li>
+</ul>
+</div>
+<div class="section" id="installing-objects-in-field">
+<h2>Installing Objects in Field<a class="headerlink" href="#installing-objects-in-field" title="Permalink to this headline"></a></h2>
+<p>The easiest way to get started is by using the Anaconda Python Distribution’s
+conda package manager:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">conda</span> <span class="n">create</span> <span class="o">-</span><span class="n">n</span> <span class="n">oif</span><span class="o">-</span><span class="n">dev</span> <span class="o">-</span><span class="n">c</span> <span class="n">conda</span><span class="o">-</span><span class="n">forge</span> <span class="o">-</span><span class="n">c</span> <span class="n">mjuric</span> <span class="n">python</span> <span class="n">spiceypy</span> <span class="n">openorb</span> <span class="n">numpy</span> <span class="n">pandas</span> <span class="n">matplotlib</span> <span class="n">spice</span><span class="o">-</span><span class="n">utils</span>
+<span class="n">conda</span> <span class="n">activate</span> <span class="n">oif</span><span class="o">-</span><span class="n">dev</span>
+</pre></div>
+</div>
+<p>Download the repo via:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">eggls6</span><span class="o">/</span><span class="n">objectsInField</span><span class="o">.</span><span class="n">git</span>
+</pre></div>
+</div>
+<p>Then download the various large binary files (mostly SPICE kernels) that we don’t keep in git by running:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">bootstrap</span><span class="o">.</span><span class="n">sh</span>
+</pre></div>
+</div>
+<p>Next, set up an editable (in-place) development environment:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">e</span> <span class="o">.</span>
+</pre></div>
+</div>
+<p>This will allow you to run the code from the source directory.</p>
+<p>Finally, run a test to make sure everything worked:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="n">test</span>
+<span class="n">oif</span> <span class="nb">input</span><span class="o">.</span><span class="n">config</span>
+</pre></div>
+</div>
+<p>To uninstall:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">setup</span><span class="o">.</span><span class="n">py</span> <span class="n">develop</span> <span class="o">-</span><span class="n">u</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="installing-the-survey-simulator-post-processing">
+<h2>Installing the Survey Simulator Post Processing<a class="headerlink" href="#installing-the-survey-simulator-post-processing" title="Permalink to this headline"></a></h2>
+<p>In order to install the Solar System survey simulator, either clone the repo
+directly from the <a class="reference external" href="https://github.com/dirac-institute/survey_simulator_post_processing">projects github</a> or
+via:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">dirac</span><span class="o">-</span><span class="n">institute</span><span class="o">/</span><span class="n">survey_simulator_post_processing</span><span class="o">.</span><span class="n">git</span>
+</pre></div>
+</div>
+</div>
+</div>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="index.html" class="btn btn-neutral float-left" title="Welcome to Solar System Survey Simulator Post Processing’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="modules.html" class="btn btn-neutral float-right" title="modules package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="overview.html" class="btn btn-neutral float-left" title="Overview" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="usingoif.html" class="btn btn-neutral float-right" title="Using Objects In Field" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
