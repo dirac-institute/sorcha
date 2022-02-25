@@ -163,23 +163,24 @@ def runPostProcessing():
         #observations['ObjID'] = observations['ObjID'].str.replace('/','')
         
         pplogger.info('Calculating apparent magnitudes...')
-        observations=PPCalculateApparentMagnitude.PPCalculateApparentMagnitude(observations, configs['phasefunction'], configs['mainfilter'])        
-        
+        #observations=PPCalculateApparentMagnitude.PPCalculateApparentMagnitude(observations, configs['phasefunction'], configs['mainfilter'])        
+        observations=PPCalculateApparentMagnitude.PPCalculateApparentMagnitude(observations, configs['phasefunction'], configs['mainfilter'], configs['othercolours'], configs['resfilters'], filterpointing)
+
 
         if (configs['objecttype']=='comet'):
              pplogger.info('Calculating cometary magnitude using a simple model...')
              observations=PPCalculateSimpleCometaryMagnitude.PPCalculateSimpleCometaryMagnitude(observations, configs['mainfilter'])        
         
-        pplogger.info('Hooking colour and brightness information...')
-        i=0
-        while (i<len(configs['othercolours'])):
-             observations=PPhookBrightnessWithColour.PPhookBrightnessWithColour(observations, configs['mainfilter'], configs['othercolours'][i], configs['resfilters'][i+1])         
-             i=i+1
-
-        observations=observations.reset_index(drop=True)
-        
-        pplogger.info('Resolving the apparent brightness in a given optical filter corresponding to the pointing...')
-        observations=PPMatchPointingsAndColours.PPMatchPointingsAndColours(observations,filterpointing)
+        #pplogger.info('Hooking colour and brightness information...')
+        #i=0
+        #while (i<len(configs['othercolours'])):
+        #     observations=PPhookBrightnessWithColour.PPhookBrightnessWithColour(observations, configs['mainfilter'], configs['othercolours'][i], configs['resfilters'][i+1])         
+        #     i=i+1
+#
+        #observations=observations.reset_index(drop=True)
+        #
+        #pplogger.info('Resolving the apparent brightness in a given optical filter corresponding to the pointing...')
+        #observations=PPMatchPointingsAndColours.PPMatchPointingsAndColours(observations,filterpointing)
         
                 
         pplogger.info('Matching observationId with limiting magnitude and seeing...')
@@ -283,7 +284,7 @@ def runPostProcessing():
         pplogger.info('Number of rows AFTER applying SSP criterion threshold: ' + str(len(observations.index)))
 
 		# write output
-        PPWriteOutput(configs, observations, pplogger)
+        PPWriteOutput(configs, observations, pplogger, endChunk)
                 
         startChunk = startChunk + configs['sizeSerialChunk']
         # end for

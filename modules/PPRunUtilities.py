@@ -3,6 +3,7 @@
 
 import logging
 import os, sys
+import pandas as pd
 import configparser
 from modules import PPOutWriteCSV, PPOutWriteSqlite3, PPOutWriteHDF5
 
@@ -260,7 +261,7 @@ def PPCMDLineParser(parser):
 	return cmd_args_dict
 	
 	
-def PPWriteOutput(configs, observations, pplogger):
+def PPWriteOutput(configs, observations, pplogger, endChunk):
 	"""
 	Author: Steph Merritt
 	
@@ -288,12 +289,12 @@ def PPWriteOutput(configs, observations, pplogger):
 			pplogger.info('Output to CSV file...')
 			observations=PPOutWriteCSV.PPOutWriteCSV(observations,out)
 	
-	elif (outputformat == 'sqlite3'):
+	elif (configs['outputformat'] == 'sqlite3'):
 		outputsuffix='.db'
 		out= configs['outpath'] + configs['outfilestem'] + outputsuffix
 		pplogger.info('Output to sqlite3 database...')
 		observations=PPOutWriteSqlite3.PPOutWriteSqlite3(observations,out)   
-	elif (outputformat == 'hdf5' or outputformat=='HDF5'):
+	elif (configs['outputformat'] == 'hdf5' or configs['outputformat']=='HDF5'):
 		outputsuffix=".h5"   
 		out=configs['outpath'] + configs['outfilestem'] + outputsuffix
 		pplogger.info('Output to HDF5 binary file...')
