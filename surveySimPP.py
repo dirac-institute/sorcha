@@ -284,7 +284,7 @@ def runPostProcessing():
         pplogger.info('Number of rows AFTER applying SSP criterion threshold: ' + str(len(observations.index)))
 
 		# write output
-        PPWriteOutput(configs, observations, pplogger)
+        PPWriteOutput(configs, observations, pplogger, endChunk)
                 
         startChunk = startChunk + configs['sizeSerialChunk']
         # end for

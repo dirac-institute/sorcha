@@ -261,7 +261,7 @@ def PPCMDLineParser(parser):
 	return cmd_args_dict
 	
 	
-def PPWriteOutput(configs, observations, pplogger):
+def PPWriteOutput(configs, observations, pplogger, endChunk):
 	"""
 	Author: Steph Merritt
 	
