@@ -259,6 +259,11 @@ def runPostProcessing():
             
             observations=observations.iloc[onSensor]
             observations["detectorID"] = detectorIDs
+            
+            # observations dataframe is now shuffled in object ID, which causes problems
+            # when applying SSP criterion efficiency.
+            
+            observations = observations.sort_index()
         
             #oif=oif.astype({"FieldID": int})
             #surveydb=surveydb.astype({"observationId": int})
