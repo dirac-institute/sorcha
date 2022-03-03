@@ -17,7 +17,7 @@ Documentation: https://survey-simulator-post-processing.readthedocs.io/en/latest
 * Data sets that are used for unit testing should live in `data/test`.  
 * All required input files for the main software or unit tests should have extensions that clearly describe the file format (e.g. .csv, .txt, .db, .fits)
 * Function/methods names should follow Rubin / LSST developer guide conventions: https://developer.lsst.io/
-
+* If you are working on addressing a specific issue ticket, assign yourself the ticket and set the status to "in progress"
 
 ## Collaboration
 This effort is a collaboration between the University of Washington's DIRAC Institute, Queen's University Belfast, and the University of Illinois at Urbana-Champaign
