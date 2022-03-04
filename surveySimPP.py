@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-import os,sys
+import os,sys,time
 import pandas as pd
 import numpy as np
 import logging
@@ -20,6 +20,7 @@ from modules import PPCalculateApparentMagnitude
 from modules import PPFootprintFilter, PPAddUncertainties, PPRandomizeMeasurements, PPVignetting
 from modules.PPDetectionProbability import calcDetectionProbability, PPDetectionProbability
 from modules.PPRunUtilities import PPGetLogger, PPConfigFileParser, PPPrintConfigsToLog, PPCMDLineParser, PPWriteOutput
+from modules.PPMatchPointingToObservations import PPMatchFilterToObservations, PPMatchPointingToObservations
 
 
 def runPostProcessing():
@@ -83,7 +84,9 @@ def runPostProcessing():
     filterpointing=PPMatchPointing.PPMatchPointing(configs['pointingdatabase'],configs['resfilters'],configs['ppdbquery'])
     
     pplogger.info('Instantiating random number generator ... ')
-    rng = np.random.default_rng(2021)
+    rng_seed = int(time.time())
+    pplogger.info('Random number seed is {}.'.format(rng_seed))
+    rng = np.random.default_rng(rng_seed)
     
     ### In case of a large input file, the data is read in chunks. The "sizeSerialChunk" parameter in PPConfig.ini assigns the chunk.
     
@@ -129,7 +132,7 @@ def runPostProcessing():
         else:   
             try: 
                 pplogger.info('Reading input pointing history: ' + cmd_args['oifoutput'])
-                oifoutputsuffix = cmd_args['oifoutput'].split('.')[-1]
+                #oifoutputsuffix = cmd_args['oifoutput'].split('.')[-1]
                 padafr=PPReadOif.PPReadOif(cmd_args['oifoutput'], configs["pointingFormat"])
                 
                 
@@ -149,14 +152,19 @@ def runPostProcessing():
             PPCheckOrbitAndColoursMatching.PPCheckOrbitAndColoursMatching(padaor,padaco,padafr)
             
         
-        pplogger.info('Joining physical parameters and orbital data with pointing data...')
+        pplogger.info('Joining physical parameters and orbital data with simulation data...')
         
         observations=PPJoinColourPointing.PPJoinColourPointing(padafr,padacl)
         observations=PPJoinOrbitalData.PPJoinOrbitalData(observations,padaor)
         if (configs['objecttype'] == 'comet'):
             pplogger.info('Joining cometary data...')
             observations=PPJoinColourPointing.PPJoinColourPointing(observations,padaco)
-
+                   
+        #pplogger.info('Joining filters from pointing database with simulation data and dropping observations in non-requested filters...')
+        #observations = PPMatchFilterToObservations(observations, filterpointing)
+        
+        #plogger.info('Joining info from pointing database with simulation data and dropping observations in non-requested filters...')
+        #observations = PPMatchPointingToObservations(observations, filterpointing)
         
         # comets may have dashes in their names that mix things up
         observations['ObjID'] = observations['ObjID'].astype(str)
@@ -183,8 +191,8 @@ def runPostProcessing():
         #observations=PPMatchPointingsAndColours.PPMatchPointingsAndColours(observations,filterpointing)
         
                 
-        pplogger.info('Matching observationId with limiting magnitude and seeing...')
-        seeing, limiting_magnitude=PPMatchFieldConditions.PPMatchFieldConditions(configs['pointingdatabase'],configs['ppdbquery'])
+        #pplogger.info('Matching observationId with limiting magnitude and seeing...')
+        #seeing, limiting_magnitude=PPMatchFieldConditions.PPMatchFieldConditions(configs['pointingdatabase'],configs['ppdbquery'])
         
                
         pplogger.info('Dropping observations that are too bright...')
@@ -199,7 +207,7 @@ def runPostProcessing():
         
             if (trailingLossesOn == True):
                 pplogger.info('Calculating trailing losses...')
-                observations['dmagDetect']=PPTrailingLoss.PPTrailingLoss(observations, seeing)
+                observations['dmagDetect']=PPTrailingLoss.PPTrailingLoss(observations, filterpointing)
 
             else:
                 observations['dmagDetect']=0.0
