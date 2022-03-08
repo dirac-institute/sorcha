@@ -20,5 +20,29 @@ Documentation: https://survey-simulator-post-processing.readthedocs.io/en/latest
 * If you are working on addressing a specific issue ticket, assign yourself the ticket and set the status to "in progress"
 * When making a pull request that closes an issue, cite the issue ticket in the pull request summary
 
+## Installation
+Set up a conda environment and activate:
+```
+conda create -n survey_sim_pp python=3.8 pip
+conda activate survey_sim_pp
+```
+
+Download the repo and cd into the directory:
+```
+cd ~/survey_simulator_post_processing
+```
+
+The code can be installed by typing:
+```
+pip install -e .
+```
+
+Then it can be run via:
+```
+surveySimPP -c ./PPConfig.ini -l ./data/test/testcolour.txt -o ./data/test/testorb.des -p ./data/test/oiftestoutput.txt 
+```
+
+
 ## Collaboration
 This effort is a collaboration between the University of Washington's DIRAC Institute, Queen's University Belfast, and the University of Illinois at Urbana-Champaign
+
