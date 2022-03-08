@@ -10,7 +10,8 @@ from lsstcomet import *
 from modules import PPFilterDetectionEfficiencyThreshold, PPreadColoursUser, PPReadColours
 from modules import PPhookBrightnessWithColour, PPJoinColourPointing, PPMatchPointing 
 from modules import PPMatchPointingsAndColours, PPFilterSSPCriterionEfficiency
-from modules import PPOutWriteCSV, PPOutWriteSqlite3, PPOutWriteHDF5
+#from modules import PPOutWriteCSV, PPOutWriteSqlite3, PPOutWriteHDF5
+from modules import PPOut
 from modules import PPReadOrbitFile, PPCheckOrbitAndColoursMatching
 from modules import PPReadOif, PPReadBrightness
 from modules import PPDetectionProbability, PPSimpleSensorArea, PPTrailingLoss, PPMatchFieldConditions
@@ -444,40 +445,14 @@ def runPostProcessing():
         observations=PPFilterSSPCriterionEfficiency.PPFilterSSPCriterionEfficiency(observations,minTracklet,noTracklets,trackletInterval,inSepThreshold)
         observations=observations.drop(['index'], axis='columns')
         
-        pplogger.info('Number of rows AFTER applying SSP criterion threshold: ' + str(len(observations.index)))
+        pplogger.info('Number of rows AFTER applying SSP criterion threshold: ' + str(len(observations.index)))   
 
-                
-        
-        
-        
-    
-        pplogger.info('Constructing output path...')
-        if (outputformat == 'csv'):
-            outputsuffix='.csv'
-            if (separatelyCSV == True):
-                objid_list = observations['ObjID'].unique().tolist() 
-                pplogger.info('Output to ' + str(len(objid_list)) + ' separate output CSV files...')
-                i=0
-                while(i<len(objid_list)):
-                         single_object_df=pd.DataFrame(observations[observations['ObjID'] == objid_list[i]])
-                         out=outpath + str(objid_list[i]) + '_' + outfilestem + outputsuffix
-                         obsi=PPOutWriteCSV.PPOutWriteCSV(single_object_df,out)
-                         i=i+1
-            else:
-                out=outpath + outfilestem + outputsuffix
-                pplogger.info('Output to CSV file...')
-                observations=PPOutWriteCSV.PPOutWriteCSV(observations,out)
-            
-        elif (outputformat == 'sqlite3'):
-            outputsuffix='.db'
-            out=outpath + outfilestem + outputsuffix
-            pplogger.info('Output to sqlite3 database...')
-            observations=PPOutWriteSqlite3.PPOutWriteSqlite3(observations,out)   
-        elif (outputformat == 'hdf5' or outputformat=='HDF5'):
-            outputsuffix=".h5"   
-            out=outpath + outfilestem + outputsuffix
-            pplogger.info('Output to HDF5 binary file...')
-            observations=PPOutWriteHDF5.PPOutWriteHDF5(observations,out,str(endChunk))    
+        pplogger.info('Saving data...')
+        if endChunk == 0:
+            mode ='w'
+        elif endChunk > 0:
+            mode='a'
+        PPOut.PPWriteOut(observations, outpath + outfilestem, mode=mode, keyin=str(endChunk))
             
                         
         else:
@@ -499,8 +474,5 @@ if __name__=='__main__':
      parser.add_argument("-o", "--orbit", help="Orbit file name", type=str, dest='o', default='./data/orbit.des')
      parser.add_argument("-p", "--pointing", help="Pointing simulation output file name", type=str, dest='p', default='./data/oiftestoutput')
      parser.add_argument("-b", "--brightness", "--phase", help="Brightness and phase parameter file name", type=str, dest='b', default='./data/HG')
-
-
-
 
      runPostProcessing()
