@@ -26,8 +26,13 @@ Set up a conda environment and activate:
 conda create -n survey_sim_pp python=3.8 pip
 conda activate survey_sim_pp
 ```
+Download repo via git clone
 
-Download the repo and cd into the directory:
+```
+git clone https://github.com/dirac-institute/survey_simulator_post_processing.git
+```
+
+Cd into the directory:
 ```
 cd ~/survey_simulator_post_processing
 ```
