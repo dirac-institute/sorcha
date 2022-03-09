@@ -5,7 +5,7 @@ import logging
 import os, sys
 import pandas as pd
 import configparser
-from modules import PPOutWriteCSV, PPOutWriteSqlite3, PPOutWriteHDF5
+from . import PPOutWriteCSV, PPOutWriteSqlite3, PPOutWriteHDF5
 
 def PPGetLogger(    
         LOG_FORMAT     = '%(asctime)s %(name)-12s %(levelname)-8s %(message)s ',

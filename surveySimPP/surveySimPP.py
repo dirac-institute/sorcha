@@ -7,23 +7,23 @@ import logging
 import argparse
 import configparser
 from lsstcomet import *
-from modules import PPFilterDetectionEfficiencyThreshold, PPreadColoursUser, PPReadColours
-from modules import PPhookBrightnessWithColour, PPJoinColourPointing, PPMatchPointing 
-from modules import PPMatchPointingsAndColours, PPFilterSSPCriterionEfficiency
-from modules import PPReadOrbitFile, PPCheckOrbitAndColoursMatching
-from modules import PPReadOif
-from modules import PPDetectionProbability, PPSimpleSensorArea, PPTrailingLoss, PPMatchFieldConditions
-from modules import PPDropObservations, PPBrightLimit
-from modules import PPMakeIntermediatePointingDatabase, PPReadIntermDatabase
-from modules import PPReadCometaryInput, PPJoinOrbitalData, PPCalculateSimpleCometaryMagnitude
-from modules import PPCalculateApparentMagnitude
-from modules import PPFootprintFilter, PPAddUncertainties, PPRandomizeMeasurements, PPVignetting
-from modules.PPDetectionProbability import calcDetectionProbability, PPDetectionProbability
-from modules.PPRunUtilities import PPGetLogger, PPConfigFileParser, PPPrintConfigsToLog, PPCMDLineParser, PPWriteOutput
-from modules.PPMatchPointingToObservations import PPMatchFilterToObservations, PPMatchPointingToObservations
+from .modules import PPFilterDetectionEfficiencyThreshold, PPreadColoursUser, PPReadColours
+from .modules import PPhookBrightnessWithColour, PPJoinColourPointing, PPMatchPointing
+from .modules import PPMatchPointingsAndColours, PPFilterSSPCriterionEfficiency
+from .modules import PPReadOrbitFile, PPCheckOrbitAndColoursMatching
+from .modules import PPReadOif
+from .modules import PPDetectionProbability, PPSimpleSensorArea, PPTrailingLoss, PPMatchFieldConditions
+from .modules import PPDropObservations, PPBrightLimit
+from .modules import PPMakeIntermediatePointingDatabase, PPReadIntermDatabase
+from .modules import PPReadCometaryInput, PPJoinOrbitalData, PPCalculateSimpleCometaryMagnitude
+from .modules import PPCalculateApparentMagnitude
+from .modules import PPFootprintFilter, PPAddUncertainties, PPRandomizeMeasurements, PPVignetting
+from .modules.PPDetectionProbability import calcDetectionProbability, PPDetectionProbability
+from .modules.PPRunUtilities import PPGetLogger, PPConfigFileParser, PPPrintConfigsToLog, PPCMDLineParser, PPWriteOutput
+from .modules.PPMatchPointingToObservations import PPMatchFilterToObservations, PPMatchPointingToObservations
 
 
-def runPostProcessing():
+def runPostProcessing(parser):
 
     """
     runPostProcessing()
@@ -304,16 +304,19 @@ def runPostProcessing():
     
     pplogger.info('Post processing completed.')
 
+
+def main():
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-c", "--config", help="Input configuration file name", type=str, dest='c', default='./PPConfig.ini')
+    parser.add_argument("-d", help="Make intermediate pointing database", dest='d', action='store_true')
+    parser.add_argument("-m", "--comet", help="Comet parameter file name", type=str, dest='m')
+    parser.add_argument("-l", "--colour", "--color", help="Colour file name", type=str, dest='l', default='./data/colour')
+    parser.add_argument("-o", "--orbit", help="Orbit file name", type=str, dest='o', default='./data/orbit.des')
+    parser.add_argument("-p", "--pointing", help="Pointing simulation output file name", type=str, dest='p', default='./data/oiftestoutput')
+
+    runPostProcessing(parser)
+
 if __name__=='__main__':
+    main()
 
-     parser = argparse.ArgumentParser()
-     parser.add_argument("-c", "--config", help="Input configuration file name", type=str, dest='c', default='./PPConfig.ini')
-     parser.add_argument("-d", help="Make intermediate pointing database", dest='d', action='store_true')
-     parser.add_argument("-m", "--comet", help="Comet parameter file name", type=str, dest='m')
-     parser.add_argument("-l", "--colour", "--color", help="Colour file name", type=str, dest='l', default='./data/colour')
-     parser.add_argument("-o", "--orbit", help="Orbit file name", type=str, dest='o', default='./data/orbit.des')
-     parser.add_argument("-p", "--pointing", help="Pointing simulation output file name", type=str, dest='p', default='./data/oiftestoutput')
-
-
-
-     runPostProcessing()
