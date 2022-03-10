@@ -53,7 +53,8 @@ def PPReadOrbitFile(orbin, beginLoc, chunkSize, filesep):
          pplogger.info(outstr)
    
    padafr=padafr.drop([ 'INDEX', 'N_PAR', 'MOID', 'COMPCODE'], axis = 1, errors='ignore')
-   
+   padafr['!!OID'] = padafr['!!OID'].astype(str)
+
     
    return padafr
 

@@ -47,4 +47,7 @@ def PPReadColours(clr_datafile, beginLoc, chunkSize, filesep):
          outstr="ERROR: uninitialised values when reading colour file. ObjID: " + str(inds)
          sys.exit(outstr)
     
+    
+    padafr['ObjID'] = padafr['ObjID'].astype(str)
+
     return padafr

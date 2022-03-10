@@ -51,4 +51,7 @@ def PPReadCometaryInput(comet_datafile, beginLoc, chunkSize,filesep):
          outstr="ERROR: uninitialised values when reading comet data file. ObjID: " + str(inds)
          sys.exit(outstr)
     
+    padafr['ObjID'] = padafr['ObjID'].astype(str)
+
+
     return padafr
