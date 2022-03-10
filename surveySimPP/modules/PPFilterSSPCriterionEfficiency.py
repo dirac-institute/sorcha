@@ -93,7 +93,8 @@ def PPFilterSSPCriterionEfficiency(padain,minintracklets,nooftracklets,intervalt
                        # (if you just put loc[j], instead of # loc[k:j] and removing duplicates
                        # down the line)
 
-                       padaouttracklet=padaouttracklet.append(subs.loc[k:s], sort=False) 
+                       #padaouttracklet=padaouttracklet.append(subs.loc[k:s], sort=False) 
+                       padaouttracklet=pd.concat([padaouttracklet,subs.loc[k:s]],sort=False)
                        padaouttracklet['counter']=counter
                        
 
@@ -114,7 +115,8 @@ def PPFilterSSPCriterionEfficiency(padain,minintracklets,nooftracklets,intervalt
                            # sometimes, the output of astropy SkyCoord.separation is a size 2 ndarray wth identical values, and not a float
                            sep=float(sep[0])
                        if (sep>sepThreshold):
-                           padaouttrackletcoll=padaouttrackletcoll.append(padaouttracklet, ignore_index=True, sort=False)
+                           #padaouttrackletcoll=padaouttrackletcoll.append(padaouttracklet, ignore_index=True, sort=False)
+                           padaouttrackletcoll=pd.concat([padaouttrackletcoll,padaouttracklet],ignore_index=True, sort=False)
                            counter=counter+1
                        #j=j+1
                        k=j
@@ -144,7 +146,8 @@ def PPFilterSSPCriterionEfficiency(padain,minintracklets,nooftracklets,intervalt
                       flindex=padaouttrackletcoll.loc[padaouttrackletcoll['counter'] == m].head(1).index[0]
                       llindex=padaouttrackletcoll.loc[padaouttrackletcoll['counter'] == ms[g+nooftracklets-1]].tail(1).index[0]
                       if (padaouttrackletcoll.at[llindex,'FieldMJD'] - padaouttrackletcoll.at[flindex,'FieldMJD'] < intervaltime):
-                            padaout=padaout.append(padaouttrackletcoll[flindex:llindex+1], ignore_index=True, sort=False)
+                            padaout=pd.concat([padaout,padaouttrackletcoll[flindex:llindex+1]], ignore_index=True, sort=False)
+                            #padaout=padaout.append(padaouttrackletcoll[flindex:llindex+1], ignore_index=True, sort=False)
                       g=g+1
                    m=m+1
 
