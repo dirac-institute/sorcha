@@ -5,6 +5,7 @@ import logging
 import os, sys
 import pandas as pd
 import configparser
+from datetime import datetime
 from . import PPOutWriteCSV, PPOutWriteSqlite3, PPOutWriteHDF5
 
 def PPGetLogger(    
@@ -22,6 +23,13 @@ def PPGetLogger(
     #stream_handler = logging.StreamHandler()
     #stream_handler.setFormatter(log_formatter)
     #log.addHandler(stream_handler)
+    
+    DSTR=datetime.now().strftime('%Y%m%d%H%M')
+    CPID=os.getpid()
+    
+    LOG_FILE_INFO=str(DSTR + '-' + str(CPID) + '-' + LOG_FILE_INFO)
+    LOG_FILE_ERROR=str(DSTR + '-' + str(CPID) + '-' + LOG_FILE_ERROR)
+    
 
     file_handler_info = logging.FileHandler(LOG_FILE_INFO, mode='w')
     file_handler_info.setFormatter(log_formatter)

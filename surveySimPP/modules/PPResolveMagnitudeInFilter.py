@@ -30,8 +30,8 @@ def PPResolveMagnitudeInFilter(padain,mainfilter,othercolours,resfilters):
     
     apparent_mag=np.zeros(len(padain), dtype=float)
     
-    i=0
-    while(i<len(resfilters)):
+
+    for i in np.arange(len(resfilters)):
         inRelevantFilterList=(padain['optFilter']==resfilters[i])
         inRelevantFilter=padain[inRelevantFilterList]
         if(len(inRelevantFilter)>0):
@@ -39,11 +39,8 @@ def PPResolveMagnitudeInFilter(padain,mainfilter,othercolours,resfilters):
                apparent_mag[inRelevantFilterList]=0.0
             else:
                apparent_mag[inRelevantFilterList]=inRelevantFilter[othercolours[i-1]]
-        i=i+1
-    padain['apparent_mag']=apparent_mag
-    padain['MagnitudeInFilter'] = padain[mainfilter] + padain['apparent_mag']
-    
-    padain=padain.drop(['apparent_mag'], axis=1, errors='ignore')
-      
+
+    padain['MagnitudeInFilter'] = padain[mainfilter] + apparent_mag
+          
     return padain 
 
