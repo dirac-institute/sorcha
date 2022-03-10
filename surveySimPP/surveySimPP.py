@@ -166,9 +166,6 @@ def runPostProcessing(parser):
         plogger.info('Joining info from pointing database with simulation data and dropping observations in non-requested filters...')
         observations = PPMatchPointingToObservations(observations, filterpointing)
         
-        # comets may have dashes in their names that mix things up
-        observations['ObjID'] = observations['ObjID'].astype(str)
-        #observations['ObjID'] = observations['ObjID'].str.replace('/','')
         
         pplogger.info('Calculating apparent magnitudes...')
         #observations=PPCalculateApparentMagnitude.PPCalculateApparentMagnitude(observations, configs['phasefunction'], configs['mainfilter'])        
