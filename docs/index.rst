@@ -5,7 +5,15 @@
 
 Welcome to Solar System Survey Simulator Post Processing's documentation!
 =========================================================================
+Welcome to the Solar System Survey Simulator Post Processing documentation. The survey simulator is a 
+Python package for studying solar system object population statistics. It has been designed with LSST in mind,
+but can be adapted to be used with any survey.
 
+
+This documentation webpage contains an installation guide and an overview of how the survey simulator 
+works. Tutorials are provided which give examples on how to determine if an object is on a field of view, 
+if it is observable with LSST, and specific guides for near earth objects, Jupiter trojans, cometary objects etc.
+ 
 
 .. toctree::
    :maxdepth: 2
@@ -13,6 +21,8 @@ Welcome to Solar System Survey Simulator Post Processing's documentation!
 
    overview
    installation
+   inputs
+   outputs
    usingoif
    gettingstarted
    tutorial

@@ -46,7 +46,15 @@ Then it can be run via:
 ```
 surveySimPP -c ./PPConfig.ini -l ./data/test/testcolour.txt -o ./data/test/testorb.des -p ./data/test/oiftestoutput.txt 
 ```
-
+You can also create config files for OIF and the survey simulator by typing:
+```
+makeConfigOIF
+```
+or
+```
+makeConfigPP
+```
+And adding any relevant config parameters.
 
 ## Collaboration
 This effort is a collaboration between the University of Washington's DIRAC Institute, Queen's University Belfast, and the University of Illinois at Urbana-Champaign

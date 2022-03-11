@@ -1,7 +1,7 @@
 Support
 =======
 
-The best way to get in touch about an issue is through the `projects github <https://github.com/dirac-institute/survey_simulator_post_processing>`_.
+The best way to get in touch about an issue is through the `project's github <https://github.com/dirac-institute/survey_simulator_post_processing>`_.
 We have a small team working on the project, so please be patient, while we get back to you.
 
 We recommend checking the FAQ first, to see if your issue is covered there but if you are still experiencing issues you can open up a 
