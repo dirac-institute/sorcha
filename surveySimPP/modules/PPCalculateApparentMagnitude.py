@@ -1,14 +1,15 @@
 #!/usr/bin/python
 
-from . import PPhookBrightnessWithColour, PPCalculateApparentMagnitudeInFilter, PPMatchPointingsAndColours
+from . import PPCalculateApparentMagnitudeInFilter, PPResolveMagnitudeInFilter
 import logging
 import pandas as pd
 
+# Author: Grigori Fedorets
 
-def PPCalculateApparentMagnitude(observations, phasefunction, mainfilter, othercolours, resfilters, filterpointing):
+def PPCalculateApparentMagnitude(observations, phasefunction, mainfilter, othercolours, resfilters):
 
     """
-    PPCalculateApparentMagnitude(observations, phasefunction, mainfilter, othercolours, resfilters, filterpointing)
+    PPCalculateApparentMagnitude(observations, phasefunction, mainfilter, othercolours, resfilters)
     
     This task combines calculating the apparent magnitude in the main filter, combining the brightness information with
     colours for appropriate filter, and then, finally, selecting the correct colour and applying the correct offset.
@@ -18,11 +19,10 @@ def PPCalculateApparentMagnitude(observations, phasefunction, mainfilter, otherc
            mainfilter     : string
            othercolours   : array of strings
            resfilters     : array of strings
-           filterpointing : string
    
     Output: observations: amended pandas DataFrame
  
-    Usage: observations=PPCalculateApparentMagnitude(observations, phasefunction, mainfilter, othercolours, resfilters, filterpointing)
+    Usage: observations=PPCalculateApparentMagnitude(observations, phasefunction, mainfilter, othercolours, resfilters)
     """
     
     pplogger = logging.getLogger(__name__)
@@ -30,18 +30,7 @@ def PPCalculateApparentMagnitude(observations, phasefunction, mainfilter, otherc
     pplogger.info('Calculating apparent magnitudes...')
     observations=PPCalculateApparentMagnitudeInFilter.PPCalculateApparentMagnitudeInFilter(observations, phasefunction, mainfilter)        
     
-
-    
-    pplogger.info('Hooking colour and brightness information...')
-    i=0
-    while (i<len(othercolours)):
-         observations=PPhookBrightnessWithColour.PPhookBrightnessWithColour(observations, mainfilter, othercolours[i], resfilters[i+1])         
-         i=i+1
- 
-    observations=observations.reset_index(drop=True)
-
-    
-    pplogger.info('Resolving the apparent brightness in a given optical filter corresponding to the pointing...')
-    observations=PPMatchPointingsAndColours.PPMatchPointingsAndColours(observations,filterpointing)
+    pplogger.info('Selecting and applying correct colour offset...')
+    observations=PPResolveMagnitudeInFilter.PPResolveMagnitudeInFilter(observations,mainfilter,othercolours,resfilters)
     
     return observations

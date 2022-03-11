@@ -163,16 +163,13 @@ def runPostProcessing(parser):
         #pplogger.info('Joining filters from pointing database with simulation data and dropping observations in non-requested filters...')
         #observations = PPMatchFilterToObservations(observations, filterpointing)
         
-        #plogger.info('Joining info from pointing database with simulation data and dropping observations in non-requested filters...')
-        #observations = PPMatchPointingToObservations(observations, filterpointing)
+        plogger.info('Joining info from pointing database with simulation data and dropping observations in non-requested filters...')
+        observations = PPMatchPointingToObservations(observations, filterpointing)
         
-        # comets may have dashes in their names that mix things up
-        observations['ObjID'] = observations['ObjID'].astype(str)
-        #observations['ObjID'] = observations['ObjID'].str.replace('/','')
         
         pplogger.info('Calculating apparent magnitudes...')
         #observations=PPCalculateApparentMagnitude.PPCalculateApparentMagnitude(observations, configs['phasefunction'], configs['mainfilter'])        
-        observations=PPCalculateApparentMagnitude.PPCalculateApparentMagnitude(observations, configs['phasefunction'], configs['mainfilter'], configs['othercolours'], configs['resfilters'], filterpointing)
+        observations=PPCalculateApparentMagnitude.PPCalculateApparentMagnitude(observations, configs['phasefunction'], configs['mainfilter'], configs['othercolours'], configs['resfilters'])
 
 
         if (configs['objecttype']=='comet'):
