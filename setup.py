@@ -9,11 +9,17 @@ setuptools.setup(
 
      packages=setuptools.find_packages(),
 
-     entry_points = {
-        'console_scripts': ['surveySimPP = surveySimPP.surveySimPP:main'],
+
+    entry_points={
+        'console_scripts': [
+            'surveySimPP = surveySimPP.surveySimPP:main',
+            'makeConfigOIF=utilities.makeConfigOIF:main',
+            'makeConfigPP=utilities.makeConfigPP:main'
+        ],
     },
-        
-        
+
+
+
      author="Meg Schwamb",
      author_email="m.schwamb@qub.ac.uk",
      description="The Survey Simulator Post Processing code for the LSST",
