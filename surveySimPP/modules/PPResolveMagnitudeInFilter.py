@@ -30,15 +30,19 @@ def PPResolveMagnitudeInFilter(padain,mainfilter,othercolours,resfilters):
     
     apparent_mag=np.zeros(len(padain), dtype=float)
     
-
-    for i in np.arange(len(resfilters)):
-        inRelevantFilterList=(padain['optFilter']==resfilters[i])
+    
+    # for cases where the input filter is the main filter
+    inRelevantFilterList=(padain['optFilter']==mainfilter)
+    inRelevantFilter=padain[inRelevantFilterList]
+    if(len(inRelevantFilter)>0):
+        apparent_mag[inRelevantFilterList]=0.0
+    
+    # for all other cases, where the offset is required
+    for i in np.arange(len(othercolours)):
+        inRelevantFilterList=(padain['optFilter']==resfilters[i+1])
         inRelevantFilter=padain[inRelevantFilterList]
         if(len(inRelevantFilter)>0):
-            if(resfilters[i]==mainfilter):
-               apparent_mag[inRelevantFilterList]=0.0
-            else:
-               apparent_mag[inRelevantFilterList]=inRelevantFilter[othercolours[i-1]]
+               apparent_mag[inRelevantFilterList]=inRelevantFilter[othercolours[i]]
 
     padain['MagnitudeInFilter'] = padain[mainfilter] + apparent_mag
           
