@@ -11,7 +11,7 @@ from .modules import PPFilterDetectionEfficiencyThreshold, PPreadColoursUser, PP
 from .modules import PPhookBrightnessWithColour, PPJoinColourPointing, PPMatchPointing
 from .modules import PPMatchPointingsAndColours, PPFilterSSPCriterionEfficiency
 from .modules import PPReadOrbitFile, PPCheckOrbitAndColoursMatching
-from .modules import PPReadOif
+from .modules import PPReadOif, PPReadEphemerides
 from .modules import PPDetectionProbability, PPSimpleSensorArea, PPTrailingLoss, PPMatchFieldConditions
 from .modules import PPDropObservations, PPBrightLimit
 from .modules import PPMakeIntermediatePointingDatabase, PPReadIntermDatabase
@@ -132,8 +132,7 @@ def runPostProcessing(parser):
         else:   
             try: 
                 pplogger.info('Reading input pointing history: ' + cmd_args['oifoutput'])
-                #oifoutputsuffix = cmd_args['oifoutput'].split('.')[-1]
-                padafr=PPReadOif.PPReadOif(cmd_args['oifoutput'], configs["pointingFormat"])
+                padafr=PPReadEphemerides.PPReadEphemerides(cmd_args['oifoutput'], configs['ephemerides_type'], configs["pointingFormat"])
                 
                 
                 padafr=padafr[padafr['ObjID'].isin(objid_list)]
@@ -297,7 +296,7 @@ def runPostProcessing(parser):
         PPWriteOutput(configs, observations, pplogger, endChunk)
                 
         startChunk = startChunk + configs['sizeSerialChunk']
-        # end for
+        # end for
     
     pplogger.info('Post processing completed.')
 
@@ -316,4 +315,4 @@ def main():
 
 if __name__=='__main__':
     main()
-
+    
