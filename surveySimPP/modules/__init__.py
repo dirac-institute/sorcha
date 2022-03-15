@@ -10,7 +10,6 @@ from . import PPDropObservations
 from . import PPFilterDetectionEfficiencyThreshold
 from . import PPFilterSSPCriterionEfficiency
 from . import PPFootprintFilter
-from . import PPhookBrightnessWithColour
 from . import PPJoinColourPointing
 from . import PPJoinOrbitalData
 from . import PPMakeIntermediatePointingDatabase

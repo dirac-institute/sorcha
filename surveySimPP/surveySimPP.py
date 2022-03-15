@@ -8,7 +8,7 @@ import argparse
 import configparser
 from lsstcomet import *
 from .modules import PPFilterDetectionEfficiencyThreshold, PPreadColoursUser, PPReadColours
-from .modules import PPhookBrightnessWithColour, PPJoinColourPointing, PPMatchPointing
+from .modules import PPJoinColourPointing, PPMatchPointing
 from .modules import PPMatchPointingsAndColours, PPFilterSSPCriterionEfficiency
 from .modules import PPReadOrbitFile, PPCheckOrbitAndColoursMatching
 from .modules import PPReadOif, PPReadEphemerides
@@ -162,7 +162,7 @@ def runPostProcessing(parser):
         #pplogger.info('Joining filters from pointing database with simulation data and dropping observations in non-requested filters...')
         #observations = PPMatchFilterToObservations(observations, filterpointing)
         
-        plogger.info('Joining info from pointing database with simulation data and dropping observations in non-requested filters...')
+        pplogger.info('Joining info from pointing database with simulation data and dropping observations in non-requested filters...')
         observations = PPMatchPointingToObservations(observations, filterpointing)
         
         
