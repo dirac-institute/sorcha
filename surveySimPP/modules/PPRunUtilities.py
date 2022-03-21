@@ -108,6 +108,7 @@ def PPConfigFileParser(configfile, pplogger):
 		pplogger.error('ERROR: objecttype is neither an asteroid or a comet.') 
 		sys.exit('ERROR: objecttype is neither an asteroid or a comet.')
 
+	config_dict['ephemerides_type'] = PPGetOrExit(config, 'INPUTFILES', 'ephemerides_type', 'ERROR: no ephemerides type provided.')
 	config_dict['pointingdatabase'] = PPGetOrExit(config, 'INPUTFILES', 'pointingdatabase', 'ERROR: no pointing database provided.')
 	config_dict['ppdbquery'] = PPGetOrExit(config, 'INPUTFILES', 'ppsqldbquery', 'ERROR: no pointing database SQLite3 query provided.')
 
