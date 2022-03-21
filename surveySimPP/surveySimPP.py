@@ -219,7 +219,7 @@ def runPostProcessing(parser):
             observations["detection_probability"] = PPDetectionProbability(observations, filterpointing)
                    
             pplogger.info('Calculating astrometric and photometric uncertainties...')
-            observations['AstrometricSigma(mas)'], observations['PhotometricSigma(mag)'], observations["SNR"] = PPAddUncertainties.addUncertainties(observations, filterpointing, obsIdNameEph='FieldID')
+            observations['AstrometricSigma(mas)'], observations['PhotometricSigma(mag)'], observations["SNR"] = PPAddUncertainties.uncertainties(observations)
             observations["AstrometricSigma(deg)"] = observations['AstrometricSigma(mas)'] / 3600. / 1000.
         
             pplogger.info('Dropping observations with signal to noise ratio less than 2...')
