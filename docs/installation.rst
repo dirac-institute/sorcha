@@ -23,8 +23,8 @@ Create a directory to contain the OIF and Survey Simulator repos::
    
 Create a conda environment::
 
-   conda create -n survey_sim_pp python=3.8 -c conda-forge -c mjuric python spiceypy openorb numpy pandas matplotlib spice-utils pip
-   conda activate simpp
+   conda create -n survey_sim_pp -c conda-forge -c mjuric python spiceypy openorb numpy pandas matplotlib spice-utils pip
+   conda activate survey_sim_pp
    
 
 Installing Objects in Field
@@ -84,6 +84,7 @@ Survey Simulator Requirements
 * sbpy
 * tables
 
+
 Installing the Survey Simulator Post Processing
 ------------------------------------------------
 Make sure you are in the directory you want to contain the Survey Simulator repo in::
@@ -107,7 +108,7 @@ Testing the Installation
 
 To test that the installation was done correctly, run::
 
-   surveySimPP.py -c ./PPConfig.ini -l ./data/test/testcolour.txt -o ./data/test/testorb.des -p ./data/test/oiftestoutput.txt
+   surveySimPP -c ./PPConfig.ini -l ./data/test/testcolour.txt -o ./data/test/testorb.des -p ./data/test/oiftestoutput.txt
    
 The output will appear in a csv file in .data/out (this pathway can be changed in the config file).
 The output should look like::

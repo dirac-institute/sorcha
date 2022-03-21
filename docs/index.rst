@@ -23,15 +23,14 @@ if it is observable with LSST, and specific guides for near earth objects, Jupit
    installation
    inputs
    outputs
-   usingoif
    gettingstarted
-   tutorial
    support
    acknowledgements
+   release
    
    
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    :caption: Documentation:
 
    modules
