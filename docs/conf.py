@@ -18,8 +18,8 @@ sys.path.insert(0, os.path.abspath('../'))
 # -- Project information -----------------------------------------------------
 
 project = 'Solar System Survey Simulator Post Processing'
-copyright = '2021, Siegfried Eggl, Mario Juric, Meg Schwamb, Grigori Fedorets, Shantanu Naidu, Sam Cornwall, Aidan Berres'
-author = 'Siegfried Eggl, Mario Juric, Meg Schwamb, Grigori Fedorets, Shantanu Naidu, Sam Cornwall, Aidan Berres'
+copyright = '2021, Siegfried Eggl, Mario Juric, Meg Schwamb, Grigori Fedorets, Shantanu Naidu, Sam Cornwall, Aidan Berres, Steph Merritt, Shannon Matthews, Lynne Jones, Colin Snodgrass'
+author = 'Siegfried Eggl, Mario Juric, Meg Schwamb, Grigori Fedorets, Shantanu Naidu, Sam Cornwall, Aidan Berres, Steph Merritt, Shannon Matthews, Lynne Jones, Colin Snodgrass'
 
 # The full version, including alpha/beta/rc tags
 release = '0.0.1'
