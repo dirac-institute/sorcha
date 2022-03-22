@@ -220,7 +220,6 @@ def runPostProcessing(parser):
                    
             pplogger.info('Calculating astrometric and photometric uncertainties...')
             observations['AstrometricSigma(mas)'], observations['PhotometricSigma(mag)'], observations["SNR"] = PPAddUncertainties.uncertainties(observations)
-            observations["AstrometricSigma(deg)"] = observations['AstrometricSigma(mas)'] / 3600. / 1000.
         
             pplogger.info('Dropping observations with signal to noise ratio less than 2...')
             observations.drop( np.where(observations["SNR"] <= 2.)[0], inplace=True)
@@ -245,7 +244,7 @@ def runPostProcessing(parser):
             pplogger.info('Calculating astrometric uncertainties...')
             observations["AstRATrue(deg)"] = observations["AstRA(deg)"]
             observations["AstDecTrue(deg)"] = observations["AstDec(deg)"]
-            observations["AstRA(deg)"], observations["AstDec(deg)"] = PPRandomizeMeasurements.randomizeAstrometry(observations, sigName='AstrometricSigma(deg)', rng=rng)
+            observations["AstRA(deg)"], observations["AstDec(deg)"] = PPRandomizeMeasurements.randomizeAstrometry(observations, sigName='AstrometricSigma(mas)', rng=rng, units='mas')
                     
             pplogger.info('Applying sensor footprint filter...')
             #on_sensor=PPFootprintFilter.footPrintFilter(observations, filterpointing, detectors)#, ra_name="AstRATrue(deg)", dec_name="AstDecTrue(deg)")
