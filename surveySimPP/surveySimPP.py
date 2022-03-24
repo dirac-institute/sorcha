@@ -17,7 +17,8 @@ from .modules import PPDropObservations, PPBrightLimit
 from .modules import PPMakeIntermediatePointingDatabase, PPReadIntermDatabase
 from .modules import PPReadCometaryInput, PPJoinOrbitalData, PPCalculateSimpleCometaryMagnitude
 from .modules import PPCalculateApparentMagnitude
-from .modules.PPApplyFootprint import PPApplyFootprint
+from .modules.PPApplyFOVFilter import PPApplyFOVFilter
+from .modules.PPSNRLimit import PPSNRLimit
 from .modules import PPFootprintFilter, PPAddUncertainties, PPRandomizeMeasurements, PPVignetting
 from .modules.PPDetectionProbability import calcDetectionProbability, PPDetectionProbability
 from .modules.PPRunUtilities import PPGetLogger, PPConfigFileParser, PPPrintConfigsToLog, PPCMDLineParser, PPWriteOutput
@@ -122,8 +123,7 @@ def runPostProcessing(parser):
             padaco=PPReadCometaryInput.PPReadCometaryInput(cmd_args['cometinput'], startChunk, incrStep, configs['filesep'])
         
         objid_list = padacl['ObjID'].unique().tolist() 
-
-        
+       
         # write pointing history to database
         # select obj_id rows from tables 
         
@@ -158,11 +158,9 @@ def runPostProcessing(parser):
         
         pplogger.info('Joining info from pointing database with simulation data and dropping observations in non-requested filters...')
         observations = PPMatchPointingToObservations(observations, filterpointing)
-        
-        
+                
         pplogger.info('Calculating apparent magnitudes...')
         observations=PPCalculateApparentMagnitude.PPCalculateApparentMagnitude(observations, configs['phasefunction'], configs['mainfilter'], configs['othercolours'], configs['resfilters'])
-
 
         if (configs['objecttype']=='comet'):
              pplogger.info('Calculating cometary magnitude using a simple model...')
@@ -174,31 +172,30 @@ def runPostProcessing(parser):
         ### The treatment is further divided by cameraModel: surfaceArea is a much simpler model, mimicking the fraction of the surface
         ### area not covered by chip gaps, whereas footprint takes into account the actual footprints
         
-        pplogger.info('Applying cuts due to camera footprint...')
-        observations = PPApplyFootprint(observations, configs)
+        pplogger.info('Applying field-of-view filters...')
+        observations = PPApplyFOVFilter(observations, configs)
 
         pplogger.info('Calculating probabilities of detections...')
-        observations["detection_probability"] = PPDetectionProbability(observations, filterpointing)
+        observations["detection_probability"] = PPDetectionProbability(observations)
                
         pplogger.info('Calculating astrometric and photometric uncertainties...')
         observations['AstrometricSigma(mas)'], observations['PhotometricSigma(mag)'], observations["SNR"] = PPAddUncertainties.uncertainties(observations)
         observations["AstrometricSigma(deg)"] = observations['AstrometricSigma(mas)'] / 3600. / 1000.
     
         pplogger.info('Dropping observations with signal to noise ratio less than 2...')
-        observations.drop( np.where(observations["SNR"] <= 2.)[0], inplace=True)
-        observations.reset_index(drop=True, inplace=True)
+        observations = PPSNRLimit(observations)
     
         pplogger.info('Applying uncertainty to photometry...')
         observations["MagnitudeInFilter"] = PPRandomizeMeasurements.randomizePhotometry(observations, magName="MagnitudeInFilter", sigName="PhotometricSigma(mag)", rng=rng)
         
         if (configs['trailingLossesOn'] == True):
              pplogger.info('Calculating trailing losses...')
-             observations['dmagDetect']=PPTrailingLoss.PPTrailingLoss(observations, filterpointing)
+             observations['dmagDetect']=PPTrailingLoss.PPTrailingLoss(observations)
         else:
             observations['dmagDetect']=0.0                 
              
         pplogger.info('Calculating vignetting losses...')
-        observations['dmagVignet']=PPVignetting.vignettingLosses(observations, filterpointing)
+        observations['dmagVignet']=PPVignetting.vignettingLosses(observations)
     
         pplogger.info("Dropping faint detections... ")
         observations.drop( np.where(observations["MagnitudeInFilter"] + observations["dmagDetect"] + observations['dmagVignet'] >= observations["fiveSigmaDepth"])[0], inplace=True)
