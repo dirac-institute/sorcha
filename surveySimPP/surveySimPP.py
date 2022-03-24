@@ -173,7 +173,7 @@ def runPostProcessing(parser):
         ### area not covered by chip gaps, whereas footprint takes into account the actual footprints
         
         pplogger.info('Applying field-of-view filters...')
-        observations = PPApplyFOVFilter(observations, configs['cameraModel'], configs['footprintPath'])
+        observations = PPApplyFOVFilter(observations, configs)
 
         pplogger.info('Calculating probabilities of detections...')
         observations["detection_probability"] = PPDetectionProbability(observations)

@@ -4,7 +4,7 @@ from . import PPFootprintFilter
 import logging
 
 
-def PPApplyFOVFilter(observations, camera_model, footprint_path):
+def PPApplyFOVFilter(observations, configs):
 
     """
     PPApplyFootprint.py
@@ -25,13 +25,13 @@ def PPApplyFOVFilter(observations, camera_model, footprint_path):
 
     pplogger = logging.getLogger(__name__)
     
-    if camera_model == "circle":
+    if configs['cameraModel'] == 'circle':
         pplogger.info('Applying detection efficiency threshold...')
-        observations=PPFilterDetectionEfficiencyThreshold.PPFilterDetectionEfficiencyThreshold(observations,configs['SSPDetectionEfficiency'])
+        observations=PPFilterDetectionEfficiencyThreshold.PPFilterDetectionEfficiencyThreshold(observations,configs['fillfactor'])
 
-    elif camera_model == "footprint":
+    elif configs['cameraModel'] == 'footprint':
         pplogger.info('Applying sensor footprint filter...')
-        footprintf = PPFootprintFilter.Footprint(footprint_path)
+        footprintf = PPFootprintFilter.Footprint(configs['footprintPath'])
         onSensor, detectorIDs = footprintf.applyFootprint(observations)
 
         observations=observations.iloc[onSensor].copy()
