@@ -33,3 +33,4 @@ from . import PPTrailingLoss
 from . import PPTranslateMagnitude
 from . import PPVignetting
 from . import PPRunUtilities
+from . import PPApplyFootprint
