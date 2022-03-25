@@ -8,5 +8,5 @@ wheel
 setuptools_scm>=3.4
 astropy
 scipy
-sbpy
 tables
+sbpy @ git+https://github.com/NASA-Planetary-Science/sbpy.git
