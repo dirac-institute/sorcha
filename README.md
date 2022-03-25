@@ -34,7 +34,7 @@ git clone https://github.com/dirac-institute/survey_simulator_post_processing.gi
 
 Cd into the directory:
 ```
-cd ~/survey_simulator_post_processing
+cd survey_simulator_post_processing
 ```
 
 The code can be installed by typing:
