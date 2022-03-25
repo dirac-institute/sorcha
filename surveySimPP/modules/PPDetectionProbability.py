@@ -70,10 +70,10 @@ def calcDetectionProbability(mag, limmag, fillFactor=1.0, w=0.1):
 
 #-----------------------------------------------------------------------------------------------
 
-def PPDetectionProbability(oif_df, survey_df, trailing_losses=False, trailing_loss_name='dmagDetect',
+def PPDetectionProbability(oif_df, trailing_losses=False, trailing_loss_name='dmagDetect',
                            magnitude_name="MagnitudeInFilter",
-                           limiting_magnitude_name_survey="fiveSigmaDepth",
-                           field_id_name="FieldID", field_id_name_survey="FieldID",
+                           limiting_magnitude_name="fiveSigmaDepth",
+                           field_id_name="FieldID",
                            fillFactor=1.0, w=0.1):
 
         """
@@ -81,18 +81,16 @@ def PPDetectionProbability(oif_df, survey_df, trailing_losses=False, trailing_lo
 
         Input
         -----
-        oif_df          ... pandas dataframe containing objectsInField output.
-        survey_df       ... pandas dataframe containing observation data (i.e., field limiting magnitudes).
+        oif_df          ... pandas dataframe containing simulation output joined to pointing.
         *_name          ... names of columns in oif_df
-        *name_survey    ... names of columns in survey_df
         fillFactor      ... fraction of the field of view covered by sensors.
         w               ... distribution parameter
         """
 
 
         if (trailing_losses==False):
-            return calcDetectionProbability(oif_df[magnitude_name],oif_df[limiting_magnitude_name_survey], fillFactor, w)
+            return calcDetectionProbability(oif_df[magnitude_name],oif_df[limiting_magnitude_name], fillFactor, w)
         elif (trailing_losses==True):
-            return calcDetectionProbability(oif_df[magnitude_name] + oif_df[trailing_loss_name],oif_df[limiting_magnitude_name_survey], fillFactor, w)
+            return calcDetectionProbability(oif_df[magnitude_name] + oif_df[trailing_loss_name],oif_df[limiting_magnitude_name], fillFactor, w)
         else:
             print('trailing_loss has to be True or False')

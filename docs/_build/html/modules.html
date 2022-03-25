@@ -17,8 +17,8 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="modules.tests package" href="modules.tests.html" />
-    <link rel="prev" title="Acknowledgements" href="acknowledgements.html" /> 
+    <link rel="next" title="lsstcomet package" href="lsstcomet.html" />
+    <link rel="prev" title="Release History" href="release.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -40,55 +40,59 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="usingoif.html">Using Objects In Field</a></li>
+<li class="toctree-l1"><a class="reference internal" href="filters.html">Filters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="inputs.html">Inputs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="configfiles.html">Configuration Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="configfiles.html#inputs">Inputs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="outputs.html">Outputs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="gettingstarted.html">Getting Started</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="troubleshooting.html">Troubleshooting</a></li>
 <li class="toctree-l1"><a class="reference internal" href="support.html">Support</a></li>
 <li class="toctree-l1"><a class="reference internal" href="acknowledgements.html">Acknowledgements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="release.html">Release History</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Documentation:</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">modules package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#subpackages">Subpackages</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="modules.tests.html">modules.tests package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#subpackages">Subpackages</a><ul class="simple">
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-modules.PPAddUncertainties">modules.PPAddUncertainties module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-modules.PPAppmag_to">modules.PPAppmag_to module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-modules.PPBrightLimit">modules.PPBrightLimit module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-modules.PPCalculateApparentMagnitude">modules.PPCalculateApparentMagnitude module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-modules.PPCalculateSimpleCometaryMagnitude">modules.PPCalculateSimpleCometaryMagnitude module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-modules.PPCheckOrbitAndColoursMatching">modules.PPCheckOrbitAndColoursMatching module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-modules.PPDetectionProbability">modules.PPDetectionProbability module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-modules.PPDropObservations">modules.PPDropObservations module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-modules.PPFilterDetectionEfficiencyThreshold">modules.PPFilterDetectionEfficiencyThreshold module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-modules.PPFilterSSPCriterionEfficiency">modules.PPFilterSSPCriterionEfficiency module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-modules.PPFootprintFilter">modules.PPFootprintFilter module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-modules.PPJoinColourPointing">modules.PPJoinColourPointing module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-modules.PPJoinCometaryWithOrbits">modules.PPJoinCometaryWithOrbits module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-modules.PPMakeIntermediatePointingDatabase">modules.PPMakeIntermediatePointingDatabase module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-modules.PPMatchFieldConditions">modules.PPMatchFieldConditions module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-modules.PPMatchPointing">modules.PPMatchPointing module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-modules.PPMatchPointingsAndColours">modules.PPMatchPointingsAndColours module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-modules.PPOutWriteCSV">modules.PPOutWriteCSV module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-modules.PPOutWriteHDF5">modules.PPOutWriteHDF5 module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-modules.PPOutWriteSqlite3">modules.PPOutWriteSqlite3 module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-modules.PPRandomize">modules.PPRandomize module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-modules.PPRandomizeMeasurements">modules.PPRandomizeMeasurements module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-modules.PPReadBrightness">modules.PPReadBrightness module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-modules.PPReadColours">modules.PPReadColours module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-modules.PPReadCometaryInput">modules.PPReadCometaryInput module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-modules.PPReadIntermDatabase">modules.PPReadIntermDatabase module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-modules.PPReadOif">modules.PPReadOif module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-modules.PPReadOrbitFile">modules.PPReadOrbitFile module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-modules.PPSimpleSensorArea">modules.PPSimpleSensorArea module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-modules.PPTrailingLoss">modules.PPTrailingLoss module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-modules.PPTranslateMagnitude">modules.PPTranslateMagnitude module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-modules.PPVignetting">modules.PPVignetting module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-modules.PPhookBrightnessWithColour">modules.PPhookBrightnessWithColour module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-modules.PPreadColoursUser">modules.PPreadColoursUser module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-modules">Module contents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-surveySimPP.modules.PPAddUncertainties">surveySimPP.modules.PPAddUncertainties module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-surveySimPP.modules.PPAppmag_to">surveySimPP.modules.PPAppmag_to module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-surveySimPP.modules.PPBrightLimit">surveySimPP.modules.PPBrightLimit module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-surveySimPP.modules.PPCalculateApparentMagnitude">surveySimPP.modules.PPCalculateApparentMagnitude module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-surveySimPP.modules.PPCalculateSimpleCometaryMagnitude">surveySimPP.modules.PPCalculateSimpleCometaryMagnitude module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-surveySimPP.modules.PPCheckOrbitAndColoursMatching">surveySimPP.modules.PPCheckOrbitAndColoursMatching module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-surveySimPP.modules.PPDetectionProbability">surveySimPP.modules.PPDetectionProbability module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-surveySimPP.modules.PPDropObservations">surveySimPP.modules.PPDropObservations module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-surveySimPP.modules.PPFilterDetectionEfficiencyThreshold">surveySimPP.modules.PPFilterDetectionEfficiencyThreshold module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-surveySimPP.modules.PPFilterSSPCriterionEfficiency">surveySimPP.modules.PPFilterSSPCriterionEfficiency module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-surveySimPP.modules.PPFootprintFilter">surveySimPP.modules.PPFootprintFilter module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-surveySimPP.modules.PPJoinColourPointing">surveySimPP.modules.PPJoinColourPointing module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#surveysimpp-modules-ppjoincometarywithorbits-module">surveySimPP.modules.PPJoinCometaryWithOrbits module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-surveySimPP.modules.PPMakeIntermediatePointingDatabase">surveySimPP.modules.PPMakeIntermediatePointingDatabase module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-surveySimPP.modules.PPMatchFieldConditions">surveySimPP.modules.PPMatchFieldConditions module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-surveySimPP.modules.PPMatchPointing">surveySimPP.modules.PPMatchPointing module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-surveySimPP.modules.PPMatchPointingsAndColours">surveySimPP.modules.PPMatchPointingsAndColours module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-surveySimPP.modules.PPOutWriteCSV">surveySimPP.modules.PPOutWriteCSV module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-surveySimPP.modules.PPOutWriteHDF5">surveySimPP.modules.PPOutWriteHDF5 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-surveySimPP.modules.PPOutWriteSqlite3">surveySimPP.modules.PPOutWriteSqlite3 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-surveySimPP.modules.PPRandomize">surveySimPP.modules.PPRandomize module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-surveySimPP.modules.PPRandomizeMeasurements">surveySimPP.modules.PPRandomizeMeasurements module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#surveysimpp-modules-ppreadbrightness-module">surveySimPP.modules.PPReadBrightness module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-surveySimPP.modules.PPReadColours">surveySimPP.modules.PPReadColours module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-surveySimPP.modules.PPReadCometaryInput">surveySimPP.modules.PPReadCometaryInput module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-surveySimPP.modules.PPReadIntermDatabase">surveySimPP.modules.PPReadIntermDatabase module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-surveySimPP.modules.PPReadOif">surveySimPP.modules.PPReadOif module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-surveySimPP.modules.PPReadOrbitFile">surveySimPP.modules.PPReadOrbitFile module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-surveySimPP.modules.PPSimpleSensorArea">surveySimPP.modules.PPSimpleSensorArea module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-surveySimPP.modules.PPTrailingLoss">surveySimPP.modules.PPTrailingLoss module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-surveySimPP.modules.PPTranslateMagnitude">surveySimPP.modules.PPTranslateMagnitude module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-surveySimPP.modules.PPVignetting">surveySimPP.modules.PPVignetting module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-surveySimPP.modules.PPhookBrightnessWithColour">surveySimPP.modules.PPhookBrightnessWithColour module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-surveySimPP.modules.PPreadColoursUser">surveySimPP.modules.PPreadColoursUser module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-surveySimPP.modules">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="lsstcomet.html">lsstcomet package</a></li>
@@ -123,50 +127,17 @@
 <div class="section" id="subpackages">
 <h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline"></a></h2>
 <div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="modules.tests.html">modules.tests package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="modules.tests.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules.tests.html#module-modules.tests.test_PPAddUncertaintiy">modules.tests.test_PPAddUncertaintiy module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules.tests.html#module-modules.tests.test_PPBrightLimit">modules.tests.test_PPBrightLimit module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules.tests.html#module-modules.tests.test_PPCalculateApparentMagnitude">modules.tests.test_PPCalculateApparentMagnitude module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules.tests.html#module-modules.tests.test_PPCalculateSimpleCometaryMagnitude">modules.tests.test_PPCalculateSimpleCometaryMagnitude module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules.tests.html#module-modules.tests.test_PPCheckOrbitAndColoursMatching">modules.tests.test_PPCheckOrbitAndColoursMatching module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules.tests.html#module-modules.tests.test_PPDetectionProbability">modules.tests.test_PPDetectionProbability module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules.tests.html#module-modules.tests.test_PPFilterDetectionEfficiencyThreshold">modules.tests.test_PPFilterDetectionEfficiencyThreshold module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules.tests.html#module-modules.tests.test_PPFilterSSPCriterionEfficiency">modules.tests.test_PPFilterSSPCriterionEfficiency module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules.tests.html#module-modules.tests.test_PPJoinColourPointing">modules.tests.test_PPJoinColourPointing module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules.tests.html#module-modules.tests.test_PPJoinCometaryWithOrbits">modules.tests.test_PPJoinCometaryWithOrbits module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules.tests.html#module-modules.tests.test_PPMakeIntermediatePointingDatabase">modules.tests.test_PPMakeIntermediatePointingDatabase module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules.tests.html#module-modules.tests.test_PPMatchPointing">modules.tests.test_PPMatchPointing module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules.tests.html#module-modules.tests.test_PPMatchPointingsAndColours">modules.tests.test_PPMatchPointingsAndColours module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules.tests.html#module-modules.tests.test_PPOutWriteCSV">modules.tests.test_PPOutWriteCSV module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules.tests.html#module-modules.tests.test_PPOutWriteHDF5">modules.tests.test_PPOutWriteHDF5 module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules.tests.html#module-modules.tests.test_PPOutWriteSqlite3">modules.tests.test_PPOutWriteSqlite3 module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules.tests.html#module-modules.tests.test_PPRandomize">modules.tests.test_PPRandomize module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules.tests.html#module-modules.tests.test_PPReadBrightness">modules.tests.test_PPReadBrightness module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules.tests.html#module-modules.tests.test_PPReadCometaryInput">modules.tests.test_PPReadCometaryInput module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules.tests.html#module-modules.tests.test_PPReadIntermDatabase">modules.tests.test_PPReadIntermDatabase module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules.tests.html#module-modules.tests.test_PPReadOrbitFile">modules.tests.test_PPReadOrbitFile module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules.tests.html#module-modules.tests.test_PPTrailingLoss">modules.tests.test_PPTrailingLoss module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules.tests.html#module-modules.tests.test_PPhookBrightnessWithColour">modules.tests.test_PPhookBrightnessWithColour module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules.tests.html#module-modules.tests.test_PPreadColours">modules.tests.test_PPreadColours module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules.tests.html#module-modules.tests.test_PPreadColoursUser">modules.tests.test_PPreadColoursUser module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules.tests.html#module-modules.tests.test_PPresolveFilters">modules.tests.test_PPresolveFilters module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules.tests.html#module-modules.tests">Module contents</a></li>
-</ul>
-</li>
-</ul>
 </div>
 </div>
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline"></a></h2>
 </div>
-<div class="section" id="module-modules.PPAddUncertainties">
-<span id="modules-ppadduncertainties-module"></span><h2>modules.PPAddUncertainties module<a class="headerlink" href="#module-modules.PPAddUncertainties" title="Permalink to this headline"></a></h2>
+<div class="section" id="module-surveySimPP.modules.PPAddUncertainties">
+<span id="surveysimpp-modules-ppadduncertainties-module"></span><h2>surveySimPP.modules.PPAddUncertainties module<a class="headerlink" href="#module-surveySimPP.modules.PPAddUncertainties" title="Permalink to this headline"></a></h2>
 <p>Calculate Astrometric and Photometric Uncertainties for ground based observations.</p>
 <dl class="py function">
-<dt class="sig sig-object py" id="modules.PPAddUncertainties.addUncertainties">
-<span class="sig-prename descclassname"><span class="pre">modules.PPAddUncertainties.</span></span><span class="sig-name descname"><span class="pre">addUncertainties</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ephemsdf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obsdf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'fieldRA'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">decName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'fieldDec'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obsIdName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'FieldID'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obsEpochName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'observationStartMJD'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raNameEph</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'AstRA(deg)'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">decNameEph</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'AstDec(deg)'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obsIdNameEph</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'observationId'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ephEpochName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'FieldMJD'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limMagName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'fiveSigmaDepth'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seeingName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'seeingFwhmGeom'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filterMagName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'MaginFil'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.PPAddUncertainties.addUncertainties" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="surveySimPP.modules.PPAddUncertainties.addUncertainties">
+<span class="sig-prename descclassname"><span class="pre">surveySimPP.modules.PPAddUncertainties.</span></span><span class="sig-name descname"><span class="pre">addUncertainties</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ephemsdf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obsdf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'fieldRA'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">decName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'fieldDec'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obsIdName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'FieldID'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obsEpochName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'observationStartMJD'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raNameEph</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'AstRA(deg)'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">decNameEph</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'AstDec(deg)'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obsIdNameEph</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'observationId'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ephEpochName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'FieldMJD'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limMagName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'fiveSigmaDepth'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seeingName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'seeingFwhmGeom'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filterMagName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'MagnitudeInFilter'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#surveySimPP.modules.PPAddUncertainties.addUncertainties" title="Permalink to this definition"></a></dt>
 <dd><p>Add astrometric and photometric uncertainties to observations generated through JPL ephemeris simulator.</p>
 <p>ephemsdf   … Pandas dataFrame containing output of JPL ephemeris simulator
 obsdf    … Pandas dataFrame containing survey simulator output such as LSST opsim
@@ -176,8 +147,8 @@ obsdf    … Pandas dataFrame containing survey simulator output such as LSST op
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="modules.PPAddUncertainties.calcAstrometricUncertainty">
-<span class="sig-prename descclassname"><span class="pre">modules.PPAddUncertainties.</span></span><span class="sig-name descname"><span class="pre">calcAstrometricUncertainty</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">m5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nvisit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">FWHMeff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">700.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">error_sys</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">astErrCoeff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.6</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_units</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mas'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.PPAddUncertainties.calcAstrometricUncertainty" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="surveySimPP.modules.PPAddUncertainties.calcAstrometricUncertainty">
+<span class="sig-prename descclassname"><span class="pre">surveySimPP.modules.PPAddUncertainties.</span></span><span class="sig-name descname"><span class="pre">calcAstrometricUncertainty</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">m5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nvisit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">FWHMeff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">700.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">error_sys</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">astErrCoeff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.6</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_units</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mas'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#surveySimPP.modules.PPAddUncertainties.calcAstrometricUncertainty" title="Permalink to this definition"></a></dt>
 <dd><p>Calculate the astrometric uncertainty, for object catalog purposes.
 The effective FWHMeff MUST BE given in miliarcsec (NOT arcsec!).
 Systematic error, error_sys, must be given in miliarcsec.
@@ -212,8 +183,8 @@ design spec from the LSST Science Requirements Document (ls.st/srd)</p></li>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="modules.PPAddUncertainties.calcPhotometricUncertainty">
-<span class="sig-prename descclassname"><span class="pre">modules.PPAddUncertainties.</span></span><span class="sig-name descname"><span class="pre">calcPhotometricUncertainty</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SNR</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.PPAddUncertainties.calcPhotometricUncertainty" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="surveySimPP.modules.PPAddUncertainties.calcPhotometricUncertainty">
+<span class="sig-prename descclassname"><span class="pre">surveySimPP.modules.PPAddUncertainties.</span></span><span class="sig-name descname"><span class="pre">calcPhotometricUncertainty</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SNR</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#surveySimPP.modules.PPAddUncertainties.calcPhotometricUncertainty" title="Permalink to this definition"></a></dt>
 <dd><p>Photometric uncertainty in magnitudes from flux signal to noise ratio.</p>
 <blockquote>
 <div><p>snr … is the signal to noise ratio in flux</p>
@@ -224,8 +195,8 @@ design spec from the LSST Science Requirements Document (ls.st/srd)</p></li>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="modules.PPAddUncertainties.calcRandomAstrometricErrorPerCoord">
-<span class="sig-prename descclassname"><span class="pre">modules.PPAddUncertainties.</span></span><span class="sig-name descname"><span class="pre">calcRandomAstrometricErrorPerCoord</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">FWHMeff</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">SNR</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">AstromErrCoeff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.6</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.PPAddUncertainties.calcRandomAstrometricErrorPerCoord" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="surveySimPP.modules.PPAddUncertainties.calcRandomAstrometricErrorPerCoord">
+<span class="sig-prename descclassname"><span class="pre">surveySimPP.modules.PPAddUncertainties.</span></span><span class="sig-name descname"><span class="pre">calcRandomAstrometricErrorPerCoord</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">FWHMeff</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">SNR</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">AstromErrCoeff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.6</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#surveySimPP.modules.PPAddUncertainties.calcRandomAstrometricErrorPerCoord" title="Permalink to this definition"></a></dt>
 <dd><p>Calculate the random astrometric uncertainty, as a function of
 effective FWHMeff and signal-to-noise ratio SNR
 Returns astrometric uncertainty in the same units as FWHM.
@@ -262,8 +233,8 @@ practice to empirically account for other error sources.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="modules.PPAddUncertainties.magErrorFromSNR">
-<span class="sig-prename descclassname"><span class="pre">modules.PPAddUncertainties.</span></span><span class="sig-name descname"><span class="pre">magErrorFromSNR</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">snr</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.PPAddUncertainties.magErrorFromSNR" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="surveySimPP.modules.PPAddUncertainties.magErrorFromSNR">
+<span class="sig-prename descclassname"><span class="pre">surveySimPP.modules.PPAddUncertainties.</span></span><span class="sig-name descname"><span class="pre">magErrorFromSNR</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">snr</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#surveySimPP.modules.PPAddUncertainties.magErrorFromSNR" title="Permalink to this definition"></a></dt>
 <dd><p>Convert flux signal to noise ratio to an uncertainty in magnitude.</p>
 <blockquote>
 <div><p>snr … is the signal to noise ratio in flux</p>
@@ -275,11 +246,11 @@ practice to empirically account for other error sources.</p>
 </dd></dl>
 
 </div>
-<div class="section" id="module-modules.PPAppmag_to">
-<span id="modules-ppappmag-to-module"></span><h2>modules.PPAppmag_to module<a class="headerlink" href="#module-modules.PPAppmag_to" title="Permalink to this headline"></a></h2>
+<div class="section" id="module-surveySimPP.modules.PPAppmag_to">
+<span id="surveysimpp-modules-ppappmag-to-module"></span><h2>surveySimPP.modules.PPAppmag_to module<a class="headerlink" href="#module-surveySimPP.modules.PPAppmag_to" title="Permalink to this headline"></a></h2>
 <dl class="py function">
-<dt class="sig sig-object py" id="modules.PPAppmag_to.appMagFitterHG">
-<span class="sig-prename descclassname"><span class="pre">modules.PPAppmag_to.</span></span><span class="sig-name descname"><span class="pre">appMagFitterHG</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mag_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weights</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.PPAppmag_to.appMagFitterHG" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="surveySimPP.modules.PPAppmag_to.appMagFitterHG">
+<span class="sig-prename descclassname"><span class="pre">surveySimPP.modules.PPAppmag_to.</span></span><span class="sig-name descname"><span class="pre">appMagFitterHG</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mag_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weights</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#surveySimPP.modules.PPAppmag_to.appMagFitterHG" title="Permalink to this definition"></a></dt>
 <dd><p>Fit visual apparent magnitude values to H-magnitude values using the HG system and LevMarLSQFitter</p>
 <dl class="simple">
 <dt>mag_list: array</dt><dd><p>visual color corrected (all the same band color/filter) apparent magnitudes to be fitted</p>
@@ -305,8 +276,8 @@ practice to empirically account for other error sources.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="modules.PPAppmag_to.appMagFitterHG12">
-<span class="sig-prename descclassname"><span class="pre">modules.PPAppmag_to.</span></span><span class="sig-name descname"><span class="pre">appMagFitterHG12</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mag_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weights</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.PPAppmag_to.appMagFitterHG12" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="surveySimPP.modules.PPAppmag_to.appMagFitterHG12">
+<span class="sig-prename descclassname"><span class="pre">surveySimPP.modules.PPAppmag_to.</span></span><span class="sig-name descname"><span class="pre">appMagFitterHG12</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mag_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weights</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#surveySimPP.modules.PPAppmag_to.appMagFitterHG12" title="Permalink to this definition"></a></dt>
 <dd><p>Fit visual apparent magnitude values to H-magnitude values using the HG12 system and LevMarLSQFitter</p>
 <dl class="simple">
 <dt>mag_list: array</dt><dd><p>visual color corrected (all the same band color/filter) apparent magnitudes to be fitted</p>
@@ -332,8 +303,8 @@ practice to empirically account for other error sources.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="modules.PPAppmag_to.appMagFitterHG1G2">
-<span class="sig-prename descclassname"><span class="pre">modules.PPAppmag_to.</span></span><span class="sig-name descname"><span class="pre">appMagFitterHG1G2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mag_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weights</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.PPAppmag_to.appMagFitterHG1G2" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="surveySimPP.modules.PPAppmag_to.appMagFitterHG1G2">
+<span class="sig-prename descclassname"><span class="pre">surveySimPP.modules.PPAppmag_to.</span></span><span class="sig-name descname"><span class="pre">appMagFitterHG1G2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mag_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weights</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#surveySimPP.modules.PPAppmag_to.appMagFitterHG1G2" title="Permalink to this definition"></a></dt>
 <dd><p>Fit visual apparent magnitude values to H-magnitude values using the HG1G2 system and LevMarLSQFitter</p>
 <dl class="simple">
 <dt>mag_list: array</dt><dd><p>visual color corrected (all the same band color/filter) apparent magnitudes to be fitted</p>
@@ -363,11 +334,11 @@ practice to empirically account for other error sources.</p>
 </dd></dl>
 
 </div>
-<div class="section" id="module-modules.PPBrightLimit">
-<span id="modules-ppbrightlimit-module"></span><h2>modules.PPBrightLimit module<a class="headerlink" href="#module-modules.PPBrightLimit" title="Permalink to this headline"></a></h2>
+<div class="section" id="module-surveySimPP.modules.PPBrightLimit">
+<span id="surveysimpp-modules-ppbrightlimit-module"></span><h2>surveySimPP.modules.PPBrightLimit module<a class="headerlink" href="#module-surveySimPP.modules.PPBrightLimit" title="Permalink to this headline"></a></h2>
 <dl class="py function">
-<dt class="sig sig-object py" id="modules.PPBrightLimit.PPBrightLimit">
-<span class="sig-prename descclassname"><span class="pre">modules.PPBrightLimit.</span></span><span class="sig-name descname"><span class="pre">PPBrightLimit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">padain</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">brlimit</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.PPBrightLimit.PPBrightLimit" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="surveySimPP.modules.PPBrightLimit.PPBrightLimit">
+<span class="sig-prename descclassname"><span class="pre">surveySimPP.modules.PPBrightLimit.</span></span><span class="sig-name descname"><span class="pre">PPBrightLimit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">padain</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">brlimit</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#surveySimPP.modules.PPBrightLimit.PPBrightLimit" title="Permalink to this definition"></a></dt>
 <dd><p>Task: PPBrightLimit</p>
 <p>Description: Goes through every row in pandas dataframe and drops lines the ColinFil
 of which is brighter than the defined magnitude.</p>
@@ -377,43 +348,31 @@ upperlimit: float, upper limit for ColinFil column value in padain dataframe</p>
 </dd></dl>
 
 </div>
-<div class="section" id="module-modules.PPCalculateApparentMagnitude">
-<span id="modules-ppcalculateapparentmagnitude-module"></span><h2>modules.PPCalculateApparentMagnitude module<a class="headerlink" href="#module-modules.PPCalculateApparentMagnitude" title="Permalink to this headline"></a></h2>
+<div class="section" id="module-surveySimPP.modules.PPCalculateApparentMagnitude">
+<span id="surveysimpp-modules-ppcalculateapparentmagnitude-module"></span><h2>surveySimPP.modules.PPCalculateApparentMagnitude module<a class="headerlink" href="#module-surveySimPP.modules.PPCalculateApparentMagnitude" title="Permalink to this headline"></a></h2>
 <dl class="py function">
-<dt class="sig sig-object py" id="modules.PPCalculateApparentMagnitude.PPCalculateApparentMagnitude">
-<span class="sig-prename descclassname"><span class="pre">modules.PPCalculateApparentMagnitude.</span></span><span class="sig-name descname"><span class="pre">PPCalculateApparentMagnitude</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">padain</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">function</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mainfilter</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.PPCalculateApparentMagnitude.PPCalculateApparentMagnitude" title="Permalink to this definition"></a></dt>
-<dd><p>PPCalculateApparentMagnitude.py</p>
-<p>Description: This task calculates the apparent brightness of an 
-object in the mail filter (as defined in the config file) at a given pointing
-according to one of the following photometric phase function models:</p>
-<blockquote>
-<div><p>HG:                Bowell et al. (1989) Asteroids II book.
-HG1G2:             Muinonen et al. (2010) Icarus 209 542.
-HG12:              Penttilä et al. (2016) PSS 123 117.
-linear             (as implemented in sbpy)</p>
-</div></blockquote>
-<p>The brightness is here calculated in the main filter, and the colour offset is
-applied later using the PPhookBrightnessWithColour function.</p>
-<p>The function makes use of the implementations in the sbpy library.</p>
+<dt class="sig sig-object py" id="surveySimPP.modules.PPCalculateApparentMagnitude.PPCalculateApparentMagnitude">
+<span class="sig-prename descclassname"><span class="pre">surveySimPP.modules.PPCalculateApparentMagnitude.</span></span><span class="sig-name descname"><span class="pre">PPCalculateApparentMagnitude</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">observations</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phasefunction</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mainfilter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">othercolours</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resfilters</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filterpointing</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#surveySimPP.modules.PPCalculateApparentMagnitude.PPCalculateApparentMagnitude" title="Permalink to this definition"></a></dt>
+<dd><p>This task combines calculating the apparent magnitude in the main filter, combining the brightness information with
+colours for appropriate filter, and then, finally, selecting the correct colour and applying the correct offset.</p>
 <dl class="simple">
-<dt>Mandatory input:      string, padain, name of input pandas daraframe  </dt><dd><dl class="simple">
-<dt>string, function, selected photometric phase function</dt><dd><p>(HG, HG1G2, HG12, linear)</p>
-</dd>
-<dt>string, mainfilter, name of the main filter in which</dt><dd><p>the brightness is calculated</p>
+<dt>Input: observations<span class="classifier">pandas DataFrame</span></dt><dd><p>phasefunction  : string
+mainfilter     : string
+othercolours   : array of strings
+resfilters     : array of strings
+filterpointing : string</p>
 </dd>
 </dl>
-</dd>
-</dl>
-<p>Output:        updated padain</p>
-<p>usage: padaout=PPCalculateApparentMagnitude(padain, function, mainfilter):</p>
+<p>Output: observations: amended pandas DataFrame</p>
+<p>Usage: observations=PPCalculateApparentMagnitude(observations, phasefunction, mainfilter, othercolours, resfilters, filterpointing)</p>
 </dd></dl>
 
 </div>
-<div class="section" id="module-modules.PPCalculateSimpleCometaryMagnitude">
-<span id="modules-ppcalculatesimplecometarymagnitude-module"></span><h2>modules.PPCalculateSimpleCometaryMagnitude module<a class="headerlink" href="#module-modules.PPCalculateSimpleCometaryMagnitude" title="Permalink to this headline"></a></h2>
+<div class="section" id="module-surveySimPP.modules.PPCalculateSimpleCometaryMagnitude">
+<span id="surveysimpp-modules-ppcalculatesimplecometarymagnitude-module"></span><h2>surveySimPP.modules.PPCalculateSimpleCometaryMagnitude module<a class="headerlink" href="#module-surveySimPP.modules.PPCalculateSimpleCometaryMagnitude" title="Permalink to this headline"></a></h2>
 <dl class="py function">
-<dt class="sig sig-object py" id="modules.PPCalculateSimpleCometaryMagnitude.PPCalculateSimpleCometaryMagnitude">
-<span class="sig-prename descclassname"><span class="pre">modules.PPCalculateSimpleCometaryMagnitude.</span></span><span class="sig-name descname"><span class="pre">PPCalculateSimpleCometaryMagnitude</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">padain</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mainfilter</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.PPCalculateSimpleCometaryMagnitude.PPCalculateSimpleCometaryMagnitude" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="surveySimPP.modules.PPCalculateSimpleCometaryMagnitude.PPCalculateSimpleCometaryMagnitude">
+<span class="sig-prename descclassname"><span class="pre">surveySimPP.modules.PPCalculateSimpleCometaryMagnitude.</span></span><span class="sig-name descname"><span class="pre">PPCalculateSimpleCometaryMagnitude</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">padain</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mainfilter</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#surveySimPP.modules.PPCalculateSimpleCometaryMagnitude.PPCalculateSimpleCometaryMagnitude" title="Permalink to this definition"></a></dt>
 <dd><p>PPCalculateSimpleCometaryMagnitude.py</p>
 <p>Description: This task calculates the brightness of the comet at a given pointing
 according to a simple model by A’Hearn et al. (1984).</p>
@@ -431,11 +390,11 @@ applied later using the PPhookBrightnessWithColour function.</p>
 </dd></dl>
 
 </div>
-<div class="section" id="module-modules.PPCheckOrbitAndColoursMatching">
-<span id="modules-ppcheckorbitandcoloursmatching-module"></span><h2>modules.PPCheckOrbitAndColoursMatching module<a class="headerlink" href="#module-modules.PPCheckOrbitAndColoursMatching" title="Permalink to this headline"></a></h2>
+<div class="section" id="module-surveySimPP.modules.PPCheckOrbitAndColoursMatching">
+<span id="surveysimpp-modules-ppcheckorbitandcoloursmatching-module"></span><h2>surveySimPP.modules.PPCheckOrbitAndColoursMatching module<a class="headerlink" href="#module-surveySimPP.modules.PPCheckOrbitAndColoursMatching" title="Permalink to this headline"></a></h2>
 <dl class="py function">
-<dt class="sig sig-object py" id="modules.PPCheckOrbitAndColoursMatching.PPCheckOrbitAndColoursMatching">
-<span class="sig-prename descclassname"><span class="pre">modules.PPCheckOrbitAndColoursMatching.</span></span><span class="sig-name descname"><span class="pre">PPCheckOrbitAndColoursMatching</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">orbin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">poiin</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.PPCheckOrbitAndColoursMatching.PPCheckOrbitAndColoursMatching" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="surveySimPP.modules.PPCheckOrbitAndColoursMatching.PPCheckOrbitAndColoursMatching">
+<span class="sig-prename descclassname"><span class="pre">surveySimPP.modules.PPCheckOrbitAndColoursMatching.</span></span><span class="sig-name descname"><span class="pre">PPCheckOrbitAndColoursMatching</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">orbin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">poiin</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#surveySimPP.modules.PPCheckOrbitAndColoursMatching.PPCheckOrbitAndColoursMatching" title="Permalink to this definition"></a></dt>
 <dd><dl class="simple">
 <dt>Description: Checks whether orbit and colour files contain the same object id:s, and</dt><dd><p>additionally checks if the pointing database object id:s is a subset of 
 all the object id:s found in the orbit/physical parameter files.</p>
@@ -449,12 +408,12 @@ pandas dataframe: poiin – pointing database</p>
 </dd></dl>
 
 </div>
-<div class="section" id="module-modules.PPDetectionProbability">
-<span id="modules-ppdetectionprobability-module"></span><h2>modules.PPDetectionProbability module<a class="headerlink" href="#module-modules.PPDetectionProbability" title="Permalink to this headline"></a></h2>
+<div class="section" id="module-surveySimPP.modules.PPDetectionProbability">
+<span id="surveysimpp-modules-ppdetectionprobability-module"></span><h2>surveySimPP.modules.PPDetectionProbability module<a class="headerlink" href="#module-surveySimPP.modules.PPDetectionProbability" title="Permalink to this headline"></a></h2>
 <p>Calculate probability of detection due to fading</p>
 <dl class="py function">
-<dt class="sig sig-object py" id="modules.PPDetectionProbability.PPDetectionProbability">
-<span class="sig-prename descclassname"><span class="pre">modules.PPDetectionProbability.</span></span><span class="sig-name descname"><span class="pre">PPDetectionProbability</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">oif_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">survey_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trailing_losses</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trailing_loss_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'dmagDetect'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">magnitude_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'MaginFil'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limiting_magnitude_name_survey</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'fiveSigmaDepth'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field_id_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'FieldID'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field_id_name_survey</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'FieldID'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fillFactor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.PPDetectionProbability.PPDetectionProbability" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="surveySimPP.modules.PPDetectionProbability.PPDetectionProbability">
+<span class="sig-prename descclassname"><span class="pre">surveySimPP.modules.PPDetectionProbability.</span></span><span class="sig-name descname"><span class="pre">PPDetectionProbability</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">oif_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">survey_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trailing_losses</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trailing_loss_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'dmagDetect'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">magnitude_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'MagnitudeInFilter'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limiting_magnitude_name_survey</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'fiveSigmaDepth'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field_id_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'FieldID'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field_id_name_survey</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'FieldID'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fillFactor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#surveySimPP.modules.PPDetectionProbability.PPDetectionProbability" title="Permalink to this definition"></a></dt>
 <dd><p>Probability of observations being observable for objectInField output.</p>
 <p>oif_df          … pandas dataframe containing objectsInField output.
 survey_df       … pandas dataframe containing observation data (i.e., field limiting magnitudes).
@@ -465,11 +424,11 @@ w               … distribution parameter</p>
 </dd></dl>
 
 </div>
-<div class="section" id="module-modules.PPDropObservations">
-<span id="modules-ppdropobservations-module"></span><h2>modules.PPDropObservations module<a class="headerlink" href="#module-modules.PPDropObservations" title="Permalink to this headline"></a></h2>
+<div class="section" id="module-surveySimPP.modules.PPDropObservations">
+<span id="surveysimpp-modules-ppdropobservations-module"></span><h2>surveySimPP.modules.PPDropObservations module<a class="headerlink" href="#module-surveySimPP.modules.PPDropObservations" title="Permalink to this headline"></a></h2>
 <dl class="py function">
-<dt class="sig sig-object py" id="modules.PPDropObservations.PPDropObservations">
-<span class="sig-prename descclassname"><span class="pre">modules.PPDropObservations.</span></span><span class="sig-name descname"><span class="pre">PPDropObservations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">observations</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">probability</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'detection</span> <span class="pre">probability'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.PPDropObservations.PPDropObservations" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="surveySimPP.modules.PPDropObservations.PPDropObservations">
+<span class="sig-prename descclassname"><span class="pre">surveySimPP.modules.PPDropObservations.</span></span><span class="sig-name descname"><span class="pre">PPDropObservations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">observations</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">probability</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'detection</span> <span class="pre">probability'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#surveySimPP.modules.PPDropObservations.PPDropObservations" title="Permalink to this definition"></a></dt>
 <dd><p>Drops rows where the probabilty of detection is less than sample drawn
 from a uniform distribution.</p>
 <p>observations … pandas dataframe of observations with a column containing the probability of detection
@@ -478,11 +437,11 @@ probability  … name of the column containing the probability of detection</p>
 </dd></dl>
 
 </div>
-<div class="section" id="module-modules.PPFilterDetectionEfficiencyThreshold">
-<span id="modules-ppfilterdetectionefficiencythreshold-module"></span><h2>modules.PPFilterDetectionEfficiencyThreshold module<a class="headerlink" href="#module-modules.PPFilterDetectionEfficiencyThreshold" title="Permalink to this headline"></a></h2>
+<div class="section" id="module-surveySimPP.modules.PPFilterDetectionEfficiencyThreshold">
+<span id="surveysimpp-modules-ppfilterdetectionefficiencythreshold-module"></span><h2>surveySimPP.modules.PPFilterDetectionEfficiencyThreshold module<a class="headerlink" href="#module-surveySimPP.modules.PPFilterDetectionEfficiencyThreshold" title="Permalink to this headline"></a></h2>
 <dl class="py function">
-<dt class="sig sig-object py" id="modules.PPFilterDetectionEfficiencyThreshold.PPFilterDetectionEfficiencyThreshold">
-<span class="sig-prename descclassname"><span class="pre">modules.PPFilterDetectionEfficiencyThreshold.</span></span><span class="sig-name descname"><span class="pre">PPFilterDetectionEfficiencyThreshold</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">padain</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.PPFilterDetectionEfficiencyThreshold.PPFilterDetectionEfficiencyThreshold" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="surveySimPP.modules.PPFilterDetectionEfficiencyThreshold.PPFilterDetectionEfficiencyThreshold">
+<span class="sig-prename descclassname"><span class="pre">surveySimPP.modules.PPFilterDetectionEfficiencyThreshold.</span></span><span class="sig-name descname"><span class="pre">PPFilterDetectionEfficiencyThreshold</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">padain</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#surveySimPP.modules.PPFilterDetectionEfficiencyThreshold.PPFilterDetectionEfficiencyThreshold" title="Permalink to this definition"></a></dt>
 <dd><p>Task: PPFilterDetectionEfficiencyThreshold</p>
 <dl class="simple">
 <dt>Input: padain: pandas dataframe, in objectsInField (oif) format, </dt><dd><p>threshold: float, between 0 and 1</p>
@@ -494,11 +453,11 @@ pre-determined acceptance threshold (between 0 and 1).</p>
 </dd></dl>
 
 </div>
-<div class="section" id="module-modules.PPFilterSSPCriterionEfficiency">
-<span id="modules-ppfiltersspcriterionefficiency-module"></span><h2>modules.PPFilterSSPCriterionEfficiency module<a class="headerlink" href="#module-modules.PPFilterSSPCriterionEfficiency" title="Permalink to this headline"></a></h2>
+<div class="section" id="module-surveySimPP.modules.PPFilterSSPCriterionEfficiency">
+<span id="surveysimpp-modules-ppfiltersspcriterionefficiency-module"></span><h2>surveySimPP.modules.PPFilterSSPCriterionEfficiency module<a class="headerlink" href="#module-surveySimPP.modules.PPFilterSSPCriterionEfficiency" title="Permalink to this headline"></a></h2>
 <dl class="py function">
-<dt class="sig sig-object py" id="modules.PPFilterSSPCriterionEfficiency.PPFilterSSPCriterionEfficiency">
-<span class="sig-prename descclassname"><span class="pre">modules.PPFilterSSPCriterionEfficiency.</span></span><span class="sig-name descname"><span class="pre">PPFilterSSPCriterionEfficiency</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">padain</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minintracklets</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nooftracklets</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">intervaltime</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inSepThresHoldAsec</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.PPFilterSSPCriterionEfficiency.PPFilterSSPCriterionEfficiency" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="surveySimPP.modules.PPFilterSSPCriterionEfficiency.PPFilterSSPCriterionEfficiency">
+<span class="sig-prename descclassname"><span class="pre">surveySimPP.modules.PPFilterSSPCriterionEfficiency.</span></span><span class="sig-name descname"><span class="pre">PPFilterSSPCriterionEfficiency</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">padain</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minintracklets</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nooftracklets</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">intervaltime</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inSepThresHoldAsec</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#surveySimPP.modules.PPFilterSSPCriterionEfficiency.PPFilterSSPCriterionEfficiency" title="Permalink to this definition"></a></dt>
 <dd><p>PPFilterSSPCriterionEfficiency.py</p>
 <p>Description: This task reads in the modified pandas dataframe
 (including colours), checks if coordinates within tracklets are far enough 
@@ -525,11 +484,11 @@ between images</p>
 </dd></dl>
 
 </div>
-<div class="section" id="module-modules.PPFootprintFilter">
-<span id="modules-ppfootprintfilter-module"></span><h2>modules.PPFootprintFilter module<a class="headerlink" href="#module-modules.PPFootprintFilter" title="Permalink to this headline"></a></h2>
+<div class="section" id="module-surveySimPP.modules.PPFootprintFilter">
+<span id="surveysimpp-modules-ppfootprintfilter-module"></span><h2>surveySimPP.modules.PPFootprintFilter module<a class="headerlink" href="#module-surveySimPP.modules.PPFootprintFilter" title="Permalink to this headline"></a></h2>
 <dl class="py function">
-<dt class="sig sig-object py" id="modules.PPFootprintFilter.footPrintFilter">
-<span class="sig-prename descclassname"><span class="pre">modules.PPFootprintFilter.</span></span><span class="sig-name descname"><span class="pre">footPrintFilter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">observations</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">survey</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">detectors</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ra_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'AstRA(deg)'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dec_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'AstDec(deg)'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'FieldID'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ra_name_field</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'fieldRA'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dec_name_field</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'fieldDec'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rot_name_field</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'rotSkyPos'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.PPFootprintFilter.footPrintFilter" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="surveySimPP.modules.PPFootprintFilter.footPrintFilter">
+<span class="sig-prename descclassname"><span class="pre">surveySimPP.modules.PPFootprintFilter.</span></span><span class="sig-name descname"><span class="pre">footPrintFilter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">observations</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">survey</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">detectors</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ra_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'AstRA(deg)'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dec_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'AstDec(deg)'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'FieldID'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ra_name_field</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'fieldRA'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dec_name_field</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'fieldDec'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rot_name_field</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'rotSkyPos'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#surveySimPP.modules.PPFootprintFilter.footPrintFilter" title="Permalink to this definition"></a></dt>
 <dd><p>Applies camera footpint to remove observations that do not fall on
 detector chips.
 Input
@@ -547,11 +506,11 @@ survey              … pandas dataframe containing fieldID, field center ra</p>
 </dd></dl>
 
 </div>
-<div class="section" id="module-modules.PPJoinColourPointing">
-<span id="modules-ppjoincolourpointing-module"></span><h2>modules.PPJoinColourPointing module<a class="headerlink" href="#module-modules.PPJoinColourPointing" title="Permalink to this headline"></a></h2>
+<div class="section" id="module-surveySimPP.modules.PPJoinColourPointing">
+<span id="surveysimpp-modules-ppjoincolourpointing-module"></span><h2>surveySimPP.modules.PPJoinColourPointing module<a class="headerlink" href="#module-surveySimPP.modules.PPJoinColourPointing" title="Permalink to this headline"></a></h2>
 <dl class="py function">
-<dt class="sig sig-object py" id="modules.PPJoinColourPointing.PPJoinColourPointing">
-<span class="sig-prename descclassname"><span class="pre">modules.PPJoinColourPointing.</span></span><span class="sig-name descname"><span class="pre">PPJoinColourPointing</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">padafr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">padacl</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.PPJoinColourPointing.PPJoinColourPointing" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="surveySimPP.modules.PPJoinColourPointing.PPJoinColourPointing">
+<span class="sig-prename descclassname"><span class="pre">surveySimPP.modules.PPJoinColourPointing.</span></span><span class="sig-name descname"><span class="pre">PPJoinColourPointing</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">padafr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">padacl</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#surveySimPP.modules.PPJoinColourPointing.PPJoinColourPointing" title="Permalink to this definition"></a></dt>
 <dd><p>PPJoinColourPointing.py</p>
 <p>Description: This task  joins the pointing pandas database with the
 colour pandas database. Each database has to have same ObjID:s: NaN:s will
@@ -562,26 +521,14 @@ be populate the fields for the missing objects.</p>
 </dd></dl>
 
 </div>
-<div class="section" id="module-modules.PPJoinCometaryWithOrbits">
-<span id="modules-ppjoincometarywithorbits-module"></span><h2>modules.PPJoinCometaryWithOrbits module<a class="headerlink" href="#module-modules.PPJoinCometaryWithOrbits" title="Permalink to this headline"></a></h2>
-<dl class="py function">
-<dt class="sig sig-object py" id="modules.PPJoinCometaryWithOrbits.PPJoinCometaryWithOrbits">
-<span class="sig-prename descclassname"><span class="pre">modules.PPJoinCometaryWithOrbits.</span></span><span class="sig-name descname"><span class="pre">PPJoinCometaryWithOrbits</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">padafr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">padaor</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.PPJoinCometaryWithOrbits.PPJoinCometaryWithOrbits" title="Permalink to this definition"></a></dt>
-<dd><p>PPJoinCometaryWithOrbits.py</p>
-<p>Description: This task  joins the pointing pandas database with the
-colour/cometary pandas database. Each database has to have same ObjID:s: NaN:s will
-be populate the fields for the missing objects.</p>
-<p>Mandatory input:      oif pandas database and colour/cometary database</p>
-<p>Output:               new joined pandas dataframe</p>
-<p>usage: padafr1=PPPJoinCometaryWithOrbits(padafr,padaor)</p>
-</dd></dl>
-
+<div class="section" id="surveysimpp-modules-ppjoincometarywithorbits-module">
+<h2>surveySimPP.modules.PPJoinCometaryWithOrbits module<a class="headerlink" href="#surveysimpp-modules-ppjoincometarywithorbits-module" title="Permalink to this headline"></a></h2>
 </div>
-<div class="section" id="module-modules.PPMakeIntermediatePointingDatabase">
-<span id="modules-ppmakeintermediatepointingdatabase-module"></span><h2>modules.PPMakeIntermediatePointingDatabase module<a class="headerlink" href="#module-modules.PPMakeIntermediatePointingDatabase" title="Permalink to this headline"></a></h2>
+<div class="section" id="module-surveySimPP.modules.PPMakeIntermediatePointingDatabase">
+<span id="surveysimpp-modules-ppmakeintermediatepointingdatabase-module"></span><h2>surveySimPP.modules.PPMakeIntermediatePointingDatabase module<a class="headerlink" href="#module-surveySimPP.modules.PPMakeIntermediatePointingDatabase" title="Permalink to this headline"></a></h2>
 <dl class="py function">
-<dt class="sig sig-object py" id="modules.PPMakeIntermediatePointingDatabase.PPMakeIntermediatePointingDatabase">
-<span class="sig-prename descclassname"><span class="pre">modules.PPMakeIntermediatePointingDatabase.</span></span><span class="sig-name descname"><span class="pre">PPMakeIntermediatePointingDatabase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">oif_output</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chunkSize</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.PPMakeIntermediatePointingDatabase.PPMakeIntermediatePointingDatabase" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="surveySimPP.modules.PPMakeIntermediatePointingDatabase.PPMakeIntermediatePointingDatabase">
+<span class="sig-prename descclassname"><span class="pre">surveySimPP.modules.PPMakeIntermediatePointingDatabase.</span></span><span class="sig-name descname"><span class="pre">PPMakeIntermediatePointingDatabase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">oif_output</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chunkSize</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#surveySimPP.modules.PPMakeIntermediatePointingDatabase.PPMakeIntermediatePointingDatabase" title="Permalink to this definition"></a></dt>
 <dd><p>PPMakeIntermediatePointingDatabase.py</p>
 <blockquote>
 <div><p>Description: This task makes an intermediate pointing database from the output of
@@ -597,14 +544,15 @@ int, chunkSize,</p>
 </dd></dl>
 
 </div>
-<div class="section" id="module-modules.PPMatchFieldConditions">
-<span id="modules-ppmatchfieldconditions-module"></span><h2>modules.PPMatchFieldConditions module<a class="headerlink" href="#module-modules.PPMatchFieldConditions" title="Permalink to this headline"></a></h2>
+<div class="section" id="module-surveySimPP.modules.PPMatchFieldConditions">
+<span id="surveysimpp-modules-ppmatchfieldconditions-module"></span><h2>surveySimPP.modules.PPMatchFieldConditions module<a class="headerlink" href="#module-surveySimPP.modules.PPMatchFieldConditions" title="Permalink to this headline"></a></h2>
 <p>Extracts observation ID, limiting magnitude, and seeing from survey database, 
 returing them as a 3*n pandas database.</p>
 <dl class="py function">
-<dt class="sig sig-object py" id="modules.PPMatchFieldConditions.PPMatchFieldConditions">
-<span class="sig-prename descclassname"><span class="pre">modules.PPMatchFieldConditions.</span></span><span class="sig-name descname"><span class="pre">PPMatchFieldConditions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dbname</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.PPMatchFieldConditions.PPMatchFieldConditions" title="Permalink to this definition"></a></dt>
-<dd><p>dbname … name of survey database</p>
+<dt class="sig sig-object py" id="surveySimPP.modules.PPMatchFieldConditions.PPMatchFieldConditions">
+<span class="sig-prename descclassname"><span class="pre">surveySimPP.modules.PPMatchFieldConditions.</span></span><span class="sig-name descname"><span class="pre">PPMatchFieldConditions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dbname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dbquery</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#surveySimPP.modules.PPMatchFieldConditions.PPMatchFieldConditions" title="Permalink to this definition"></a></dt>
+<dd><p>dbname …  string, name of survey database
+dgquery … string, SQLite3 query for querying the pointing database (defined in configuration file)</p>
 <dl class="simple">
 <dt>fieldConditions … pandas dataframe containing field ID, limiting </dt><dd><p>magnitude, and seeing</p>
 </dd>
@@ -612,28 +560,29 @@ returing them as a 3*n pandas database.</p>
 </dd></dl>
 
 </div>
-<div class="section" id="module-modules.PPMatchPointing">
-<span id="modules-ppmatchpointing-module"></span><h2>modules.PPMatchPointing module<a class="headerlink" href="#module-modules.PPMatchPointing" title="Permalink to this headline"></a></h2>
+<div class="section" id="module-surveySimPP.modules.PPMatchPointing">
+<span id="surveysimpp-modules-ppmatchpointing-module"></span><h2>surveySimPP.modules.PPMatchPointing module<a class="headerlink" href="#module-surveySimPP.modules.PPMatchPointing" title="Permalink to this headline"></a></h2>
 <dl class="py function">
-<dt class="sig sig-object py" id="modules.PPMatchPointing.PPMatchPointing">
-<span class="sig-prename descclassname"><span class="pre">modules.PPMatchPointing.</span></span><span class="sig-name descname"><span class="pre">PPMatchPointing</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bsdbname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resfilters</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.PPMatchPointing.PPMatchPointing" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="surveySimPP.modules.PPMatchPointing.PPMatchPointing">
+<span class="sig-prename descclassname"><span class="pre">surveySimPP.modules.PPMatchPointing.</span></span><span class="sig-name descname"><span class="pre">PPMatchPointing</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bsdbname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resfilters</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dbquery</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#surveySimPP.modules.PPMatchPointing.PPMatchPointing" title="Permalink to this definition"></a></dt>
 <dd><p>PPMatchPointing.py</p>
 <p>Description: This task reads in the main baseline database, and extracts observationID,
 observationsStartMJD, used filter and three seeing parameters at a given pointing and outputs a 6*n pandas dataframe.</p>
 <dl class="simple">
-<dt>Mandatory input:      bsdbname:   name of database</dt><dd><p>resfilters: filters required for output</p>
+<dt>Mandatory input:      bsdbname:   string, name of database</dt><dd><p>resfilters: array of strings, filters required for output
+dbquery:    string, SQLite3 query for querying the pointing database (defined in configuration file)</p>
 </dd>
 </dl>
 <p>Output:               8*n pandas dataframe</p>
-<p>usage: padafr=PPMatchPointing(bsdbname,resfilters)</p>
+<p>usage: padafr=PPMatchPointing(bsdbname,resfilters,dbquery)</p>
 </dd></dl>
 
 </div>
-<div class="section" id="module-modules.PPMatchPointingsAndColours">
-<span id="modules-ppmatchpointingsandcolours-module"></span><h2>modules.PPMatchPointingsAndColours module<a class="headerlink" href="#module-modules.PPMatchPointingsAndColours" title="Permalink to this headline"></a></h2>
+<div class="section" id="module-surveySimPP.modules.PPMatchPointingsAndColours">
+<span id="surveysimpp-modules-ppmatchpointingsandcolours-module"></span><h2>surveySimPP.modules.PPMatchPointingsAndColours module<a class="headerlink" href="#module-surveySimPP.modules.PPMatchPointingsAndColours" title="Permalink to this headline"></a></h2>
 <dl class="py function">
-<dt class="sig sig-object py" id="modules.PPMatchPointingsAndColours.PPMatchPointingsAndColours">
-<span class="sig-prename descclassname"><span class="pre">modules.PPMatchPointingsAndColours.</span></span><span class="sig-name descname"><span class="pre">PPMatchPointingsAndColours</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">padain</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pointfildb</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.PPMatchPointingsAndColours.PPMatchPointingsAndColours" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="surveySimPP.modules.PPMatchPointingsAndColours.PPMatchPointingsAndColours">
+<span class="sig-prename descclassname"><span class="pre">surveySimPP.modules.PPMatchPointingsAndColours.</span></span><span class="sig-name descname"><span class="pre">PPMatchPointingsAndColours</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">padain</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pointfildb</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#surveySimPP.modules.PPMatchPointingsAndColours.PPMatchPointingsAndColours" title="Permalink to this definition"></a></dt>
 <dd><p>PPMatchPointingsAndColours.py</p>
 <p>Description: This task takes two pandas dataframes: one is output that includes all 
 relevant colours, the other is a two-column database that includes all the fieldId:s
@@ -651,11 +600,11 @@ pointing and filter dataframe (pandas dataframe)</p>
 </dd></dl>
 
 </div>
-<div class="section" id="module-modules.PPOutWriteCSV">
-<span id="modules-ppoutwritecsv-module"></span><h2>modules.PPOutWriteCSV module<a class="headerlink" href="#module-modules.PPOutWriteCSV" title="Permalink to this headline"></a></h2>
+<div class="section" id="module-surveySimPP.modules.PPOutWriteCSV">
+<span id="surveysimpp-modules-ppoutwritecsv-module"></span><h2>surveySimPP.modules.PPOutWriteCSV module<a class="headerlink" href="#module-surveySimPP.modules.PPOutWriteCSV" title="Permalink to this headline"></a></h2>
 <dl class="py function">
-<dt class="sig sig-object py" id="modules.PPOutWriteCSV.PPOutWriteCSV">
-<span class="sig-prename descclassname"><span class="pre">modules.PPOutWriteCSV.</span></span><span class="sig-name descname"><span class="pre">PPOutWriteCSV</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">padain</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outf</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.PPOutWriteCSV.PPOutWriteCSV" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="surveySimPP.modules.PPOutWriteCSV.PPOutWriteCSV">
+<span class="sig-prename descclassname"><span class="pre">surveySimPP.modules.PPOutWriteCSV.</span></span><span class="sig-name descname"><span class="pre">PPOutWriteCSV</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">padain</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outf</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#surveySimPP.modules.PPOutWriteCSV.PPOutWriteCSV" title="Permalink to this definition"></a></dt>
 <dd><p>PPOutWriteCSV.py</p>
 <p>Description: This task reads in the pandas database, and writes out a CSV file by a name given by the user.</p>
 <p>Mandatory input:      name of database, name of output file</p>
@@ -664,11 +613,11 @@ pointing and filter dataframe (pandas dataframe)</p>
 </dd></dl>
 
 </div>
-<div class="section" id="module-modules.PPOutWriteHDF5">
-<span id="modules-ppoutwritehdf5-module"></span><h2>modules.PPOutWriteHDF5 module<a class="headerlink" href="#module-modules.PPOutWriteHDF5" title="Permalink to this headline"></a></h2>
+<div class="section" id="module-surveySimPP.modules.PPOutWriteHDF5">
+<span id="surveysimpp-modules-ppoutwritehdf5-module"></span><h2>surveySimPP.modules.PPOutWriteHDF5 module<a class="headerlink" href="#module-surveySimPP.modules.PPOutWriteHDF5" title="Permalink to this headline"></a></h2>
 <dl class="py function">
-<dt class="sig sig-object py" id="modules.PPOutWriteHDF5.PPOutWriteHDF5">
-<span class="sig-prename descclassname"><span class="pre">modules.PPOutWriteHDF5.</span></span><span class="sig-name descname"><span class="pre">PPOutWriteHDF5</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pp_results</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keyin</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.PPOutWriteHDF5.PPOutWriteHDF5" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="surveySimPP.modules.PPOutWriteHDF5.PPOutWriteHDF5">
+<span class="sig-prename descclassname"><span class="pre">surveySimPP.modules.PPOutWriteHDF5.</span></span><span class="sig-name descname"><span class="pre">PPOutWriteHDF5</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pp_results</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keyin</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#surveySimPP.modules.PPOutWriteHDF5.PPOutWriteHDF5" title="Permalink to this definition"></a></dt>
 <dd><p>PPOutWriteSqlite3.py</p>
 <p>Description: This task reads in the pandas database, and writes out a HDF5 binary file by a name given by the user.</p>
 <p>Mandatory input:      name of database, name of output file</p>
@@ -677,11 +626,11 @@ pointing and filter dataframe (pandas dataframe)</p>
 </dd></dl>
 
 </div>
-<div class="section" id="module-modules.PPOutWriteSqlite3">
-<span id="modules-ppoutwritesqlite3-module"></span><h2>modules.PPOutWriteSqlite3 module<a class="headerlink" href="#module-modules.PPOutWriteSqlite3" title="Permalink to this headline"></a></h2>
+<div class="section" id="module-surveySimPP.modules.PPOutWriteSqlite3">
+<span id="surveysimpp-modules-ppoutwritesqlite3-module"></span><h2>surveySimPP.modules.PPOutWriteSqlite3 module<a class="headerlink" href="#module-surveySimPP.modules.PPOutWriteSqlite3" title="Permalink to this headline"></a></h2>
 <dl class="py function">
-<dt class="sig sig-object py" id="modules.PPOutWriteSqlite3.PPOutWriteSqlite3">
-<span class="sig-prename descclassname"><span class="pre">modules.PPOutWriteSqlite3.</span></span><span class="sig-name descname"><span class="pre">PPOutWriteSqlite3</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pp_results</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outf</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.PPOutWriteSqlite3.PPOutWriteSqlite3" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="surveySimPP.modules.PPOutWriteSqlite3.PPOutWriteSqlite3">
+<span class="sig-prename descclassname"><span class="pre">surveySimPP.modules.PPOutWriteSqlite3.</span></span><span class="sig-name descname"><span class="pre">PPOutWriteSqlite3</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pp_results</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outf</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#surveySimPP.modules.PPOutWriteSqlite3.PPOutWriteSqlite3" title="Permalink to this definition"></a></dt>
 <dd><p>PPOutWriteSqlite3.py</p>
 <p>Description: This task reads in the pandas database, and writes out a Sqlite3 database file by a name given by the user.</p>
 <p>Mandatory input:      name of database, name of output file</p>
@@ -690,11 +639,11 @@ pointing and filter dataframe (pandas dataframe)</p>
 </dd></dl>
 
 </div>
-<div class="section" id="module-modules.PPRandomize">
-<span id="modules-pprandomize-module"></span><h2>modules.PPRandomize module<a class="headerlink" href="#module-modules.PPRandomize" title="Permalink to this headline"></a></h2>
+<div class="section" id="module-surveySimPP.modules.PPRandomize">
+<span id="surveysimpp-modules-pprandomize-module"></span><h2>surveySimPP.modules.PPRandomize module<a class="headerlink" href="#module-surveySimPP.modules.PPRandomize" title="Permalink to this headline"></a></h2>
 <dl class="py function">
-<dt class="sig sig-object py" id="modules.PPRandomize.randomizeAstrometry">
-<span class="sig-prename descclassname"><span class="pre">modules.PPRandomize.</span></span><span class="sig-name descname"><span class="pre">randomizeAstrometry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ephemsdf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raSigName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">decSigName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'AstRA(deg)'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">decName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'AstDec(deg)'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.PPRandomize.randomizeAstrometry" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="surveySimPP.modules.PPRandomize.randomizeAstrometry">
+<span class="sig-prename descclassname"><span class="pre">surveySimPP.modules.PPRandomize.</span></span><span class="sig-name descname"><span class="pre">randomizeAstrometry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ephemsdf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raSigName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">decSigName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'AstRA(deg)'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">decName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'AstDec(deg)'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#surveySimPP.modules.PPRandomize.randomizeAstrometry" title="Permalink to this definition"></a></dt>
 <dd><p>Randomize astrometric values (in degrees) for simulated observations</p>
 <dl class="simple">
 <dt>ephemsdf   … Pandas dataFrame containing output of JPL ephemeris </dt><dd><p>generator and astrometric uncertainties</p>
@@ -705,8 +654,8 @@ pointing and filter dataframe (pandas dataframe)</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="modules.PPRandomize.randomizePhotometry">
-<span class="sig-prename descclassname"><span class="pre">modules.PPRandomize.</span></span><span class="sig-name descname"><span class="pre">randomizePhotometry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ephemsdf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">photSigName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">photName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Filtermag'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.PPRandomize.randomizePhotometry" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="surveySimPP.modules.PPRandomize.randomizePhotometry">
+<span class="sig-prename descclassname"><span class="pre">surveySimPP.modules.PPRandomize.</span></span><span class="sig-name descname"><span class="pre">randomizePhotometry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ephemsdf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">photSigName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">photName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Filtermag'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#surveySimPP.modules.PPRandomize.randomizePhotometry" title="Permalink to this definition"></a></dt>
 <dd><p>Randomize photometric values for simulated observations</p>
 <dl class="simple">
 <dt>ephemsdf   … Pandas dataFrame containing output of JPL ephemeris </dt><dd><p>generator and astrometric uncertainties</p>
@@ -717,12 +666,12 @@ pointing and filter dataframe (pandas dataframe)</p>
 </dd></dl>
 
 </div>
-<div class="section" id="module-modules.PPRandomizeMeasurements">
-<span id="modules-pprandomizemeasurements-module"></span><h2>modules.PPRandomizeMeasurements module<a class="headerlink" href="#module-modules.PPRandomizeMeasurements" title="Permalink to this headline"></a></h2>
+<div class="section" id="module-surveySimPP.modules.PPRandomizeMeasurements">
+<span id="surveysimpp-modules-pprandomizemeasurements-module"></span><h2>surveySimPP.modules.PPRandomizeMeasurements module<a class="headerlink" href="#module-surveySimPP.modules.PPRandomizeMeasurements" title="Permalink to this headline"></a></h2>
 <p>Calculate Astrometric and Photometric Uncertainties for ground based observations and randomize OIF measurements accordingly.</p>
 <dl class="py function">
-<dt class="sig sig-object py" id="modules.PPRandomizeMeasurements.flux2mag">
-<span class="sig-prename descclassname"><span class="pre">modules.PPRandomizeMeasurements.</span></span><span class="sig-name descname"><span class="pre">flux2mag</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f0</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3631</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.PPRandomizeMeasurements.flux2mag" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="surveySimPP.modules.PPRandomizeMeasurements.flux2mag">
+<span class="sig-prename descclassname"><span class="pre">surveySimPP.modules.PPRandomizeMeasurements.</span></span><span class="sig-name descname"><span class="pre">flux2mag</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f0</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3631</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#surveySimPP.modules.PPRandomizeMeasurements.flux2mag" title="Permalink to this definition"></a></dt>
 <dd><p>AB ugriz system (f0 = 3631 Jy) to magnitude conversion</p>
 <p>f  … flux [Jy]
 f0 … zero point flux</p>
@@ -730,8 +679,8 @@ f0 … zero point flux</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="modules.PPRandomizeMeasurements.icrf2radec">
-<span class="sig-prename descclassname"><span class="pre">modules.PPRandomizeMeasurements.</span></span><span class="sig-name descname"><span class="pre">icrf2radec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.PPRandomizeMeasurements.icrf2radec" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="surveySimPP.modules.PPRandomizeMeasurements.icrf2radec">
+<span class="sig-prename descclassname"><span class="pre">surveySimPP.modules.PPRandomizeMeasurements.</span></span><span class="sig-name descname"><span class="pre">icrf2radec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#surveySimPP.modules.PPRandomizeMeasurements.icrf2radec" title="Permalink to this definition"></a></dt>
 <dd><p>Convert ICRF xyz to Right Ascension and Declination.
 Geometric states on unit sphere, no light travel time/aberration correction.</p>
 <p>x,y,z … 3D vector of unit length (ICRF)
@@ -741,8 +690,8 @@ dec … Declination [deg]</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="modules.PPRandomizeMeasurements.mag2flux">
-<span class="sig-prename descclassname"><span class="pre">modules.PPRandomizeMeasurements.</span></span><span class="sig-name descname"><span class="pre">mag2flux</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f0</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3631</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.PPRandomizeMeasurements.mag2flux" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="surveySimPP.modules.PPRandomizeMeasurements.mag2flux">
+<span class="sig-prename descclassname"><span class="pre">surveySimPP.modules.PPRandomizeMeasurements.</span></span><span class="sig-name descname"><span class="pre">mag2flux</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f0</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3631</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#surveySimPP.modules.PPRandomizeMeasurements.mag2flux" title="Permalink to this definition"></a></dt>
 <dd><p>AB ugriz system (f0 = 3631 Jy) magnitude to flux conversion</p>
 <p>mag … pogson magnitude
 f0 … zero point flux</p>
@@ -750,8 +699,8 @@ f0 … zero point flux</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="modules.PPRandomizeMeasurements.radec2icrf">
-<span class="sig-prename descclassname"><span class="pre">modules.PPRandomizeMeasurements.</span></span><span class="sig-name descname"><span class="pre">radec2icrf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ra</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dec</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.PPRandomizeMeasurements.radec2icrf" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="surveySimPP.modules.PPRandomizeMeasurements.radec2icrf">
+<span class="sig-prename descclassname"><span class="pre">surveySimPP.modules.PPRandomizeMeasurements.</span></span><span class="sig-name descname"><span class="pre">radec2icrf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ra</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dec</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#surveySimPP.modules.PPRandomizeMeasurements.radec2icrf" title="Permalink to this definition"></a></dt>
 <dd><p>Convert Right Ascension and Declination to ICRF xyz unit vector.
 Geometric states on unit sphere, no light travel time/aberration correction.
 Parameters:
@@ -763,8 +712,8 @@ deg … True: angles in degrees, False: angles in radians</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="modules.PPRandomizeMeasurements.randomizeAstrometry">
-<span class="sig-prename descclassname"><span class="pre">modules.PPRandomizeMeasurements.</span></span><span class="sig-name descname"><span class="pre">randomizeAstrometry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">df</span></em>, <em class="sig-param"><span class="pre">rng=Generator(PCG64)</span> <span class="pre">at</span> <span class="pre">0x7FA76C23D9E0</span></em>, <em class="sig-param"><span class="pre">raName='AstRA(deg)'</span></em>, <em class="sig-param"><span class="pre">decName='AstDec(deg)'</span></em>, <em class="sig-param"><span class="pre">raRndName='AstRARnd(deg)'</span></em>, <em class="sig-param"><span class="pre">decRndName='AstDecRnd(deg)'</span></em>, <em class="sig-param"><span class="pre">sigName='AstSig(deg)'</span></em>, <em class="sig-param"><span class="pre">units='deg'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.PPRandomizeMeasurements.randomizeAstrometry" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="surveySimPP.modules.PPRandomizeMeasurements.randomizeAstrometry">
+<span class="sig-prename descclassname"><span class="pre">surveySimPP.modules.PPRandomizeMeasurements.</span></span><span class="sig-name descname"><span class="pre">randomizeAstrometry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">df</span></em>, <em class="sig-param"><span class="pre">rng=Generator(PCG64)</span> <span class="pre">at</span> <span class="pre">0x7FC6BDFC8740</span></em>, <em class="sig-param"><span class="pre">raName='AstRA(deg)'</span></em>, <em class="sig-param"><span class="pre">decName='AstDec(deg)'</span></em>, <em class="sig-param"><span class="pre">raRndName='AstRARnd(deg)'</span></em>, <em class="sig-param"><span class="pre">decRndName='AstDecRnd(deg)'</span></em>, <em class="sig-param"><span class="pre">sigName='AstSig(deg)'</span></em>, <em class="sig-param"><span class="pre">units='deg'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#surveySimPP.modules.PPRandomizeMeasurements.randomizeAstrometry" title="Permalink to this definition"></a></dt>
 <dd><p>Randomize astrometry with a normal distribution around the actual RADEC pointing.
 The randomized values are added to the input pandas data frame.</p>
 <p>df    … pandas DataFrame containing astrometry and sigma.
@@ -782,8 +731,8 @@ the poles. Distributions close to the poles may look odd in RADEC.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="modules.PPRandomizeMeasurements.randomizeObservations">
-<span class="sig-prename descclassname"><span class="pre">modules.PPRandomizeMeasurements.</span></span><span class="sig-name descname"><span class="pre">randomizeObservations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ephemsdf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obsdf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'fieldRA'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">decName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'fieldDec'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obsIdName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'observationId'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obsEpochName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'observationStartMJD'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raNameEph</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'AstRA(deg)'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">decNameEph</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'AstDec(deg)'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obsIdNameEph</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'observationId'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ephEpochName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'FieldMJD'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limMagName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'fiveSigmaDepth'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seeingName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'seeingFwhmEff'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filterMagName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Filtermag'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.PPRandomizeMeasurements.randomizeObservations" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="surveySimPP.modules.PPRandomizeMeasurements.randomizeObservations">
+<span class="sig-prename descclassname"><span class="pre">surveySimPP.modules.PPRandomizeMeasurements.</span></span><span class="sig-name descname"><span class="pre">randomizeObservations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ephemsdf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obsdf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'fieldRA'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">decName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'fieldDec'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obsIdName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'observationId'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obsEpochName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'observationStartMJD'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raNameEph</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'AstRA(deg)'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">decNameEph</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'AstDec(deg)'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obsIdNameEph</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'observationId'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ephEpochName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'FieldMJD'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limMagName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'fiveSigmaDepth'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seeingName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'seeingFwhmEff'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filterMagName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Filtermag'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#surveySimPP.modules.PPRandomizeMeasurements.randomizeObservations" title="Permalink to this definition"></a></dt>
 <dd><p>Add astrometric and photometric errors to observations generated through JPL ephemeris simulator OIF.</p>
 <p>ephemsdf   … Pandas dataFrame containing output of JPL ephemeris simulator OIF
 obsdf    … Pandas dataFrame containing survey simulator output such as LSST opsim
@@ -793,8 +742,8 @@ obsdf    … Pandas dataFrame containing survey simulator output such as LSST op
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="modules.PPRandomizeMeasurements.randomizePhotometry">
-<span class="sig-prename descclassname"><span class="pre">modules.PPRandomizeMeasurements.</span></span><span class="sig-name descname"><span class="pre">randomizePhotometry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">df</span></em>, <em class="sig-param"><span class="pre">magName='Filtermag'</span></em>, <em class="sig-param"><span class="pre">magRndName='FiltermagRnd'</span></em>, <em class="sig-param"><span class="pre">sigName='FiltermagSig'</span></em>, <em class="sig-param"><span class="pre">rng=Generator(PCG64)</span> <span class="pre">at</span> <span class="pre">0x7FA76C23D9E0</span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.PPRandomizeMeasurements.randomizePhotometry" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="surveySimPP.modules.PPRandomizeMeasurements.randomizePhotometry">
+<span class="sig-prename descclassname"><span class="pre">surveySimPP.modules.PPRandomizeMeasurements.</span></span><span class="sig-name descname"><span class="pre">randomizePhotometry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">df</span></em>, <em class="sig-param"><span class="pre">magName='Filtermag'</span></em>, <em class="sig-param"><span class="pre">magRndName='FiltermagRnd'</span></em>, <em class="sig-param"><span class="pre">sigName='FiltermagSig'</span></em>, <em class="sig-param"><span class="pre">rng=Generator(PCG64)</span> <span class="pre">at</span> <span class="pre">0x7FC6BDFC8740</span></em><span class="sig-paren">)</span><a class="headerlink" href="#surveySimPP.modules.PPRandomizeMeasurements.randomizePhotometry" title="Permalink to this definition"></a></dt>
 <dd><p>Randomize photometry with normal distribution around magName value.</p>
 <p>df         … pandas DataFrame containing photometric data
 magName    … column name of photometric data [mag]
@@ -806,8 +755,8 @@ Should be fixed at some point.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="modules.PPRandomizeMeasurements.sampleNormalFOV">
-<span class="sig-prename descclassname"><span class="pre">modules.PPRandomizeMeasurements.</span></span><span class="sig-name descname"><span class="pre">sampleNormalFOV</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">center</span></em>, <em class="sig-param"><span class="pre">sigma</span></em>, <em class="sig-param"><span class="pre">ndim=3</span></em>, <em class="sig-param"><span class="pre">rng=Generator(PCG64)</span> <span class="pre">at</span> <span class="pre">0x7FA76C23D9E0</span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.PPRandomizeMeasurements.sampleNormalFOV" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="surveySimPP.modules.PPRandomizeMeasurements.sampleNormalFOV">
+<span class="sig-prename descclassname"><span class="pre">surveySimPP.modules.PPRandomizeMeasurements.</span></span><span class="sig-name descname"><span class="pre">sampleNormalFOV</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">center</span></em>, <em class="sig-param"><span class="pre">sigma</span></em>, <em class="sig-param"><span class="pre">ndim=3</span></em>, <em class="sig-param"><span class="pre">rng=Generator(PCG64)</span> <span class="pre">at</span> <span class="pre">0x7FC6BDFC8740</span></em><span class="sig-paren">)</span><a class="headerlink" href="#surveySimPP.modules.PPRandomizeMeasurements.sampleNormalFOV" title="Permalink to this definition"></a></dt>
 <dd><p>Sample n points randomly (normal distribution) on a region on the unit (hyper-)sphere.</p>
 <p>center  … center of hpyer-sphere (float, ndim); can be an [n, ndim] dimensional array, but only if n == npoints</p>
 <p>sigma   … 1 sigma distance on unit sphere [radians], [n] dimensional array
@@ -817,35 +766,14 @@ seed    … random seed (int)</p>
 </dd></dl>
 
 </div>
-<div class="section" id="module-modules.PPReadBrightness">
-<span id="modules-ppreadbrightness-module"></span><h2>modules.PPReadBrightness module<a class="headerlink" href="#module-modules.PPReadBrightness" title="Permalink to this headline"></a></h2>
-<dl class="py function">
-<dt class="sig sig-object py" id="modules.PPReadBrightness.PPReadBrightness">
-<span class="sig-prename descclassname"><span class="pre">modules.PPReadBrightness.</span></span><span class="sig-name descname"><span class="pre">PPReadBrightness</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">br_datafile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beginLoc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chunkSize</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filesep</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.PPReadBrightness.PPReadBrightness" title="Permalink to this definition"></a></dt>
-<dd><p>PPReadBrightness.py</p>
-<p>Description: This task reads in the brightness file and puts it into a 
-single pandas dataframe for further use downstream by other tasks.</p>
-<p>The format of the colours is one of the following:</p>
-<p>ObjID H G
-ObjID H G1 G2
-ObjID H G12
-ObjID H S</p>
-<dl class="simple">
-<dt>Mandatory input:      string, br_datafile, name of brightn data file</dt><dd><p>integer, beginLoc, location in file where reading begins
-integer, chunkSize, length of chunk to be read in 
-string, filesep, separator used in input file, blank or comma</p>
-</dd>
-</dl>
-<p>Output:               pandas dataframe</p>
-<p>usage: padafr=PPReadBrightness(br_datafile, beginLoc, chunkSize,filesep)</p>
-</dd></dl>
-
+<div class="section" id="surveysimpp-modules-ppreadbrightness-module">
+<h2>surveySimPP.modules.PPReadBrightness module<a class="headerlink" href="#surveysimpp-modules-ppreadbrightness-module" title="Permalink to this headline"></a></h2>
 </div>
-<div class="section" id="module-modules.PPReadColours">
-<span id="modules-ppreadcolours-module"></span><h2>modules.PPReadColours module<a class="headerlink" href="#module-modules.PPReadColours" title="Permalink to this headline"></a></h2>
+<div class="section" id="module-surveySimPP.modules.PPReadColours">
+<span id="surveysimpp-modules-ppreadcolours-module"></span><h2>surveySimPP.modules.PPReadColours module<a class="headerlink" href="#module-surveySimPP.modules.PPReadColours" title="Permalink to this headline"></a></h2>
 <dl class="py function">
-<dt class="sig sig-object py" id="modules.PPReadColours.PPReadColours">
-<span class="sig-prename descclassname"><span class="pre">modules.PPReadColours.</span></span><span class="sig-name descname"><span class="pre">PPReadColours</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">clr_datafile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beginLoc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chunkSize</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filesep</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.PPReadColours.PPReadColours" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="surveySimPP.modules.PPReadColours.PPReadColours">
+<span class="sig-prename descclassname"><span class="pre">surveySimPP.modules.PPReadColours.</span></span><span class="sig-name descname"><span class="pre">PPReadColours</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">clr_datafile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beginLoc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chunkSize</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filesep</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#surveySimPP.modules.PPReadColours.PPReadColours" title="Permalink to this definition"></a></dt>
 <dd><p>PPReadColours.py</p>
 <p>Description: This task reads in the colours file and puts it into a 
 single pandas dataframe for further use downstream by other tasks.</p>
@@ -862,11 +790,11 @@ string, filesep, separator used in input file, blank or comma</p>
 </dd></dl>
 
 </div>
-<div class="section" id="module-modules.PPReadCometaryInput">
-<span id="modules-ppreadcometaryinput-module"></span><h2>modules.PPReadCometaryInput module<a class="headerlink" href="#module-modules.PPReadCometaryInput" title="Permalink to this headline"></a></h2>
+<div class="section" id="module-surveySimPP.modules.PPReadCometaryInput">
+<span id="surveysimpp-modules-ppreadcometaryinput-module"></span><h2>surveySimPP.modules.PPReadCometaryInput module<a class="headerlink" href="#module-surveySimPP.modules.PPReadCometaryInput" title="Permalink to this headline"></a></h2>
 <dl class="py function">
-<dt class="sig sig-object py" id="modules.PPReadCometaryInput.PPReadCometaryInput">
-<span class="sig-prename descclassname"><span class="pre">modules.PPReadCometaryInput.</span></span><span class="sig-name descname"><span class="pre">PPReadCometaryInput</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">comet_datafile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beginLoc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chunkSize</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filesep</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.PPReadCometaryInput.PPReadCometaryInput" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="surveySimPP.modules.PPReadCometaryInput.PPReadCometaryInput">
+<span class="sig-prename descclassname"><span class="pre">surveySimPP.modules.PPReadCometaryInput.</span></span><span class="sig-name descname"><span class="pre">PPReadCometaryInput</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">comet_datafile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beginLoc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chunkSize</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filesep</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#surveySimPP.modules.PPReadCometaryInput.PPReadCometaryInput" title="Permalink to this definition"></a></dt>
 <dd><p>PPReadCometaryInput.py</p>
 <p>Description: This task reads in the cometary data file and puts it into a 
 single pandas dataframe for further use downstream by other tasks.</p>
@@ -885,11 +813,11 @@ string, filesep, separator used in input file, blank or comma</p>
 </dd></dl>
 
 </div>
-<div class="section" id="module-modules.PPReadIntermDatabase">
-<span id="modules-ppreadintermdatabase-module"></span><h2>modules.PPReadIntermDatabase module<a class="headerlink" href="#module-modules.PPReadIntermDatabase" title="Permalink to this headline"></a></h2>
+<div class="section" id="module-surveySimPP.modules.PPReadIntermDatabase">
+<span id="surveysimpp-modules-ppreadintermdatabase-module"></span><h2>surveySimPP.modules.PPReadIntermDatabase module<a class="headerlink" href="#module-surveySimPP.modules.PPReadIntermDatabase" title="Permalink to this headline"></a></h2>
 <dl class="py function">
-<dt class="sig sig-object py" id="modules.PPReadIntermDatabase.PPReadIntermDatabase">
-<span class="sig-prename descclassname"><span class="pre">modules.PPReadIntermDatabase.</span></span><span class="sig-name descname"><span class="pre">PPReadIntermDatabase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">intermdb</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">part_objid_list</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.PPReadIntermDatabase.PPReadIntermDatabase" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="surveySimPP.modules.PPReadIntermDatabase.PPReadIntermDatabase">
+<span class="sig-prename descclassname"><span class="pre">surveySimPP.modules.PPReadIntermDatabase.</span></span><span class="sig-name descname"><span class="pre">PPReadIntermDatabase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">intermdb</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">part_objid_list</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#surveySimPP.modules.PPReadIntermDatabase.PPReadIntermDatabase" title="Permalink to this definition"></a></dt>
 <dd><p>PPReadIntermDatabase.py</p>
 <p>Description: This task reads in the intermediate pointing sqlite3 database specified
 by a subset of object ids, and outputs a pandas dataframe.</p>
@@ -902,11 +830,11 @@ by a subset of object ids, and outputs a pandas dataframe.</p>
 </dd></dl>
 
 </div>
-<div class="section" id="module-modules.PPReadOif">
-<span id="modules-ppreadoif-module"></span><h2>modules.PPReadOif module<a class="headerlink" href="#module-modules.PPReadOif" title="Permalink to this headline"></a></h2>
+<div class="section" id="module-surveySimPP.modules.PPReadOif">
+<span id="surveysimpp-modules-ppreadoif-module"></span><h2>surveySimPP.modules.PPReadOif module<a class="headerlink" href="#module-surveySimPP.modules.PPReadOif" title="Permalink to this headline"></a></h2>
 <dl class="py function">
-<dt class="sig sig-object py" id="modules.PPReadOif.PPReadOif">
-<span class="sig-prename descclassname"><span class="pre">modules.PPReadOif.</span></span><span class="sig-name descname"><span class="pre">PPReadOif</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">oif_output</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filesep</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">suffix</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.PPReadOif.PPReadOif" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="surveySimPP.modules.PPReadOif.PPReadOif">
+<span class="sig-prename descclassname"><span class="pre">surveySimPP.modules.PPReadOif.</span></span><span class="sig-name descname"><span class="pre">PPReadOif</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">oif_output</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inputformat</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#surveySimPP.modules.PPReadOif.PPReadOif" title="Permalink to this definition"></a></dt>
 <dd><p>PPReadOif.py</p>
 <p>Description: This task reads in the output of oif (objectsInField) and puts it into a 
 single pandas dataframe for further use downstream by other tasks.</p>
@@ -915,26 +843,25 @@ called recipes.</p>
 <p>Any other relevant data (e.g. magnitudes and colours) are read and amended to the
 main pandas dataframe by separate tasks.</p>
 <dl class="simple">
-<dt>Mandatory input:      string, oif_output, name of text file including Output from objectsInField (oif) </dt><dd><p>string, filesep, separator used in input file, blank or comma
-string, suffix, file extension of input file, either csv, txt or h5 (hdf5, HDF5)</p>
+<dt>Mandatory input:      string, oif_output, name of text file including Output from objectsInField (oif) </dt><dd><p>string, inputformat, input format of pointing putput (csv, whitespace, hdf5)</p>
 </dd>
 </dl>
 <p>Output:               pandas dataframe</p>
-<p>usage: padafr=PPReadOif(oif_output,filesep)</p>
+<p>usage: padafr=PPReadOif(oif_output,inputformat)</p>
 </dd></dl>
 
 </div>
-<div class="section" id="module-modules.PPReadOrbitFile">
-<span id="modules-ppreadorbitfile-module"></span><h2>modules.PPReadOrbitFile module<a class="headerlink" href="#module-modules.PPReadOrbitFile" title="Permalink to this headline"></a></h2>
+<div class="section" id="module-surveySimPP.modules.PPReadOrbitFile">
+<span id="surveysimpp-modules-ppreadorbitfile-module"></span><h2>surveySimPP.modules.PPReadOrbitFile module<a class="headerlink" href="#module-surveySimPP.modules.PPReadOrbitFile" title="Permalink to this headline"></a></h2>
 <dl class="py function">
-<dt class="sig sig-object py" id="modules.PPReadOrbitFile.PPReadOrbitFile">
-<span class="sig-prename descclassname"><span class="pre">modules.PPReadOrbitFile.</span></span><span class="sig-name descname"><span class="pre">PPReadOrbitFile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">orbin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beginLoc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chunkSize</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filesep</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.PPReadOrbitFile.PPReadOrbitFile" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="surveySimPP.modules.PPReadOrbitFile.PPReadOrbitFile">
+<span class="sig-prename descclassname"><span class="pre">surveySimPP.modules.PPReadOrbitFile.</span></span><span class="sig-name descname"><span class="pre">PPReadOrbitFile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">orbin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beginLoc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chunkSize</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filesep</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#surveySimPP.modules.PPReadOrbitFile.PPReadOrbitFile" title="Permalink to this definition"></a></dt>
 <dd><p>Description: Read orbit file, and store in a pandas dataframe. Note, that here, no
 orbit class is initialised</p>
 <dl class="simple">
 <dt>Mandatory input:   string, orbin (name of input orbit file)</dt><dd><p>integer, beginLoc, location in file where reading begins
 integer, chunkSize, length of chunk to be read in 
-string, filesep, separator used in input file, blank or comma</p>
+string, filesep, separator used in input file, whitespace or csv</p>
 </dd>
 </dl>
 <p>Output:            pandas dataframe</p>
@@ -942,13 +869,13 @@ string, filesep, separator used in input file, blank or comma</p>
 </dd></dl>
 
 </div>
-<div class="section" id="module-modules.PPSimpleSensorArea">
-<span id="modules-ppsimplesensorarea-module"></span><h2>modules.PPSimpleSensorArea module<a class="headerlink" href="#module-modules.PPSimpleSensorArea" title="Permalink to this headline"></a></h2>
+<div class="section" id="module-surveySimPP.modules.PPSimpleSensorArea">
+<span id="surveysimpp-modules-ppsimplesensorarea-module"></span><h2>surveySimPP.modules.PPSimpleSensorArea module<a class="headerlink" href="#module-surveySimPP.modules.PPSimpleSensorArea" title="Permalink to this headline"></a></h2>
 <p>Remove a portion of the observations to simulate the losses due to gaps between
 CCD chips and rafts on the sensor.</p>
 <dl class="py function">
-<dt class="sig sig-object py" id="modules.PPSimpleSensorArea.PPSimpleSensorArea">
-<span class="sig-prename descclassname"><span class="pre">modules.PPSimpleSensorArea.</span></span><span class="sig-name descname"><span class="pre">PPSimpleSensorArea</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ephemsdf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fillfactor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.9</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.PPSimpleSensorArea.PPSimpleSensorArea" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="surveySimPP.modules.PPSimpleSensorArea.PPSimpleSensorArea">
+<span class="sig-prename descclassname"><span class="pre">surveySimPP.modules.PPSimpleSensorArea.</span></span><span class="sig-name descname"><span class="pre">PPSimpleSensorArea</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ephemsdf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fillfactor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.9</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#surveySimPP.modules.PPSimpleSensorArea.PPSimpleSensorArea" title="Permalink to this definition"></a></dt>
 <dd><p>Randomly removes a number of observations proportional to the
 fraction of the field not covered by the detector.</p>
 <p>ephemsdf   … pandas dataFrame containing observations
@@ -957,21 +884,21 @@ fillfactor … fraction of FOV covered by the sensor</p>
 </dd></dl>
 
 </div>
-<div class="section" id="module-modules.PPTrailingLoss">
-<span id="modules-pptrailingloss-module"></span><h2>modules.PPTrailingLoss module<a class="headerlink" href="#module-modules.PPTrailingLoss" title="Permalink to this headline"></a></h2>
+<div class="section" id="module-surveySimPP.modules.PPTrailingLoss">
+<span id="surveysimpp-modules-pptrailingloss-module"></span><h2>surveySimPP.modules.PPTrailingLoss module<a class="headerlink" href="#module-surveySimPP.modules.PPTrailingLoss" title="Permalink to this headline"></a></h2>
 <p>Calculate Astrometric and Photometric Uncertainties for ground based observations.</p>
 <dl class="py function">
-<dt class="sig sig-object py" id="modules.PPTrailingLoss.PPTrailingLoss">
-<span class="sig-prename descclassname"><span class="pre">modules.PPTrailingLoss.</span></span><span class="sig-name descname"><span class="pre">PPTrailingLoss</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">oif_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">survey_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'circularPSF'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dra_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'AstRARate(deg/day)'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ddec_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'AstDecRate(deg/day)'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dec_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'AstDec(deg)'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seeing_name_oif</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'seeing'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field_id_name_oif</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'FieldID'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seeing_name_survey</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'seeingFwhmGeom'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field_id_name_survey</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'observationId'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.PPTrailingLoss.PPTrailingLoss" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="surveySimPP.modules.PPTrailingLoss.PPTrailingLoss">
+<span class="sig-prename descclassname"><span class="pre">surveySimPP.modules.PPTrailingLoss.</span></span><span class="sig-name descname"><span class="pre">PPTrailingLoss</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">oif_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">survey_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'circularPSF'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dra_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'AstRARate(deg/day)'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ddec_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'AstDecRate(deg/day)'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dec_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'AstDec(deg)'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seeing_name_oif</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'seeing'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field_id_name_oif</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'FieldID'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seeing_name_survey</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'seeingFwhmGeom'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field_id_name_survey</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'observationId'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#surveySimPP.modules.PPTrailingLoss.PPTrailingLoss" title="Permalink to this definition"></a></dt>
 <dd><p>Calculates Detection trailing loss for objectInField output.</p>
 </dd></dl>
 
 </div>
-<div class="section" id="module-modules.PPTranslateMagnitude">
-<span id="modules-pptranslatemagnitude-module"></span><h2>modules.PPTranslateMagnitude module<a class="headerlink" href="#module-modules.PPTranslateMagnitude" title="Permalink to this headline"></a></h2>
+<div class="section" id="module-surveySimPP.modules.PPTranslateMagnitude">
+<span id="surveysimpp-modules-pptranslatemagnitude-module"></span><h2>surveySimPP.modules.PPTranslateMagnitude module<a class="headerlink" href="#module-surveySimPP.modules.PPTranslateMagnitude" title="Permalink to this headline"></a></h2>
 <dl class="py function">
-<dt class="sig sig-object py" id="modules.PPTranslateMagnitude.PPTranslateMagnitude">
-<span class="sig-prename descclassname"><span class="pre">modules.PPTranslateMagnitude.</span></span><span class="sig-name descname"><span class="pre">PPTranslateMagnitude</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">oif_output</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">survey_db</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colors</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">oifFieldIDName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'FieldID'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">surveyFieldIDName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'observationId'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">surveyFilterName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'filter'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">oifObjIDName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'ObjID'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colorsObjIDName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'ObjID'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">oif_filter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'V'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.PPTranslateMagnitude.PPTranslateMagnitude" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="surveySimPP.modules.PPTranslateMagnitude.PPTranslateMagnitude">
+<span class="sig-prename descclassname"><span class="pre">surveySimPP.modules.PPTranslateMagnitude.</span></span><span class="sig-name descname"><span class="pre">PPTranslateMagnitude</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">oif_output</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">survey_db</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colors</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">oifFieldIDName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'FieldID'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">surveyFieldIDName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'observationId'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">surveyFilterName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'filter'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">oifObjIDName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'ObjID'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colorsObjIDName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'ObjID'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">oif_filter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'V'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#surveySimPP.modules.PPTranslateMagnitude.PPTranslateMagnitude" title="Permalink to this definition"></a></dt>
 <dd><p>Uses filter and color information from survey and color tables
 to translate V band magnitude to appropriate sdss filter magnitude.</p>
 <p>oif_output   …   pandas table containing output of objectsInField simulator
@@ -984,43 +911,43 @@ colors       …   pandas table containing color difference between V band</p>
 </dd></dl>
 
 </div>
-<div class="section" id="module-modules.PPVignetting">
-<span id="modules-ppvignetting-module"></span><h2>modules.PPVignetting module<a class="headerlink" href="#module-modules.PPVignetting" title="Permalink to this headline"></a></h2>
+<div class="section" id="module-surveySimPP.modules.PPVignetting">
+<span id="surveysimpp-modules-ppvignetting-module"></span><h2>surveySimPP.modules.PPVignetting module<a class="headerlink" href="#module-surveySimPP.modules.PPVignetting" title="Permalink to this headline"></a></h2>
 <dl class="py function">
-<dt class="sig sig-object py" id="modules.PPVignetting.calcVignettingLosses">
-<span class="sig-prename descclassname"><span class="pre">modules.PPVignetting.</span></span><span class="sig-name descname"><span class="pre">calcVignettingLosses</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ra</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dec</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fieldra</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fielddec</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.PPVignetting.calcVignettingLosses" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="surveySimPP.modules.PPVignetting.calcVignettingLosses">
+<span class="sig-prename descclassname"><span class="pre">surveySimPP.modules.PPVignetting.</span></span><span class="sig-name descname"><span class="pre">calcVignettingLosses</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ra</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dec</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fieldra</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fielddec</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#surveySimPP.modules.PPVignetting.calcVignettingLosses" title="Permalink to this definition"></a></dt>
 <dd><p>Calculates magnitude loss due to vignetting for a point with the telescope
 centered on fieldra, fielddec.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="modules.PPVignetting.haversine">
-<span class="sig-prename descclassname"><span class="pre">modules.PPVignetting.</span></span><span class="sig-name descname"><span class="pre">haversine</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ra1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dec1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ra2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dec2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.PPVignetting.haversine" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="surveySimPP.modules.PPVignetting.haversine">
+<span class="sig-prename descclassname"><span class="pre">surveySimPP.modules.PPVignetting.</span></span><span class="sig-name descname"><span class="pre">haversine</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ra1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dec1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ra2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dec2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#surveySimPP.modules.PPVignetting.haversine" title="Permalink to this definition"></a></dt>
 <dd><p>Calculates angular distance between two points. Can produce floating point
 errors for antipodal points, which are not intended to be encountered within
 the scope of this module.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="modules.PPVignetting.vignetFunc">
-<span class="sig-prename descclassname"><span class="pre">modules.PPVignetting.</span></span><span class="sig-name descname"><span class="pre">vignetFunc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.PPVignetting.vignetFunc" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="surveySimPP.modules.PPVignetting.vignetFunc">
+<span class="sig-prename descclassname"><span class="pre">surveySimPP.modules.PPVignetting.</span></span><span class="sig-name descname"><span class="pre">vignetFunc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#surveySimPP.modules.PPVignetting.vignetFunc" title="Permalink to this definition"></a></dt>
 <dd><p>Grabbed from sims_selfcal. From VignettingFunc_v3.3.TXT.  r is in degrees, frac is fraction of rays which were not vignetted.
 returns the magnitudes of dimming caused by the vingetting relative to the center of the field</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="modules.PPVignetting.vignettingLosses">
-<span class="sig-prename descclassname"><span class="pre">modules.PPVignetting.</span></span><span class="sig-name descname"><span class="pre">vignettingLosses</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">oifdf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">surveydf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raNameOIF</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'AstRA(deg)'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">decNameOIF</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'AstDec(deg)'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fieldNameOIF</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'FieldID'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raNameSurvey</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'fieldRA'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">decNameSurvey</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'fieldDec'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.PPVignetting.vignettingLosses" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="surveySimPP.modules.PPVignetting.vignettingLosses">
+<span class="sig-prename descclassname"><span class="pre">surveySimPP.modules.PPVignetting.</span></span><span class="sig-name descname"><span class="pre">vignettingLosses</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">oifdf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">surveydf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raNameOIF</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'AstRA(deg)'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">decNameOIF</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'AstDec(deg)'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fieldNameOIF</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'FieldID'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raNameSurvey</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'fieldRA'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">decNameSurvey</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'fieldDec'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#surveySimPP.modules.PPVignetting.vignettingLosses" title="Permalink to this definition"></a></dt>
 <dd><p>Takes dataframes containg observation and field positions and calculates
 the magnitude losses due to vignetting.</p>
 </dd></dl>
 
 </div>
-<div class="section" id="module-modules.PPhookBrightnessWithColour">
-<span id="modules-pphookbrightnesswithcolour-module"></span><h2>modules.PPhookBrightnessWithColour module<a class="headerlink" href="#module-modules.PPhookBrightnessWithColour" title="Permalink to this headline"></a></h2>
+<div class="section" id="module-surveySimPP.modules.PPhookBrightnessWithColour">
+<span id="surveysimpp-modules-pphookbrightnesswithcolour-module"></span><h2>surveySimPP.modules.PPhookBrightnessWithColour module<a class="headerlink" href="#module-surveySimPP.modules.PPhookBrightnessWithColour" title="Permalink to this headline"></a></h2>
 <dl class="py function">
-<dt class="sig sig-object py" id="modules.PPhookBrightnessWithColour.PPhookBrightnessWithColour">
-<span class="sig-prename descclassname"><span class="pre">modules.PPhookBrightnessWithColour.</span></span><span class="sig-name descname"><span class="pre">PPhookBrightnessWithColour</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">padain</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initfilter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colour</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resfilter</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.PPhookBrightnessWithColour.PPhookBrightnessWithColour" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="surveySimPP.modules.PPhookBrightnessWithColour.PPhookBrightnessWithColour">
+<span class="sig-prename descclassname"><span class="pre">surveySimPP.modules.PPhookBrightnessWithColour.</span></span><span class="sig-name descname"><span class="pre">PPhookBrightnessWithColour</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">padain</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initfilter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colour</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resfilter</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#surveySimPP.modules.PPhookBrightnessWithColour.PPhookBrightnessWithColour" title="Permalink to this definition"></a></dt>
 <dd><p>Task: PPHookBrightnessWithColour</p>
 <dl>
 <dt>Input: padain: combined pandas dataframe, including objectsInField (oif) and colours</dt><dd><p>in the ‘col-X format’.</p>
@@ -1041,11 +968,11 @@ the apparent brightnesses in the given ‘resfilter’ filter.</p>
 </dd></dl>
 
 </div>
-<div class="section" id="module-modules.PPreadColoursUser">
-<span id="modules-ppreadcoloursuser-module"></span><h2>modules.PPreadColoursUser module<a class="headerlink" href="#module-modules.PPreadColoursUser" title="Permalink to this headline"></a></h2>
+<div class="section" id="module-surveySimPP.modules.PPreadColoursUser">
+<span id="surveysimpp-modules-ppreadcoloursuser-module"></span><h2>surveySimPP.modules.PPreadColoursUser module<a class="headerlink" href="#module-surveySimPP.modules.PPreadColoursUser" title="Permalink to this headline"></a></h2>
 <dl class="py function">
-<dt class="sig sig-object py" id="modules.PPreadColoursUser.PPreadColoursUser">
-<span class="sig-prename descclassname"><span class="pre">modules.PPreadColoursUser.</span></span><span class="sig-name descname"><span class="pre">PPreadColoursUser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">oif_out</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colour</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mean</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stdev</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">indataf</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.PPreadColoursUser.PPreadColoursUser" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="surveySimPP.modules.PPreadColoursUser.PPreadColoursUser">
+<span class="sig-prename descclassname"><span class="pre">surveySimPP.modules.PPreadColoursUser.</span></span><span class="sig-name descname"><span class="pre">PPreadColoursUser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">oif_out</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colour</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mean</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stdev</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">indataf</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#surveySimPP.modules.PPreadColoursUser.PPreadColoursUser" title="Permalink to this definition"></a></dt>
 <dd><p>PPreadColoursUser.py</p>
 <p>Description: This task assigns a designated colour to each object in the
 input file and puts it into a
@@ -1073,8 +1000,8 @@ existing colour dataframe (pandas dataFrame, optional)</p>
 </dd></dl>
 
 </div>
-<div class="section" id="module-modules">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-modules" title="Permalink to this headline"></a></h2>
+<div class="section" id="module-surveySimPP.modules">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-surveySimPP.modules" title="Permalink to this headline"></a></h2>
 </div>
 </div>
 
@@ -1082,14 +1009,14 @@ existing colour dataframe (pandas dataFrame, optional)</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="acknowledgements.html" class="btn btn-neutral float-left" title="Acknowledgements" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="modules.tests.html" class="btn btn-neutral float-right" title="modules.tests package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="release.html" class="btn btn-neutral float-left" title="Release History" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="lsstcomet.html" class="btn btn-neutral float-right" title="lsstcomet package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2021, Siegfried Eggl, Mario Juric, Meg Schwamb, Grigori Fedorets, Shantanu Naidu, Sam Cornwall, Aidan Berres.</p>
+    <p>&#169; Copyright 2021, Siegfried Eggl, Mario Juric, Meg Schwamb, Grigori Fedorets, Shantanu Naidu, Sam Cornwall, Aidan Berres, Steph Merritt, Shannon Matthews, Lynne Jones, Colin Snodgrass.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

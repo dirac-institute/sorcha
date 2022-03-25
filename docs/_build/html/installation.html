@@ -17,7 +17,7 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Using Objects In Field" href="usingoif.html" />
+    <link rel="next" title="Filters" href="filters.html" />
     <link rel="prev" title="Overview" href="overview.html" /> 
 </head>
 
@@ -40,16 +40,24 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Installation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#requirements">Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#oif-requirements">OIF Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#initial-steps">Initial Steps</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#installing-objects-in-field">Installing Objects in Field</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#survey-simulator-requirements">Survey Simulator Requirements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#installing-the-survey-simulator-post-processing">Installing the Survey Simulator Post Processing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#testing-the-installation">Testing the Installation</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="usingoif.html">Using Objects In Field</a></li>
+<li class="toctree-l1"><a class="reference internal" href="filters.html">Filters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="inputs.html">Inputs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="configfiles.html">Configuration Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="configfiles.html#inputs">Inputs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="outputs.html">Outputs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="gettingstarted.html">Getting Started</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="troubleshooting.html">Troubleshooting</a></li>
 <li class="toctree-l1"><a class="reference internal" href="support.html">Support</a></li>
 <li class="toctree-l1"><a class="reference internal" href="acknowledgements.html">Acknowledgements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="release.html">Release History</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Documentation:</span></p>
 <ul>
@@ -87,29 +95,47 @@
 <a class="reference external" href="https://github.com/eggls6/objectsInField">Objects in Field</a>.
 This is used to generate candidate detections for an input population of
 moving objects in a specified list of field pointings.</p>
-<div class="section" id="requirements">
-<h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline"></a></h2>
+<div class="section" id="oif-requirements">
+<h2>OIF Requirements<a class="headerlink" href="#oif-requirements" title="Permalink to this headline"></a></h2>
 <ul class="simple">
 <li><p>python 3</p></li>
 <li><p>spiceypy python library</p></li>
 <li><p>pyoorb python library</p></li>
-<li><p>other standard python libraries like numpy, pandas, etc.</p></li>
+<li><p>numpy</p></li>
+<li><p>pandas</p></li>
+<li><p>matplotlib</p></li>
 <li><p>NAIF SPICE Utilities</p></li>
 </ul>
 </div>
-<div class="section" id="installing-objects-in-field">
-<h2>Installing Objects in Field<a class="headerlink" href="#installing-objects-in-field" title="Permalink to this headline"></a></h2>
-<p>The easiest way to get started is by using the Anaconda Python Distribution’s
-conda package manager:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">conda</span> <span class="n">create</span> <span class="o">-</span><span class="n">n</span> <span class="n">oif</span><span class="o">-</span><span class="n">dev</span> <span class="o">-</span><span class="n">c</span> <span class="n">conda</span><span class="o">-</span><span class="n">forge</span> <span class="o">-</span><span class="n">c</span> <span class="n">mjuric</span> <span class="n">python</span> <span class="n">spiceypy</span> <span class="n">openorb</span> <span class="n">numpy</span> <span class="n">pandas</span> <span class="n">matplotlib</span> <span class="n">spice</span><span class="o">-</span><span class="n">utils</span>
-<span class="n">conda</span> <span class="n">activate</span> <span class="n">oif</span><span class="o">-</span><span class="n">dev</span>
+<div class="section" id="initial-steps">
+<h2>Initial Steps<a class="headerlink" href="#initial-steps" title="Permalink to this headline"></a></h2>
+<p>Create a directory to contain the OIF and Survey Simulator repos:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mkdir</span> <span class="n">survey_sim_pp</span>
+<span class="n">cd</span> <span class="n">survey_sim_pp</span>
 </pre></div>
 </div>
-<p>Download the repo via:</p>
+<p>Create a conda environment:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">conda</span> <span class="n">create</span> <span class="o">-</span><span class="n">n</span> <span class="n">survey_sim_pp</span> <span class="o">-</span><span class="n">c</span> <span class="n">conda</span><span class="o">-</span><span class="n">forge</span> <span class="o">-</span><span class="n">c</span> <span class="n">mjuric</span> <span class="n">python</span> <span class="n">spiceypy</span> <span class="n">openorb</span> <span class="n">numpy</span> <span class="n">pandas</span> <span class="n">matplotlib</span> <span class="n">spice</span><span class="o">-</span><span class="n">utils</span> <span class="n">pip</span>
+<span class="n">conda</span> <span class="n">activate</span> <span class="n">survey_sim_pp</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="installing-objects-in-field">
+<h2>Installing Objects in Field<a class="headerlink" href="#installing-objects-in-field" title="Permalink to this headline"></a></h2>
+<p>Make sure you are in the directory you want to contain the Survey Simulator repo in:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="n">survey_sim_pp</span>
+</pre></div>
+</div>
+<p>Download the OIF repo via:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">eggls6</span><span class="o">/</span><span class="n">objectsInField</span><span class="o">.</span><span class="n">git</span>
 </pre></div>
 </div>
-<p>Then download the various large binary files (mostly SPICE kernels) that we don’t keep in git by running:</p>
+<p>And cd into the repo:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="n">objectsInField</span>
+</pre></div>
+</div>
+<p>There are various large binary files (mostly SPICE kernels) that aren’t kept in git, so these
+can be installed by running:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">bootstrap</span><span class="o">.</span><span class="n">sh</span>
 </pre></div>
 </div>
@@ -123,17 +149,62 @@ conda package manager:</p>
 <span class="n">oif</span> <span class="nb">input</span><span class="o">.</span><span class="n">config</span>
 </pre></div>
 </div>
+<p>If everything has installed correctly, the first few lines from this output will be:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ObjID</span><span class="p">,</span> <span class="n">FieldID</span><span class="p">,</span> <span class="n">FieldMJD</span><span class="p">,</span> <span class="n">AstRange</span><span class="p">(</span><span class="n">km</span><span class="p">),</span> <span class="n">AstRangeRate</span><span class="p">(</span><span class="n">km</span><span class="o">/</span><span class="n">s</span><span class="p">),</span> <span class="n">AstRA</span><span class="p">(</span><span class="n">deg</span><span class="p">),</span> <span class="n">AstRARate</span><span class="p">(</span><span class="n">deg</span><span class="o">/</span><span class="n">day</span><span class="p">),</span> <span class="n">AstDec</span><span class="p">(</span><span class="n">deg</span><span class="p">),</span> <span class="n">AstDecRate</span><span class="p">(</span><span class="n">deg</span><span class="o">/</span><span class="n">day</span><span class="p">),</span> <span class="n">Ast</span><span class="o">-</span><span class="n">Sun</span><span class="p">(</span><span class="n">J2000x</span><span class="p">)(</span><span class="n">km</span><span class="p">),</span> <span class="n">Ast</span><span class="o">-</span><span class="n">Sun</span><span class="p">(</span><span class="n">J2000y</span><span class="p">)(</span><span class="n">km</span><span class="p">),</span> <span class="n">Ast</span><span class="o">-</span><span class="n">Sun</span><span class="p">(</span><span class="n">J2000z</span><span class="p">)(</span><span class="n">km</span><span class="p">),</span> <span class="n">Ast</span><span class="o">-</span><span class="n">Sun</span><span class="p">(</span><span class="n">J2000vx</span><span class="p">)(</span><span class="n">km</span><span class="o">/</span><span class="n">s</span><span class="p">),</span> <span class="n">Ast</span><span class="o">-</span><span class="n">Sun</span><span class="p">(</span><span class="n">J2000vy</span><span class="p">)(</span><span class="n">km</span><span class="o">/</span><span class="n">s</span><span class="p">),</span> <span class="n">Ast</span><span class="o">-</span><span class="n">Sun</span><span class="p">(</span><span class="n">J2000vz</span><span class="p">)(</span><span class="n">km</span><span class="o">/</span><span class="n">s</span><span class="p">),</span> <span class="n">Obs</span><span class="o">-</span><span class="n">Sun</span><span class="p">(</span><span class="n">J2000x</span><span class="p">)(</span><span class="n">km</span><span class="p">),</span> <span class="n">Obs</span><span class="o">-</span><span class="n">Sun</span><span class="p">(</span><span class="n">J2000y</span><span class="p">)(</span><span class="n">km</span><span class="p">),</span> <span class="n">Obs</span><span class="o">-</span><span class="n">Sun</span><span class="p">(</span><span class="n">J2000z</span><span class="p">)(</span><span class="n">km</span><span class="p">),</span> <span class="n">Obs</span><span class="o">-</span><span class="n">Sun</span><span class="p">(</span><span class="n">J2000vx</span><span class="p">)(</span><span class="n">km</span><span class="o">/</span><span class="n">s</span><span class="p">),</span> <span class="n">Obs</span><span class="o">-</span><span class="n">Sun</span><span class="p">(</span><span class="n">J2000vy</span><span class="p">)(</span><span class="n">km</span><span class="o">/</span><span class="n">s</span><span class="p">),</span> <span class="n">Obs</span><span class="o">-</span><span class="n">Sun</span><span class="p">(</span><span class="n">J2000vz</span><span class="p">)(</span><span class="n">km</span><span class="o">/</span><span class="n">s</span><span class="p">),</span> <span class="n">Sun</span><span class="o">-</span><span class="n">Ast</span><span class="o">-</span><span class="n">Obs</span><span class="p">(</span><span class="n">deg</span><span class="p">),</span> <span class="n">V</span><span class="p">,</span> <span class="n">V</span><span class="p">(</span><span class="n">H</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">S100003Ua</span><span class="p">,</span><span class="mi">992</span><span class="p">,</span><span class="mf">59855.012720</span><span class="p">,</span><span class="mf">232764749.248562</span><span class="p">,</span><span class="mf">19.381</span><span class="p">,</span><span class="mf">313.391309</span><span class="p">,</span><span class="mf">0.093855</span><span class="p">,</span><span class="o">-</span><span class="mf">14.189297</span><span class="p">,</span><span class="o">-</span><span class="mf">0.001147</span><span class="p">,</span><span class="mf">302701424.872</span><span class="p">,</span><span class="o">-</span><span class="mf">141376977.611</span><span class="p">,</span><span class="o">-</span><span class="mf">47258199.518</span><span class="p">,</span><span class="mf">10.938</span><span class="p">,</span><span class="mf">16.381</span><span class="p">,</span><span class="mf">6.838</span><span class="p">,</span><span class="mf">147675817.300</span><span class="p">,</span><span class="mf">22607836.793</span><span class="p">,</span><span class="mf">9798564.669</span><span class="p">,</span><span class="o">-</span><span class="mf">5.071</span><span class="p">,</span><span class="mf">27.085</span><span class="p">,</span><span class="mf">11.641</span><span class="p">,</span><span class="mf">22.025168</span><span class="p">,</span><span class="mf">12.229</span><span class="p">,</span><span class="mf">3.789</span>
+<span class="n">S100005xa</span><span class="p">,</span><span class="mi">40</span><span class="p">,</span><span class="mf">59854.002209</span><span class="p">,</span><span class="mf">311895722.264139</span><span class="p">,</span><span class="mf">18.108</span><span class="p">,</span><span class="mf">312.493375</span><span class="p">,</span><span class="mf">0.024745</span><span class="p">,</span><span class="o">-</span><span class="mf">10.868628</span><span class="p">,</span><span class="o">-</span><span class="mf">0.020284</span><span class="p">,</span><span class="mf">355032405.197</span><span class="p">,</span><span class="o">-</span><span class="mf">205593003.122</span><span class="p">,</span><span class="o">-</span><span class="mf">50029660.233</span><span class="p">,</span><span class="mf">8.437</span><span class="p">,</span><span class="mf">15.234</span><span class="p">,</span><span class="mf">7.005</span><span class="p">,</span><span class="mf">148124584.428</span><span class="p">,</span><span class="mf">20259701.559</span><span class="p">,</span><span class="mf">8780700.962</span><span class="p">,</span><span class="o">-</span><span class="mf">4.542</span><span class="p">,</span><span class="mf">27.134</span><span class="p">,</span><span class="mf">11.674</span><span class="p">,</span><span class="mf">17.656392</span><span class="p">,</span><span class="mf">14.416</span><span class="p">,</span><span class="mf">4.726</span>
+</pre></div>
+</div>
 <p>To uninstall:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">setup</span><span class="o">.</span><span class="n">py</span> <span class="n">develop</span> <span class="o">-</span><span class="n">u</span>
 </pre></div>
 </div>
 </div>
+<div class="section" id="survey-simulator-requirements">
+<h2>Survey Simulator Requirements<a class="headerlink" href="#survey-simulator-requirements" title="Permalink to this headline"></a></h2>
+<ul class="simple">
+<li><p>python 3</p></li>
+<li><p>numpy</p></li>
+<li><p>pandas</p></li>
+<li><p>pytest</p></li>
+<li><p>pytest-cov&lt;2.6.0</p></li>
+<li><p>coveralls</p></li>
+<li><p>setuptools&gt;=42</p></li>
+<li><p>wheel</p></li>
+<li><p>setuptools_scm&gt;=3.4</p></li>
+<li><p>astropy</p></li>
+<li><p>scipy</p></li>
+<li><p>sbpy</p></li>
+<li><p>tables</p></li>
+</ul>
+</div>
 <div class="section" id="installing-the-survey-simulator-post-processing">
 <h2>Installing the Survey Simulator Post Processing<a class="headerlink" href="#installing-the-survey-simulator-post-processing" title="Permalink to this headline"></a></h2>
+<p>Make sure you are in the directory you want to contain the Survey Simulator repo in:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="n">survey_sim_pp</span>
+</pre></div>
+</div>
 <p>In order to install the Solar System survey simulator, either clone the repo
 directly from the <a class="reference external" href="https://github.com/dirac-institute/survey_simulator_post_processing">projects github</a> or
 via:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">dirac</span><span class="o">-</span><span class="n">institute</span><span class="o">/</span><span class="n">survey_simulator_post_processing</span><span class="o">.</span><span class="n">git</span>
+</pre></div>
+</div>
+<p>Next, ensure you are in the main Survey Simulator directory and set up an editable (in-place) development environment:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="o">~/</span><span class="n">survey_simulator_post_processing</span>
+<span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">e</span> <span class="o">.</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="testing-the-installation">
+<h2>Testing the Installation<a class="headerlink" href="#testing-the-installation" title="Permalink to this headline"></a></h2>
+<p>To test that the installation was done correctly, run:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">surveySimPP</span> <span class="o">-</span><span class="n">c</span> <span class="o">./</span><span class="n">PPConfig</span><span class="o">.</span><span class="n">ini</span> <span class="o">-</span><span class="n">l</span> <span class="o">./</span><span class="n">data</span><span class="o">/</span><span class="n">test</span><span class="o">/</span><span class="n">testcolour</span><span class="o">.</span><span class="n">txt</span> <span class="o">-</span><span class="n">o</span> <span class="o">./</span><span class="n">data</span><span class="o">/</span><span class="n">test</span><span class="o">/</span><span class="n">testorb</span><span class="o">.</span><span class="n">des</span> <span class="o">-</span><span class="n">p</span> <span class="o">./</span><span class="n">data</span><span class="o">/</span><span class="n">test</span><span class="o">/</span><span class="n">oiftestoutput</span><span class="o">.</span><span class="n">txt</span>
+</pre></div>
+</div>
+<p>The output will appear in a csv file in .data/out (this pathway can be changed in the config file).
+The output should look like:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">This</span>
 </pre></div>
 </div>
 </div>
@@ -144,13 +215,13 @@ via:</p>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="overview.html" class="btn btn-neutral float-left" title="Overview" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="usingoif.html" class="btn btn-neutral float-right" title="Using Objects In Field" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="filters.html" class="btn btn-neutral float-right" title="Filters" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2021, Siegfried Eggl, Mario Juric, Meg Schwamb, Grigori Fedorets, Shantanu Naidu, Sam Cornwall, Aidan Berres.</p>
+    <p>&#169; Copyright 2021, Siegfried Eggl, Mario Juric, Meg Schwamb, Grigori Fedorets, Shantanu Naidu, Sam Cornwall, Aidan Berres, Steph Merritt, Shannon Matthews, Lynne Jones, Colin Snodgrass.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

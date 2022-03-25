@@ -6,7 +6,7 @@ rad2deg = np.degrees
 sin = np.sin
 cos = np.cos
 
-def vignettingLosses(oifdf, surveydf,
+def vignettingLosses(oifdf,
                      raNameOIF="AstRA(deg)", decNameOIF="AstDec(deg)", fieldNameOIF="FieldID",
                      raNameSurvey="fieldRA", decNameSurvey="fieldDec"):
     """Takes dataframes containg observation and field positions and calculates

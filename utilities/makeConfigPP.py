@@ -64,7 +64,7 @@ def makeConfigFile(args):
 		config.write(filename)
 		
 
-if (__name__=='__main__'):
+def main():
 
 	parser = argparse.ArgumentParser(description='Creating the config file for SSP.')
 	
@@ -113,3 +113,6 @@ if (__name__=='__main__'):
 	args = parser.parse_args()
 	
 	makeConfigFile(args)
+
+if __name__=='__main__':
+    main()

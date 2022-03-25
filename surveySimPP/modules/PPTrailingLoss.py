@@ -97,10 +97,9 @@ def calcTrailingLoss(dRaCosDec, dDec, seeing, texp=30.0, model='circularPSF', a_
 
 #-----------------------------------------------------------------------------------------------
 
-def PPTrailingLoss(oif_df, survey_df, model='circularPSF', dra_name='AstRARate(deg/day)',
+def PPTrailingLoss(oif_df, model='circularPSF', dra_name='AstRARate(deg/day)',
                    ddec_name='AstDecRate(deg/day)', dec_name='AstDec(deg)',
-                   seeing_name_oif="seeing", field_id_name_oif="FieldID",
-                   seeing_name_survey='seeingFwhmGeom', field_id_name_survey='observationId'):
+                   seeing_name_survey='seeingFwhmGeom'):
     """
     Calculates Detection trailing loss for objectInField output.
     """

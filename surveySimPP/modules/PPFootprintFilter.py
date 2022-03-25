@@ -299,11 +299,10 @@ class Footprint:
             
     
     def applyFootprint(
-        self, oifDF, pointings,
+        self, field_df,
         ra_name="AstRA(deg)", 
         dec_name="AstDec(deg)", 
-        field_name="FieldID", 
-        field_name_survey="FieldID",
+        field_name="FieldID",
         ra_name_field='fieldRA', 
         dec_name_field="fieldDec", 
         rot_name_field="rotSkyPos",
@@ -317,10 +316,9 @@ class Footprint:
 
         INPUT
         -----
-        oifDF           ... Pandas DataFrame containing detection information
-        pointings       ... Pandas DataFrame containing field pointing information
-        *_name          ... column names for oifDF
-        *_name_field    ... column names for pointings
+        field_df        ... Pandas DataFrame containing detection information with pointings
+        *_name          ... column names for object RA and Dec
+        *_name_field    ... column names for field RA and Dec
         method          ... which algorthim to use to convert on sky location
                             to focal plane coordinates
 
@@ -333,17 +331,17 @@ class Footprint:
         # TODO: only grab pointings that have detections in oifDF
         
         # convert detections to xyz on unit sphere
-        ra=deg2rad(oifDF[ra_name])
-        dec=deg2rad(oifDF[dec_name])
+        ra=deg2rad(field_df[ra_name])
+        dec=deg2rad(field_df[dec_name])
         
         #
-        field_df = pd.merge(
-            oifDF[[field_name]],
-            pointings[[field_name_survey, ra_name_field, dec_name_field, rot_name_field]],
-            left_on=field_name,
-            right_on=field_name_survey,
-            how="left"
-        )
+        #field_df = pd.merge(
+        #    oifDF[[field_name]],
+        #    pointings[[field_name_survey, ra_name_field, dec_name_field, rot_name_field]],
+        #    left_on=field_name,
+        #    right_on=field_name_survey,
+        #    how="left"
+        #)
         
         # convert field pointings to xyz on unit sphere
         fieldra   = deg2rad(field_df[ra_name_field])
@@ -371,7 +369,7 @@ class Footprint:
         observations_complex = x + y*1.0j
         rotation = np.exp(-rotSkyPos*1.0j)
 
-        #observations_complex *= rotation
+        observations_complex *= rotation
         x = np.real(observations_complex)
         y = np.imag(observations_complex)
         

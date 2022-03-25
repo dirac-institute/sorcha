@@ -100,7 +100,7 @@ def makeConfig(args):
         with open(os.path.join(args.prefix, orbitsName + "-" + str(startingOrbits[i]).zfill(ndigits) + '-' + str(startingOrbits[i] + nOrbits-1).zfill(ndigits) + '.ini'), 'w') as file:
             config.write(file)
 
-if (__name__=='__main__'):
+def main():
 
     parser=argparse.ArgumentParser(description='creating config file(s) for Objects in Field')
     parser.add_argument("o", help="orbits file", type=str)
@@ -136,3 +136,8 @@ if (__name__=='__main__'):
 
     # make config file 
     makeConfig(args)
+
+
+if __name__=='__main__':
+    main()
+
