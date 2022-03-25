@@ -39,11 +39,16 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="usingoif.html">Using Objects In Field</a></li>
+<li class="toctree-l1"><a class="reference internal" href="filters.html">Filters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="inputs.html">Inputs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="configfiles.html">Configuration Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="configfiles.html#inputs">Inputs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="outputs.html">Outputs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="gettingstarted.html">Getting Started</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="troubleshooting.html">Troubleshooting</a></li>
 <li class="toctree-l1"><a class="reference internal" href="support.html">Support</a></li>
 <li class="toctree-l1"><a class="reference internal" href="acknowledgements.html">Acknowledgements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="release.html">Release History</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Documentation:</span></p>
 <ul>
@@ -77,83 +82,81 @@
              
   <div class="section" id="welcome-to-solar-system-survey-simulator-post-processing-s-documentation">
 <h1>Welcome to Solar System Survey Simulator Post Processing’s documentation!<a class="headerlink" href="#welcome-to-solar-system-survey-simulator-post-processing-s-documentation" title="Permalink to this headline"></a></h1>
+<p>Welcome to the Solar System Survey Simulator Post Processing documentation. The survey simulator is a
+Python package for studying Solar System object population statistics. It has been designed
+with the <a class="reference external" href="https://www.lsst.org">Vera Rubin Observatory Legacy Survey of Space and Time (LSST)</a> in mind,
+but can be adapted to be used with any survey.</p>
+<p>This documentation webpage contains an installation guide and an overview of how the survey simulator
+works. Tutorials are provided which give examples on how to determine if an object is on a field of view,
+if it is observable with LSST, and specific guides for near earth objects, Jupiter trojans, cometary objects etc.</p>
 <div class="toctree-wrapper compound">
 <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="overview.html#inputs">Inputs</a></li>
-<li class="toctree-l2"><a class="reference internal" href="overview.html#filters">Filters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="overview.html#design-philosophy">Design Philosophy</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="installation.html#requirements">Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#oif-requirements">OIF Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#initial-steps">Initial Steps</a></li>
 <li class="toctree-l2"><a class="reference internal" href="installation.html#installing-objects-in-field">Installing Objects in Field</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#survey-simulator-requirements">Survey Simulator Requirements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="installation.html#installing-the-survey-simulator-post-processing">Installing the Survey Simulator Post Processing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#testing-the-installation">Testing the Installation</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="usingoif.html">Using Objects In Field</a></li>
+<li class="toctree-l1"><a class="reference internal" href="filters.html">Filters</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="filters.html#brightness-limit">Brightness Limit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="filters.html#detection-efficiency">Detection Efficiency</a></li>
+<li class="toctree-l2"><a class="reference internal" href="filters.html#trailing-loss">Trailing Loss</a></li>
+<li class="toctree-l2"><a class="reference internal" href="filters.html#faint-detections">Faint Detections</a></li>
+<li class="toctree-l2"><a class="reference internal" href="filters.html#camera-footprint">Camera Footprint</a></li>
+<li class="toctree-l2"><a class="reference internal" href="filters.html#vignetting">Vignetting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="filters.html#solar-system-processing">Solar System Processing</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="inputs.html">Inputs</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="inputs.html#orbit-file">Orbit File</a></li>
+<li class="toctree-l2"><a class="reference internal" href="inputs.html#physical-parameters-file">Physical Parameters File</a></li>
+<li class="toctree-l2"><a class="reference internal" href="inputs.html#cometary-activity-parameters-file-optional">Cometary Activity Parameters File (Optional)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="inputs.html#lsst-pointing-database">LSST Pointing Database</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="configfiles.html">Configuration Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="configfiles.html#inputs">Inputs</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="configfiles.html#objects-in-field-configuration-file">Objects in Field Configuration File</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configfiles.html#survey-simulator-configuration-file">Survey Simulator Configuration File</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="outputs.html">Outputs</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="outputs.html#objects-in-field">Objects in Field</a></li>
+<li class="toctree-l2"><a class="reference internal" href="outputs.html#survey-simulator">Survey Simulator</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="gettingstarted.html">Getting Started</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="gettingstarted.html#running-objects-in-field">Running Objects in Field</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gettingstarted.html#creating-object-files">Creating Object Files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gettingstarted.html#running-oif">Running OIF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gettingstarted.html#generate-an-oif-config-file">Generate an OIF Config File</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gettingstarted.html#id1">Running OIF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gettingstarted.html#generate-an-survey-simulator-config-file">Generate an Survey Simulator Config File</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gettingstarted.html#running-the-survey-simulator">Running the Survey Simulator</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="troubleshooting.html">Troubleshooting</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="troubleshooting.html#pointing-database">Pointing Database</a></li>
+<li class="toctree-l2"><a class="reference internal" href="troubleshooting.html#mismatch-in-inputs">Mismatch in Inputs</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="support.html">Support</a></li>
 <li class="toctree-l1"><a class="reference internal" href="acknowledgements.html">Acknowledgements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="release.html">Release History</a></li>
 </ul>
 </div>
 <div class="toctree-wrapper compound">
 <p class="caption"><span class="caption-text">Documentation:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="modules.html">modules package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="modules.html#subpackages">Subpackages</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules.html#module-modules.PPAddUncertainties">modules.PPAddUncertainties module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules.html#module-modules.PPAppmag_to">modules.PPAppmag_to module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules.html#module-modules.PPBrightLimit">modules.PPBrightLimit module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules.html#module-modules.PPCalculateApparentMagnitude">modules.PPCalculateApparentMagnitude module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules.html#module-modules.PPCalculateSimpleCometaryMagnitude">modules.PPCalculateSimpleCometaryMagnitude module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules.html#module-modules.PPCheckOrbitAndColoursMatching">modules.PPCheckOrbitAndColoursMatching module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules.html#module-modules.PPDetectionProbability">modules.PPDetectionProbability module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules.html#module-modules.PPDropObservations">modules.PPDropObservations module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules.html#module-modules.PPFilterDetectionEfficiencyThreshold">modules.PPFilterDetectionEfficiencyThreshold module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules.html#module-modules.PPFilterSSPCriterionEfficiency">modules.PPFilterSSPCriterionEfficiency module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules.html#module-modules.PPFootprintFilter">modules.PPFootprintFilter module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules.html#module-modules.PPJoinColourPointing">modules.PPJoinColourPointing module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules.html#module-modules.PPJoinCometaryWithOrbits">modules.PPJoinCometaryWithOrbits module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules.html#module-modules.PPMakeIntermediatePointingDatabase">modules.PPMakeIntermediatePointingDatabase module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules.html#module-modules.PPMatchFieldConditions">modules.PPMatchFieldConditions module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules.html#module-modules.PPMatchPointing">modules.PPMatchPointing module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules.html#module-modules.PPMatchPointingsAndColours">modules.PPMatchPointingsAndColours module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules.html#module-modules.PPOutWriteCSV">modules.PPOutWriteCSV module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules.html#module-modules.PPOutWriteHDF5">modules.PPOutWriteHDF5 module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules.html#module-modules.PPOutWriteSqlite3">modules.PPOutWriteSqlite3 module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules.html#module-modules.PPRandomize">modules.PPRandomize module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules.html#module-modules.PPRandomizeMeasurements">modules.PPRandomizeMeasurements module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules.html#module-modules.PPReadBrightness">modules.PPReadBrightness module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules.html#module-modules.PPReadColours">modules.PPReadColours module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules.html#module-modules.PPReadCometaryInput">modules.PPReadCometaryInput module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules.html#module-modules.PPReadIntermDatabase">modules.PPReadIntermDatabase module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules.html#module-modules.PPReadOif">modules.PPReadOif module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules.html#module-modules.PPReadOrbitFile">modules.PPReadOrbitFile module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules.html#module-modules.PPSimpleSensorArea">modules.PPSimpleSensorArea module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules.html#module-modules.PPTrailingLoss">modules.PPTrailingLoss module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules.html#module-modules.PPTranslateMagnitude">modules.PPTranslateMagnitude module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules.html#module-modules.PPVignetting">modules.PPVignetting module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules.html#module-modules.PPhookBrightnessWithColour">modules.PPhookBrightnessWithColour module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules.html#module-modules.PPreadColoursUser">modules.PPreadColoursUser module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules.html#module-modules">Module contents</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="lsstcomet.html">lsstcomet package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="lsstcomet.html#subpackages">Subpackages</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lsstcomet.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lsstcomet.html#module-lsstcomet.model">lsstcomet.model module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lsstcomet.html#module-lsstcomet.phase">lsstcomet.phase module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lsstcomet.html#module-lsstcomet.setup">lsstcomet.setup module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lsstcomet.html#module-lsstcomet.util">lsstcomet.util module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lsstcomet.html#module-lsstcomet">Module contents</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">modules package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lsstcomet.html">lsstcomet package</a></li>
 </ul>
 </div>
 </div>
@@ -176,7 +179,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2021, Siegfried Eggl, Mario Juric, Meg Schwamb, Grigori Fedorets, Shantanu Naidu, Sam Cornwall, Aidan Berres.</p>
+    <p>&#169; Copyright 2021, Siegfried Eggl, Mario Juric, Meg Schwamb, Grigori Fedorets, Shantanu Naidu, Sam Cornwall, Aidan Berres, Steph Merritt, Shannon Matthews, Lynne Jones, Colin Snodgrass.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

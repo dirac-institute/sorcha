@@ -1,164 +1,62 @@
 Overview
 ========
+The Solar System Science Collaboration (SSSC) Science Roadmap `(Schwamb et al. 2018) <https://ui.adsabs.harvard.edu/abs/2018arXiv180201783S/abstract>`_ highlights 
+probing the orbital distributions, size/brightness distributions, and surface colours
+as the top LSST science priorities in each of the Solar System small body populations. In order to do detailed 
+population studies on the orbital properties and physical characteristics of the various Solar System small body reservoirs, one
+requires being able to account for all the survey biases (the complex and often intertwined detection biases – brightness limits,
+pointing, cadence, on-sky motion limits, software detection efficiencies) in one’s discovery survey (`see Lawler et al. 2018 <https://ui.adsabs.harvard.edu/abs/2018FrASS...5...14L/abstract>`_ for 
+a more detailed discussion). A survey simulator takes an input model small body population and outputs (biases the population to)
+what Rubin Observatory should have detected by utilizing the LSST pointing history, observation metadata, and Rubin Observatory 
+Solar System Processing pipeline’s detection efficiency.
 
-The Survey Simulator Post Processing code is 
+
+
+Design Philosophy 
+----------------------
+The Survey Simulator Post Processing code is designed to compliment LSST observations, as a way to study
+Solar System object population statistics. The user is able to create synthetic population statistics and 
+run them through the survey simulator, which applies the specific observational biases from the LSST. In 
+this way, a synthetic population can be compared to real LSST observations. The survey simulator code 
+takes a series of simulated object orbits and parameters as an input and applies a range of biases that are 
+associated with the LSST, using what we have called :ref:`Filters<Filters>`.
+
+While this survey simulator has been built with LSST in mind, it has been written in a way which allows
+for customisation and can be applied in a general manner. The filters which can be applied can be switched
+on or off depending on the population in question and users can easily write and insert their own filters 
+for their specific needs.
+ 
+The software is open source and written in a modular way, where each filter has been written as its
+own function. We have developed a suite of filters which should cover the majority
+of use cases for the LSST, but there is a possibility to adapt the code for the users own goals. This
+may come in the form of adding additional filters or by adapting the software for use with another wide-field survey.
+The set of filters that can be applied to the synthetic input population can also be varies based on the population and science case of the user.
+
+We have provided a rigorous validation to the current version of the code. The filters provided can be switched on and off via 
+a configuration file and command line arguments, depending on the users needs. While the software is versatile we understand that
+users may wish to adapt the python code to suit their specific needs. **In this case, it is up to the user themselves to valide the 
+changes that they have made.**
+
+
+Overview of Use
+------------------
+The Survey Simulator is formed out of two pieces of software, working in tandem. The first
+code is an ephemerides generator. While the user can use any relevant ephemerides generator, we reccomend 
+using `Objects in Field (OIF) <https://github.com/eggls6/objectsInField>`_.  for this. 
+
+The second piece of software is `Post Processing (surveySimPP) <https://github.com/dirac-institute/survey_simulator_post_processing>`_,
+which applies the relevant biases to the simulated data, though a set of :ref:`filters<Filters>`.
+
+Both OIF and surveySimPP take a series of inputs. The basic pipeline overview can be seen below. The user generates a population with a set of orbits. This
+orbital parameter file is processed by Objects in Field (or any other orbital code) with respect to the LSST 
+pointing database, before being passed into the survey simulator. Here the user can alter the configuration
+file to apply relevant :ref:`filters<Filters>`, which account for the observational biases in LSST. An optional cometary 
+parameter file can also be added here.
+
+
 
 .. image:: images/OIF.png
   :width: 800
-  :alt: Alternative text
+  :alt: An overview of the inputs and outputs of the survey simulator post processing code. 
   
   
-Inputs
------------------
-
-**Input: Orbits**
-
-The orbital parameter file is used with both Objects in Field and the Survey Simulator Post Processing
-code. The orbital parameters can take three formats: **Cometary, Keplarian** and **Cartesian**
-
-
-- **'COM'** = objID, q, e, inc, Omega, argPeri, tPeri, epoch, H, g, sed_filename
-
-
-- **'KEP'** = objID, a, e, inc, Omega, argPeri, meanAnomaly, epoch, H, g, sed_filename
-
-
-- **'CART'** = objID, x, y, z, xdot, ydot, zdot, epoch, H, g, sed_filename
-
-
-
-+----------+----------------------------------------------------------------------------------+
-| Keyword  | Description                                                                      |
-+==========+==================================================================================+
-| objID    | Object identifier. Unique identifier for each object withtin the population      |
-+----------+----------------------------------------------------------------------------------+
-| q        | Perihelion distance  = a*(1-e)                                                   |
-+----------+----------------------------------------------------------------------------------+
-| e        | Eccentricity                                                                     | 
-+----------+----------------------------------------------------------------------------------+
-| a        | Semimajor axis                                                                   |
-+----------+----------------------------------------------------------------------------------+
-| x        |                                                                                  |
-+----------+----------------------------------------------------------------------------------+
-| y        |                                                                                  |
-+----------+----------------------------------------------------------------------------------+
-| z        |                                                                                  |
-+----------+----------------------------------------------------------------------------------+
-| inc      | Inclination                                                                      |
-+----------+----------------------------------------------------------------------------------+
-| Omega    | Longitude of the ascending node                                                  |
-+----------+----------------------------------------------------------------------------------+
-| argPeri  | Argument of periapsis                                                            |
-+----------+----------------------------------------------------------------------------------+
-| tPeri    | Time of periapsis                                                                |
-+----------+----------------------------------------------------------------------------------+
-
-.. attention::
-   All orbits used should be heliocentric. When using the Survey Simulator Post Processing code the 
-   format of the orbits (i.e. Cometary, Keplerian, Cartesian) should remain consistent throughout
-   each simulation.
-
-
-**Input: Colours**
-
-The LSST will survey the sky in six bandpasses. These are **u, g, r, i, z and y**. In the colour file
-you can set a main filter which all other colours are compared to.
-
-- **main filter = r**
-- **other colours = g-r, i-r, z-r**
-- **res filters = r, g, i, z**
-
-**Input: Brightness**
-
-The brightness of an atmosphereless body is a function of its phase angle (a). 
-Several empirical models exist to predict the brightness, including the HG system (where H is approximately
-the brightness at d = 0 and G represents the slope)
-For this input, the options are: HG, HG1G2, HG12, linear, none
-
-- **phasefunction = HG**
-
-
-**Input: Cometary Properties (Optional)**
-
-This is an input file which describes how the object brightness will be augmented from the normal r^4 
-brightening as objects move inwards 
-
-
-**Input: LSST Pointing Database**
-
-This is a file containing the pointing data for the LSST survey. Prior to the start of the survey, this 
-data is estimated from up-to-date observation planning and environmental data. This file will be updated with
-real-life pointing data as the observations take place.
-
-
-
-
-Filters
------------------
-
-**Filter: Brightness Limit**
-
-The saturation limit on the LSST is magnitude 16.0. Anything that is brighter than this cannot be correctly
-measured, so typically it is omitted. 
-
-- **brightLimit = 16.0**
-
-**Filter: Detection Efficiency**
-
-The LSST automatic pipeline is not expected to identify all relevant objects. This will lower the
-number of objects detected by a given amount. 
-
- - **SSPDetectionEfficiency = 0.95**
-
-
-**Filter: Trailing Loss**
-
-If the object we are observing is fast moving, the signal will be smeared over several pixels. This 
-reduces the signal to noise of each pixel. For the LSST this is mostly relevant to NEOs.
-Options: True, False
-
-- **trailingLossesOn = False**
-
-.. image:: images/Trail.png
-  :width: 400
-  :alt: Alternative text
-  
-
-**Filter: Faint Detections**
-
-Towards fainter magnitudes, the likelihood of detecting an object decreases. This filter determines if a 
-faint object is detected depending on the (simulated) seeing and the limiting magnitude given in the pointing
-database.
-
-
-
-**Filter: Camera Footprint**
-
-Due to footprint of the LSST detector (see figure below), it is possible that some objects may be lost in
-gaps between the chips. This may not be an important factor in some cases, e.g. when observing very fast moving 
-objects, so the calculation can be done in two ways.
-
-Surface area: a simpler approach. The fraction of the surface area of a given pointing output (which is 
-circular in objectsInField). **Use this if **
-
-Camera footprint: using the LSST camera footprint, including chip gaps, with possibility to “remove” 
-entire rafts. The Camera footprint given by a separate data file. **Use this to **
-
-- **cameraModel = footprint**
-
-.. image:: images/Footprint.png
-  :width: 400
-  :alt: Alternative text
-  
-.. attention::
-   When using the surface area approach, remember to set the value of r to 1.75. When using the 
-   camera footprint set r to 2.06. 
-
-
-**Filter: Vignetting**
-
-Objects that are on the edges of the field of view are dimmer due to vignetting. This filter applies
-a model of this from a built-in function.
-
-
-**Filter: Solar System Processing**

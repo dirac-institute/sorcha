@@ -43,54 +43,81 @@ class Error(Exception):
 
 ############################################
 
-def addUncertainties(ephemsdf,obsdf,raName='fieldRA',decName='fieldDec',obsIdName='FieldID',
-                     obsEpochName='observationStartMJD',
-                     raNameEph='AstRA(deg)',decNameEph='AstDec(deg)',
-                     obsIdNameEph='observationId',ephEpochName='FieldMJD',
-                     limMagName='fiveSigmaDepth',seeingName='seeingFwhmGeom',
-                     filterMagName='MagnitudeInFilter'):
+#def addUncertainties(ephemsdf,obsdf,raName='fieldRA',decName='fieldDec',obsIdName='FieldID',
+#                     obsEpochName='observationStartMJD',
+#                     raNameEph='AstRA(deg)',decNameEph='AstDec(deg)',
+#                     obsIdNameEph='observationId',ephEpochName='FieldMJD',
+#                     limMagName='fiveSigmaDepth',seeingName='seeingFwhmGeom',
+#                     filterMagName='MagnitudeInFilter'):
 
+
+ #   """Add astrometric and photometric uncertainties to observations generated through JPL ephemeris simulator.
+#
+ #   Parameters:
+ #   -----------
+ #   ephemsdf   ... Pandas dataFrame containing output of JPL ephemeris simulator
+ #   obsdf    ... Pandas dataFrame containing survey simulator output such as LSST opsim
+ #   *Name    ... relevant column names in obsdf
+ #   *NameEph ... relevant column names in ephemsdf
+
+
+ #   Returns:
+ #   --------
+ #   ephemsOut ... ephems Pandas dataFrame (observations with added uncertainties)
+ #   """
+
+    #Check whether the observations dataframe covers the whole ephemeris time
+    #--------------------------------------------------------------------------
+    # Should be handled somewhere else
+    #--------------------------------------------------------------------------
+    #tobsmin=obsdf[obsEpochName].min()
+    #tobsmax=obsdf[obsEpochName].max()
+    #tephmin=ephemsdf[ephEpochName].min()
+    #tephmax=ephemsdf[ephEpochName].max()
+
+    #if(tephmin<tobsmin or tephmax>tobsmax):
+    #    print('observations tmin, ephemeris tmin:',tobsmin, tephmin)
+    #    print('observations tmax, ephemeris tmax:',tobsmax, tephmax)
+    #    raise Exception('Observations do not cover the entire ephemeris timespan.')
+    #--------------------------------------------------------------------------
+
+    # Remove 
+    #tempdf = pd.merge(
+    #    ephemsdf[[obsIdNameEph]],
+    #    obsdf[[obsIdName, limMagName, seeingName]],
+    #    left_on=obsIdNameEph,
+    #    right_on=obsIdName,
+    #    how="left"
+    #)
+
+#    astrSig,SNR,_=calcAstrometricUncertainty(ephemsdf[filterMagName], tempdf[limMagName],
+#                                            FWHMeff=tempdf[seeingName]*1000, output_units='mas')
+#    photometric_sigma = magErrorFromSNR(SNR)
+
+ #   return (astrSig, photometric_sigma, SNR)
+
+def uncertainties(detDF, 
+                    limMagName='fiveSigmaDepth', seeingName='seeingFwhmGeom', 
+                    filterMagName='MagnitudeInFilter'
+                ):
 
     """Add astrometric and photometric uncertainties to observations generated through JPL ephemeris simulator.
 
     Parameters:
     -----------
-    ephemsdf   ... Pandas dataFrame containing output of JPL ephemeris simulator
-    obsdf    ... Pandas dataFrame containing survey simulator output such as LSST opsim
-    *Name    ... relevant column names in obsdf
-    *NameEph ... relevant column names in ephemsdf
-
+    detDF    ... Pandas dataFrame containing output of JPL ephemeris simulator
+    *Name    ... relevant column names in detDF
 
     Returns:
     --------
     ephemsOut ... ephems Pandas dataFrame (observations with added uncertainties)
     """
 
-    #Check whether the observations dataframe covers the whole ephemeris time
-    tobsmin=obsdf[obsEpochName].min()
-    tobsmax=obsdf[obsEpochName].max()
-    tephmin=ephemsdf[ephEpochName].min()
-    tephmax=ephemsdf[ephEpochName].max()
-
-    if(tephmin<tobsmin or tephmax>tobsmax):
-        print('observations tmin, ephemeris tmin:',tobsmin, tephmin)
-        print('observations tmax, ephemeris tmax:',tobsmax, tephmax)
-        raise Exception('Observations do not cover the entire ephemeris timespan.')
-
-    tempdf = pd.merge(
-        ephemsdf[[obsIdNameEph]],
-        obsdf[[obsIdName, limMagName, seeingName]],
-        left_on=obsIdNameEph,
-        right_on=obsIdName,
-        how="left"
-    )
-
-    astrSig,SNR,_=calcAstrometricUncertainty(ephemsdf[filterMagName], tempdf[limMagName],
-                                            FWHMeff=tempdf[seeingName]*1000, output_units='mas')
+    astrSig,SNR,_=calcAstrometricUncertainty(detDF[filterMagName], detDF[limMagName],
+                                            FWHMeff=detDF[seeingName]*1000, output_units='mas')
     photometric_sigma = magErrorFromSNR(SNR)
 
     return (astrSig, photometric_sigma, SNR)
-
 
 def calcAstrometricUncertainty(mag, m5, nvisit=1, FWHMeff=700.0, error_sys = 10.0,
                                astErrCoeff=0.60, output_units='mas'):
