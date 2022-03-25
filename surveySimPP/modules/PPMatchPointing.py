@@ -4,7 +4,7 @@ import pandas as pd
 
 #Author: Grigori Fedorets
 
-def PPMatchPointing(bsdbname,resfilters, dbquery):
+def PPMatchPointing(bsdbname,observing_filters, dbquery):
 
     """
     PPMatchPointing.py
@@ -16,13 +16,13 @@ def PPMatchPointing(bsdbname,resfilters, dbquery):
 
 
     Mandatory input:      bsdbname:   string, name of database
-                          resfilters: array of strings, filters required for output
+                          observing_filters: array of strings, filters required for output
                           dbquery:    string, SQLite3 query for querying the pointing database (defined in configuration file)
 
     Output:               8*n pandas dataframe
 
 
-    usage: padafr=PPMatchPointing(bsdbname,resfilters,dbquery)
+    usage: padafr=PPMatchPointing(bsdbname,observing_filters,dbquery)
     """
 
 
@@ -34,6 +34,6 @@ def PPMatchPointing(bsdbname,resfilters, dbquery):
     df=df.rename(columns={'observationId': 'FieldID'})
     df=df.rename(columns={'observationId': 'FieldID'}) 
     df=df.rename(columns={'filter': 'optFilter'}) # not to confuse with the pandas filter command   
-    dfo=df[df.optFilter.isin(resfilters)]
+    dfo=df[df.optFilter.isin(observing_filters)]
     return dfo
     

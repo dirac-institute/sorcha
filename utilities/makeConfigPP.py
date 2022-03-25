@@ -24,7 +24,6 @@ def makeConfigFile(args):
                 },
             'FILTERS':
                 {
-                'mainfilter':   			args.mainfilter,
                 'othercolours':         	args.othercolours,
                 'resfilters':				args.resfilter
                 },
@@ -79,7 +78,6 @@ def main():
 	parser.add_argument('--auxformat', '-inauxf', help='Separator in orbit/colour/brightness/cometary data files: comma or whitespace. Default is "whitespace".', type=str, default='whitespace')
 	
 	# FILTERS
-	parser.add_argument('--mainfilter', '-mfilt', help='The main filter in the colour file to which all other colours are compared. Default is "r".', type=str, default='r')
 	parser.add_argument('--othercolours', '-ofilt', help='Other colours with respect to the main filter, e.g g-r. Should be given separated by comma. Default is "g-r,i-r,z-r".', type=str, default='g-r,i-r,z-r')
 	parser.add_argument('--resfilter', '-rfilt', help='resulting filters; main filter, followed by resolved colours, such as, e.g. \'r\'+\'g-r\'=\'g\'. Should be given in the following order: main filter, resolved filters in the same order as respective other colours. Should be separated by comma. Default is "r,g,i,z"', 
 									type=str, default='r,g,i,z')
