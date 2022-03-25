@@ -7,3 +7,4 @@ Describe your changes.
 - [ ] Does pip install still work?
 - [ ] Have you written a unit test for any new functions?
 - [ ] Do all the units tests run successfully?
+- [ ] Does SurveySimPP run successfully on a test set?
