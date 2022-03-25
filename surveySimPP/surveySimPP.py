@@ -7,22 +7,22 @@ import logging
 import argparse
 import configparser
 from lsstcomet import *
-from .modules import PPFilterDetectionEfficiencyThreshold, PPreadColoursUser, PPReadColours
-from .modules import PPJoinColourPointing, PPMatchPointing
-from .modules import PPMatchPointingsAndColours, PPFilterSSPCriterionEfficiency
-from .modules import PPReadOrbitFile, PPCheckOrbitAndColoursMatching
-from .modules import PPReadOif, PPReadEphemerides
-from .modules import PPDetectionProbability, PPSimpleSensorArea, PPTrailingLoss, PPMatchFieldConditions
-from .modules import PPDropObservations, PPBrightLimit
-from .modules import PPMakeIntermediatePointingDatabase, PPReadIntermDatabase
-from .modules import PPReadCometaryInput, PPJoinOrbitalData, PPCalculateSimpleCometaryMagnitude
-from .modules import PPCalculateApparentMagnitude
-from .modules.PPApplyFOVFilter import PPApplyFOVFilter
-from .modules.PPSNRLimit import PPSNRLimit
-from .modules import PPFootprintFilter, PPAddUncertainties, PPRandomizeMeasurements, PPVignetting
-from .modules.PPDetectionProbability import calcDetectionProbability, PPDetectionProbability
-from .modules.PPRunUtilities import PPGetLogger, PPConfigFileParser, PPPrintConfigsToLog, PPCMDLineParser, PPWriteOutput
-from .modules.PPMatchPointingToObservations import PPMatchFilterToObservations, PPMatchPointingToObservations
+from modules import PPFilterDetectionEfficiencyThreshold, PPreadColoursUser, PPReadColours
+from modules import PPJoinColourPointing, PPMatchPointing
+from modules import PPMatchPointingsAndColours, PPFilterSSPCriterionEfficiency
+from modules import PPReadOrbitFile, PPCheckOrbitAndColoursMatching
+from modules import PPReadOif, PPReadEphemerides
+from modules import PPDetectionProbability, PPSimpleSensorArea, PPTrailingLoss, PPMatchFieldConditions
+from modules import PPDropObservations, PPBrightLimit
+from modules import PPMakeIntermediatePointingDatabase, PPReadIntermDatabase
+from modules import PPReadCometaryInput, PPJoinOrbitalData, PPCalculateSimpleCometaryMagnitude
+from modules import PPCalculateApparentMagnitude
+from modules.PPApplyFOVFilter import PPApplyFOVFilter
+from modules.PPSNRLimit import PPSNRLimit
+from modules import PPFootprintFilter, PPAddUncertainties, PPRandomizeMeasurements, PPVignetting
+from modules.PPDetectionProbability import calcDetectionProbability, PPDetectionProbability
+from modules.PPRunUtilities import PPGetLogger, PPConfigFileParser, PPPrintConfigsToLog, PPCMDLineParser, PPWriteOutput
+from modules.PPMatchPointingToObservations import PPMatchFilterToObservations, PPMatchPointingToObservations
 
 
 def runPostProcessing(parser):
@@ -83,12 +83,15 @@ def runPostProcessing(parser):
          PPMakeIntermediatePointingDatabase.PPMakeIntermediatePointingDatabase(cmd_args['oifoutput'],'./data/interm.db', 100)
      
     pplogger.info('Reading pointing database and Matching observationID with appropriate optical filter...')
-    filterpointing=PPMatchPointing.PPMatchPointing(configs['pointingdatabase'],configs['resfilters'],configs['ppdbquery'])
+    filterpointing=PPMatchPointing.PPMatchPointing(configs['pointingdatabase'],configs['observing_filters'],configs['ppdbquery'])
     
     pplogger.info('Instantiating random number generator ... ')
     rng_seed = int(time.time())
     pplogger.info('Random number seed is {}.'.format(rng_seed))
     rng = np.random.default_rng(rng_seed)
+    
+    # Extracting mainfilter, the first in resfilters
+    mainfilter=configs['observing_filters'][0]
     
     ### In case of a large input file, the data is read in chunks. The "sizeSerialChunk" parameter in PPConfig.ini assigns the chunk.
     
@@ -160,11 +163,11 @@ def runPostProcessing(parser):
         observations = PPMatchPointingToObservations(observations, filterpointing)
                 
         pplogger.info('Calculating apparent magnitudes...')
-        observations=PPCalculateApparentMagnitude.PPCalculateApparentMagnitude(observations, configs['phasefunction'], configs['mainfilter'], configs['othercolours'], configs['resfilters'])
+        observations=PPCalculateApparentMagnitude.PPCalculateApparentMagnitude(observations, configs['phasefunction'], mainfilter, configs['othercolours'], configs['observing_filters'])
 
         if (configs['objecttype']=='comet'):
              pplogger.info('Calculating cometary magnitude using a simple model...')
-             observations=PPCalculateSimpleCometaryMagnitude.PPCalculateSimpleCometaryMagnitude(observations, configs['mainfilter'])        
+             observations=PPCalculateSimpleCometaryMagnitude.PPCalculateSimpleCometaryMagnitude(observations, mainfilter)        
        
         pplogger.info('Dropping observations that are too bright...')
         observations=PPBrightLimit.PPBrightLimit(observations,configs['brightLimit'])
