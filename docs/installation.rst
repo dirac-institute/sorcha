@@ -11,7 +11,9 @@ OIF Requirements
 * python 3
 * spiceypy python library
 * pyoorb python library
-* other standard python libraries like numpy, pandas, etc.
+* numpy
+* pandas
+* matplotlib
 * NAIF SPICE Utilities
 
 Initial Steps
