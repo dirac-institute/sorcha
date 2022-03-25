@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Filters &mdash; Solar System Survey Simulator Post Processing 0.0.1 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Inputs" href="inputs.html" />
+    <link rel="prev" title="Installation" href="installation.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> Solar System Survey Simulator Post Processing
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Filters</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#brightness-limit">Brightness Limit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#detection-efficiency">Detection Efficiency</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#trailing-loss">Trailing Loss</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#faint-detections">Faint Detections</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#camera-footprint">Camera Footprint</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#vignetting">Vignetting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#solar-system-processing">Solar System Processing</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="inputs.html">Inputs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="configfiles.html">Configuration Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="configfiles.html#inputs">Inputs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="outputs.html">Outputs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gettingstarted.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="support.html">Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="acknowledgements.html">Acknowledgements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="release.html">Release History</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Documentation:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">modules package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lsstcomet.html">lsstcomet package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Solar System Survey Simulator Post Processing</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Filters</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/filters.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="filters">
+<h1>Filters<a class="headerlink" href="#filters" title="Permalink to this headline"></a></h1>
+<div class="section" id="brightness-limit">
+<h2>Brightness Limit<a class="headerlink" href="#brightness-limit" title="Permalink to this headline"></a></h2>
+<p>The saturation limit of the LSST is magnitude 16.0. Anything that is brighter than this cannot be correctly
+measured, and so typically it is omitted.</p>
+<ul class="simple">
+<li><p><strong>brightLimit = 16.0</strong></p></li>
+</ul>
+</div>
+<div class="section" id="detection-efficiency">
+<h2>Detection Efficiency<a class="headerlink" href="#detection-efficiency" title="Permalink to this headline"></a></h2>
+<p>The LSST automatic pipeline is not expected to identify all objects. This will lower the
+number of objects detected by a given amount. The number of objects that are not identified is
+set to 5%.</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><strong>SSPDetectionEfficiency = 0.95</strong></p></li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="trailing-loss">
+<h2>Trailing Loss<a class="headerlink" href="#trailing-loss" title="Permalink to this headline"></a></h2>
+<p>If the object we are observing is fast moving, the signal will be smeared over several pixels. This
+reduces the signal to noise of each pixel. For the LSST this is mostly relevant to NEOs.
+Options: True, False</p>
+<ul class="simple">
+<li><p><strong>trailingLossesOn = False</strong></p></li>
+</ul>
+<a class="reference internal image-reference" href="_images/Trail.png"><img alt="Alternative text" src="_images/Trail.png" style="width: 400px;" /></a>
+</div>
+<div class="section" id="faint-detections">
+<h2>Faint Detections<a class="headerlink" href="#faint-detections" title="Permalink to this headline"></a></h2>
+<p>Towards fainter magnitudes, the likelihood of detecting an object decreases. This filter determines if a
+faint object is detected depending on the (simulated) seeing and the limiting magnitude given in the pointing
+database.</p>
+</div>
+<div class="section" id="camera-footprint">
+<h2>Camera Footprint<a class="headerlink" href="#camera-footprint" title="Permalink to this headline"></a></h2>
+<p>Due to footprint of the LSST detector (see figure below), it is possible that some objects may be lost in
+gaps between the chips. This may not be an important factor in some cases, e.g. when observing very fast moving
+objects, so the calculation can be done in two ways.</p>
+<p>Surface area: a simpler approach. The fraction of the surface area of a given pointing output (which is
+circular in objectsInField). <a href="#id1"><span class="problematic" id="id2">**</span></a>Use this if **</p>
+<p>Camera footprint: using the LSST camera footprint, including chip gaps, with possibility to “remove”
+entire rafts. The Camera footprint given by a separate data file. <a href="#id3"><span class="problematic" id="id4">**</span></a>Use this to **</p>
+<ul class="simple">
+<li><p><strong>cameraModel = footprint</strong></p></li>
+</ul>
+<a class="reference internal image-reference" href="_images/Footprint.png"><img alt="Alternative text" src="_images/Footprint.png" style="width: 400px;" /></a>
+<div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<p>When using the surface area approach, remember to set the value of r to 1.75. When using the
+camera footprint set r to 2.06.</p>
+</div>
+</div>
+<div class="section" id="vignetting">
+<h2>Vignetting<a class="headerlink" href="#vignetting" title="Permalink to this headline"></a></h2>
+<p>Objects that are on the edges of the field of view are dimmer due to vignetting. This filter applies
+a model of this from a built-in function.</p>
+</div>
+<div class="section" id="solar-system-processing">
+<h2>Solar System Processing<a class="headerlink" href="#solar-system-processing" title="Permalink to this headline"></a></h2>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="installation.html" class="btn btn-neutral float-left" title="Installation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="inputs.html" class="btn btn-neutral float-right" title="Inputs" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Siegfried Eggl, Mario Juric, Meg Schwamb, Grigori Fedorets, Shantanu Naidu, Sam Cornwall, Aidan Berres, Steph Merritt, Shannon Matthews, Lynne Jones, Colin Snodgrass.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

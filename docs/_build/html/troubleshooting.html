@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Troubleshooting &mdash; Solar System Survey Simulator Post Processing 0.0.1 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Support" href="support.html" />
+    <link rel="prev" title="Getting Started" href="gettingstarted.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> Solar System Survey Simulator Post Processing
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="filters.html">Filters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="inputs.html">Inputs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="configfiles.html">Configuration Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="configfiles.html#inputs">Inputs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="outputs.html">Outputs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gettingstarted.html">Getting Started</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Troubleshooting</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#pointing-database">Pointing Database</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#mismatch-in-inputs">Mismatch in Inputs</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="support.html">Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="acknowledgements.html">Acknowledgements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="release.html">Release History</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Documentation:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">modules package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lsstcomet.html">lsstcomet package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Solar System Survey Simulator Post Processing</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Troubleshooting</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/troubleshooting.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="troubleshooting">
+<h1>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permalink to this headline"></a></h1>
+<div class="section" id="pointing-database">
+<h2>Pointing Database<a class="headerlink" href="#pointing-database" title="Permalink to this headline"></a></h2>
+<p>The pointing database is a sqlite database, generated by <a class="reference external" href="https://rubin-sim.lsst.io/rubin_sim/index.html">(rubin_sim)</a>,
+which contains information on the predicted pointing of the LSST survey. An overview of the information contained within the
+most up-to-date version of the database is given <a class="reference external" href="https://rubin-sim.lsst.io/rs_scheduler/output_schema.html#">(here)</a>.</p>
+<p>There are two versions of the pointing database and users may encounter an issue
+depending on which version they are using. The pointing database that was released
+prior to (DATE) includes a column called <strong>SummaryAllProps</strong>, which has since been renamed
+to <strong>observations</strong>.</p>
+<p>The survey simulator post processing configuration file tells the code which columns in the
+pointing database to read using the line:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">surveydbquery</span> <span class="o">=</span> <span class="n">SELECT</span> <span class="n">observationId</span><span class="p">,</span><span class="n">observationStartMJD</span><span class="p">,</span><span class="n">fieldRA</span><span class="p">,</span><span class="n">fieldDEC</span><span class="p">,</span><span class="n">rotSkyPos</span> <span class="n">FROM</span> <span class="n">observations</span> <span class="n">order</span> <span class="n">by</span> <span class="n">observationStartMJD</span>
+</pre></div>
+</div>
+<p>However, if you are getting an error like:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pandas</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">sql</span><span class="o">.</span><span class="n">DatabaseError</span><span class="p">:</span> <span class="n">Execution</span> <span class="n">failed</span> <span class="n">on</span> <span class="n">sql</span> <span class="s1">&#39;SELECT observationStartMJD, observationId FROM observations ORDER BY observationStartMJD&#39;</span><span class="p">:</span> <span class="n">no</span> <span class="n">such</span> <span class="n">table</span><span class="p">:</span> <span class="n">observations</span>
+</pre></div>
+</div>
+<p>Then it is likely that you are using the older version of the pointing database. This
+can be fixed by either updating to the newer version (which can be found here), or by changing
+the <strong>surveydbquery</strong> line in the survey simulator configuration file to:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">surveydbquery</span> <span class="o">=</span> <span class="n">SELECT</span> <span class="n">observationId</span><span class="p">,</span><span class="n">observationStartMJD</span><span class="p">,</span><span class="n">fieldRA</span><span class="p">,</span><span class="n">fieldDEC</span><span class="p">,</span><span class="n">rotSkyPos</span> <span class="n">FROM</span> <span class="n">SummaryAllProps</span> <span class="n">order</span> <span class="n">by</span> <span class="n">observationStartMJD</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="mismatch-in-inputs">
+<h2>Mismatch in Inputs<a class="headerlink" href="#mismatch-in-inputs" title="Permalink to this headline"></a></h2>
+<p>There are several files which are passed into the survey simulator. These are the
+orbit file, the physical parameter file and an optional cometary parameter file. Each provide
+specific information about the synthetic population that is being analysed.</p>
+<p>Within these files, it is necessary to specify an entry for every object. The survey simulator
+post processing code will run a check to ensure that all entries have an associated
+orbit and physical/cometary parameter value, so if you get an error like:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ERROR</span><span class="p">:</span> <span class="n">PPCheckOrbitAndColourMatching</span><span class="p">:</span> <span class="nb">input</span> <span class="n">colour</span><span class="o">/</span><span class="n">cometary</span> <span class="n">parameter</span> <span class="ow">and</span> <span class="n">orbit</span> <span class="n">files</span> <span class="n">do</span> <span class="ow">not</span> <span class="n">match</span><span class="o">.</span>
+</pre></div>
+</div>
+<p>then make sure that for each file (orbit, ephemerides and physical/cometary parameters) contains information
+for each object you wish to simulate.</p>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="gettingstarted.html" class="btn btn-neutral float-left" title="Getting Started" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="support.html" class="btn btn-neutral float-right" title="Support" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Siegfried Eggl, Mario Juric, Meg Schwamb, Grigori Fedorets, Shantanu Naidu, Sam Cornwall, Aidan Berres, Steph Merritt, Shannon Matthews, Lynne Jones, Colin Snodgrass.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

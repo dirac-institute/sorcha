@@ -1,0 +1,52 @@
+Inputs and Outputs
+==================
+  
+Objects in Field
+-----------------
+
+**Inputs: Orbits**
+
+The orbital parameter file is used with both Objects in Field and the Survey Simulator Post Processing
+code. The orbital parameters can take three formats: **Cometary, Keplarian** and **Cartesian**
+
+
+- **'COM'** = objID, q, e, inc, Omega, argPeri, tPeri, epoch, H, g, sed_filename
+
+
+- **'KEP'** = objID, a, e, inc, Omega, argPeri, meanAnomaly, epoch, H, g, sed_filename
+
+
+- **'CART'** = objID, x, y, z, xdot, ydot, zdot, epoch, H, g, sed_filename
+
+
+
++----------+----------------------------------------------------------------------------------+
+| Keyword  | Description                                                                      |
++==========+==================================================================================+
+| objID    | Object identifier. Unique identifier for each object withtin the population      |
++----------+----------------------------------------------------------------------------------+
+| q        | Perihelion distance  = a*(1-e)                                                   |
++----------+----------------------------------------------------------------------------------+
+| e        | Eccentricity                                                                     | 
++----------+----------------------------------------------------------------------------------+
+| a        | Semimajor axis                                                                   |
++----------+----------------------------------------------------------------------------------+
+| x        |                                                                                  |
++----------+----------------------------------------------------------------------------------+
+| y        |                                                                                  |
++----------+----------------------------------------------------------------------------------+
+| z        |                                                                                  |
++----------+----------------------------------------------------------------------------------+
+| inc      | Inclination                                                                      |
++----------+----------------------------------------------------------------------------------+
+| Omega    | Longitude of the ascending node                                                  |
++----------+----------------------------------------------------------------------------------+
+| argPeri  | Argument of periapsis                                                            |
++----------+----------------------------------------------------------------------------------+
+| tPeri    | Time of periapsis                                                                |
++----------+----------------------------------------------------------------------------------+
+
+.. attention::
+   All orbits used should be heliocentric. When using the Survey Simulator Post Processing code the 
+   format of the orbits (i.e. Cometary, Keplerian, Cartesian) should remain consistent throughout
+   each simulation, i.e. only use one type of coordinate format per run.
