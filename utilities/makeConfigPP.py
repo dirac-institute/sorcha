@@ -51,8 +51,7 @@ def makeConfigFile(args):
                 {
                 'outpath':   				args.outpath,
                 'outfilestem':         		args.outfilestem,
-                'outputformat':				args.outputformat,
-                'separatelyCSV':			args.separatelycsv
+                'outputformat':				args.outputformat
                 },
             'GENERAL':
                 {
@@ -105,7 +104,6 @@ if (__name__=='__main__'):
 	parser.add_argument('--outpath', '-out', help='Path to output. Default is "./data/out".', type=str, default='./data/out/')
 	parser.add_argument('--outfilestem', '-outstem', help='Output file name stem. Default is "hundredcomets"', type=str, default='hundredcomets')
 	parser.add_argument('--outputformat', '-outf', help="Output format. Options: csv, sqlite3, hdf5. Default is csv.", type=str, default='csv')
-	parser.add_argument('--separatelycsv', '-sepcsv', help="Toggle to write out the CSV file for each object separately. Default is False.", action="store_true")
 	
 	# GENERAL
 	parser.add_argument('--sizeserialchunk', '-chunk', help="Size of chunk of objects to be processed serially. Default is 10.", type=int, default=10)

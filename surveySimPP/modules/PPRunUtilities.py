@@ -160,11 +160,10 @@ def PPConfigFileParser(configfile, pplogger):
 	config_dict['outfilestem'] = PPGetOrExit(config, 'OUTPUTFORMAT', 'outfilestem', 'ERROR: name of output file stem not specified.')    
 
 	config_dict['outputformat'] = PPGetOrExit(config, 'OUTPUTFORMAT', 'outputformat', 'ERROR: output format not specified.')   
-	if config_dict['outputformat'] not in ['csv', 'sqlite3', 'hdf5', 'HDF5', 'h5']:
-		pplogger.error('ERROR: output format should be either csv, sqlite3 or hdf5.')
-		sys.exit('ERROR: output format should be either csv, sqlite3 or hdf5.')
+	if config_dict['outputformat'] not in ['csv', 'separatelyCSV', 'separatelyCsv', 'separatelycsv', 'sqlite3', 'hdf5', 'HDF5', 'h5']:
+		pplogger.error('ERROR: output format should be either csv, separatelyCSV, sqlite3 or hdf5.')
+		sys.exit('ERROR: output format should be either csv, separatelyCSV, sqlite3 or hdf5.')
 
-	config_dict['separatelyCSV'] = PPToBool(config['OUTPUTFORMAT']['separatelyCSV'])
 	config_dict['sizeSerialChunk'] = int(config['GENERAL']['sizeSerialChunk'])
 
 	return config_dict
@@ -283,19 +282,20 @@ def PPWriteOutput(configs, observations, pplogger, endChunk):
 	pplogger.info('Constructing output path...')
 	if (configs['outputformat'] == 'csv'):
 		outputsuffix='.csv'
-		if (configs['separatelyCSV'] == True):
-			objid_list = observations['ObjID'].unique().tolist() 
-			pplogger.info('Output to ' + str(len(objid_list)) + ' separate output CSV files...')
-			i=0
-			while(i<len(objid_list)):
-				 single_object_df=pd.DataFrame(observations[observations['ObjID'] == objid_list[i]])
-				 out=configs['outpath'] + str(objid_list[i]) + '_' + configs['outfilestem'] + outputsuffix
-				 obsi=PPOutWriteCSV.PPOutWriteCSV(single_object_df,out)
-				 i=i+1
-		else:
-			out= configs['outpath'] + configs['outfilestem'] + outputsuffix
-			pplogger.info('Output to CSV file...')
-			observations=PPOutWriteCSV.PPOutWriteCSV(observations,out)
+		out= configs['outpath'] + configs['outfilestem'] + outputsuffix
+		pplogger.info('Output to CSV file...')
+		observations=PPOutWriteCSV.PPOutWriteCSV(observations,out)
+	
+	elif ((configs['outputformat'] == 'separatelyCSV') or (configs['outputformat'] == 'separatelyCsv') or (configs['outputformat'] == 'separatelycsv')):
+        outputsuffix='.csv'
+        objid_list = observations['ObjID'].unique().tolist() 
+		pplogger.info('Output to ' + str(len(objid_list)) + ' separate output CSV files...')
+		i=0
+		while(i<len(objid_list)):
+			single_object_df=pd.DataFrame(observations[observations['ObjID'] == objid_list[i]])
+			out=configs['outpath'] + str(objid_list[i]) + '_' + configs['outfilestem'] + outputsuffix
+			obsi=PPOutWriteCSV.PPOutWriteCSV(single_object_df,out)
+			i=i+1	
 	
 	elif (configs['outputformat'] == 'sqlite3'):
 		outputsuffix='.db'
