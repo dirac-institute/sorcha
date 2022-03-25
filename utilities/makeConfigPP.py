@@ -56,8 +56,7 @@ def makeConfigFile(args):
                 },
             'GENERAL':
                 {
-                'sizeSerialChunk':   		args.sizeserialchunk,
-                'testValue':				1			
+                'sizeSerialChunk':   		args.sizeserialchunk
                 }
 					})
 	

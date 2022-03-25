@@ -99,7 +99,6 @@ def PPConfigFileParser(configfile, pplogger):
 	config.read(configfile)
 
 	config_dict = {}
-	config_dict['testvalue'] = int(config['GENERAL']['testvalue'])	
 	config_dict['pointingFormat'] = PPGetOrExit(config, 'INPUTFILES', 'pointingFormat', 'ERROR: no pointing simulation format is specified.')
 	config_dict['filesep'] = PPGetOrExit(config, 'INPUTFILES', 'auxFormat', 'ERROR: no auxilliary data (e.g. colour) format specified.')  
 
