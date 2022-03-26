@@ -66,7 +66,7 @@ from . import PPAddUncertainties
 ```
 And in the surveySimPP.py file it will look something like this:
 ```
-from .modules import PPAddUncertainties
+from surveySimPP.modules import PPAddUncertainties
 ```
 When adding, removing or changing the name of any module, just make sure that you've updated both of these files to reflect the changes.
 
