@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-from lsstcomet import Comet
+from surveySimPP.lsstcomet import Comet
 from math import sqrt
 import pandas as pd
 import numpy as np

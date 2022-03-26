@@ -6,23 +6,22 @@ import numpy as np
 import logging
 import argparse
 import configparser
-from lsstcomet import *
-from modules import PPFilterDetectionEfficiencyThreshold, PPreadColoursUser, PPReadColours
-from modules import PPJoinColourPointing, PPMatchPointing
-from modules import PPMatchPointingsAndColours, PPFilterSSPCriterionEfficiency
-from modules import PPReadOrbitFile, PPCheckOrbitAndColoursMatching
-from modules import PPReadOif, PPReadEphemerides
-from modules import PPDetectionProbability, PPSimpleSensorArea, PPTrailingLoss, PPMatchFieldConditions
-from modules import PPDropObservations, PPBrightLimit
-from modules import PPMakeIntermediatePointingDatabase, PPReadIntermDatabase
-from modules import PPReadCometaryInput, PPJoinOrbitalData, PPCalculateSimpleCometaryMagnitude
-from modules import PPCalculateApparentMagnitude
-from modules.PPApplyFOVFilter import PPApplyFOVFilter
-from modules.PPSNRLimit import PPSNRLimit
-from modules import PPFootprintFilter, PPAddUncertainties, PPRandomizeMeasurements, PPVignetting
-from modules.PPDetectionProbability import calcDetectionProbability, PPDetectionProbability
-from modules.PPRunUtilities import PPGetLogger, PPConfigFileParser, PPPrintConfigsToLog, PPCMDLineParser, PPWriteOutput
-from modules.PPMatchPointingToObservations import PPMatchFilterToObservations, PPMatchPointingToObservations
+from surveySimPP.modules import PPFilterDetectionEfficiencyThreshold, PPreadColoursUser, PPReadColours
+from surveySimPP.modules import PPJoinColourPointing, PPMatchPointing
+from surveySimPP.modules import PPMatchPointingsAndColours, PPFilterSSPCriterionEfficiency
+from surveySimPP.modules import PPReadOrbitFile, PPCheckOrbitAndColoursMatching
+from surveySimPP.modules import PPReadOif, PPReadEphemerides
+from surveySimPP.modules import PPDetectionProbability, PPSimpleSensorArea, PPTrailingLoss, PPMatchFieldConditions
+from surveySimPP.modules import PPDropObservations, PPBrightLimit
+from surveySimPP.modules import PPMakeIntermediatePointingDatabase, PPReadIntermDatabase
+from surveySimPP.modules import PPReadCometaryInput, PPJoinOrbitalData, PPCalculateSimpleCometaryMagnitude
+from surveySimPP.modules import PPCalculateApparentMagnitude
+from surveySimPP.modules.PPApplyFOVFilter import PPApplyFOVFilter
+from surveySimPP.modules.PPSNRLimit import PPSNRLimit
+from surveySimPP.modules import PPFootprintFilter, PPAddUncertainties, PPRandomizeMeasurements, PPVignetting
+from surveySimPP.modules.PPDetectionProbability import calcDetectionProbability, PPDetectionProbability
+from surveySimPP.modules.PPRunUtilities import PPGetLogger, PPConfigFileParser, PPPrintConfigsToLog, PPCMDLineParser, PPWriteOutput
+from surveySimPP.modules.PPMatchPointingToObservations import PPMatchFilterToObservations, PPMatchPointingToObservations
 
 
 def runPostProcessing(parser):
