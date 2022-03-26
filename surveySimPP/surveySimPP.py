@@ -29,7 +29,7 @@ def runPostProcessing(parser):
 
     """
     
-    Description: Runs the post processing survey simulator functions that apply a series of filters to bias a model Solar System small
+    Runs the post processing survey simulator functions that apply a series of filters to bias a model Solar System small
                  body population to what the Vera C. Rubin Observatory Legacy Survey of Space and Time would observe. 
 
     Output:               csv, hdf5, or sqlite file
@@ -213,7 +213,8 @@ def runPostProcessing(parser):
 def main():
     """
 
-    Description: A post processing survey simulator that applies a series of filters to bias a model Solar System small body population to what the     specified wide-field survey would observe.
+    A post processing survey simulator that applies a series of filters to bias a model Solar System small 
+    body population to what the specified wide-field survey would observe.
 
     Mandatory input:      configuration file, orbit file, colour file, and optional cometary activity properties file
 
