@@ -36,10 +36,11 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption"><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Overview</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#design-philosophy">Design Philosophy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#overview-of-use">Overview of Use</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
@@ -54,10 +55,9 @@
 <li class="toctree-l1"><a class="reference internal" href="acknowledgements.html">Acknowledgements</a></li>
 <li class="toctree-l1"><a class="reference internal" href="release.html">Release History</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Documentation:</span></p>
+<p class="caption" role="heading"><span class="caption-text">Documentation:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="modules.html">modules package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="lsstcomet.html">lsstcomet package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="surveySimPP.html">surveySimPP package</a></li>
 </ul>
 
         </div>
@@ -100,18 +100,13 @@ Solar System Processing pipeline’s detection efficiency.</p>
 <p>The Survey Simulator Post Processing code is designed to compliment LSST observations, as a way to study
 Solar System object population statistics. The user is able to create synthetic population statistics and
 run them through the survey simulator, which applies the specific observational biases from the LSST. In
-this way, predicted models can be compared more accurately to what LSST observes. The survey simulator code
-takes a series of object parameter inputs and applies a range of filters, which affect the observed LSST data.
-An overview of the inputs and filters are given in this section.</p>
+this way, a synthetic population can be compared to real LSST observations. The survey simulator code
+takes a series of simulated object orbits and parameters as an input and applies a range of biases that are
+associated with the LSST, using what we have called <a class="reference internal" href="filters.html#filters"><span class="std std-ref">Filters</span></a>.</p>
 <p>While this survey simulator has been built with LSST in mind, it has been written in a way which allows
 for customisation and can be applied in a general manner. The filters which can be applied can be switched
 on or off depending on the population in question and users can easily write and insert their own filters
 for their specific needs.</p>
-<p>The survey simulator post processing code takes the simulated orbits and
-physical parameters of a series of objects and applies biases associated with the LSST.
-The code applies a series of filters that relate to observational biases associated with the LSST, in order
-to simulate what LSST would be capable of observing. In this way, it allows the user to compare a synthetic distribution
-with the true output of the LSST observations.</p>
 <p>The software is open source and written in a modular way, where each filter has been written as its
 own function. We have developed a suite of filters which should cover the majority
 of use cases for the LSST, but there is a possibility to adapt the code for the users own goals. This
@@ -121,7 +116,15 @@ The set of filters that can be applied to the synthetic input population can als
 a configuration file and command line arguments, depending on the users needs. While the software is versatile we understand that
 users may wish to adapt the python code to suit their specific needs. <strong>In this case, it is up to the user themselves to valide the
 changes that they have made.</strong></p>
-<p>The basic pipeline overview can be seen below. The user generates a population with a set of orbits. This
+</div>
+<div class="section" id="overview-of-use">
+<h2>Overview of Use<a class="headerlink" href="#overview-of-use" title="Permalink to this headline"></a></h2>
+<p>The Survey Simulator is formed out of two pieces of software, working in tandem. The first
+code is an ephemerides generator. While the user can use any relevant ephemerides generator, we reccomend
+using <a class="reference external" href="https://github.com/eggls6/objectsInField">Objects in Field (OIF)</a>.  for this.</p>
+<p>The second piece of software is <a class="reference external" href="https://github.com/dirac-institute/survey_simulator_post_processing">Post Processing (surveySimPP)</a>,
+which applies the relevant biases to the simulated data, though a set of <a class="reference internal" href="filters.html#filters"><span class="std std-ref">filters</span></a>.</p>
+<p>Both OIF and surveySimPP take a series of inputs. The basic pipeline overview can be seen below. The user generates a population with a set of orbits. This
 orbital parameter file is processed by Objects in Field (or any other orbital code) with respect to the LSST
 pointing database, before being passed into the survey simulator. Here the user can alter the configuration
 file to apply relevant <a class="reference internal" href="filters.html#filters"><span class="std std-ref">filters</span></a>, which account for the observational biases in LSST. An optional cometary
