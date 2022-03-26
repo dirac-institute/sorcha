@@ -1,3 +1,4 @@
 #survey simulated post processing generated files
 *.log
 *.err
+*.egg-info
