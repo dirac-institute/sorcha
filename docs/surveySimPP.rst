@@ -1,15 +1,6 @@
 surveySimPP package
 ===================
 
-Subpackages
------------
-
-.. toctree::
-   :maxdepth: 4
-
-   surveySimPP.lsstcomet
-   surveySimPP.modules
-
 Submodules
 ----------
 
@@ -20,6 +11,15 @@ surveySimPP.surveySimPP module
    :members:
    :undoc-members:
    :show-inheritance:
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   surveySimPP.lsstcomet
+   surveySimPP.modules
 
 Module contents
 ---------------

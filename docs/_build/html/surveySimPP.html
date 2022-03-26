@@ -54,13 +54,13 @@
 <p class="caption" role="heading"><span class="caption-text">Documentation:</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">surveySimPP package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-surveySimPP.surveySimPP">surveySimPP.surveySimPP module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#subpackages">Subpackages</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="surveySimPP.lsstcomet.html">surveySimPP.lsstcomet package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="surveySimPP.modules.html">surveySimPP.modules package</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-surveySimPP.surveySimPP">surveySimPP.surveySimPP module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-surveySimPP">Module contents</a></li>
 </ul>
 </li>
@@ -92,6 +92,50 @@
              
   <div class="section" id="surveysimpp-package">
 <h1>surveySimPP package<a class="headerlink" href="#surveysimpp-package" title="Permalink to this headline"></a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline"></a></h2>
+</div>
+<div class="section" id="module-surveySimPP.surveySimPP">
+<span id="surveysimpp-surveysimpp-module"></span><h2>surveySimPP.surveySimPP module<a class="headerlink" href="#module-surveySimPP.surveySimPP" title="Permalink to this headline"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="surveySimPP.surveySimPP.main">
+<span class="sig-prename descclassname"><span class="pre">surveySimPP.surveySimPP.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#surveySimPP.surveySimPP.main" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="surveySimPP.surveySimPP.runPostProcessing">
+<span class="sig-prename descclassname"><span class="pre">surveySimPP.surveySimPP.</span></span><span class="sig-name descname"><span class="pre">runPostProcessing</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#surveySimPP.surveySimPP.runPostProcessing" title="Permalink to this definition"></a></dt>
+<dd><p>Author: Grigori Fedorets, Samuel Cornwall</p>
+<p>Description: This is the main file. Its purpose is to illustrate the workflow of the 
+post-processing tools, and to perform a suite of tasks such as filtering and colour manipulation.
+The output is written to a file.</p>
+<p>This file may need to be modified for the user’s purposes.
+In its modified form, the recipe does the following:
+1. reads parameters from the config file
+2. reads the pointing history file
+3. reads the colour, orbit, brightness, and, optionally, cometary information files
+4. combines all data files into a single pandas dataframe
+5. applies basic filters, simulating, e.g. detection efficiency</p>
+<blockquote>
+<div><p>of solar system processing, chip gaps, etc.</p>
+</div></blockquote>
+<ol class="arabic simple" start="6">
+<li><p>connecting the apparent brightness of an asteroid with its colour</p></li>
+<li><p>matching observationID with a given optical filter</p></li>
+</ol>
+<p>8. Resolving the apparent brightness in a given optical filter corresponding to the pointing
+[here should be detection efficency function
+9. outputs to a csv file</p>
+<dl class="simple">
+<dt>Mandatory input:      orbit file and colour file (designated in the config file)</dt><dd><p>The parameters are defined in the config file (./PPConfig.ini)</p>
+</dd>
+</dl>
+<p>Output:               csv datafile</p>
+<p>usage: [from command line]                         python surveySimPP.py -c $CONFIGURATION_FILE -l $COLOURFILE -o $ORBITFILE -p $POINTINGSIMOUTPUT -b $~BRIGHTNESSFILE [–comet $COMETPARAMFILE]
+usage: [from command line, default config files]   python surveySimPP.py</p>
+</dd></dl>
+
+</div>
 <div class="section" id="subpackages">
 <h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline"></a></h2>
 <div class="toctree-wrapper compound">
@@ -156,50 +200,6 @@
 </li>
 </ul>
 </div>
-</div>
-<div class="section" id="submodules">
-<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline"></a></h2>
-</div>
-<div class="section" id="module-surveySimPP.surveySimPP">
-<span id="surveysimpp-surveysimpp-module"></span><h2>surveySimPP.surveySimPP module<a class="headerlink" href="#module-surveySimPP.surveySimPP" title="Permalink to this headline"></a></h2>
-<dl class="py function">
-<dt class="sig sig-object py" id="surveySimPP.surveySimPP.main">
-<span class="sig-prename descclassname"><span class="pre">surveySimPP.surveySimPP.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#surveySimPP.surveySimPP.main" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="surveySimPP.surveySimPP.runPostProcessing">
-<span class="sig-prename descclassname"><span class="pre">surveySimPP.surveySimPP.</span></span><span class="sig-name descname"><span class="pre">runPostProcessing</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#surveySimPP.surveySimPP.runPostProcessing" title="Permalink to this definition"></a></dt>
-<dd><p>Author: Grigori Fedorets, Samuel Cornwall</p>
-<p>Description: This is the main file. Its purpose is to illustrate the workflow of the 
-post-processing tools, and to perform a suite of tasks such as filtering and colour manipulation.
-The output is written to a file.</p>
-<p>This file may need to be modified for the user’s purposes.
-In its modified form, the recipe does the following:
-1. reads parameters from the config file
-2. reads the pointing history file
-3. reads the colour, orbit, brightness, and, optionally, cometary information files
-4. combines all data files into a single pandas dataframe
-5. applies basic filters, simulating, e.g. detection efficiency</p>
-<blockquote>
-<div><p>of solar system processing, chip gaps, etc.</p>
-</div></blockquote>
-<ol class="arabic simple" start="6">
-<li><p>connecting the apparent brightness of an asteroid with its colour</p></li>
-<li><p>matching observationID with a given optical filter</p></li>
-</ol>
-<p>8. Resolving the apparent brightness in a given optical filter corresponding to the pointing
-[here should be detection efficency function
-9. outputs to a csv file</p>
-<dl class="simple">
-<dt>Mandatory input:      orbit file and colour file (designated in the config file)</dt><dd><p>The parameters are defined in the config file (./PPConfig.ini)</p>
-</dd>
-</dl>
-<p>Output:               csv datafile</p>
-<p>usage: [from command line]                         python surveySimPP.py -c $CONFIGURATION_FILE -l $COLOURFILE -o $ORBITFILE -p $POINTINGSIMOUTPUT -b $~BRIGHTNESSFILE [–comet $COMETPARAMFILE]
-usage: [from command line, default config files]   python surveySimPP.py</p>
-</dd></dl>
-
 </div>
 <div class="section" id="module-surveySimPP">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-surveySimPP" title="Permalink to this headline"></a></h2>
