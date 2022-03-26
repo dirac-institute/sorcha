@@ -25,7 +25,6 @@ from surveySimPP.modules.PPMatchPointingToObservations import PPMatchFilterToObs
 
 # Author: Samuel Cornwall, Siegfried Eggl, Grigori Fedorets, Steph Merritt, Meg Schwamb
 
-
 def runPostProcessing(parser):
 
     """
