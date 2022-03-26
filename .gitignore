@@ -2,3 +2,4 @@
 *.log
 *.err
 *.egg-info
+*.pyc
