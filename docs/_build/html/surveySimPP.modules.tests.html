@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>surveySimPP.modules.tests package &mdash; Solar System Survey Simulator Post Processing 0.0.1 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="surveySimPP.modules package" href="surveySimPP.modules.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> Solar System Survey Simulator Post Processing
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="filters.html">Filters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="inputs.html">Inputs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="configfiles.html">Configuration Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="configfiles.html#inputs">Inputs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="outputs.html">Outputs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gettingstarted.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="support.html">Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="acknowledgements.html">Acknowledgements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="release.html">Release History</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Documentation:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="surveySimPP.html">surveySimPP package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="surveySimPP.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="surveySimPP.lsstcomet.html">surveySimPP.lsstcomet package</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="surveySimPP.modules.html">surveySimPP.modules package</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="surveySimPP.modules.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="surveySimPP.modules.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="surveySimPP.modules.html#module-surveySimPP.modules.PPAddUncertainties">surveySimPP.modules.PPAddUncertainties module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="surveySimPP.modules.html#module-surveySimPP.modules.PPApplyFOVFilter">surveySimPP.modules.PPApplyFOVFilter module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="surveySimPP.modules.html#module-surveySimPP.modules.PPAppmag_to">surveySimPP.modules.PPAppmag_to module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="surveySimPP.modules.html#module-surveySimPP.modules.PPBrightLimit">surveySimPP.modules.PPBrightLimit module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="surveySimPP.modules.html#module-surveySimPP.modules.PPCalculateApparentMagnitude">surveySimPP.modules.PPCalculateApparentMagnitude module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="surveySimPP.modules.html#module-surveySimPP.modules.PPCalculateApparentMagnitudeInFilter">surveySimPP.modules.PPCalculateApparentMagnitudeInFilter module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="surveySimPP.modules.html#module-surveySimPP.modules.PPCalculateSimpleCometaryMagnitude">surveySimPP.modules.PPCalculateSimpleCometaryMagnitude module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="surveySimPP.modules.html#module-surveySimPP.modules.PPCheckOrbitAndColoursMatching">surveySimPP.modules.PPCheckOrbitAndColoursMatching module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="surveySimPP.modules.html#module-surveySimPP.modules.PPDetectionProbability">surveySimPP.modules.PPDetectionProbability module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="surveySimPP.modules.html#module-surveySimPP.modules.PPDropObservations">surveySimPP.modules.PPDropObservations module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="surveySimPP.modules.html#module-surveySimPP.modules.PPFilterDetectionEfficiencyThreshold">surveySimPP.modules.PPFilterDetectionEfficiencyThreshold module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="surveySimPP.modules.html#module-surveySimPP.modules.PPFilterSSPCriterionEfficiency">surveySimPP.modules.PPFilterSSPCriterionEfficiency module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="surveySimPP.modules.html#module-surveySimPP.modules.PPFootprintFilter">surveySimPP.modules.PPFootprintFilter module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="surveySimPP.modules.html#module-surveySimPP.modules.PPJoinColourPointing">surveySimPP.modules.PPJoinColourPointing module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="surveySimPP.modules.html#module-surveySimPP.modules.PPJoinOrbitalData">surveySimPP.modules.PPJoinOrbitalData module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="surveySimPP.modules.html#module-surveySimPP.modules.PPMakeIntermediatePointingDatabase">surveySimPP.modules.PPMakeIntermediatePointingDatabase module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="surveySimPP.modules.html#module-surveySimPP.modules.PPMatchFieldConditions">surveySimPP.modules.PPMatchFieldConditions module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="surveySimPP.modules.html#module-surveySimPP.modules.PPMatchPointing">surveySimPP.modules.PPMatchPointing module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="surveySimPP.modules.html#module-surveySimPP.modules.PPMatchPointingToObservations">surveySimPP.modules.PPMatchPointingToObservations module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="surveySimPP.modules.html#module-surveySimPP.modules.PPMatchPointingsAndColours">surveySimPP.modules.PPMatchPointingsAndColours module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="surveySimPP.modules.html#module-surveySimPP.modules.PPOutWriteCSV">surveySimPP.modules.PPOutWriteCSV module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="surveySimPP.modules.html#module-surveySimPP.modules.PPOutWriteHDF5">surveySimPP.modules.PPOutWriteHDF5 module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="surveySimPP.modules.html#module-surveySimPP.modules.PPOutWriteSqlite3">surveySimPP.modules.PPOutWriteSqlite3 module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="surveySimPP.modules.html#module-surveySimPP.modules.PPRandomize">surveySimPP.modules.PPRandomize module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="surveySimPP.modules.html#module-surveySimPP.modules.PPRandomizeMeasurements">surveySimPP.modules.PPRandomizeMeasurements module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="surveySimPP.modules.html#module-surveySimPP.modules.PPReadColours">surveySimPP.modules.PPReadColours module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="surveySimPP.modules.html#module-surveySimPP.modules.PPReadCometaryInput">surveySimPP.modules.PPReadCometaryInput module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="surveySimPP.modules.html#module-surveySimPP.modules.PPReadEphemerides">surveySimPP.modules.PPReadEphemerides module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="surveySimPP.modules.html#module-surveySimPP.modules.PPReadIntermDatabase">surveySimPP.modules.PPReadIntermDatabase module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="surveySimPP.modules.html#module-surveySimPP.modules.PPReadOif">surveySimPP.modules.PPReadOif module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="surveySimPP.modules.html#module-surveySimPP.modules.PPReadOrbitFile">surveySimPP.modules.PPReadOrbitFile module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="surveySimPP.modules.html#module-surveySimPP.modules.PPResolveMagnitudeInFilter">surveySimPP.modules.PPResolveMagnitudeInFilter module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="surveySimPP.modules.html#module-surveySimPP.modules.PPRunUtilities">surveySimPP.modules.PPRunUtilities module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="surveySimPP.modules.html#module-surveySimPP.modules.PPSNRLimit">surveySimPP.modules.PPSNRLimit module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="surveySimPP.modules.html#module-surveySimPP.modules.PPSimpleSensorArea">surveySimPP.modules.PPSimpleSensorArea module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="surveySimPP.modules.html#module-surveySimPP.modules.PPTrailingLoss">surveySimPP.modules.PPTrailingLoss module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="surveySimPP.modules.html#module-surveySimPP.modules.PPTranslateMagnitude">surveySimPP.modules.PPTranslateMagnitude module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="surveySimPP.modules.html#module-surveySimPP.modules.PPVignetting">surveySimPP.modules.PPVignetting module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="surveySimPP.modules.html#module-surveySimPP.modules.PPreadColoursUser">surveySimPP.modules.PPreadColoursUser module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="surveySimPP.modules.html#module-surveySimPP.modules">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="surveySimPP.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="surveySimPP.html#module-surveySimPP.surveySimPP">surveySimPP.surveySimPP module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="surveySimPP.html#module-surveySimPP">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Solar System Survey Simulator Post Processing</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="surveySimPP.html">surveySimPP package</a> &raquo;</li>
+          <li><a href="surveySimPP.modules.html">surveySimPP.modules package</a> &raquo;</li>
+      <li>surveySimPP.modules.tests package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/surveySimPP.modules.tests.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="surveysimpp-modules-tests-package">
+<h1>surveySimPP.modules.tests package<a class="headerlink" href="#surveysimpp-modules-tests-package" title="Permalink to this headline"></a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline"></a></h2>
+</div>
+<div class="section" id="surveysimpp-modules-tests-test-ppadduncertaintiy-module">
+<h2>surveySimPP.modules.tests.test_PPAddUncertaintiy module<a class="headerlink" href="#surveysimpp-modules-tests-test-ppadduncertaintiy-module" title="Permalink to this headline"></a></h2>
+</div>
+<div class="section" id="surveysimpp-modules-tests-test-ppbrightlimit-module">
+<h2>surveySimPP.modules.tests.test_PPBrightLimit module<a class="headerlink" href="#surveysimpp-modules-tests-test-ppbrightlimit-module" title="Permalink to this headline"></a></h2>
+</div>
+<div class="section" id="module-surveySimPP.modules.tests.test_PPCalculateApparentMagnitudeInFilter">
+<span id="surveysimpp-modules-tests-test-ppcalculateapparentmagnitudeinfilter-module"></span><h2>surveySimPP.modules.tests.test_PPCalculateApparentMagnitudeInFilter module<a class="headerlink" href="#module-surveySimPP.modules.tests.test_PPCalculateApparentMagnitudeInFilter" title="Permalink to this headline"></a></h2>
+</div>
+<div class="section" id="module-surveySimPP.modules.tests.test_PPCalculateSimpleCometaryMagnitude">
+<span id="surveysimpp-modules-tests-test-ppcalculatesimplecometarymagnitude-module"></span><h2>surveySimPP.modules.tests.test_PPCalculateSimpleCometaryMagnitude module<a class="headerlink" href="#module-surveySimPP.modules.tests.test_PPCalculateSimpleCometaryMagnitude" title="Permalink to this headline"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="surveySimPP.modules.tests.test_PPCalculateSimpleCometaryMagnitude.test_PPCalculateSimpleCometaryMagnitude">
+<span class="sig-prename descclassname"><span class="pre">surveySimPP.modules.tests.test_PPCalculateSimpleCometaryMagnitude.</span></span><span class="sig-name descname"><span class="pre">test_PPCalculateSimpleCometaryMagnitude</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#surveySimPP.modules.tests.test_PPCalculateSimpleCometaryMagnitude.test_PPCalculateSimpleCometaryMagnitude" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-surveySimPP.modules.tests.test_PPCheckOrbitAndColoursMatching">
+<span id="surveysimpp-modules-tests-test-ppcheckorbitandcoloursmatching-module"></span><h2>surveySimPP.modules.tests.test_PPCheckOrbitAndColoursMatching module<a class="headerlink" href="#module-surveySimPP.modules.tests.test_PPCheckOrbitAndColoursMatching" title="Permalink to this headline"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="surveySimPP.modules.tests.test_PPCheckOrbitAndColoursMatching.test_PPCheckOrbitAndColoursMatching">
+<span class="sig-prename descclassname"><span class="pre">surveySimPP.modules.tests.test_PPCheckOrbitAndColoursMatching.</span></span><span class="sig-name descname"><span class="pre">test_PPCheckOrbitAndColoursMatching</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#surveySimPP.modules.tests.test_PPCheckOrbitAndColoursMatching.test_PPCheckOrbitAndColoursMatching" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-surveySimPP.modules.tests.test_PPDetectionProbability">
+<span id="surveysimpp-modules-tests-test-ppdetectionprobability-module"></span><h2>surveySimPP.modules.tests.test_PPDetectionProbability module<a class="headerlink" href="#module-surveySimPP.modules.tests.test_PPDetectionProbability" title="Permalink to this headline"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="surveySimPP.modules.tests.test_PPDetectionProbability.test_PPDetectionProbabilty">
+<span class="sig-prename descclassname"><span class="pre">surveySimPP.modules.tests.test_PPDetectionProbability.</span></span><span class="sig-name descname"><span class="pre">test_PPDetectionProbabilty</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#surveySimPP.modules.tests.test_PPDetectionProbability.test_PPDetectionProbabilty" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="surveySimPP.modules.tests.test_PPDetectionProbability.test_calcDetectionProbability">
+<span class="sig-prename descclassname"><span class="pre">surveySimPP.modules.tests.test_PPDetectionProbability.</span></span><span class="sig-name descname"><span class="pre">test_calcDetectionProbability</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#surveySimPP.modules.tests.test_PPDetectionProbability.test_calcDetectionProbability" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-surveySimPP.modules.tests.test_PPFilterDetectionEfficiencyThreshold">
+<span id="surveysimpp-modules-tests-test-ppfilterdetectionefficiencythreshold-module"></span><h2>surveySimPP.modules.tests.test_PPFilterDetectionEfficiencyThreshold module<a class="headerlink" href="#module-surveySimPP.modules.tests.test_PPFilterDetectionEfficiencyThreshold" title="Permalink to this headline"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="surveySimPP.modules.tests.test_PPFilterDetectionEfficiencyThreshold.test_PPFilterDetectionEfficiencyThreshold">
+<span class="sig-prename descclassname"><span class="pre">surveySimPP.modules.tests.test_PPFilterDetectionEfficiencyThreshold.</span></span><span class="sig-name descname"><span class="pre">test_PPFilterDetectionEfficiencyThreshold</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#surveySimPP.modules.tests.test_PPFilterDetectionEfficiencyThreshold.test_PPFilterDetectionEfficiencyThreshold" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-surveySimPP.modules.tests.test_PPFilterSSPCriterionEfficiency">
+<span id="surveysimpp-modules-tests-test-ppfiltersspcriterionefficiency-module"></span><h2>surveySimPP.modules.tests.test_PPFilterSSPCriterionEfficiency module<a class="headerlink" href="#module-surveySimPP.modules.tests.test_PPFilterSSPCriterionEfficiency" title="Permalink to this headline"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="surveySimPP.modules.tests.test_PPFilterSSPCriterionEfficiency.test_PPFilterSSPCriterionEfficiency">
+<span class="sig-prename descclassname"><span class="pre">surveySimPP.modules.tests.test_PPFilterSSPCriterionEfficiency.</span></span><span class="sig-name descname"><span class="pre">test_PPFilterSSPCriterionEfficiency</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#surveySimPP.modules.tests.test_PPFilterSSPCriterionEfficiency.test_PPFilterSSPCriterionEfficiency" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-surveySimPP.modules.tests.test_PPJoinColourPointing">
+<span id="surveysimpp-modules-tests-test-ppjoincolourpointing-module"></span><h2>surveySimPP.modules.tests.test_PPJoinColourPointing module<a class="headerlink" href="#module-surveySimPP.modules.tests.test_PPJoinColourPointing" title="Permalink to this headline"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="surveySimPP.modules.tests.test_PPJoinColourPointing.test_PPJoinColourPointing">
+<span class="sig-prename descclassname"><span class="pre">surveySimPP.modules.tests.test_PPJoinColourPointing.</span></span><span class="sig-name descname"><span class="pre">test_PPJoinColourPointing</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#surveySimPP.modules.tests.test_PPJoinColourPointing.test_PPJoinColourPointing" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-surveySimPP.modules.tests.test_PPJoinOrbitalData">
+<span id="surveysimpp-modules-tests-test-ppjoinorbitaldata-module"></span><h2>surveySimPP.modules.tests.test_PPJoinOrbitalData module<a class="headerlink" href="#module-surveySimPP.modules.tests.test_PPJoinOrbitalData" title="Permalink to this headline"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="surveySimPP.modules.tests.test_PPJoinOrbitalData.test_PPJoinCOrbitalData">
+<span class="sig-prename descclassname"><span class="pre">surveySimPP.modules.tests.test_PPJoinOrbitalData.</span></span><span class="sig-name descname"><span class="pre">test_PPJoinCOrbitalData</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#surveySimPP.modules.tests.test_PPJoinOrbitalData.test_PPJoinCOrbitalData" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-surveySimPP.modules.tests.test_PPMakeIntermediatePointingDatabase">
+<span id="surveysimpp-modules-tests-test-ppmakeintermediatepointingdatabase-module"></span><h2>surveySimPP.modules.tests.test_PPMakeIntermediatePointingDatabase module<a class="headerlink" href="#module-surveySimPP.modules.tests.test_PPMakeIntermediatePointingDatabase" title="Permalink to this headline"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="surveySimPP.modules.tests.test_PPMakeIntermediatePointingDatabase.test_PPMakeIntermediatePointingDatabase">
+<span class="sig-prename descclassname"><span class="pre">surveySimPP.modules.tests.test_PPMakeIntermediatePointingDatabase.</span></span><span class="sig-name descname"><span class="pre">test_PPMakeIntermediatePointingDatabase</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#surveySimPP.modules.tests.test_PPMakeIntermediatePointingDatabase.test_PPMakeIntermediatePointingDatabase" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-surveySimPP.modules.tests.test_PPMatchPointing">
+<span id="surveysimpp-modules-tests-test-ppmatchpointing-module"></span><h2>surveySimPP.modules.tests.test_PPMatchPointing module<a class="headerlink" href="#module-surveySimPP.modules.tests.test_PPMatchPointing" title="Permalink to this headline"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="surveySimPP.modules.tests.test_PPMatchPointing.test_PPMatchPointing">
+<span class="sig-prename descclassname"><span class="pre">surveySimPP.modules.tests.test_PPMatchPointing.</span></span><span class="sig-name descname"><span class="pre">test_PPMatchPointing</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#surveySimPP.modules.tests.test_PPMatchPointing.test_PPMatchPointing" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="surveysimpp-modules-tests-test-ppmatchpointingsandcolours-module">
+<h2>surveySimPP.modules.tests.test_PPMatchPointingsAndColours module<a class="headerlink" href="#surveysimpp-modules-tests-test-ppmatchpointingsandcolours-module" title="Permalink to this headline"></a></h2>
+</div>
+<div class="section" id="surveysimpp-modules-tests-test-ppoutwritecsv-module">
+<h2>surveySimPP.modules.tests.test_PPOutWriteCSV module<a class="headerlink" href="#surveysimpp-modules-tests-test-ppoutwritecsv-module" title="Permalink to this headline"></a></h2>
+</div>
+<div class="section" id="surveysimpp-modules-tests-test-ppoutwritehdf5-module">
+<h2>surveySimPP.modules.tests.test_PPOutWriteHDF5 module<a class="headerlink" href="#surveysimpp-modules-tests-test-ppoutwritehdf5-module" title="Permalink to this headline"></a></h2>
+</div>
+<div class="section" id="surveysimpp-modules-tests-test-ppoutwritesqlite3-module">
+<h2>surveySimPP.modules.tests.test_PPOutWriteSqlite3 module<a class="headerlink" href="#surveysimpp-modules-tests-test-ppoutwritesqlite3-module" title="Permalink to this headline"></a></h2>
+</div>
+<div class="section" id="module-surveySimPP.modules.tests.test_PPRandomize">
+<span id="surveysimpp-modules-tests-test-pprandomize-module"></span><h2>surveySimPP.modules.tests.test_PPRandomize module<a class="headerlink" href="#module-surveySimPP.modules.tests.test_PPRandomize" title="Permalink to this headline"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="surveySimPP.modules.tests.test_PPRandomize.test_randomizeAstrometry">
+<span class="sig-prename descclassname"><span class="pre">surveySimPP.modules.tests.test_PPRandomize.</span></span><span class="sig-name descname"><span class="pre">test_randomizeAstrometry</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#surveySimPP.modules.tests.test_PPRandomize.test_randomizeAstrometry" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="surveySimPP.modules.tests.test_PPRandomize.test_randomizePhotometry">
+<span class="sig-prename descclassname"><span class="pre">surveySimPP.modules.tests.test_PPRandomize.</span></span><span class="sig-name descname"><span class="pre">test_randomizePhotometry</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#surveySimPP.modules.tests.test_PPRandomize.test_randomizePhotometry" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-surveySimPP.modules.tests.test_PPReadCometaryInput">
+<span id="surveysimpp-modules-tests-test-ppreadcometaryinput-module"></span><h2>surveySimPP.modules.tests.test_PPReadCometaryInput module<a class="headerlink" href="#module-surveySimPP.modules.tests.test_PPReadCometaryInput" title="Permalink to this headline"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="surveySimPP.modules.tests.test_PPReadCometaryInput.test_PPReadCometaryInput">
+<span class="sig-prename descclassname"><span class="pre">surveySimPP.modules.tests.test_PPReadCometaryInput.</span></span><span class="sig-name descname"><span class="pre">test_PPReadCometaryInput</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#surveySimPP.modules.tests.test_PPReadCometaryInput.test_PPReadCometaryInput" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-surveySimPP.modules.tests.test_PPReadIntermDatabase">
+<span id="surveysimpp-modules-tests-test-ppreadintermdatabase-module"></span><h2>surveySimPP.modules.tests.test_PPReadIntermDatabase module<a class="headerlink" href="#module-surveySimPP.modules.tests.test_PPReadIntermDatabase" title="Permalink to this headline"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="surveySimPP.modules.tests.test_PPReadIntermDatabase.test_PPReadIntermDatabase">
+<span class="sig-prename descclassname"><span class="pre">surveySimPP.modules.tests.test_PPReadIntermDatabase.</span></span><span class="sig-name descname"><span class="pre">test_PPReadIntermDatabase</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#surveySimPP.modules.tests.test_PPReadIntermDatabase.test_PPReadIntermDatabase" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-surveySimPP.modules.tests.test_PPReadOrbitFile">
+<span id="surveysimpp-modules-tests-test-ppreadorbitfile-module"></span><h2>surveySimPP.modules.tests.test_PPReadOrbitFile module<a class="headerlink" href="#module-surveySimPP.modules.tests.test_PPReadOrbitFile" title="Permalink to this headline"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="surveySimPP.modules.tests.test_PPReadOrbitFile.test_PPReadOrbitFile">
+<span class="sig-prename descclassname"><span class="pre">surveySimPP.modules.tests.test_PPReadOrbitFile.</span></span><span class="sig-name descname"><span class="pre">test_PPReadOrbitFile</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#surveySimPP.modules.tests.test_PPReadOrbitFile.test_PPReadOrbitFile" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-surveySimPP.modules.tests.test_PPTrailingLoss">
+<span id="surveysimpp-modules-tests-test-pptrailingloss-module"></span><h2>surveySimPP.modules.tests.test_PPTrailingLoss module<a class="headerlink" href="#module-surveySimPP.modules.tests.test_PPTrailingLoss" title="Permalink to this headline"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="surveySimPP.modules.tests.test_PPTrailingLoss.test_PPTrailingLoss">
+<span class="sig-prename descclassname"><span class="pre">surveySimPP.modules.tests.test_PPTrailingLoss.</span></span><span class="sig-name descname"><span class="pre">test_PPTrailingLoss</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#surveySimPP.modules.tests.test_PPTrailingLoss.test_PPTrailingLoss" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="surveySimPP.modules.tests.test_PPTrailingLoss.test_calcTrailingLoss">
+<span class="sig-prename descclassname"><span class="pre">surveySimPP.modules.tests.test_PPTrailingLoss.</span></span><span class="sig-name descname"><span class="pre">test_calcTrailingLoss</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#surveySimPP.modules.tests.test_PPTrailingLoss.test_calcTrailingLoss" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-surveySimPP.modules.tests.test_PPreadColours">
+<span id="surveysimpp-modules-tests-test-ppreadcolours-module"></span><h2>surveySimPP.modules.tests.test_PPreadColours module<a class="headerlink" href="#module-surveySimPP.modules.tests.test_PPreadColours" title="Permalink to this headline"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="surveySimPP.modules.tests.test_PPreadColours.test_PPReadColours">
+<span class="sig-prename descclassname"><span class="pre">surveySimPP.modules.tests.test_PPreadColours.</span></span><span class="sig-name descname"><span class="pre">test_PPReadColours</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#surveySimPP.modules.tests.test_PPreadColours.test_PPReadColours" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-surveySimPP.modules.tests.test_PPreadColoursUser">
+<span id="surveysimpp-modules-tests-test-ppreadcoloursuser-module"></span><h2>surveySimPP.modules.tests.test_PPreadColoursUser module<a class="headerlink" href="#module-surveySimPP.modules.tests.test_PPreadColoursUser" title="Permalink to this headline"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="surveySimPP.modules.tests.test_PPreadColoursUser.test_PPreadColoursUser">
+<span class="sig-prename descclassname"><span class="pre">surveySimPP.modules.tests.test_PPreadColoursUser.</span></span><span class="sig-name descname"><span class="pre">test_PPreadColoursUser</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#surveySimPP.modules.tests.test_PPreadColoursUser.test_PPreadColoursUser" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-surveySimPP.modules.tests.test_PPresolveFilters">
+<span id="surveysimpp-modules-tests-test-ppresolvefilters-module"></span><h2>surveySimPP.modules.tests.test_PPresolveFilters module<a class="headerlink" href="#module-surveySimPP.modules.tests.test_PPresolveFilters" title="Permalink to this headline"></a></h2>
+</div>
+<div class="section" id="module-surveySimPP.modules.tests">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-surveySimPP.modules.tests" title="Permalink to this headline"></a></h2>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="surveySimPP.modules.html" class="btn btn-neutral float-left" title="surveySimPP.modules package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Siegfried Eggl, Mario Juric, Meg Schwamb, Grigori Fedorets, Shantanu Naidu, Sam Cornwall, Aidan Berres, Steph Merritt, Shannon Matthews, Lynne Jones, Colin Snodgrass.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

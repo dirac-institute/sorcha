@@ -1,0 +1,21 @@
+surveySimPP.lsstcomet.tests package
+===================================
+
+Submodules
+----------
+
+surveySimPP.lsstcomet.tests.test\_model module
+----------------------------------------------
+
+.. automodule:: surveySimPP.lsstcomet.tests.test_model
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: surveySimPP.lsstcomet.tests
+   :members:
+   :undoc-members:
+   :show-inheritance:
