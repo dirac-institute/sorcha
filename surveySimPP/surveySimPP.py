@@ -23,41 +23,18 @@ from surveySimPP.modules.PPDetectionProbability import calcDetectionProbability,
 from surveySimPP.modules.PPRunUtilities import PPGetLogger, PPConfigFileParser, PPPrintConfigsToLog, PPCMDLineParser, PPWriteOutput
 from surveySimPP.modules.PPMatchPointingToObservations import PPMatchFilterToObservations, PPMatchPointingToObservations
 
+# Author: Samuel Cornwall, Siegfried Eggl, Grigori Fedorets, Steph Merritt, Meg Schwamb
+
 
 def runPostProcessing(parser):
 
     """
-    runPostProcessing()
     
-    Author: Grigori Fedorets, Samuel Cornwall
+    Description: Runs the post processing survey simulator functions that apply a series of filters to bias a model Solar System small
+                 body population to what the Vera C. Rubin Observatory Legacy Survey of Space and Time would observe. 
+
+    Output:               csv, hdf5, or sqlite file
     
-    Description: This is the main file. Its purpose is to illustrate the workflow of the 
-    post-processing tools, and to perform a suite of tasks such as filtering and colour manipulation.
-    The output is written to a file.
-    
-    This file may need to be modified for the user's purposes.
-    In its modified form, the recipe does the following:
-    1. reads parameters from the config file
-    2. reads the pointing history file
-    3. reads the colour, orbit, brightness, and, optionally, cometary information files
-    4. combines all data files into a single pandas dataframe
-    5. applies basic filters, simulating, e.g. detection efficiency 
-       of solar system processing, chip gaps, etc.
-    6. connecting the apparent brightness of an asteroid with its colour
-    7. matching observationID with a given optical filter
-    8. Resolving the apparent brightness in a given optical filter corresponding to the pointing
-    [here should be detection efficency function
-    9. outputs to a csv file
-    
-    
-    Mandatory input:      orbit file and colour file (designated in the config file)
-                          The parameters are defined in the config file (./PPConfig.ini) 
-    
-    Output:               csv datafile
-    
-    
-    usage: [from command line]                         python surveySimPP.py -c $CONFIGURATION_FILE -l $COLOURFILE -o $ORBITFILE -p $POINTINGSIMOUTPUT -b $~BRIGHTNESSFILE [--comet $COMETPARAMFILE]
-    usage: [from command line, default config files]   python surveySimPP.py
     
     """
 
@@ -235,6 +212,25 @@ def runPostProcessing(parser):
 
 
 def main():
+    """
+
+    Description: A post processing survey simulator that applies a series of filters to bias a model Solar System small body population to what the     specified wide-field survey would observe.
+
+    Mandatory input:      configuration file, orbit file, colour file, and optional cometary activity properties file
+
+    Output:               csv, hdf5, or sqlite file
+
+
+    usage: surveySimPP [-h] [-c C] [-d] [-m M] [-l L] [-o O] [-p P]
+        optional arguments:
+         -h, --help      show this help message and exit
+         -c C, --config C   Input configuration file name
+         -d          Make intermediate pointing database
+         -m M, --comet M    Comet parameter file name
+         -l L, --colour L, --color L  Colour file name
+         -o O, --orbit O    Orbit file name
+         -p P, --pointing P  Pointing simulation output file name
+    """
 
     parser = argparse.ArgumentParser()
     parser.add_argument("-c", "--config", help="Input configuration file name", type=str, dest='c', default='./PPConfig.ini')
