@@ -256,7 +256,7 @@ def PPCMDLineParser(parser):
 
 	cmd_args_dict = {}
 	
-	cmd_args_dict['colourinput'] = PPFindFileOrExit(args.l, '-c --colour')
+	cmd_args_dict['colourinput'] = PPFindFileOrExit(args.l, '-l --colour')
 	cmd_args_dict['orbinfile'] = PPFindFileOrExit(args.o, '-o --orbit')
 	cmd_args_dict['oifoutput'] = PPFindFileOrExit(args.p, '-p, --pointing')
 	cmd_args_dict['configfile'] = PPFindFileOrExit(args.c, '-c, --config')
