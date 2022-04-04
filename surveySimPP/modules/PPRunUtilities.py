@@ -109,6 +109,7 @@ def PPConfigFileParser(configfile, pplogger):
 
 	config_dict['ephemerides_type'] = PPGetOrExit(config, 'INPUTFILES', 'ephemerides_type', 'ERROR: no ephemerides type provided.')
 	config_dict['pointingdatabase'] = PPGetOrExit(config, 'INPUTFILES', 'pointingdatabase', 'ERROR: no pointing database provided.')
+	PPFindFileOrExit(config_dict['pointingdatabase'], 'pointingdatabase')
 	config_dict['ppdbquery'] = PPGetOrExit(config, 'INPUTFILES', 'ppsqldbquery', 'ERROR: no pointing database SQLite3 query provided.')
 
 	config_dict['othercolours'] = [e.strip() for e in config.get('FILTERS', 'othercolours').split(',')]
@@ -126,6 +127,7 @@ def PPConfigFileParser(configfile, pplogger):
 		sys.exit('ERROR: cameraModel should be either circle or footprint.')        
 	elif (config_dict['cameraModel'] == 'footprint'):
 		config_dict['footprintPath'] = PPGetOrExit(config, 'INPUTFILES', 'footprintPath', 'ERROR: no camera footprint provided.')
+		PPFindFileOrExit(config_dict['footprintPath'], 'footprintPath')
    
 	config_dict['SSPDetectionEfficiency'] = float(config['FILTERINGPARAMETERS']['SSPDetectionEfficiency'])
 	if (config_dict['SSPDetectionEfficiency'] > 1.0 or config_dict['SSPDetectionEfficiency'] > 1.0 or isinstance(config_dict['SSPDetectionEfficiency'],(float,int))==False):
@@ -153,7 +155,9 @@ def PPConfigFileParser(configfile, pplogger):
 		sys.exit('ERROR: tracklet appearance interval is negative, or not a number.')
 	
 	config_dict['outpath'] = PPGetOrExit(config, 'OUTPUTFORMAT', 'outpath', 'ERROR: out path not specified.')   
-	config_dict['outfilestem'] = PPGetOrExit(config, 'OUTPUTFORMAT', 'outfilestem', 'ERROR: name of output file stem not specified.')    
+	config_dict['outfilestem'] = PPGetOrExit(config, 'OUTPUTFORMAT', 'outfilestem', 'ERROR: name of output file stem not specified.')
+	
+	PPFindFileOrExit(config_dict['outpath'], 'outpath')
 
 	config_dict['outputformat'] = PPGetOrExit(config, 'OUTPUTFORMAT', 'outputformat', 'ERROR: output format not specified.')   
 	if config_dict['outputformat'] not in ['csv', 'separatelyCSV', 'separatelyCsv', 'separatelycsv', 'sqlite3', 'hdf5', 'HDF5', 'h5']:
