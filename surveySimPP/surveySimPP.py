@@ -90,7 +90,6 @@ def runPostProcessing(parser):
         ### Processing begins, all processing is done for chunks
         
         pplogger.info('Reading input orbit file: ' + cmd_args['orbinfile'])
-        # The H given in the orbital DES file is omitted and erased; it is given in a separate brightness file instead
         padaor=PPReadOrbitFile.PPReadOrbitFile(cmd_args['orbinfile'], startChunk, incrStep, configs['filesep'])
         
         pplogger.info('Reading input colours: ' + cmd_args['colourinput'])
