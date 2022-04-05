@@ -1,7 +1,0 @@
-surveySimPP
-===========
-
-.. toctree::
-   :maxdepth: 4
-
-   surveySimPP
