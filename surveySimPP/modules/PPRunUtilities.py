@@ -3,6 +3,7 @@
 
 import logging
 import os, sys
+import numpy as np
 import pandas as pd
 import configparser
 from datetime import datetime
@@ -76,7 +77,7 @@ def PPToBool(value):
         raise ValueError('invalid literal for boolean: "%s"' % value)
 
 
-def PPConfigFileParser(configfile, pplogger):
+def PPConfigFileParser(configfile, survey_name):
 	"""
 	Author: Steph Merritt
 	
@@ -88,7 +89,8 @@ def PPConfigFileParser(configfile, pplogger):
 
 	This could easily be broken up even more, and probably should be.	
 	
-	Mandatory input:	string, configfile, string filepath of the config pile
+	Mandatory input:	string, configfile, string filepath of the config file
+	                    string, survey_name, command-line argument containing survey name
 						logger object, pplogger
 	
 	Output: 			dictionary of variables taken from the config file
@@ -97,6 +99,8 @@ def PPConfigFileParser(configfile, pplogger):
 
 	config = configparser.ConfigParser()
 	config.read(configfile)
+	
+	pplogger = logging.getLogger(__name__)
 
 	config_dict = {}
 	config_dict['pointingFormat'] = PPGetOrExit(config, 'INPUTFILES', 'pointingFormat', 'ERROR: no pointing simulation format is specified.')
@@ -117,6 +121,8 @@ def PPConfigFileParser(configfile, pplogger):
 	if (len(config_dict['othercolours']) != len(config_dict['observing_filters'])-1):
 		pplogger.error('ERROR: mismatch in input config colours and filters: len(othercolours) != len(observing_filters) - 1')
 		sys.exit('ERROR: mismatch in input config colours and filters: len(othercolours) != len(observing_filters) - 1')
+	
+	PPCheckFiltersForSurvey(survey_name, config_dict['observing_filters'])
 	 
 	config_dict['phasefunction'] = PPGetOrExit(config,'PHASE', 'phasefunction', 'ERROR: phase function not defined.')
 	config_dict['trailingLossesOn'] = PPToBool(config['PERFORMANCE']['trailingLossesOn'])
@@ -168,8 +174,38 @@ def PPConfigFileParser(configfile, pplogger):
 
 	return config_dict
 
+def PPCheckFiltersForSurvey(survey_name, observing_filters):
+    """
+    Author: Steph Merritt
+    
+    When given a list of filters, this function checks to make sure they exist in the
+    user-selected survey. Currently only has options for LSST, but can be expanded upon
+    later. If the filters given in the config file do not match the survey filters,
+    the function exits the program with an error.
+    
+    Parameters:
+    -----------
+    survey_name: string containing survey name
+    observing_filters: list of strings with colour filters.
+    
+    """
+    
+    pplogger = logging.getLogger(__name__)
 
-def PPPrintConfigsToLog(configs, pplogger):
+    if survey_name in ["LSST", "lsst"]:
+
+        lsst_filters = ['u', 'g', 'r', 'i', 'z', 'y']
+        filters_ok = all(elem in lsst_filters for elem in observing_filters)
+
+        if not filters_ok:
+            bad_list = np.setdiff1d(observing_filters,lsst_filters)
+            pplogger.error('ERROR: Filter(s) {} given in config file are not recognised filters for {} survey.'.format(bad_list, survey_name))
+            pplogger.error('Accepted {} filters: {}'.format("LSST", lsst_filters))
+            pplogger.error('Change observing_filters in config file or select another survey.')
+            sys.exit('ERROR: Filter(s) {} given in config file are not recognised filters for {} survey.'.format(bad_list, survey_name))
+
+            
+def PPPrintConfigsToLog(configs):
 	"""
 	Author: Steph Merritt
 	
@@ -181,6 +217,8 @@ def PPPrintConfigsToLog(configs, pplogger):
 	Output: none
 	
 	"""
+	
+	pplogger = logging.getLogger(__name__)
 
 	pplogger.info('Object type is ' + str(configs['objecttype']))
 
@@ -264,6 +302,7 @@ def PPCMDLineParser(parser):
 	if args.m: cmd_args_dict['cometinput'] = PPFindFileOrExit(args.m, '-m, --comet') 
     
 	cmd_args_dict['makeIntermediatePointingDatabase']=bool(args.d)
+	cmd_args_dict['surveyname'] = args.s
 
 	return cmd_args_dict
 	

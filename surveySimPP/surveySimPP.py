@@ -25,7 +25,7 @@ from surveySimPP.modules.PPMatchPointingToObservations import PPMatchFilterToObs
 
 # Author: Samuel Cornwall, Siegfried Eggl, Grigori Fedorets, Steph Merritt, Meg Schwamb
 
-def runPostProcessing(parser):
+def runLSSTPostProcessing(cmd_args):
 
     """
     
@@ -38,18 +38,18 @@ def runPostProcessing(parser):
 
     ### Initialise argument parser and assign command line arguments
     
-    cmd_args = PPCMDLineParser(parser)
+    #cmd_args = PPCMDLineParser(parser)
 
     pplogger = PPGetLogger()
     
     ### Read, assign and error-handle the configuration file
     pplogger.info('Reading configuration file...')
     
-    configs = PPConfigFileParser(cmd_args['configfile'], pplogger)
+    configs = PPConfigFileParser(cmd_args['configfile'], cmd_args['surveyname'])
    
     pplogger.info('Configuration file successfully read.')
         
-    PPPrintConfigsToLog(configs, pplogger)
+    PPPrintConfigsToLog(configs)
     
     ### End of config parsing
     
@@ -64,7 +64,7 @@ def runPostProcessing(parser):
     pplogger.info('Random number seed is {}.'.format(rng_seed))
     rng = np.random.default_rng(rng_seed)
     
-    # Extracting mainfilter, the first in resfilters
+    # Extracting mainfilter, the first in observing_filters
     mainfilter=configs['observing_filters'][0]
     
     ### In case of a large input file, the data is read in chunks. The "sizeSerialChunk" parameter in PPConfig.ini assigns the chunk.
@@ -111,7 +111,6 @@ def runPostProcessing(parser):
             try: 
                 pplogger.info('Reading input pointing history: ' + cmd_args['oifoutput'])
                 padafr=PPReadEphemerides.PPReadEphemerides(cmd_args['oifoutput'], configs['ephemerides_type'], configs["pointingFormat"])
-                
                 
                 padafr=padafr[padafr['ObjID'].isin(objid_list)]
 
@@ -219,7 +218,7 @@ def main():
     Output:               csv, hdf5, or sqlite file
 
 
-    usage: surveySimPP [-h] [-c C] [-d] [-m M] [-l L] [-o O] [-p P]
+    usage: surveySimPP [-h] [-c C] [-d] [-m M] [-l L] [-o O] [-p P] [-s S]
         optional arguments:
          -h, --help      show this help message and exit
          -c C, --config C   Input configuration file name
@@ -228,6 +227,7 @@ def main():
          -l L, --colour L, --color L  Colour file name
          -o O, --orbit O    Orbit file name
          -p P, --pointing P  Pointing simulation output file name
+         -s S, --survey S   Name of the survey you wish to simulate
     """
 
     parser = argparse.ArgumentParser()
@@ -237,8 +237,14 @@ def main():
     parser.add_argument("-l", "--colour", "--color", help="Colour file name", type=str, dest='l', default='./data/colour', required=True)
     parser.add_argument("-o", "--orbit", help="Orbit file name", type=str, dest='o', default='./data/orbit.des', required=True)
     parser.add_argument("-p", "--pointing", help="Pointing simulation output file name", type=str, dest='p', default='./data/oiftestoutput', required=True)
+    parser.add_argument("-s", "--survey", help="Survey to simulate", type=str, dest='s', default='LSST')
 
-    runPostProcessing(parser)
+    cmd_args = PPCMDLineParser(parser)
+    
+    if cmd_args['surveyname'] in ['LSST', 'lsst']:
+        runLSSTPostProcessing(cmd_args)
+    else:
+        print('ERROR: Survey name not recognised. Current allowed surveys are: {}'.format(['LSST', 'lsst'])) 
 
 if __name__=='__main__':
     main()
