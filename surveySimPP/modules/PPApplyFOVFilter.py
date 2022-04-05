@@ -2,6 +2,7 @@
 
 from . import PPFootprintFilter
 import logging
+from . import PPFilterDetectionEfficiencyThreshold
 
 
 def PPApplyFOVFilter(observations, configs):
