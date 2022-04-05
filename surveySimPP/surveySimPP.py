@@ -6,22 +6,30 @@ import numpy as np
 import logging
 import argparse
 import configparser
-from surveySimPP.modules import PPFilterDetectionEfficiencyThreshold, PPreadColoursUser, PPReadColours
-from surveySimPP.modules import PPJoinColourPointing, PPMatchPointing
-from surveySimPP.modules import PPMatchPointingsAndColours, PPFilterSSPCriterionEfficiency
-from surveySimPP.modules import PPReadOrbitFile, PPCheckOrbitAndColoursMatching
-from surveySimPP.modules import PPReadOif, PPReadEphemerides
-from surveySimPP.modules import PPDetectionProbability, PPSimpleSensorArea, PPTrailingLoss, PPMatchFieldConditions
+#from surveySimPP.modules import PPFilterDetectionEfficiencyThreshold, PPreadColoursUser, PPReadColours
+#from surveySimPP.modules import PPJoinColourPointing, PPMatchPointing
+#from surveySimPP.modules import PPMatchPointingsAndColours, PPFilterSSPCriterionEfficiency
+#from surveySimPP.modules import PPReadOrbitFile, PPCheckOrbitAndColoursMatching
+#from surveySimPP.modules import PPReadOif, PPReadEphemerides
+#from surveySimPP.modules import PPDetectionProbability, PPSimpleSensorArea, PPTrailingLoss, PPMatchFieldConditions
+#from surveySimPP.modules import PPMakeIntermediatePointingDatabase, PPReadIntermDatabase
+#from surveySimPP.modules import PPReadCometaryInput, PPJoinOrbitalData, PPCalculateSimpleCometaryMagnitude
+#from surveySimPP.modules import PPFootprintFilter, PPAddUncertainties, PPRandomizeMeasurements, PPVignetting
+#from surveySimPP.modules.PPDetectionProbability import calcDetectionProbability, PPDetectionProbability
+#from surveySimPP.modules.PPMatchPointingToObservations import PPMatchFilterToObservations, PPMatchPointingToObservations
+from surveySimPP.modules import PPMatchPointing
+from surveySimPP.modules import PPFilterSSPCriterionEfficiency
+from surveySimPP.modules import PPTrailingLoss
 from surveySimPP.modules import PPDropObservations, PPBrightLimit
-from surveySimPP.modules import PPMakeIntermediatePointingDatabase, PPReadIntermDatabase
-from surveySimPP.modules import PPReadCometaryInput, PPJoinOrbitalData, PPCalculateSimpleCometaryMagnitude
+from surveySimPP.modules import PPMakeIntermediatePointingDatabase
+from surveySimPP.modules import PPCalculateSimpleCometaryMagnitude
 from surveySimPP.modules import PPCalculateApparentMagnitude
 from surveySimPP.modules.PPApplyFOVFilter import PPApplyFOVFilter
 from surveySimPP.modules.PPSNRLimit import PPSNRLimit
-from surveySimPP.modules import PPFootprintFilter, PPAddUncertainties, PPRandomizeMeasurements, PPVignetting
-from surveySimPP.modules.PPDetectionProbability import calcDetectionProbability, PPDetectionProbability
-from surveySimPP.modules.PPRunUtilities import PPGetLogger, PPConfigFileParser, PPPrintConfigsToLog, PPCMDLineParser, PPWriteOutput
-from surveySimPP.modules.PPMatchPointingToObservations import PPMatchFilterToObservations, PPMatchPointingToObservations
+from surveySimPP.modules import PPAddUncertainties, PPRandomizeMeasurements, PPVignetting
+from surveySimPP.modules.PPDetectionProbability import PPDetectionProbability
+from surveySimPP.modules.PPRunUtilities import PPGetLogger, PPConfigFileParser, PPPrintConfigsToLog, PPCMDLineParser, PPWriteOutput, PPReadAllInput
+
 
 # Author: Samuel Cornwall, Siegfried Eggl, Grigori Fedorets, Steph Merritt, Meg Schwamb
 
@@ -89,50 +97,7 @@ def runLSSTPostProcessing(cmd_args):
         
         ### Processing begins, all processing is done for chunks
         
-        pplogger.info('Reading input orbit file: ' + cmd_args['orbinfile'])
-        padaor=PPReadOrbitFile.PPReadOrbitFile(cmd_args['orbinfile'], startChunk, incrStep, configs['filesep'])
-        
-        pplogger.info('Reading input colours: ' + cmd_args['colourinput'])
-        padacl=PPReadColours.PPReadColours(cmd_args['colourinput'], startChunk, incrStep, configs['filesep'])
-        if (configs['objecttype'] == 'comet'):
-            pplogger.info('Reading cometary parameters: ' + cmd_args['cometinput'])
-            padaco=PPReadCometaryInput.PPReadCometaryInput(cmd_args['cometinput'], startChunk, incrStep, configs['filesep'])
-        
-        objid_list = padacl['ObjID'].unique().tolist() 
-       
-        # write pointing history to database
-        # select obj_id rows from tables 
-        
-        if (cmd_args['makeIntermediatePointingDatabase'] == True):
-            # read from intermediate database
-            padafr=PPReadIntermDatabase.PPReadIntermDatabase('./data/interm.db', objid_list)
-        else:   
-            try: 
-                pplogger.info('Reading input pointing history: ' + cmd_args['oifoutput'])
-                padafr=PPReadEphemerides.PPReadEphemerides(cmd_args['oifoutput'], configs['ephemerides_type'], configs["pointingFormat"])
-                
-                padafr=padafr[padafr['ObjID'].isin(objid_list)]
-
-            except MemoryError:
-                pplogger.error('ERROR: insufficient memory. Try to run with -d True or reduce sizeSerialChunk.')
-                sys.exit('ERROR: insufficient memory. Try to run with -d True or reduce sizeSerialChunk.')
-        
-        
-        pplogger.info('Checking if orbit, brightness, colour/cometary and pointing simulation input files match...')
-        PPCheckOrbitAndColoursMatching.PPCheckOrbitAndColoursMatching(padaor,padacl,padafr)
-        
-        if (configs['objecttype'] == 'comet'):
-            PPCheckOrbitAndColoursMatching.PPCheckOrbitAndColoursMatching(padaor,padaco,padafr)
-             
-        pplogger.info('Joining physical parameters and orbital data with simulation data...')       
-        observations=PPJoinColourPointing.PPJoinColourPointing(padafr,padacl)
-        observations=PPJoinOrbitalData.PPJoinOrbitalData(observations,padaor)
-        if (configs['objecttype'] == 'comet'):
-            pplogger.info('Joining cometary data...')
-            observations=PPJoinColourPointing.PPJoinColourPointing(observations,padaco)
-        
-        pplogger.info('Joining info from pointing database with simulation data and dropping observations in non-requested filters...')
-        observations = PPMatchPointingToObservations(observations, filterpointing)
+        observations = PPReadAllInput(cmd_args, configs, filterpointing, startChunk, incrStep)       
                 
         pplogger.info('Calculating apparent magnitudes...')
         observations=PPCalculateApparentMagnitude.PPCalculateApparentMagnitude(observations, configs['phasefunction'], mainfilter, configs['othercolours'], configs['observing_filters'])
@@ -199,7 +164,7 @@ def runLSSTPostProcessing(cmd_args):
         pplogger.info('Number of rows AFTER applying SSP criterion threshold: ' + str(len(observations.index)))
 
 		# write output
-        PPWriteOutput(configs, observations, pplogger, endChunk)
+        PPWriteOutput(configs, observations, endChunk)
                 
         startChunk = startChunk + configs['sizeSerialChunk']
         # end for
