@@ -8,6 +8,9 @@ import pandas as pd
 import configparser
 from datetime import datetime
 from . import PPOutWriteCSV, PPOutWriteSqlite3, PPOutWriteHDF5
+from . import PPReadOrbitFile, PPCheckOrbitAndColoursMatching, PPReadCometaryInput
+from . import PPReadIntermDatabase, PPReadEphemerides, PPJoinColourPointing
+from . import PPJoinOrbitalData, PPMatchPointingToObservations, PPReadColours
 
 def PPGetLogger(    
         LOG_FORMAT     = '%(asctime)s %(name)-12s %(levelname)-8s %(message)s ',
@@ -91,7 +94,6 @@ def PPConfigFileParser(configfile, survey_name):
 	
 	Mandatory input:	string, configfile, string filepath of the config file
 	                    string, survey_name, command-line argument containing survey name
-						logger object, pplogger
 	
 	Output: 			dictionary of variables taken from the config file
 	
@@ -212,7 +214,6 @@ def PPPrintConfigsToLog(configs):
 	Description: Prints all the values from the config file to the log. Copied out of the runscript.
 	
 	Mandatory input:	dict, configs, dictionary of config variables created by PPConfigFileParser
-						logger object, pplogger, logger object
 						
 	Output: none
 	
@@ -255,25 +256,26 @@ def PPPrintConfigsToLog(configs):
 
 
 def PPFindFileOrExit(arg_fn, argname):
-	"""
-	Author: Steph Merritt
-	
-	Description: Checks to see if the filename given by arg_fn actually exists. If it doesn't,
-	this fails gracefully and exits to the command line.
-	
-	Mandatory input:	string, arg_fn, string filename passed by command line argument
-						string, argname,  name/flag of the argument printed in error message
-	
-	Output:				string, arg_fn unchanged
-	
-	"""
+    """
+    Author: Steph Merritt
 
-	if os.path.exists(arg_fn):
-		return arg_fn
-	else:
-		logging.error('ERROR: filename {} supplied for {} argument does not exist.'.format(arg_fn, argname))
-		sys.exit('ERROR: filename {} supplied for {} argument does not exist.'.format(arg_fn, argname))
-	
+    Description: Checks to see if the filename given by arg_fn actually exists. If it doesn't,
+    this fails gracefully and exits to the command line.
+
+    Mandatory input:	string, arg_fn, string filename passed by command line argument
+                        string, argname,  name/flag of the argument printed in error message
+
+    Output:				string, arg_fn unchanged
+    """
+
+    pplogger = logging.getLogger(__name__)
+
+    if os.path.exists(arg_fn):
+        return arg_fn
+    else:
+        pplogger.error('ERROR: filename {} supplied for {} argument does not exist.'.format(arg_fn, argname))
+        sys.exit('ERROR: filename {} supplied for {} argument does not exist.'.format(arg_fn, argname))
+
 
 def PPCMDLineParser(parser):
 	"""
@@ -307,7 +309,7 @@ def PPCMDLineParser(parser):
 	return cmd_args_dict
 	
 	
-def PPWriteOutput(configs, observations, pplogger, endChunk):
+def PPWriteOutput(configs, observations, endChunk):
 	"""
 	Author: Steph Merritt
 	
@@ -315,8 +317,9 @@ def PPWriteOutput(configs, observations, pplogger, endChunk):
 	
 	Mandatory input:	dict, configs, dictionary of config variables created by PPConfigFileParser
 						pandas DataFrame, observations, table of observations for output
-						logger object, pplogger, logger object
 	"""
+	
+	pplogger = logging.getLogger(__name__)
 	
 	pplogger.info('Constructing output path...')
 	if (configs['outputformat'] == 'csv'):
@@ -345,5 +348,72 @@ def PPWriteOutput(configs, observations, pplogger, endChunk):
 		outputsuffix=".h5"   
 		out=configs['outpath'] + configs['outfilestem'] + outputsuffix
 		pplogger.info('Output to HDF5 binary file...')
-		observations=PPOutWriteHDF5.PPOutWriteHDF5(observations,out,str(endChunk))    
-	
+		observations=PPOutWriteHDF5.PPOutWriteHDF5(observations,out,str(endChunk))
+		
+
+def PPReadAllInput(cmd_args, configs, filterpointing, startChunk, incrStep):
+    """
+    Author: Steph Merritt
+
+    Description: Reads in the simulation data and the orbit and colour files, and then
+    joins them with the pointing database to create a single Pandas dataframe of simulation
+    data with all necessary orbit, colour and pointing information.
+
+    Mandatory input:	dict, cmd_args, dictionary of command line variables created by PPCMDLineParser
+                        dict, configs, dictionary of config variables created by PPConfigFileParser
+                        pandas DataFrame, filterpointing, pointing database
+                        int, startChunk, start of chunk
+                        int, incrStep, size of chunk
+
+    Output:             pandas Dataframe, observations, dataframe of simulation data with all
+                    necessary orbit, colour and pointing information.
+    """
+
+    pplogger = logging.getLogger(__name__)
+
+    pplogger.info('Reading input orbit file: ' + cmd_args['orbinfile'])
+    padaor=PPReadOrbitFile.PPReadOrbitFile(cmd_args['orbinfile'], startChunk, incrStep, configs['filesep'])
+
+    pplogger.info('Reading input colours: ' + cmd_args['colourinput'])
+    padacl=PPReadColours.PPReadColours(cmd_args['colourinput'], startChunk, incrStep, configs['filesep'])
+    if (configs['objecttype'] == 'comet'):
+        pplogger.info('Reading cometary parameters: ' + cmd_args['cometinput'])
+        padaco=PPReadCometaryInput.PPReadCometaryInput(cmd_args['cometinput'], startChunk, incrStep, configs['filesep'])
+
+    objid_list = padacl['ObjID'].unique().tolist() 
+
+    # write pointing history to database
+    # select obj_id rows from tables 
+
+    if (cmd_args['makeIntermediatePointingDatabase'] == True):
+        # read from intermediate database
+        padafr=PPReadIntermDatabase.PPReadIntermDatabase('./data/interm.db', objid_list)
+    else:   
+        try: 
+            pplogger.info('Reading input pointing history: ' + cmd_args['oifoutput'])
+            padafr=PPReadEphemerides.PPReadEphemerides(cmd_args['oifoutput'], configs['ephemerides_type'], configs["pointingFormat"])
+        
+            padafr=padafr[padafr['ObjID'].isin(objid_list)]
+
+        except MemoryError:
+            pplogger.error('ERROR: insufficient memory. Try to run with -d True or reduce sizeSerialChunk.')
+            sys.exit('ERROR: insufficient memory. Try to run with -d True or reduce sizeSerialChunk.')
+
+
+    pplogger.info('Checking if orbit, brightness, colour/cometary and pointing simulation input files match...')
+    PPCheckOrbitAndColoursMatching.PPCheckOrbitAndColoursMatching(padaor,padacl,padafr)
+
+    if (configs['objecttype'] == 'comet'):
+        PPCheckOrbitAndColoursMatching.PPCheckOrbitAndColoursMatching(padaor,padaco,padafr)
+     
+    pplogger.info('Joining physical parameters and orbital data with simulation data...')       
+    observations=PPJoinColourPointing.PPJoinColourPointing(padafr,padacl)
+    observations=PPJoinOrbitalData.PPJoinOrbitalData(observations,padaor)
+    if (configs['objecttype'] == 'comet'):
+        pplogger.info('Joining cometary data...')
+        observations=PPJoinColourPointing.PPJoinColourPointing(observations,padaco)
+
+    pplogger.info('Joining info from pointing database with simulation data and dropping observations in non-requested filters...')
+    observations = PPMatchPointingToObservations.PPMatchPointingToObservations(observations, filterpointing)   
+
+    return observations
