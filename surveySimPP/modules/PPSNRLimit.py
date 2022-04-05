@@ -2,7 +2,7 @@
 
 import numpy as np
 
-def PPSNRLimit(observations, sigma_limit=2.):
+def PPSNRLimit(obs, sigma_limit=2.):
     """
     PPSNRLimit.py
     
@@ -23,8 +23,10 @@ def PPSNRLimit(observations, sigma_limit=2.):
     observations: Pandas dataframe as input but with entries under the SNR limit removed.
     
     """
-
-    observations.drop( np.where(observations["SNR"] <= sigma_limit)[0], inplace=True)
-    observations.reset_index(drop=True, inplace=True)
     
-    return observations
+    obs.reset_index(inplace=True)
+    rows_to_drop = np.where(obs["SNR"] <= sigma_limit)[0]   
+    observations_dropped = obs.drop(index=rows_to_drop)
+    observations_dropped.reset_index(drop=True, inplace=True)
+    
+    return observations_dropped
