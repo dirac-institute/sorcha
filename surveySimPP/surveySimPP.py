@@ -6,17 +6,6 @@ import numpy as np
 import logging
 import argparse
 import configparser
-#from surveySimPP.modules import PPFilterDetectionEfficiencyThreshold, PPreadColoursUser, PPReadColours
-#from surveySimPP.modules import PPJoinColourPointing, PPMatchPointing
-#from surveySimPP.modules import PPMatchPointingsAndColours, PPFilterSSPCriterionEfficiency
-#from surveySimPP.modules import PPReadOrbitFile, PPCheckOrbitAndColoursMatching
-#from surveySimPP.modules import PPReadOif, PPReadEphemerides
-#from surveySimPP.modules import PPDetectionProbability, PPSimpleSensorArea, PPTrailingLoss, PPMatchFieldConditions
-#from surveySimPP.modules import PPMakeIntermediatePointingDatabase, PPReadIntermDatabase
-#from surveySimPP.modules import PPReadCometaryInput, PPJoinOrbitalData, PPCalculateSimpleCometaryMagnitude
-#from surveySimPP.modules import PPFootprintFilter, PPAddUncertainties, PPRandomizeMeasurements, PPVignetting
-#from surveySimPP.modules.PPDetectionProbability import calcDetectionProbability, PPDetectionProbability
-#from surveySimPP.modules.PPMatchPointingToObservations import PPMatchFilterToObservations, PPMatchPointingToObservations
 from surveySimPP.modules import PPMatchPointing
 from surveySimPP.modules import PPFilterSSPCriterionEfficiency
 from surveySimPP.modules import PPTrailingLoss
