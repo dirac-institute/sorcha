@@ -3,3 +3,5 @@
 *.err
 *.egg-info
 *.pyc
+__pycache__
+/data/test/testdb_PPIntermDB.db

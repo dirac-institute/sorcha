@@ -4,8 +4,6 @@ import pytest
 import pandas as pd
 #from filtering import PPFilterDetectionEfficiencyThreshold
 
-from ..PPReadOif import PPReadOif
-from ..PPFilterDetectionEfficiencyThreshold import PPFilterDetectionEfficiencyThreshold
 
 """
 test_detectionEfficencyThreshold.py
@@ -21,18 +19,20 @@ Action: 1. count lines from raw output
 Author: Grigori Fedorets
 """
 
+
 def test_PPFilterDetectionEfficiencyThreshold():
 
-    padafr=PPReadOif('./data/test/oiftestoutput.txt', 'whitespace')
-    nrows=len(padafr.index)
-    pada1=PPFilterDetectionEfficiencyThreshold(padafr,1.00)
-    nr1=len(pada1.index)
-    pada2=PPFilterDetectionEfficiencyThreshold(padafr,0.00)
-    nr2=len(pada2.index)
-    
+    from surveySimPP.modules.PPReadOif import PPReadOif
+    from surveySimPP.modules.PPFilterDetectionEfficiencyThreshold import PPFilterDetectionEfficiencyThreshold
+
+    padafr = PPReadOif('./data/test/oiftestoutput.txt', 'whitespace')
+    nrows = len(padafr.index)
+    pada1 = PPFilterDetectionEfficiencyThreshold(padafr, 1.00)
+    nr1 = len(pada1.index)
+    pada2 = PPFilterDetectionEfficiencyThreshold(padafr, 0.00)
+    nr2 = len(pada2.index)
+
     assert nr1 == nrows
     assert nr2 == 0
-    
-    return
 
-    
+    return
