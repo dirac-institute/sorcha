@@ -30,4 +30,5 @@ def test_PPTrailingLoss():
         "observationId": np.arange(0, 10)
 
     })
-    assert 0.25893924959480374 == PPTrailingLoss(oif_df=testoifdf)[5]
+
+    np.testing.assert_array_almost_equal(0.25893924959480374, PPTrailingLoss(oif_df=testoifdf)[5], decimal=14)
