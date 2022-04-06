@@ -18,6 +18,7 @@ setuptools.setup(
         ],
     },
 
+
     author="Meg Schwamb",
     author_email="m.schwamb@qub.ac.uk",
     description="The Survey Simulator Post Processing code for the LSST",
