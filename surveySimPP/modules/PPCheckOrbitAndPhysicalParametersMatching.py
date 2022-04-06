@@ -6,21 +6,21 @@ import sys
 
 # Author: Grigori Fedorets
 
-def PPCheckOrbitAndColoursMatching(orbin,colin,poiin):
+def PPCheckOrbitAndPhysicalParametersMatching(orbin,colin,poiin):
 
 
    """
-   PPCheckOrbitAndColoursMatching
+   PPCheckOrbitAndPhysicalParametersMatching
    
    
    
-   Description: Checks whether orbit and colour files contain the same object id:s, and
+   Description: Checks whether orbit and physical parameter files contain the same object id:s, and
                additionally checks if the pointing database object id:s is a subset of 
                all the object id:s found in the orbit/physical parameter files.
 
 
    Mandatory input:   pandas dataframe: orbin -- orbits
-                      pandas dataframe: colin -- colours/cometary parameters
+                      pandas dataframe: colin -- physical parameters
                       pandas dataframe: poiin -- pointing database
    
 
@@ -42,8 +42,8 @@ def PPCheckOrbitAndColoursMatching(orbin,colin,poiin):
         if poiobjs.isin(orbin['!!OID']).all():
             return
         else:
-            logging.error('ERROR: PPCheckOrbitAndColourMatching: input pointing and orbit files do not match.')
-            sys.exit('ERROR: PPCheckOrbitAndColourMatching: input pointing and orbit files do not match.')
+            logging.error('ERROR: PPCheckOrbitAndPhysicalParametersMatching: input pointing and orbit files do not match.')
+            sys.exit('ERROR: PPCheckOrbitAndPhysicalParametersMatching: input pointing and orbit files do not match.')
    else:
-      logging.error('ERROR: PPCheckOrbitAndColourMatching: input colour/cometary parameter and orbit files do not match.')
-      sys.exit('ERROR: PPCheckOrbitAndColourMatching: input colour/cometary parameter and orbit files do not match.')
+      logging.error('ERROR: PPCheckOrbitAndPhysicalParametersMatching: input physical parameter and orbit files do not match.')
+      sys.exit('ERROR: PPCheckOrbitAndPhysicalParametersMatching: input physical parameter and orbit files do not match.')

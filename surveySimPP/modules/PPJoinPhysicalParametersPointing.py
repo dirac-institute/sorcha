@@ -4,24 +4,24 @@ import pandas as pd
 
 # Author: Grigori Fedorets
 
-def PPJoinColourPointing(padafr,padacl):
+def PPJoinPhysicalParametersPointing(padafr,padacl):
 
    """
-   PPJoinColourPointing.py
+   PPJoinPhysicalParametersPointing.py
 
 
 
    Description: This task  joins the pointing pandas database with the
-   colour pandas database. Each database has to have same ObjID:s: NaN:s will
+   physical parameters pandas database. Each database has to have same ObjID:s: NaN:s will
    be populate the fields for the missing objects.  
    
 
-   Mandatory input:      oif pandas database and colour database
+   Mandatory input:      oif pandas database and physical parameters database
 
    Output:               new joined pandas dataframe
 
 
-   usage: padafr1=PPJoinColourPointing(padafr,padacl)
+   usage: padafr1=PPJoinPhysicalParametersPointing(padafr,padacl)
    """
 
 

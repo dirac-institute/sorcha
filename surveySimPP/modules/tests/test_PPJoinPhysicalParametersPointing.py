@@ -4,16 +4,16 @@ import pytest
 import pandas as pd
 
 
-def test_PPJoinColourPointing():
+def test_PPJoinPhysicalParametersPointing():
 
-    from surveySimPP.modules.PPJoinColourPointing import PPJoinColourPointing
+    from surveySimPP.modules.PPJoinPhysicalParametersPointing import PPJoinPhysicalParametersPointing
     from surveySimPP.modules.PPReadOif import PPReadOif
-    from surveySimPP.modules.PPReadColours import PPReadColours
+    from surveySimPP.modules.PPReadPhysicalParameters import PPReadPhysicalParameters
 
     padafr = PPReadOif('./data/test/oiftestoutput.txt', 'whitespace')
     padacl = PPReadColours('./data/test/testcolour.txt', 0, 5, 'whitespace')
 
-    padare = PPJoinColourPointing(padafr, padacl)
+    padare = PPJoinPhysicalParametersPointing(padafr, padacl)
 
     ncol = 27
     ncolre = len(padare.columns)

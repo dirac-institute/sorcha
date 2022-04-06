@@ -168,7 +168,7 @@ def main():
 
     A post processing survey simulator that applies a series of filters to bias a model Solar System small body population to what the specified wide-field survey would observe.
 
-    Mandatory input:      configuration file, orbit file, colour file, and optional cometary activity properties file
+    Mandatory input:      configuration file, orbit file, physical parameters file, and optional cometary activity properties file
 
     Output:               csv, hdf5, or sqlite file
 
@@ -179,7 +179,7 @@ def main():
          -c C, --config C   Input configuration file name
          -d          Make intermediate pointing database
          -m M, --comet M    Comet parameter file name
-         -l L, --colour L, --color L  Colour file name
+         -l L, --params L   Physical parameters file name
          -o O, --orbit O    Orbit file name
          -p P, --pointing P  Pointing simulation output file name
          -s S, --survey S   Name of the survey you wish to simulate
@@ -189,7 +189,7 @@ def main():
     parser.add_argument("-c", "--config", help="Input configuration file name", type=str, dest='c', default='./PPConfig.ini', required=True)
     parser.add_argument("-d", help="Make intermediate pointing database", dest='d', action='store_true')
     parser.add_argument("-m", "--comet", help="Comet parameter file name", type=str, dest='m')
-    parser.add_argument("-l", "--colour", "--color", help="Colour file name", type=str, dest='l', default='./data/colour', required=True)
+    parser.add_argument("-l", "--params", help="Physical parameters file name", type=str, dest='l', default='./data/params', required=True)
     parser.add_argument("-o", "--orbit", help="Orbit file name", type=str, dest='o', default='./data/orbit.des', required=True)
     parser.add_argument("-p", "--pointing", help="Pointing simulation output file name", type=str, dest='p', default='./data/oiftestoutput', required=True)
     parser.add_argument("-s", "--survey", help="Survey to simulate", type=str, dest='s', default='LSST')
@@ -199,7 +199,7 @@ def main():
     if cmd_args['surveyname'] in ['LSST', 'lsst']:
         runLSSTPostProcessing(cmd_args)
     else:
-        print('ERROR: Survey name not recognised. Current allowed surveys are: {}'.format(['LSST', 'lsst'])) 
+        sys.exit('ERROR: Survey name not recognised. Current allowed surveys are: {}'.format(['LSST', 'lsst'])) 
 
 if __name__=='__main__':
     main()

@@ -7,13 +7,13 @@ import numpy as np
 # Author: Grigori Fedorets
 
 
-def PPReadColours(clr_datafile, beginLoc, chunkSize, filesep):
+def PPReadPhysicalParameters(clr_datafile, beginLoc, chunkSize, filesep):
 
     """
-    PPReadColours.py
+    PPReadPhysicalParameters.py
     
     
-    Description: This task reads in the colours file and puts it into a 
+    Description: This task reads in the physical parameters file and puts it into a 
     single pandas dataframe for further use downstream by other tasks.
     
     The format of the colours is:

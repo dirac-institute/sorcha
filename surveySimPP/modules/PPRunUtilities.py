@@ -8,9 +8,9 @@ import pandas as pd
 import configparser
 from datetime import datetime
 from . import PPOutWriteCSV, PPOutWriteSqlite3, PPOutWriteHDF5
-from . import PPReadOrbitFile, PPCheckOrbitAndColoursMatching, PPReadCometaryInput
-from . import PPReadIntermDatabase, PPReadEphemerides, PPJoinColourPointing
-from . import PPJoinOrbitalData, PPMatchPointingToObservations, PPReadColours
+from . import PPReadOrbitFile, PPCheckOrbitAndPhysicalParametersMatching, PPReadCometaryInput
+from . import PPReadIntermDatabase, PPReadEphemerides, PPJoinPhysicalParametersPointing
+from . import PPJoinOrbitalData, PPMatchPointingToObservations, PPReadPhysicalParameters
 
 def PPGetLogger(    
         LOG_FORMAT     = '%(asctime)s %(name)-12s %(levelname)-8s %(message)s ',
@@ -106,7 +106,7 @@ def PPConfigFileParser(configfile, survey_name):
 
 	config_dict = {}
 	config_dict['pointingFormat'] = PPGetOrExit(config, 'INPUTFILES', 'pointingFormat', 'ERROR: no pointing simulation format is specified.')
-	config_dict['filesep'] = PPGetOrExit(config, 'INPUTFILES', 'auxFormat', 'ERROR: no auxilliary data (e.g. colour) format specified.')  
+	config_dict['filesep'] = PPGetOrExit(config, 'INPUTFILES', 'auxFormat', 'ERROR: no auxilliary data format specified.')  
 
 	config_dict['objecttype'] = PPGetOrExit(config, 'OBJECTS', 'objecttype', 'ERROR: no object type provided.')    
 	if config_dict['objecttype'] not in ['asteroid', 'comet']:
@@ -296,7 +296,7 @@ def PPCMDLineParser(parser):
 
 	cmd_args_dict = {}
 	
-	cmd_args_dict['colourinput'] = PPFindFileOrExit(args.l, '-l --colour')
+	cmd_args_dict['paramsinput'] = PPFindFileOrExit(args.l, '-l --params')
 	cmd_args_dict['orbinfile'] = PPFindFileOrExit(args.o, '-o --orbit')
 	cmd_args_dict['oifoutput'] = PPFindFileOrExit(args.p, '-p, --pointing')
 	cmd_args_dict['configfile'] = PPFindFileOrExit(args.c, '-c, --config')
@@ -355,9 +355,9 @@ def PPReadAllInput(cmd_args, configs, filterpointing, startChunk, incrStep):
     """
     Author: Steph Merritt
 
-    Description: Reads in the simulation data and the orbit and colour files, and then
+    Description: Reads in the simulation data and the orbit and physical parameter files, and then
     joins them with the pointing database to create a single Pandas dataframe of simulation
-    data with all necessary orbit, colour and pointing information.
+    data with all necessary orbit, physical parameter and pointing information.
 
     Mandatory input:	dict, cmd_args, dictionary of command line variables created by PPCMDLineParser
                         dict, configs, dictionary of config variables created by PPConfigFileParser
@@ -366,7 +366,7 @@ def PPReadAllInput(cmd_args, configs, filterpointing, startChunk, incrStep):
                         int, incrStep, size of chunk
 
     Output:             pandas Dataframe, observations, dataframe of simulation data with all
-                    necessary orbit, colour and pointing information.
+                    necessary orbit, physical parameter and pointing information.
     """
 
     pplogger = logging.getLogger(__name__)
@@ -374,8 +374,8 @@ def PPReadAllInput(cmd_args, configs, filterpointing, startChunk, incrStep):
     pplogger.info('Reading input orbit file: ' + cmd_args['orbinfile'])
     padaor=PPReadOrbitFile.PPReadOrbitFile(cmd_args['orbinfile'], startChunk, incrStep, configs['filesep'])
 
-    pplogger.info('Reading input colours: ' + cmd_args['colourinput'])
-    padacl=PPReadColours.PPReadColours(cmd_args['colourinput'], startChunk, incrStep, configs['filesep'])
+    pplogger.info('Reading input physical parameters: ' + cmd_args['paramsinput'])
+    padacl=PPReadPhysicalParameters.PPReadPhysicalParameters(cmd_args['paramsinput'], startChunk, incrStep, configs['filesep'])
     if (configs['objecttype'] == 'comet'):
         pplogger.info('Reading cometary parameters: ' + cmd_args['cometinput'])
         padaco=PPReadCometaryInput.PPReadCometaryInput(cmd_args['cometinput'], startChunk, incrStep, configs['filesep'])
@@ -400,18 +400,18 @@ def PPReadAllInput(cmd_args, configs, filterpointing, startChunk, incrStep):
             sys.exit('ERROR: insufficient memory. Try to run with -d True or reduce sizeSerialChunk.')
 
 
-    pplogger.info('Checking if orbit, brightness, colour/cometary and pointing simulation input files match...')
-    PPCheckOrbitAndColoursMatching.PPCheckOrbitAndColoursMatching(padaor,padacl,padafr)
+    pplogger.info('Checking if orbit, brightness, physical parameters and pointing simulation input files match...')
+    PPCheckOrbitAndPhysicalParametersMatching.PPCheckOrbitAndPhysicalParametersMatching(padaor,padacl,padafr)
 
     if (configs['objecttype'] == 'comet'):
-        PPCheckOrbitAndColoursMatching.PPCheckOrbitAndColoursMatching(padaor,padaco,padafr)
+        PPCheckOrbitAndPhysicalParametersMatching.PPCheckOrbitAndPhysicalParametersMatching(padaor,padaco,padafr)
      
     pplogger.info('Joining physical parameters and orbital data with simulation data...')       
-    observations=PPJoinColourPointing.PPJoinColourPointing(padafr,padacl)
+    observations=PPJoinPhysicalParametersPointing.PPJoinPhysicalParametersPointing(padafr,padacl)
     observations=PPJoinOrbitalData.PPJoinOrbitalData(observations,padaor)
     if (configs['objecttype'] == 'comet'):
         pplogger.info('Joining cometary data...')
-        observations=PPJoinColourPointing.PPJoinColourPointing(observations,padaco)
+        observations=PPJoinPhysicalParametersPointing.PPJoinPhysicalParametersPointing(observations,padaco)
 
     pplogger.info('Joining info from pointing database with simulation data and dropping observations in non-requested filters...')
     observations = PPMatchPointingToObservations.PPMatchPointingToObservations(observations, filterpointing)   
