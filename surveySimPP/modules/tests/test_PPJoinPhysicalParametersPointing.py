@@ -11,7 +11,7 @@ def test_PPJoinPhysicalParametersPointing():
     from surveySimPP.modules.PPReadPhysicalParameters import PPReadPhysicalParameters
 
     padafr = PPReadOif('./data/test/oiftestoutput.txt', 'whitespace')
-    padacl = PPReadColours('./data/test/testcolour.txt', 0, 5, 'whitespace')
+    padacl = PPReadPhysicalParameters('./data/test/testcolour.txt', 0, 5, 'whitespace')
 
     padare = PPJoinPhysicalParametersPointing(padafr, padacl)
 

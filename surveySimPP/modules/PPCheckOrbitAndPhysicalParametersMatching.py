@@ -28,7 +28,7 @@ def PPCheckOrbitAndPhysicalParametersMatching(orbin,colin,poiin):
                       
 
 
-   Usage: PPCheckOrbitAndColoursMatching(orbin,colin,poiin)
+   Usage: PPCheckOrbitAndPhysicalParametersMatching(orbin,colin,poiin)
 
    """
    poi=pd.unique(poiin['ObjID'])
