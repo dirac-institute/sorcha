@@ -39,15 +39,23 @@ def PPReadEphemerides(eph_output, ephemerides_type, inputformat):
 
    usage: PPReadEphemerides(padafr, ephemerides_type, inputformat)
    """
+
+   pplogger = logging.getLogger(__name__)
    
-   ephemerides_type=ephemerides_type.casefold()
+   ephemerides_type_=ephemerides_type.casefold()
 
    
-   if (ephemerides_type=='oif'):
+   if (ephemerides_type_=='oif'):
          padafr=PPReadOif.PPReadOif(eph_output, inputformat)
+   
 
+   
    # Functions for adding alternative types of ephemerides can be added here
    # See below for self-explanatory columns required for the ephemerides input
+   
+   else:
+       pplogger.error("PPReadEphemerides: invalid value for ephemerides_type: ", ephemerides_type)
+       sys.exit("PPReadEphemerides: invalid value for ephemerides_type: ", ephemerides_type)
    
    # check the necessary columns exist
    
