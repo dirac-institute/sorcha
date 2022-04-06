@@ -24,11 +24,11 @@ Calculate Astrometric and Photometric Uncertainties for ground based observation
 # Numpy
 import numpy as np
 
-#Pandas
+# Pandas
 import pandas as pd
 
 
-__all__ = ['addUncertainties','calcAstrometricUncertainty', 'calcPhotometricUncertainty',
+__all__ = ['calcAstrometricUncertainty', 'calcPhotometricUncertainty',
            'calcRandomAstrometricErrorPerCoord', 'magErrorFromSNR']
 
 
@@ -43,13 +43,12 @@ class Error(Exception):
 
 ############################################
 
-#def addUncertainties(ephemsdf,obsdf,raName='fieldRA',decName='fieldDec',obsIdName='FieldID',
+# def addUncertainties(ephemsdf,obsdf,raName='fieldRA',decName='fieldDec',obsIdName='FieldID',
 #                     obsEpochName='observationStartMJD',
 #                     raNameEph='AstRA(deg)',decNameEph='AstDec(deg)',
 #                     obsIdNameEph='observationId',ephEpochName='FieldMJD',
 #                     limMagName='fiveSigmaDepth',seeingName='seeingFwhmGeom',
 #                     filterMagName='MagnitudeInFilter'):
-
 
  #   """Add astrometric and photometric uncertainties to observations generated through JPL ephemeris simulator.
 #
@@ -60,35 +59,34 @@ class Error(Exception):
  #   *Name    ... relevant column names in obsdf
  #   *NameEph ... relevant column names in ephemsdf
 
-
  #   Returns:
  #   --------
  #   ephemsOut ... ephems Pandas dataFrame (observations with added uncertainties)
  #   """
 
-    #Check whether the observations dataframe covers the whole ephemeris time
-    #--------------------------------------------------------------------------
+    # Check whether the observations dataframe covers the whole ephemeris time
+    # --------------------------------------------------------------------------
     # Should be handled somewhere else
-    #--------------------------------------------------------------------------
-    #tobsmin=obsdf[obsEpochName].min()
-    #tobsmax=obsdf[obsEpochName].max()
-    #tephmin=ephemsdf[ephEpochName].min()
-    #tephmax=ephemsdf[ephEpochName].max()
+    # --------------------------------------------------------------------------
+    # tobsmin=obsdf[obsEpochName].min()
+    # tobsmax=obsdf[obsEpochName].max()
+    # tephmin=ephemsdf[ephEpochName].min()
+    # tephmax=ephemsdf[ephEpochName].max()
 
-    #if(tephmin<tobsmin or tephmax>tobsmax):
+    # if(tephmin<tobsmin or tephmax>tobsmax):
     #    print('observations tmin, ephemeris tmin:',tobsmin, tephmin)
     #    print('observations tmax, ephemeris tmax:',tobsmax, tephmax)
     #    raise Exception('Observations do not cover the entire ephemeris timespan.')
-    #--------------------------------------------------------------------------
+    # --------------------------------------------------------------------------
 
-    # Remove 
-    #tempdf = pd.merge(
+    # Remove
+    # tempdf = pd.merge(
     #    ephemsdf[[obsIdNameEph]],
     #    obsdf[[obsIdName, limMagName, seeingName]],
     #    left_on=obsIdNameEph,
     #    right_on=obsIdName,
     #    how="left"
-    #)
+    # )
 
 #    astrSig,SNR,_=calcAstrometricUncertainty(ephemsdf[filterMagName], tempdf[limMagName],
 #                                            FWHMeff=tempdf[seeingName]*1000, output_units='mas')
@@ -96,11 +94,10 @@ class Error(Exception):
 
  #   return (astrSig, photometric_sigma, SNR)
 
-def uncertainties(detDF, 
-                    limMagName='fiveSigmaDepth', seeingName='seeingFwhmGeom', 
-                    filterMagName='MagnitudeInFilter'
-                ):
-
+def uncertainties(detDF,
+                  limMagName='fiveSigmaDepth', seeingName='seeingFwhmGeom',
+                  filterMagName='MagnitudeInFilter'
+                  ):
     """Add astrometric and photometric uncertainties to observations generated through JPL ephemeris simulator.
 
     Parameters:
@@ -113,13 +110,14 @@ def uncertainties(detDF,
     ephemsOut ... ephems Pandas dataFrame (observations with added uncertainties)
     """
 
-    astrSig,SNR,_=calcAstrometricUncertainty(detDF[filterMagName], detDF[limMagName],
-                                            FWHMeff=detDF[seeingName]*1000, output_units='mas')
+    astrSig, SNR, _ = calcAstrometricUncertainty(detDF[filterMagName], detDF[limMagName],
+                                                 FWHMeff=detDF[seeingName] * 1000, output_units='mas')
     photometric_sigma = magErrorFromSNR(SNR)
 
     return (astrSig, photometric_sigma, SNR)
 
-def calcAstrometricUncertainty(mag, m5, nvisit=1, FWHMeff=700.0, error_sys = 10.0,
+
+def calcAstrometricUncertainty(mag, m5, nvisit=1, FWHMeff=700.0, error_sys=10.0,
                                astErrCoeff=0.60, output_units='mas'):
     """Calculate the astrometric uncertainty, for object catalog purposes.
     The effective FWHMeff MUST BE given in miliarcsec (NOT arcsec!).
@@ -162,25 +160,24 @@ def calcAstrometricUncertainty(mag, m5, nvisit=1, FWHMeff=700.0, error_sys = 10.
     """
 
     # external functions
-    power=np.power
-    sqrt=np.sqrt
-
+    power = np.power
+    sqrt = np.sqrt
 
     # first compute SNR
     rgamma = 0.039
-    xval = power(10, 0.4*(mag-m5))
-    SNR = 1./sqrt((0.04-rgamma)*xval + rgamma*xval*xval)
+    xval = power(10, 0.4 * (mag - m5))
+    SNR = 1. / sqrt((0.04 - rgamma) * xval + rgamma * xval * xval)
     # random astrometric error for a single visit
     error_rand = calcRandomAstrometricErrorPerCoord(FWHMeff, SNR, astErrCoeff)
     # random astrometric error for nvisit observations
     if (nvisit > 1):
         error_rand = error_rand / sqrt(nvisit)
     # add systematic error floor:
-    astrom_error = sqrt(error_sys * error_sys + error_rand*error_rand)
+    astrom_error = sqrt(error_sys * error_sys + error_rand * error_rand)
 
-    if (output_units=='arcsec'):
-        astrom_error=astrom_error/1000
-        error_rand=error_rand/1000
+    if (output_units == 'arcsec'):
+        astrom_error = astrom_error / 1000
+        error_rand = error_rand / 1000
 
     return astrom_error, SNR, error_rand
 
@@ -202,7 +199,7 @@ def calcPhotometricUncertainty(SNR):
     return photSig
 
 
-def calcRandomAstrometricErrorPerCoord(FWHMeff, SNR, AstromErrCoeff = 0.60):
+def calcRandomAstrometricErrorPerCoord(FWHMeff, SNR, AstromErrCoeff=0.60):
     """Calculate the random astrometric uncertainty, as a function of
     effective FWHMeff and signal-to-noise ratio SNR
     Returns astrometric uncertainty in the same units as FWHM.
@@ -246,6 +243,7 @@ def calcRandomAstrometricErrorPerCoord(FWHMeff, SNR, AstromErrCoeff = 0.60):
     RandomAstrometricErrorPerCoord = AstromErrCoeff * FWHMeff / SNR
     return RandomAstrometricErrorPerCoord
 
+
 def magErrorFromSNR(snr):
     """
     Convert flux signal to noise ratio to an uncertainty in magnitude.
@@ -264,8 +262,8 @@ def magErrorFromSNR(snr):
     """
 
     # external functions
-    log10=np.log10
+    log10 = np.log10
 
     # see e.g. www.ucolick.org/~bolte/AY257/s_n.pdf section 3.1
-    magerr=2.5*log10(1.0+1.0/snr)
+    magerr = 2.5 * log10(1.0 + 1.0 / snr)
     return magerr
