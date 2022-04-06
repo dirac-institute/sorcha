@@ -54,8 +54,8 @@ def PPReadEphemerides(eph_output, ephemerides_type, inputformat):
    # See below for self-explanatory columns required for the ephemerides input
    
    else:
-       pplogger.error("PPReadEphemerides: invalid value for ephemerides_type: ", ephemerides_type)
-       sys.exit("PPReadEphemerides: invalid value for ephemerides_type: ", ephemerides_type)
+       pplogger.error("PPReadEphemerides: invalid value for ephemerides_type: " + str(ephemerides_type))
+       sys.exit("PPReadEphemerides: invalid value for ephemerides_type: " + str(ephemerides_type))
    
    # check the necessary columns exist
    
