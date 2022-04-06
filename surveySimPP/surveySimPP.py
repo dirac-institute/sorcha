@@ -77,7 +77,7 @@ def runLSSTPostProcessing(cmd_args):
             pass
     lenf=ii
     
-    while(endChunk <= lenf):
+    while(endChunk < lenf):
         endChunk=startChunk + configs['sizeSerialChunk'] 
         if (lenf-startChunk > configs['sizeSerialChunk']):
              incrStep=configs['sizeSerialChunk']
@@ -110,6 +110,8 @@ def runLSSTPostProcessing(cmd_args):
         pplogger.info('Calculating astrometric and photometric uncertainties...')
         observations['AstrometricSigma(mas)'], observations['PhotometricSigma(mag)'], observations["SNR"] = PPAddUncertainties.uncertainties(observations)
         observations["AstrometricSigma(deg)"] = observations['AstrometricSigma(mas)'] / 3600. / 1000.
+        
+        #PPWriteOutput(configs, observations, endChunk)
     
         pplogger.info('Dropping observations with signal to noise ratio less than 2...')
         observations = PPSNRLimit(observations)
