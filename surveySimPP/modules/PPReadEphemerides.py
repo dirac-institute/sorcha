@@ -5,7 +5,7 @@ import sys
 import pandas as pd
 import logging
 from . import PPReadOif
-from surveySimPP.modules.PPRunUtilities import PPGetLogger
+
 
 # Author: Grigori Fedorets
 
@@ -42,7 +42,7 @@ def PPReadEphemerides(eph_output, ephemerides_type, inputformat):
 
     usage: PPReadEphemerides(padafr, ephemerides_type, inputformat)
     """
-
+    from surveySimPP.modules.PPRunUtilities import PPGetLogger
     pplogger = PPGetLogger()
 
     if (ephemerides_type == 'oif'):
