@@ -9,8 +9,8 @@ def test_PPReadIntermDatabase():
 
     from surveySimPP.modules.PPMakeIntermediatePointingDatabase import PPMakeIntermediatePointingDatabase
     from surveySimPP.modules.PPReadIntermDatabase import PPReadIntermDatabase
-    from surveySimPP.modules.PPReadColours import PPReadColours
-    padacl = PPReadColours('./data/test/testcolour.txt', 0, 5, 'whitespace')
+    from surveySimPP.modules.PPReadPhysicalParameters import PPReadPhysicalParameters
+    padacl = PPReadPhysicalParameters('./data/test/testcolour.txt', 0, 5, 'whitespace')
     print(padacl)
     objid_list = padacl['ObjID'].unique().tolist()
 

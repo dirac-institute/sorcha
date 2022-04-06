@@ -8,17 +8,17 @@ import sys
 
 def test_PPOutWriteCSV():
 
-    from surveySimPP.modules.PPJoinColourPointing import PPJoinColourPointing
+    from surveySimPP.modules.PPJoinPhysicalParametersPointing import PPJoinPhysicalParametersPointing
     from surveySimPP.modules.PPReadOif import PPReadOif
-    from surveySimPP.modules.PPReadColours import PPReadColours
+    from surveySimPP.modules.PPReadPhysicalParameters import PPReadPhysicalParameters
     from surveySimPP.modules.PPMatchPointing import PPMatchPointing
     from surveySimPP.modules.PPMatchPointingsAndColours import PPMatchPointingsAndColours
     from surveySimPP.modules.PPOutWriteCSV import PPOutWriteCSV
 
     padafr = PPReadOif('./data/test/oiftestoutput.txt', "whitespace")
-    padacl = PPReadColours('./data/test/testcolour.txt', 0, 5, "whitespace")
+    padacl = PPReadPhysicalParameters('./data/test/testcolour.txt', 0, 5, "whitespace")
 
-    resdf = PPJoinColourPointing(padafr, padacl)
+    resdf = PPJoinPhysicalParametersPointing(padafr, padacl)
 
     dbq = 'SELECT observationId, observationStartMJD, filter, seeingFwhmGeom, seeingFwhmEff, fiveSigmaDepth, fieldRA, fieldDec, rotSkyPos FROM SummaryAllProps order by observationId'
 

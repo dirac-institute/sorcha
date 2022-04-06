@@ -6,16 +6,16 @@ import pandas as pd
 
 def test_PPMatchPointingsAndColours():
 
-    from surveySimPP.modules.PPJoinColourPointing import PPJoinColourPointing
+    from surveySimPP.modules.PPJoinPhysicalParametersPointing import PPJoinPhysicalParametersPointing
     from surveySimPP.modules.PPReadOif import PPReadOif
-    from surveySimPP.modules.PPReadColours import PPReadColours
+    from surveySimPP.modules.PPReadPhysicalParameters import PPReadPhysicalParameters
     from surveySimPP.modules.PPMatchPointing import PPMatchPointing
     from surveySimPP.modules.PPMatchPointingsAndColours import PPMatchPointingsAndColours
 
     padafr = PPReadOif('./data/test/oiftestoutput.txt', 'whitespace')
-    padacl = PPReadColours('./data/test/testcolour.txt', 0, 5, 'whitespace')
+    padacl = PPReadPhysicalParameters('./data/test/testcolour.txt', 0, 5, 'whitespace')
 
-    resdf = PPJoinColourPointing(padafr, padacl)
+    resdf = PPJoinPhysicalParametersPointing(padafr, padacl)
 
     # DRY COMMENT OUT BELOW - PPhookBrightnessWithColour NO LONGER EXISTS
     # resdf1=PPhookBrightnessWithColour(resdf, 'r', 'i-r', 'i')
