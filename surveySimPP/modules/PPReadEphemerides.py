@@ -41,7 +41,7 @@ def PPReadEphemerides(eph_output, ephemerides_type, inputformat):
    """
    
    ephemerides_type=ephemerides_type.casefold()
-   print(ephemerides_type)
+
    
    if (ephemerides_type=='oif'):
          padafr=PPReadOif.PPReadOif(eph_output, inputformat)
