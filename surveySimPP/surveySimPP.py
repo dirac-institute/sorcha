@@ -34,8 +34,6 @@ def runLSSTPostProcessing(cmd_args):
     """
 
     ### Initialise argument parser and assign command line arguments
-    
-    #cmd_args = PPCMDLineParser(parser)
 
     pplogger = PPGetLogger()
     
@@ -94,9 +92,11 @@ def runLSSTPostProcessing(cmd_args):
         if (configs['objecttype']=='comet'):
              pplogger.info('Calculating cometary magnitude using a simple model...')
              observations=PPCalculateSimpleCometaryMagnitude.PPCalculateSimpleCometaryMagnitude(observations, mainfilter)        
-       
-        pplogger.info('Dropping observations that are too bright...')
-        observations=PPBrightLimit.PPBrightLimit(observations,configs['brightLimit'])
+        
+        if configs['brightLimit']:
+            pplogger.info('Dropping observations that are too bright...')
+            observations=PPBrightLimit.PPBrightLimit(observations,configs['brightLimit'])
+            observations.reset_index(drop=True, inplace=True)
         
         ### The treatment is further divided by cameraModel: surfaceArea is a much simpler model, mimicking the fraction of the surface
         ### area not covered by chip gaps, whereas footprint takes into account the actual footprints
@@ -110,11 +110,11 @@ def runLSSTPostProcessing(cmd_args):
         pplogger.info('Calculating astrometric and photometric uncertainties...')
         observations['AstrometricSigma(mas)'], observations['PhotometricSigma(mag)'], observations["SNR"] = PPAddUncertainties.uncertainties(observations)
         observations["AstrometricSigma(deg)"] = observations['AstrometricSigma(mas)'] / 3600. / 1000.
-        
-        #PPWriteOutput(configs, observations, endChunk)
     
-        pplogger.info('Dropping observations with signal to noise ratio less than 2...')
-        observations = PPSNRLimit(observations)
+        if configs['SNRLimit']:
+            pplogger.info('Dropping observations with signal to noise ratio less than {}...'.format(configs['SNRLimit']))
+            observations = PPSNRLimit(observations, configs['SNRLimit'])
+            observations.reset_index(drop=True, inplace=True)
     
         pplogger.info('Applying uncertainty to photometry...')
         observations["MagnitudeInFilter"] = PPRandomizeMeasurements.randomizePhotometry(observations, magName="MagnitudeInFilter", sigName="PhotometricSigma(mag)", rng=rng)
@@ -129,6 +129,7 @@ def runLSSTPostProcessing(cmd_args):
         observations['dmagVignet']=PPVignetting.vignettingLosses(observations)
     
         pplogger.info("Dropping faint detections... ")
+        observations.reset_index(drop=True, inplace=True)
         observations.drop( np.where(observations["MagnitudeInFilter"] + observations["dmagDetect"] + observations['dmagVignet'] >= observations["fiveSigmaDepth"])[0], inplace=True)
         observations.reset_index(drop=True, inplace=True)
     
@@ -144,15 +145,17 @@ def runLSSTPostProcessing(cmd_args):
     
         pplogger.info('Dropping observations below detection threshold...')
         observations=PPDropObservations.PPDropObservations(observations, "detection_probability")
+        observations.reset_index(drop=True, inplace=True)
         
         pplogger.info('Number of rows AFTER applying detection probability threshold: ' + str(len(observations.index)))
         
-        pplogger.info('Applying SSP criterion efficiency...')
+        if configs['SSPFiltering']:
+            pplogger.info('Applying SSP criterion efficiency...')
 
-        observations=PPFilterSSPCriterionEfficiency.PPFilterSSPCriterionEfficiency(observations,configs['minTracklet'],configs['noTracklets'],configs['trackletInterval'],configs['inSepThreshold'])
-        observations=observations.drop(['index'], axis='columns')
-        
-        pplogger.info('Number of rows AFTER applying SSP criterion threshold: ' + str(len(observations.index)))
+            observations=PPFilterSSPCriterionEfficiency.PPFilterSSPCriterionEfficiency(observations,configs['minTracklet'],configs['noTracklets'],configs['trackletInterval'],configs['inSepThreshold'])
+            observations=observations.drop(['index'], axis='columns')
+
+            pplogger.info('Number of rows AFTER applying SSP criterion threshold: ' + str(len(observations.index)))
 
 		# write output
         PPWriteOutput(configs, observations, endChunk)
