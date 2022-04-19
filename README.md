@@ -34,7 +34,7 @@ git clone https://github.com/dirac-institute/survey_simulator_post_processing.gi
 
 Cd into the directory:
 ```
-cd ~/survey_simulator_post_processing
+cd survey_simulator_post_processing
 ```
 
 The code can be installed by typing:
@@ -66,7 +66,7 @@ from . import PPAddUncertainties
 ```
 And in the surveySimPP.py file it will look something like this:
 ```
-from .modules import PPAddUncertainties
+from surveySimPP.modules import PPAddUncertainties
 ```
 When adding, removing or changing the name of any module, just make sure that you've updated both of these files to reflect the changes.
 

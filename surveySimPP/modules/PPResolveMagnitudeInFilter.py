@@ -6,7 +6,7 @@ import numpy as np
 # Author: Grigori Fedorets, Meg Schwamb
 
 
-def PPResolveMagnitudeInFilter(padain,mainfilter,othercolours,resfilters):
+def PPResolveMagnitudeInFilter(padain,mainfilter,othercolours,observing_filters):
     """
     PPResolveMagnitudeInFilter.py
     
@@ -18,13 +18,13 @@ def PPResolveMagnitudeInFilter(padain,mainfilter,othercolours,resfilters):
     Mandatory input: string, padain, name of input pandas dataframe
                      string, mainfilter, name of the main filter in which the apparent magnitude has been calculated
                      array of strings, othercolours, names of colour offsets (e.g. r-i)
-                     array of strings, resfilters, names of resulting colours, main filter is the first one, followed 
+                     array of strings, observing_filters, names of resulting colours, main filter is the first one, followed 
                      in order by resolved colours, such as, e.g. 'r'+'g-r'='g'. They should be given in the following order: 
                      main filter, resolved filters in the same order as respective other colours.
     
     Output: updated padain
     
-    Usage: padaout=PPResolveMagnitudeInFilter(padain,mainfilter,othercolours,resfilters)
+    Usage: padaout=PPResolveMagnitudeInFilter(padain,mainfilter,othercolours,observing_filters)
     
     """
     
@@ -39,7 +39,7 @@ def PPResolveMagnitudeInFilter(padain,mainfilter,othercolours,resfilters):
     
     # for all other cases, where the offset is required
     for i in np.arange(len(othercolours)):
-        inRelevantFilterList=(padain['optFilter']==resfilters[i+1])
+        inRelevantFilterList=(padain['optFilter']==observing_filters[i+1])
         inRelevantFilter=padain[inRelevantFilterList]
         if(len(inRelevantFilter)>0):
                apparent_mag[inRelevantFilterList]=inRelevantFilter[othercolours[i]]

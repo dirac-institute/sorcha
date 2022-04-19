@@ -1,5 +1,6 @@
 Getting Started
-===============
+================
+
 In this section we provide an overview of how to use the survey simulator. We start by generating a set of 
 files containing information on the objects that we wish to study. We take you through the process of generating
 ephemerides for these objects using Objects in Field, and show you how to 
@@ -10,12 +11,12 @@ The first step in the process is to generate a set of files which describe the o
 of the objects that we wish to study. Here we will generate a file called 'testorb.des', which contains
 the orbits of five objects::
 
-   !!OID FORMAT q e i Omega argperi t_p H t_0 INDEX N_PAR MOID COMPCODE
-   St50000na  COM   5.03716   0.02669   6.46900 295.58100 132.80719  46418.04982  8.59  54800.00000 1 6 -1 Python
-   St5000dFa  COM   5.04913   0.02712  16.16440  55.75900  24.35430  47328.77692 12.05  54800.00000 1 6 -1 Python
-   St5000eWa  COM   4.98165   0.04476  11.60880 153.92300 101.06336  54793.36628 12.12  54800.00000 1 6 -1 Python
-   St5000iya  COM   4.71572   0.10005  21.32190 183.36400 103.67819  46765.73616 12.32  54800.00000 1 6 -1 Python
-   St5000k9a  COM   5.06933   0.03021  28.83260 240.92000  93.77753  54472.36405 12.43  54800.00000 1 6 -1 Python
+   !!OID FORMAT q e i Omega argperi t_p H t_0
+   St50000na  COM   5.03716   0.02669   6.46900 295.58100 132.80719  46418.04982  8.59  54800.00000 
+   St5000dFa  COM   5.04913   0.02712  16.16440  55.75900  24.35430  47328.77692 12.05  54800.00000 
+   St5000eWa  COM   4.98165   0.04476  11.60880 153.92300 101.06336  54793.36628 12.12  54800.00000 
+   St5000iya  COM   4.71572   0.10005  21.32190 183.36400 103.67819  46765.73616 12.32  54800.00000 
+   St5000k9a  COM   5.06933   0.03021  28.83260 240.92000  93.77753  54472.36405 12.43  54800.00000 
 
 We will also generate a file called 'testcolour.txt' which contains information about the colour and brightness of the objects::
 

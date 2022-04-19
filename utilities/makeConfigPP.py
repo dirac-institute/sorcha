@@ -24,7 +24,6 @@ def makeConfigFile(args):
                 },
             'FILTERS':
                 {
-                'mainfilter':   			args.mainfilter,
                 'othercolours':         	args.othercolours,
                 'resfilters':				args.resfilter
                 },
@@ -51,13 +50,11 @@ def makeConfigFile(args):
                 {
                 'outpath':   				args.outpath,
                 'outfilestem':         		args.outfilestem,
-                'outputformat':				args.outputformat,
-                'separatelyCSV':			args.separatelycsv
+                'outputformat':				args.outputformat
                 },
             'GENERAL':
                 {
-                'sizeSerialChunk':   		args.sizeserialchunk,
-                'testValue':				1			
+                'sizeSerialChunk':   		args.sizeserialchunk
                 }
 					})
 	
@@ -81,7 +78,6 @@ def main():
 	parser.add_argument('--auxformat', '-inauxf', help='Separator in orbit/colour/brightness/cometary data files: comma or whitespace. Default is "whitespace".', type=str, default='whitespace')
 	
 	# FILTERS
-	parser.add_argument('--mainfilter', '-mfilt', help='The main filter in the colour file to which all other colours are compared. Default is "r".', type=str, default='r')
 	parser.add_argument('--othercolours', '-ofilt', help='Other colours with respect to the main filter, e.g g-r. Should be given separated by comma. Default is "g-r,i-r,z-r".', type=str, default='g-r,i-r,z-r')
 	parser.add_argument('--resfilter', '-rfilt', help='resulting filters; main filter, followed by resolved colours, such as, e.g. \'r\'+\'g-r\'=\'g\'. Should be given in the following order: main filter, resolved filters in the same order as respective other colours. Should be separated by comma. Default is "r,g,i,z"', 
 									type=str, default='r,g,i,z')
@@ -106,7 +102,6 @@ def main():
 	parser.add_argument('--outpath', '-out', help='Path to output. Default is "./data/out".', type=str, default='./data/out/')
 	parser.add_argument('--outfilestem', '-outstem', help='Output file name stem. Default is "hundredcomets"', type=str, default='hundredcomets')
 	parser.add_argument('--outputformat', '-outf', help="Output format. Options: csv, sqlite3, hdf5. Default is csv.", type=str, default='csv')
-	parser.add_argument('--separatelycsv', '-sepcsv', help="Toggle to write out the CSV file for each object separately. Default is False.", action="store_true")
 	
 	# GENERAL
 	parser.add_argument('--sizeserialchunk', '-chunk', help="Size of chunk of objects to be processed serially. Default is 10.", type=int, default=10)
