@@ -4,13 +4,13 @@ from . import PPBrightLimit
 from . import PPCalculateApparentMagnitude
 from . import PPCalculateApparentMagnitudeInFilter
 from . import PPCalculateSimpleCometaryMagnitude
-from . import PPCheckOrbitAndColoursMatching
+from . import PPCheckOrbitAndPhysicalParametersMatching
 from . import PPDetectionProbability
 from . import PPDropObservations
 from . import PPFilterDetectionEfficiencyThreshold
 from . import PPFilterSSPCriterionEfficiency
 from . import PPFootprintFilter
-from . import PPJoinColourPointing
+from . import PPJoinPhysicalParametersPointing
 from . import PPJoinOrbitalData
 from . import PPMakeIntermediatePointingDatabase
 from . import PPMatchFieldConditions
@@ -22,7 +22,7 @@ from . import PPOutWriteHDF5
 from . import PPOutWriteSqlite3
 from . import PPRandomize
 from . import PPRandomizeMeasurements
-from . import PPReadColours
+from . import PPReadPhysicalParameters
 from . import PPreadColoursUser
 from . import PPReadCometaryInput
 from . import PPReadIntermDatabase

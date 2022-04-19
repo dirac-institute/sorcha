@@ -34,8 +34,6 @@ def runLSSTPostProcessing(cmd_args):
     """
 
     ### Initialise argument parser and assign command line arguments
-    
-    #cmd_args = PPCMDLineParser(parser)
 
     pplogger = PPGetLogger()
     
@@ -77,7 +75,7 @@ def runLSSTPostProcessing(cmd_args):
             pass
     lenf=ii
     
-    while(endChunk <= lenf):
+    while(endChunk < lenf):
         endChunk=startChunk + configs['sizeSerialChunk'] 
         if (lenf-startChunk > configs['sizeSerialChunk']):
              incrStep=configs['sizeSerialChunk']
@@ -94,9 +92,11 @@ def runLSSTPostProcessing(cmd_args):
         if (configs['objecttype']=='comet'):
              pplogger.info('Calculating cometary magnitude using a simple model...')
              observations=PPCalculateSimpleCometaryMagnitude.PPCalculateSimpleCometaryMagnitude(observations, mainfilter)        
-       
-        pplogger.info('Dropping observations that are too bright...')
-        observations=PPBrightLimit.PPBrightLimit(observations,configs['brightLimit'])
+        
+        if configs['brightLimit']:
+            pplogger.info('Dropping observations that are too bright...')
+            observations=PPBrightLimit.PPBrightLimit(observations,configs['brightLimit'])
+            observations.reset_index(drop=True, inplace=True)
         
         ### The treatment is further divided by cameraModel: surfaceArea is a much simpler model, mimicking the fraction of the surface
         ### area not covered by chip gaps, whereas footprint takes into account the actual footprints
@@ -111,8 +111,10 @@ def runLSSTPostProcessing(cmd_args):
         observations['AstrometricSigma(mas)'], observations['PhotometricSigma(mag)'], observations["SNR"] = PPAddUncertainties.uncertainties(observations)
         observations["AstrometricSigma(deg)"] = observations['AstrometricSigma(mas)'] / 3600. / 1000.
     
-        pplogger.info('Dropping observations with signal to noise ratio less than 2...')
-        observations = PPSNRLimit(observations)
+        if configs['SNRLimit']:
+            pplogger.info('Dropping observations with signal to noise ratio less than {}...'.format(configs['SNRLimit']))
+            observations = PPSNRLimit(observations, configs['SNRLimit'])
+            observations.reset_index(drop=True, inplace=True)
     
         pplogger.info('Applying uncertainty to photometry...')
         observations["MagnitudeInFilter"] = PPRandomizeMeasurements.randomizePhotometry(observations, magName="MagnitudeInFilter", sigName="PhotometricSigma(mag)", rng=rng)
@@ -127,6 +129,7 @@ def runLSSTPostProcessing(cmd_args):
         observations['dmagVignet']=PPVignetting.vignettingLosses(observations)
     
         pplogger.info("Dropping faint detections... ")
+        observations.reset_index(drop=True, inplace=True)
         observations.drop( np.where(observations["MagnitudeInFilter"] + observations["dmagDetect"] + observations['dmagVignet'] >= observations["fiveSigmaDepth"])[0], inplace=True)
         observations.reset_index(drop=True, inplace=True)
     
@@ -142,15 +145,17 @@ def runLSSTPostProcessing(cmd_args):
     
         pplogger.info('Dropping observations below detection threshold...')
         observations=PPDropObservations.PPDropObservations(observations, "detection_probability")
+        observations.reset_index(drop=True, inplace=True)
         
         pplogger.info('Number of rows AFTER applying detection probability threshold: ' + str(len(observations.index)))
         
-        pplogger.info('Applying SSP criterion efficiency...')
+        if configs['SSPFiltering']:
+            pplogger.info('Applying SSP criterion efficiency...')
 
-        observations=PPFilterSSPCriterionEfficiency.PPFilterSSPCriterionEfficiency(observations,configs['minTracklet'],configs['noTracklets'],configs['trackletInterval'],configs['inSepThreshold'])
-        observations=observations.drop(['index'], axis='columns')
-        
-        pplogger.info('Number of rows AFTER applying SSP criterion threshold: ' + str(len(observations.index)))
+            observations=PPFilterSSPCriterionEfficiency.PPFilterSSPCriterionEfficiency(observations,configs['minTracklet'],configs['noTracklets'],configs['trackletInterval'],configs['inSepThreshold'])
+            observations=observations.drop(['index'], axis='columns')
+
+            pplogger.info('Number of rows AFTER applying SSP criterion threshold: ' + str(len(observations.index)))
 
 		# write output
         PPWriteOutput(configs, observations, endChunk)
@@ -166,7 +171,7 @@ def main():
 
     A post processing survey simulator that applies a series of filters to bias a model Solar System small body population to what the specified wide-field survey would observe.
 
-    Mandatory input:      configuration file, orbit file, colour file, and optional cometary activity properties file
+    Mandatory input:      configuration file, orbit file, physical parameters file, and optional cometary activity properties file
 
     Output:               csv, hdf5, or sqlite file
 
@@ -177,7 +182,7 @@ def main():
          -c C, --config C   Input configuration file name
          -d          Make intermediate pointing database
          -m M, --comet M    Comet parameter file name
-         -l L, --colour L, --color L  Colour file name
+         -l L, --params L   Physical parameters file name
          -o O, --orbit O    Orbit file name
          -p P, --pointing P  Pointing simulation output file name
          -s S, --survey S   Name of the survey you wish to simulate
@@ -187,7 +192,7 @@ def main():
     parser.add_argument("-c", "--config", help="Input configuration file name", type=str, dest='c', default='./PPConfig.ini', required=True)
     parser.add_argument("-d", help="Make intermediate pointing database", dest='d', action='store_true')
     parser.add_argument("-m", "--comet", help="Comet parameter file name", type=str, dest='m')
-    parser.add_argument("-l", "--colour", "--color", help="Colour file name", type=str, dest='l', default='./data/colour', required=True)
+    parser.add_argument("-l", "--params", help="Physical parameters file name", type=str, dest='l', default='./data/params', required=True)
     parser.add_argument("-o", "--orbit", help="Orbit file name", type=str, dest='o', default='./data/orbit.des', required=True)
     parser.add_argument("-p", "--pointing", help="Pointing simulation output file name", type=str, dest='p', default='./data/oiftestoutput', required=True)
     parser.add_argument("-s", "--survey", help="Survey to simulate", type=str, dest='s', default='LSST')
@@ -197,7 +202,7 @@ def main():
     if cmd_args['surveyname'] in ['LSST', 'lsst']:
         runLSSTPostProcessing(cmd_args)
     else:
-        print('ERROR: Survey name not recognised. Current allowed surveys are: {}'.format(['LSST', 'lsst'])) 
+        sys.exit('ERROR: Survey name not recognised. Current allowed surveys are: {}'.format(['LSST', 'lsst'])) 
 
 if __name__=='__main__':
     main()
