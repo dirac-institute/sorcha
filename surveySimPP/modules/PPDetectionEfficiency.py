@@ -1,9 +1,9 @@
 #!/usr/bin/python
 
 import pandas as pd
-import random
 import sys
 import logging
+import numpy as np
 
 # Author: Grigori Fedorets
 
