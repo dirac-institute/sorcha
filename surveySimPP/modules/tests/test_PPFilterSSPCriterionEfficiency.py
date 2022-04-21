@@ -13,7 +13,7 @@ def test_PPFilterSSPCriterionEfficiency():
 
     padafr = PPReadOif('./data/test/oiftestoutput.txt', 'whitespace')
     print(padafr)
-    padaout = PPFilterSSPCriterionEfficiency(padafr, 2, 1, 15.0, 1.0)
+    padaout = PPFilterSSPCriterionEfficiency(padafr, 1, 2, 1, 15.0, 1.0)
     print(padaout)
     nlc = 6
     nlco = len(padaout.index)

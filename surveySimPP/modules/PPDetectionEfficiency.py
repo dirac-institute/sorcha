@@ -34,7 +34,7 @@ def PPDetectionEfficiency(padain, threshold):
 
     uniform_distr = np.random.random(num_obs)
     
-    padain_drop = padain.drop(padain[uniform_distr > 0.95].index)
+    padain_drop = padain.drop(padain[uniform_distr > threshold].index)
     
     #nrows=len(padain.index)
     #i=0
