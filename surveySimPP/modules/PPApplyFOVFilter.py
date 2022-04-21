@@ -2,8 +2,6 @@
 
 from . import PPFootprintFilter
 import logging
-from . import PPFilterDetectionEfficiencyThreshold
-
 
 def PPApplyFOVFilter(observations, configs):
     """
@@ -18,7 +16,7 @@ def PPApplyFOVFilter(observations, configs):
     Input:
     --------
     observations: Pandas dataframe of simulation data joined with pointing info.
-    configs: 
+    configs: dictionary of config variables
 
 
     """
@@ -26,8 +24,7 @@ def PPApplyFOVFilter(observations, configs):
     pplogger = logging.getLogger(__name__)
 
     if configs['cameraModel'] == 'circle':
-        pplogger.info('Applying detection efficiency threshold...')
-        observations = PPFilterDetectionEfficiencyThreshold.PPFilterDetectionEfficiencyThreshold(observations, configs['fillfactor'])
+        pplogger.info('FOV is circular. Skipping...')
 
     elif configs['cameraModel'] == 'footprint':
         pplogger.info('Applying sensor footprint filter...')

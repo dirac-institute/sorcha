@@ -1,12 +1,13 @@
 #!/usr/bin/python
 
 from . import PPCalculateApparentMagnitudeInFilter, PPResolveMagnitudeInFilter
+from . import PPCalculateSimpleCometaryMagnitude
 import logging
 import pandas as pd
 
 # Author: Grigori Fedorets
 
-def PPCalculateApparentMagnitude(observations, phasefunction, mainfilter, othercolours, observing_filters):
+def PPCalculateApparentMagnitude(observations, phasefunction, mainfilter, othercolours, observing_filters, object_type):
 
     """
     PPCalculateApparentMagnitude(observations, phasefunction, mainfilter, othercolours, observing_filters)
@@ -28,9 +29,16 @@ def PPCalculateApparentMagnitude(observations, phasefunction, mainfilter, otherc
     pplogger = logging.getLogger(__name__)
  
     pplogger.info('Calculating apparent magnitudes...')
-    observations=PPCalculateApparentMagnitudeInFilter.PPCalculateApparentMagnitudeInFilter(observations, phasefunction, mainfilter)        
+    observations=PPCalculateApparentMagnitudeInFilter.PPCalculateApparentMagnitudeInFilter(observations, phasefunction, mainfilter)
+    
+    if (object_type =='comet'):
+         pplogger.info('Calculating cometary magnitude using a simple model...')
+         observations=PPCalculateSimpleCometaryMagnitude.PPCalculateSimpleCometaryMagnitude(observations, mainfilter)         
     
     pplogger.info('Selecting and applying correct colour offset...')
     observations=PPResolveMagnitudeInFilter.PPResolveMagnitudeInFilter(observations,mainfilter,othercolours,observing_filters)
     
-    return observations
+    observations_drop = observations.drop(mainfilter, axis=1)
+    observations_drop.reset_index(drop=True, inplace=True)
+    
+    return observations_drop

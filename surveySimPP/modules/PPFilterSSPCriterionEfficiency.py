@@ -6,9 +6,11 @@ import pandas as pd
 from astropy import units as u
 from astropy.coordinates import SkyCoord
 
+from . import PPDetectionEfficiency
+
 # Author: Grigori Fedorets
 
-def PPFilterSSPCriterionEfficiency(padain,minintracklets,nooftracklets,intervaltime,inSepThresHoldAsec):
+def PPFilterSSPCriterionEfficiency(padain,detefficiency,minintracklets,nooftracklets,intervaltime,inSepThresHoldAsec):
    """
    PPFilterSSPCriterionEfficiency.py
    
@@ -24,6 +26,7 @@ def PPFilterSSPCriterionEfficiency(padain,minintracklets,nooftracklets,intervalt
 
 
    Mandatory input:   padain: modified pandas dataframe
+                      detefficiency: float, fractional percentage of successfully linked detections
                       minintracklets: integer, minimum number of observations
                       nooftracklets: integer, number of tracklets required for linking
                       interval time: float, interval of time (in days) which should include
@@ -35,7 +38,7 @@ def PPFilterSSPCriterionEfficiency(padain,minintracklets,nooftracklets,intervalt
    Output:               pandas dataframe
 
 
-   usage: padafr=PPFilterSSPCriterionEfficiency(padain,minintracklet,nooftracklets,intervaltime, inSepThresHoldAsec)
+   usage: padafr=PPFilterSSPCriterionEfficiency(padain,detefficiency,minintracklet,nooftracklets,intervaltime, inSepThresHoldAsec)
    """
    
       
@@ -50,6 +53,9 @@ def PPFilterSSPCriterionEfficiency(padain,minintracklets,nooftracklets,intervalt
    if (nooftracklets<1):
        pplogger.error('ERROR: PPFilterSSPCriterionEfficiency: minimum number of tracklets should be at least 1.')
        sys.exit('ERROR: PPFilterSSPCriterionEfficiency: minimum number of tracklets should be at least 1.')
+       
+   # this accounts for the fact that ~95% of detections are successfully linked
+   padain=PPDetectionEfficiency.PPDetectionEfficiency(padain,detefficiency)
    
    padain.reset_index(inplace=True)
    cols=padain.columns.tolist()

@@ -1,18 +1,18 @@
 #!/usr/bin/python
 
-def PPSNRLimit(observations, sigma_limit=2.):
+def PPMagnitudeLimit(observations, mag_limit):
     """
-    PPSNRLimit.py
+    PPMagnitudeLimit.py
     
     Author: Steph Merritt (sort of)
     
-    Filter that simply performs a straight SNR cut based on a limit.
+    Filter that simply performs a straight magnitude cut based on a limit.
     
     Inputs:
     --------
     observations: Pandas dataframe of simulation data merged with pointing data. Must have
     "SNR" column.
-    sigma_limit: Float limit for SNR cut, default 2.0.
+    mag_limit: Float limit for magnitude cut.
     
     Returns:
     ---------
@@ -21,7 +21,7 @@ def PPSNRLimit(observations, sigma_limit=2.):
     """
     
     observations.reset_index(inplace=True)  
-    observations_dropped = observations[observations['SNR'] > sigma_limit]
+    observations_dropped = observations[observations['PSFMag'] < mag_limit]
     observations_dropped.reset_index(drop=True, inplace=True)
     
     return observations_dropped

@@ -44,7 +44,7 @@ def PPResolveMagnitudeInFilter(padain,mainfilter,othercolours,observing_filters)
         if(len(inRelevantFilter)>0):
                apparent_mag[inRelevantFilterList]=inRelevantFilter[othercolours[i]]
 
-    padain['MagnitudeInFilter'] = padain[mainfilter] + apparent_mag
+    padain['TrailedSourceMag'] = padain[mainfilter] + apparent_mag
           
     return padain 
 

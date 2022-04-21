@@ -71,8 +71,8 @@ def calcDetectionProbability(mag, limmag, fillFactor=1.0, w=0.1):
 #-----------------------------------------------------------------------------------------------
 
 def PPDetectionProbability(oif_df, trailing_losses=False, trailing_loss_name='dmagDetect',
-                           magnitude_name="MagnitudeInFilter",
-                           limiting_magnitude_name="fiveSigmaDepth",
+                           magnitude_name="TrailedSourceMag",
+                           limiting_magnitude_name="fiveSigmaDepthAtSource",
                            field_id_name="FieldID",
                            fillFactor=1.0, w=0.1):
 

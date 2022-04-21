@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+import logging
 
 deg2rad = np.radians
 rad2deg = np.degrees
@@ -10,8 +11,8 @@ def vignettingLosses(oifdf,
                      raNameOIF="AstRA(deg)", decNameOIF="AstDec(deg)", fieldNameOIF="FieldID",
                      raNameSurvey="fieldRA", decNameSurvey="fieldDec"):
     """Takes dataframes containg observation and field positions and calculates
-    the magnitude losses due to vignetting."""
-
+    the magnitude losses due to vignetting. Returns the effective limiting magnitude 
+    at the source, as affected by vignetting."""
 
     losses = calcVignettingLosses(oifdf[raNameOIF], oifdf[decNameOIF], oifdf[raNameSurvey], oifdf[decNameSurvey])
     
@@ -72,3 +73,11 @@ def vignetFunc(x):
 
     result = -2.5*np.log10(np.interp(x,vignetFunc.r,vignetFunc.frac))
     return result
+
+def vignettingEffects(observations):
+    """Calculates effective limiting magnitude at source, taking vignetting into account.
+    """
+
+    dmagVignet=vignettingLosses(observations)
+    
+    return observations['fiveSigmaDepth']-dmagVignet
