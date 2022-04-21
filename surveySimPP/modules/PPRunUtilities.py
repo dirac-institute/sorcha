@@ -150,33 +150,37 @@ def PPConfigFileParser(configfile, survey_name):
             check_for_fillfactor = config['FILTERINGPARAMETERS']['fillfactor']
             pplogger.error('ERROR: fill factor supplied in config file but camera model is not "circle".')
             sys.exit('ERROR: fill factor supplied in config file but camera model is not "circle".')
-        except KeyError: pass
+        except KeyError:
+            config_dict['fillfactor'] = 1.0
 		
     elif (config_dict['cameraModel']) == 'circle':
-        config_dict['fillfactor'] = PPGetOrExit(config, 'FILTERINGPARAMETERS', 'fillfactor', 'ERROR: no fill factor specified for circular footprint.')
-   
-    config_dict['SSPDetectionEfficiency'] = float(config['FILTERINGPARAMETERS']['SSPDetectionEfficiency'])
-    if (config_dict['SSPDetectionEfficiency'] > 1.0 or config_dict['SSPDetectionEfficiency'] > 1.0 or isinstance(config_dict['SSPDetectionEfficiency'],(float,int))==False):
-        pplogger.error('ERROR: SSP detection efficiency out of bounds (should be between 0 and 1.), or not a number.')
-        sys.exit('ERROR: SSP detection efficiency out of bounds (should be between 0 and 1.), or not a number.')
+        config_dict['fillfactor'] = float(PPGetOrExit(config, 'FILTERINGPARAMETERS', 'fillfactor', 'ERROR: no fill factor specified for circular footprint.'))
 
     config_dict['brightLimit'] = float(PPGetOrPass(config, 'FILTERINGPARAMETERS', 'brightLimit', 'Brightness limit not supplied. No brightness filter will be applied.'))
-    config_dict['SNRLimit'] = float(PPGetOrPass(config, 'FILTERINGPARAMETERS', 'SNRLimit', 'SNR limit not supplied. No SNR cut will be applied.'))	
+    config_dict['SNRLimit'] = float(PPGetOrPass(config, 'FILTERINGPARAMETERS', 'SNRLimit', 'SNR limit not supplied. SNR limit defaulting to 2 sigma.'))	
+    config_dict['magLimit'] = float(PPGetOrPass(config, 'FILTERINGPARAMETERS', 'magLimit', 'Magnitude limit not supplied. No magnitude cut will be applied.'))
+    
+    if not config_dict['SNRLimit']: config_dict['SNRLimit'] = 2.0	
     
     if config_dict['brightLimit'] and (isinstance(config_dict['brightLimit'],(float,int))==False):
         pplogger.error('ERROR: brightness limit is not an int or float.')
         sys.exit('ERROR: brightness limit is not an int or float.')
     
-    if config_dict['SNRLimit'] and (isinstance(config_dict['SNRLimit'],(float,int))==False or config_dict['SNRLimit'] < 0):
+    if (isinstance(config_dict['SNRLimit'],(float,int))==False or config_dict['SNRLimit'] < 0):
         pplogger.error('ERROR: SNR limit is negative, or not an int or float.')
         sys.exit('ERROR: SNR limit is negative, or not an int or float.')
-        
+    
+    if config_dict['magLimit'] and (isinstance(config_dict['magLimit'],(float,int))==False or config_dict['magLimit'] < 0):
+        pplogger.error('ERROR: magnitude limit is negative, or not an int or float.')
+        sys.exit('ERROR: magnitude limit is negative, or not an int or float.')
+    
     config_dict['inSepThreshold'] = float(PPGetOrPass(config, 'FILTERINGPARAMETERS', 'inSepThreshold', 'Separation threshold not supplied for SSP filtering.'))
     config_dict['minTracklet'] = int(PPGetOrPass(config, 'FILTERINGPARAMETERS', 'minTracklet', 'Minimum tracklet length not supplied for SSP filtering.'))
     config_dict['noTracklets'] = int(PPGetOrPass(config, 'FILTERINGPARAMETERS', 'noTracklets', 'Number of tracklets not supplied for SSP filtering.'))
     config_dict['trackletInterval'] = float(PPGetOrPass(config,'FILTERINGPARAMETERS','trackletInterval', 'Tracklet interval not supplied for SSP filtering.'))
+    config_dict['SSPDetectionEfficiency'] = float(PPGetOrPass(config, 'FILTERINGPARAMETERS', 'SSPDetectionEfficiency', 'Detection efficiency not supplied for SSP filtering.'))
 	
-    if config_dict['inSepThreshold'] and config_dict['minTracklet'] and config_dict['noTracklets'] and config_dict['trackletInterval']:
+    if config_dict['inSepThreshold'] and config_dict['minTracklet'] and config_dict['noTracklets'] and config_dict['trackletInterval'] and config_dict['SSPDetectionEfficiency']:
         
         # only error handles these values if they are supplied
         if (config_dict['minTracklet'] < 1 or isinstance(config_dict['minTracklet'],int)==False):
@@ -190,14 +194,18 @@ def PPConfigFileParser(configfile, survey_name):
         if (config_dict['trackletInterval'] <= 0.0 or isinstance(config_dict['trackletInterval'],(float,int))==False):
             pplogger.error('ERROR: tracklet appearance interval is negative, or not a number.')
             sys.exit('ERROR: tracklet appearance interval is negative, or not a number.')
+        
+        if (config_dict['SSPDetectionEfficiency'] > 1.0 or config_dict['SSPDetectionEfficiency'] > 1.0 or isinstance(config_dict['SSPDetectionEfficiency'],(float,int))==False):
+            pplogger.error('ERROR: SSP detection efficiency out of bounds (should be between 0 and 1.), or not a number.')
+            sys.exit('ERROR: SSP detection efficiency out of bounds (should be between 0 and 1.), or not a number.')
               
         config_dict['SSPFiltering'] = True  
     
-    elif not config_dict['inSepThreshold'] and not config_dict['minTracklet'] and not config_dict['noTracklets'] and not config_dict['trackletInterval']:
+    elif not config_dict['inSepThreshold'] and not config_dict['minTracklet'] and not config_dict['noTracklets'] and not config_dict['trackletInterval'] and not config_dict['SSPDetectionEfficiency']:
         config_dict['SSPFiltering'] = False
     else:
-        pplogger.error('ERROR: only some SSP filtering variables supplied. Supply all four required variables for SSP filter, or none to turn filter off.')
-        sys.exit('ERROR: only some SSP filtering variables supplied. Supply all four required variables for SSP filter, or none to turn filter off.')
+        pplogger.error('ERROR: only some SSP filtering variables supplied. Supply all five required variables for SSP filter, or none to turn filter off.')
+        sys.exit('ERROR: only some SSP filtering variables supplied. Supply all five required variables for SSP filter, or none to turn filter off.')
 			
     config_dict['outpath'] = PPGetOrExit(config, 'OUTPUTFORMAT', 'outpath', 'ERROR: out path not specified.')   
     config_dict['outfilestem'] = PPGetOrExit(config, 'OUTPUTFORMAT', 'outfilestem', 'ERROR: name of output file stem not specified.')
@@ -280,11 +288,10 @@ def PPPrintConfigsToLog(configs):
     if (configs['cameraModel'] == 'footprint'):
         pplogger.info('Footprint is modelled after the actual camera footprint.')
         pplogger.info('Loading camera footprint from ' + configs['footprintPath'])
+        pplogger.info('The filling factor has been set to ' + str(configs["fillfactor"]))
     else:
         pplogger.info('Footprint is circular')
         pplogger.info('The filling factor for the circular footprint is ' + str(configs["fillfactor"]))
-
-    pplogger.info('Simulated SSP detection efficiency is ' + str(configs["SSPDetectionEfficiency"]))
 	
     if configs['brightLimit']: pplogger.info('The upper brightness limit is ' + str(configs['brightLimit']))
     else: pplogger.info('Brightness limit is turned off.')
@@ -294,9 +301,10 @@ def PPPrintConfigsToLog(configs):
 	
     if configs['SSPFiltering']:	
         pplogger.info('Solar System Processing filtering is turned on.')
-        pplogger.info('For Solar System Processing, the minimum required number of observatrions in a tracklet is ' + str(configs['minTracklet']))
+        pplogger.info('For Solar System Processing, the fractional detection efficiency is ' + str(configs["SSPDetectionEfficiency"]))
+        pplogger.info('For Solar System Processing, the minimum required number of observations in a tracklet is ' + str(configs['minTracklet']))
         pplogger.info('For Solar System Processing, the minimum required number of tracklets is ' + str(configs['noTracklets']))
-        pplogger.info('Fos Solar System Processing, the maximum interval of time in days of tracklets to be contained in is ' + str(configs['trackletInterval']))
+        pplogger.info('For Solar System Processing, the maximum interval of time in days of tracklets to be contained in is ' + str(configs['trackletInterval']))
         pplogger.info('For Solar System Processing, the minimum angular separation between observations in arcseconds is ' + str(configs['inSepThreshold']))
     else:
         pplogger.info('Solar System Processing filtering is turned off.')
