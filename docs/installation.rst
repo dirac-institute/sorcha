@@ -84,8 +84,6 @@ Survey Simulator Requirements
 * astropy
 * scipy
 * sbpy
-* tables
-
 
 Installing the Survey Simulator Post Processing
 ------------------------------------------------
