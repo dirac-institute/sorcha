@@ -3,16 +3,16 @@
 import pandas as pd
 import sys
 import logging
-import numpy as np
 
 # Author: Grigori Fedorets
 
-def PPDetectionEfficiency(padain, threshold):
+def PPDetectionEfficiency(padain, threshold, rng):
     """
     Task: PPDetectionEfficiency
     
     Input: padain: pandas dataframe, in objectsInField (oif) format, 
            threshold: float, between 0 and 1
+           rng: Numpy random number generator. If not specified, will use default seeded with system time.
     
     Action: Goes through every row in pandas dataframe and accepts/declines based on
     pre-determined acceptance threshold (between 0 and 1).
@@ -32,7 +32,7 @@ def PPDetectionEfficiency(padain, threshold):
          
     num_obs = len(padain.index)
 
-    uniform_distr = np.random.random(num_obs)
+    uniform_distr = rng.random(num_obs)
     
     padain_drop = padain.drop(padain[uniform_distr > threshold].index)
     

@@ -23,6 +23,7 @@ Calculate Astrometric and Photometric Uncertainties for ground based observation
 """
 # Numpy
 import numpy as np
+import time
 
 #Pandas
 import pandas as pd
@@ -30,7 +31,7 @@ import pandas as pd
 from . import PPAddUncertainties as uc
 
 #set a default random number generator
-default_rng = np.random.default_rng(2021)
+#default_rng = np.random.default_rng(int(time.time()))
 
 __all__ = ['randomizeObservations','flux2mag','mag2flux','radec2icrf','icrf2radec',
            'sampleNormalFOV','randomizeAstrometry','randomizePhotometry']
@@ -43,7 +44,7 @@ class Error(Exception):
 
     pass
 
-def randomizeObservations(ephemsdf,obsdf,raName='fieldRA',decName='fieldDec',obsIdName='observationId',
+def randomizeObservations(ephemsdf,obsdf, rng, raName='fieldRA',decName='fieldDec',obsIdName='observationId',
                      obsEpochName='observationStartMJD',
                      raNameEph='AstRA(deg)',decNameEph='AstDec(deg)',
                      obsIdNameEph='observationId',ephEpochName='FieldMJD',
@@ -95,11 +96,11 @@ def randomizeObservations(ephemsdf,obsdf,raName='fieldRA',decName='fieldDec',obs
         selection['PhotometricSigma(mag)'] = photSig
         selection['AstometrySigma(deg)'] = astrSig/1000/3600/180
 
-        randomizeAstrometry(selection,raName=raNameEph,decName=decNameEph,
+        randomizeAstrometry(selection,rng, raName=raNameEph,decName=decNameEph,
                             raRndName='AstRARnd(deg)',decRndName='AstDecRnd(deg)',
                             sigName='AstometrySigma(deg)',units='deg')
 
-        randomizePhotometry(selection,magName=filterMagName,magRndName='FiltermagRnd',sigName='PhotometricSigma(mag)')
+        randomizePhotometry(selection,rng, magName=filterMagName,magRndName='FiltermagRnd',sigName='PhotometricSigma(mag)')
 
         ephemsFiltered.append(selection)
 
@@ -107,7 +108,7 @@ def randomizeObservations(ephemsdf,obsdf,raName='fieldRA',decName='fieldDec',obs
 
     return ephemsOut
 
-def randomizeAstrometry(df, rng=default_rng, raName='AstRA(deg)',decName='AstDec(deg)',
+def randomizeAstrometry(df, rng, raName='AstRA(deg)',decName='AstDec(deg)',
                          raRndName='AstRARnd(deg)',decRndName='AstDecRnd(deg)',
                          sigName='AstSig(deg)',units='deg'):
 
@@ -151,7 +152,7 @@ def randomizeAstrometry(df, rng=default_rng, raName='AstRA(deg)',decName='AstDec
     n = len(df.index)
     xyz = zeros([n,3])
 
-    xyz = sampleNormalFOV(center, sigmarad, ndim=3, rng=rng)
+    xyz = sampleNormalFOV(center, sigmarad, rng, ndim=3)
 
     if (units=='deg'):
         [ra, dec] = icrf2radec(xyz[:,0], xyz[:,1], xyz[:,2], deg=True)
@@ -162,7 +163,7 @@ def randomizeAstrometry(df, rng=default_rng, raName='AstRA(deg)',decName='AstDec
     return ra, dec
 
 
-def sampleNormalFOV(center, sigma, ndim=3, rng=default_rng):
+def sampleNormalFOV(center, sigma, rng, ndim=3):
     """Sample n points randomly (normal distribution) on a region on the unit (hyper-)sphere.
 
     Parameters:
@@ -206,7 +207,7 @@ def sampleNormalFOV(center, sigma, ndim=3, rng=default_rng):
     return vec
 
 
-def randomizePhotometry(df,magName='Filtermag',magRndName='FiltermagRnd',sigName='FiltermagSig', rng=default_rng):
+def randomizePhotometry(df, rng, magName='Filtermag',magRndName='FiltermagRnd',sigName='FiltermagSig'):
 
     """Randomize photometry with normal distribution around magName value.
 
