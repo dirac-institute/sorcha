@@ -8,3 +8,4 @@ Describe your changes.
 - [ ] Have you written a unit test for any new functions?
 - [ ] Do all the units tests run successfully?
 - [ ] Does SurveySimPP run successfully on a test set of input files/databases?
+- [ ] Hace you used flake8 on the files you have updated to confirm python programming style guide enforcement?
