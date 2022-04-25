@@ -3,14 +3,10 @@
 import pandas as pd
 import sys
 import logging
-import numpy as np
-import time
 
 # Author: Grigori Fedorets
 
-default_rng = np.random.default_rng(int(time.time()))
-
-def PPDetectionEfficiency(padain, threshold, rng=default_rng):
+def PPDetectionEfficiency(padain, threshold, rng):
     """
     Task: PPDetectionEfficiency
     
