@@ -23,6 +23,7 @@ Calculate Astrometric and Photometric Uncertainties for ground based observation
 """
 # Numpy
 import numpy as np
+import time
 
 #Pandas
 import pandas as pd
@@ -30,7 +31,7 @@ import pandas as pd
 from . import PPAddUncertainties as uc
 
 #set a default random number generator
-default_rng = np.random.default_rng(2021)
+default_rng = np.random.default_rng(int(time.time()))
 
 __all__ = ['randomizeObservations','flux2mag','mag2flux','radec2icrf','icrf2radec',
            'sampleNormalFOV','randomizeAstrometry','randomizePhotometry']

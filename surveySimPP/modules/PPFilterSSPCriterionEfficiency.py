@@ -5,12 +5,16 @@ import logging
 import pandas as pd
 from astropy import units as u
 from astropy.coordinates import SkyCoord
+import numpy as np
+import time
 
 from . import PPDetectionEfficiency
 
+default_rng = np.random.default_rng(int(time.time()))
+
 # Author: Grigori Fedorets
 
-def PPFilterSSPCriterionEfficiency(padain,detefficiency,minintracklets,nooftracklets,intervaltime,inSepThresHoldAsec):
+def PPFilterSSPCriterionEfficiency(padain,detefficiency,minintracklets,nooftracklets,intervaltime,inSepThresHoldAsec, rng=default_rng):
    """
    PPFilterSSPCriterionEfficiency.py
    
@@ -34,6 +38,7 @@ def PPFilterSSPCriterionEfficiency(padain,detefficiency,minintracklets,nooftrack
                       inSepThresHoldAsec: float: minimum separation for SSP inside the tracklet
                                      to distinguish between two images to recognise the motion 
                                      between images
+                      rng: Numpy random number generator object. If not defined, uses default seeded with system time.
 
    Output:               pandas dataframe
 
@@ -55,7 +60,7 @@ def PPFilterSSPCriterionEfficiency(padain,detefficiency,minintracklets,nooftrack
        sys.exit('ERROR: PPFilterSSPCriterionEfficiency: minimum number of tracklets should be at least 1.')
        
    # this accounts for the fact that ~95% of detections are successfully linked
-   padain=PPDetectionEfficiency.PPDetectionEfficiency(padain,detefficiency)
+   padain=PPDetectionEfficiency.PPDetectionEfficiency(padain,detefficiency, rng=rng)
    
    padain.reset_index(inplace=True)
    cols=padain.columns.tolist()

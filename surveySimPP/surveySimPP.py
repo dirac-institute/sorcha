@@ -92,10 +92,6 @@ def runLSSTPostProcessing(cmd_args):
         if configs['brightLimit']:
             pplogger.info('Dropping observations that are too bright...')
             observations=PPBrightLimit.PPBrightLimit(observations,configs['brightLimit'])
-            #observations.reset_index(drop=True, inplace=True)
-        
-        ### The treatment is further divided by cameraModel: surfaceArea is a much simpler model, mimicking the fraction of the surface
-        ### area not covered by chip gaps, whereas footprint takes into account the actual footprints
         
         pplogger.info('Applying field-of-view filters...')
         observations = PPApplyFOVFilter(observations, configs)
@@ -134,7 +130,14 @@ def runLSSTPostProcessing(cmd_args):
         observations.reset_index(drop=True, inplace=True)
         
         pplogger.info('Applying fading function...')
-        observations = PPFilterFadingFunction(observations, configs['fillfactor'])
+        observations = PPFilterFadingFunction(observations, configs['fillfactor'], rng=rng)
+
+        if configs['SSPFiltering']:
+            pplogger.info('Applying SSP criterion efficiency...')
+            observations=PPFilterSSPCriterionEfficiency.PPFilterSSPCriterionEfficiency(observations,configs['SSPDetectionEfficiency'],configs['minTracklet'],configs['noTracklets'],configs['trackletInterval'],configs['inSepThreshold'], rng=rng)
+            observations=observations.drop(['index'], axis='columns')
+            observations.reset_index(drop=True, inplace=True)
+            pplogger.info('Number of rows AFTER applying SSP criterion threshold: ' + str(len(observations.index)))
 
 		# write output
         PPWriteOutput(configs, observations, endChunk)
