@@ -3,8 +3,11 @@ Getting Started
 
 In this section we provide an overview of how to use the survey simulator. We start by generating a set of 
 files containing information on the objects that we wish to study. We take you through the process of generating
-ephemerides for these objects using Objects in Field, and show you how to 
+ephemerides for these objects using Objects in Field, and show you how to use surveySimPP. 
 
+.. tip::
+   In this quick start guide, we go demonstrate how to run a single instance of OIF and surveySimPP. Both packages are designed to allow multiple instances to be run in parallel in order to process very large numbers of synthetic planetesimals. We recommend starting with the examples below, before moving on to parallel processing.
+   
 Creating Object Files
 -------------------------
 The first step in the process is to generate a set of files which describe the orbital and physical parameters
