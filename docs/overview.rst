@@ -58,7 +58,7 @@ pointing database, before being passed into the survey simulator. Here the user 
 file to apply relevant :ref:`filters<Filters>`, which account for the observational biases in LSST. An optional cometary 
 parameter file can also be added here.
 
-   .. warning::
+.. warning::
    We have validated surveySimPP using input from Objects In Field. If the user is going to use a different engine to generate the emphemeris of their simulated planetesimals as input for surveySimPP, the user has the responsibiilty to validate the accuracy of this input.
 
 
