@@ -1,6 +1,6 @@
 Overview
 ========
-The Solar System Science Collaboration (SSSC) Science Roadmap `(Schwamb et al. 2018) <https://ui.adsabs.harvard.edu/abs/2018arXiv180201783S/abstract>`_ highlights 
+The `Vera C. Rubin Observatory Legacy Survey of Space and Time (LSST)<https://www.lsst.org/>`_ Solar System Science Collaboration (SSSC) Science Roadmap `(Schwamb et al. 2018) <https://ui.adsabs.harvard.edu/abs/2018arXiv180201783S/abstract>`_ highlights 
 probing the orbital distributions, size/brightness distributions, and surface colours
 as the top LSST science priorities in each of the Solar System small body populations. In order to do detailed 
 population studies on the orbital properties and physical characteristics of the various Solar System small body reservoirs, one
