@@ -44,6 +44,9 @@ The Survey Simulator is formed out of two pieces of software, working in tandem.
 code is an ephemerides generator. While the user can use any relevant ephemerides generator, we reccomend 
 using `Objects in Field (OIF) <https://github.com/eggls6/objectsInField>`_.  for this. 
 
+.. note::
+   OIF is powered by the python version of (openorb) <https://github.com/oorb/oorb>,  an open-source orbit-computation package. 
+
 The second piece of software is `Post Processing (surveySimPP) <https://github.com/dirac-institute/survey_simulator_post_processing>`_,
 which applies the relevant biases to the simulated data, though a set of :ref:`filters<Filters>`.
 
