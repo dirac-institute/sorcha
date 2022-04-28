@@ -47,7 +47,6 @@ using `Objects in Field (OIF) <https://github.com/eggls6/objectsInField>`_ for t
 .. note::
    Objects in Field (OIF) is powered by the python version of `(openorb) <https://github.com/oorb/oorb>`_, an open-source orbit-computation package, using SPICE kenrnels to calculate the positions of the planets and a set of input planetesimal orbits hosted by the `Navigation and Ancillary Information Facility (NAIF) <https://naif.jpl.nasa.gov/naif/>`_ team of the Jet Propulsion Laboratory (JPL). 
    
-
    
 The second piece of software is `Post Processing (surveySimPP) <https://github.com/dirac-institute/survey_simulator_post_processing>`_,
 which applies the relevant biases to the simulated data, though a set of :ref:`filters<Filters>`.
@@ -59,7 +58,7 @@ file to apply relevant :ref:`filters<Filters>`, which account for the observatio
 parameter file can also be added here.
 
 .. warning::
-   We have validated surveySimPP using input from Objects In Field. If the user is going to use a different engine to generate the emphemeris of their simulated planetesimals as input for surveySimPP, the user has the responsibiilty to validate the accuracy of this input.
+   We have validated surveySimPP with Objects In Field. If the user chooses to use a different emphemeris engine's calculations as input for surveySimPP, the user has the responsibiilty to check the accuracy of this input.
 
 
 .. image:: images/OIF.png
