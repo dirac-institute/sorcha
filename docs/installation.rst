@@ -47,6 +47,9 @@ There are various large binary files (mostly SPICE kernels) that aren't kept in 
 can be installed by running::
 
    ./bootstrap.sh
+   
+. note::
+   The bash script downloads and stores the SPICE files to oif/data/  
 
 Next, set up an editable (in-place) development environment::
 
