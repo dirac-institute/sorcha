@@ -2,8 +2,8 @@ Installation
 ============
 
 .. note::
-   surveySimPP and OIF packages are pip installable. We hope to have conda installable versions as well in the future. 
-
+   The surveySimPP and OIF python packages are currently pip installable. We hope to have conda installable versions in the near future.
+   
 
 In order to use the Solar System survey simulator, we must first install 
 `Objects in Field <https://github.com/eggls6/objectsInField>`_. 
