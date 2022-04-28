@@ -29,7 +29,7 @@ We will also generate a file called 'testcolour.txt' which contains information 
 
 
 
-Running OIF
+OIF
 -----------
 The survey simulator post processing code relies on using an orbital calculator to generate ephemerides,
 we recommend using Objects in Field, but you can use any orbital calculator as long as the outputs are 
@@ -98,12 +98,15 @@ Save this information as a file called 'testorb_oif.out'.
 
 .. warning::
    Only one instance of OIF can be run per output directory. Make sure to have different output pathways if you are running multiple instances on the same compute node. 
+ 
+surveySimPP
+-----------------------------------------
 
+Now that we have the information about the ephemerides, we can begin to run the survey simulator to 
+check if these objects are observable by the LSST.
 
 Generate an Survey Simulator Config File 
 -----------------------------------------
-Now that we have the information about the ephemerides, we can begin to run the survey simulator to 
-check if these objects are observable by the LSST.
 
 The key information about the simulation paramteres are held in the post processing configuration file.
 There is a configuration file generator build into the survey simulator, which can be run using::
@@ -156,7 +159,7 @@ can be added (see inputs). The config file will look something like this::
 
 
 
-Running the Survey Simulator
+Running surveySimPP
 -----------------------------
 Finally, we have all the information required to run the survey simulator. This can be done by typing::
 
