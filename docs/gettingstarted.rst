@@ -96,6 +96,9 @@ The first few lines returned will look something like this::
 This generates the ephemerides for the objects we are looking for. This information will be used when running the SSPP.
 Save this information as a file called 'testorb_oif.out'.
 
+.. warning::
+   Only one instance of OIF can be run per output directory. Make sure to have different output pathways if you are running multiple instances on the same compute node. 
+
 
 Generate an Survey Simulator Config File 
 -----------------------------------------
