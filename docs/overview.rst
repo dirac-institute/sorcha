@@ -42,11 +42,13 @@ Overview of Use
 ------------------
 The Survey Simulator is formed out of two pieces of software, working in tandem. The first
 code is an ephemerides generator. While the user can use any relevant ephemerides generator, we reccomend 
-using `Objects in Field (OIF) <https://github.com/eggls6/objectsInField>`_.  for this. 
+using `Objects in Field (OIF) <https://github.com/eggls6/objectsInField>`_ for this. 
 
 .. note::
    Objects in Field (OIF) is powered by the python version of `(openorb) <https://github.com/oorb/oorb>`_, an open-source orbit-computation package, using SPICE kenrnels to calculate the positions of the planets and a set of input planetesimal orbits hosted by the `Navigation and Ancillary Information Facility (NAIF) <https://naif.jpl.nasa.gov/naif/>`_ team of the Jet Propulsion Laboratory (JPL). 
+   
 
+   
 The second piece of software is `Post Processing (surveySimPP) <https://github.com/dirac-institute/survey_simulator_post_processing>`_,
 which applies the relevant biases to the simulated data, though a set of :ref:`filters<Filters>`.
 
@@ -56,6 +58,8 @@ pointing database, before being passed into the survey simulator. Here the user 
 file to apply relevant :ref:`filters<Filters>`, which account for the observational biases in LSST. An optional cometary 
 parameter file can also be added here.
 
+   .. warning::
+   We have validated surveySimPP using input from Objects In Field. If the user is going to use a different engine to generate the emphemeris of their simulated planetesimals as input for surveySimPP, the user has the responsibiilty to validate the accuracy of this input.
 
 
 .. image:: images/OIF.png
