@@ -38,7 +38,7 @@ then you can skip to the section on using the survey simulator.
 
 
 Generate an OIF Config File 
--------------------------------
+~~~~~~~~~~~~
 The survey simulator post processing code comes with several command line utilities. One of these is 
 a config file generator for Objects in Field. makeConfigOIF takes two required parameters, the name of 
 the orbit file and the pointing database. There are several optional arguments which can be used to further 
@@ -82,7 +82,7 @@ This will return the following::
 This file will be saved as testorb-1-5.ini in the directory it has been run within. 
 
 Running OIF
---------------
+~~~~~~~~~~~~
 Now that we have an OIF config file, we can easily run OIF by typing::
 
    oif testorb-1-5.ini
@@ -105,8 +105,8 @@ surveySimPP
 Now that we have the information about the ephemerides, we can begin to run the survey simulator to 
 check if these objects are observable by the LSST.
 
-Generate an Survey Simulator Config File 
------------------------------------------
+Generate a surveySimPP Config File 
+~~~~~~~~~~~~
 
 The key information about the simulation paramteres are held in the post processing configuration file.
 There is a configuration file generator build into the survey simulator, which can be run using::
@@ -160,7 +160,7 @@ can be added (see inputs). The config file will look something like this::
 
 
 Running surveySimPP
------------------------------
+~~~~~~~~~~~~
 Finally, we have all the information required to run the survey simulator. This can be done by typing::
 
    surveySimPP -c config.ini -l testcolour.txt -o testorb.des -p testorb_oif.out
