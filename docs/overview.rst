@@ -68,6 +68,6 @@ changes that they have made.**
    
    
 .. note::
-   Contributions are very welcome. If there is a feature or functionality not yet available in surveySimPP, we encourage you to propose the feature as an issue in the `repository <https://github.com/dirac-institute/survey_simulator_post_processing/issues>`_ or share your code with the new enhacenements. Further details can be found on our :ref:`Support<support>' page.
+   Contributions are very welcome. If there is a feature or functionality not yet available in surveySimPP, we encourage you to propose the feature as an issue in the `repository <https://github.com/dirac-institute/survey_simulator_post_processing/issues>`_ or share your code with the new enhacenements. Further details can be found on our :ref:`support<Support>' page.
       
 
