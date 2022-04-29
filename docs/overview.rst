@@ -15,7 +15,7 @@ Overview of Use
 The Survey Simulator is formed out of two python packages working in tandem. The first part is an ephemerides generator. While the user can use any relevant ephemerides generator, we reccomend using `Objects in Field (OIF) <https://github.com/eggls6/objectsInField>`_ package for this. 
 
 .. note::
-   Objects in Field (OIF) is powered by the python version of `(openorb) <https://github.com/oorb/oorb>`_, an open-source orbit-computation package, using SPICE kenrnels to calculate the positions of the planets and a set of input planetesimal orbits hosted by the `Navigation and Ancillary Information Facility (NAIF) <https://naif.jpl.nasa.gov/naif/>`_ team of the Jet Propulsion Laboratory (JPL). 
+   `Objects in Field (OIF) <https://github.com/eggls6/objectsInField>`_ is powered by the python version of `(openorb) <https://github.com/oorb/oorb>`_, an open-source orbit-computation package, using SPICE kenrnels to calculate the positions of the planets and a set of input planetesimal orbits hosted by the `Navigation and Ancillary Information Facility (NAIF) <https://naif.jpl.nasa.gov/naif/>`_ team of the Jet Propulsion Laboratory (JPL). 
    
    
 The second piece of software is `Post Processing (surveySimPP) <https://github.com/dirac-institute/survey_simulator_post_processing>`_,
