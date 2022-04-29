@@ -27,15 +27,16 @@ pointing database, before being passed into the survey simulator. Here the user 
 file to apply relevant :ref:`filters<Filters>`, which account for the observational biases in LSST. An optional cometary 
 parameter file can also be added here.
 
+
+.. image:: images/OIF.png
+  :width: 800
+  :alt: An overview of the inputs and outputs of the survey simulator post processing code.
+
+
 .. warning::
    We have validated surveySimPP with Objects In Field. If the user chooses to use a different emphemeris engine's calculations as input for surveySimPP, the user has the responsibiilty to check the accuracy of this input.
    
  
-
-.. image:: images/OIF.png
-  :width: 800
-  :alt: An overview of the inputs and outputs of the survey simulator post processing code. 
-  
 
 Design Philosophy 
 ----------------------
