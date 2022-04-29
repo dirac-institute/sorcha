@@ -10,11 +10,36 @@ a more detailed discussion). A survey simulator takes an input model small body 
 what Rubin Observatory should have detected by utilizing the LSST pointing history, observation metadata, and Rubin Observatory 
 Solar System Processing pipeline’s detection efficiency.
 
+Overview of Use
+------------------
+The Survey Simulator is formed out of two python packages working in tandem. The first part is an ephemerides generator. While the user can use any relevant ephemerides generator, we reccomend using `Objects in Field (OIF) <https://github.com/eggls6/objectsInField>`_ package for this. 
 
+.. note::
+   Objects in Field (OIF) is powered by the python version of `(openorb) <https://github.com/oorb/oorb>`_, an open-source orbit-computation package, using SPICE kenrnels to calculate the positions of the planets and a set of input planetesimal orbits hosted by the `Navigation and Ancillary Information Facility (NAIF) <https://naif.jpl.nasa.gov/naif/>`_ team of the Jet Propulsion Laboratory (JPL). 
+   
+   
+The second piece of software is `Post Processing (surveySimPP) <https://github.com/dirac-institute/survey_simulator_post_processing>`_,
+which applies the relevant biases to the simulated data, though a set of :ref:`filters<Filters>`.
+
+Both OIF and surveySimPP take a series of inputs. The basic pipeline overview can be seen below. The user generates a population with a set of orbits. This
+orbital parameter file is processed by Objects in Field (or any other orbital code) with respect to the LSST 
+pointing database, before being passed into the survey simulator. Here the user can alter the configuration
+file to apply relevant :ref:`filters<Filters>`, which account for the observational biases in LSST. An optional cometary 
+parameter file can also be added here.
+
+.. warning::
+   We have validated surveySimPP with Objects In Field. If the user chooses to use a different emphemeris engine's calculations as input for surveySimPP, the user has the responsibiilty to check the accuracy of this input.
+   
+ 
+
+.. image:: images/OIF.png
+  :width: 800
+  :alt: An overview of the inputs and outputs of the survey simulator post processing code. 
+  
 
 Design Philosophy 
 ----------------------
-The Survey Simulator Post Processing code is designed to compliment LSST observations, as a way to study
+The surveySimPP package is designed to compliment LSST observations, as a way to study
 Solar System object population statistics. The user is able to create synthetic population statistics and 
 run them through the survey simulator, which applies the specific observational biases from the LSST. In 
 this way, a synthetic population can be compared to real LSST observations. The survey simulator code 
@@ -37,35 +62,8 @@ a configuration file and command line arguments, depending on the users needs. W
 users may wish to adapt the python code to suit their specific needs. **In this case, it is up to the user themselves to validate the 
 changes that they have made.**
    
-Overview of Use
-------------------
-The Survey Simulator is formed out of two pieces of software, working in tandem. The first
-code is an ephemerides generator. While the user can use any relevant ephemerides generator, we reccomend 
-using `Objects in Field (OIF) <https://github.com/eggls6/objectsInField>`_ for this. 
-
-.. note::
-   Objects in Field (OIF) is powered by the python version of `(openorb) <https://github.com/oorb/oorb>`_, an open-source orbit-computation package, using SPICE kenrnels to calculate the positions of the planets and a set of input planetesimal orbits hosted by the `Navigation and Ancillary Information Facility (NAIF) <https://naif.jpl.nasa.gov/naif/>`_ team of the Jet Propulsion Laboratory (JPL). 
-   
-   
-The second piece of software is `Post Processing (surveySimPP) <https://github.com/dirac-institute/survey_simulator_post_processing>`_,
-which applies the relevant biases to the simulated data, though a set of :ref:`filters<Filters>`.
-
-Both OIF and surveySimPP take a series of inputs. The basic pipeline overview can be seen below. The user generates a population with a set of orbits. This
-orbital parameter file is processed by Objects in Field (or any other orbital code) with respect to the LSST 
-pointing database, before being passed into the survey simulator. Here the user can alter the configuration
-file to apply relevant :ref:`filters<Filters>`, which account for the observational biases in LSST. An optional cometary 
-parameter file can also be added here.
-
-.. warning::
-   We have validated surveySimPP with Objects In Field. If the user chooses to use a different emphemeris engine's calculations as input for surveySimPP, the user has the responsibiilty to check the accuracy of this input.
    
 .. warning::
-   We have designed the software in a modular way to make it easier to adapt and modify surveySimPP. As with any open source package, once the user has made modifications to the codebase it is the responsibility of the user to confirm these changes provide an accurate result. 
+   We have designed the software in a modular way to make it easier to adapt and modify surveySimPP as needed. **As with any open source package, once the user has made modifications to the codebase published in the online repository, it is the responsibility of the user to confirm these changes provide an accurate result**. 
    
 
-
-.. image:: images/OIF.png
-  :width: 800
-  :alt: An overview of the inputs and outputs of the survey simulator post processing code. 
-  
-  
