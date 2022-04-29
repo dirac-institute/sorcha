@@ -33,11 +33,10 @@ may come in the form of adding additional filters or by adapting the software fo
 The set of filters that can be applied to the synthetic input population can also be varies based on the population and science case of the user.
 
 We have provided a rigorous validation to the current version of the code. The filters provided can be switched on and off via 
-a configuration file and command line arguments, depending on the users needs. While the software is versatile we understand that
-users may wish to adapt the python code to suit their specific needs. **In this case, it is up to the user themselves to valide the 
+a configuration file and command line arguments, depending on the users needs. While the software is versatile, we understand that
+users may wish to adapt the python code to suit their specific needs. **In this case, it is up to the user themselves to validate the 
 changes that they have made.**
-
-
+   
 Overview of Use
 ------------------
 The Survey Simulator is formed out of two pieces of software, working in tandem. The first
@@ -59,6 +58,10 @@ parameter file can also be added here.
 
 .. warning::
    We have validated surveySimPP with Objects In Field. If the user chooses to use a different emphemeris engine's calculations as input for surveySimPP, the user has the responsibiilty to check the accuracy of this input.
+   
+.. warning::
+   We have designed the software in a modular way to make it easier to adapt and modify surveySimPP. As with any open source package, once the user has made modifications to the codebase it is the responsibility of the user to confirm these changes provide an accurate result. 
+   
 
 
 .. image:: images/OIF.png
