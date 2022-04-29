@@ -64,7 +64,7 @@ changes that they have made.**
    
    
 .. warning::
-   We have designed the software in a modular way to make it easier to adapt and modify surveySimPP as needed. **As with any open source package, once the user has made modifications to the codebase published in the  `online repository <https://github.com/dirac-institute/survey_simulator_post_processing>`_, t is the responsibility of the user to confirm these changes provide an accurate result**. 
+   We have designed the software in a modular way to make it easier to adapt and modify surveySimPP as needed. As with any open source package, once the user has made modifications to the codebase published in the  `online repository <https://github.com/dirac-institute/survey_simulator_post_processing>`_, **it is the responsibility of the user to confirm these changes provide an accurate result**. 
    
    
 .. note::
