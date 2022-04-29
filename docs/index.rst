@@ -7,7 +7,7 @@ Welcome to Solar System Survey Simulator Post Processing's documentation!
 =========================================================================
 Welcome to the Solar System Survey Simulator Post Processing documentation. The survey simulator is a 
 Python package for studying Solar System object population statistics. It has been designed 
-with the `Vera Rubin Observatory Legacy Survey of Space and Time (LSST) <https://www.lsst.org>`_ in mind,
+with the `Vera C. Rubin Observatory Legacy Survey of Space and Time (LSST) <https://www.lsst.org>`_ in mind,
 but can be adapted to be used with any survey.
 
 
