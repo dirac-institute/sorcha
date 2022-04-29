@@ -1,17 +1,25 @@
 Inputs
 ==========
-There are a set of input files that are required to run the survey simulator post processing code, which describe the orbital
-and physical parameters of the series of objects that are being simulated. These files are: an orbit file, a physical paramerer file,
-an optional cometary parameter file and the LSST pointing database. Each of these files are describe within this section and example files
+There is a set of input files that are required to run the survey simulator post processing codes, which describe the orbital
+and physical parameters for synetheric planetesimals that are being simulated. These files are: an orbit file, a physical paramerer file,
+an optional cometary parameter file, ephemeris file (Objects in Field output) and the LSST pointing database. Each of these files are described within this section and example files
 are shown.
+
+
+.. image:: images/OIF.png
+  :width: 800
+  :alt: An overview of the inputs and outputs of the survey simulator post processing code.
+
 
 Orbit File
 -----------------
-This is a file which contains the orbital information of a set of synthetic objects. The orbital parameters should be heliolcentric
-and can be given in **Cometary, Keplerian or Cartesian** formats. Each object within the synthetic population should be given it's own unique
-object ID (OID). 
 
-The orbit file is used when running both **Objects in Field** and **Post Processing**.
+.. note::
+  The orbit file is used by  **Objects in Field** and **surveySimPP**.
+
+This is a file which contains the orbital information of a set of synthetic objects. The orbital parameters should be **heliolcentric**
+and can be given in **Cometary orKeplerian** formats. Each object within the synthetic population must be be given it's own unique
+object ID (OID). 
 
 An example of an orbit file in cometary format, with each object ID represented by a unique string can be seen here::
 
@@ -31,11 +39,10 @@ While another example of an orbit file, in Keplarian format, with the object ID 
    492747 KEP 2.07343841 0.55492866 10.4931965 185.436066 139.102676 261.443756 24.706829100000004 59853.0 
    546031 KEP 1.33862102 0.133786723 39.04102329999999 341.855743 186.264435 40.9884872 24.6075134 59853.0  
 
-
-
 .. warning::
 
-   Remember that all orbits used should be **heliocentric**.
+   OIF and SurveySimPP assume **heliocentric** orbits are provided as input!
+
 
 The orbital parameter file is used with both Objects in Field and the Survey Simulator Post Processing
 code. The orbital parameters can take three formats: **Cometary, Keplarian** and **Cartesian**
@@ -62,18 +69,6 @@ code. The orbital parameters can take three formats: **Cometary, Keplarian** and
 +-------------+----------------------------------------------------------------------------------+
 | a           | Semimajor axis                                                                   |
 +-------------+----------------------------------------------------------------------------------+
-| x           |                                                                                  |
-+-------------+----------------------------------------------------------------------------------+
-| y           |                                                                                  |
-+-------------+----------------------------------------------------------------------------------+
-| z           |                                                                                  |
-+-------------+----------------------------------------------------------------------------------+
-| xdot        | Inclination                                                                      |
-+-------------+----------------------------------------------------------------------------------+
-| ydot        | Longitude of the ascending node                                                  |
-+-------------+----------------------------------------------------------------------------------+
-| zdot        | Longitude of the ascending node                                                  |
-+-------------+----------------------------------------------------------------------------------+
 | inc         | Inclination                                                                      |
 +-------------+----------------------------------------------------------------------------------+
 | Omega       | Longitude of the ascending node                                                  |
@@ -88,9 +83,6 @@ code. The orbital parameters can take three formats: **Cometary, Keplarian** and
 +-------------+----------------------------------------------------------------------------------+
 | H           |                                                                                  |
 +-------------+----------------------------------------------------------------------------------+
-| g           |                                                                                  |
-+-------------+----------------------------------------------------------------------------------+
-
 
 .. attention::
    When using the Survey Simulator Post Processing code the format of the orbits (i.e. Cometary, Keplerian, Cartesian) should remain consistent throughout
@@ -99,14 +91,15 @@ code. The orbital parameters can take three formats: **Cometary, Keplarian** and
 
 Physical Parameters File
 -------------------------------------------
-The input file for the physical parameters includes information about the objects colour and brightness.
+.. note::
+  The physical parameters file is used by **surveySimPP**.
 
-This file is used when running **Post Processing**
 
-The LSST will survey the sky in six bandpasses. These are **u, g, r, i, z and y**. In the colour file
+The input file for the physical parameters includes information about the objects color and brightness.
+
+Rubin Observatory will survey the sky in six broadband (optical filters),**u, g, r, i, z, and y**. In the physical parameters file
 you can set a main filter which all other colours are compared to.
 
-- **main filter = r**
 - **other colours = g-r, i-r, z-r**
 - **res filters = r, g, i, z**
 
@@ -134,6 +127,9 @@ An example of the physical parameter file can be seen here::
 Cometary Activity Parameters File (Optional)
 -----------------------------------------------
 
+.. note::
+  The cometary activity file is used by  **surveySimPP**.
+
 This is an optional input file which describes how the object apparent magnitude will be augmented from 
 a standard non-active, atmosphere-less body as it moves inwards towards the Sun. This is dependent on
 calculations done using `sbpy <https://sbpy.readthedocs.io/en/latest/api/sbpy.photometry.LinearPhaseFunc.html#sbpy.photometry.LinearPhaseFunc>`_.
@@ -153,16 +149,29 @@ An example of a cometary activity parameter file can be seen here::
 LSST Pointing Database
 ------------------------
 
-This is a file containing the pointing data for the LSST survey. Prior to the start of the survey, this 
-data is estimated from up-to-date observation planning and environmental data. This is generated through
-the Rubin Observatory scheduler (known as rubin_sim). A description of an early version of this python software can be found in
-Delgado et al. (2014) and the open source repository is found at https://github.com/lsst/rubin_sim. 
-The output of rubin_sim is a sqlite database containing the pointing history and associated metadata 
-of the simulated observation history of LSST. This will be updated with real-life pointing data as 
-observations take place.
 
+.. note::
+  The LSST pointing database is used by  **Objects in Field** and **surveySimPP**.
+
+This database contains information about the LSST pointing history and observing conditions.  We use observation mid-point time, right ascension, declination, rotation angle of the camera, 5-sigma limiting magnitude, filter, and seeing information in Objects in Field and surveySimPP to determine if a synthetic Solar System object is observable.  
+What we call the LSST pointing database (currently simulated since Rubin Observatory hasn’t started operations) is generated through the Rubin Observatory scheduler (since 2021 referred to as `rubin_sim <https://github.com/lsst/rubin_sim>`_ and previously known as OpSim). This software is currently under active development and is being used to run many simulated iterations of LSST scenarios showing what the cadence would look like with differing survey strategies. A description of an early version of this python software can be found in `Delgado et al.(2014) <https://ui.adsabs.harvard.edu/abs/2014SPIE.9150E..15D>`_.The output of rubin_sim is a sqlite database containing the pointing history and associated metadata 
+of the simulated observation history of LSST.
+
+.. tip::
+   The contents of the observations table in the sqlite LSST pointing database can be found `here <https://rubin-sim.lsst.io/rs_scheduler/output_schema.html>`_
+
+The latest version of rubin_sim cadence simulations can be found at https://lsst.ncsa.illinois.edu/sim-data/sims_featureScheduler_runs2.0/. An example rubin_sim simulation visualized on sky is shown below: 
 
 .. raw:: html
 
     <iframe width="700" height="360" src="https://epyc.astro.washington.edu/~lynnej/opsim_downloads/baseline_v2.0_10yrs.mp4" frameborder="0" allowfullscreen></iframe>
 
+
+.. attention::
+   There may be changes to how this information is read in when the Rubin Observatory science operations begin in approximately mid-2024.
+
+Ephemeris file (Objects in Field Output)
+------------------------
+
+.. note::
+  The ephemeris file is used by  **surveySimPP**.

@@ -1,9 +1,6 @@
 Configuration Files
 =====================
 
-Inputs
-==========
-
 There are a set of utilities that are installed alongside the survey simulator. These are configuration
 file generators, which generate a set of config files for use with both OIF and the survey simulator.
 An overview of the possible inputs for these config file generators is given below::
