@@ -8,7 +8,7 @@ If your output looks mixed up or garbled, double check that you are not running 
 Pointing Database 
 ---------------------
 
-If you ar having issues with reading the LSST pointing database such asgetting an error like::
+If you are having issues with reading the LSST pointing database such asgetting an error like::
   
    pandas.io.sql.DatabaseError: Execution failed on sql 'SELECT observationStartMJD, observationId FROM observations ORDER BY observationStartMJD': no such table: observations
 
