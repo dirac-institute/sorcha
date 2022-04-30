@@ -132,5 +132,20 @@ They are described as follows:
 | --sizeserialchunk SIZESERIALCHUNK, -chunk SIZESERIALCHUNK                    |  Size of chunk of objects to be processed serially. Default is 10.                                                                                                                                                                                                   | 
 +------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 
-  
+ .. _database_query:  
+
+Setting Up the Correct LSST Pointing Database Query 
+---------------------------------------------------
+
+Object in Field's **Surveydbquery** config file parameter and surveySimPP's **ppsqldbquery** config file parameter contain the sql query for obtaining this information from the pointing database. 
+
+From rubin_sim v2.0 simulations onward use the query::
+
+  SELECT observationId,observationStartMJD,fieldRA,fieldDEC,rotSkyPos FROM observations order by observationStartMJD
+
+For past rubin_sim/OpSim simulations pre-v2.0 use the query::
+
+  SELECT observationId, observationStartMJD, filter, seeingFwhmGeom, seeingFwhmEff, fiveSigmaDepth, fieldRA, fieldDec, rotSkyPos FROM SummaryAllProps order by observationId
+
+
 
