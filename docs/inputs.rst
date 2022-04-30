@@ -1,5 +1,11 @@
 Inputs
 ==========
+
+.. note::
+  The user must specify the properties of each synthetic planetesimal individually: an orbit, other physical parameters (like color, asbolute magnitude, phase curve parameters, etc), and, if needed, cometarty activity properties.
+
+
+
 There is a set of input files that are required to run the survey simulator post processing codes, which describe the orbital
 and physical parameters for synetheric planetesimals that are being simulated. These files are: an orbit file, a physical paramerer file,
 an optional cometary parameter file, ephemeris file (Objects in Field output) and the LSST pointing database. Each of these files are described within this section and example files
@@ -10,6 +16,8 @@ are shown.
   :width: 800
   :alt: An overview of the inputs and outputs of the survey simulator post processing code.
 
+.. tip::
+  * Each synthetic planetesimal has its own unique object identifier set by the user and must have entries in the orbits and physical parameters files, as well as the cometary activity file, if used. 
 
 Orbit File
 -----------------
@@ -135,15 +143,15 @@ a standard non-active, atmosphere-less body as it moves inwards towards the Sun.
 calculations done using `sbpy <https://sbpy.readthedocs.io/en/latest/api/sbpy.photometry.LinearPhaseFunc.html#sbpy.photometry.LinearPhaseFunc>`_.
 
 
-.. warning::
-
-   When running simulations of objects exhibiting cometary activity, **every** object in that simulation must have an associated cometary activety.
-   When running a single simulation either every object experiences cometary activity, or none do.
-
-An example of a cometary activity parameter file can be seen here::
+An example of a cometary activity parameter file::
 
    ObjID                       afrho1 k
    67P/Churyumov-Gerasimenko   1552  -3.35
+
+
+.. warning::
+
+   **When running an instance of surveySimPP, either every synthetic planetesimal experiences cometary activity, or none do.** When running simulations of synthetic planetesimals exhibiting cometary activity, **every** object in that simulation must have an entry in the  associated cometary activety file.
 
 
 LSST Pointing Database
@@ -174,4 +182,4 @@ Ephemeris file (Objects in Field Output)
 ------------------------
 
 .. note::
-  The ephemeris file is used by  **surveySimPP**.
+  The ephemeris file is used by  **surveySimPP**. We recommend using **Objects in Fields** to generate it.
