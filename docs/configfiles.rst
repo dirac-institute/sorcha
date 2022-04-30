@@ -1,12 +1,38 @@
 Configuration Files
 =====================
 
-There are a set of utilities that are installed alongside the survey simulator. These are configuration
-file generators, which generate a set of config files for use with both OIF and the survey simulator.
-An overview of the possible inputs for these config file generators is given below::
+SurveySimPP and Objects In Field uses configuration files to set the majority of the various parameters for running the software. The configuration file for surveSimPP allows turning on and off various filters. An overview of the possible options for the config files are described below. 
+
+.. tip::
+  We have developed  a set of utilities that are installed alongside the surveySimPP that can generate a config file for Objects in Fielda (**makeConfigOIF**) and one for surveySimPP (**makeConfigPP**). We describe below how to use those utilities to set up your config files. 
 
 Objects in Field Configuration File
 ------------------------------------
+
+
+surveySimPP Configuration File
+------------------------------------
+
+
+ .. _database_query:
+
+Setting Up the Correct LSST Pointing Database Query
+---------------------------------------------------
+
+Object in Field's **Surveydbquery** config file parameter and surveySimPP's **ppsqldbquery** config file parameter contain the sql query for obtaining this information from the pointing database.
+
+From rubin_sim v2.0 simulations onward use the query::
+
+  SELECT observationId,observationStartMJD,fieldRA,fieldDEC,rotSkyPos FROM observations order by observationStartMJD
+
+For past rubin_sim/OpSim simulations pre-v2.0 use the query::
+
+  SELECT observationId, observationStartMJD, filter, seeingFwhmGeom, seeingFwhmEff, fiveSigmaDepth, fieldRA, fieldDec, rotSkyPos FROM SummaryAllProps order by observationId
+
+
+
+Using makeConfigOIF
+---------------------
 The first config file generator works alongside OIF. By typing in the command::
 
    makeConfigOIF --help
@@ -62,9 +88,10 @@ a basic config file, filled mostly with default values. These values can be twea
 Which will generate a config file with the number of days in the survey set to 10.
 
 
+.. note::
+   makeConfigOIF is designed to help generate multiple configuration files if the user wants to divide the compute task across several nodes/processors.
 
-
-Survey Simulator Configuration File 
+Using makeConfigPP
 -------------------------------------
 Typing in the command::
 
@@ -131,21 +158,6 @@ They are described as follows:
 +------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | --sizeserialchunk SIZESERIALCHUNK, -chunk SIZESERIALCHUNK                    |  Size of chunk of objects to be processed serially. Default is 10.                                                                                                                                                                                                   | 
 +------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-
- .. _database_query:  
-
-Setting Up the Correct LSST Pointing Database Query 
----------------------------------------------------
-
-Object in Field's **Surveydbquery** config file parameter and surveySimPP's **ppsqldbquery** config file parameter contain the sql query for obtaining this information from the pointing database. 
-
-From rubin_sim v2.0 simulations onward use the query::
-
-  SELECT observationId,observationStartMJD,fieldRA,fieldDEC,rotSkyPos FROM observations order by observationStartMJD
-
-For past rubin_sim/OpSim simulations pre-v2.0 use the query::
-
-  SELECT observationId, observationStartMJD, filter, seeingFwhmGeom, seeingFwhmEff, fiveSigmaDepth, fieldRA, fieldDec, rotSkyPos FROM SummaryAllProps order by observationId
 
 
 
