@@ -17,7 +17,7 @@ are shown.
   :alt: An overview of the inputs and outputs of the survey simulator post processing code.
 
 .. tip::
-  * Each synthetic planetesimal has its own unique object identifier set by the user and must have entries in the orbits and physical parameters files, as well as the cometary activity file, if used. 
+  Each synthetic planetesimal has its own unique object identifier set by the user and must have entries in the orbits and physical parameters files, as well as the cometary activity file, if used. 
 
 Orbit File
 -----------------
@@ -25,11 +25,20 @@ Orbit File
 .. note::
   The orbit file is used by  **Objects in Field** and **surveySimPP**.
 
-This is a file which contains the orbital information of a set of synthetic objects. The orbital parameters should be **heliolcentric**
-and can be given in **Cometary orKeplerian** formats. Each object within the synthetic population must be be given it's own unique
-object ID (OID). 
+This is a file which contains the orbital information of a set of synthetic objects. The orbital parameters must be **heliolcentric**, and orbits can be define in **Cometary(COM)  or Keplerian (KEP)** formats. Each simulated planetesimals within the synthetic population must be be given it's own unique object ID (OID). 
 
-An example of an orbit file in cometary format, with each object ID represented by a unique string can be seen here::
+.. tip::
+  *  The orbit file must have a consistent format (i.e. cometary or Keplerian) throughout
+  *  The ordering of the columns does not matter as long as the required columns exist and have entries.
+  *  The first row in the orbit file must be a header started with '!!' to denote it as the header row
+  *  Objects in Field does take other input formats, but surveySimPP is only designed to handle cometary and keplerian orbits
+
+.. warning::
+  OIF and SurveySimPP assume **heliocentric** orbits are provided as input!
+
+Cometary Orbit Format
+~~~~~~~~~~~~~~~~~~~~~
+An example of an orbit file in cometary format, with each object ID represented by a unique string::
 
    !!OID FORMAT q e i node argperi t_p H t_0
    S1000000a COM 3.01822 0.05208 22.56035 211.00286 335.42134 51575.94061 14.20 54800.00000
@@ -38,33 +47,17 @@ An example of an orbit file in cometary format, with each object ID represented 
    S1000003a COM 2.10917 0.13219 1.46615 266.54621 232.24412 54212.16304 19.58 54800.00000 
    S1000004a COM 2.17676 0.19949 12.92422 162.14580 192.22312 51895.46586 10.56 54800.00000
 
-While another example of an orbit file, in Keplarian format, with the object ID represented by a unique set of numbers can be seen here::
+Keplarian Orbit Format
+~~~~~~~~~~~~~~~~~~~~~~
+An example of an orbit file, in Keplarian format, with the object ID represented by a unique set of numbers::
 
-   !!OID FORMAT q e i node argperi t_p H t_0 
-   242880 KEP 1.81032181 0.457012266 8.52469063 321.309082 218.878296 194.936127 24.9029942 59853.0 
-   175331 KEP 1.39049709 0.458397567 43.3037987 232.109802 241.479919 91.1170349 24.4742165 59853.0 
-   647396 KEP 1.65742993 0.493258268 5.16465139 302.836609 266.81219500000003 161.882599 23.124664300000006 59853.0  
-   492747 KEP 2.07343841 0.55492866 10.4931965 185.436066 139.102676 261.443756 24.706829100000004 59853.0 
-   546031 KEP 1.33862102 0.133786723 39.04102329999999 341.855743 186.264435 40.9884872 24.6075134 59853.0  
-
-.. warning::
-
-   OIF and SurveySimPP assume **heliocentric** orbits are provided as input!
-
-
-The orbital parameter file is used with both Objects in Field and the Survey Simulator Post Processing
-code. The orbital parameters can take three formats: **Cometary, Keplarian** and **Cartesian**
-
-
-- **'COM'** = objID, q, e, inc, Omega, argPeri, tPeri, epoch, H, g
-
-
-- **'KEP'** = objID, a, e, inc, Omega, argPeri, meanAnomaly, epoch, H, g
-
-
-- **'CART'** = objID, x, y, z, xdot, ydot, zdot, epoch, H, g
-
-
+   !!OID FORMAT  a e inc node peri ma epoch H
+   t1 KEP 47.9877 0.0585 11.3584 148.4661 140.4756 308.3244 53157.00 7.0 
+   t2 KEP 47.7468 0.0552 7.1829 171.9226 55.3728 158.9403 53157.00 7.0 
+   t3 KEP 47.9300 0.3805 3.4292 72.9463 7.0754 84.7860 53157.00 7.0 
+   t4 KEP 47.6833 0.1973 14.0872 344.2142 167.0238 220.2356 53157.00 7.0 
+   t5 KEP 47.9356 0.2912 4.3621 306.0908 217.8116 18.7043 53157.00 7.0 
+   t6 KEP 47.9786 0.2730 2.2425 147.9340 166.6578 327.8996 53157.00 7.0 
 
 +-------------+----------------------------------------------------------------------------------+
 | Keyword     | Description                                                                      |
@@ -91,10 +84,6 @@ code. The orbital parameters can take three formats: **Cometary, Keplarian** and
 +-------------+----------------------------------------------------------------------------------+
 | H           |                                                                                  |
 +-------------+----------------------------------------------------------------------------------+
-
-.. attention::
-   When using the Survey Simulator Post Processing code the format of the orbits (i.e. Cometary, Keplerian, Cartesian) should remain consistent throughout
-   each simulation, i.e. only use one type of coordinate format per run.
 
 
 Physical Parameters File
