@@ -10,7 +10,7 @@ Contributions are very welcome. If there is a feature or functionality not yet a
 
 Submitting Github Issue
 -----------------------
-The best way to get in touch about a bug or to suggest enhacements to surveySimPP is raise an issue through the `project's github repository <https://github.com/dirac-institute/survey_simulator_post_processing/issues>`_. We have a small team working on the project, so please be patient, while we get back to you.
+The best way to get in touch about a bug, suggest enhancements to surveySimPP, or recommend changes to the documentation is raise an issue through the `project's github repository <https://github.com/dirac-institute/survey_simulator_post_processing/issues>`_. We have a small team working on the project, so please be patient, while we get back to you.
 
 Submitting a Pull Request
 -------------------------
@@ -18,5 +18,5 @@ Submitting a Pull Request
 We welcome upgrades/bug fixes to the code, This can be done by opening a pull request in the `github repo <https://github.com/dirac-institute/survey_simulator_post_processing>`_.
 
 
-.. tip::
+.. note::
    We recommend that if you are planning to submit a pull request with enhancements to raise a `github issue <https://github.com/dirac-institute/survey_simulator_post_processing/issues>`_ first to discuss further before submitting a pull request.
