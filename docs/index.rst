@@ -32,10 +32,10 @@ if it is observable with LSST, and specific guides for near earth objects, Jupit
    gettingstarted
    troubleshooting
    support
-   acknowledgements
    release
-   
-   
+   contributors   
+   acknowledgements
+ 
 .. toctree::
    :maxdepth: 1
    :caption: Documentation:
