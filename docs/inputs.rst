@@ -1,19 +1,44 @@
 Inputs
 ==========
-There are a set of input files that are required to run the survey simulator post processing code, which describe the orbital
-and physical parameters of the series of objects that are being simulated. These files are: an orbit file, a physical paramerer file,
-an optional cometary parameter file and the LSST pointing database. Each of these files are describe within this section and example files
+
+.. note::
+  The user must specify the properties of each synthetic planetesimal individually: an orbit, other physical parameters (like color, asbolute magnitude, phase curve parameters, etc), and, if needed, cometarty activity properties.
+
+
+
+There is a set of input files that are required to run the survey simulator post processing codes, which describe the orbital
+and physical parameters for synetheric planetesimals that are being simulated. These files are: an orbit file, a physical paramerer file,
+an optional cometary parameter file, ephemeris file (Objects in Field output) and the LSST pointing database. Each of these files are described within this section and example files
 are shown.
+
+
+.. image:: images/OIF.png
+  :width: 800
+  :alt: An overview of the inputs and outputs of the survey simulator post processing code.
+
+.. tip::
+  Each synthetic planetesimal has its own unique object identifier set by the user and must have entries in the orbits and physical parameters files, as well as the cometary activity file, if used. 
 
 Orbit File
 -----------------
-This is a file which contains the orbital information of a set of synthetic objects. The orbital parameters should be heliolcentric
-and can be given in **Cometary, Keplerian or Cartesian** formats. Each object within the synthetic population should be given it's own unique
-object ID (OID). 
 
-The orbit file is used when running both **Objects in Field** and **Post Processing**.
+.. note::
+  The orbit file is used by  **Objects in Field** and **surveySimPP**.
 
-An example of an orbit file in cometary format, with each object ID represented by a unique string can be seen here::
+This is a file which contains the orbital information of a set of synthetic objects. The orbital parameters must be **heliolcentric**, and orbits can be define in **Cometary(COM)  or Keplerian (KEP)** formats. Each simulated planetesimals within the synthetic population must be be given it's own unique object ID (OID). The file can be **white space separated**  or **comma value separated (CSV)** format. The first line of the orbit file is a header line starting with !! that specifies what each of the columns are.
+
+.. tip::
+  *  The orbit file must have a consistent format (i.e. cometary or Keplerian) throughout
+  *  The ordering of the columns does not matter as long as the required columns exist and have entries.
+  *  The first row in the orbit file must be a header started with '!!' to denote it as the header row
+  *  Objects in Field does take other input formats, but surveySimPP is only designed to handle cometary and keplerian orbits
+
+.. warning::
+  OIF and SurveySimPP assume **heliocentric** orbits are provided as input!
+
+Cometary Orbit Format
+~~~~~~~~~~~~~~~~~~~~~
+An example of an orbit file in cometary format, with each object ID represented by a unique string::
 
    !!OID FORMAT q e i node argperi t_p H t_0
    S1000000a COM 3.01822 0.05208 22.56035 211.00286 335.42134 51575.94061 14.20 54800.00000
@@ -22,102 +47,95 @@ An example of an orbit file in cometary format, with each object ID represented 
    S1000003a COM 2.10917 0.13219 1.46615 266.54621 232.24412 54212.16304 19.58 54800.00000 
    S1000004a COM 2.17676 0.19949 12.92422 162.14580 192.22312 51895.46586 10.56 54800.00000
 
-While another example of an orbit file, in Keplarian format, with the object ID represented by a unique set of numbers can be seen here::
++-------------+----------------------------------------------------------------------------------+
+| Keyword     | Description                                                                      |
++=============+==================================================================================+
+| OID         | Object identifier for each synthetic planetesimal simulated (string)             |
++-------------+----------------------------------------------------------------------------------+
+| FORMAT      | Orbit format string (COM)  						         |
++-------------+----------------------------------------------------------------------------------+
+| q           | Perihelion (au)									 |
++-------------+----------------------------------------------------------------------------------+
+| e           | Eccentricity                                                                     |
++-------------+----------------------------------------------------------------------------------+
+| inc         | Inclination (degrees)                                                            |
++-------------+----------------------------------------------------------------------------------+
+| node        | Longitude of the ascending node (degrees)                                        |
++-------------+----------------------------------------------------------------------------------+
+| argPeri     | Argument of perihelion (degrees)                                                 |
++-------------+----------------------------------------------------------------------------------+
+| t_P         | Time of periapsis (degrees)                                                      |
++-------------+----------------------------------------------------------------------------------+
+| t_0         | Epoch (MJD)                                                                      |
++-------------+----------------------------------------------------------------------------------+
+| H           | Absolute magnitude (magnitudes)                                                  |
++-------------+----------------------------------------------------------------------------------+
 
-   !!OID FORMAT q e i node argperi t_p H t_0 
-   242880 KEP 1.81032181 0.457012266 8.52469063 321.309082 218.878296 194.936127 24.9029942 59853.0 
-   175331 KEP 1.39049709 0.458397567 43.3037987 232.109802 241.479919 91.1170349 24.4742165 59853.0 
-   647396 KEP 1.65742993 0.493258268 5.16465139 302.836609 266.81219500000003 161.882599 23.124664300000006 59853.0  
-   492747 KEP 2.07343841 0.55492866 10.4931965 185.436066 139.102676 261.443756 24.706829100000004 59853.0 
-   546031 KEP 1.33862102 0.133786723 39.04102329999999 341.855743 186.264435 40.9884872 24.6075134 59853.0  
+**Header line**
+The first row in the orbit file must be a header started with ‘!!’ to denote it as the header row::
+   !!OID FORMAT q e i node argperi t_p H t_0
 
 
+.. tip::
+  The orbit file can be either white space separated or comma value separated (CSV). For readability we show examples with white space in the online documentation. 
 
-.. warning::
-
-   Remember that all orbits used should be **heliocentric**.
-
-The orbital parameter file is used with both Objects in Field and the Survey Simulator Post Processing
-code. The orbital parameters can take three formats: **Cometary, Keplarian** and **Cartesian**
+.. note::
+  We are working on updating Objects in Field to not require H and move H to the physical parameters files. 
 
 
-- **'COM'** = objID, q, e, inc, Omega, argPeri, tPeri, epoch, H, g
+Keplerian Orbit Format
+~~~~~~~~~~~~~~~~~~~~~~
+An example of an orbit file, in Keplarian format, with the object ID represented by a unique set of numbers::
 
-
-- **'KEP'** = objID, a, e, inc, Omega, argPeri, meanAnomaly, epoch, H, g
-
-
-- **'CART'** = objID, x, y, z, xdot, ydot, zdot, epoch, H, g
-
-
+   !!OID FORMAT  a e inc node peri ma epoch H
+   t1 KEP 47.9877 0.0585 11.3584 148.4661 140.4756 308.3244 53157.00 7.0 
+   t2 KEP 47.7468 0.0552 7.1829 171.9226 55.3728 158.9403 53157.00 7.0 
+   t3 KEP 47.9300 0.3805 3.4292 72.9463 7.0754 84.7860 53157.00 7.0 
+   t4 KEP 47.6833 0.1973 14.0872 344.2142 167.0238 220.2356 53157.00 7.0 
+   t5 KEP 47.9356 0.2912 4.3621 306.0908 217.8116 18.7043 53157.00 7.0 
+   t6 KEP 47.9786 0.2730 2.2425 147.9340 166.6578 327.8996 53157.00 7.0 
 
 +-------------+----------------------------------------------------------------------------------+
 | Keyword     | Description                                                                      |
 +=============+==================================================================================+
-| objID       | Object identifier. Unique identifier for each object withtin the population      |
+| OID         | Object identifier for each synthetic planetesimal simulated (string)             |
 +-------------+----------------------------------------------------------------------------------+
-| q           | Perihelion distance  = a*(1-e)                                                   |
+| FORMAT      | Orbit format string (KEP)                                                        |
 +-------------+----------------------------------------------------------------------------------+
-| e           | Eccentricity                                                                     | 
+| a           | Semimajor axis (au)                                                              |
 +-------------+----------------------------------------------------------------------------------+
-| a           | Semimajor axis                                                                   |
+| e           | Eccentricity                                                                     |
 +-------------+----------------------------------------------------------------------------------+
-| x           |                                                                                  |
+| inc         | Inclination (degree)                                                             |
 +-------------+----------------------------------------------------------------------------------+
-| y           |                                                                                  |
+| node        | Longitude of the ascending node (degrees)                                        |
 +-------------+----------------------------------------------------------------------------------+
-| z           |                                                                                  |
+| peri        | Argument of perihelion (degrees)                                                 |
 +-------------+----------------------------------------------------------------------------------+
-| xdot        | Inclination                                                                      |
+| ma          | Mean Anomaly (degrees)                                                           |           
 +-------------+----------------------------------------------------------------------------------+
-| ydot        | Longitude of the ascending node                                                  |
+| epoch       | Epoch (MJD)                                                                      |
 +-------------+----------------------------------------------------------------------------------+
-| zdot        | Longitude of the ascending node                                                  |
-+-------------+----------------------------------------------------------------------------------+
-| inc         | Inclination                                                                      |
-+-------------+----------------------------------------------------------------------------------+
-| Omega       | Longitude of the ascending node                                                  |
-+-------------+----------------------------------------------------------------------------------+
-| argPeri     | Argument of periapsis                                                            |
-+-------------+----------------------------------------------------------------------------------+
-| meanAnomaly |                                                                                  |
-+-------------+----------------------------------------------------------------------------------+
-| tPeri       | Time of periapsis                                                                |
-+-------------+----------------------------------------------------------------------------------+
-| epoch       |                                                                                  |
-+-------------+----------------------------------------------------------------------------------+
-| H           |                                                                                  |
-+-------------+----------------------------------------------------------------------------------+
-| g           |                                                                                  |
+| H           | Absolute Magnitude (magnitudes)                                                  |
 +-------------+----------------------------------------------------------------------------------+
 
+**Header line**
+The first row in the orbit file must be a header started with ‘!!’ to denote it as the header row::
+   !!OID FORMAT q e i node argperi t_p H t_0
 
-.. attention::
-   When using the Survey Simulator Post Processing code the format of the orbits (i.e. Cometary, Keplerian, Cartesian) should remain consistent throughout
-   each simulation, i.e. only use one type of coordinate format per run.
+.. tip::
+  The orbit file can be either white space separated or comma value separated (CSV). For readability we show examples with white space in the online documentation.
+
+.. note::
+  We are working on updating Objects in Field to not require H and move H to the physical parameters files. 
 
 
 Physical Parameters File
 -------------------------------------------
-The input file for the physical parameters includes information about the objects colour and brightness.
+.. note::
+  The physical parameters file is used by **surveySimPP**.
 
-This file is used when running **Post Processing**
-
-The LSST will survey the sky in six bandpasses. These are **u, g, r, i, z and y**. In the colour file
-you can set a main filter which all other colours are compared to.
-
-- **main filter = r**
-- **other colours = g-r, i-r, z-r**
-- **res filters = r, g, i, z**
-
-The brightness of an atmosphereless body is a function of its phase angle (a). 
-Several empirical models exist to predict the brightness, including the HG system (where H is approximately
-the brightness at d = 0 and G represents the slope)
-For this input, the options are: HG, HG1G2, HG12, linear, none
-
-
-The physical parameter file must contain an associated value for each of the objects within the orbit file above. If there 
-is a  mis-match between these files, the survey simulator code will throw an error.
+The input file for the physical parameters includes information about the objects color and brightness.
 
 An example of the physical parameter file can be seen here::
 
@@ -129,40 +147,69 @@ An example of the physical parameter file can be seen here::
    St500003a 6.61 0.0 0.0 0.0 0.0 0.0 0.15
    St500004a 6.92 0.0 0.0 0.0 0.0 0.0 0.15
 
+Rubin Observatory will survey the sky in six broadband (optical filters),**u, g, r, i, z, and y**. In the physical parameters file
+you can set a main filter which all other colours are compared to.
+
+- **other colours = g-r, i-r, z-r**
+- **res filters = r, g, i, z**
+
+The brightness of an atmosphereless body is a function of its phase angle (a).
+Several empirical models exist to predict the brightness, including the HG system (where H is approximately
+the brightness at d = 0 and G represents the slope)
+For this input, the options are: HG, HG1G2, HG12, linear, none
+
+Phase Functions
+~~~~~~~~~~~~~~~~~~~~~
+This is done using the linear phase slope utilities in using `sbpy <https://sbpy.readthedocs.io/en/latest/api/sbpy.photometry.LinearPhaseFunc.html#sbpy.photometry.LinearPhaseFunc>`_.
 
 
 Cometary Activity Parameters File (Optional)
 -----------------------------------------------
 
+.. note::
+  The cometary activity file is used by  **surveySimPP**.
+
 This is an optional input file which describes how the object apparent magnitude will be augmented from 
-a standard non-active, atmosphere-less body as it moves inwards towards the Sun. This is dependent on
-calculations done using `sbpy <https://sbpy.readthedocs.io/en/latest/api/sbpy.photometry.LinearPhaseFunc.html#sbpy.photometry.LinearPhaseFunc>`_.
+a standard non-active, atmosphere-less body as it moves inwards and outwards towards the Sun.
 
 
-.. warning::
-
-   When running simulations of objects exhibiting cometary activity, **every** object in that simulation must have an associated cometary activety.
-   When running a single simulation either every object experiences cometary activity, or none do.
-
-An example of a cometary activity parameter file can be seen here::
+An example of a cometary activity parameter file::
 
    ObjID                       afrho1 k
    67P/Churyumov-Gerasimenko   1552  -3.35
 
 
+.. warning::
+
+   **When running an instance of surveySimPP, either every synthetic planetesimal experiences cometary activity, or none do.** When running simulations of synthetic planetesimals exhibiting cometary activity, **every** object in that simulation must have an entry in the  associated cometary activety file.
+
+
 LSST Pointing Database
 ------------------------
 
-This is a file containing the pointing data for the LSST survey. Prior to the start of the survey, this 
-data is estimated from up-to-date observation planning and environmental data. This is generated through
-the Rubin Observatory scheduler (known as rubin_sim). A description of an early version of this python software can be found in
-Delgado et al. (2014) and the open source repository is found at https://github.com/lsst/rubin_sim. 
-The output of rubin_sim is a sqlite database containing the pointing history and associated metadata 
-of the simulated observation history of LSST. This will be updated with real-life pointing data as 
-observations take place.
 
+.. note::
+  The LSST pointing database is used by  **Objects in Field** and **surveySimPP**.
+
+This database contains information about the LSST pointing history and observing conditions.  We use observation mid-point time, right ascension, declination, rotation angle of the camera, 5-sigma limiting magnitude, filter, and seeing information in Objects in Field and surveySimPP to determine if a synthetic Solar System object is observable.  
+What we call the LSST pointing database (currently simulated since Rubin Observatory hasn’t started operations) is generated through the Rubin Observatory scheduler (since 2021 referred to as `rubin_sim <https://github.com/lsst/rubin_sim>`_ and previously known as OpSim). This software is currently under active development and is being used to run many simulated iterations of LSST scenarios showing what the cadence would look like with differing survey strategies. A description of an early version of this python software can be found in `Delgado et al.(2014) <https://ui.adsabs.harvard.edu/abs/2014SPIE.9150E..15D>`_.The output of rubin_sim is a sqlite database containing the pointing history and associated metadata 
+of the simulated observation history of LSST.
+
+.. tip::
+   The contents of the observations table in the sqlite LSST pointing database can be found `here <https://rubin-sim.lsst.io/rs_scheduler/output_schema.html>`_
+
+The latest version of rubin_sim cadence simulations can be found at https://lsst.ncsa.illinois.edu/sim-data/sims_featureScheduler_runs2.0/. An example rubin_sim simulation visualized on sky is shown below: 
 
 .. raw:: html
 
     <iframe width="700" height="360" src="https://epyc.astro.washington.edu/~lynnej/opsim_downloads/baseline_v2.0_10yrs.mp4" frameborder="0" allowfullscreen></iframe>
 
+
+.. attention::
+   There may be changes to how this information is read in when the Rubin Observatory science operations begin in approximately mid-2024.
+
+Ephemeris file (Objects in Field Output)
+------------------------
+
+.. note::
+  The ephemeris file is used by  **surveySimPP**. We recommend using **Objects in Fields** to generate it.

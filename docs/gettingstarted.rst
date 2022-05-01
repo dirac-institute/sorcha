@@ -3,8 +3,11 @@ Getting Started
 
 In this section we provide an overview of how to use the survey simulator. We start by generating a set of 
 files containing information on the objects that we wish to study. We take you through the process of generating
-ephemerides for these objects using Objects in Field, and show you how to 
+ephemerides for these objects using Objects in Field, and show you how to use surveySimPP. 
 
+.. tip::
+   In this quick start guide, we demonstrate how to run a single instance of OIF and surveySimPP. Both packages are designed to allow multiple instances to be run in parallel in order to accomodate simulations with very large numbers of synthetic planetesimals by breaking up the job across multiple live proccesses. We recommend first starting with the examples below, before moving on to parallel processing.
+   
 Creating Object Files
 -------------------------
 The first step in the process is to generate a set of files which describe the orbital and physical parameters
@@ -29,7 +32,7 @@ We will also generate a file called 'testcolour.txt' which contains information 
 
 
 
-Running OIF
+OIF
 -----------
 The survey simulator post processing code relies on using an orbital calculator to generate ephemerides,
 we recommend using Objects in Field, but you can use any orbital calculator as long as the outputs are 
@@ -38,7 +41,7 @@ then you can skip to the section on using the survey simulator.
 
 
 Generate an OIF Config File 
--------------------------------
+~~~~~~~~~~~~
 The survey simulator post processing code comes with several command line utilities. One of these is 
 a config file generator for Objects in Field. makeConfigOIF takes two required parameters, the name of 
 the orbit file and the pointing database. There are several optional arguments which can be used to further 
@@ -82,7 +85,7 @@ This will return the following::
 This file will be saved as testorb-1-5.ini in the directory it has been run within. 
 
 Running OIF
---------------
+~~~~~~~~~~~~
 Now that we have an OIF config file, we can easily run OIF by typing::
 
    oif testorb-1-5.ini
@@ -96,11 +99,17 @@ The first few lines returned will look something like this::
 This generates the ephemerides for the objects we are looking for. This information will be used when running the SSPP.
 Save this information as a file called 'testorb_oif.out'.
 
-
-Generate an Survey Simulator Config File 
+.. warning::
+   Only one instance of OIF can be run per output directory. Make sure to have different output pathways if you are running multiple instances on the same compute node. 
+ 
+surveySimPP
 -----------------------------------------
+
 Now that we have the information about the ephemerides, we can begin to run the survey simulator to 
 check if these objects are observable by the LSST.
+
+Generate a surveySimPP Config File 
+~~~~~~~~~~~~
 
 The key information about the simulation paramteres are held in the post processing configuration file.
 There is a configuration file generator build into the survey simulator, which can be run using::
@@ -153,8 +162,8 @@ can be added (see inputs). The config file will look something like this::
 
 
 
-Running the Survey Simulator
------------------------------
+Running surveySimPP
+~~~~~~~~~~~~
 Finally, we have all the information required to run the survey simulator. This can be done by typing::
 
    surveySimPP -c config.ini -l testcolour.txt -o testorb.des -p testorb_oif.out
@@ -165,3 +174,7 @@ The output will look something like::
    ObjID	FieldID	FieldMJD	AstRange(km)	AstRangeRate(km/s)	AstRA(deg)	AstRARate(deg/day)	AstDec(deg)	AstDecRate(deg/day)	Ast-Sun(J2000x)(km)	Ast-Sun(J2000y)(km)	Ast-Sun(J2000z)(km)	Ast-Sun(J2000vx)(km/s)	Ast-Sun(J2000vy)(km/s)	Ast-Sun(J2000vz)(km/s)	Obs-Sun(J2000x)(km)	Obs-Sun(J2000y)(km)	Obs-Sun(J2000z)(km)	Obs-Sun(J2000vx)(km/s)	Obs-Sun(J2000vy)(km/s)	Obs-Sun(J2000vz)(km/s)	Sun-Ast-Obs(deg)	V(H=0	r	u-r	g-r	i-r	z-r	y-r	GS	FORMAT	q	e	incl	Omega	argperi	t_p	H	t_0	optFilter	seeingFwhmGeom	seeingFwhmEff	fiveSigmaDepth	fieldRA	fieldDec	rotSkyPos	MagnitudeInFilter	detection_probability	AstrometricSigma(mas)	PhotometricSigma(mag)	SNR	AstrometricSigma(deg)	dmagDetect	dmagVignet	AstRATrue(deg)	AstDecTrue(deg)	detectorID	counter
    St50000na	62219	60316.29343	681970963.2	-22.13	159.746519	-0.044737	3.913378547	-0.005534	-679174915.5	365194946.6	102747132.1	-6.571	-9.857	-5.602	-40861819.07	129664764.6	56203804.57	-29.365	-8.001	-3.331	8.778568	7.471	16.07484516	0	0	0	0	0	0.15	COM	5.03716	0.02669	6.469	295.581	132.80719	46418.04982	8.59	54800	r	0.585678604	0.649244044	24.43052583	159.521035	3.397667557	92.68659281	16.07485283	1	10.05273103	0.001218502	890.5418589	2.79E-06	0	0	159.746518	3.91338	137	0
    St50000na	62265	60316.3154	681929000.3	-22.07	159.7455319	-0.044908	3.913256351	-0.005532	-679187393.4	365176229.6	102736495.2	-6.571	-9.857	-5.602	-40917530.36	129649531.7	56197475.35	-29.316	-8.043	-3.336	8.775898	7.471	16.07460555	0	0	0	0	0	0.15	COM	5.03716	0.02669	6.469	295.581	132.80719	46418.04982	8.59	54800	i	0.646608058	0.723367467	23.87237218	159.521035	3.397667557	103.1829538	16.07243513	1	10.05259425	0.001217681	891.1428252	2.79E-06	0	0	159.745533	3.913258	137	0
+   
+
+.. warning::
+   Only one instance of surveySimPP can be run per output directory. Make sure to have different output pathways if you are running multiple instances on the same compute node. 

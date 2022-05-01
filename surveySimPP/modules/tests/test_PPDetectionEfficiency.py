@@ -2,6 +2,7 @@
 
 import pytest
 import pandas as pd
+import numpy as np
 #from filtering import PPFilterDetectionEfficiencyThreshold
 
 
@@ -20,16 +21,18 @@ Author: Grigori Fedorets
 """
 
 
-def test_PPFilterDetectionEfficiencyThreshold():
+def test_PPDetectionEfficiency():
 
     from surveySimPP.modules.PPReadOif import PPReadOif
-    from surveySimPP.modules.PPFilterDetectionEfficiencyThreshold import PPFilterDetectionEfficiencyThreshold
+    from surveySimPP.modules.PPDetectionEfficiency import PPDetectionEfficiency
+
+    rng = np.random.default_rng(2021)
 
     padafr = PPReadOif('./data/test/oiftestoutput.txt', 'whitespace')
     nrows = len(padafr.index)
-    pada1 = PPFilterDetectionEfficiencyThreshold(padafr, 1.00)
+    pada1 = PPDetectionEfficiency(padafr, 1.00, rng)
     nr1 = len(pada1.index)
-    pada2 = PPFilterDetectionEfficiencyThreshold(padafr, 0.00)
+    pada2 = PPDetectionEfficiency(padafr, 0.00, rng)
     nr2 = len(pada2.index)
 
     assert nr1 == nrows

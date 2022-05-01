@@ -7,7 +7,7 @@ from . import PPCalculateSimpleCometaryMagnitude
 from . import PPCheckOrbitAndPhysicalParametersMatching
 from . import PPDetectionProbability
 from . import PPDropObservations
-from . import PPFilterDetectionEfficiencyThreshold
+from . import PPDetectionEfficiency
 from . import PPFilterSSPCriterionEfficiency
 from . import PPFootprintFilter
 from . import PPJoinPhysicalParametersPointing
@@ -35,3 +35,5 @@ from . import PPVignetting
 from . import PPRunUtilities
 from . import PPApplyFOVFilter
 from . import PPSNRLimit
+from . import PPFilterFadingFunction
+from . import PPMagnitudeLimit
