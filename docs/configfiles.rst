@@ -1,18 +1,19 @@
 Configuration Files
 =====================
 
-SurveySimPP and Objects In Field uses configuration files to set the majority of the various parameters for running the software. The configuration file for surveSimPP allows turning on and off various filters. An overview of the possible options for the config files are described below. 
+SurveySimPP and Objects In Field both use configuration files to set the majority of the various parameters required for running these software packages. The configuration file for surveSimPP allows turning on and off various filters for biasng the simulated small body population to what the survey shold have found. An overview of the possible options for the config files are described below with recommendations on what you should set these config parameters to depending on your use case.
 
 .. tip::
-  We have developed  a set of utilities that are installed alongside the surveySimPP that can generate a config file for Objects in Fielda (**makeConfigOIF**) and one for surveySimPP (**makeConfigPP**). We describe below how to use those utilities to set up your config files. 
+  We have developed  a set of utilities that are installed alongside surveySimPP that can generate a config file for Objects in Field (See :ref:`makeConfigOIF`) and one for surveySimPP (See :ref:`makeConfigPP`). 
 
 Objects in Field Configuration File
 ------------------------------------
 
+.. tip::
+   We recommend that **nbody** should be always be set to **True**. You can break up the task across multiple proccesses if you need an increase in speed.
 
 surveySimPP Configuration File
 ------------------------------------
-
 
  .. _database_query:
 
@@ -29,7 +30,7 @@ For past rubin_sim/OpSim simulations pre-v2.0 use the query::
 
   SELECT observationId, observationStartMJD, filter, seeingFwhmGeom, seeingFwhmEff, fiveSigmaDepth, fieldRA, fieldDec, rotSkyPos FROM SummaryAllProps order by observationId
 
-
+.. _makeConfigOIF:
 
 Using makeConfigOIF
 ---------------------
@@ -90,6 +91,8 @@ Which will generate a config file with the number of days in the survey set to 1
 
 .. note::
    makeConfigOIF is designed to help generate multiple configuration files if the user wants to divide the compute task across several nodes/processors.
+
+.. _makeConfigPP:
 
 Using makeConfigPP
 -------------------------------------
