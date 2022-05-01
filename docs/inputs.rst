@@ -25,7 +25,7 @@ Orbit File
 .. note::
   The orbit file is used by  **Objects in Field** and **surveySimPP**.
 
-This is a file which contains the orbital information of a set of synthetic objects. The orbital parameters must be **heliolcentric**, and orbits can be define in **Cometary(COM)  or Keplerian (KEP)** formats. Each simulated planetesimals within the synthetic population must be be given it's own unique object ID (OID). 
+This is a file which contains the orbital information of a set of synthetic objects. The orbital parameters must be **heliolcentric**, and orbits can be define in **Cometary(COM)  or Keplerian (KEP)** formats. Each simulated planetesimals within the synthetic population must be be given it's own unique object ID (OID). The file can be **white space separated**  or **comma value separated (CSV)** format. The first line of the orbit file is a header line starting with !! that specifies what each of the columns are.
 
 .. tip::
   *  The orbit file must have a consistent format (i.e. cometary or Keplerian) throughout
@@ -50,29 +50,34 @@ An example of an orbit file in cometary format, with each object ID represented 
 +-------------+----------------------------------------------------------------------------------+
 | Keyword     | Description                                                                      |
 +=============+==================================================================================+
-| objID       | Object identifier. Unique identifier for each object withtin the population      |
+| OID         | Object identifier for each synthetic planetesimal simulated (string)             |
 +-------------+----------------------------------------------------------------------------------+
-| q           | Perihelion distance  = a*(1-e)                                                   |
+| FORMAT      | Orbit format string (COM)  						         |
++-------------+----------------------------------------------------------------------------------+
+| q           | Perihelion (au)									 |
 +-------------+----------------------------------------------------------------------------------+
 | e           | Eccentricity                                                                     |
 +-------------+----------------------------------------------------------------------------------+
-| a           | Semimajor axis                                                                   |
+| inc         | Inclination (degrees)                                                            |
 +-------------+----------------------------------------------------------------------------------+
-| inc         | Inclination                                                                      |
+| node        | Longitude of the ascending node (degrees)                                        |
 +-------------+----------------------------------------------------------------------------------+
-| Omega       | Longitude of the ascending node                                                  |
+| argPeri     | Argument of perihelion (degrees)                                                 |
 +-------------+----------------------------------------------------------------------------------+
-| argPeri     | Argument of periapsis                                                            |
+| t_P         | Time of periapsis (degrees)                                                      |
 +-------------+----------------------------------------------------------------------------------+
-| meanAnomaly |                                                                                  |
+| t_0         | Epoch (MJD)                                                                      |
 +-------------+----------------------------------------------------------------------------------+
-| tPeri       | Time of periapsis                                                                |
-+-------------+----------------------------------------------------------------------------------+
-| epoch       |                                                                                  |
-+-------------+----------------------------------------------------------------------------------+
-| H           |                                                                                  |
+| H           | Absolute magnitude (magnitudes)                                                  |
 +-------------+----------------------------------------------------------------------------------+
 
+**Header line**
+The first row in the orbit file must be a header started with ‘!!’ to denote it as the header row::
+   !!OID FORMAT q e i node argperi t_p H t_0
+
+
+.. tip::
+  The orbit file can be either white space separated or comma value separated (CSV). For readability we show examples with white space in the online documentation. 
 
 .. note::
   We are working on updating Objects in Field to not require H and move H to the physical parameters files. 
@@ -93,28 +98,33 @@ An example of an orbit file, in Keplarian format, with the object ID represented
 +-------------+----------------------------------------------------------------------------------+
 | Keyword     | Description                                                                      |
 +=============+==================================================================================+
-| objID       | Object identifier. Unique identifier for each object withtin the population      |
+| OID         | Object identifier for each synthetic planetesimal simulated (string)             |
 +-------------+----------------------------------------------------------------------------------+
-| q           | Perihelion distance  = a*(1-e)                                                   |
+| FORMAT      | Orbit format string (KEP)                                                        |
++-------------+----------------------------------------------------------------------------------+
+| a           | Semimajor axis (au)                                                              |
 +-------------+----------------------------------------------------------------------------------+
 | e           | Eccentricity                                                                     |
 +-------------+----------------------------------------------------------------------------------+
-| a           | Semimajor axis                                                                   |
+| inc         | Inclination (degree)                                                             |
 +-------------+----------------------------------------------------------------------------------+
-| inc         | Inclination                                                                      |
+| node        | Longitude of the ascending node (degrees)                                        |
 +-------------+----------------------------------------------------------------------------------+
-| Omega       | Longitude of the ascending node                                                  |
+| peri        | Argument of perihelion (degrees)                                                 |
 +-------------+----------------------------------------------------------------------------------+
-| argPeri     | Argument of periapsis                                                            |
+| ma          | Mean Anomaly (degrees)                                                           |           
 +-------------+----------------------------------------------------------------------------------+
-| meanAnomaly |                                                                                  |
+| epoch       | Epoch (MJD)                                                                      |
 +-------------+----------------------------------------------------------------------------------+
-| tPeri       | Time of periapsis                                                                |
+| H           | Absolute Magnitude (magnitudes)                                                  |
 +-------------+----------------------------------------------------------------------------------+
-| epoch       |                                                                                  |
-+-------------+----------------------------------------------------------------------------------+
-| H           |                                                                                  |
-+-------------+----------------------------------------------------------------------------------+
+
+**Header line**
+The first row in the orbit file must be a header started with ‘!!’ to denote it as the header row::
+   !!OID FORMAT q e i node argperi t_p H t_0
+
+.. tip::
+  The orbit file can be either white space separated or comma value separated (CSV). For readability we show examples with white space in the online documentation.
 
 .. note::
   We are working on updating Objects in Field to not require H and move H to the physical parameters files. 
@@ -125,23 +135,7 @@ Physical Parameters File
 .. note::
   The physical parameters file is used by **surveySimPP**.
 
-
 The input file for the physical parameters includes information about the objects color and brightness.
-
-Rubin Observatory will survey the sky in six broadband (optical filters),**u, g, r, i, z, and y**. In the physical parameters file
-you can set a main filter which all other colours are compared to.
-
-- **other colours = g-r, i-r, z-r**
-- **res filters = r, g, i, z**
-
-The brightness of an atmosphereless body is a function of its phase angle (a). 
-Several empirical models exist to predict the brightness, including the HG system (where H is approximately
-the brightness at d = 0 and G represents the slope)
-For this input, the options are: HG, HG1G2, HG12, linear, none
-
-
-The physical parameter file must contain an associated value for each of the objects within the orbit file above. If there 
-is a  mis-match between these files, the survey simulator code will throw an error.
 
 An example of the physical parameter file can be seen here::
 
@@ -153,6 +147,20 @@ An example of the physical parameter file can be seen here::
    St500003a 6.61 0.0 0.0 0.0 0.0 0.0 0.15
    St500004a 6.92 0.0 0.0 0.0 0.0 0.0 0.15
 
+Rubin Observatory will survey the sky in six broadband (optical filters),**u, g, r, i, z, and y**. In the physical parameters file
+you can set a main filter which all other colours are compared to.
+
+- **other colours = g-r, i-r, z-r**
+- **res filters = r, g, i, z**
+
+The brightness of an atmosphereless body is a function of its phase angle (a).
+Several empirical models exist to predict the brightness, including the HG system (where H is approximately
+the brightness at d = 0 and G represents the slope)
+For this input, the options are: HG, HG1G2, HG12, linear, none
+
+Phase Functions
+~~~~~~~~~~~~~~~~~~~~~
+This is done using the linear phase slope utilities in using `sbpy <https://sbpy.readthedocs.io/en/latest/api/sbpy.photometry.LinearPhaseFunc.html#sbpy.photometry.LinearPhaseFunc>`_.
 
 
 Cometary Activity Parameters File (Optional)
@@ -162,8 +170,7 @@ Cometary Activity Parameters File (Optional)
   The cometary activity file is used by  **surveySimPP**.
 
 This is an optional input file which describes how the object apparent magnitude will be augmented from 
-a standard non-active, atmosphere-less body as it moves inwards towards the Sun. This is dependent on
-calculations done using `sbpy <https://sbpy.readthedocs.io/en/latest/api/sbpy.photometry.LinearPhaseFunc.html#sbpy.photometry.LinearPhaseFunc>`_.
+a standard non-active, atmosphere-less body as it moves inwards and outwards towards the Sun.
 
 
 An example of a cometary activity parameter file::
