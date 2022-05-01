@@ -146,7 +146,7 @@ def randomizeAstrometry(df, rng, raName='AstRA(deg)',decName='AstDec(deg)',
         center= radec2icrf(df[raName],df[decName]).T
     elif (radecUnits=='mas'):
         center= radec2icrf(df[raName]/3600000., df[decName]/3600000.).T
-    elif (radecUnits='rad'):
+    elif (radecUnits=='rad'):
         center= radec2icrf(df[raName],df[decName],deg=False).T
     else:
         print("Bad units were provided for RA and Dec.")

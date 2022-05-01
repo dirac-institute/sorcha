@@ -20,7 +20,6 @@ from . import PPMatchPointingToObservations
 from . import PPOutWriteCSV
 from . import PPOutWriteHDF5
 from . import PPOutWriteSqlite3
-from . import PPRandomize
 from . import PPRandomizeMeasurements
 from . import PPReadPhysicalParameters
 from . import PPreadColoursUser
