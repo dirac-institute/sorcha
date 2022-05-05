@@ -165,7 +165,7 @@ def randomizeAstrometry(df, rng, raName='AstRA(deg)',decName='AstDec(deg)',
 
     xyz = sampleNormalFOV(center, sigmarad, rng, ndim=3)
 
-    if (units=='deg'):
+    if (radecUnits=='deg'):
         [ra, dec] = icrf2radec(xyz[:,0], xyz[:,1], xyz[:,2], deg=True)
 
     else:
