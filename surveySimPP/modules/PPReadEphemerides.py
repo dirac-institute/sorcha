@@ -44,9 +44,15 @@ def PPReadEphemerides(eph_output, ephemerides_type, inputformat):
     """
     from surveySimPP.modules.PPRunUtilities import PPGetLogger
     pplogger = PPGetLogger()
+    
+    ephtypeci=ephemerides_type.casefold()
 
-    if (ephemerides_type == 'oif'):
+    if (ephtypeci == 'oif'):
         padafr = PPReadOif.PPReadOif(eph_output, inputformat)
+        
+    else:
+       pplogger.error("PPReadEphemerides: invalid value for ephemerides_type: " + str(ephemerides_type))
+       sys.exit("PPReadEphemerides: invalid value for ephemerides_type: " + str(ephemerides_type))
 
     # Functions for adding alternative types of ephemerides can be added here
     # See below for self-explanatory columns required for the ephemerides input
