@@ -61,13 +61,11 @@ def PPCalculateApparentMagnitudeInFilter(padain, function, mainfilter):
               G1arr = padain['G1'].values
               G2arr = padain['G2'].values
               pharr= padain['phase'].values
-              i=0
               phfarr=[]
-              while(i<len(padain.index)):
+              for i in range(len(padain.index)):
                   HGm=HG1G2(H=Harr[i]*u.mag, G1=G1arr[i], G2=G2arr[i])
                   phf=HGm(pharr[i]*u.deg)
                   phfarr.append(phf.value)
-                  i=i+1
               padain['phase_function']=phfarr
               # in sbpy, phase_function = H(alpha) + Phi(alpha)
               padain[mainfilter] =  5.*log10(padain['delta']) + 5.*log10(padain['rho']) + padain['phase_function']
@@ -82,13 +80,11 @@ def PPCalculateApparentMagnitudeInFilter(padain, function, mainfilter):
               Harr=padain['H'].values
               Garr = padain['GS'].values
               pharr= padain['phase'].values
-              i=0
               phfarr=[]
-              while(i<len(padain.index)):
+              for i in range(len(padain.index)):
                   HGm=HG(H=Harr[i]*u.mag, G=Garr[i])
                   phf=HGm(pharr[i]*u.deg)
                   phfarr.append(phf.value)
-                  i=i+1
               padain['phase_function']=phfarr
               # in sbpy, phase_function = H(alpha) + Phi(alpha)
               padain[mainfilter] =  padain['phase_function'] + 5.*log10(padain['delta']) + 5.*log10(padain['rho'])  
@@ -105,13 +101,11 @@ def PPCalculateApparentMagnitudeInFilter(padain, function, mainfilter):
               Harr=padain['H'].values
               G12arr = padain['G12'].values
               pharr= padain['phase'].values
-              i=0
               phfarr=[]
-              while(i<len(padain.index)):
+              for i in range(len(padain.index)):
                   HGm=HG12_Pen16(H=Harr[i]*u.mag, G12=G12arr[i])
                   phf=HGm(pharr[i]*u.deg)
                   phfarr.append(phf.value)
-                  i=i+1
               padain['phase_function']=phfarr
               # in sbpy, phase_function = H(alpha) + Phi(alpha)
               padain[mainfilter] =  5.*log10(padain['delta']) + 5.*log10(padain['rho']) + padain['phase_function']
@@ -128,13 +122,11 @@ def PPCalculateApparentMagnitudeInFilter(padain, function, mainfilter):
               Harr=padain['H'].values
               Sarr = padain['S'].values
               pharr= padain['phase'].values
-              i=0
               phfarr=[]
-              while(i<len(padain.index)):
+              for i in range(len(padain.index)):
                   HGm=LinearPhaseFunc(H=Harr[i]*u.mag, S=Sarr[i]*u.mag/u.deg)
                   phf=HGm(pharr[i]*u.deg)
                   phfarr.append(phf.value)
-                  i=i+1
               padain['phase_function']=phfarr
               # in sbpy, phase_function = H(alpha) + Phi(alpha)
               padain[mainfilter] =  5.*log10(padain['delta']) + 5.*log10(padain['rho']) + padain['phase_function'] 
