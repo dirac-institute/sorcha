@@ -7,7 +7,8 @@ import numpy as np
 import pandas as pd
 import configparser
 from datetime import datetime
-from . import PPOutWriteCSV, PPOutWriteSqlite3, PPOutWriteHDF5
+#from .PPOutput import PPOutWriteCSV, PPOutWriteSqlite3, PPOutWriteHDF5
+from . import PPOutput
 from . import PPReadOrbitFile, PPCheckOrbitAndPhysicalParametersMatching, PPReadCometaryInput
 from . import PPReadIntermDatabase, PPReadEphemerides, PPJoinPhysicalParametersPointing
 from . import PPJoinOrbitalData, PPMatchPointingToObservations, PPReadPhysicalParameters
@@ -380,7 +381,7 @@ def PPWriteOutput(configs, observations, endChunk):
 		outputsuffix='.csv'
 		out= configs['outpath'] + configs['outfilestem'] + outputsuffix
 		pplogger.info('Output to CSV file...')
-		observations=PPOutWriteCSV.PPOutWriteCSV(observations,out)
+		observations=PPOutput.PPOutWriteCSV(observations,out)
 	
 	elif ((configs['outputformat'] == 'separatelyCSV') or (configs['outputformat'] == 'separatelyCsv') or (configs['outputformat'] == 'separatelycsv')):
 		outputsuffix='.csv'
@@ -390,19 +391,19 @@ def PPWriteOutput(configs, observations, endChunk):
 		while(i<len(objid_list)):
 			single_object_df=pd.DataFrame(observations[observations['ObjID'] == objid_list[i]])
 			out=configs['outpath'] + str(objid_list[i]) + '_' + configs['outfilestem'] + outputsuffix
-			obsi=PPOutWriteCSV.PPOutWriteCSV(single_object_df,out)
+			obsi=PPOutput.PPOutWriteCSV(single_object_df,out)
 			i=i+1	
 	
 	elif (configs['outputformat'] == 'sqlite3'):
 		outputsuffix='.db'
 		out= configs['outpath'] + configs['outfilestem'] + outputsuffix
 		pplogger.info('Output to sqlite3 database...')
-		observations=PPOutWriteSqlite3.PPOutWriteSqlite3(observations,out)   
+		observations=PPOutput.PPOutWriteSqlite3(observations,out)   
 	elif (configs['outputformat'] == 'hdf5' or configs['outputformat']=='HDF5'):
 		outputsuffix=".h5"   
 		out=configs['outpath'] + configs['outfilestem'] + outputsuffix
 		pplogger.info('Output to HDF5 binary file...')
-		observations=PPOutWriteHDF5.PPOutWriteHDF5(observations,out,str(endChunk))
+		observations=PPOutput.PPOutWriteHDF5(observations,out,str(endChunk))
 		
 
 def PPReadAllInput(cmd_args, configs, filterpointing, startChunk, incrStep):

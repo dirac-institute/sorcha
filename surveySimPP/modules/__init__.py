@@ -17,9 +17,7 @@ from . import PPMatchFieldConditions
 from . import PPMatchPointing
 from . import PPMatchPointingsAndColours
 from . import PPMatchPointingToObservations
-from . import PPOutWriteCSV
-from . import PPOutWriteHDF5
-from . import PPOutWriteSqlite3
+from . import PPOutput
 from . import PPRandomizeMeasurements
 from . import PPReadPhysicalParameters
 from . import PPreadColoursUser
