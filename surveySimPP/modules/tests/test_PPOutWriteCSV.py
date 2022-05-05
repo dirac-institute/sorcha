@@ -13,7 +13,7 @@ def test_PPOutWriteCSV():
     from surveySimPP.modules.PPReadPhysicalParameters import PPReadPhysicalParameters
     from surveySimPP.modules.PPMatchPointing import PPMatchPointing
     from surveySimPP.modules.PPMatchPointingsAndColours import PPMatchPointingsAndColours
-    from surveySimPP.modules.PPOutWriteCSV import PPOutWriteCSV
+    from surveySimPP.modules.PPOutput import PPOutWriteCSV
 
     padafr = PPReadOif('./data/test/oiftestoutput.txt', "whitespace")
     padacl = PPReadPhysicalParameters('./data/test/testcolour.txt', 0, 5, "whitespace")
