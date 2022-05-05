@@ -112,8 +112,13 @@ def runLSSTPostProcessing(cmd_args):
         pplogger.info('Calculating effects of vignetting on limiting magnitude...')
         observations['fiveSigmaDepthAtSource'] = PPVignetting.vignettingEffects(observations)
 
-        pplogger.info('Calculating astrometric and photometric uncertainties...')
+        pplogger.info('Calculating astrometric and photometric uncertainties, randomizing photometry...')
         observations = PPAddUncertainties.addUncertainties(observations, rng)
+
+        pplogger.info('Applying astrometric uncertainties...')
+        observations["AstRATrue(deg)"] = observations["AstRA(deg)"]
+        observations["AstDecTrue(deg)"] = observations["AstDec(deg)"]
+        observations["AstRA(deg)"], observations["AstDec(deg)"] = PPRandomizeMeasurements.randomizeAstrometry(observations, rng, sigName='AstrometricSigma(deg)')
 
         pplogger.info('Dropping observations with signal to noise ratio less than {}...'.format(configs['SNRLimit']))
         observations = PPSNRLimit(observations, configs['SNRLimit'])
@@ -130,11 +135,6 @@ def runLSSTPostProcessing(cmd_args):
         if configs['magLimit']:
             pplogger.info('Dropping detections fainter than user-defined magnitude limit... ')
             observations = PPMagnitudeLimit(observations, configs['magLimit'])
-
-        pplogger.info('Applying astrometric uncertainties...')
-        observations["AstRATrue(deg)"] = observations["AstRA(deg)"]
-        observations["AstDecTrue(deg)"] = observations["AstDec(deg)"]
-        observations["AstRA(deg)"], observations["AstDec(deg)"] = PPRandomizeMeasurements.randomizeAstrometry(observations, rng, sigName='AstrometricSigma(deg)')
 
         pplogger.info('Applying fading function...')
         observations = PPFilterFadingFunction(observations, configs['fillfactor'], rng)

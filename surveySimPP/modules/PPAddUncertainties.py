@@ -99,6 +99,11 @@ class Error(Exception):
  #   return (astrSig, photometric_sigma, SNR)
 
 def addUncertainties(detDF, rng):   
+    """
+    Generates astrometric and photometric unvertainties, and SNR. Uses uncertainties to randomize the photometry.
+    """
+
+
     detDF['AstrometricSigma(deg)'], detDF['PhotometricSigma(mag)'], detDF['SNR'] = uncertainties(detDF)
 
     detDF["observedTrailedSourceMag"] = PPRandomizeMeasurements.randomizePhotometry(
