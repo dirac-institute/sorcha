@@ -78,5 +78,5 @@ Objects that are on the edges of the field of view are dimmer due to vignetting.
 a model of this from a built-in function.
 
 
-Solar System Processing
+Linking 
 ---------------------------
