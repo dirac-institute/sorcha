@@ -100,6 +100,24 @@ def runLSSTPostProcessing(cmd_args):
             configs['othercolours'], configs['observing_filters'],
             configs['objecttype'])
 
+        #----------------------------------------------------------------------
+        if configs['trailingLossesOn']:
+            pplogger.info('Calculating trailing losses...')
+            dmagDetect = PPTrailingLoss.PPTrailingLoss(observations, "circularPSF")
+            observations['PSFMag'] = dmagDetect + observations['TrailedSourceMag']
+        else:
+            observations['PSFMag'] = observations['TrailedSourceMag']
+        #----------------------------------------------------------------        
+
+        pplogger.info('Calculating effects of vignetting on limiting magnitude...')
+        observations['fiveSigmaDepthAtSource'] = PPVignetting.vignettingEffects(observations)
+
+        pplogger.info('Calculating astrometric and photometric uncertainties...')
+        observations = PPAddUncertainties.addUncertainties(observations, rng)
+
+        pplogger.info('Dropping observations with signal to noise ratio less than {}...'.format(configs['SNRLimit']))
+        observations = PPSNRLimit(observations, configs['SNRLimit'])
+        
         if configs['brightLimit']:
             pplogger.info('Dropping observations that are too bright...')
             observations = PPBrightLimit.PPBrightLimit(
@@ -109,40 +127,14 @@ def runLSSTPostProcessing(cmd_args):
         pplogger.info('Applying field-of-view filters...')
         observations = PPApplyFOVFilter(observations, configs)
 
-        pplogger.info('Calculating astrometric and photometric uncertainties...')
-        observations['AstrometricSigma(mas)'], observations['PhotometricSigma(mag)'], observations["SNR"] = PPAddUncertainties.uncertainties(observations, filterMagName='TrailedSourceMag')
-        observations["AstrometricSigma(deg)"] = observations['AstrometricSigma(mas)'] / 3600. / 1000.
-
-        pplogger.info('Dropping observations with signal to noise ratio less than {}...'.format(configs['SNRLimit']))
-        observations = PPSNRLimit(observations, configs['SNRLimit'])
-
-        pplogger.info('Applying uncertainty to photometry...')
-        observations["TrailedSourceMag"] = PPRandomizeMeasurements.randomizePhotometry(
-                observations, rng, magName="TrailedSourceMag",
-                sigName="PhotometricSigma(mag)")
-
-        if configs['trailingLossesOn']:
-            pplogger.info('Calculating trailing losses...')
-            dmagDetect = PPTrailingLoss.PPTrailingLoss(observations)
-            observations['PSFMag'] = dmagDetect + observations['TrailedSourceMag']
-        else:
-            observations['PSFMag'] = observations['TrailedSourceMag']
-
-        pplogger.info('Calculating effects of vignetting on limiting magnitude...')
-        observations['fiveSigmaDepthAtSource'] = PPVignetting.vignettingEffects(observations)
-
         if configs['magLimit']:
             pplogger.info('Dropping detections fainter than user-defined magnitude limit... ')
             observations = PPMagnitudeLimit(observations, configs['magLimit'])
 
-        pplogger.info('Calculating astrometric uncertainties...')
+        pplogger.info('Applying astrometric uncertainties...')
         observations["AstRATrue(deg)"] = observations["AstRA(deg)"]
         observations["AstDecTrue(deg)"] = observations["AstDec(deg)"]
         observations["AstRA(deg)"], observations["AstDec(deg)"] = PPRandomizeMeasurements.randomizeAstrometry(observations, rng, sigName='AstrometricSigma(deg)')
-
-        pplogger.info('Dropping column with astrometric sigma in milliarcseconds ...')
-        observations = observations.copy().drop(columns=["AstrometricSigma(mas)"])
-        observations.reset_index(drop=True, inplace=True)
 
         pplogger.info('Applying fading function...')
         observations = PPFilterFadingFunction(observations, configs['fillfactor'], rng)
