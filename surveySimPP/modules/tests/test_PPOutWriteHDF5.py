@@ -13,7 +13,7 @@ def test_PPOutWriteHDF5():
     from surveySimPP.modules.PPReadPhysicalParameters import PPReadPhysicalParameters
     from surveySimPP.modules.PPMatchPointing import PPMatchPointing
     from surveySimPP.modules.PPMatchPointingsAndColours import PPMatchPointingsAndColours
-    from surveySimPP.modules.PPOutWriteHDF5 import PPOutWriteHDF5
+    from surveySimPP.modules.PPOutput import PPOutWriteHDF5
 
     padafr = PPReadOif('./data/test/oiftestoutput.txt', "whitespace")
     padacl = PPReadPhysicalParameters('./data/test/testcolour.txt', 0, 20, "whitespace")
