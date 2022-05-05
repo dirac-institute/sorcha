@@ -14,7 +14,7 @@ def test_PPOutWriteSqlite3():
     from surveySimPP.modules.PPReadPhysicalParameters import PPReadPhysicalParameters
     from surveySimPP.modules.PPMatchPointing import PPMatchPointing
     from surveySimPP.modules.PPMatchPointingsAndColours import PPMatchPointingsAndColours
-    from surveySimPP.modules.PPOutWriteSqlite3 import PPOutWriteSqlite3
+    from surveySimPP.modules.PPOutput import PPOutWriteSqlite3
 
     padafr = PPReadOif('./data/test/oiftestoutput.txt', "whitespace")
     padacl = PPReadPhysicalParameters('./data/test/testcolour.txt', 0, 5, "whitespace")

@@ -23,10 +23,14 @@ Calculate Astrometric and Photometric Uncertainties for ground based observation
 """
 # Numpy
 import numpy as np
+degCos = lambda x: np.cos(x * np.pi / 180.)
+degSin = lambda x: np.sin(x * np.pi / 180.)
 
 # Pandas
 import pandas as pd
 
+from surveySimPP.modules import PPTrailingLoss
+from surveySimPP.modules import PPRandomizeMeasurements
 
 __all__ = ['calcAstrometricUncertainty', 'calcPhotometricUncertainty',
            'calcRandomAstrometricErrorPerCoord', 'magErrorFromSNR']
@@ -94,9 +98,27 @@ class Error(Exception):
 
  #   return (astrSig, photometric_sigma, SNR)
 
+def addUncertainties(detDF, rng):   
+    """
+    Generates astrometric and photometric unvertainties, and SNR. Uses uncertainties to randomize the photometry.
+    """
+
+
+    detDF['AstrometricSigma(deg)'], detDF['PhotometricSigma(mag)'], detDF['SNR'] = uncertainties(detDF)
+
+    detDF["observedTrailedSourceMag"] = PPRandomizeMeasurements.randomizePhotometry(
+                                            detDF, rng, magName="TrailedSourceMag",
+                                            sigName="PhotometricSigma(mag)")
+    detDF["observedPSFMag"] = PPRandomizeMeasurements.randomizePhotometry(
+                                            detDF, rng, magName="PSFMag",
+                                            sigName="PhotometricSigma(mag)")
+    return detDF
+ 
 def uncertainties(detDF,
-                  limMagName='fiveSigmaDepth', seeingName='seeingFwhmGeom',
-                  filterMagName='MagnitudeInFilter'
+                  limMagName='fiveSigmaDepthAtSource', seeingName='seeingFwhmGeom',
+                  filterMagName='trailedSourceMag',
+                  dra_name='AstRARate(deg/day)',
+                  ddec_name='AstDecRate(deg/day)', dec_name='AstDec(deg)'
                   ):
     """Add astrometric and photometric uncertainties to observations generated through JPL ephemeris simulator.
 
@@ -109,12 +131,17 @@ def uncertainties(detDF,
     --------
     ephemsOut ... ephems Pandas dataFrame (observations with added uncertainties)
     """
+    dMag = PPTrailingLoss.calcTrailingLoss(detDF[dra_name]*degCos(detDF[dec_name]),
+                                            detDF[ddec_name],
+                                            detDF[seeingName]
+                                            )
 
-    astrSig, SNR, _ = calcAstrometricUncertainty(detDF[filterMagName], detDF[limMagName],
+    astrSig, SNR, _ = calcAstrometricUncertainty(detDF[filterMagName] + dMag, detDF[limMagName],
                                                  FWHMeff=detDF[seeingName] * 1000, output_units='mas')
     photometric_sigma = magErrorFromSNR(SNR)
+    astrSigDeg = astrSig / 3600. / 1000.
 
-    return (astrSig, photometric_sigma, SNR)
+    return (astrSigDeg, photometric_sigma, SNR)
 
 
 def calcAstrometricUncertainty(mag, m5, nvisit=1, FWHMeff=700.0, error_sys=10.0,
