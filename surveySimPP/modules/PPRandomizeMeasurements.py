@@ -110,7 +110,7 @@ def randomizeObservations(ephemsdf,obsdf, rng, raName='fieldRA',decName='fieldDe
 
 def randomizeAstrometry(df, rng, raName='AstRA(deg)',decName='AstDec(deg)',
                          raRndName='AstRARnd(deg)',decRndName='AstDecRnd(deg)',
-                         sigName='AstSig(deg)',units='deg'):
+                         sigName='AstSig(deg)',radecUnits='deg', sigUnits='mas'):
 
     """Randomize astrometry with a normal distribution around the actual RADEC pointing.
     The randomized values are added to the input pandas data frame.
@@ -142,19 +142,30 @@ def randomizeAstrometry(df, rng, raName='AstRA(deg)',decName='AstDec(deg)',
     rad2deg = np.rad2deg
     zeros = np.zeros
 
-    if (units=='deg'):
+    if (radecUnits=='deg'):
         center= radec2icrf(df[raName],df[decName]).T
-        sigmarad= deg2rad(df[sigName])
-    else:
+    elif (radecUnits=='mas'):
+        center= radec2icrf(df[raName]/3600000., df[decName]/3600000.).T
+    elif (radecUnits=='rad'):
         center= radec2icrf(df[raName],df[decName],deg=False).T
+    else:
+        print("Bad units were provided for RA and Dec.")
+
+    if (sigUnits=='deg'):
+        sigmarad= deg2rad(df[sigName])
+    elif (sigUnits=='mas'):
+        sigmarad= deg2rad(df[sigName]/3600000.)
+    elif (sigUnits=='rad'):
         sigmarad=df[sigName]
+    else:
+        print("Bad units were provided for astrometric uncertainty.")
 
     n = len(df.index)
     xyz = zeros([n,3])
 
     xyz = sampleNormalFOV(center, sigmarad, rng, ndim=3)
 
-    if (units=='deg'):
+    if (radecUnits=='deg'):
         [ra, dec] = icrf2radec(xyz[:,0], xyz[:,1], xyz[:,2], deg=True)
 
     else:
