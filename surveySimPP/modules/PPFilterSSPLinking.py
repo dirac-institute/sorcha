@@ -11,9 +11,9 @@ from . import PPDetectionEfficiency
 
 # Author: Grigori Fedorets
 
-def PPFilterSSPCriterionEfficiency(padain,detefficiency,minintracklets,nooftracklets,intervaltime,inSepThresHoldAsec, rng):
+def PPFilterSSPLinking(padain,detefficiency,minintracklets,nooftracklets,intervaltime,inSepThresHoldAsec, rng):
    """
-   PPFilterSSPCriterionEfficiency.py
+   PPFilterSSPLinking.py
    
    
    

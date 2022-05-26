@@ -116,7 +116,7 @@ def addUncertainties(detDF, rng):
  
 def uncertainties(detDF,
                   limMagName='fiveSigmaDepthAtSource', seeingName='seeingFwhmGeom',
-                  filterMagName='trailedSourceMag',
+                  filterMagName='TrailedSourceMag',
                   dra_name='AstRARate(deg/day)',
                   ddec_name='AstDecRate(deg/day)', dec_name='AstDec(deg)'
                   ):

@@ -4,20 +4,20 @@ import sys
 import time
 import numpy as np
 import argparse
-from surveySimPP.modules import PPMatchPointing
-from surveySimPP.modules import PPFilterSSPCriterionEfficiency
-from surveySimPP.modules import PPTrailingLoss
-from surveySimPP.modules import PPBrightLimit
-from surveySimPP.modules import PPMakeIntermediatePointingDatabase
-from surveySimPP.modules import PPCalculateApparentMagnitude
+from surveySimPP.modules.PPMatchPointing import PPMatchPointing
+from surveySimPP.modules.PPFilterSSPLinking import PPFilterSSPLinking
+from surveySimPP.modules.PPTrailingLoss import PPTrailingLoss
+from surveySimPP.modules.PPBrightLimit import PPBrightLimit
+from surveySimPP.modules.PPMakeIntermediatePointingDatabase import PPMakeIntermediatePointingDatabase
+from surveySimPP.modules.PPCalculateApparentMagnitude import PPCalculateApparentMagnitude
 from surveySimPP.modules.PPApplyFOVFilter import PPApplyFOVFilter
 from surveySimPP.modules.PPSNRLimit import PPSNRLimit
 from surveySimPP.modules import PPAddUncertainties, PPRandomizeMeasurements
 from surveySimPP.modules import PPVignetting
 from surveySimPP.modules.PPFilterFadingFunction import PPFilterFadingFunction
-from surveySimPP.modules.PPRunUtilities import PPGetLogger, PPConfigFileParser, PPPrintConfigsToLog, PPCMDLineParser, PPWriteOutput, PPReadAllInput
+from surveySimPP.modules.PPRunUtilities import PPGetLogger, PPConfigFileParser, PPPrintConfigsToLog, PPCMDLineParser, PPReadAllInput
 from surveySimPP.modules.PPMagnitudeLimit import PPMagnitudeLimit
-#from surveySimPP.modules.PPOutput import PPOutWriteCSV, PPOutWriteSqlite3, PPOutWriteHDF5
+from surveySimPP.modules.PPOutput import PPWriteOutput
 
 
 # Author: Samuel Cornwall, Siegfried Eggl, Grigori Fedorets, Steph Merritt, Meg Schwamb
@@ -34,30 +34,21 @@ def runLSSTPostProcessing(cmd_args):
 
     # Initialise argument parser and assign command line arguments
 
-    pplogger = PPGetLogger()
+    pplogger = PPGetLogger(cmd_args['outpath'])
 
-    # Read, assign and error-handle the configuration file
     pplogger.info('Reading configuration file...')
-
     configs = PPConfigFileParser(cmd_args['configfile'], cmd_args['surveyname'])
 
     pplogger.info('Configuration file successfully read.')
-
     PPPrintConfigsToLog(configs)
 
     # End of config parsing
 
     if cmd_args['makeIntermediatePointingDatabase']:
-        PPMakeIntermediatePointingDatabase.PPMakeIntermediatePointingDatabase(
-                                cmd_args['oifoutput'],
-                                './data/interm.db',
-                                100)
+        PPMakeIntermediatePointingDatabase(cmd_args['oifoutput'],'./data/interm.db',100)
 
     pplogger.info('Reading pointing database and matching observationID with appropriate optical filter...')
-    filterpointing = PPMatchPointing.PPMatchPointing(
-                                configs['pointingdatabase'],
-                                configs['observing_filters'],
-                                configs['ppdbquery'])
+    filterpointing = PPMatchPointing(configs['pointingdatabase'], configs['observing_filters'], configs['ppdbquery'])
 
     pplogger.info('Instantiating random number generator ... ')
     rng_seed = int(time.time())
@@ -95,15 +86,17 @@ def runLSSTPostProcessing(cmd_args):
                                       startChunk, incrStep)
 
         pplogger.info('Calculating apparent magnitudes...')
-        observations = PPCalculateApparentMagnitude.PPCalculateApparentMagnitude(
-            observations, configs['phasefunction'], mainfilter,
-            configs['othercolours'], configs['observing_filters'],
-            configs['objecttype'])
+        observations = PPCalculateApparentMagnitude(observations, 
+                                                    configs['phasefunction'], 
+                                                    mainfilter,
+                                                    configs['othercolours'], 
+                                                    configs['observing_filters'],
+                                                    configs['objecttype'])
 
         #----------------------------------------------------------------------
         if configs['trailingLossesOn']:
             pplogger.info('Calculating trailing losses...')
-            dmagDetect = PPTrailingLoss.PPTrailingLoss(observations, "circularPSF")
+            dmagDetect = PPTrailingLoss(observations, "circularPSF")
             observations['PSFMag'] = dmagDetect + observations['TrailedSourceMag']
         else:
             observations['PSFMag'] = observations['TrailedSourceMag']
@@ -119,41 +112,47 @@ def runLSSTPostProcessing(cmd_args):
         observations["AstRATrue(deg)"] = observations["AstRA(deg)"]
         observations["AstDecTrue(deg)"] = observations["AstDec(deg)"]
         observations["AstRA(deg)"], observations["AstDec(deg)"] = PPRandomizeMeasurements.randomizeAstrometry(observations, rng, sigName='AstrometricSigma(deg)')
-
-        pplogger.info('Dropping observations with signal to noise ratio less than {}...'.format(configs['SNRLimit']))
-        observations = PPSNRLimit(observations, configs['SNRLimit'])
         
-        if configs['brightLimit']:
-            pplogger.info('Dropping observations that are too bright...')
-            observations = PPBrightLimit.PPBrightLimit(
-                observations,
-                configs['brightLimit'])
-
         pplogger.info('Applying field-of-view filters...')
-        observations = PPApplyFOVFilter(observations, configs)
+        observations = PPApplyFOVFilter(observations, configs, rng)
+                
+        if configs['SNRLimitOn']:
+            pplogger.info('Dropping observations with signal to noise ratio less than {}...'.format(configs['SNRLimit']))
+            observations = PPSNRLimit(observations, configs['SNRLimit'])
+        else:
+            pplogger.info('Dropping observations with signal to noise ratio less than 2...')
+            observations = PPSNRLimit(observations, 2.0)
 
-        if configs['magLimit']:
+        if configs['magLimitOn']:
             pplogger.info('Dropping detections fainter than user-defined magnitude limit... ')
             observations = PPMagnitudeLimit(observations, configs['magLimit'])
+                  
+        if configs['fadingFunctionOn']:
+            pplogger.info('Applying detection efficiency fading function...')
+            observations = PPFilterFadingFunction(observations, configs['fillfactor'], rng)
+    
+        if configs['brightLimitOn']:
+            pplogger.info('Dropping observations that are too bright...')
+            observations = PPBrightLimit(observations, configs['brightLimit'])
 
-        pplogger.info('Applying fading function...')
-        observations = PPFilterFadingFunction(observations, configs['fillfactor'], rng)
+        if configs['SSPLinkingOn']:
+            pplogger.info('Applying SSP linking filter...')
+            pplogger.info('Number of rows BEFORE applying SSP linking filter: ' + str(len(observations.index)))
 
-        if configs['SSPFiltering']:
-            pplogger.info('Applying SSP criterion efficiency...')
-
-            observations = PPFilterSSPCriterionEfficiency.PPFilterSSPCriterionEfficiency(
-                        observations, configs['SSPDetectionEfficiency'],
-                        configs['minTracklet'], configs['noTracklets'],
-                        configs['trackletInterval'], configs['inSepThreshold'],
-                        rng)
+            observations = PPFilterSSPLinking(observations, 
+                                              configs['SSPDetectionEfficiency'],
+                                              configs['minTracklet'], 
+                                              configs['noTracklets'],
+                                              configs['trackletInterval'],
+                                              configs['inSepThreshold'],
+                                              rng)
 
             observations = observations.drop(['index'], axis='columns')
             observations.reset_index(drop=True, inplace=True)
-            pplogger.info('Number of rows AFTER applying SSP criterion threshold: ' + str(len(observations.index)))
+            pplogger.info('Number of rows AFTER applying SSP linking filter: ' + str(len(observations.index)))
 
         # write output
-        PPWriteOutput(configs, observations, endChunk)
+        PPWriteOutput(cmd_args, configs, observations, endChunk)
 
         startChunk = startChunk + configs['sizeSerialChunk']
         # end for
@@ -191,7 +190,9 @@ def main():
     parser.add_argument("-o", "--orbit", help="Orbit file name", type=str, dest='o', default='./data/orbit.des', required=True)
     parser.add_argument("-p", "--pointing", help="Pointing simulation output file name", type=str, dest='p', default='./data/oiftestoutput', required=True)
     parser.add_argument("-s", "--survey", help="Survey to simulate", type=str, dest='s', default='LSST')
-
+    parser.add_argument("-u", "--outfile", help="Path to store output and logs.", type=str, dest="u", default='./data/out/', required=True)
+    parser.add_argument("-t", "--stem", help="Output file name stem.", type=str, dest="t", default='SSPPOutput')
+    
     cmd_args = PPCMDLineParser(parser)
 
     if cmd_args['surveyname'] in ['LSST', 'lsst']:

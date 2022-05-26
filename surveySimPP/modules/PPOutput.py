@@ -3,6 +3,7 @@
 import pandas as pd
 import os
 import sqlite3
+import logging
 
 #     Author: Grigori Fedorets
 
@@ -76,5 +77,50 @@ def PPOutWriteSqlite3(pp_results,outf):
     cnx = sqlite3.connect(outf)
 
     pp_results.to_sql("pp_results", con=cnx, if_exists="append")
+
+
+def PPWriteOutput(cmd_args, configs, observations, endChunk):
+    """
+    Author: Steph Merritt
+
+    Description: Writes out the output in the format specified in the config file.
+
+    Mandatory input:	dict, configs, dictionary of config variables created by PPConfigFileParser
+                        pandas DataFrame, observations, table of observations for output
+    """
+
+    pplogger = logging.getLogger(__name__)
+
+    pplogger.info('Constructing output path...')
     
+    if (configs['outputformat'] == 'csv'):
+        outputsuffix = '.csv'
+        out = cmd_args['outpath'] + cmd_args['outfilestem'] + outputsuffix
+        pplogger.info('Output to CSV file...')
+        observations = PPOutWriteCSV(observations,out)
+
+    elif ((configs['outputformat'] == 'separatelyCSV') or (configs['outputformat'] == 'separatelyCsv') or (configs['outputformat'] == 'separatelycsv')):
+        outputsuffix ='.csv'
+        objid_list = observations['ObjID'].unique().tolist() 
+        pplogger.info('Output to ' + str(len(objid_list)) + ' separate output CSV files...')
+        i=0
+        
+        while(i<len(objid_list)):
+            single_object_df = pd.DataFrame(observations[observations['ObjID'] == objid_list[i]])
+            out=cmd_args['outpath'] + str(objid_list[i]) + '_' + cmd_args['outfilestem'] + outputsuffix
+            obsi = PPOutWriteCSV(single_object_df,out)
+            i = i + 1
+
+    elif (configs['outputformat'] == 'sqlite3'):
+        outputsuffix = '.db'
+        out = cmd_args['outpath'] + cmd_args['outfilestem'] + outputsuffix
+        pplogger.info('Output to sqlite3 database...')
+        observations = PPOutWriteSqlite3(observations,out)   
+
+    elif (configs['outputformat'] == 'hdf5' or configs['outputformat']=='HDF5'):
+        outputsuffix = ".h5"   
+        out = cmd_args['outpath'] + cmd_args['outfilestem'] + outputsuffix
+        pplogger.info('Output to HDF5 binary file...')
+        observations = PPOutWriteHDF5(observations,out,str(endChunk))
     
+
