@@ -4,14 +4,15 @@ from . import PPFootprintFilter
 import logging
 import numpy as np
 
+
 def PPApplyFOVFilter(observations, configs, rng):
     """
     PPApplyFootprint.py
 
     Author: Steph Merritt
 
-    Wrapper function for PPFootprintFilter and PPFilterDetectionEfficiency. Checks to see 
-    whether a camera footprint filter should be applied or if a simple fraction of the 
+    Wrapper function for PPFootprintFilter and PPFilterDetectionEfficiency. Checks to see
+    whether a camera footprint filter should be applied or if a simple fraction of the
     circular footprint should be used, then applies the required filter.
 
     Input:
@@ -26,7 +27,7 @@ def PPApplyFOVFilter(observations, configs, rng):
 
     if configs['cameraModel'] == 'circle' and not configs['fadingFunctionOn']:
         pplogger.info('FOV is circular and fading function is off. Removing random observations.')
-        
+
         observations = PPSimpleSensorArea(observations, rng, configs['fillfactor'])
 
     elif configs['cameraModel'] == 'footprint':
@@ -38,35 +39,35 @@ def PPApplyFOVFilter(observations, configs, rng):
         observations["detectorID"] = detectorIDs
 
         observations = observations.sort_index()
-    
+
     else:
         pplogger.info('FOV is circular and fading function is on. Skipping FOV filter.')
 
     return observations
- 
-    
+
+
 def PPSimpleSensorArea(ephemsdf, rng, fillfactor=0.9):
 
-        '''Randomly removes a number of observations proportional to the
-        fraction of the field not covered by the detector.
+    '''Randomly removes a number of observations proportional to the
+    fraction of the field not covered by the detector.
 
-        Parameters
-        ----------
-        ephemsdf   ... pandas dataFrame containing observations
-        fillfactor ... fraction of FOV covered by the sensor
+    Parameters
+    ----------
+    ephemsdf   ... pandas dataFrame containing observations
+    fillfactor ... fraction of FOV covered by the sensor
 
-        Returns
-        -------
-        ephemsOut  ... pandas dataFrame
+    Returns
+    -------
+    ephemsOut  ... pandas dataFrame
 
-        '''
-        n = len(ephemsdf)
-        
-        randomNum = rng.random(n)
-        fillArray = np.zeros(n) + fillfactor
-        dropObs = np.where(randomNum > fillArray)[0]
+    '''
+    n = len(ephemsdf)
 
-        ephemsOut = ephemsdf.drop(dropObs)
-        ephemsOut = ephemsOut.reset_index(drop=True)
+    randomNum = rng.random(n)
+    fillArray = np.zeros(n) + fillfactor
+    dropObs = np.where(randomNum > fillArray)[0]
 
-        return ephemsOut
+    ephemsOut = ephemsdf.drop(dropObs)
+    ephemsOut = ephemsOut.reset_index(drop=True)
+
+    return ephemsOut
