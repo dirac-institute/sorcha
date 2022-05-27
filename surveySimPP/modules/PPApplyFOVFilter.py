@@ -2,15 +2,17 @@
 
 from . import PPFootprintFilter
 import logging
+import numpy as np
 
-def PPApplyFOVFilter(observations, configs):
+
+def PPApplyFOVFilter(observations, configs, rng):
     """
     PPApplyFootprint.py
 
     Author: Steph Merritt
 
-    Wrapper function for PPFootprintFilter and PPFilterDetectionEfficiency. Checks to see 
-    whether a camera footprint filter should be applied or if a simple fraction of the 
+    Wrapper function for PPFootprintFilter and PPFilterDetectionEfficiency. Checks to see
+    whether a camera footprint filter should be applied or if a simple fraction of the
     circular footprint should be used, then applies the required filter.
 
     Input:
@@ -23,8 +25,10 @@ def PPApplyFOVFilter(observations, configs):
 
     pplogger = logging.getLogger(__name__)
 
-    if configs['cameraModel'] == 'circle':
-        pplogger.info('FOV is circular. Skipping...')
+    if configs['cameraModel'] == 'circle' and not configs['fadingFunctionOn']:
+        pplogger.info('FOV is circular and fading function is off. Removing random observations.')
+
+        observations = PPSimpleSensorArea(observations, rng, configs['fillfactor'])
 
     elif configs['cameraModel'] == 'footprint':
         pplogger.info('Applying sensor footprint filter...')
@@ -36,4 +40,34 @@ def PPApplyFOVFilter(observations, configs):
 
         observations = observations.sort_index()
 
+    else:
+        pplogger.info('FOV is circular and fading function is on. Skipping FOV filter.')
+
     return observations
+
+
+def PPSimpleSensorArea(ephemsdf, rng, fillfactor=0.9):
+
+    '''Randomly removes a number of observations proportional to the
+    fraction of the field not covered by the detector.
+
+    Parameters
+    ----------
+    ephemsdf   ... pandas dataFrame containing observations
+    fillfactor ... fraction of FOV covered by the sensor
+
+    Returns
+    -------
+    ephemsOut  ... pandas dataFrame
+
+    '''
+    n = len(ephemsdf)
+
+    randomNum = rng.random(n)
+    fillArray = np.zeros(n) + fillfactor
+    dropObs = np.where(randomNum > fillArray)[0]
+
+    ephemsOut = ephemsdf.drop(dropObs)
+    ephemsOut = ephemsOut.reset_index(drop=True)
+
+    return ephemsOut

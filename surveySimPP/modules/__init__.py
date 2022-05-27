@@ -8,7 +8,7 @@ from . import PPCheckOrbitAndPhysicalParametersMatching
 from . import PPDetectionProbability
 from . import PPDropObservations
 from . import PPDetectionEfficiency
-from . import PPFilterSSPCriterionEfficiency
+from . import PPFilterSSPLinking
 from . import PPFootprintFilter
 from . import PPJoinPhysicalParametersPointing
 from . import PPJoinOrbitalData
@@ -25,7 +25,6 @@ from . import PPReadCometaryInput
 from . import PPReadIntermDatabase
 from . import PPReadOif
 from . import PPReadOrbitFile
-from . import PPSimpleSensorArea
 from . import PPTrailingLoss
 from . import PPTranslateMagnitude
 from . import PPVignetting

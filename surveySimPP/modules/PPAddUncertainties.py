@@ -21,16 +21,23 @@
 Calculate Astrometric and Photometric Uncertainties for ground based observations.
 
 """
-# Numpy
+
 import numpy as np
-degCos = lambda x: np.cos(x * np.pi / 180.)
-degSin = lambda x: np.sin(x * np.pi / 180.)
-
-# Pandas
-import pandas as pd
-
 from surveySimPP.modules import PPTrailingLoss
 from surveySimPP.modules import PPRandomizeMeasurements
+
+# lambda functions as variables are not PEP8 compliant. should be defs.
+# degCos = lambda x: np.cos(x * np.pi / 180.)
+# degSin = lambda x: np.sin(x * np.pi / 180.)
+
+
+def degCos(x):
+    return np.cos(x * np.pi / 180.)
+
+
+def degSin(x):
+    return np.sin(x * np.pi / 180.)
+
 
 __all__ = ['calcAstrometricUncertainty', 'calcPhotometricUncertainty',
            'calcRandomAstrometricErrorPerCoord', 'magErrorFromSNR']
@@ -54,55 +61,54 @@ class Error(Exception):
 #                     limMagName='fiveSigmaDepth',seeingName='seeingFwhmGeom',
 #                     filterMagName='MagnitudeInFilter'):
 
- #   """Add astrometric and photometric uncertainties to observations generated through JPL ephemeris simulator.
+#   """Add astrometric and photometric uncertainties to observations generated through JPL ephemeris simulator.
 #
- #   Parameters:
- #   -----------
- #   ephemsdf   ... Pandas dataFrame containing output of JPL ephemeris simulator
- #   obsdf    ... Pandas dataFrame containing survey simulator output such as LSST opsim
- #   *Name    ... relevant column names in obsdf
- #   *NameEph ... relevant column names in ephemsdf
+#   Parameters:
+#   -----------
+#   ephemsdf   ... Pandas dataFrame containing output of JPL ephemeris simulator
+#   obsdf    ... Pandas dataFrame containing survey simulator output such as LSST opsim
+#   *Name    ... relevant column names in obsdf
+#   *NameEph ... relevant column names in ephemsdf
 
- #   Returns:
- #   --------
- #   ephemsOut ... ephems Pandas dataFrame (observations with added uncertainties)
- #   """
+#   Returns:
+#   --------
+#   ephemsOut ... ephems Pandas dataFrame (observations with added uncertainties)
+#   """
 
-    # Check whether the observations dataframe covers the whole ephemeris time
-    # --------------------------------------------------------------------------
-    # Should be handled somewhere else
-    # --------------------------------------------------------------------------
-    # tobsmin=obsdf[obsEpochName].min()
-    # tobsmax=obsdf[obsEpochName].max()
-    # tephmin=ephemsdf[ephEpochName].min()
-    # tephmax=ephemsdf[ephEpochName].max()
+# Check whether the observations dataframe covers the whole ephemeris time
+# --------------------------------------------------------------------------
+# Should be handled somewhere else
+# --------------------------------------------------------------------------
+# tobsmin=obsdf[obsEpochName].min()
+# tobsmax=obsdf[obsEpochName].max()
+# tephmin=ephemsdf[ephEpochName].min()
+# tephmax=ephemsdf[ephEpochName].max()
 
-    # if(tephmin<tobsmin or tephmax>tobsmax):
-    #    print('observations tmin, ephemeris tmin:',tobsmin, tephmin)
-    #    print('observations tmax, ephemeris tmax:',tobsmax, tephmax)
-    #    raise Exception('Observations do not cover the entire ephemeris timespan.')
-    # --------------------------------------------------------------------------
+# if(tephmin<tobsmin or tephmax>tobsmax):
+#    print('observations tmin, ephemeris tmin:',tobsmin, tephmin)
+#    print('observations tmax, ephemeris tmax:',tobsmax, tephmax)
+#    raise Exception('Observations do not cover the entire ephemeris timespan.')
+# --------------------------------------------------------------------------
 
-    # Remove
-    # tempdf = pd.merge(
-    #    ephemsdf[[obsIdNameEph]],
-    #    obsdf[[obsIdName, limMagName, seeingName]],
-    #    left_on=obsIdNameEph,
-    #    right_on=obsIdName,
-    #    how="left"
-    # )
+# Remove
+# tempdf = pd.merge(
+#    ephemsdf[[obsIdNameEph]],
+#    obsdf[[obsIdName, limMagName, seeingName]],
+#    left_on=obsIdNameEph,
+#    right_on=obsIdName,
+#    how="left"
+# )
 
 #    astrSig,SNR,_=calcAstrometricUncertainty(ephemsdf[filterMagName], tempdf[limMagName],
 #                                            FWHMeff=tempdf[seeingName]*1000, output_units='mas')
 #    photometric_sigma = magErrorFromSNR(SNR)
 
- #   return (astrSig, photometric_sigma, SNR)
+#   return (astrSig, photometric_sigma, SNR)
 
-def addUncertainties(detDF, rng):   
+def addUncertainties(detDF, rng):
     """
     Generates astrometric and photometric unvertainties, and SNR. Uses uncertainties to randomize the photometry.
     """
-
 
     detDF['AstrometricSigma(deg)'], detDF['PhotometricSigma(mag)'], detDF['SNR'] = uncertainties(detDF)
 
@@ -113,10 +119,11 @@ def addUncertainties(detDF, rng):
                                             detDF, rng, magName="PSFMag",
                                             sigName="PhotometricSigma(mag)")
     return detDF
- 
+
+
 def uncertainties(detDF,
                   limMagName='fiveSigmaDepthAtSource', seeingName='seeingFwhmGeom',
-                  filterMagName='trailedSourceMag',
+                  filterMagName='TrailedSourceMag',
                   dra_name='AstRARate(deg/day)',
                   ddec_name='AstDecRate(deg/day)', dec_name='AstDec(deg)'
                   ):
@@ -131,10 +138,10 @@ def uncertainties(detDF,
     --------
     ephemsOut ... ephems Pandas dataFrame (observations with added uncertainties)
     """
-    dMag = PPTrailingLoss.calcTrailingLoss(detDF[dra_name]*degCos(detDF[dec_name]),
-                                            detDF[ddec_name],
-                                            detDF[seeingName]
-                                            )
+
+    dMag = PPTrailingLoss.calcTrailingLoss(detDF[dra_name] * degCos(detDF[dec_name]),
+                                           detDF[ddec_name],
+                                           detDF[seeingName])
 
     astrSig, SNR, _ = calcAstrometricUncertainty(detDF[filterMagName] + dMag, detDF[limMagName],
                                                  FWHMeff=detDF[seeingName] * 1000, output_units='mas')

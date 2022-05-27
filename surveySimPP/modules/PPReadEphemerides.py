@@ -42,8 +42,8 @@ def PPReadEphemerides(eph_output, ephemerides_type, inputformat):
 
     usage: PPReadEphemerides(padafr, ephemerides_type, inputformat)
     """
-    from surveySimPP.modules.PPRunUtilities import PPGetLogger
-    pplogger = PPGetLogger()
+    #from surveySimPP.modules.PPRunUtilities import PPGetLogger
+    pplogger = logging.getLogger(__name__)
     
     ephtypeci=ephemerides_type.casefold()
 
