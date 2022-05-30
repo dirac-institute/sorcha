@@ -23,6 +23,8 @@ Calculate probability of detection due to fading
 """
 
 import numpy as np
+import sys
+import logging
 
 __all__ = ['PPDetectionProbability']
 
@@ -89,5 +91,6 @@ def PPDetectionProbability(oif_df, trailing_losses=False, trailing_loss_name='dm
     elif trailing_losses:
         return calcDetectionProbability(oif_df[magnitude_name] + oif_df[trailing_loss_name], oif_df[limiting_magnitude_name], fillFactor, w)
     else:
+        pplogger = logging.getLogger(__name__)
         pplogger.error('ERROR: PPDetectionProbability: trailing_losses should be True or False.')
         sys.exit('ERROR: PPDetectionProbability: trailing_losses should be True or False.')
