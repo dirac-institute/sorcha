@@ -1,7 +1,5 @@
-import numpy as np
-import pandas as pd
+__all__ = ['PPDropObservations']
 
-__all__=['PPDropObservations']
 
 def PPDropObservations(observations, rng, probability="detection probability"):
     """
