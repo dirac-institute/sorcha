@@ -250,12 +250,9 @@ def PPConfigFileParser(configfile, survey_name):
     config_dict['trackletInterval'], _ = PPGetValueAndFlag(config, 'FILTERINGPARAMETERS', 'trackletInterval', 'float', 'Tracklet interval not supplied for SSP filtering.')
     config_dict['SSPDetectionEfficiency'], _ = PPGetValueAndFlag(config, 'FILTERINGPARAMETERS', 'SSPDetectionEfficiency', 'float', 'Detection efficiency not supplied for SSP filtering.')
 
-    if (config_dict['inSepThreshold'] is not None
-            and config_dict['minTracklet'] is not None
-            and config_dict['noTracklets'] is not None
-            and config_dict['trackletInterval'] is not None
-            and config_dict['SSPDetectionEfficiency'] is not None):
+    SSPvariables = [config_dict['inSepThreshold'], config_dict['minTracklet'], config_dict['noTracklets'], config_dict['trackletInterval'], config_dict['SSPDetectionEfficiency']]
 
+    if all(SSPvariables):
         # only error handles these values if they are supplied
         if config_dict['minTracklet'] < 1:
             pplogger.error('ERROR: minTracklet is zero or negative.')
@@ -275,11 +272,7 @@ def PPConfigFileParser(configfile, survey_name):
 
         config_dict['SSPLinkingOn'] = True
 
-    elif (config_dict['inSepThreshold'] is None
-            and config_dict['minTracklet'] is None
-            and config_dict['noTracklets'] is None
-            and config_dict['trackletInterval'] is None
-            and config_dict['SSPDetectionEfficiency'] is None):
+    elif not any(SSPvariables):
 
         config_dict['SSPLinkingOn'] = False
 
@@ -287,12 +280,17 @@ def PPConfigFileParser(configfile, survey_name):
         pplogger.error('ERROR: only some SSP linking variables supplied. Supply all five required variables for SSP linking filter, or none to turn filter off.')
         sys.exit('ERROR: only some SSP linking variables supplied. Supply all five required variables for SSP linking filter, or none to turn filter off.')
 
-    # output format
+    # output format and size
 
-    config_dict['outputformat'] = PPGetOrExit(config, 'OUTPUTFORMAT', 'outputformat', 'ERROR: output format not specified.')
-    if config_dict['outputformat'] not in ['csv', 'separatelyCSV', 'separatelyCsv', 'separatelycsv', 'sqlite3', 'hdf5', 'HDF5', 'h5']:
-        pplogger.error('ERROR: output format should be either csv, separatelyCSV, sqlite3 or hdf5.')
-        sys.exit('ERROR: output format should be either csv, separatelyCSV, sqlite3 or hdf5.')
+    config_dict['outputformat'] = PPGetOrExit(config, 'OUTPUTFORMAT', 'outputformat', 'ERROR: output format not specified.').lower()
+    if config_dict['outputformat'] not in ['csv', 'separatelycsv', 'sqlite3', 'hdf5', 'h5']:
+        pplogger.error('ERROR: outputformat should be either csv, separatelyCSV, sqlite3 or hdf5.')
+        sys.exit('ERROR: outputformat should be either csv, separatelyCSV, sqlite3 or hdf5.')
+
+    config_dict['outputsize'] = PPGetOrExit(config, 'OUTPUTFORMAT', 'outputsize', 'ERROR: output size not specified.').lower()
+    if config_dict['outputsize'] not in ['default', 'full']:
+        pplogger.error('ERROR: outputsize should be "default" or "full".')
+        sys.exit('ERROR: outputsize should be "default" or "full".')
 
     # size of chunk
 

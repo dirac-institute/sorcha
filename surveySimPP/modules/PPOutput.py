@@ -75,17 +75,26 @@ def PPOutWriteSqlite3(pp_results, outf):
     pp_results.to_sql("pp_results", con=cnx, if_exists="append")
 
 
-def PPWriteOutput(cmd_args, configs, observations, endChunk):
+def PPWriteOutput(cmd_args, configs, observations_in, endChunk):
     """
     Author: Steph Merritt
 
     Description: Writes out the output in the format specified in the config file.
 
-    Mandatory input:	dict, configs, dictionary of config variables created by PPConfigFileParser
+    Mandatory input:    dict, configs, dictionary of config variables created by PPConfigFileParser
                         pandas DataFrame, observations, table of observations for output
     """
 
     pplogger = logging.getLogger(__name__)
+
+    if configs['outputsize'] == 'default':
+        observations = observations_in[['ObjID', 'FieldMJD', 'fieldRA', 'fieldDec', 
+                                        'AstRA(deg)', 'AstDec(deg)', 'AstrometricSigma(deg)', 
+                                        'optFilter', 'observedPSFMag', 'observedTrailedSourceMag', 
+                                        'PhotometricSigma(mag)', 'fiveSigmaDepth', 
+                                        'fiveSigmaDepthAtSource']]
+    #else:
+        #observations = observations_in
 
     pplogger.info('Constructing output path...')
 
@@ -95,7 +104,7 @@ def PPWriteOutput(cmd_args, configs, observations, endChunk):
         pplogger.info('Output to CSV file...')
         observations = PPOutWriteCSV(observations, out)
 
-    elif ((configs['outputformat'] == 'separatelyCSV') or (configs['outputformat'] == 'separatelyCsv') or (configs['outputformat'] == 'separatelycsv')):
+    elif (configs['outputformat'] == 'separatelycsv'):
         outputsuffix = '.csv'
         objid_list = observations['ObjID'].unique().tolist()
         pplogger.info('Output to ' + str(len(objid_list)) + ' separate output CSV files...')
@@ -113,7 +122,7 @@ def PPWriteOutput(cmd_args, configs, observations, endChunk):
         pplogger.info('Output to sqlite3 database...')
         observations = PPOutWriteSqlite3(observations, out)
 
-    elif (configs['outputformat'] == 'hdf5' or configs['outputformat'] == 'HDF5'):
+    elif (configs['outputformat'] == 'hdf5' or configs['outputformat'] == 'h5'):
         outputsuffix = ".h5"
         out = cmd_args['outpath'] + cmd_args['outfilestem'] + outputsuffix
         pplogger.info('Output to HDF5 binary file...')

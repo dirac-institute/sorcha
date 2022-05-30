@@ -21,14 +21,8 @@
 Calculate probability of detection due to fading
 
 """
-# Numpy
-import numpy as np
-# Pandas
-import pandas as pd
-#Counter
-from collections import Counter
 
-from . import PPTrailingLoss
+import numpy as np
 
 __all__ = ['PPDetectionProbability']
 
@@ -41,34 +35,37 @@ class Error(Exception):
 
     pass
 
-#-----------------------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------------------------
+
+
 def calcDetectionProbability(mag, limmag, fillFactor=1.0, w=0.1):
-        """ Find the probability of a detection given a visual magnitude,
-        limiting magnitude, and fillfactor,
-        determined by the fading function from Veres & Chesley (2017).
+    """ Find the probability of a detection given a visual magnitude,
+    limiting magnitude, and fillfactor,
+    determined by the fading function from Veres & Chesley (2017).
 
-        Parameters
-        ----------
-        mag: float
-                magnitude of object in filter used for that field
-        limmag: float
-             limiting magnitude of the field
-        fillfactor: float
-             fraction of FOV covered by the camera sensor
-        w: float
-             distribution parameter
+    Parameters
+    ----------
+    mag: float
+            magnitude of object in filter used for that field
+    limmag: float
+         limiting magnitude of the field
+    fillfactor: float
+         fraction of FOV covered by the camera sensor
+    w: float
+         distribution parameter
 
-        Returns
-        -------
-        P: float
-            Probability of detection
-        """
+    Returns
+    -------
+    P: float
+        Probability of detection
+    """
 
-        P = fillFactor / (1. + np.exp((mag - limmag) / w))
+    P = fillFactor / (1. + np.exp((mag - limmag) / w))
 
-        return P
+    return P
 
-#-----------------------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------------------------
+
 
 def PPDetectionProbability(oif_df, trailing_losses=False, trailing_loss_name='dmagDetect',
                            magnitude_name="TrailedSourceMag",
@@ -76,21 +73,21 @@ def PPDetectionProbability(oif_df, trailing_losses=False, trailing_loss_name='dm
                            field_id_name="FieldID",
                            fillFactor=1.0, w=0.1):
 
-        """
-        Probability of observations being observable for objectInField output.
+    """
+    Probability of observations being observable for objectInField output.
 
-        Input
-        -----
-        oif_df          ... pandas dataframe containing simulation output joined to pointing.
-        *_name          ... names of columns in oif_df
-        fillFactor      ... fraction of the field of view covered by sensors.
-        w               ... distribution parameter
-        """
+    Input
+    -----
+    oif_df          ... pandas dataframe containing simulation output joined to pointing.
+    *_name          ... names of columns in oif_df
+    fillFactor      ... fraction of the field of view covered by sensors.
+    w               ... distribution parameter
+    """
 
-
-        if (trailing_losses==False):
-            return calcDetectionProbability(oif_df[magnitude_name],oif_df[limiting_magnitude_name], fillFactor, w)
-        elif (trailing_losses==True):
-            return calcDetectionProbability(oif_df[magnitude_name] + oif_df[trailing_loss_name],oif_df[limiting_magnitude_name], fillFactor, w)
-        else:
-            print('trailing_loss has to be True or False')
+    if not trailing_losses:
+        return calcDetectionProbability(oif_df[magnitude_name], oif_df[limiting_magnitude_name], fillFactor, w)
+    elif trailing_losses:
+        return calcDetectionProbability(oif_df[magnitude_name] + oif_df[trailing_loss_name], oif_df[limiting_magnitude_name], fillFactor, w)
+    else:
+        pplogger.error('ERROR: PPDetectionProbability: trailing_losses should be True or False.')
+        sys.exit('ERROR: PPDetectionProbability: trailing_losses should be True or False.')
