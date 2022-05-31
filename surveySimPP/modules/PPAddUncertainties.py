@@ -110,23 +110,28 @@ def addUncertainties(detDF, configs, rng):
     Generates astrometric and photometric unvertainties, and SNR. Uses uncertainties to randomize the photometry.
     """
 
-    detDF['AstrometricSigma(deg)'], detDF['PhotometricSigmaTrailedSource(mag)'], detDF['SNR'] = uncertainties(detDF, filterMagName='TrailedSourceMag')
-    
+    detDF['AstrometricSigma(deg)'], detDF['PhotometricSigmaTrailedSource(mag)'], detDF['SNR'] = uncertainties(detDF, configs, filterMagName='TrailedSourceMag')
+
     if configs['trailingLossesOn']:
-        _, detDF['PhotometricSigmaPSF(mag)'], detDF['SNR'] = uncertainties(detDF, filterMagName='PSFMag')
+        _, detDF['PhotometricSigmaPSF(mag)'], detDF['SNR'] = uncertainties(detDF, configs, filterMagName='PSFMag')
     else:
         detDF['PhotometricSigmaPSF(mag)'] = detDF['PhotometricSigmaTrailedSource(mag)']
 
     detDF["observedTrailedSourceMag"] = PPRandomizeMeasurements.randomizePhotometry(
                                             detDF, rng, magName="TrailedSourceMag",
                                             sigName="PhotometricSigmaTrailedSource(mag)")
-    detDF["observedPSFMag"] = PPRandomizeMeasurements.randomizePhotometry(
-                                            detDF, rng, magName="PSFMag",
-                                            sigName="PhotometricSigmaPSF(mag)")
+    
+    if configs['trailingLossesOn']:
+        detDF["observedPSFMag"] = PPRandomizeMeasurements.randomizePhotometry(
+                                                detDF, rng, magName="PSFMag",
+                                                sigName="PhotometricSigmaPSF(mag)")
+    else:
+       detDF["observedPSFMag"] = detDF["observedTrailedSourceMag"]
+
     return detDF
 
 
-def uncertainties(detDF,
+def uncertainties(detDF, configs,
                   limMagName='fiveSigmaDepthAtSource', seeingName='seeingFwhmGeom',
                   filterMagName='TrailedSourceMag',
                   dra_name='AstRARate(deg/day)',
@@ -144,9 +149,12 @@ def uncertainties(detDF,
     ephemsOut ... ephems Pandas dataFrame (observations with added uncertainties)
     """
 
-    dMag = PPTrailingLoss.calcTrailingLoss(detDF[dra_name] * degCos(detDF[dec_name]),
-                                           detDF[ddec_name],
-                                           detDF[seeingName])
+    if configs['trailingLossesOn']:
+        dMag = PPTrailingLoss.calcTrailingLoss(detDF[dra_name] * degCos(detDF[dec_name]),
+                                               detDF[ddec_name],
+                                               detDF[seeingName])
+    else:
+        dMag = 0.0
 
     astrSig, SNR, _ = calcAstrometricUncertainty(detDF[filterMagName] + dMag, detDF[limMagName],
                                                  FWHMeff=detDF[seeingName] * 1000, output_units='mas')
