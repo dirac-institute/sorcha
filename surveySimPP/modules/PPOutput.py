@@ -91,8 +91,8 @@ def PPWriteOutput(cmd_args, configs, observations_in, endChunk):
         observations = observations_in[['ObjID', 'FieldMJD', 'fieldRA', 'fieldDec', 
                                         'AstRA(deg)', 'AstDec(deg)', 'AstrometricSigma(deg)', 
                                         'optFilter', 'observedPSFMag', 'observedTrailedSourceMag', 
-                                        'PhotometricSigma(mag)', 'fiveSigmaDepth', 
-                                        'fiveSigmaDepthAtSource']]
+                                        'PhotometricSigmaPSF(mag)', 'PhotometricSigmaTrailedSource(mag)', 
+                                        'fiveSigmaDepth', 'fiveSigmaDepthAtSource']]
     #else:
         #observations = observations_in
 

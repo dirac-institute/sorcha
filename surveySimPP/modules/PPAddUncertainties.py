@@ -105,19 +105,24 @@ class Error(Exception):
 
 #   return (astrSig, photometric_sigma, SNR)
 
-def addUncertainties(detDF, rng):
+def addUncertainties(detDF, configs, rng):
     """
     Generates astrometric and photometric unvertainties, and SNR. Uses uncertainties to randomize the photometry.
     """
 
-    detDF['AstrometricSigma(deg)'], detDF['PhotometricSigma(mag)'], detDF['SNR'] = uncertainties(detDF)
+    detDF['AstrometricSigma(deg)'], detDF['PhotometricSigmaTrailedSource(mag)'], detDF['SNR'] = uncertainties(detDF, filterMagName='TrailedSourceMag')
+    
+    if configs['trailingLossesOn']:
+        _, detDF['PhotometricSigmaPSF(mag)'], detDF['SNR'] = uncertainties(detDF, filterMagName='PSFMag')
+    else:
+        detDF['PhotometricSigmaPSF(mag)'] = detDF['PhotometricSigmaTrailedSource(mag)']
 
     detDF["observedTrailedSourceMag"] = PPRandomizeMeasurements.randomizePhotometry(
                                             detDF, rng, magName="TrailedSourceMag",
-                                            sigName="PhotometricSigma(mag)")
+                                            sigName="PhotometricSigmaTrailedSource(mag)")
     detDF["observedPSFMag"] = PPRandomizeMeasurements.randomizePhotometry(
                                             detDF, rng, magName="PSFMag",
-                                            sigName="PhotometricSigma(mag)")
+                                            sigName="PhotometricSigmaPSF(mag)")
     return detDF
 
 

@@ -106,7 +106,7 @@ def runLSSTPostProcessing(cmd_args):
         observations['fiveSigmaDepthAtSource'] = PPVignetting.vignettingEffects(observations)
 
         pplogger.info('Calculating astrometric and photometric uncertainties, randomizing photometry...')
-        observations = PPAddUncertainties.addUncertainties(observations, rng)
+        observations = PPAddUncertainties.addUncertainties(observations, configs, rng)
 
         pplogger.info('Applying astrometric uncertainties...')
         observations["AstRATrue(deg)"] = observations["AstRA(deg)"]
