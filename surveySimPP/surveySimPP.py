@@ -91,7 +91,7 @@ def runLSSTPostProcessing(cmd_args):
                                                     mainfilter,
                                                     configs['othercolours'],
                                                     configs['observing_filters'],
-                                                    configs['objecttype'])
+                                                    configs['cometactivity'])
 
         # ----------------------------------------------------------------------
         if configs['trailingLossesOn']:

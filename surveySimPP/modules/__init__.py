@@ -26,7 +26,6 @@ from . import PPReadIntermDatabase
 from . import PPReadOif
 from . import PPReadOrbitFile
 from . import PPTrailingLoss
-from . import PPTranslateMagnitude
 from . import PPVignetting
 from . import PPRunUtilities
 from . import PPApplyFOVFilter
