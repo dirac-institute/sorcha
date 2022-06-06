@@ -1,7 +1,8 @@
 import pandas as pd
 import numpy as np
 
-__all__=['PPTranslateMagnitude']
+__all__ = ['PPTranslateMagnitude']
+
 
 def PPTranslateMagnitude(oif_output, survey_db, colors,
                          oifFieldIDName='FieldID', surveyFieldIDName='observationId',

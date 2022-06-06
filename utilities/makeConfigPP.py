@@ -12,7 +12,7 @@ def makeConfigFile(args):
 
     config.read_dict({
             'OBJECTS':
-            {'objecttype': args.objecttype},
+            {'cometactivity': args.cometactivity},
             'INPUTFILES':
             {'ephemerides_type': args.ephemeridestype,
                 'pointingdatabase': args.pointingdatabase,
@@ -61,7 +61,7 @@ def main():
     parser.add_argument('filename', help='Filepath where you want to store the config file.', type=str)
 
     # OBJECTS
-    parser.add_argument('--objecttype', '-obj', help='Type of object: asteroid or comet. Default is "asteroid".', type=str, default='asteroid')
+    parser.add_argument('--cometactivity', '-com', help='Type of cometary activity. Options are "comet" or None. Default is None.', type=str, default=None)
 
     # INPUTFILES
     parser.add_argument('--ephemeridestype', '-eph', help='Type of input ephemerides: default = oif. Options: currently only oif.', type=str, default='oif')

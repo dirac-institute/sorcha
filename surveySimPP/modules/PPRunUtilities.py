@@ -172,12 +172,12 @@ def PPConfigFileParser(configfile, survey_name):
     PPFindFileOrExit(config_dict['pointingdatabase'], 'pointingdatabase')
     config_dict['ppdbquery'] = PPGetOrExit(config, 'INPUTFILES', 'ppsqldbquery', 'ERROR: no pointing database SQLite3 query provided.')
 
-    # object type checking
+    # cometary activity checking
 
-    config_dict['objecttype'] = PPGetOrExit(config, 'OBJECTS', 'objecttype', 'ERROR: no object type provided.')
-    if config_dict['objecttype'] not in ['asteroid', 'comet']:
-        pplogger.error('ERROR: objecttype is neither an asteroid or a comet.')
-        sys.exit('ERROR: objecttype is neither an asteroid or a comet.')
+    config_dict['cometactivity'] = PPGetOrExit(config, 'OBJECTS', 'cometactivity', 'ERROR: no comet activity specified.').lower()
+    if config_dict['cometactivity'] not in ['asteroid', 'none']:
+        pplogger.error('ERROR: cometactivity must be "comet" or "none".')
+        sys.exit('ERROR: cometactivity must be "comet" or "none".')
 
     # filters
 
@@ -347,7 +347,10 @@ def PPPrintConfigsToLog(configs):
 
     pplogger = logging.getLogger(__name__)
 
-    pplogger.info('Object type is ' + str(configs['objecttype']))
+    if configs['cometactivity'] == 'comet':
+        pplogger.info('Cometary activity set to: ' + str(configs['cometary activity']))
+    elif configs['cometactivity'] == 'none':
+        pplogger.info('No cometary activity.')
 
     pplogger.info('Pointing simulation result format is: ' + configs['pointingFormat'])
     pplogger.info('Pointing simulation result path is: ' + configs['pointingdatabase'])
@@ -488,7 +491,7 @@ def PPReadAllInput(cmd_args, configs, filterpointing, startChunk, incrStep):
 
     pplogger.info('Reading input physical parameters: ' + cmd_args['paramsinput'])
     padacl = PPReadPhysicalParameters(cmd_args['paramsinput'], startChunk, incrStep, configs['filesep'])
-    if (configs['objecttype'] == 'comet'):
+    if (configs['cometactivity'] == 'comet'):
         pplogger.info('Reading cometary parameters: ' + cmd_args['cometinput'])
         padaco = PPReadCometaryInput(cmd_args['cometinput'], startChunk, incrStep, configs['filesep'])
 
@@ -511,13 +514,13 @@ def PPReadAllInput(cmd_args, configs, filterpointing, startChunk, incrStep):
     pplogger.info('Checking if orbit, brightness, physical parameters and pointing simulation input files match...')
     PPCheckOrbitAndPhysicalParametersMatching(padaor, padacl, padafr)
 
-    if (configs['objecttype'] == 'comet'):
+    if (configs['cometactivity'] == 'comet'):
         PPCheckOrbitAndPhysicalParametersMatching(padaor, padaco, padafr)
 
     pplogger.info('Joining physical parameters and orbital data with simulation data...')
     observations = PPJoinPhysicalParametersPointing(padafr, padacl)
     observations = PPJoinOrbitalData(observations, padaor)
-    if (configs['objecttype'] == 'comet'):
+    if (configs['cometactivity'] == 'comet'):
         pplogger.info('Joining cometary data...')
         observations = PPJoinPhysicalParametersPointing(observations, padaco)
 
