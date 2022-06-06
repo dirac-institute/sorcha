@@ -45,8 +45,12 @@ pip install -e .
 
 Then it can be run via:
 ```
-surveySimPP -c ./demo/PPConfig.ini -l ./data/test/testcolour.txt -o ./data/test/testorb.des -p ./data/test/oiftestoutput.txt -u ./data/out -t testrun
+surveySimPP -c ./demo/PPConfig.ini -l ./data/test/testcolour.txt -o ./data/test/testorb.des -p ./data/test/oiftestoutput.txt -u ./data/out/ -t testrun
 ```
+
+This will create a .csv file in /data/out/ called testrun.csv, containing only the column headings.
+
+
 You can also create config files for OIF and the survey simulator by typing:
 ```
 makeConfigOIF
