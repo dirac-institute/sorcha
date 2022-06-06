@@ -42,11 +42,17 @@ The code can be installed by typing:
 pip install -e .
 ```
 
+Next, install the pointing database to the ./demo/ folder. This can be found [here](http://astro-lsst-01.astro.washington.edu:8080/?runId=1): click one of the links entitled 'baseline_v2.0_10yrs.db' near the top in the SQLite file column.
 
-Then it can be run via:
+
+Then the simulator can be run via:
 ```
-surveySimPP -c ./demo/PPConfig.ini -l ./data/test/testcolour.txt -o ./data/test/testorb.des -p ./data/test/oiftestoutput.txt -u ./data/out -t testrun
+surveySimPP -c ./demo/PPConfig.ini -l ./demo/colours_10mbas.txt -o ./demo/orbits_10mbas.des -p ./demo/oif_10mbas.txt -u ./data/out/ -t demorun
 ```
+
+This will create a .csv file in /data/out/ called demorun.csv with the accompanying log files.
+
+
 You can also create config files for OIF and the survey simulator by typing:
 ```
 makeConfigOIF
