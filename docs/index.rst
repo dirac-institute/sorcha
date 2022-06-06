@@ -15,7 +15,7 @@ works. Tutorials are provided which give examples on how to determine if an obje
 if it is observable with LSST, and specific guides for near earth objects, Jupiter trojans, cometary objects etc.
 
 .. warning::
-   This documentation site and the software packages it describes are under active development
+   This documentation site and the software packages it describes are under active development. Validation is still on-going. DO NOT USE this for science purposes just yet.
  
 .. seealso::
    We have a summary paper (currently in prep) that provides and a broad summary of the software and with significant detail in the methodolgy behind in it. This documentation covers some of the same material but dives deeper into how to install and how to run simulations of what LSST would discover given a model population of synthetic Solar System bodies and a given pointing history for the survey.  
