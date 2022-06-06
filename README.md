@@ -47,7 +47,7 @@ Next, install the pointing database to the ./demo/ folder. This can be found [he
 
 Then the simulator can be run via:
 ```
-surveySimPP -c ./demo/PPConfig.ini -l ./data/demo/colours_10mbas.txt -o ./data/demo/orbits_10mbas.des -p ./data/demo/oif_10mbas.txt -u ./data/out/ -t demorun
+surveySimPP -c ./demo/PPConfig.ini -l ./demo/colours_10mbas.txt -o ./demo/orbits_10mbas.des -p ./demo/oif_10mbas.txt -u ./data/out/ -t demorun
 ```
 
 This will create a .csv file in /data/out/ called demorun.csv with the accompanying log files.
