@@ -34,11 +34,11 @@ def PPGetLogger(
     # stream_handler.setFormatter(log_formatter)
     # log.addHandler(stream_handler)
 
-    dstr = datetime.now().strftime('%Y%m%d%H%M')
+    dstr = datetime.now().strftime('%Y-%m-%d-%H-%M-%S')
     cpid = os.getpid()
 
-    log_file_info = str(log_location + dstr + '-' + str(cpid) + '-' + log_file_info)
-    log_file_error = str(log_location + dstr + '-' + str(cpid) + '-' + log_file_error)
+    log_file_info = str(log_location + dstr + '-p' + str(cpid) + '-' + log_file_info)
+    log_file_error = str(log_location + dstr + '-p' + str(cpid) + '-' + log_file_error)
 
     file_handler_info = logging.FileHandler(log_file_info, mode='w')
     file_handler_info.setFormatter(log_formatter)
