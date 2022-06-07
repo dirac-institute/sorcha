@@ -101,9 +101,6 @@ SurveySimPP Requirements
 *  matplotlib
 
 
-.. note::
-   SurveySimPP currently requires the latest development version of the sbpy package. Pip will install that version of sbpy automatically.
-
 Installing the Survey Simulator Post Processing 
 ~~~~~~~~~~~~
 **Step 1** Navigate to the directory you want to storen the surveySimPP soure code in::
