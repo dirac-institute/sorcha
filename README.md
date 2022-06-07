@@ -21,6 +21,10 @@ Documentation: https://survey-simulator-post-processing.readthedocs.io/en/latest
 * When making a pull request that closes an issue, cite the issue ticket in the pull request summary
 
 ## Installation
+
+We have some basic instructions below, but the best place to go is our documentation pages: https://survey-simulator-post-processing.readthedocs.io/en/latest/
+
+
 Set up a conda environment and activate:
 ```
 conda create -n survey_sim_pp python=3.8 pip
