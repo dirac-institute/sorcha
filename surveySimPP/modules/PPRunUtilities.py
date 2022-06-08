@@ -175,7 +175,7 @@ def PPConfigFileParser(configfile, survey_name):
     # cometary activity checking
 
     config_dict['cometactivity'] = PPGetOrExit(config, 'OBJECTS', 'cometactivity', 'ERROR: no comet activity specified.').lower()
-    if config_dict['cometactivity'] not in ['asteroid', 'none']:
+    if config_dict['cometactivity'] not in ['comet', 'none']:
         pplogger.error('ERROR: cometactivity must be "comet" or "none".')
         sys.exit('ERROR: cometactivity must be "comet" or "none".')
 
