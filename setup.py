@@ -31,6 +31,6 @@ setuptools.setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent", ],
 
-    install_requires=['numpy', 'pandas==1.3.5', 'scipy', 'astropy', 'matplotlib', 'sbpy'],
+    install_requires=['numpy', 'pandas', 'scipy', 'astropy', 'matplotlib', 'sbpy'],
 
 )
