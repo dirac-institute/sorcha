@@ -16,7 +16,7 @@ Initial Steps
 
 **Step 2** Create a conda environment::
 
-   conda create -n survey_sim_pp -c conda-forge -c mjuric python=3.9 spiceypy openorb numpy pandas matplotlib spice-utils pip
+   conda create -n survey_sim_pp -c conda-forge -c mjuric python=3.9 spiceypy=4.0.1 openorb numpy pandas matplotlib spice-utils pip
    conda activate survey_sim_pp
 
    

@@ -7,6 +7,7 @@ Subpackages
 .. toctree::
    :maxdepth: 4
 
+
 Submodules
 ----------
 
@@ -26,6 +27,14 @@ surveySimPP.lsstcomet.phase module
    :undoc-members:
    :show-inheritance:
 
+surveySimPP.lsstcomet.setup module
+----------------------------------
+
+.. automodule:: surveySimPP.lsstcomet.setup
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 surveySimPP.lsstcomet.util module
 ---------------------------------
 
@@ -34,10 +43,3 @@ surveySimPP.lsstcomet.util module
    :undoc-members:
    :show-inheritance:
 
-Module contents
----------------
-
-.. automodule:: surveySimPP.lsstcomet
-   :members:
-   :undoc-members:
-   :show-inheritance:
