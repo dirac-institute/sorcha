@@ -166,7 +166,9 @@ def PPConfigFileParser(configfile, survey_name):
     # formatting and input
 
     config_dict['pointingFormat'] = PPGetOrExit(config, 'INPUTFILES', 'pointingFormat', 'ERROR: no pointing simulation format is specified.').lower()
-    # if config_dict['pointingFormat'] not in ['csv', 'whitespace', 'hdf5']:
+    if config_dict['pointingFormat'] not in ['csv', 'whitespace', 'hdf5']:
+        pplogger.error('ERROR: outputformat should be either csv, separatelyCSV, sqlite3 or hdf5.')
+        sys.exit('ERROR: outputformat should be either csv, separatelyCSV, sqlite3 or hdf5.')
     
     config_dict['filesep'] = PPGetOrExit(config, 'INPUTFILES', 'auxFormat', 'ERROR: no auxiliary data format specified.')
     config_dict['ephemerides_type'] = PPGetOrExit(config, 'INPUTFILES', 'ephemerides_type', 'ERROR: no ephemerides type provided.')
@@ -255,6 +257,7 @@ def PPConfigFileParser(configfile, survey_name):
 
     SSPvariables = [config_dict['inSepThreshold'], config_dict['minTracklet'], config_dict['noTracklets'], config_dict['trackletInterval'], config_dict['SSPDetectionEfficiency']]
 
+    # the below if-statement explicitly checks for None so a zero triggers the correct error
     if all(v is not None for v in SSPvariables):
         # only error handles these values if they are supplied
         if config_dict['minTracklet'] < 1:
@@ -291,9 +294,9 @@ def PPConfigFileParser(configfile, survey_name):
         sys.exit('ERROR: outputformat should be either csv, separatelyCSV, sqlite3 or hdf5.')
 
     config_dict['outputsize'] = PPGetOrExit(config, 'OUTPUTFORMAT', 'outputsize', 'ERROR: output size not specified.').lower()
-    if config_dict['outputsize'] not in ['default', 'full']:
-        pplogger.error('ERROR: outputsize should be "default" or "full".')
-        sys.exit('ERROR: outputsize should be "default" or "full".')
+    if config_dict['outputsize'] not in ['default']:
+        pplogger.error('ERROR: outputsize should be "default".')
+        sys.exit('ERROR: outputsize should be "default".')
 
     # size of chunk
 
