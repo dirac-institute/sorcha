@@ -165,11 +165,14 @@ def PPConfigFileParser(configfile, survey_name):
 
     # formatting and input
 
-    config_dict['pointingFormat'] = PPGetOrExit(config, 'INPUTFILES', 'pointingFormat', 'ERROR: no pointing simulation format is specified.')
+    config_dict['pointingFormat'] = PPGetOrExit(config, 'INPUTFILES', 'pointingFormat', 'ERROR: no pointing simulation format is specified.').lower()
+    # if config_dict['pointingFormat'] not in ['csv', 'whitespace', 'hdf5']:
+    
     config_dict['filesep'] = PPGetOrExit(config, 'INPUTFILES', 'auxFormat', 'ERROR: no auxiliary data format specified.')
     config_dict['ephemerides_type'] = PPGetOrExit(config, 'INPUTFILES', 'ephemerides_type', 'ERROR: no ephemerides type provided.')
     config_dict['pointingdatabase'] = PPGetOrExit(config, 'INPUTFILES', 'pointingdatabase', 'ERROR: no pointing database provided.')
     PPFindFileOrExit(config_dict['pointingdatabase'], 'pointingdatabase')
+    
     config_dict['ppdbquery'] = PPGetOrExit(config, 'INPUTFILES', 'ppsqldbquery', 'ERROR: no pointing database SQLite3 query provided.')
 
     # cometary activity checking
@@ -252,7 +255,7 @@ def PPConfigFileParser(configfile, survey_name):
 
     SSPvariables = [config_dict['inSepThreshold'], config_dict['minTracklet'], config_dict['noTracklets'], config_dict['trackletInterval'], config_dict['SSPDetectionEfficiency']]
 
-    if all(SSPvariables):
+    if all(v is not None for v in SSPvariables):
         # only error handles these values if they are supplied
         if config_dict['minTracklet'] < 1:
             pplogger.error('ERROR: minTracklet is zero or negative.')
