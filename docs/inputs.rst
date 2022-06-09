@@ -73,6 +73,7 @@ An example of an orbit file in cometary format, with each object ID represented 
 
 **Header line**
 The first row in the orbit file must be a header started with ‘!!’ to denote it as the header row::
+
    !!OID FORMAT q e i node argperi t_p H t_0
 
 
@@ -121,6 +122,7 @@ An example of an orbit file, in Keplarian format, with the object ID represented
 
 **Header line**
 The first row in the orbit file must be a header started with ‘!!’ to denote it as the header row::
+
    !!OID FORMAT q e i node argperi t_p H t_0
 
 .. tip::
@@ -183,6 +185,19 @@ An example of a cometary activity parameter file::
 
    **When running an instance of surveySimPP, either every synthetic planetesimal experiences cometary activity, or none do.** When running simulations of synthetic planetesimals exhibiting cometary activity, **every** object in that simulation must have an entry in the  associated cometary activety file.
 
++-------------+-----------------------------------------------------------------------------------+
+| Keyword     | Description                                                                       |
++=============+===================================================================================+
+| OID         | Object identifier for each synthetic planetesimal simulated (string)              |
++-------------+-----------------------------------------------------------------------------------+
+| afrho1      | Afρ, quantity of                                                                  |
+|             | `A'Hearn et al. (1984) <https://ui.adsabs.harvard.edu/abs/1984AJ.....89..579A>`_. |
+|             | at perihelion (cm). The product of                                                |
+|             | albedo, filling factor of grains within the observer field of view, and the       |
+|             | linear radius of the field of view at the comet                                   |
++-------------+-----------------------------------------------------------------------------------+
+| k           | Dust falling exponential value (dust falling at rh^k)                             |
++-------------+-----------------------------------------------------------------------------------+
 
 LSST Pointing Database
 ------------------------
@@ -209,7 +224,7 @@ The latest version of rubin_sim cadence simulations can be found at https://lsst
    There may be changes to how this information is read in when the Rubin Observatory science operations begin in approximately mid-2024.
 
 Ephemeris file (Objects in Field Output)
-------------------------
+-----------------------------------------
 
 .. note::
   The ephemeris file is used by  **surveySimPP**. We recommend using **Objects in Fields** to generate it.

@@ -1,8 +1,8 @@
 Outputs
 ==================
   
-Objects in Field (OIF)
------------------
+Objects in Field (OIF) Output
+------------------------------
 The format of the OIF output looks something like::
    
    ObjID, FieldID, FieldMJD, AstRange(km), AstRangeRate(km/s), AstRA(deg), AstRARate(deg/day), AstDec(deg), AstDecRate(deg/day), Ast-Sun(J2000x)(km), Ast-Sun(J2000y)(km), Ast-Sun(J2000z)(km), Ast-Sun(J2000vx)(km/s), Ast-Sun(J2000vy)(km/s), Ast-Sun(J2000vz)(km/s), Obs-Sun(J2000x)(km), Obs-Sun(J2000y)(km), Obs-Sun(J2000z)(km), Obs-Sun(J2000vx)(km/s), Obs-Sun(J2000vy)(km/s), Obs-Sun(J2000vz)(km/s), Sun-Ast-Obs(deg), V, V(H=0)
@@ -64,11 +64,11 @@ The output from OIF is directly input into surveySimPPr. The following table giv
 | V(H=0)                 | Object's apprent V amgnitude if H=0, if H is provided as input                   |
 +------------------------+----------------------------------------------------------------------------------+
 
-.. noteg::
+.. note::
    All positions, positions, and velocities are in respect to J2000. 
 
-SurveySimPP
------------------
+SurveySimPP Output
+----------------------
 The format of the survey simulator output looks something like::
    
    ObjID	FieldID	FieldMJD	AstRange(km)	AstRangeRate(km/s)	AstRA(deg)	AstRARate(deg/day)	AstDec(deg)	AstDecRate(deg/day)	Ast-Sun(J2000x)(km)	Ast-Sun(J2000y)(km)	Ast-Sun(J2000z)(km)	Ast-Sun(J2000vx)(km/s)	Ast-Sun(J2000vy)(km/s)	Ast-Sun(J2000vz)(km/s)	Obs-Sun(J2000x)(km)	Obs-Sun(J2000y)(km)	Obs-Sun(J2000z)(km)	Obs-Sun(J2000vx)(km/s)	Obs-Sun(J2000vy)(km/s)	Obs-Sun(J2000vz)(km/s)	Sun-Ast-Obs(deg)	V(H=0	r	u-r	g-r	i-r	z-r	y-r	GS	FORMAT	q	e	incl	Omega	argperi	t_p	H	t_0	g	i	z	observationStartMJD	optFilter	seeingFwhmGeom	seeingFwhmEff	fiveSigmaDepth	fieldRA	fieldDec	rotSkyPos	MagnitudeInFilter	detection_probability	AstrometricSigma(mas)	PhotometricSigma(mag)	SNR	AstrometricSigma(deg)	dmagDetect	dmagVignet	AstRATrue(deg)	AstDecTrue(deg)	detectorID	counter
@@ -108,3 +108,5 @@ The format of the survey simulator output looks something like::
 | fiveSigmaDepthAtSource             |  5-sigma limiting magnitude at the object's location on the detector             |
 +------------------------------------+----------------------------------------------------------------------------------+
 
+.. note::
+   All positions, positions, and velocities are in respect to J2000.
