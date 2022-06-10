@@ -38,6 +38,7 @@ if it is observable with LSST, and specific guides for near earth objects, Jupit
    release
    contributors   
    acknowledgements
+   cite
  
 .. toctree::
    :maxdepth: 1

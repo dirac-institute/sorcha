@@ -8,9 +8,6 @@ Subpackages
    :maxdepth: 4
 
 
-Submodules
-----------
-
 surveySimPP.lsstcomet.model module
 ----------------------------------
 
