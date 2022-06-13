@@ -156,7 +156,7 @@ Testing the surveySimPP Installation
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 To test that the installation was done correctly, run::
 
-   surveySimPP -c ./PPConfig.ini -l ./data/test/testcolour.txt -o ./data/test/testorb.des -p ./data/test/oiftestoutput.txt
+   surveySimPP -c ./demo/PPConfig.ini -l ./demo/colours_10mbas.txt -o ./demo/orbits_10mbas.des -p ./demo/oif_10mbas.txt -u ./data/out/ -t demorun
    
 The output will appear in a csv file in .data/out (this pathway can be changed in the config file).
 The output should look like::

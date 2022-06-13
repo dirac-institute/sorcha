@@ -117,8 +117,6 @@ An example of an orbit file, in Keplarian format, with the object ID represented
 +-------------+----------------------------------------------------------------------------------+
 | epoch       | Epoch (MJD)                                                                      |
 +-------------+----------------------------------------------------------------------------------+
-| H           | Absolute Magnitude (magnitudes)                                                  |
-+-------------+----------------------------------------------------------------------------------+
 
 **Header line**
 The first row in the orbit file must be a header started with ‘!!’ to denote it as the header row::
@@ -128,21 +126,20 @@ The first row in the orbit file must be a header started with ‘!!’ to denote
 .. tip::
   The orbit file can be either white space separated or comma value separated (CSV). For readability we show examples with white space in the online documentation.
 
-.. note::
-  We are working on updating Objects in Field to not require H and move H to the physical parameters files. 
-
+.. tip::
+  Objects in Field does have the capability take a V-band absolute magnitude and other parameters to calculate a V-band apparent magnitude. surveySimPP allows for more complicated modifications to the apparent magnitude (such as cometary activity or the ability to possibly add light curve effects if a module [if a module is developed]). Therefore we recommend not including ana V-band H value. Instead we recommend providing the H of the synthetic planetesimals in the physical paramters file used by surveySimPP (see the next section). 
 
 Physical Parameters File
 -------------------------------------------
 .. note::
   The physical parameters file is used by **surveySimPP**.
 
-The input file for the physical parameters includes information about the objects color and brightness.
+The input file for the physical parameters includes information about the objects optical colors, phase curve, and absolute magnitude. 
 
 An example of the physical parameter file can be seen here::
 
 
-   ObjID r u-r g-r i-r z-r y-r GS
+   ObjID H u-r g-r i-r z-r y-r GS 
    St500000a 5.63 0.0 0.0 0.0 0.0 0.0 0.15
    St500001a 6.25 0.0 0.0 0.0 0.0 0.0 0.15
    St500002a 6.36 0.0 0.0 0.0 0.0 0.0 0.15
@@ -159,6 +156,16 @@ The brightness of an atmosphereless body is a function of its phase angle (a).
 Several empirical models exist to predict the brightness, including the HG system (where H is approximately
 the brightness at d = 0 and G represents the slope)
 For this input, the options are: HG, HG1G2, HG12, linear, none
+
++-------------+----------------------------------------------------------------------------------+
+| Keyword     | Description                                                                      |
++=============+==================================================================================+
+| OID         | Object identifier for each synthetic planetesimal simulated (string)             |
++-------------+----------------------------------------------------------------------------------+
+| H           | Absolute Magnitude (magnitudes)                                                  |
++-------------+----------------------------------------------------------------------------------+
+| GS          | Phase Curve Parameter (either G12 or β)                                          |
++-------------+----------------------------------------------------------------------------------+
 
 Phase Functions
 ~~~~~~~~~~~~~~~~~~~~~
