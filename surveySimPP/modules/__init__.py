@@ -13,7 +13,6 @@ from . import PPFootprintFilter
 from . import PPJoinPhysicalParametersPointing
 from . import PPJoinOrbitalData
 from . import PPMakeIntermediatePointingDatabase
-from . import PPMatchFieldConditions
 from . import PPMatchPointing
 from . import PPMatchPointingsAndColours
 from . import PPMatchPointingToObservations
