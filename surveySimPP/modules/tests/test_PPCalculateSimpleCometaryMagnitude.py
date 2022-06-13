@@ -3,6 +3,8 @@
 import pytest
 import pandas as pd
 
+from surveySimPP.tests.data import get_test_filepath
+
 
 def test_PPCalculateSimpleCometaryMagnitude():
 
@@ -14,10 +16,10 @@ def test_PPCalculateSimpleCometaryMagnitude():
     from surveySimPP.modules.PPReadOrbitFile import PPReadOrbitFile
     from surveySimPP.modules.PPCalculateSimpleCometaryMagnitude import PPCalculateSimpleCometaryMagnitude
 
-    padafr = PPReadOif('./data/test/67P.out', 'whitespace')
-    padacl = PPReadPhysicalParameters('./data/test/testcometcolour.txt', 0, 3, 'whitespace')
-    padaco = PPReadCometaryInput('./data/test/testcomet.txt', 0, 3, 'whitespace')
-    padaor = PPReadOrbitFile('./data/test/67P.orb.des', 0, 3, 'whitespace')
+    padafr = PPReadOif(get_test_filepath('67P.out'), 'whitespace')
+    padacl = PPReadPhysicalParameters(get_test_filepath('testcometcolour.txt'), 0, 3, 'whitespace')
+    padaco = PPReadCometaryInput(get_test_filepath('testcomet.txt'), 0, 3, 'whitespace')
+    padaor = PPReadOrbitFile(get_test_filepath('67P.orb.des'), 0, 3, 'whitespace')
 
     resdf1 = PPJoinPhysicalParametersPointing(padafr, padacl)
     resdf2 = PPJoinPhysicalParametersPointing(resdf1, padaco)

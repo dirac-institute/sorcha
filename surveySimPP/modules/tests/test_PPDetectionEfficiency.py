@@ -5,6 +5,8 @@ import pandas as pd
 import numpy as np
 #from filtering import PPFilterDetectionEfficiencyThreshold
 
+from surveySimPP.tests.data import get_test_filepath
+
 
 """
 test_detectionEfficencyThreshold.py
@@ -28,7 +30,7 @@ def test_PPDetectionEfficiency():
 
     rng = np.random.default_rng(2021)
 
-    padafr = PPReadOif('./data/test/oiftestoutput.txt', 'whitespace')
+    padafr = PPReadOif(get_test_filepath('oiftestoutput.txt'), 'whitespace')
     nrows = len(padafr.index)
     pada1 = PPDetectionEfficiency(padafr, 1.00, rng)
     nr1 = len(pada1.index)

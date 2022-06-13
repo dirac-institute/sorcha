@@ -4,19 +4,22 @@ import pytest
 import pandas as pd
 import sqlite3
 
+from surveySimPP.tests.data import get_test_filepath
 
-def test_PPReadIntermDatabase():
+
+def test_PPReadIntermDatabase(tmp_path):
 
     from surveySimPP.modules.PPMakeIntermediatePointingDatabase import PPMakeIntermediatePointingDatabase
     from surveySimPP.modules.PPReadIntermDatabase import PPReadIntermDatabase
     from surveySimPP.modules.PPReadPhysicalParameters import PPReadPhysicalParameters
-    padacl = PPReadPhysicalParameters('./data/test/testcolour.txt', 0, 5, 'whitespace')
+    padacl = PPReadPhysicalParameters(get_test_filepath('testcolour.txt'), 0, 5, 'whitespace')
     print(padacl)
     objid_list = padacl['ObjID'].unique().tolist()
 
-    daba = PPMakeIntermediatePointingDatabase('./data/test/oiftestoutput.txt', './data/test/testdb_PPIntermDB.db', 10)
+    testdb = str(tmp_path / "testdb_PPIntermDB.db")
+    daba = PPMakeIntermediatePointingDatabase(get_test_filepath('oiftestoutput.txt'), testdb, 10)
 
-    padafr = PPReadIntermDatabase('./data/test/testdb_PPIntermDB.db', objid_list)
+    padafr = PPReadIntermDatabase(testdb, objid_list)
 
     nlines = 9
 
