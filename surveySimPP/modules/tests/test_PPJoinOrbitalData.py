@@ -3,6 +3,8 @@
 import pytest
 import pandas as pd
 
+from surveySimPP.tests.data import get_test_filepath
+
 
 def test_PPJoinCOrbitalData():
 
@@ -12,9 +14,9 @@ def test_PPJoinCOrbitalData():
     from surveySimPP.modules.PPReadPhysicalParameters import PPReadPhysicalParameters
     from surveySimPP.modules.PPReadOrbitFile import PPReadOrbitFile
 
-    padafr = PPReadOif('./data/test/oiftestoutput.txt', "whitespace")
-    padacl = PPReadPhysicalParameters('./data/test/testcolour.txt', 0, 5, "whitespace")
-    padaor = PPReadOrbitFile('./data/test/testorb.des', 0, 5, "whitespace")
+    padafr = PPReadOif(get_test_filepath('oiftestoutput.txt'), "whitespace")
+    padacl = PPReadPhysicalParameters(get_test_filepath('testcolour.txt'), 0, 5, "whitespace")
+    padaor = PPReadOrbitFile(get_test_filepath('testorb.des'), 0, 5, "whitespace")
 
     padain = PPJoinPhysicalParametersPointing(padafr, padacl)
     padare = PPJoinOrbitalData(padain, padaor)

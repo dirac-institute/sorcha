@@ -5,6 +5,8 @@ import pandas as pd
 import os
 import sys
 
+from surveySimPP.tests.data import get_test_filepath
+
 
 def test_PPOutWriteCSV():
 
@@ -15,14 +17,14 @@ def test_PPOutWriteCSV():
     from surveySimPP.modules.PPMatchPointingsAndColours import PPMatchPointingsAndColours
     from surveySimPP.modules.PPOutput import PPOutWriteCSV
 
-    padafr = PPReadOif('./data/test/oiftestoutput.txt', "whitespace")
-    padacl = PPReadPhysicalParameters('./data/test/testcolour.txt', 0, 5, "whitespace")
+    padafr = PPReadOif(get_test_filepath('oiftestoutput.txt'), "whitespace")
+    padacl = PPReadPhysicalParameters(get_test_filepath('testcolour.txt'), 0, 5, "whitespace")
 
     resdf = PPJoinPhysicalParametersPointing(padafr, padacl)
 
     dbq = 'SELECT observationId, observationStartMJD, filter, seeingFwhmGeom, seeingFwhmEff, fiveSigmaDepth, fieldRA, fieldDec, rotSkyPos FROM SummaryAllProps order by observationId'
 
-    pada5 = PPMatchPointing('./data/test/baseline_10yrs_10klines.db', ['g', 'r', 'i'], dbq)
+    pada5 = PPMatchPointing(get_test_filepath('baseline_10yrs_10klines.db'), ['g', 'r', 'i'], dbq)
 
     # DRY COMMENT OUT BELOW - resdf3 NOT CREATED
     # pada6 = PPMatchPointingsAndColours(resdf3, pada5)

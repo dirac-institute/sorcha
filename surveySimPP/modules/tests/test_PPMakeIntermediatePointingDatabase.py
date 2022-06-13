@@ -4,12 +4,15 @@ import pytest
 import pandas as pd
 import sqlite3
 
+from surveySimPP.tests.data import get_test_filepath
 
-def test_PPMakeIntermediatePointingDatabase():
+
+def test_PPMakeIntermediatePointingDatabase(tmp_path):
 
     from surveySimPP.modules.PPMakeIntermediatePointingDatabase import PPMakeIntermediatePointingDatabase
 
-    daba = PPMakeIntermediatePointingDatabase('./data/test/oiftestoutput.txt', './data/test/testdb_PPIntermDB.db', 10)
+    testdb = str(tmp_path / "testdb_PPIntermDB.db")
+    daba = PPMakeIntermediatePointingDatabase(get_test_filepath('oiftestoutput.txt'), testdb, 10)
 
     nlines = 9
 

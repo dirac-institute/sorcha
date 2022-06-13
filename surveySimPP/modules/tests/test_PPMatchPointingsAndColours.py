@@ -3,6 +3,8 @@
 import pytest
 import pandas as pd
 
+from surveySimPP.tests.data import get_test_filepath
+
 
 def test_PPMatchPointingsAndColours():
 
@@ -12,8 +14,8 @@ def test_PPMatchPointingsAndColours():
     from surveySimPP.modules.PPMatchPointing import PPMatchPointing
     from surveySimPP.modules.PPMatchPointingsAndColours import PPMatchPointingsAndColours
 
-    padafr = PPReadOif('./data/test/oiftestoutput.txt', 'whitespace')
-    padacl = PPReadPhysicalParameters('./data/test/testcolour.txt', 0, 5, 'whitespace')
+    padafr = PPReadOif(get_test_filepath('oiftestoutput.txt'), 'whitespace')
+    padacl = PPReadPhysicalParameters(get_test_filepath('testcolour.txt'), 0, 5, 'whitespace')
 
     resdf = PPJoinPhysicalParametersPointing(padafr, padacl)
 
@@ -23,7 +25,7 @@ def test_PPMatchPointingsAndColours():
 
     dbq = 'SELECT observationId, observationStartMJD, filter, seeingFwhmGeom, seeingFwhmEff, fiveSigmaDepth, fieldRA, fieldDec, rotSkyPos FROM SummaryAllProps order by observationId'
 
-    pada5 = PPMatchPointing('./data/test/baseline_10yrs_10klines.db', ['g', 'r', 'i'], dbq)
+    pada5 = PPMatchPointing(get_test_filepath('baseline_10yrs_10klines.db'), ['g', 'r', 'i'], dbq)
     # pada6=PPMatchPointingsAndColours(resdf3,pada5)
 
     # ncols=38

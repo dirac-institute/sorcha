@@ -3,6 +3,8 @@
 import pytest
 import pandas as pd
 
+from surveySimPP.tests.data import get_test_filepath
+
 
 def test_PPJoinPhysicalParametersPointing():
 
@@ -10,8 +12,8 @@ def test_PPJoinPhysicalParametersPointing():
     from surveySimPP.modules.PPReadOif import PPReadOif
     from surveySimPP.modules.PPReadPhysicalParameters import PPReadPhysicalParameters
 
-    padafr = PPReadOif('./data/test/oiftestoutput.txt', 'whitespace')
-    padacl = PPReadPhysicalParameters('./data/test/testcolour.txt', 0, 5, 'whitespace')
+    padafr = PPReadOif(get_test_filepath('oiftestoutput.txt'), 'whitespace')
+    padacl = PPReadPhysicalParameters(get_test_filepath('testcolour.txt'), 0, 5, 'whitespace')
 
     padare = PPJoinPhysicalParametersPointing(padafr, padacl)
 

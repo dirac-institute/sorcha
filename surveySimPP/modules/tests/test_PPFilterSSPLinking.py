@@ -6,13 +6,15 @@ import numpy as np
 from astropy import units as u
 from astropy.coordinates import SkyCoord
 
+from surveySimPP.tests.data import get_test_filepath
+
 
 def test_PPFilterSSPLinking():
 
     from surveySimPP.modules.PPReadOif import PPReadOif
     from surveySimPP.modules.PPFilterSSPLinking import PPFilterSSPLinking
 
-    padafr = PPReadOif('./data/test/oiftestoutput.txt', 'whitespace')
+    padafr = PPReadOif(get_test_filepath('oiftestoutput.txt'), 'whitespace')
     
     rng = np.random.default_rng(2021)
     

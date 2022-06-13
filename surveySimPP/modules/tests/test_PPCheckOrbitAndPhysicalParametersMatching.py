@@ -3,6 +3,8 @@
 import pytest
 import pandas as pd
 
+from surveySimPP.tests.data import get_test_filepath
+
 
 def test_PPCheckOrbitAndPhysicalParametersMatching():
 
@@ -13,9 +15,9 @@ def test_PPCheckOrbitAndPhysicalParametersMatching():
 
     compval = 1
 
-    padaor = PPReadOrbitFile('./data/test/testorb.des', 0, 10, 'whitespace')
-    padacl = PPReadPhysicalParameters('./data/test/testcolour.txt', 0, 10, 'whitespace')
-    padapo = PPReadOif('./data/test/oiftestoutput.txt', 'whitespace')
+    padaor = PPReadOrbitFile(get_test_filepath('testorb.des'), 0, 10, 'whitespace')
+    padacl = PPReadPhysicalParameters(get_test_filepath('testcolour.txt'), 0, 10, 'whitespace')
+    padapo = PPReadOif(get_test_filepath('oiftestoutput.txt'), 'whitespace')
 
     print(padaor)
     print(padacl)
