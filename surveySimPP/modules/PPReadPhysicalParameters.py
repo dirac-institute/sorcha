@@ -34,7 +34,7 @@ def PPReadPhysicalParameters(clr_datafile, beginLoc, chunkSize, filesep):
     """
 
     if (filesep=="whitespace"):
-        padafr=pd.read_csv(clr_datafile, sep='\s+', skiprows=range(1,beginLoc+1), nrows=chunkSize, header=0)
+        padafr=pd.read_csv(clr_datafile, delim_whitespace=True, skiprows=range(1,beginLoc+1), nrows=chunkSize, header=0)
     elif (filesep=="comma" or filesep=="csv"):
         padafr=pd.read_csv(clr_datafile, skiprows=range(1,beginLoc+1), nrows=chunkSize, header=0)
     
