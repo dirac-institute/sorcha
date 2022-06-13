@@ -37,7 +37,7 @@ def PPReadOif(oif_output, inputformat):
    pplogger = logging.getLogger(__name__)
 
    if (inputformat=="whitespace"):
-       padafr=pd.read_csv(oif_output, sep='\s+')
+       padafr=pd.read_csv(oif_output, delim_whitespace=True)
    elif (inputformat=="comma") or (inputformat=='csv'):
        padafr=pd.read_csv(oif_output, delimiter=',')   
    elif (inputformat=='h5') or (inputformat=='hdf5') or (inputformat=='HDF5'):

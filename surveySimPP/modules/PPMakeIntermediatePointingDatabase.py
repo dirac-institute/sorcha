@@ -46,7 +46,7 @@ def PPMakeIntermediatePointingDatabase(oif_output,outf,chunkSize):
         else:
              incrStep=lenf-startChunk
 
-        interm=pd.read_csv(oif_output, sep='\s+', skiprows=range(1,startChunk+1), nrows=incrStep, header=0)    
+        interm=pd.read_csv(oif_output, delim_whitespace=True, skiprows=range(1,startChunk+1), nrows=incrStep, header=0)
         interm.to_sql("interm", con=cnx, if_exists="append")
         
         startChunk = startChunk + chunkSize

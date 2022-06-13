@@ -34,7 +34,7 @@ def PPReadOrbitFile(orbin, beginLoc, chunkSize, filesep):
    pplogger = logging.getLogger(__name__)
    
    if (filesep=="whitespace"):
-       padafr=pd.read_csv(orbin, sep='\s+', skiprows=range(1,beginLoc+1), nrows=chunkSize, header=0)
+       padafr=pd.read_csv(orbin, delim_whitespace=True, skiprows=range(1,beginLoc+1), nrows=chunkSize, header=0)
    elif (filesep=="csv" or filesep=="comma"):
        padafr=pd.read_csv(orbin, delimiter=',', skiprows=range(1,beginLoc+1), nrows=chunkSize, header=0)    
 
