@@ -31,10 +31,11 @@ def PPReadIntermDatabase(intermdb,part_objid_list):
       
      cur=con.cursor()
 
-     padafr=pd.DataFrame(columns=namespd)
+     padafr = []
      for j in part_objid_list_:
           cur.execute("SELECT * from interm WHERE ObjID IN (?);", j)
           padafrtmp=pd.DataFrame(cur.fetchall(), columns=namespd)
-          padafr=padafr.append(padafrtmp)
+          padafr.append(padafrtmp)
+     padafr = pd.concat(padafr)
           
      return padafr
