@@ -105,6 +105,11 @@ def runLSSTPostProcessing(cmd_args):
         pplogger.info('Calculating effects of vignetting on limiting magnitude...')
         observations['fiveSigmaDepthAtSource'] = PPVignetting.vignettingEffects(observations)
 
+        
+        # Note that the below code creates observedTrailedSourceMag and observedPSFMag
+        # as columns in the observations dataframe.
+        # These are the columns that should be used moving forward for filters etc.
+        # Do NOT use TrailedSourceMag or PSFMag, these are cut later.
         pplogger.info('Calculating astrometric and photometric uncertainties, randomizing photometry...')
         observations = PPAddUncertainties.addUncertainties(observations, configs, rng)
 
