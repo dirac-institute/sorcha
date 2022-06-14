@@ -20,8 +20,7 @@ def PPSNRLimit(observations, sigma_limit=2.):
     
     """
     
-    observations.reset_index(inplace=True)  
-    observations_dropped = observations[observations['SNR'] > sigma_limit]
-    observations_dropped.reset_index(drop=True, inplace=True)
+    observations = observations[observations['SNR'] > sigma_limit]
+    observations.reset_index(drop=True, inplace=True)
     
-    return observations_dropped
+    return observations
