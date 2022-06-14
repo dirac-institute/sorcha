@@ -3,8 +3,7 @@ Overview
 The `Vera C. Rubin Observatory Legacy Survey of Space and Time (LSST) <https://www.lsst.org/>`_ Solar System Science Collaboration (SSSC) Science Roadmap `(Schwamb et al. 2018) <https://ui.adsabs.harvard.edu/abs/2018arXiv180201783S/abstract>`_ highlights 
 probing the orbital distributions, size/brightness distributions, and surface colours
 as the top LSST science priorities in each of the Solar System small body populations. In order to do detailed 
-population studies on the orbital properties and physical characteristics of the various Solar System small body reservoirs, one
-requires being able to account for all the survey biases (the complex and often intertwined detection biases – brightness limits,
+population studies on the orbital properties and physical characteristics of the various Solar System small body reservoirs, one must account for all the survey biases (the complex and often intertwined detection biases – brightness limits,
 pointing, cadence, on-sky motion limits, software detection efficiencies) in one’s discovery survey (`see Lawler et al. 2018 <https://ui.adsabs.harvard.edu/abs/2018FrASS...5...14L/abstract>`_ for 
 a more detailed discussion). A survey simulator takes an input model small body population and outputs (biases the population to)
 what Rubin Observatory should have detected by utilizing the LSST pointing history, observation metadata, and Rubin Observatory 
@@ -13,7 +12,7 @@ Solar System Processing pipeline’s detection efficiency.
 Overview of Use
 ------------------
 
-The user is able to a create synthetic Solar System small body population and run them through the Survey Simulator, which applies the specific observational biases from the LSST. In this way, a synthetic population can be compared to real LSST observations. The Survey Simulator is formed out of two python packages working in tandem. The first part is an ephemerides generator. While the user can use any relevant ephemerides generator, we reccomend using `Objects in Field (OIF) <https://github.com/eggls6/objectsInField>`_ package for this. The second piece of software is `Post Processing (surveySimPP) <https://github.com/dirac-institute/survey_simulator_post_processing>`_, which applies the relevant observational biases to simulate what would be detected by LSST, using what we have called :ref:`filters<Filters>`.
+The user is able to create a synthetic Solar System small body population and run them through the Survey Simulator, which applies the specific observational biases from the LSST. In this way, a synthetic population can be compared to real LSST observations. The Survey Simulator is formed out of two python packages working in tandem. The first part is an ephemerides generator. While the user can use any relevant ephemerides generator, we reccomend using `Objects in Field (OIF) <https://github.com/eggls6/objectsInField>`_ package for this. The second piece of software is `Post Processing (surveySimPP) <https://github.com/dirac-institute/survey_simulator_post_processing>`_, which applies the relevant observational biases to simulate what would be detected by LSST, using what we have called :ref:`filters<Filters>`.
 
 
 .. note::

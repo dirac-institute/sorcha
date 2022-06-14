@@ -1,7 +1,7 @@
 Configuration Files
 =====================
 
-SurveySimPP and Objects In Field both use configuration files to set the majority of the various parameters required for running these software packages. The configuration file for surveSimPP allows turning on and off various filters for biasng the simulated small body population to what the survey shold have found. An overview of the possible options for the config files are described below with recommendations on what you should set these config parameters to depending on your use case.
+SurveySimPP and Objects In Field both use configuration files to set the majority of the various parameters required for running these software packages. The configuration file for surveySimPP allows turning on and off various filters for biasing the simulated small body population to what the survey should have found. An overview of the possible options for the config files are described below with recommendations on what you should set these config parameters to depending on your use case.
 
 .. tip::
   We have developed  a set of utilities that are installed alongside surveySimPP that can generate a config file for Objects in Field (See :ref:`makeConfigOIF`) and one for surveySimPP (See :ref:`makeConfigPP`). 

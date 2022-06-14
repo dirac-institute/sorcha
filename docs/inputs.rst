@@ -7,7 +7,7 @@ Inputs
 
 
 There is a set of input files that are required to run the survey simulator post processing codes, which describe the orbital
-and physical parameters for synetheric planetesimals that are being simulated. These files are: an orbit file, a physical paramerer file,
+and physical parameters for synthetic planetesimals that are being simulated. These files are: an orbit file, a physical paramerer file,
 an optional cometary parameter file, ephemeris file (Objects in Field output) and the LSST pointing database. Each of these files are described within this section and example files
 are shown.
 
@@ -127,7 +127,7 @@ The first row in the orbit file must be a header started with ‘!!’ to denote
   The orbit file can be either white space separated or comma value separated (CSV). For readability we show examples with white space in the online documentation.
 
 .. tip::
-  Objects in Field does have the capability take a V-band absolute magnitude and other parameters to calculate a V-band apparent magnitude. surveySimPP allows for more complicated modifications to the apparent magnitude (such as cometary activity or the ability to possibly add light curve effects if a module [if a module is developed]). Therefore we recommend not including ana V-band H value. Instead we recommend providing the H of the synthetic planetesimals in the physical paramters file used by surveySimPP (see the next section). 
+  Objects in Field does have the capability take a V-band absolute magnitude and other parameters to calculate a V-band apparent magnitude. surveySimPP allows for more complicated modifications to the apparent magnitude such as cometary activity (a simple cometary brightening model is included) or the ability to possibly add light curve effects if a module is developed. Therefore, we recommend not including any V-band H value in the orbits input file. Instead, we recommend providing the H  of the synthetic planetesimals in the physical paramters file used by surveySimPP (see the next section). 
 
 Physical Parameters File
 -------------------------------------------
@@ -179,7 +179,7 @@ Cometary Activity Parameters File (Optional)
   The cometary activity file is used by  **surveySimPP**.
 
 This is an optional input file which describes how the object apparent magnitude will be augmented from 
-a standard non-active, atmosphere-less body as it moves inwards and outwards towards the Sun.
+a standard non-active, atmosphereless body as it moves inwards and outwards towards the Sun.
 
 
 An example of a cometary activity parameter file::
@@ -190,7 +190,7 @@ An example of a cometary activity parameter file::
 
 .. warning::
 
-   **When running an instance of surveySimPP, either every synthetic planetesimal experiences cometary activity, or none do.** When running simulations of synthetic planetesimals exhibiting cometary activity, **every** object in that simulation must have an entry in the  associated cometary activety file.
+   **When running an instance of surveySimPP, either every synthetic planetesimal experiences cometary activity, or none do.** When running simulations of synthetic planetesimals exhibiting cometary activity, **every** object in that simulation must have an entry in the  associated cometary activity file.
 
 +-------------+-----------------------------------------------------------------------------------+
 | Keyword     | Description                                                                       |
