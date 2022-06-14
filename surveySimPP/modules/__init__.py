@@ -1,5 +1,4 @@
 from . import PPAddUncertainties
-from . import PPAppmag_to
 from . import PPBrightLimit
 from . import PPCalculateApparentMagnitude
 from . import PPCalculateApparentMagnitudeInFilter
