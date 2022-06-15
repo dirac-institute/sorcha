@@ -8,7 +8,7 @@ def test_PPConfigFileParser():
 
     configs = PPConfigFileParser(get_test_filepath('test_PPConfig.ini'), 'lsst')
 
-    test_configs = {'pointingFormat': 'whitespace',
+    test_configs = {'ephFormat': 'whitespace',
                     'filesep': 'whitespace',
                     'ephemerides_type': 'oif',
                     'pointingdatabase': './surveySimPP/tests/data/baseline_10yrs_10klines.db',
