@@ -316,6 +316,9 @@ def PPConfigFileParser(configfile, survey_name):
     if config_dict['sizeSerialChunk'] < 1:
         pplogger.error('ERROR: sizeSerialChunk is zero or negative.')
         sys.exit('ERROR: sizeSerialChunk is zero or negative.')
+    
+    if config.has_option('GENERAL', 'rng_seed'):  
+        config_dict['rng_seed'] = PPGetIntOrExit(config, 'GENERAL', 'rng_seed', 'ERROR: this error should not trigger.')
 
     return config_dict
 

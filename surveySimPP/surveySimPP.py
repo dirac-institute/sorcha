@@ -51,7 +51,12 @@ def runLSSTPostProcessing(cmd_args):
     filterpointing = PPMatchPointing(configs['pointingdatabase'], configs['observing_filters'], configs['ppdbquery'])
 
     pplogger.info('Instantiating random number generator ... ')
-    rng_seed = int(time.time())
+    
+    if configs['rng_seed']:
+        rng_seed = configs['rng_seed']
+    else:
+        rng_seed = int(time.time())
+    
     pplogger.info('Random number seed is {}.'.format(rng_seed))
     rng = np.random.default_rng(rng_seed)
 
