@@ -35,6 +35,10 @@ def PPReadOrbitFile(orbin, beginLoc, chunkSize, filesep):
     elif (filesep == "csv" or filesep == "comma"):
         padafr = pd.read_csv(orbin, delimiter=',', skiprows=range(1, beginLoc + 1), nrows=chunkSize, header=0)
 
+    if 'H' in padafr.columns:
+        pplogger.error('H column present in orbits data file. H must be included in physical parameters file only.')
+        sys.exit('H column present in orbits data file. H must be included in physical parameters file only.')
+
     padafr = padafr.rename(columns=lambda x: x.strip())
     # rename i to incl to avoid confusion with the colour i
     padafr = padafr.rename(columns={"i": "incl"})
@@ -45,8 +49,8 @@ def PPReadOrbitFile(orbin, beginLoc, chunkSize, filesep):
         pdt = padafr[padafr.isna().any(axis=1)]
         inds = str(pdt['ObjID'].values)
         outstr = "ERROR: uninitialised values when reading orbit file. ObjID: " + str(inds)
+        pplogger.error(outstr)
         sys.exit(outstr)
-        pplogger.info(outstr)
 
     padafr = padafr.drop(['INDEX', 'N_PAR', 'MOID', 'COMPCODE'], axis=1, errors='ignore')
     padafr['ObjID'] = padafr['ObjID'].astype(str)

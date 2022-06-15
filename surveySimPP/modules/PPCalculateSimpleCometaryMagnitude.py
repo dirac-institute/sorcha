@@ -34,7 +34,7 @@ def PPCalculateSimpleCometaryMagnitude(padain, mainfilter):
                      + padain['Ast-Sun(J2000y)(km)'] * padain['Ast-Sun(J2000y)(km)']
                      + padain['Ast-Sun(J2000z)(km)'] * padain['Ast-Sun(J2000z)(km)']).pow(1./2) / 1.495978707e8
 
-    com = Comet(Hv=padain[mainfilter], afrho1=padain.afrho1, q=padain.q, k=padain.k)
+    com = Comet(Hv=padain['H'], afrho1=padain.afrho1, q=padain.q, k=padain.k)
 
     g = {'rh': padain['rho'], 'delta': padain['delta'], 'phase': padain['Sun-Ast-Obs(deg)']}
     # Here, only the coma contribution is calculated in the main filter
@@ -43,6 +43,6 @@ def PPCalculateSimpleCometaryMagnitude(padain, mainfilter):
     except:
         print(g)
     # The contribution of the nucleus is taken from the absolute brightness
-    padain[mainfilter] = -2.5 * np.log10(10 ** (-0.4 * padain['coma']) + 10 ** (-0.4 * padain[mainfilter]))
+    padain[mainfilter] = -2.5 * np.log10(10 ** (-0.4 * padain['coma']) + 10 ** (-0.4 * padain['H']))
 
     return padain
