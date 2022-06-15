@@ -172,8 +172,8 @@ def PPConfigFileParser(configfile, survey_name):
     
     config_dict['filesep'] = PPGetOrExit(config, 'INPUTFILES', 'auxFormat', 'ERROR: no auxiliary data format specified.').lower()
     if config_dict['filesep'] not in ['comma', 'whitespace']:
-        pplogger.error('ERROR: auxFormat should be either comma or whitespace.')
-        sys.exit('ERROR: auxFormat should be either comma or whitespace.')
+        pplogger.error('ERROR: auxFormat should be either comma, csv, or whitespace.')
+        sys.exit('ERROR: auxFormat should be either comma, csv, or whitespace.')
 
     config_dict['ephemerides_type'] = PPGetOrExit(config, 'INPUTFILES', 'ephemerides_type', 'ERROR: no ephemerides type provided.')
     config_dict['pointingdatabase'] = PPGetOrExit(config, 'INPUTFILES', 'pointingdatabase', 'ERROR: no pointing database provided.')
