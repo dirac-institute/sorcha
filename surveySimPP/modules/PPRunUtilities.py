@@ -190,11 +190,14 @@ def PPConfigFileParser(configfile, survey_name):
 
     # filters
 
-    othercolours = PPGetOrExit(config, 'FILTERS', 'othercolours', 'ERROR: othercolours config file variable not provided.')
-    config_dict['othercolours'] = [e.strip() for e in othercolours.split(',')]
+    #othercolours = PPGetOrExit(config, 'FILTERS', 'othercolours', 'ERROR: othercolours config file variable not provided.')
+    #config_dict['othercolours'] = [e.strip() for e in othercolours.split(',')]
 
     obsfilters = PPGetOrExit(config, 'FILTERS', 'observing_filters', 'ERROR: observing_filters config file variable not provided.')
     config_dict['observing_filters'] = [e.strip() for e in obsfilters.split(',')]
+
+    config_dict['mainfilter'] = config_dict['observing_filters'][0]
+    config_dict['othercolours'] = [x + "-" + config_dict['mainfilter'] for x in config_dict['observing_filters'][1:]]
 
     if (len(config_dict['othercolours']) != len(config_dict['observing_filters']) - 1):
         pplogger.error('ERROR: mismatch in input config colours and filters: len(othercolours) != len(observing_filters) - 1')
@@ -319,6 +322,8 @@ def PPConfigFileParser(configfile, survey_name):
     
     if config.has_option('GENERAL', 'rng_seed'):  
         config_dict['rng_seed'] = PPGetIntOrExit(config, 'GENERAL', 'rng_seed', 'ERROR: this error should not trigger.')
+    else:
+        config_dict['rng_seed'] = None
 
     return config_dict
 
@@ -379,7 +384,7 @@ def PPPrintConfigsToLog(configs):
     pplogger.info('Pointing simulation result path is: ' + configs['pointingdatabase'])
     pplogger.info('Pointing simulation result required query is: ' + configs['ppdbquery'])
 
-    pplogger.info('The main filter in which brightness is defined is ' + configs['observing_filters'][0])
+    pplogger.info('The main filter in which brightness is defined is ' + configs['mainfilter'])
     othcs = ' '.join(str(e) for e in configs['othercolours'])
     pplogger.info('The colour indices included in the simulation are ' + othcs)
     rescs = ' '.join(str(f) for f in configs['observing_filters'])

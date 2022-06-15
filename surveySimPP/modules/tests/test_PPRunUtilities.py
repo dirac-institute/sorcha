@@ -15,8 +15,9 @@ def test_PPConfigFileParser():
                     'pointingdatabase': './surveySimPP/tests/data/baseline_10yrs_10klines.db',
                     'ppdbquery': 'SELECT observationId, observationStartMJD, filter, seeingFwhmGeom, seeingFwhmEff, fiveSigmaDepth, fieldRA, fieldDec, rotSkyPos FROM SummaryAllProps order by observationId',
                     'cometactivity': 'none',
-                    'othercolours': ['g-r', 'i-r', 'z-r'],
                     'observing_filters': ['r', 'g', 'i', 'z'],
+                    'mainfilter': 'r',
+                    'othercolours': ['g-r', 'i-r', 'z-r'],
                     'phasefunction': 'HG',
                     'trailingLossesOn': True,
                     'cameraModel': 'footprint',
@@ -37,6 +38,7 @@ def test_PPConfigFileParser():
                     'SSPLinkingOn': True,
                     'outputformat': 'csv',
                     'outputsize': 'default',
-                    'sizeSerialChunk': 10}
+                    'sizeSerialChunk': 10,
+                    'rng_seed': None}
 
     assert configs == test_configs
