@@ -2,6 +2,7 @@
 
 from surveySimPP.tests.data import get_test_filepath
 
+
 def test_PPConfigFileParser():
 
     from surveySimPP.modules.PPRunUtilities import PPConfigFileParser

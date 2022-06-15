@@ -174,11 +174,11 @@ def PPConfigFileParser(configfile, survey_name):
     if config_dict['filesep'] not in ['comma', 'whitespace']:
         pplogger.error('ERROR: auxFormat should be either comma or whitespace.')
         sys.exit('ERROR: auxFormat should be either comma or whitespace.')
-    
+
     config_dict['ephemerides_type'] = PPGetOrExit(config, 'INPUTFILES', 'ephemerides_type', 'ERROR: no ephemerides type provided.')
     config_dict['pointingdatabase'] = PPGetOrExit(config, 'INPUTFILES', 'pointingdatabase', 'ERROR: no pointing database provided.')
     PPFindFileOrExit(config_dict['pointingdatabase'], 'pointingdatabase')
-    
+
     config_dict['ppdbquery'] = PPGetOrExit(config, 'INPUTFILES', 'ppsqldbquery', 'ERROR: no pointing database SQLite3 query provided.')
 
     # cometary activity checking
@@ -192,10 +192,10 @@ def PPConfigFileParser(configfile, survey_name):
 
     othercolours = PPGetOrExit(config, 'FILTERS', 'othercolours', 'ERROR: othercolours config file variable not provided.')
     config_dict['othercolours'] = [e.strip() for e in othercolours.split(',')]
-    
+
     obsfilters = PPGetOrExit(config, 'FILTERS', 'observing_filters', 'ERROR: observing_filters config file variable not provided.')
     config_dict['observing_filters'] = [e.strip() for e in obsfilters.split(',')]
-    
+
     if (len(config_dict['othercolours']) != len(config_dict['observing_filters']) - 1):
         pplogger.error('ERROR: mismatch in input config colours and filters: len(othercolours) != len(observing_filters) - 1')
         sys.exit('ERROR: mismatch in input config colours and filters: len(othercolours) != len(observing_filters) - 1')
@@ -283,7 +283,7 @@ def PPConfigFileParser(configfile, survey_name):
         if (config_dict['SSPDetectionEfficiency'] > 1.0 or config_dict['SSPDetectionEfficiency'] > 1.0):
             pplogger.error('ERROR: SSPDetectionEfficiency out of bounds (should be between 0 and 1).')
             sys.exit('ERROR: SSPDetectionEfficiency out of bounds (should be between 0 and 1).')
-        
+
         if config_dict['inSepThreshold'] <= 0.0:
             pplogger.error('ERROR: inSepThreshold is zero or negative.')
             sys.exit('ERROR: inSepThreshold is zero or negative.')
@@ -371,8 +371,8 @@ def PPPrintConfigsToLog(configs):
         pplogger.info('No cometary activity.')
 
     pplogger.info('Format of ephemerides file is: ' + configs['ephFormat'])
-    pplogger.info('Format of auxiliary files is: ' + configs['filesep'])    
-    
+    pplogger.info('Format of auxiliary files is: ' + configs['filesep'])
+
     pplogger.info('Pointing simulation result path is: ' + configs['pointingdatabase'])
     pplogger.info('Pointing simulation result required query is: ' + configs['ppdbquery'])
 
