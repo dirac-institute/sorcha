@@ -1,8 +1,5 @@
 #!/bin/python
 
-import pytest
-import pandas as pd
-
 from surveySimPP.tests.data import get_test_filepath
 
 
@@ -21,7 +18,7 @@ def test_PPJoinCOrbitalData():
     padain = PPJoinPhysicalParametersPointing(padafr, padacl)
     padare = PPJoinOrbitalData(padain, padaor)
 
-    ncol = 36
+    ncol = 35
     ncolre = len(padare.columns)
 
     assert ncol == ncolre

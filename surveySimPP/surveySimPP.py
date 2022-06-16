@@ -51,12 +51,14 @@ def runLSSTPostProcessing(cmd_args):
     filterpointing = PPMatchPointing(configs['pointingdatabase'], configs['observing_filters'], configs['ppdbquery'])
 
     pplogger.info('Instantiating random number generator ... ')
-    rng_seed = int(time.time())
+    
+    if configs['rng_seed']:
+        rng_seed = configs['rng_seed']
+    else:
+        rng_seed = int(time.time())
+    
     pplogger.info('Random number seed is {}.'.format(rng_seed))
     rng = np.random.default_rng(rng_seed)
-
-    # Extracting mainfilter, the first in observing_filters
-    mainfilter = configs['observing_filters'][0]
 
     # In case of a large input file, the data is read in chunks. The
     # "sizeSerialChunk" parameter in PPConfig.ini assigns the chunk.
@@ -88,7 +90,7 @@ def runLSSTPostProcessing(cmd_args):
         pplogger.info('Calculating apparent magnitudes...')
         observations = PPCalculateApparentMagnitude(observations,
                                                     configs['phasefunction'],
-                                                    mainfilter,
+                                                    configs['mainfilter'],
                                                     configs['othercolours'],
                                                     configs['observing_filters'],
                                                     configs['cometactivity'])

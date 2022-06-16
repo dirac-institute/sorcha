@@ -165,16 +165,20 @@ def PPConfigFileParser(configfile, survey_name):
 
     # formatting and input
 
-    config_dict['pointingFormat'] = PPGetOrExit(config, 'INPUTFILES', 'pointingFormat', 'ERROR: no pointing simulation format is specified.').lower()
-    if config_dict['pointingFormat'] not in ['csv', 'whitespace', 'hdf5']:
-        pplogger.error('ERROR: outputformat should be either csv, separatelyCSV, sqlite3 or hdf5.')
-        sys.exit('ERROR: outputformat should be either csv, separatelyCSV, sqlite3 or hdf5.')
+    config_dict['ephFormat'] = PPGetOrExit(config, 'INPUTFILES', 'ephFormat', 'ERROR: no ephemerides file format is specified.').lower()
+    if config_dict['ephFormat'] not in ['csv', 'whitespace', 'hdf5']:
+        pplogger.error('ERROR: ephFormat should be either csv, whitespace, or hdf5.')
+        sys.exit('ERROR: ephFormat should be either either csv, whitespace, or hdf5.')
     
-    config_dict['filesep'] = PPGetOrExit(config, 'INPUTFILES', 'auxFormat', 'ERROR: no auxiliary data format specified.')
+    config_dict['filesep'] = PPGetOrExit(config, 'INPUTFILES', 'auxFormat', 'ERROR: no auxiliary data format specified.').lower()
+    if config_dict['filesep'] not in ['comma', 'whitespace']:
+        pplogger.error('ERROR: auxFormat should be either comma, csv, or whitespace.')
+        sys.exit('ERROR: auxFormat should be either comma, csv, or whitespace.')
+
     config_dict['ephemerides_type'] = PPGetOrExit(config, 'INPUTFILES', 'ephemerides_type', 'ERROR: no ephemerides type provided.')
     config_dict['pointingdatabase'] = PPGetOrExit(config, 'INPUTFILES', 'pointingdatabase', 'ERROR: no pointing database provided.')
     PPFindFileOrExit(config_dict['pointingdatabase'], 'pointingdatabase')
-    
+
     config_dict['ppdbquery'] = PPGetOrExit(config, 'INPUTFILES', 'ppsqldbquery', 'ERROR: no pointing database SQLite3 query provided.')
 
     # cometary activity checking
@@ -186,8 +190,15 @@ def PPConfigFileParser(configfile, survey_name):
 
     # filters
 
-    config_dict['othercolours'] = [e.strip() for e in config.get('FILTERS', 'othercolours').split(',')]
-    config_dict['observing_filters'] = [e.strip() for e in config.get('FILTERS', 'observing_filters').split(',')]
+    #othercolours = PPGetOrExit(config, 'FILTERS', 'othercolours', 'ERROR: othercolours config file variable not provided.')
+    #config_dict['othercolours'] = [e.strip() for e in othercolours.split(',')]
+
+    obsfilters = PPGetOrExit(config, 'FILTERS', 'observing_filters', 'ERROR: observing_filters config file variable not provided.')
+    config_dict['observing_filters'] = [e.strip() for e in obsfilters.split(',')]
+
+    config_dict['mainfilter'] = config_dict['observing_filters'][0]
+    config_dict['othercolours'] = [x + "-" + config_dict['mainfilter'] for x in config_dict['observing_filters'][1:]]
+
     if (len(config_dict['othercolours']) != len(config_dict['observing_filters']) - 1):
         pplogger.error('ERROR: mismatch in input config colours and filters: len(othercolours) != len(observing_filters) - 1')
         sys.exit('ERROR: mismatch in input config colours and filters: len(othercolours) != len(observing_filters) - 1')
@@ -276,6 +287,10 @@ def PPConfigFileParser(configfile, survey_name):
             pplogger.error('ERROR: SSPDetectionEfficiency out of bounds (should be between 0 and 1).')
             sys.exit('ERROR: SSPDetectionEfficiency out of bounds (should be between 0 and 1).')
 
+        if config_dict['inSepThreshold'] <= 0.0:
+            pplogger.error('ERROR: inSepThreshold is zero or negative.')
+            sys.exit('ERROR: inSepThreshold is zero or negative.')
+
         config_dict['SSPLinkingOn'] = True
 
     elif not any(SSPvariables):
@@ -304,6 +319,11 @@ def PPConfigFileParser(configfile, survey_name):
     if config_dict['sizeSerialChunk'] < 1:
         pplogger.error('ERROR: sizeSerialChunk is zero or negative.')
         sys.exit('ERROR: sizeSerialChunk is zero or negative.')
+    
+    if config.has_option('GENERAL', 'rng_seed'):  
+        config_dict['rng_seed'] = PPGetIntOrExit(config, 'GENERAL', 'rng_seed', 'ERROR: this error should not trigger.')
+    else:
+        config_dict['rng_seed'] = None
 
     return config_dict
 
@@ -358,11 +378,13 @@ def PPPrintConfigsToLog(configs):
     elif configs['cometactivity'] == 'none':
         pplogger.info('No cometary activity.')
 
-    pplogger.info('Pointing simulation result format is: ' + configs['pointingFormat'])
+    pplogger.info('Format of ephemerides file is: ' + configs['ephFormat'])
+    pplogger.info('Format of auxiliary files is: ' + configs['filesep'])
+
     pplogger.info('Pointing simulation result path is: ' + configs['pointingdatabase'])
     pplogger.info('Pointing simulation result required query is: ' + configs['ppdbquery'])
 
-    pplogger.info('The main filter in which brightness is defined is ' + configs['observing_filters'][0])
+    pplogger.info('The main filter in which brightness is defined is ' + configs['mainfilter'])
     othcs = ' '.join(str(e) for e in configs['othercolours'])
     pplogger.info('The colour indices included in the simulation are ' + othcs)
     rescs = ' '.join(str(f) for f in configs['observing_filters'])
@@ -509,7 +531,7 @@ def PPReadAllInput(cmd_args, configs, filterpointing, startChunk, incrStep):
     else:
         try:
             pplogger.info('Reading input pointing history: ' + cmd_args['oifoutput'])
-            padafr = PPReadEphemerides(cmd_args['oifoutput'], configs['ephemerides_type'], configs["pointingFormat"])
+            padafr = PPReadEphemerides(cmd_args['oifoutput'], configs['ephemerides_type'], configs["ephFormat"])
 
             padafr = padafr[padafr['ObjID'].isin(objid_list)]
 

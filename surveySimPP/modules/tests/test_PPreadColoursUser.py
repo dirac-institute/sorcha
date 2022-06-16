@@ -9,7 +9,7 @@ from surveySimPP.tests.data import get_test_filepath
 def test_PPreadColoursUser():
 
     from surveySimPP.modules.PPReadOif import PPReadOif
-    from surveySimPP.modules.PPreadColoursUser import PPreadColoursUser
+    from surveySimPP.utilities.PPreadColoursUser import PPreadColoursUser
 
     resval = 0.6
 

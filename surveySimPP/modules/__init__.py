@@ -1,5 +1,4 @@
 from . import PPAddUncertainties
-from . import PPAppmag_to
 from . import PPBrightLimit
 from . import PPCalculateApparentMagnitude
 from . import PPCalculateApparentMagnitudeInFilter
@@ -19,7 +18,6 @@ from . import PPMatchPointingToObservations
 from . import PPOutput
 from . import PPRandomizeMeasurements
 from . import PPReadPhysicalParameters
-from . import PPreadColoursUser
 from . import PPReadCometaryInput
 from . import PPReadIntermDatabase
 from . import PPReadOif

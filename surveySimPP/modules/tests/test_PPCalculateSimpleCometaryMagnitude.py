@@ -1,8 +1,5 @@
 #!/bin/python
 
-import pytest
-import pandas as pd
-
 from surveySimPP.tests.data import get_test_filepath
 
 
@@ -25,9 +22,9 @@ def test_PPCalculateSimpleCometaryMagnitude():
     resdf2 = PPJoinPhysicalParametersPointing(resdf1, padaco)
     resdf3 = PPJoinOrbitalData(resdf2, padaor)
 
-    #resdf3['r'] = resdf3['V']
+    # resdf3['r'] = resdf3['V']
 
-    ncols1 = len(resdf3.columns) + 3
+    ncols1 = len(resdf3.columns) + 4
 
     resdf = PPCalculateSimpleCometaryMagnitude(resdf3, 'r')
 
