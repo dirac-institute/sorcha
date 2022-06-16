@@ -1,9 +1,32 @@
 #!/bin/python
+import os
+import shutil
+
+import pytest
 
 from surveySimPP.tests.data import get_test_filepath
 
 
-def test_PPConfigFileParser():
+@pytest.fixture
+def setup_and_teardown_for_PPConfigFileParser(tmp_path):
+    # Record initial working directory
+    initial_wd = os.getcwd()
+
+    # Copy files mentioned in config file into the temp directory
+    shutil.copy(get_test_filepath("baseline_10yrs_10klines.db"), tmp_path)
+    shutil.copy(get_test_filepath("detectors_corners.csv"), tmp_path)
+
+    # Move to the temp directory
+    os.chdir(tmp_path)
+
+    # Yield to pytest to run the test
+    yield
+
+    # After running the test, move back to initial working directory
+    os.chdir(initial_wd)
+
+
+def test_PPConfigFileParser(setup_and_teardown_for_PPConfigFileParser):
 
     from surveySimPP.modules.PPRunUtilities import PPConfigFileParser
 
@@ -12,7 +35,7 @@ def test_PPConfigFileParser():
     test_configs = {'ephFormat': 'whitespace',
                     'filesep': 'whitespace',
                     'ephemerides_type': 'oif',
-                    'pointingdatabase': './surveySimPP/tests/data/baseline_10yrs_10klines.db',
+                    'pointingdatabase': './baseline_10yrs_10klines.db',
                     'ppdbquery': 'SELECT observationId, observationStartMJD, filter, seeingFwhmGeom, seeingFwhmEff, fiveSigmaDepth, fieldRA, fieldDec, rotSkyPos FROM SummaryAllProps order by observationId',
                     'cometactivity': 'none',
                     'observing_filters': ['r', 'g', 'i', 'z'],
@@ -21,7 +44,7 @@ def test_PPConfigFileParser():
                     'phasefunction': 'HG',
                     'trailingLossesOn': True,
                     'cameraModel': 'footprint',
-                    'footprintPath': './data/detectors_corners.csv',
+                    'footprintPath': './detectors_corners.csv',
                     'fillfactor': 1.0,
                     'brightLimit': 16.0,
                     'brightLimitOn': True,
