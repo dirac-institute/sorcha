@@ -7,7 +7,7 @@ import logging
 # Author: Grigori Fedorets
 
 
-def PPCalculateApparentMagnitude(observations, phasefunction, mainfilter, othercolours, observing_filters, object_type):
+def PPCalculateApparentMagnitude(observations, phasefunction, mainfilter, othercolours, observing_filters, object_type, verbose=False):
 
     """
     PPCalculateApparentMagnitude(observations, phasefunction, mainfilter, othercolours, observing_filters)
@@ -27,15 +27,15 @@ def PPCalculateApparentMagnitude(observations, phasefunction, mainfilter, otherc
     """
 
     pplogger = logging.getLogger(__name__)
+    verboselog = pplogger.info if verbose else lambda *a, **k: None
 
-    pplogger.info('Calculating apparent magnitudes...')
     observations = PPCalculateApparentMagnitudeInFilter.PPCalculateApparentMagnitudeInFilter(observations, phasefunction, mainfilter)
 
     if (object_type == 'comet'):
-        pplogger.info('Calculating cometary magnitude using a simple model...')
+        verboselog('Calculating cometary magnitude using a simple model...')
         observations = PPCalculateSimpleCometaryMagnitude.PPCalculateSimpleCometaryMagnitude(observations, mainfilter)
 
-    pplogger.info('Selecting and applying correct colour offset...')
+    verboselog('Selecting and applying correct colour offset...')
     observations = PPResolveMagnitudeInFilter.PPResolveMagnitudeInFilter(observations, mainfilter, othercolours, observing_filters)
 
     observations_drop = observations.drop(mainfilter, axis=1)

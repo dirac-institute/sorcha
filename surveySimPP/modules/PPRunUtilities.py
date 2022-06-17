@@ -130,7 +130,6 @@ def PPGetValueAndFlag(config, section, key, type_wanted, none_message):
 
     if value is None:
         flag = False
-        logging.info(none_message)
     else:
         flag = True
 
@@ -352,7 +351,7 @@ def PPCheckFiltersForSurvey(survey_name, observing_filters):
             sys.exit('ERROR: Filter(s) {} given in config file are not recognised filters for {} survey.'.format(bad_list, survey_name))
 
 
-def PPPrintConfigsToLog(configs):
+def PPPrintConfigsToLog(configs, cmd_args):
     """
     Author: Steph Merritt
 
@@ -365,11 +364,18 @@ def PPPrintConfigsToLog(configs):
     """
 
     pplogger = logging.getLogger(__name__)
+    
+    pplogger.info('The config file used is located at ' + cmd_args['configfile'])
+    pplogger.info('The physical parameters file used is located at ' + cmd_args['paramsinput'])
+    pplogger.info('The orbits file used is located at ' + cmd_args['orbinfile'])
+    pplogger.info('The ephemerides file used is located at ' + cmd_args['oifoutput'])
+    pplogger.info('The survey selected is: ' + cmd_args['surveyname'])
+    pplogger.info('Creation of interim database is: ' + str(cmd_args['makeIntermediatePointingDatabase']))
 
     if configs['cometactivity'] == 'comet':
         pplogger.info('Cometary activity set to: ' + str(configs['cometary activity']))
     elif configs['cometactivity'] == 'none':
-        pplogger.info('No cometary activity.')
+        pplogger.info('No cometary activity selected.')
 
     pplogger.info('Format of ephemerides file is: ' + configs['ephFormat'])
     pplogger.info('Format of auxiliary files is: ' + configs['filesep'])
@@ -428,6 +434,8 @@ def PPPrintConfigsToLog(configs):
         pplogger.info('...the minimum angular separation between observations in arcseconds is ' + str(configs['inSepThreshold']))
     else:
         pplogger.info('Solar System Processing linking filter is turned OFF.')
+    
+    pplogger.info('Output files will be saved in path: ' + cmd_args['outpath'] + ' with filestem ' + cmd_args['outfilestem'])
 
 
 def PPFindFileOrExit(arg_fn, argname):
@@ -483,11 +491,12 @@ def PPCMDLineParser(parser):
     cmd_args_dict['makeIntermediatePointingDatabase'] = bool(args.d)
     cmd_args_dict['surveyname'] = args.s
     cmd_args_dict['outfilestem'] = args.t
+    cmd_args_dict['verbose'] = args.v
 
     return cmd_args_dict
 
 
-def PPReadAllInput(cmd_args, configs, filterpointing, startChunk, incrStep):
+def PPReadAllInput(cmd_args, configs, filterpointing, startChunk, incrStep, verbose=True):
     """
     Author: Steph Merritt
 
@@ -506,14 +515,15 @@ def PPReadAllInput(cmd_args, configs, filterpointing, startChunk, incrStep):
     """
 
     pplogger = logging.getLogger(__name__)
+    verboselog = pplogger.info if verbose else lambda *a, **k: None
 
-    pplogger.info('Reading input orbit file: ' + cmd_args['orbinfile'])
+    verboselog('Reading input orbit file: ' + cmd_args['orbinfile'])
     padaor = PPReadOrbitFile(cmd_args['orbinfile'], startChunk, incrStep, configs['filesep'])
 
-    pplogger.info('Reading input physical parameters: ' + cmd_args['paramsinput'])
+    verboselog('Reading input physical parameters: ' + cmd_args['paramsinput'])
     padacl = PPReadPhysicalParameters(cmd_args['paramsinput'], configs['othercolours'], startChunk, incrStep, configs['filesep'])
     if (configs['cometactivity'] == 'comet'):
-        pplogger.info('Reading cometary parameters: ' + cmd_args['cometinput'])
+        verboselog('Reading cometary parameters: ' + cmd_args['cometinput'])
         padaco = PPReadCometaryInput(cmd_args['cometinput'], startChunk, incrStep, configs['filesep'])
 
     objid_list = padacl['ObjID'].unique().tolist()
@@ -523,7 +533,7 @@ def PPReadAllInput(cmd_args, configs, filterpointing, startChunk, incrStep):
         padafr = PPReadIntermDatabase('./data/interm.db', objid_list)
     else:
         try:
-            pplogger.info('Reading input pointing history: ' + cmd_args['oifoutput'])
+            verboselog('Reading input pointing history: ' + cmd_args['oifoutput'])
             padafr = PPReadEphemerides(cmd_args['oifoutput'], configs['ephemerides_type'], configs["ephFormat"])
 
             padafr = padafr[padafr['ObjID'].isin(objid_list)]
@@ -532,20 +542,20 @@ def PPReadAllInput(cmd_args, configs, filterpointing, startChunk, incrStep):
             pplogger.error('ERROR: insufficient memory. Try to run with -d True or reduce sizeSerialChunk.')
             sys.exit('ERROR: insufficient memory. Try to run with -d True or reduce sizeSerialChunk.')
 
-    pplogger.info('Checking if orbit, brightness, physical parameters and pointing simulation input files match...')
+    verboselog('Checking if orbit, brightness, physical parameters and pointing simulation input files match...')
     PPCheckOrbitAndPhysicalParametersMatching(padaor, padacl, padafr)
 
     if (configs['cometactivity'] == 'comet'):
         PPCheckOrbitAndPhysicalParametersMatching(padaor, padaco, padafr)
 
-    pplogger.info('Joining physical parameters and orbital data with simulation data...')
+    verboselog('Joining physical parameters and orbital data with simulation data...')
     observations = PPJoinPhysicalParametersPointing(padafr, padacl)
     observations = PPJoinOrbitalData(observations, padaor)
     if (configs['cometactivity'] == 'comet'):
-        pplogger.info('Joining cometary data...')
+        verboselog('Joining cometary data...')
         observations = PPJoinPhysicalParametersPointing(observations, padaco)
 
-    pplogger.info('Joining info from pointing database with simulation data and dropping observations in non-requested filters...')
+    verboselog('Joining info from pointing database with simulation data and dropping observations in non-requested filters...')
     observations = PPMatchPointingToObservations(observations, filterpointing)
 
     return observations

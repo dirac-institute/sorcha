@@ -2,6 +2,7 @@
 
 import pandas as pd
 import sys
+import logging
 
 # Author: Grigori Fedorets
 
@@ -32,6 +33,8 @@ def PPReadCometaryInput(comet_datafile, beginLoc, chunkSize, filesep):
 
     usage: padafr=PPReadCometaryInput(comet_datafile, beginLoc, chunkSize)
     """
+    
+    pplogger = logging.getLogger(__name__)
 
     if (filesep == "whitespace"):
         padafr = pd.read_csv(comet_datafile, delim_whitespace=True, skiprows=range(1, beginLoc + 1), nrows=chunkSize, header=0)
@@ -46,6 +49,7 @@ def PPReadCometaryInput(comet_datafile, beginLoc, chunkSize, filesep):
         pdt = padafr[padafr.isna().any(axis=1)]
         inds = str(pdt['ObjID'].values)
         outstr = "ERROR: uninitialised values when reading comet data file. ObjID: " + str(inds)
+        pplogger.error(outstr)
         sys.exit(outstr)
 
     padafr['ObjID'] = padafr['ObjID'].astype(str)
