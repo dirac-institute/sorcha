@@ -1,5 +1,6 @@
 #!/usr/bin/python
-# Utility functions used in the running of surveySimPP.py.
+# Parsing and error handling of the config file.
+# Should probably be overhauled. OOP would help here.
 
 import logging
 import os
