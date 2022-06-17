@@ -6,53 +6,6 @@ import os
 import sys
 import numpy as np
 import configparser
-from datetime import datetime
-from .PPReadOrbitFile import PPReadOrbitFile
-from .PPCheckOrbitAndPhysicalParametersMatching import PPCheckOrbitAndPhysicalParametersMatching
-from .PPReadCometaryInput import PPReadCometaryInput
-from .PPReadIntermDatabase import PPReadIntermDatabase
-from .PPReadEphemerides import PPReadEphemerides
-from .PPJoinPhysicalParametersPointing import PPJoinPhysicalParametersPointing
-from .PPJoinOrbitalData import PPJoinOrbitalData
-from .PPMatchPointingToObservations import PPMatchPointingToObservations
-from .PPReadPhysicalParameters import PPReadPhysicalParameters
-
-
-def PPGetLogger(
-        log_location,
-        log_format='%(asctime)s %(name)-12s %(levelname)-8s %(message)s ',
-        log_name='',
-        log_file_info='postprocessing.log',
-        log_file_error='postprocessing.err'):
-
-    # log_format     = '',
-    log = logging.getLogger(log_name)
-    log_formatter = logging.Formatter(log_format)
-
-    # comment this to suppress console output
-    # stream_handler = logging.StreamHandler()
-    # stream_handler.setFormatter(log_formatter)
-    # log.addHandler(stream_handler)
-
-    dstr = datetime.now().strftime('%Y-%m-%d-%H-%M-%S')
-    cpid = os.getpid()
-
-    log_file_info = str(log_location + dstr + '-p' + str(cpid) + '-' + log_file_info)
-    log_file_error = str(log_location + dstr + '-p' + str(cpid) + '-' + log_file_error)
-
-    file_handler_info = logging.FileHandler(log_file_info, mode='w')
-    file_handler_info.setFormatter(log_formatter)
-    file_handler_info.setLevel(logging.INFO)
-    log.addHandler(file_handler_info)
-
-    file_handler_error = logging.FileHandler(log_file_error, mode='w')
-    file_handler_error.setFormatter(log_formatter)
-    file_handler_error.setLevel(logging.ERROR)
-    log.addHandler(file_handler_error)
-
-    log.setLevel(logging.INFO)
-
-    return log
 
 
 def PPGetOrExit(config, section, key, message):
@@ -134,6 +87,59 @@ def PPGetValueAndFlag(config, section, key, type_wanted, none_message):
         flag = True
 
     return value, flag
+
+
+def PPFindFileOrExit(arg_fn, argname):
+    """
+    Author: Steph Merritt
+
+    Description: Checks to see if the filename given by arg_fn actually exists. If it doesn't,
+    this fails gracefully and exits to the command line.
+
+    Mandatory input:    string, arg_fn, string filename passed by command line argument
+                        string, argname,  name/flag of the argument printed in error message
+
+    Output:             string, arg_fn unchanged
+    """
+
+    pplogger = logging.getLogger(__name__)
+
+    if os.path.exists(arg_fn):
+        return arg_fn
+    else:
+        pplogger.error('ERROR: filename {} supplied for {} argument does not exist.'.format(arg_fn, argname))
+        sys.exit('ERROR: filename {} supplied for {} argument does not exist.'.format(arg_fn, argname))
+
+
+def PPCheckFiltersForSurvey(survey_name, observing_filters):
+    """
+    Author: Steph Merritt
+
+    When given a list of filters, this function checks to make sure they exist in the
+    user-selected survey. Currently only has options for LSST, but can be expanded upon
+    later. If the filters given in the config file do not match the survey filters,
+    the function exits the program with an error.
+
+    Parameters:
+    -----------
+    survey_name: string containing survey name
+    observing_filters: list of strings with colour filters.
+
+    """
+
+    pplogger = logging.getLogger(__name__)
+
+    if survey_name in ["LSST", "lsst"]:
+
+        lsst_filters = ['u', 'g', 'r', 'i', 'z', 'y']
+        filters_ok = all(elem in lsst_filters for elem in observing_filters)
+
+        if not filters_ok:
+            bad_list = np.setdiff1d(observing_filters, lsst_filters)
+            pplogger.error('ERROR: Filter(s) {} given in config file are not recognised filters for {} survey.'.format(bad_list, survey_name))
+            pplogger.error('Accepted {} filters: {}'.format("LSST", lsst_filters))
+            pplogger.error('Change observing_filters in config file or select another survey.')
+            sys.exit('ERROR: Filter(s) {} given in config file are not recognised filters for {} survey.'.format(bad_list, survey_name))
 
 
 def PPConfigFileParser(configfile, survey_name):
@@ -331,37 +337,6 @@ def PPConfigFileParser(configfile, survey_name):
     return config_dict
 
 
-def PPCheckFiltersForSurvey(survey_name, observing_filters):
-    """
-    Author: Steph Merritt
-
-    When given a list of filters, this function checks to make sure they exist in the
-    user-selected survey. Currently only has options for LSST, but can be expanded upon
-    later. If the filters given in the config file do not match the survey filters,
-    the function exits the program with an error.
-
-    Parameters:
-    -----------
-    survey_name: string containing survey name
-    observing_filters: list of strings with colour filters.
-
-    """
-
-    pplogger = logging.getLogger(__name__)
-
-    if survey_name in ["LSST", "lsst"]:
-
-        lsst_filters = ['u', 'g', 'r', 'i', 'z', 'y']
-        filters_ok = all(elem in lsst_filters for elem in observing_filters)
-
-        if not filters_ok:
-            bad_list = np.setdiff1d(observing_filters, lsst_filters)
-            pplogger.error('ERROR: Filter(s) {} given in config file are not recognised filters for {} survey.'.format(bad_list, survey_name))
-            pplogger.error('Accepted {} filters: {}'.format("LSST", lsst_filters))
-            pplogger.error('Change observing_filters in config file or select another survey.')
-            sys.exit('ERROR: Filter(s) {} given in config file are not recognised filters for {} survey.'.format(bad_list, survey_name))
-
-
 def PPPrintConfigsToLog(configs, cmd_args):
     """
     Author: Steph Merritt
@@ -446,128 +421,5 @@ def PPPrintConfigsToLog(configs, cmd_args):
         pplogger.info('...the minimum angular separation between observations in arcseconds is ' + str(configs['inSepThreshold']))
     else:
         pplogger.info('Solar System Processing linking filter is turned OFF.')
-    
+
     pplogger.info('Output files will be saved in path: ' + cmd_args['outpath'] + ' with filestem ' + cmd_args['outfilestem'])
-
-
-def PPFindFileOrExit(arg_fn, argname):
-    """
-    Author: Steph Merritt
-
-    Description: Checks to see if the filename given by arg_fn actually exists. If it doesn't,
-    this fails gracefully and exits to the command line.
-
-    Mandatory input:    string, arg_fn, string filename passed by command line argument
-                        string, argname,  name/flag of the argument printed in error message
-
-    Output:             string, arg_fn unchanged
-    """
-
-    pplogger = logging.getLogger(__name__)
-
-    if os.path.exists(arg_fn):
-        return arg_fn
-    else:
-        pplogger.error('ERROR: filename {} supplied for {} argument does not exist.'.format(arg_fn, argname))
-        sys.exit('ERROR: filename {} supplied for {} argument does not exist.'.format(arg_fn, argname))
-
-
-def PPCMDLineParser(parser):
-    """
-    Author: Steph Merritt
-
-    Description: Parses the command line arguments, makes sure the filenames given actually exist,
-    then stores them in a single dict.
-
-    Will only look for the comet parameters file if it's actually given at the command line.
-
-    Mandatory input:    ArgumentParser object, parser, of command line arguments
-
-    output:             dictionary of variables taken from command line arguments
-
-    """
-
-    args = parser.parse_args()
-
-    cmd_args_dict = {}
-
-    cmd_args_dict['paramsinput'] = PPFindFileOrExit(args.l, '-l, --params')
-    cmd_args_dict['orbinfile'] = PPFindFileOrExit(args.o, '-o, --orbit')
-    cmd_args_dict['oifoutput'] = PPFindFileOrExit(args.p, '-p, --pointing')
-    cmd_args_dict['configfile'] = PPFindFileOrExit(args.c, '-c, --config')
-    cmd_args_dict['outpath'] = PPFindFileOrExit(args.u, '-u, --outfile')
-
-    if args.m:
-        cmd_args_dict['cometinput'] = PPFindFileOrExit(args.m, '-m, --comet')
-
-    cmd_args_dict['makeIntermediatePointingDatabase'] = bool(args.d)
-    cmd_args_dict['surveyname'] = args.s
-    cmd_args_dict['outfilestem'] = args.t
-    cmd_args_dict['verbose'] = args.v
-
-    return cmd_args_dict
-
-
-def PPReadAllInput(cmd_args, configs, filterpointing, startChunk, incrStep, verbose=True):
-    """
-    Author: Steph Merritt
-
-    Description: Reads in the simulation data and the orbit and physical parameter files, and then
-    joins them with the pointing database to create a single Pandas dataframe of simulation
-    data with all necessary orbit, physical parameter and pointing information.
-
-    Mandatory input:	dict, cmd_args, dictionary of command line variables created by PPCMDLineParser
-                        dict, configs, dictionary of config variables created by PPConfigFileParser
-                        pandas DataFrame, filterpointing, pointing database
-                        int, startChunk, start of chunk
-                        int, incrStep, size of chunk
-
-    Output:             pandas Dataframe, observations, dataframe of simulation data with all
-                        necessary orbit, physical parameter and pointing information.
-    """
-
-    pplogger = logging.getLogger(__name__)
-    verboselog = pplogger.info if verbose else lambda *a, **k: None
-
-    verboselog('Reading input orbit file: ' + cmd_args['orbinfile'])
-    padaor = PPReadOrbitFile(cmd_args['orbinfile'], startChunk, incrStep, configs['filesep'])
-
-    verboselog('Reading input physical parameters: ' + cmd_args['paramsinput'])
-    padacl = PPReadPhysicalParameters(cmd_args['paramsinput'], configs['othercolours'], startChunk, incrStep, configs['filesep'])
-    if (configs['cometactivity'] == 'comet'):
-        verboselog('Reading cometary parameters: ' + cmd_args['cometinput'])
-        padaco = PPReadCometaryInput(cmd_args['cometinput'], startChunk, incrStep, configs['filesep'])
-
-    objid_list = padacl['ObjID'].unique().tolist()
-
-    if cmd_args['makeIntermediatePointingDatabase']:
-        # read from intermediate database
-        padafr = PPReadIntermDatabase('./data/interm.db', objid_list)
-    else:
-        try:
-            verboselog('Reading input pointing history: ' + cmd_args['oifoutput'])
-            padafr = PPReadEphemerides(cmd_args['oifoutput'], configs['ephemerides_type'], configs["ephFormat"])
-
-            padafr = padafr[padafr['ObjID'].isin(objid_list)]
-
-        except MemoryError:
-            pplogger.error('ERROR: insufficient memory. Try to run with -d True or reduce sizeSerialChunk.')
-            sys.exit('ERROR: insufficient memory. Try to run with -d True or reduce sizeSerialChunk.')
-
-    verboselog('Checking if orbit, brightness, physical parameters and pointing simulation input files match...')
-    PPCheckOrbitAndPhysicalParametersMatching(padaor, padacl, padafr)
-
-    if (configs['cometactivity'] == 'comet'):
-        PPCheckOrbitAndPhysicalParametersMatching(padaor, padaco, padafr)
-
-    verboselog('Joining physical parameters and orbital data with simulation data...')
-    observations = PPJoinPhysicalParametersPointing(padafr, padacl)
-    observations = PPJoinOrbitalData(observations, padaor)
-    if (configs['cometactivity'] == 'comet'):
-        verboselog('Joining cometary data...')
-        observations = PPJoinPhysicalParametersPointing(observations, padaco)
-
-    verboselog('Joining info from pointing database with simulation data and dropping observations in non-requested filters...')
-    observations = PPMatchPointingToObservations(observations, filterpointing)
-
-    return observations
