@@ -252,6 +252,11 @@ def PPConfigFileParser(configfile, survey_name):
     
     if config_dict['fadingFunctionOn']:
         config_dict['fadingFunctionWidth'] = PPGetFloatOrExit(config, 'FILTERINGPARAMETERS', 'fadingFunctionWidth', 'ERROR: fading function is on but no fadingFunctionWidth supplied.')
+ 
+        if config_dict['fadingFunctionWidth'] <= 0.0 or config_dict['fadingFunctionWidth'] > 0.5:
+            pplogger.error('ERROR: fadingFunctionWidth out of bounds. Must be greater than zero and less than 0.5.')
+            sys.exit('ERROR: fadingFunctionWidth out of bounds. Must be greater than zero and less than 0.5.')
+
     elif config.has_option('FILTERINGPARAMETERS', 'fadingFunctionWidth'):
         pplogger.error('ERROR: fadingFunctionWidth supplied in config file but FadingFunctionOn is False.')
         sys.exit('ERROR: fadingFunctionWidth supplied in config file but FadingFunctionOn is False.')
