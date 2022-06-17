@@ -24,7 +24,7 @@ def PPFilterSSPLinking(padain, detefficiency, minintracklets, nooftracklets, int
     Generally, to be applied after detection threshold.
 
 
-    Mandatory input:   padain: modified pandas dataframe
+    Mandatory input:  padain: modified pandas dataframe
                       detefficiency: float, fractional percentage of successfully linked detections
                       minintracklets: integer, minimum number of observations
                       nooftracklets: integer, number of tracklets required for linking

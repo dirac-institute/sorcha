@@ -169,7 +169,7 @@ def PPConfigFileParser(configfile, survey_name):
     if config_dict['ephFormat'] not in ['csv', 'whitespace', 'hdf5']:
         pplogger.error('ERROR: ephFormat should be either csv, whitespace, or hdf5.')
         sys.exit('ERROR: ephFormat should be either either csv, whitespace, or hdf5.')
-    
+
     config_dict['filesep'] = PPGetOrExit(config, 'INPUTFILES', 'auxFormat', 'ERROR: no auxiliary data format specified.').lower()
     if config_dict['filesep'] not in ['comma', 'whitespace']:
         pplogger.error('ERROR: auxFormat should be either comma, csv, or whitespace.')
@@ -190,18 +190,11 @@ def PPConfigFileParser(configfile, survey_name):
 
     # filters
 
-    #othercolours = PPGetOrExit(config, 'FILTERS', 'othercolours', 'ERROR: othercolours config file variable not provided.')
-    #config_dict['othercolours'] = [e.strip() for e in othercolours.split(',')]
-
     obsfilters = PPGetOrExit(config, 'FILTERS', 'observing_filters', 'ERROR: observing_filters config file variable not provided.')
     config_dict['observing_filters'] = [e.strip() for e in obsfilters.split(',')]
 
     config_dict['mainfilter'] = config_dict['observing_filters'][0]
     config_dict['othercolours'] = [x + "-" + config_dict['mainfilter'] for x in config_dict['observing_filters'][1:]]
-
-    if (len(config_dict['othercolours']) != len(config_dict['observing_filters']) - 1):
-        pplogger.error('ERROR: mismatch in input config colours and filters: len(othercolours) != len(observing_filters) - 1')
-        sys.exit('ERROR: mismatch in input config colours and filters: len(othercolours) != len(observing_filters) - 1')
 
     PPCheckFiltersForSurvey(survey_name, config_dict['observing_filters'])
 
@@ -319,8 +312,8 @@ def PPConfigFileParser(configfile, survey_name):
     if config_dict['sizeSerialChunk'] < 1:
         pplogger.error('ERROR: sizeSerialChunk is zero or negative.')
         sys.exit('ERROR: sizeSerialChunk is zero or negative.')
-    
-    if config.has_option('GENERAL', 'rng_seed'):  
+
+    if config.has_option('GENERAL', 'rng_seed'):
         config_dict['rng_seed'] = PPGetIntOrExit(config, 'GENERAL', 'rng_seed', 'ERROR: this error should not trigger.')
     else:
         config_dict['rng_seed'] = None
@@ -518,7 +511,7 @@ def PPReadAllInput(cmd_args, configs, filterpointing, startChunk, incrStep):
     padaor = PPReadOrbitFile(cmd_args['orbinfile'], startChunk, incrStep, configs['filesep'])
 
     pplogger.info('Reading input physical parameters: ' + cmd_args['paramsinput'])
-    padacl = PPReadPhysicalParameters(cmd_args['paramsinput'], startChunk, incrStep, configs['filesep'])
+    padacl = PPReadPhysicalParameters(cmd_args['paramsinput'], configs['othercolours'], startChunk, incrStep, configs['filesep'])
     if (configs['cometactivity'] == 'comet'):
         pplogger.info('Reading cometary parameters: ' + cmd_args['cometinput'])
         padaco = PPReadCometaryInput(cmd_args['cometinput'], startChunk, incrStep, configs['filesep'])
