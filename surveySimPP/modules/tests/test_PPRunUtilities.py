@@ -53,6 +53,7 @@ def test_PPConfigFileParser(setup_and_teardown_for_PPConfigFileParser):
                     'magLimit': None,
                     'magLimitOn': False,
                     'fadingFunctionOn': True,
+                    'fadingFunctionWidth': 0.1,
                     'inSepThreshold': 0.5,
                     'minTracklet': 2,
                     'noTracklets': 3,

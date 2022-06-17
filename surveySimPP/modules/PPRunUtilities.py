@@ -244,11 +244,17 @@ def PPConfigFileParser(configfile, survey_name):
 
     if config_dict['magLimitOn'] and config_dict['SNRLimitOn']:
         pplogger.error('ERROR: SNR limit and magnitude limit are mutually exclusive. Please delete one or both from config file.')
-        sys.exit('ERROR: SNR limit and magnitude limit are mutually exclusive. Please delete one for both from config file.')
+        sys.exit('ERROR: SNR limit and magnitude limit are mutually exclusive. Please delete one or both from config file.')
 
     # fading function
 
     config_dict['fadingFunctionOn'] = PPGetBoolOrExit(config, 'FILTERINGPARAMETERS', 'fadingFunctionOn', 'ERROR: fadingFunctionOn flag not present.')
+    
+    if config_dict['fadingFunctionOn']:
+        config_dict['fadingFunctionWidth'] = PPGetFloatOrExit(config, 'FILTERINGPARAMETERS', 'fadingFunctionWidth', 'ERROR: fading function is on but no fadingFunctionWidth supplied.')
+    elif config.has_option('FILTERINGPARAMETERS', 'fadingFunctionWidth'):
+        pplogger.error('ERROR: fadingFunctionWidth supplied in config file but FadingFunctionOn is False.')
+        sys.exit('ERROR: fadingFunctionWidth supplied in config file but FadingFunctionOn is False.')
 
     # SSP linking filter
 
@@ -421,6 +427,7 @@ def PPPrintConfigsToLog(configs, cmd_args):
 
     if configs['fadingFunctionOn']:
         pplogger.info('The detection efficiency fading function is ON.')
+        pplogger.info('The width parameter of the fading function has been set to: ' + str(configs['fadingFunctionWidth']))
     else:
         pplogger.info('The detection efficiency fading function is OFF.')
 

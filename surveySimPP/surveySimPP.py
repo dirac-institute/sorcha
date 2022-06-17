@@ -143,7 +143,7 @@ def runLSSTPostProcessing(cmd_args):
 
         if configs['fadingFunctionOn']:
             verboselog('Applying detection efficiency fading function...')
-            observations = PPFilterFadingFunction(observations, configs['fillfactor'], rng, verbose=cmd_args['verbose'])
+            observations = PPFilterFadingFunction(observations, configs['fillfactor'], configs['fadingFunctionWidth'], rng, verbose=cmd_args['verbose'])
 
         if configs['brightLimitOn']:
             verboselog('Dropping observations that are too bright...')
