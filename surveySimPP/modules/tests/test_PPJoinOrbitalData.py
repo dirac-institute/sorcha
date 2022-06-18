@@ -12,7 +12,7 @@ def test_PPJoinCOrbitalData():
     from surveySimPP.modules.PPReadOrbitFile import PPReadOrbitFile
 
     padafr = PPReadOif(get_test_filepath('oiftestoutput.txt'), "whitespace")
-    padacl = PPReadPhysicalParameters(get_test_filepath('testcolour.txt'), 0, 5, "whitespace")
+    padacl = PPReadPhysicalParameters(get_test_filepath('testcolour.txt'), ['g-r', 'i-r', 'z-r'], 0, 5, "whitespace")
     padaor = PPReadOrbitFile(get_test_filepath('testorb.des'), 0, 5, "whitespace")
 
     padain = PPJoinPhysicalParametersPointing(padafr, padacl)

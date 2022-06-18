@@ -14,7 +14,7 @@ def test_PPCalculateSimpleCometaryMagnitude():
     from surveySimPP.modules.PPCalculateSimpleCometaryMagnitude import PPCalculateSimpleCometaryMagnitude
 
     padafr = PPReadOif(get_test_filepath('67P.out'), 'whitespace')
-    padacl = PPReadPhysicalParameters(get_test_filepath('testcometcolour.txt'), 0, 3, 'whitespace')
+    padacl = PPReadPhysicalParameters(get_test_filepath('testcometcolour.txt'), ['g-r', 'i-r', 'z-r'], 0, 3, 'whitespace')
     padaco = PPReadCometaryInput(get_test_filepath('testcomet.txt'), 0, 3, 'whitespace')
     padaor = PPReadOrbitFile(get_test_filepath('67P.orb.des'), 0, 3, 'whitespace')
 

@@ -1,8 +1,5 @@
 #!/bin/python
 
-import pytest
-import pandas as pd
-
 from surveySimPP.tests.data import get_test_filepath
 
 
@@ -12,10 +9,10 @@ def test_PPMatchPointingsAndColours():
     from surveySimPP.modules.PPReadOif import PPReadOif
     from surveySimPP.modules.PPReadPhysicalParameters import PPReadPhysicalParameters
     from surveySimPP.modules.PPMatchPointing import PPMatchPointing
-    from surveySimPP.modules.PPMatchPointingsAndColours import PPMatchPointingsAndColours
+    # from surveySimPP.modules.PPMatchPointingsAndColours import PPMatchPointingsAndColours
 
     padafr = PPReadOif(get_test_filepath('oiftestoutput.txt'), 'whitespace')
-    padacl = PPReadPhysicalParameters(get_test_filepath('testcolour.txt'), 0, 5, 'whitespace')
+    padacl = PPReadPhysicalParameters(get_test_filepath('testcolour.txt'), ['g-r', 'i-r', 'z-r'], 0, 5, 'whitespace')
 
     resdf = PPJoinPhysicalParametersPointing(padafr, padacl)
 

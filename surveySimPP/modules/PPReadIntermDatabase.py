@@ -1,6 +1,5 @@
 #!/usr/bin/python
 
-
 import pandas as pd
 import sqlite3
 
@@ -28,7 +27,6 @@ def PPReadIntermDatabase(intermdb,part_objid_list):
      part_objid_list_=tuple(part_objid_list)
      part_objid_list_ = [(i,) for i in part_objid_list]
      
-      
      cur=con.cursor()
 
      padafr = []
@@ -37,5 +35,5 @@ def PPReadIntermDatabase(intermdb,part_objid_list):
           padafrtmp=pd.DataFrame(cur.fetchall(), columns=namespd)
           padafr.append(padafrtmp)
      padafr = pd.concat(padafr)
-          
+
      return padafr

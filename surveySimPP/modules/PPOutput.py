@@ -75,7 +75,7 @@ def PPOutWriteSqlite3(pp_results, outf):
     pp_results.to_sql("pp_results", con=cnx, if_exists="append")
 
 
-def PPWriteOutput(cmd_args, configs, observations_in, endChunk):
+def PPWriteOutput(cmd_args, configs, observations_in, endChunk, verbose=False):
     """
     Author: Steph Merritt
 
@@ -86,6 +86,7 @@ def PPWriteOutput(cmd_args, configs, observations_in, endChunk):
     """
 
     pplogger = logging.getLogger(__name__)
+    verboselog = pplogger.info if verbose else lambda *a, **k: None
 
     if configs['outputsize'] == 'default':
         observations = observations_in[['ObjID', 'FieldMJD', 'fieldRA', 'fieldDec', 
@@ -96,18 +97,18 @@ def PPWriteOutput(cmd_args, configs, observations_in, endChunk):
     #else:
         #observations = observations_in
 
-    pplogger.info('Constructing output path...')
+    verboselog('Constructing output path...')
 
     if (configs['outputformat'] == 'csv'):
         outputsuffix = '.csv'
         out = cmd_args['outpath'] + cmd_args['outfilestem'] + outputsuffix
-        pplogger.info('Output to CSV file...')
+        verboselog('Output to CSV file...')
         observations = PPOutWriteCSV(observations, out)
 
     elif (configs['outputformat'] == 'separatelycsv'):
         outputsuffix = '.csv'
         objid_list = observations['ObjID'].unique().tolist()
-        pplogger.info('Output to ' + str(len(objid_list)) + ' separate output CSV files...')
+        verboselog('Output to ' + str(len(objid_list)) + ' separate output CSV files...')
 
         i = 0
         while(i < len(objid_list)):
@@ -119,11 +120,11 @@ def PPWriteOutput(cmd_args, configs, observations_in, endChunk):
     elif (configs['outputformat'] == 'sqlite3'):
         outputsuffix = '.db'
         out = cmd_args['outpath'] + cmd_args['outfilestem'] + outputsuffix
-        pplogger.info('Output to sqlite3 database...')
+        verboselog('Output to sqlite3 database...')
         observations = PPOutWriteSqlite3(observations, out)
 
     elif (configs['outputformat'] == 'hdf5' or configs['outputformat'] == 'h5'):
         outputsuffix = ".h5"
         out = cmd_args['outpath'] + cmd_args['outfilestem'] + outputsuffix
-        pplogger.info('Output to HDF5 binary file...')
+        verboselog('Output to HDF5 binary file...')
         observations = PPOutWriteHDF5(observations, out, str(endChunk))
