@@ -9,3 +9,7 @@ __pycache__
 
 # Sphinx
 docs/_build
+
+.tox
+.tmp
+.idea
