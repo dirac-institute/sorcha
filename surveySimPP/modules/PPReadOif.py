@@ -53,7 +53,7 @@ def PPReadOif(oif_output, inputformat):
     # as they can be calculated with a variety of phase functions, and in different filters
 
     padafr = padafr.drop(['V', 'V(H=0)'], axis=1, errors='ignore')
-    
+
     try:
         padafr['ObjID'] = padafr['ObjID'].astype(str)
     except KeyError:
