@@ -65,9 +65,8 @@ def PPReadEphemerides(eph_output, ephemerides_type, inputformat):
             'Obs-Sun(J2000x)(km)', 'Obs-Sun(J2000y)(km)', 'Obs-Sun(J2000z)(km)', 'Obs-Sun(J2000vx)(km/s)',
             'Obs-Sun(J2000vy)(km/s)', 'Obs-Sun(J2000vz)(km/s)', 'Sun-Ast-Obs(deg)']
 
-    for col in cols:
-        if col not in padafr:
-            pplogger.error('ERROR: PPReadEphemerides: essential columns missing from ephemerides input: ', col)
-            sys.exit('ERROR: PPReadEphemerides: essential columns missing from ephemerides input: ', col)
+    if not all(col in padafr.columns for col in cols):
+        pplogger.error('ERROR: PPReadEphemerides: essential columns missing from ephemerides input. Required columns are: {}'.format(cols))
+        sys.exit('ERROR: PPReadEphemerides: essential columns missing from ephemerides input. Required columns are: {}'.format(cols))
 
     return padafr
