@@ -44,8 +44,8 @@ def PPReadOif(oif_output, inputformat):
     elif (inputformat == 'h5') or (inputformat == 'hdf5') or (inputformat == 'HDF5'):
         padafr = pd.read_hdf(oif_output).reset_index(drop=True)
     else:
-        pplogger.error("ERROR: PPReadOif: unknown format for pointing simulation results.")
-        sys.exit("ERROR: PPReadOif: unknown format for pointing simulation results.")
+        pplogger.error("ERROR: PPReadOif: unknown format for ephemeris simulation results.")
+        sys.exit("ERROR: PPReadOif: unknown format for ephemeris simulation results.")
 
     padafr = padafr.rename(columns=lambda x: x.strip())
 
@@ -53,6 +53,11 @@ def PPReadOif(oif_output, inputformat):
     # as they can be calculated with a variety of phase functions, and in different filters
 
     padafr = padafr.drop(['V', 'V(H=0)'], axis=1, errors='ignore')
-    padafr['ObjID'] = padafr['ObjID'].astype(str)
+
+    try:
+        padafr['ObjID'] = padafr['ObjID'].astype(str)
+    except KeyError:
+        pplogger.error("ERROR: ephemeris input file does not have 'ObjID' column.")
+        sys.exit("ERROR: ephemeris input file does not have 'ObjID' column.")
 
     return padafr
