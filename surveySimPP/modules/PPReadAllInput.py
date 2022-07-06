@@ -49,7 +49,7 @@ def PPReadAllInput(cmd_args, configs, filterpointing, startChunk, incrStep, verb
     if cmd_args['makeIntermediateEphemerisDatabase'] or cmd_args['readIntermediateEphemerisDatabase']:
         # read from intermediate database
         verboselog('Reading from intermediate ephemeris database.')
-        padafr = PPReadIntermediateEphemerisDatabase('./data/interm.db', objid_list)
+        padafr = PPReadIntermediateEphemerisDatabase(cmd_args['outpath']+'interm.db', objid_list)
     else:
         try:
             verboselog('Reading input pointing history: ' + cmd_args['oifoutput'])

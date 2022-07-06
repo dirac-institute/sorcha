@@ -46,8 +46,8 @@ def PPCMDLineParser(parser):
         pplogger.error('ERROR: both -dr and -dw flags set at command line. Please use only one.')
         sys.exit('ERROR: both -dr and -dw flags set at command line. Please use only one.')
 
-    if args.dr and not os.path.exists('./data/interm.db'):
-        pplogger.error('ERROR: intermediate ephemeris database not found at ./data/interm.db. Rerun with command line flag -dw to create one.')
-        sys.exit('ERROR: intermediate ephemeris database not found at ./data/interm.db. Rerun with command line flag -dw to create one.')
+    if args.dr and not os.path.exists(cmd_args_dict['outpath'] + 'interm.db'):
+        pplogger.error('ERROR: intermediate ephemeris database not found at ' + cmd_args_dict['outpath'] + 'interm.db. Rerun with command line flag -dw to create one.')
+        sys.exit('ERROR: intermediate ephemeris database not found at ' + cmd_args_dict['outpath'] + 'interm.db. Rerun with command line flag -dw to create one.')
 
     return cmd_args_dict
