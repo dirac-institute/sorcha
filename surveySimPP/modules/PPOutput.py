@@ -90,7 +90,6 @@ def PPWriteOutput(cmd_args, configs, observations_in, endChunk, verbose=False):
 
     if configs['outputsize'] == 'default':
         observations = observations_in[['ObjID', 'FieldMJD', 'fieldRA', 'fieldDec',
-                                        'AstRATrue(deg)', 'AstDecTrue(deg)',
                                         'AstRA(deg)', 'AstDec(deg)', 'AstrometricSigma(deg)',
                                         'optFilter', 'observedPSFMag', 'observedTrailedSourceMag',
                                         'PhotometricSigmaPSF(mag)', 'PhotometricSigmaTrailedSource(mag)',
