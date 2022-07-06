@@ -1,6 +1,10 @@
 #!/usr/bin/python
 
+import os
+import sys
+import logging
 from .PPConfigParser import PPFindFileOrExit
+
 
 def PPCMDLineParser(parser):
     """
@@ -17,6 +21,8 @@ def PPCMDLineParser(parser):
 
     """
 
+    pplogger = logging.getLogger(__name__)
+
     args = parser.parse_args()
 
     cmd_args_dict = {}
@@ -30,9 +36,18 @@ def PPCMDLineParser(parser):
     if args.m:
         cmd_args_dict['cometinput'] = PPFindFileOrExit(args.m, '-m, --comet')
 
-    cmd_args_dict['makeIntermediatePointingDatabase'] = bool(args.d)
+    cmd_args_dict['makeIntermediateEphemerisDatabase'] = bool(args.dw)
+    cmd_args_dict['readIntermediateEphemerisDatabase'] = bool(args.dr)
     cmd_args_dict['surveyname'] = args.s
     cmd_args_dict['outfilestem'] = args.t
     cmd_args_dict['verbose'] = args.v
+
+    if args.dr and args.dw:
+        pplogger.error('ERROR: both -dr and -dw flags set at command line. Please use only one.')
+        sys.exit('ERROR: both -dr and -dw flags set at command line. Please use only one.')
+
+    if args.dr and not os.path.exists('./data/interm.db'):
+        pplogger.error('ERROR: intermediate ephemeris database not found at ./data/interm.db. Rerun with command line flag -dw to create one.')
+        sys.exit('ERROR: intermediate ephemeris database not found at ./data/interm.db. Rerun with command line flag -dw to create one.')
 
     return cmd_args_dict

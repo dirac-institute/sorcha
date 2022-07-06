@@ -256,10 +256,10 @@ def PPConfigFileParser(configfile, survey_name):
     # fading function
 
     config_dict['fadingFunctionOn'] = PPGetBoolOrExit(config, 'FILTERINGPARAMETERS', 'fadingFunctionOn', 'ERROR: fadingFunctionOn flag not present.')
-    
+
     if config_dict['fadingFunctionOn']:
         config_dict['fadingFunctionWidth'] = PPGetFloatOrExit(config, 'FILTERINGPARAMETERS', 'fadingFunctionWidth', 'ERROR: fading function is on but no fadingFunctionWidth supplied.')
- 
+
         if config_dict['fadingFunctionWidth'] <= 0.0 or config_dict['fadingFunctionWidth'] > 0.5:
             pplogger.error('ERROR: fadingFunctionWidth out of bounds. Must be greater than zero and less than 0.5.')
             sys.exit('ERROR: fadingFunctionWidth out of bounds. Must be greater than zero and less than 0.5.')
@@ -351,13 +351,14 @@ def PPPrintConfigsToLog(configs, cmd_args):
     """
 
     pplogger = logging.getLogger(__name__)
-    
+
     pplogger.info('The config file used is located at ' + cmd_args['configfile'])
     pplogger.info('The physical parameters file used is located at ' + cmd_args['paramsinput'])
     pplogger.info('The orbits file used is located at ' + cmd_args['orbinfile'])
     pplogger.info('The ephemerides file used is located at ' + cmd_args['oifoutput'])
     pplogger.info('The survey selected is: ' + cmd_args['surveyname'])
-    pplogger.info('Creation of interim database is: ' + str(cmd_args['makeIntermediatePointingDatabase']))
+    pplogger.info('Creation of intermediate ephemeris database is: ' + str(cmd_args['makeIntermediateEphemerisDatabase']))
+    pplogger.info('Reading from existing intermediate ephemeris database is: ' + str(cmd_args['readIntermediateEphemerisDatabase']))
 
     if configs['cometactivity'] == 'comet':
         pplogger.info('Cometary activity set to: ' + str(configs['cometary activity']))

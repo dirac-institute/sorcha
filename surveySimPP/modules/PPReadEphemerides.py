@@ -26,9 +26,6 @@ def PPReadEphemerides(eph_output, ephemerides_type, inputformat):
     'Obs-Sun(J2000vy)(km/s)', 'Obs-Sun(J2000vz)(km/s)', 'Sun-Ast-Obs(deg)']
 
 
-
-
-
     Mandatory input:      string, eph_output, name of text file including Output from ephemerides file
                           string, ephemerides_type, type of ephemerides pointing simulation (oif)
                           string, inputformat, input format of pointing putput (csv, whitespace, hdf5)
