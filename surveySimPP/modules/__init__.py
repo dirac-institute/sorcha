@@ -11,7 +11,7 @@ from . import PPFilterSSPLinking
 from . import PPFootprintFilter
 from . import PPJoinPhysicalParametersPointing
 from . import PPJoinOrbitalData
-from . import PPMakeIntermediatePointingDatabase
+from . import PPMakeIntermediateEphemerisDatabase
 from . import PPMatchPointing
 from . import PPMatchPointingsAndColours
 from . import PPMatchPointingToObservations
@@ -19,7 +19,7 @@ from . import PPOutput
 from . import PPRandomizeMeasurements
 from . import PPReadPhysicalParameters
 from . import PPReadCometaryInput
-from . import PPReadIntermDatabase
+from . import PPReadIntermediateEphemerisDatabase
 from . import PPReadOif
 from . import PPReadOrbitFile
 from . import PPTrailingLoss

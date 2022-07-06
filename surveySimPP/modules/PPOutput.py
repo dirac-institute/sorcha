@@ -89,13 +89,13 @@ def PPWriteOutput(cmd_args, configs, observations_in, endChunk, verbose=False):
     verboselog = pplogger.info if verbose else lambda *a, **k: None
 
     if configs['outputsize'] == 'default':
-        observations = observations_in[['ObjID', 'FieldMJD', 'fieldRA', 'fieldDec', 
-                                        'AstRA(deg)', 'AstDec(deg)', 'AstrometricSigma(deg)', 
-                                        'optFilter', 'observedPSFMag', 'observedTrailedSourceMag', 
-                                        'PhotometricSigmaPSF(mag)', 'PhotometricSigmaTrailedSource(mag)', 
+        observations = observations_in[['ObjID', 'FieldMJD', 'fieldRA', 'fieldDec',
+                                        'AstRA(deg)', 'AstDec(deg)', 'AstrometricSigma(deg)',
+                                        'optFilter', 'observedPSFMag', 'observedTrailedSourceMag',
+                                        'PhotometricSigmaPSF(mag)', 'PhotometricSigmaTrailedSource(mag)',
                                         'fiveSigmaDepth', 'fiveSigmaDepthAtSource']]
-    #else:
-        #observations = observations_in
+    # else:
+        # observations = observations_in
 
     verboselog('Constructing output path...')
 

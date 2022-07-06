@@ -9,7 +9,7 @@ from surveySimPP.modules.PPMatchPointing import PPMatchPointing
 from surveySimPP.modules.PPFilterSSPLinking import PPFilterSSPLinking
 from surveySimPP.modules.PPTrailingLoss import PPTrailingLoss
 from surveySimPP.modules.PPBrightLimit import PPBrightLimit
-from surveySimPP.modules.PPMakeIntermediatePointingDatabase import PPMakeIntermediatePointingDatabase
+from surveySimPP.modules.PPMakeIntermediateEphemerisDatabase import PPMakeIntermediateEphemerisDatabase
 from surveySimPP.modules.PPCalculateApparentMagnitude import PPCalculateApparentMagnitude
 from surveySimPP.modules.PPApplyFOVFilter import PPApplyFOVFilter
 from surveySimPP.modules.PPSNRLimit import PPSNRLimit
@@ -54,8 +54,8 @@ def runLSSTPostProcessing(cmd_args):
 
     # End of config parsing
 
-    if cmd_args['makeIntermediatePointingDatabase']:
-        PPMakeIntermediatePointingDatabase(cmd_args['oifoutput'], './data/interm.db', 100)
+    if cmd_args['makeIntermediateEphemerisDatabase']:
+        PPMakeIntermediateEphemerisDatabase(cmd_args['oifoutput'], cmd_args['outpath']+'interm.db', 100)
 
     verboselog('Reading pointing database and matching observationID with appropriate optical filter...')
 
@@ -129,7 +129,7 @@ def runLSSTPostProcessing(cmd_args):
         verboselog('Applying astrometric uncertainties...')
         observations["AstRATrue(deg)"] = observations["AstRA(deg)"]
         observations["AstDecTrue(deg)"] = observations["AstDec(deg)"]
-        observations["AstRA(deg)"], observations["AstDec(deg)"] = PPRandomizeMeasurements.randomizeAstrometry(observations, rng, sigName='AstrometricSigma(deg)')
+        observations["AstRA(deg)"], observations["AstDec(deg)"] = PPRandomizeMeasurements.randomizeAstrometry(observations, rng, sigName='AstrometricSigma(deg)', sigUnits='deg')
 
         verboselog('Applying field-of-view filters...')
         observations = PPApplyFOVFilter(observations, configs, rng, verbose=cmd_args['verbose'])
@@ -190,20 +190,24 @@ def main():
 
     usage: surveySimPP [-h] [-c C] [-d] [-m M] [-l L] [-o O] [-p P] [-s S]
         optional arguments:
-         -h, --help      show this help message and exit
-         -c C, --config C   Input configuration file name
-         -d          Make intermediate pointing database
-         -m M, --comet M    Comet parameter file name
-         -l L, --params L   Physical parameters file name
-         -o O, --orbit O    Orbit file name
-         -p P, --pointing P  Pointing simulation output file name
-         -s S, --survey S   Name of the survey you wish to simulate
-         -v V, --verbose    Verbosity on or off. Default is on.
+         -h, --help           show this help message and exit
+         -c C, --config C     Input configuration file name
+         -dw                  Make intermediate ephemeris database
+         -dr                  Read from existing intermediate ephemeris database
+         -m M, --comet M      Comet parameter file name
+         -l L, --params L     Physical parameters file name
+         -o O, --orbit O      Orbit file name
+         -p P, --pointing P   Pointing simulation output file name
+         -s S, --survey S     Name of the survey you wish to simulate
+         -u U, --outfile U    Path in which to store output and logs
+         -t T, --stem T       Output file name stem
+         -v V, --verbose      Verbosity on or off: default is on
     """
 
     parser = argparse.ArgumentParser()
     parser.add_argument("-c", "--config", help="Input configuration file name", type=str, dest='c', default='./PPConfig.ini', required=True)
-    parser.add_argument("-d", help="Make intermediate pointing database", dest='d', action='store_true')
+    parser.add_argument("-dw", help="Make intermediate ephemeris database. Overwrites existing database if present.", dest='dw', action='store_true')
+    parser.add_argument("-dr", help="Read from existing/previous intermediate ephemeris database.", dest='dr', action='store_true')
     parser.add_argument("-m", "--comet", help="Comet parameter file name", type=str, dest='m')
     parser.add_argument("-l", "--params", help="Physical parameters file name", type=str, dest='l', default='./data/params', required=True)
     parser.add_argument("-o", "--orbit", help="Orbit file name", type=str, dest='o', default='./data/orbit.des', required=True)

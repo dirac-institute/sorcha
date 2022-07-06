@@ -6,7 +6,7 @@ import sys
 from .PPReadOrbitFile import PPReadOrbitFile
 from .PPCheckOrbitAndPhysicalParametersMatching import PPCheckOrbitAndPhysicalParametersMatching
 from .PPReadCometaryInput import PPReadCometaryInput
-from .PPReadIntermDatabase import PPReadIntermDatabase
+from .PPReadIntermediateEphemerisDatabase import PPReadIntermediateEphemerisDatabase
 from .PPReadEphemerides import PPReadEphemerides
 from .PPJoinPhysicalParametersPointing import PPJoinPhysicalParametersPointing
 from .PPJoinOrbitalData import PPJoinOrbitalData
@@ -46,9 +46,10 @@ def PPReadAllInput(cmd_args, configs, filterpointing, startChunk, incrStep, verb
 
     objid_list = padacl['ObjID'].unique().tolist()
 
-    if cmd_args['makeIntermediatePointingDatabase']:
+    if cmd_args['makeIntermediateEphemerisDatabase'] or cmd_args['readIntermediateEphemerisDatabase']:
         # read from intermediate database
-        padafr = PPReadIntermDatabase('./data/interm.db', objid_list)
+        verboselog('Reading from intermediate ephemeris database.')
+        padafr = PPReadIntermediateEphemerisDatabase(cmd_args['outpath']+'interm.db', objid_list)
     else:
         try:
             verboselog('Reading input pointing history: ' + cmd_args['oifoutput'])
@@ -57,8 +58,8 @@ def PPReadAllInput(cmd_args, configs, filterpointing, startChunk, incrStep, verb
             padafr = padafr[padafr['ObjID'].isin(objid_list)]
 
         except MemoryError:
-            pplogger.error('ERROR: insufficient memory. Try to run with -d True or reduce sizeSerialChunk.')
-            sys.exit('ERROR: insufficient memory. Try to run with -d True or reduce sizeSerialChunk.')
+            pplogger.error('ERROR: insufficient memory. Try to run with -dw command line flag or reduce sizeSerialChunk.')
+            sys.exit('ERROR: insufficient memory. Try to run with -dw command line flag or reduce sizeSerialChunk.')
 
     verboselog('Checking if orbit, brightness, physical parameters and pointing simulation input files match...')
     PPCheckOrbitAndPhysicalParametersMatching(padaor, padacl, padafr)
