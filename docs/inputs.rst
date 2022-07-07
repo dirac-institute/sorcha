@@ -19,6 +19,9 @@ are shown.
 .. tip::
   Each synthetic planetesimal has its own unique object identifier set by the user and must have entries in the orbits and physical parameters files, as well as the cometary activity file, if used. 
 
+.. warning::
+  OIF and SurveySimPP are not checking whether or not a planetesimal ID has been repeated in another row of the input files. **It is up to the user to ensure their input files include only unique IDs**. 
+
 Orbit File
 -----------------
 
@@ -68,20 +71,15 @@ An example of an orbit file in cometary format, with each object ID represented 
 +-------------+----------------------------------------------------------------------------------+
 | t_0         | Epoch (MJD)                                                                      |
 +-------------+----------------------------------------------------------------------------------+
-| H           | Absolute magnitude (magnitudes)                                                  |
-+-------------+----------------------------------------------------------------------------------+
 
 **Header line**
 The first row in the orbit file must be a header started with ‘!!’ to denote it as the header row::
 
-   !!OID FORMAT q e i node argperi t_p H t_0
+   !!OID FORMAT q e i node argperi t_p t_0
 
 
 .. tip::
   The orbit file can be either white space separated or comma value separated (CSV). For readability we show examples with white space in the online documentation. 
-
-.. note::
-  We are working on updating Objects in Field to not require H and move H to the physical parameters files. 
 
 
 Keplerian Orbit Format
@@ -235,3 +233,6 @@ Ephemeris file (Objects in Field Output)
 
 .. note::
   The ephemeris file is used by  **surveySimPP**. We recommend using **Objects in Fields** to generate it.
+
+.. note::
+  With our recommended setup you will have V magnitudes outputted by OIF into the ephemeris file which is generated from a default H assumed by OIF. SurveySimPP ignores these apparent magnitudes and computes its own based on the configuration inputs and additional input files.
