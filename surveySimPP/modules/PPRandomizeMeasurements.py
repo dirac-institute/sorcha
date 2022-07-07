@@ -21,20 +21,15 @@
 Calculate Astrometric and Photometric Uncertainties for ground based observations and randomize OIF measurements accordingly.
 
 """
-# Numpy
-import numpy as np
-import time
 
-#Pandas
+import numpy as np
 import pandas as pd
 
 from . import PPAddUncertainties as uc
 
-#set a default random number generator
-#default_rng = np.random.default_rng(int(time.time()))
+__all__ = ['randomizeObservations', 'flux2mag', 'mag2flux', 'radec2icrf', 'icrf2radec',
+           'sampleNormalFOV', 'randomizeAstrometry', 'randomizePhotometry']
 
-__all__ = ['randomizeObservations','flux2mag','mag2flux','radec2icrf','icrf2radec',
-           'sampleNormalFOV','randomizeAstrometry','randomizePhotometry']
 
 ############################################
 # MODULE SPECIFIC EXCEPTION
@@ -44,12 +39,14 @@ class Error(Exception):
 
     pass
 
-def randomizeObservations(ephemsdf,obsdf, rng, raName='fieldRA',decName='fieldDec',obsIdName='observationId',
-                     obsEpochName='observationStartMJD',
-                     raNameEph='AstRA(deg)',decNameEph='AstDec(deg)',
-                     obsIdNameEph='observationId',ephEpochName='FieldMJD',
-                     limMagName='fiveSigmaDepth',seeingName='seeingFwhmEff',
-                     filterMagName='Filtermag'):
+
+def randomizeObservations(ephemsdf, obsdf, rng, raName='fieldRA', decName='fieldDec',
+                          obsIdName='observationId',
+                          obsEpochName='observationStartMJD',
+                          raNameEph='AstRA(deg)', decNameEph='AstDec(deg)',
+                          obsIdNameEph='observationId', ephEpochName='FieldMJD',
+                          limMagName='fiveSigmaDepth', seeingName='seeingFwhmEff',
+                          filterMagName='Filtermag'):
 
     """Add astrometric and photometric errors to observations generated through JPL ephemeris simulator OIF.
 
@@ -66,51 +63,52 @@ def randomizeObservations(ephemsdf,obsdf, rng, raName='fieldRA',decName='fieldDe
     ephemsOut ... ephems Pandas dataFrame (observations with added uncertainties)
     """
 
-    #Check whether the observations dataframe covers the whole ephemeris time
-    tobsmin=obsdf[obsEpochName].min()
-    tobsmax=obsdf[obsEpochName].max()
-    tephmin=ephemsdf[ephEpochName].min()
-    tephmax=ephemsdf[ephEpochName].max()
+    # Check whether the observations dataframe covers the whole ephemeris time
+    tobsmin = obsdf[obsEpochName].min()
+    tobsmax = obsdf[obsEpochName].max()
+    tephmin = ephemsdf[ephEpochName].min()
+    tephmax = ephemsdf[ephEpochName].max()
 
-    if(tephmin<tobsmin or tephmax>tobsmax):
-        print('observations tmin, ephemeris tmin:',tobsmin, tephmin)
-        print('observations tmax, ephemeris tmax:',tobsmax, tephmax)
+    if(tephmin < tobsmin or tephmax > tobsmax):
+        print('observations tmin, ephemeris tmin:', tobsmin, tephmin)
+        print('observations tmax, ephemeris tmax:', tobsmax, tephmax)
         raise Exception('Observations do not cover the entire ephemeris timespan.')
 
     # Preselect only those observations mentioned in the ephemeris dataframe
-    obsdfSel=obsdf[obsdf[obsIdName].isin(ephemsdf[obsIdNameEph])]
+    obsdfSel = obsdf[obsdf[obsIdName].isin(ephemsdf[obsIdNameEph])]
 
-    ephemsFiltered=[]
+    ephemsFiltered = []
     # Iterate over all selected observations from opsim database
     for index, row in obsdfSel.iterrows():
 
-        selection=ephemsdf[ephemsdf[obsIdNameEph] == row[obsIdName]].reset_index(drop=True)
+        selection = ephemsdf[ephemsdf[obsIdNameEph] == row[obsIdName]].reset_index(drop=True)
 
-        #Add astrometric and photometric 1 sigma uncertainties
-        astrSig,SNR,rndError = uc.calcAstrometricUncertainty(selection[filterMagName], row[limMagName],
-                                                    FWHMeff=row[seeingName]*1000, output_units='mas')
+        # Add astrometric and photometric 1 sigma uncertainties
+        astrSig, SNR, rndError = uc.calcAstrometricUncertainty(selection[filterMagName], row[limMagName],
+                                                               FWHMeff=row[seeingName] * 1000, output_units='mas')
         photSig = uc.magErrorFromSNR(SNR)
 
         selection['AstRASigma(mas)'] = astrSig
         selection['AstDecSigma(mas)'] = astrSig
         selection['PhotometricSigma(mag)'] = photSig
-        selection['AstometrySigma(deg)'] = astrSig/1000/3600/180
+        selection['AstometrySigma(deg)'] = astrSig / 1000 / 3600 / 180
 
-        randomizeAstrometry(selection,rng, raName=raNameEph,decName=decNameEph,
-                            raRndName='AstRARnd(deg)',decRndName='AstDecRnd(deg)',
-                            sigName='AstometrySigma(deg)',units='deg')
+        randomizeAstrometry(selection, rng, raName=raNameEph, decName=decNameEph,
+                            raRndName='AstRARnd(deg)', decRndName='AstDecRnd(deg)',
+                            sigName='AstometrySigma(deg)', units='deg')
 
-        randomizePhotometry(selection,rng, magName=filterMagName,magRndName='FiltermagRnd',sigName='PhotometricSigma(mag)')
+        randomizePhotometry(selection, rng, magName=filterMagName, magRndName='FiltermagRnd', sigName='PhotometricSigma(mag)')
 
         ephemsFiltered.append(selection)
 
-    ephemsOut=pd.concat(ephemsFiltered).reset_index(drop=True)
+    ephemsOut = pd.concat(ephemsFiltered).reset_index(drop=True)
 
     return ephemsOut
 
-def randomizeAstrometry(df, rng, raName='AstRA(deg)',decName='AstDec(deg)',
-                         raRndName='AstRARnd(deg)',decRndName='AstDecRnd(deg)',
-                         sigName='AstSig(deg)',radecUnits='deg', sigUnits='mas'):
+
+def randomizeAstrometry(df, rng, raName='AstRA(deg)', decName='AstDec(deg)',
+                        raRndName='AstRARnd(deg)', decRndName='AstDecRnd(deg)',
+                        sigName='AstSig(deg)', radecUnits='deg', sigUnits='mas'):
 
     """Randomize astrometry with a normal distribution around the actual RADEC pointing.
     The randomized values are added to the input pandas data frame.
@@ -139,37 +137,37 @@ def randomizeAstrometry(df, rng, raName='AstRA(deg)',decName='AstDec(deg)',
     """
 
     deg2rad = np.deg2rad
-    rad2deg = np.rad2deg
+    # rad2deg = np.rad2deg
     zeros = np.zeros
 
-    if (radecUnits=='deg'):
-        center= radec2icrf(df[raName],df[decName]).T
-    elif (radecUnits=='mas'):
-        center= radec2icrf(df[raName]/3600000., df[decName]/3600000.).T
-    elif (radecUnits=='rad'):
-        center= radec2icrf(df[raName],df[decName],deg=False).T
+    if (radecUnits == 'deg'):
+        center = radec2icrf(df[raName], df[decName]).T
+    elif (radecUnits == 'mas'):
+        center = radec2icrf(df[raName] / 3600000., df[decName] / 3600000.).T
+    elif (radecUnits == 'rad'):
+        center = radec2icrf(df[raName], df[decName], deg=False).T
     else:
         print("Bad units were provided for RA and Dec.")
 
-    if (sigUnits=='deg'):
-        sigmarad= deg2rad(df[sigName])
-    elif (sigUnits=='mas'):
-        sigmarad= deg2rad(df[sigName]/3600000.)
-    elif (sigUnits=='rad'):
-        sigmarad=df[sigName]
+    if (sigUnits == 'deg'):
+        sigmarad = deg2rad(df[sigName])
+    elif (sigUnits == 'mas'):
+        sigmarad = deg2rad(df[sigName] / 3600000.)
+    elif (sigUnits == 'rad'):
+        sigmarad = df[sigName]
     else:
         print("Bad units were provided for astrometric uncertainty.")
 
     n = len(df.index)
-    xyz = zeros([n,3])
+    xyz = zeros([n, 3])
 
     xyz = sampleNormalFOV(center, sigmarad, rng, ndim=3)
 
-    if (radecUnits=='deg'):
-        [ra, dec] = icrf2radec(xyz[:,0], xyz[:,1], xyz[:,2], deg=True)
+    if (radecUnits == 'deg'):
+        [ra, dec] = icrf2radec(xyz[:, 0], xyz[:, 1], xyz[:, 2], deg=True)
 
     else:
-        [ra, dec] = icrf2radec(xyz[:,0], xyz[:,1], xyz[:,2], deg=False)
+        [ra, dec] = icrf2radec(xyz[:, 0], xyz[:, 1], xyz[:, 2], deg=False)
 
     return ra, dec
 
@@ -196,30 +194,28 @@ def sampleNormalFOV(center, sigma, rng, ndim=3):
     zeros = np.zeros
 
     mean = zeros(ndim)
-    cov = zeros([ndim,ndim])
+    cov = zeros([ndim, ndim])
 
     n = len(sigma)
 
     for i in range(ndim):
-           cov[i,i] = 1
+        cov[i, i] = 1
 
     # create a small hypersphere with npoints around center point (e.g. RADEC vector on unit sphere)
     # the small hypersphere will look like a bubble on the unit sphere
     mini_sphere = normaln(mean, cov, n)
 
-
     # this step allows for vectorization
-    mini_sphere = mini_sphere*array([sigma,sigma,sigma]).T + center
-
+    mini_sphere = mini_sphere * array([sigma, sigma, sigma]).T + center
 
     # project mini_sphere onto celestial sphere
-    [x,y,z] = [mini_sphere[:,0],mini_sphere[:,1],mini_sphere[:,2]]/norm(mini_sphere, axis=1)
-    vec = array([x,y,z]).T
+    [x, y, z] = [mini_sphere[:, 0], mini_sphere[:, 1], mini_sphere[:, 2]] / norm(mini_sphere, axis=1)
+    vec = array([x, y, z]).T
+
     return vec
 
 
-def randomizePhotometry(df, rng, magName='Filtermag',magRndName='FiltermagRnd',sigName='FiltermagSig'):
-
+def randomizePhotometry(df, rng, magName='Filtermag', magRndName='FiltermagRnd', sigName='FiltermagSig'):
     """Randomize photometry with normal distribution around magName value.
 
     Parameters:
@@ -246,9 +242,10 @@ def randomizePhotometry(df, rng, magName='Filtermag',magRndName='FiltermagRnd',s
 
     s = normal(0, 1, len(df.index))
 
-    return df[magName] + s*df[sigName]
+    return df[magName] + s * df[sigName]
 
-def flux2mag(f,  f0=3631):
+
+def flux2mag(f, f0=3631):
     """AB ugriz system (f0 = 3631 Jy) to magnitude conversion
 
        Parameters:
@@ -260,11 +257,13 @@ def flux2mag(f,  f0=3631):
        --------
        mag ... pogson magnitude
     """
-    mag=-2.5*np.log10(f/f0)
+
+    mag = -2.5 * np.log10(f / f0)
 
     return mag
 
-def mag2flux(mag,  f0=3631):
+
+def mag2flux(mag, f0=3631):
     """AB ugriz system (f0 = 3631 Jy) magnitude to flux conversion
 
        Parameters:
@@ -277,7 +276,7 @@ def mag2flux(mag,  f0=3631):
        f  ... flux [Jy]
 
     """
-    f = f0*10**(-0.4*mag)
+    f = f0 * 10 ** (-0.4 * mag)
 
     return f
 
@@ -297,32 +296,32 @@ def icrf2radec(x, y, z, deg=True):
     dec ... Declination [deg]
     """
 
-    norm=np.linalg.norm
-    array=np.array
-    arctan2=np.arctan2
-    arcsin=np.arcsin
-    rad2deg=np.rad2deg
-    modulo=np.mod
-    pix2=2.*np.pi
+    norm = np.linalg.norm
+    array = np.array
+    arctan2 = np.arctan2
+    arcsin = np.arcsin
+    rad2deg = np.rad2deg
+    modulo = np.mod
+    pix2 = 2. * np.pi
 
-    pos=array([x,y,z])
-    if(pos.ndim>1):
-        r=norm(pos,axis=0)
+    pos = array([x, y, z])
+    if(pos.ndim > 1):
+        r = norm(pos, axis=0)
     else:
-        r=norm(pos)
+        r = norm(pos)
 
-    xu=x/r
-    yu=y/r
-    zu=z/r
+    xu = x / r
+    yu = y / r
+    zu = z / r
 
-    phi=arctan2(yu,xu)
-    delta=arcsin(zu)
+    phi = arctan2(yu, xu)
+    delta = arcsin(zu)
 
     if(deg):
-        ra = modulo(rad2deg(phi)+360,360)
+        ra = modulo(rad2deg(phi) + 360, 360)
         dec = rad2deg(delta)
     else:
-        ra = modulo(phi+pix2,pix2)
+        ra = modulo(phi + pix2, pix2)
         dec = delta
 
     return ra, dec
@@ -342,10 +341,10 @@ def radec2icrf(ra, dec, deg=True):
     x,y,z ... 3D vector of unit length (ICRF)
     """
 
-    deg2rad=np.deg2rad
-    array=np.array
-    cos=np.cos
-    sin=np.sin
+    deg2rad = np.deg2rad
+    array = np.array
+    cos = np.cos
+    sin = np.sin
 
     if(deg):
         a = deg2rad(ra)
@@ -355,17 +354,16 @@ def radec2icrf(ra, dec, deg=True):
         d = array(dec)
 
     cosd = cos(d)
-    x = cosd*cos(a)
-    y = cosd*sin(a)
+    x = cosd * cos(a)
+    y = cosd * sin(a)
     z = sin(d)
 
     return array([x, y, z])
 
 
-def randomizeAstrometry2(df,raName='AstRA(deg)',decName='AstDec(deg)',
-                         raRndName='AstRARnd(deg)',decRndName='AstDecRnd(deg)',
-                         sigName='AstSig(deg)',units='deg'):
-
+def randomizeAstrometry2(df, raName='AstRA(deg)', decName='AstDec(deg)',
+                         raRndName='AstRARnd(deg)', decRndName='AstDecRnd(deg)',
+                         sigName='AstSig(deg)', units='deg'):
     """Randomize astrometry with a normal distribution around the actual RADEC pointing.
     The randomized values are added to the input pandas data frame.
 
@@ -392,37 +390,36 @@ def randomizeAstrometry2(df,raName='AstRA(deg)',decName='AstDec(deg)',
     """
 
     deg2rad = np.deg2rad
-    rad2deg = np.rad2deg
+    # rad2deg = np.rad2deg
     zeros = np.zeros
 
-    if (units=='deg'):
-        center= radec2icrf(df[raName],df[decName]).T
-        sigmarad= deg2rad(df[sigName])
+    if (units == 'deg'):
+        center = radec2icrf(df[raName], df[decName]).T
+        sigmarad = deg2rad(df[sigName])
     else:
-        center= radec2icrf(df[raName],df[decName],deg=False).T
-        sigmarad=df[sigName]
+        center = radec2icrf(df[raName], df[decName], deg=False).T
+        sigmarad = df[sigName]
 
     n = len(df.index)
-    xyz = zeros([n,3])
+    xyz = zeros([n, 3])
 
-    cov = zeros([n,3,3])
-    cov[:,0,0] = sigmarad**2
-    cov[:,1,1] = sigmarad**2
-    cov[:,2,2] = sigmarad**2
+    cov = zeros([n, 3, 3])
+    cov[:, 0, 0] = sigmarad ** 2
+    cov[:, 1, 1] = sigmarad ** 2
+    cov[:, 2, 2] = sigmarad ** 2
 
     xyz = sampleNormalFOV2(center, cov, ndim=3, seed=2021)
 
-    if (units=='deg'):
-        [ra, dec] = icrf2radec(xyz[:,0], xyz[:,1], xyz[:,2], deg=True)
+    if (units == ' deg'):
+        [ra, dec] = icrf2radec(xyz[:, 0], xyz[:, 1], xyz[:, 2], deg=True)
 
     else:
-        [ra, dec] = icrf2radec(xyz[:,0], xyz[:,1], xyz[:,2], deg=False)
+        [ra, dec] = icrf2radec(xyz[:, 0], xyz[:, 1], xyz[:, 2], deg=False)
 
     df[raRndName] = ra
     df[decRndName] = dec
 
     return
-
 
 
 def sampleNormalFOV2(center, cov, npoints=1, ndim=3, seed=2021):
@@ -451,40 +448,39 @@ def sampleNormalFOV2(center, cov, npoints=1, ndim=3, seed=2021):
     shape = np.shape
     zeros = np.zeros
 
-
     if (shape(center)[0] >= 1):
-        n = len(center[:,0])
+        n = len(center[:, 0])
 
-        if(npoints == 1):
-            vec = zeros([n,3])
+        if (npoints == 1):
+            vec = zeros([n, 3])
 
             for j in range(n):
 
                 # create a small hypersphere with npoints around center point (e.g. RADEC vector on unit sphere)
                 # the small hypersphere will look like a bubble on the unit sphere
                 # mini_sphere = normaln(mean, cov, npoints)
-                mini_sphere = normaln(center[j,:], cov[j,:,:], 1)
+                mini_sphere = normaln(center[j, :], cov[j, :, :], 1)
 
                 # project mini_sphere onto celestial sphere
-                vec[j,:]=array([mini_sphere[:,0],mini_sphere[:,1],mini_sphere[:,2]]/norm(mini_sphere, axis=1)).T
+                vec[j, :] = array([mini_sphere[:, 0], mini_sphere[:, 1], mini_sphere[:, 2]] / norm(mini_sphere, axis=1)).T
 
         else:
             vec = []
 
             for j in range(n):
 
-#             # create a small hypersphere with npoints around center point (e.g. RADEC vector on unit sphere)
-#             # the small hypersphere will look like a bubble on the unit sphere
-#             # mini_sphere = normaln(mean, cov, npoints)
-              mini_sphere = normaln(center[j,:], cov[j,:,:], npoints)
+                # create a small hypersphere with npoints around center point (e.g. RADEC vector on unit sphere)
+                # the small hypersphere will look like a bubble on the unit sphere
+                # mini_sphere = normaln(mean, cov, npoints)
+                mini_sphere = normaln(center[j, :], cov[j, :, :], npoints)
 
-#             # project mini_sphere onto celestial sphere
-              vec.extend(array([mini_sphere[:,0],mini_sphere[:,1],mini_sphere[:,2]]/norm(mini_sphere, axis=1)).T)
-              vec = array(vec)
+                # project mini_sphere onto celestial sphere
+                vec.extend(array([mini_sphere[:, 0], mini_sphere[:, 1], mini_sphere[:, 2]] / norm(mini_sphere, axis=1)).T)
+                vec = array(vec)
     else:
 
-        mini_sphere = normaln(center[:], cov[:,:], npoints)
-        vec = array([mini_sphere[:,0],mini_sphere[:,1],mini_sphere[:,2]]/norm(mini_sphere, axis=1)).T
+        mini_sphere = normaln(center[:], cov[:, :], npoints)
+        vec = array([mini_sphere[:, 0], mini_sphere[:, 1], mini_sphere[:, 2]] / norm(mini_sphere, axis=1)).T
 
     return vec
 
@@ -581,8 +577,6 @@ def sampleNormalFOV2(center, cov, npoints=1, ndim=3, seed=2021):
 #         idx = where(dec < -90)
 #         dec[idx] = -90 + abs(mod(dec[idx],-90) )
 #         ra[idx] = ra[idx] + 180
-
-
 
 #     elif(n == 1):
 

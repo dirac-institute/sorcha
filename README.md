@@ -2,7 +2,8 @@
 
 <!-- [![Build Status](https://travis-ci.org/dirac-institute/survey_simulator_post_processing.svg?branch=master)](https://travis-ci.org/dirac-institute/survey_simulator_post_processing) -->
 
-![pytest](https://github.com/dirac-institute/survey_simulator_post_processing/actions/workflows/pytest.yml/badge.svg)
+[![ci](https://github.com/dirac-institute/survey_simulator_post_processing/actions/workflows/ci.yml/badge.svg)](https://github.com/dirac-institute/survey_simulator_post_processing/actions/workflows/ci.yml)
+[![pytest](https://github.com/dirac-institute/survey_simulator_post_processing/actions/workflows/pytest.yml/badge.svg)](https://github.com/dirac-institute/survey_simulator_post_processing/actions/workflows/pytest.yml)
 
 LSST stack based post-processing modules in python for the JPL survey simulator: https://github.com/AsteroidSurveySimulator/objectsInField
 
@@ -45,9 +46,6 @@ The code can be installed by typing:
 ```
 pip install -e .
 ```
-
-Next, install the pointing database to the ./demo/ folder. This can be found [here](http://astro-lsst-01.astro.washington.edu:8080/?runId=1): click one of the links entitled 'baseline_v2.0_10yrs.db' near the top in the SQLite file column.
-
 
 Then the simulator can be run via:
 ```

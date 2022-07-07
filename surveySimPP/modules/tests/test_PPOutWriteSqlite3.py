@@ -1,10 +1,6 @@
 #!/bin/python
 
-import pytest
-import pandas as pd
-import os
-import sys
-import sqlite3
+# import sqlite3
 
 from surveySimPP.tests.data import get_test_filepath
 
@@ -15,11 +11,11 @@ def test_PPOutWriteSqlite3():
     from surveySimPP.modules.PPReadOif import PPReadOif
     from surveySimPP.modules.PPReadPhysicalParameters import PPReadPhysicalParameters
     from surveySimPP.modules.PPMatchPointing import PPMatchPointing
-    from surveySimPP.modules.PPMatchPointingsAndColours import PPMatchPointingsAndColours
+    # from surveySimPP.modules.PPMatchPointingsAndColours import PPMatchPointingsAndColours
     from surveySimPP.modules.PPOutput import PPOutWriteSqlite3
 
     padafr = PPReadOif(get_test_filepath('oiftestoutput.txt'), "whitespace")
-    padacl = PPReadPhysicalParameters(get_test_filepath('testcolour.txt'), 0, 5, "whitespace")
+    padacl = PPReadPhysicalParameters(get_test_filepath('testcolour.txt'), ['g-r', 'i-r', 'z-r'], 0, 5, "whitespace")
 
     resdf = PPJoinPhysicalParametersPointing(padafr, padacl)
 

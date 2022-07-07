@@ -27,19 +27,21 @@ def PPCheckOrbitAndPhysicalParametersMatching(orbin, colin, poiin):
     Usage: PPCheckOrbitAndPhysicalParametersMatching(orbin,colin,poiin)
 
     """
+    
+    pplogger = logging.getLogger(__name__)
 
     poi = pd.unique(poiin['ObjID'])
     poiobjs = pd.Series(poi, dtype=object)
 
-    orbin = orbin.astype({'!!OID': object})
+    orbin = orbin.astype({'ObjID': object})
     colin = colin.astype({'ObjID': object})
 
-    if orbin['!!OID'].equals(colin['ObjID']):
-        if poiobjs.isin(orbin['!!OID']).all():
+    if orbin['ObjID'].equals(colin['ObjID']):
+        if poiobjs.isin(orbin['ObjID']).all():
             return
         else:
-            logging.error('ERROR: PPCheckOrbitAndPhysicalParametersMatching: input pointing and orbit files do not match.')
+            pplogger.error('ERROR: PPCheckOrbitAndPhysicalParametersMatching: input pointing and orbit files do not match.')
             sys.exit('ERROR: PPCheckOrbitAndPhysicalParametersMatching: input pointing and orbit files do not match.')
     else:
-        logging.error('ERROR: PPCheckOrbitAndPhysicalParametersMatching: input physical parameter and orbit files do not match.')
+        pplogger.error('ERROR: PPCheckOrbitAndPhysicalParametersMatching: input physical parameter and orbit files do not match.')
         sys.exit('ERROR: PPCheckOrbitAndPhysicalParametersMatching: input physical parameter and orbit files do not match.')

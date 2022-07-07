@@ -3,7 +3,7 @@ from .PPDropObservations import PPDropObservations
 from .PPDetectionProbability import PPDetectionProbability
 
 
-def PPFilterFadingFunction(observations, fillfactor, rng):
+def PPFilterFadingFunction(observations, fillfactor, width, rng, verbose=False):
     """Wrapper function for PPDetectionProbability and PPDropObservations.
 
     Calculates detection probability based on a fading function, then drops rows where the
@@ -22,17 +22,18 @@ def PPFilterFadingFunction(observations, fillfactor, rng):
     """
 
     pplogger = logging.getLogger(__name__)
+    verboselog = pplogger.info if verbose else lambda *a, **k: None
 
-    pplogger.info('Calculating probabilities of detections...')
-    observations["detection_probability"] = PPDetectionProbability(observations, fillFactor=fillfactor)
+    verboselog('Calculating probabilities of detections...')
+    observations["detection_probability"] = PPDetectionProbability(observations, fillFactor=fillfactor, w=width)
 
-    pplogger.info('Number of rows BEFORE applying detection probability threshold: ' + str(len(observations.index)))
+    verboselog('Number of rows BEFORE applying detection probability threshold: ' + str(len(observations.index)))
 
-    pplogger.info('Dropping observations below detection threshold...')
+    verboselog('Dropping observations below detection threshold...')
     observations = PPDropObservations(observations, rng, "detection_probability")
     observations_drop = observations.drop("detection_probability", axis=1)
     observations_drop.reset_index(drop=True, inplace=True)
 
-    pplogger.info('Number of rows AFTER applying detection probability threshold: ' + str(len(observations_drop.index)))
+    verboselog('Number of rows AFTER applying detection probability threshold: ' + str(len(observations_drop.index)))
 
     return observations_drop
