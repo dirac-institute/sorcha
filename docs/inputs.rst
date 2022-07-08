@@ -28,7 +28,7 @@ Orbit File
 .. note::
   The orbit file is used by  **Objects in Field** and **surveySimPP**.
 
-This is a file which contains the orbital information of a set of synthetic objects. The orbital parameters must be **heliolcentric**, and orbits can be define in **Cometary(COM)  or Keplerian (KEP)** formats. Each simulated planetesimals within the synthetic population must be be given it's own unique object ID (OID). The file can be **white space separated**  or **comma value separated (CSV)** format. The first line of the orbit file is a header line starting with !! that specifies what each of the columns are.
+This is a file which contains the orbital information of a set of synthetic objects. The orbital parameters must be **heliolcentric**, and orbits can be define in **Cometary(COM)  or Keplerian (KEP)** formats. Each simulated planetesimals within the synthetic population must be be given it's own unique object ID (ObjID). The file can be **white space separated**  or **comma value separated (CSV)** format. The first line of the orbit file is a header line starting with !! that specifies what each of the columns are.
 
 .. tip::
   *  The orbit file must have a consistent format (i.e. cometary or Keplerian) throughout
@@ -43,7 +43,7 @@ Cometary Orbit Format
 ~~~~~~~~~~~~~~~~~~~~~
 An example of an orbit file in cometary format, with each object ID represented by a unique string::
 
-   !!OID FORMAT q e i node argperi t_p H t_0
+   !!ObjID FORMAT q e i node argperi t_p H t_0
    S1000000a COM 3.01822 0.05208 22.56035 211.00286 335.42134 51575.94061 14.20 54800.00000
    S1000001a COM 2.10974 0.07518 4.91571 209.40298 322.66447 54205.77161 20.57 54800.00000
    S1000002a COM 2.80523 0.07777 1.24945 112.52284 139.86858 54468.71747 14.65 54800.00000
@@ -53,7 +53,7 @@ An example of an orbit file in cometary format, with each object ID represented 
 +-------------+----------------------------------------------------------------------------------+
 | Keyword     | Description                                                                      |
 +=============+==================================================================================+
-| OID         | Object identifier for each synthetic planetesimal simulated (string)             |
+| ObjID       | Object identifier for each synthetic planetesimal simulated (string)             |
 +-------------+----------------------------------------------------------------------------------+
 | FORMAT      | Orbit format string (COM)  						         |
 +-------------+----------------------------------------------------------------------------------+
@@ -75,7 +75,7 @@ An example of an orbit file in cometary format, with each object ID represented 
 **Header line**
 The first row in the orbit file must be a header started with ‘!!’ to denote it as the header row::
 
-   !!OID FORMAT q e i node argperi t_p t_0
+   !!ObjID FORMAT q e i node argperi t_p t_0
 
 
 .. tip::
@@ -86,7 +86,7 @@ Keplerian Orbit Format
 ~~~~~~~~~~~~~~~~~~~~~~
 An example of an orbit file, in Keplarian format, with the object ID represented by a unique set of numbers::
 
-   !!OID FORMAT  a e inc node peri ma epoch H
+   !!ObjID FORMAT  a e inc node peri ma epoch H
    t1 KEP 47.9877 0.0585 11.3584 148.4661 140.4756 308.3244 53157.00 7.0 
    t2 KEP 47.7468 0.0552 7.1829 171.9226 55.3728 158.9403 53157.00 7.0 
    t3 KEP 47.9300 0.3805 3.4292 72.9463 7.0754 84.7860 53157.00 7.0 
@@ -97,7 +97,7 @@ An example of an orbit file, in Keplarian format, with the object ID represented
 +-------------+----------------------------------------------------------------------------------+
 | Keyword     | Description                                                                      |
 +=============+==================================================================================+
-| OID         | Object identifier for each synthetic planetesimal simulated (string)             |
+| ObjID       | Object identifier for each synthetic planetesimal simulated (string)             |
 +-------------+----------------------------------------------------------------------------------+
 | FORMAT      | Orbit format string (KEP)                                                        |
 +-------------+----------------------------------------------------------------------------------+
@@ -119,7 +119,7 @@ An example of an orbit file, in Keplarian format, with the object ID represented
 **Header line**
 The first row in the orbit file must be a header started with ‘!!’ to denote it as the header row::
 
-   !!OID FORMAT q e i node argperi t_p H t_0
+   !!ObjID FORMAT q e i node argperi t_p H t_0
 
 .. tip::
   The orbit file can be either white space separated or comma value separated (CSV). For readability we show examples with white space in the online documentation.
@@ -158,7 +158,7 @@ For this input, the options are: HG, HG1G2, HG12, linear, none
 +-------------+----------------------------------------------------------------------------------+
 | Keyword     | Description                                                                      |
 +=============+==================================================================================+
-| OID         | Object identifier for each synthetic planetesimal simulated (string)             |
+| ObjID       | Object identifier for each synthetic planetesimal simulated (string)             |
 +-------------+----------------------------------------------------------------------------------+
 | H           | Absolute Magnitude (magnitudes)                                                  |
 +-------------+----------------------------------------------------------------------------------+
@@ -193,7 +193,7 @@ An example of a cometary activity parameter file::
 +-------------+-----------------------------------------------------------------------------------+
 | Keyword     | Description                                                                       |
 +=============+===================================================================================+
-| OID         | Object identifier for each synthetic planetesimal simulated (string)              |
+| ObjID       | Object identifier for each synthetic planetesimal simulated (string)              |
 +-------------+-----------------------------------------------------------------------------------+
 | afrho1      | Afρ, quantity of                                                                  |
 |             | `A'Hearn et al. (1984) <https://ui.adsabs.harvard.edu/abs/1984AJ.....89..579A>`_. |
@@ -255,9 +255,57 @@ The file can be **white space separated or comma value separated (CSV)** format.
 .. note::
   With our recommended setup you will have V magnitudes outputted by OIF into the ephemeris file which is generated from a default H assumed by OIF. SurveySimPP ignores these apparent magnitudes and computes its own based on the configuration inputs and additional input files.
 
-+-------------+----------------------------------------------------------------------------------+
-| Keyword     | Description                                                                      |
-+=============+==================================================================================+
-| OID         | Object identifier for each synthetic planetesimal simulated (string)             |
-+-------------+----------------------------------------------------------------------------------+
++--------------------------+----------------------------------------------------------------------------------+
+| Keyword                  | Description                                                                      |
++==========================+==================================================================================+
+| ObjID                    | Object identifier for each synthetic planetesimal simulated (string)             |
++--------------------------+----------------------------------------------------------------------------------+
+| FieldID                  | Observation pointing field identificator                                         |
++--------------------------+----------------------------------------------------------------------------------+
+| FieldMJD                 | Observation Mean Julian Date                                                     |
++--------------------------+----------------------------------------------------------------------------------+
+| AstRange(km)             | Topocentric distance to the synthetic planetesimal                               |
++--------------------------+----------------------------------------------------------------------------------+
+| AstRangeRate(km/s)       | Radial component of the object’s topocentric velocity (km/s)                     |
++--------------------------+----------------------------------------------------------------------------------+
+| AstRA(deg)               | Synthetic plantesimal's right ascension (degrees)                                |
++--------------------------+----------------------------------------------------------------------------------+
+| AstRARate(deg/day)       | Synthetic plantesimal's right ascension rate of motion (deg/day)                 |
++--------------------------+----------------------------------------------------------------------------------+
+| AstDec(deg)              | Synthetic plantesimal's declination (degrees)                                    |
++--------------------------+----------------------------------------------------------------------------------+
+| AstDecRate(deg/day)      | Synthetic plantesimal's declination rate of motion (deg/day)                     |
++--------------------------+----------------------------------------------------------------------------------+
+| Ast-Sun(J2000x)(km)      |  Cartesian X-component of the synthetic planetesimal's heliocentric distamce (km)|
++--------------------------+----------------------------------------------------------------------------------+
+| Ast-Sun(J2000y)(km)      |  Cartesian Y-component of the synthetic planetesimal's heliocentric distance (km)|
++--------------------------+----------------------------------------------------------------------------------+
+| Ast-Sun(J2000z)(km)      |  Cartesian Z-component of the synthetic planetesimal's heliocentric distance (km)|
++--------------------------+----------------------------------------------------------------------------------+
+|Ast-Sun(J2000vx)(km/s)    |Cartesian X-component of the synthetic planetesimal's heliocentric velocity (km/s)|
++--------------------------+----------------------------------------------------------------------------------+
+|Ast-Sun(J2000vy)(km/s)    |Cartesian Y-component of the synthetic planetesimal's heliocentric velocity (km/s)|
++--------------------------+----------------------------------------------------------------------------------+
+| Ast-Sun(J2000vz)(km/s)   |Cartesian Z-component of the synthetic planetesimal's heliocentric velocity (km/s)|
++--------------------------+----------------------------------------------------------------------------------+
+| Obs-Sun(J2000x)(km)      |  Cartesian X-component of observer's heliocentric distamce (km)                  |
++--------------------------+----------------------------------------------------------------------------------+
+| Obs-Sun(J2000y)(km)      |  Cartesian Y-component of the observer's heliocentric distance (km)              |             
++--------------------------+----------------------------------------------------------------------------------+
+| Obs-Sun(J2000z)(km)      |  Cartesian Z-component of the observer's heliocentric distance (km)              |
++--------------------------+----------------------------------------------------------------------------------+
+|Obs-Sun(J2000vx)(km/s)    |  Cartesian X-component of the obsever's heliocentric velocity (km/s)             |
++--------------------------+----------------------------------------------------------------------------------+
+|Obs-Sun(J2000vy)(km/s)    |  Cartesian Y-component of the observer's heliocentric velocity (km/s)            |
++--------------------------+----------------------------------------------------------------------------------+
+| Obs-Sun(J2000vz)(km/s)   |Cartesian Z-component of the observer's heliocentric velocity (km/s)              |
++--------------------------+----------------------------------------------------------------------------------+
+| Sun-Ast-Obs(deg)         | The phase angle between the Sun,synthetic plantesimal, & observer (deg)          |
++--------------------------+----------------------------------------------------------------------------------+
+| V (optional)             | Calculated V-band magnitude (not read in)                                        |
++--------------------------+----------------------------------------------------------------------------------+
+| V(H=0 (optional)         | Calculated V-band magnitude if H=0 (not read in)                                 |
++--------------------------+----------------------------------------------------------------------------------+
 
+.. note::
+   All positions and velocities are in respect to J2000 
