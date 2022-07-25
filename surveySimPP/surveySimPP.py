@@ -165,7 +165,6 @@ def runLSSTPostProcessing(cmd_args):
                                               configs['inSepThreshold'],
                                               rng)
 
-            observations = observations.drop(['index'], axis='columns')
             observations.reset_index(drop=True, inplace=True)
             verboselog('Number of rows AFTER applying SSP linking filter: ' + str(len(observations.index)))
 

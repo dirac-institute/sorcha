@@ -1,162 +1,140 @@
 #!/usr/bin/python
 
-import sys
-import logging
 import pandas as pd
+import numpy as np
 from astropy import units as u
 from astropy.coordinates import SkyCoord
 
-from . import PPDetectionEfficiency
+from .PPDetectionEfficiency import PPDetectionEfficiency
 
-# Author: Grigori Fedorets
+# Author: Steph Merritt
 
 
-def PPFilterSSPLinking(padain, detefficiency, minintracklets, nooftracklets, intervaltime, inSepThresHoldAsec, rng):
+def PPFilterSSPLinking(observations,
+                       detection_efficiency,
+                       min_observations,
+                       min_tracklets,
+                       tracklet_interval,
+                       minimum_separation,
+                       rng):
     """
-    PPFilterSSPLinking.py
+    A function which mimics the effects of the SSP linking process by looking
+    for valid tracklets within valid tracks and only outputting observations
+    which would be thus successfully "linked" by SSP.
 
-    Description: This task reads in the modified pandas dataframe
-    (including colours), checks if coordinates within tracklets are far enough
-    to be separated by SSP, checks against the SSP detection criterion
-    (_nooftracklets_ detections over _intervaltime_ nights), and outputs only the objects
-    that satisfy that criterion.
-
-    Generally, to be applied after detection threshold.
-
-
-    Mandatory input:  padain: modified pandas dataframe
-                      detefficiency: float, fractional percentage of successfully linked detections
-                      minintracklets: integer, minimum number of observations
-                      nooftracklets: integer, number of tracklets required for linking
-                      interval time: float, interval of time (in days) which should include
-                                     nooftracklets to qualify for a detection.
-                      inSepThresHoldAsec: float: minimum separation for SSP inside the tracklet
-                                     to distinguish between two images to recognise the motion
-                                     between images
-                      rng: Numpy random number generator object. If not defined, uses default seeded with system time.
-
-    Output:               pandas dataframe
+    Parameters:
+    -----------
+    detection_efficiency (float): the fractional percentage of successfully linked
+                                  detections
+    min_observations (int):       the minimum number of observations in a night required
+                                  to form a tracklet
+    min_tracklets (int):          the minimum number of tracklets required to
+                                  form a valid track
+    tracklet_interval (int):      the time window (in days) in which the minimum number of
+                                  tracklets must occur to form a valid track
+    minimum_separation (float):   the minimum separation inside a tracklet for it
+                                  to be recognised as motion between images (in arcseconds)
+    rng (numpy RNG object):       random number generator object
 
 
-    usage: padafr=PPFilterSSPCriterionEfficiency(padain,detefficiency,minintracklet,nooftracklets,intervaltime, inSepThresHoldAsec)
+    Returns:
+    -----------
+    observations_out (pandas dataframe): a pandas dataframe containing observations
+                                         of linked objects
+
     """
 
-    pplogger = logging.getLogger(__name__)
+    # remove set percentage of entries at random based on linking efficiency
+    observations_deteff = PPDetectionEfficiency(observations, detection_efficiency, rng)
+    observations_deteff.reset_index(inplace=True, drop=True)
 
-    if (minintracklets < 2):
-        pplogger.error('ERROR: PPFilterSSPCriterionEfficiency: minimum number of observations in tracklet should be at least 2.')
-        sys.exit('ERROR: PPFilterSSPCriterionEfficiency: minimum number of observations in tracklet should be at least 2.')
+    # store original integer row indices as a column
+    # could just use drop=False above but I wanted an unambiguous column name
+    observations_deteff["original_index"] = np.arange(len(observations_deteff))
 
-    if (nooftracklets < 1):
-        pplogger.error('ERROR: PPFilterSSPCriterionEfficiency: minimum number of tracklets should be at least 1.')
-        sys.exit('ERROR: PPFilterSSPCriterionEfficiency: minimum number of tracklets should be at least 1.')
+    # store copy of this original dataframe to select all valid observations from later
+    # this is quicker than making a dataframe as we go, pd.concat() is slow
+    orig_observations = observations_deteff.copy()
+    final_idx = []
 
-    # this accounts for the fact that ~95% of detections are successfully linked
-    padain = PPDetectionEfficiency.PPDetectionEfficiency(padain, detefficiency, rng)
+    objid_list = observations_deteff['ObjID'].unique().tolist()
 
-    padain.reset_index(inplace=True)
-    cols = padain.columns.tolist()
-    cols.append('counter')
+    # calculate night number from FieldMJD (makes calculations easier)
+    observations_deteff["night"] = np.round(observations_deteff["FieldMJD"].values - 60218.001806).astype(int)
 
-    objid_list = padain['ObjID'].unique().tolist()
+    # this for-loop could possibly be avoided by using groupby().apply() but I suspect the
+    # time saving would be negligible, .apply() is slow.
+    for objID in objid_list:
 
-    # below variable is never used - SM
-    # minno = minintracklets * nooftracklets
+        obs_object = observations_deteff.loc[observations_deteff['ObjID'] == objID]
 
-    padaout = pd.DataFrame(columns=cols)
+        # get dataframe of night and number of observations per night
+        obs_per_night_df = pd.DataFrame({"frequency": obs_object.value_counts("night", sort=False)})
 
-    sepThreshold = inSepThresHoldAsec / 3600.
+        # merge, then drop observations where object was observed less than min_observations a night
+        obs_freq = pd.merge(obs_object, obs_per_night_df, on="night")
+        obs_above_min = obs_freq.loc[obs_freq["frequency"] >= min_observations]
+        obs_above_min.reset_index(inplace=True, drop=True)
 
-    # Here one might think of parallelisation
-    i = 0
-    while(i < len(objid_list)):
-        subs = padain[padain['ObjID'] == objid_list[i]]
-        subs = subs.drop_duplicates(subset='FieldID').reset_index(drop=True)
-        # The absolute minimum number of observations is two
-        # if one, just output everything
-        if len(subs.index) >= 2:
-            counter = 0  # of number of tracklets per object
-            r = subs.index.tolist()
-            padaouttrackletcoll = pd.DataFrame(columns=cols)
+        # group this dataframe by night
+        grouped_by_night = obs_above_min.groupby(['night'])
 
-            j = r[0]
-            k = r[0]
+        # calculate separation between first and last observation of the night
+        first_ra = grouped_by_night.head(1)["AstRA(deg)"].reset_index(drop=True).values
+        last_ra = grouped_by_night.tail(1)["AstRA(deg)"].reset_index(drop=True).values
+        first_dec = grouped_by_night.head(1)["AstDec(deg)"].reset_index(drop=True).values
+        last_dec = grouped_by_night.tail(1)["AstDec(deg)"].reset_index(drop=True).values
 
-            # If criterion becomes satisfied, or data end:
-            # first, tracklet
-            padaouttracklet = pd.DataFrame()
-            subidx = subs.index.values.max()
+        first_coord = SkyCoord(first_ra * u.degree, first_dec * u.degree)
+        last_coord = SkyCoord(last_ra * u.degree, last_dec * u.degree)
+        separation = first_coord.separation(last_coord).arcsecond
 
-            while(j <= r[-1]):
+        separation_df = pd.DataFrame({'night': obs_above_min["night"].unique(), "separation": separation})
 
-                # Longest night at LSST site is around 10.8 hours
-                s = j
+        # merge on and drop all observations where separation < minimum separation
+        obs_sep = pd.merge(obs_above_min, separation_df, on="night")
+        obs_above_min_sep = obs_sep.loc[obs_sep["separation"] >= minimum_separation]
+        obs_above_min_sep.reset_index(inplace=True, drop=True)
 
-                while(subs.at[s, 'FieldMJD'] - subs.at[k, 'FieldMJD'] < 11 / 24. and s <= r[-1]):
-                    # The reason why this is done in a seemingly weird way is because
-                    # for some reason the values in pandas columns get mixed up
-                    # (if you just put loc[j], instead of # loc[k:j] and removing duplicates
-                    # down the line)
+        # quick check: if number of nights left is less than min_tracklets, skip this object
+        # as there aren't enough tracklets to count as a full track
+        if len(obs_above_min_sep["night"].unique()) < min_tracklets:
+            continue
 
-                    # padaouttracklet=padaouttracklet.append(subs.loc[k:s], sort=False)
-                    padaouttracklet = pd.concat([padaouttracklet, subs.loc[k:s]], sort=False)
-                    padaouttracklet['counter'] = counter
+        unique_nights = obs_above_min_sep["night"].unique()
+        valid = np.zeros(len(unique_nights), dtype=bool)
 
-                    if (s == subidx):
-                        break
-                    s = s + 1
+        # can't find a way to avoid this loop (yet), pandas .rolling() is unhelpful.
+        # checks to see if a track containing a number of tracklets >= min_tracklets
+        # exists in a window of days <= tracklet_interval.
+        # assumes all observations in a night are part of a valid tracklet
+        # which should be true at this point
+        for i, night in enumerate(unique_nights):
 
-                if((j - k + 1) >= minintracklets and len(padaouttracklet.index.values) > 1):
+            if i + min_tracklets - 1 >= len(unique_nights):
+                break
 
-                    # see comment above why this is done weirdly
-                    padaouttracklet = padaouttracklet.drop_duplicates(subset=['FieldID'])  # .reset_index(drop=True)
-                    # Check if observations within tracklets are not too close to each other
-                    firstCoordTracklet = SkyCoord(padaouttracklet.at[k, 'AstRA(deg)'] * u.degree, padaouttracklet.at[k, 'AstDec(deg)'] * u.degree)
-                    lastCoordTracklet = SkyCoord(padaouttracklet.at[j, 'AstRA(deg)'] * u.degree, padaouttracklet.at[j, 'AstDec(deg)'] * u.degree)
+            diff = unique_nights[i + min_tracklets - 1] - night
 
-                    sep = firstCoordTracklet.separation(lastCoordTracklet).degree
-                    if not isinstance(sep, float):
-                        # sometimes, the output of astropy SkyCoord.separation is a size 2 ndarray wth identical values, and not a float
-                        sep = float(sep[0])
-                    if (sep > sepThreshold):
-                        # padaouttrackletcoll=padaouttrackletcoll.append(padaouttracklet, ignore_index=True, sort=False)
-                        padaouttrackletcoll = pd.concat([padaouttrackletcoll, padaouttracklet], ignore_index=True, sort=False)
-                        counter = counter + 1
-                    # j=j+1
-                    k = j
+            if diff < tracklet_interval:
+                # no minus one here because slicing is half-open
+                valid[i:i + min_tracklets] = True
 
-                    padaouttracklet = pd.DataFrame()
+        valid_df = pd.DataFrame({"night": unique_nights, "valid": valid})
 
-                elif ((len(padaouttracklet.index.values) <= 1) and s != j):
-                    pass
-                else:
-                    k = j
-                    padaouttracklet = pd.DataFrame()
-                j = j + 1
+        # merge on and drop all observations where the tracklets aren't part of a valid track
+        obs_final = pd.merge(obs_above_min_sep, valid_df, on="night")
+        obs_final_drop = obs_final.loc[obs_final["valid"] == 1]  # using == True upsets flake8
 
-            # This is the collection of all tracklets for a single object
+        # get the original index numbers of the observations that made it through
+        # append them to the final index
+        final_index = obs_final_drop["original_index"].values
+        final_idx.append(final_index.tolist())
 
-            padaouttrackletcoll = padaouttrackletcoll[cols]
-            padaouttrackletcoll = padaouttrackletcoll.drop(['index'], axis=1)
-            padaouttrackletcoll = padaouttrackletcoll.drop_duplicates(subset=['FieldID']).reset_index(drop=True)
-            ms = pd.unique(padaouttrackletcoll['counter'])
+    # flatten the final index
+    flat_idx = [x for xs in final_idx for x in xs]
 
-            m = 0
-            g = 0
+    # get the rows that survived the filter from the original observations dataframe
+    final_observations = orig_observations[orig_observations.index.isin(flat_idx)]
 
-            if (len(ms) >= nooftracklets):
-                while(m <= ms[-nooftracklets]):
-                    if (m in padaouttrackletcoll['counter'].values):
-                        flindex = padaouttrackletcoll.loc[padaouttrackletcoll['counter'] == m].head(1).index[0]
-                        llindex = padaouttrackletcoll.loc[padaouttrackletcoll['counter'] == ms[g + nooftracklets - 1]].tail(1).index[0]
-                        if (padaouttrackletcoll.at[llindex, 'FieldMJD'] - padaouttrackletcoll.at[flindex, 'FieldMJD'] < intervaltime):
-                            padaout = pd.concat([padaout, padaouttrackletcoll[flindex:llindex + 1]], ignore_index=True, sort=False)
-                        # padaout=padaout.append(padaouttrackletcoll[flindex:llindex+1], ignore_index=True, sort=False)
-                        g = g + 1
-                    m = m + 1
-
-            padaout = padaout.drop_duplicates(subset=['FieldID']).reset_index(drop=True)
-
-        i = i + 1
-
-    return padaout
+    return final_observations
