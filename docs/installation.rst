@@ -158,7 +158,7 @@ To test that the installation was done correctly, run::
 
    surveySimPP -c ./demo/PPConfig.ini -l ./demo/colours_10mbas.txt -o ./demo/orbits_10mbas.des -p ./demo/oif_10mbas.txt -u ./data/out/ -t demorun
    
-The output will appear in a csv file in .data/out (this pathway can be changed in the config file).
+The output will appear in a csv file in .data/out (this pathway can be changed via the -u command line argument)
 The first several lines of the csv file should look like::
 
    ObjID,FieldMJD,fieldRA,fieldDec,AstRA(deg),AstDec(deg),AstrometricSigma(deg),optFilter,observedPSFMag,observedTrailedSourceMag,PhotometricSigmaPSF(mag),PhotometricSigmaTrailedSource(mag),fiveSigmaDepth,fiveSigmaDepthAtSource

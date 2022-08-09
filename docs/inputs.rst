@@ -43,12 +43,12 @@ Cometary Orbit Format
 ~~~~~~~~~~~~~~~~~~~~~
 An example of an orbit file in cometary format, with each object ID represented by a unique string::
 
-   !!ObjID FORMAT q e i node argperi t_p H t_0
-   S1000000a COM 3.01822 0.05208 22.56035 211.00286 335.42134 51575.94061 14.20 54800.00000
-   S1000001a COM 2.10974 0.07518 4.91571 209.40298 322.66447 54205.77161 20.57 54800.00000
-   S1000002a COM 2.80523 0.07777 1.24945 112.52284 139.86858 54468.71747 14.65 54800.00000
-   S1000003a COM 2.10917 0.13219 1.46615 266.54621 232.24412 54212.16304 19.58 54800.00000 
-   S1000004a COM 2.17676 0.19949 12.92422 162.14580 192.22312 51895.46586 10.56 54800.00000
+   !!ObjID FORMAT q e i node argperi t_p t_0
+   S1000000a COM 3.01822 0.05208 22.56035 211.00286 335.42134 51575.94061 54800.00000
+   S1000001a COM 2.10974 0.07518 4.91571 209.40298 322.66447 54205.77161 54800.00000
+   S1000002a COM 2.80523 0.07777 1.24945 112.52284 139.86858 54468.71747 54800.00000
+   S1000003a COM 2.10917 0.13219 1.46615 266.54621 232.24412 54212.16304 54800.00000 
+   S1000004a COM 2.17676 0.19949 12.92422 162.14580 192.22312 51895.46586 54800.00000
 
 +-------------+----------------------------------------------------------------------------------+
 | Keyword     | Description                                                                      |
@@ -86,13 +86,13 @@ Keplerian Orbit Format
 ~~~~~~~~~~~~~~~~~~~~~~
 An example of an orbit file, in Keplarian format, with the object ID represented by a unique set of numbers::
 
-   !!ObjID FORMAT  a e inc node peri ma epoch H
-   t1 KEP 47.9877 0.0585 11.3584 148.4661 140.4756 308.3244 53157.00 7.0 
-   t2 KEP 47.7468 0.0552 7.1829 171.9226 55.3728 158.9403 53157.00 7.0 
-   t3 KEP 47.9300 0.3805 3.4292 72.9463 7.0754 84.7860 53157.00 7.0 
-   t4 KEP 47.6833 0.1973 14.0872 344.2142 167.0238 220.2356 53157.00 7.0 
-   t5 KEP 47.9356 0.2912 4.3621 306.0908 217.8116 18.7043 53157.00 7.0 
-   t6 KEP 47.9786 0.2730 2.2425 147.9340 166.6578 327.8996 53157.00 7.0 
+   !!ObjID FORMAT  a e inc node peri ma epoch 
+   t1 KEP 47.9877 0.0585 11.3584 148.4661 140.4756 308.3244 53157.00 
+   t2 KEP 47.7468 0.0552 7.1829 171.9226 55.3728 158.9403 53157.00
+   t3 KEP 47.9300 0.3805 3.4292 72.9463 7.0754 84.7860 53157.00 
+   t4 KEP 47.6833 0.1973 14.0872 344.2142 167.0238 220.2356 53157.00  
+   t5 KEP 47.9356 0.2912 4.3621 306.0908 217.8116 18.7043 53157.00  
+   t6 KEP 47.9786 0.2730 2.2425 147.9340 166.6578 327.8996 53157.00  
 
 +-------------+----------------------------------------------------------------------------------+
 | Keyword     | Description                                                                      |
@@ -119,7 +119,7 @@ An example of an orbit file, in Keplarian format, with the object ID represented
 **Header line**
 The first row in the orbit file must be a header started with ‘!!’ to denote it as the header row::
 
-   !!ObjID FORMAT q e i node argperi t_p H t_0
+   !!ObjID FORMAT q e i node argperi t_p t_0
 
 .. tip::
   The orbit file can be either white space separated or comma value separated (CSV). For readability we show examples with white space in the online documentation.
@@ -132,43 +132,52 @@ Physical Parameters File
 .. note::
   The physical parameters file is used by **surveySimPP**.
 
-The input file for the physical parameters includes information about the objects optical colors, phase curve, and absolute magnitude. 
+The input file for the physical parameters includes information about the objects optical colors, phase curve parameters, and absolute magnitude. The file can be **white space separated**  or **comma value separated (CSV)** format.
 
-An example of the physical parameter file can be seen here::
+An example of the physical parameters file where a single linear slope phase curve parameter is used for all filters::
 
 
    ObjID H u-r g-r i-r z-r y-r GS 
-   St500000a 5.63 0.0 0.0 0.0 0.0 0.0 0.15
-   St500001a 6.25 0.0 0.0 0.0 0.0 0.0 0.15
-   St500002a 6.36 0.0 0.0 0.0 0.0 0.0 0.15
-   St500003a 6.61 0.0 0.0 0.0 0.0 0.0 0.15
-   St500004a 6.92 0.0 0.0 0.0 0.0 0.0 0.15
+   St500000a 5.63 2.55 0.92 -0.38 -0.59 -0.70 0.15
+   St500001a 6.25 2.55 0.92 -0.38 -0.59 -0.70 0.15
+   St500002a 6.36 1.72 0.48 -0.11 -0.12 -0.12 0.15
+   St500003a 6.67 1.72 0.48 -0.11 -0.12 -0.12 0.15
+   St500004a 10.2 1.90 0.58 -0.21 -0.30 -0.39 0.15
 
-Rubin Observatory will survey the sky in six broadband (optical filters),**u, g, r, i, z, and y**. In the physical parameters file
-you can set a main filter which all other colours are compared to.
 
-- **other colours = g-r, i-r, z-r**
-- **res filters = r, g, i, z**
+An example of the physical parameters file where a HG prescription is specified for each filter::
 
-The brightness of an atmosphereless body is a function of its phase angle (a).
-Several empirical models exist to predict the brightness, including the HG system (where H is approximately
-the brightness at d = 0 and G represents the slope)
-For this input, the options are: HG, HG1G2, HG12, linear, none
+   ObjID H u-r g-r i-r z-r y-r Gr Gu Gg Gi Gz Gy
+   St500000a 5.63 2.55 0.92 -0.38 -0.59 -0.70 0.15 0.17 0.14 0.19 0.18 0.20
+   St500001a 6.25 2.55 0.92 -0.38 -0.59 -0.70 0.15 0.17 0.14 0.17 0.19 0.17
+   St500002a 6.36 1.72 0.48 -0.11 -0.12 -0.12 0.15 0.17 0.13 0.17 0.16 0.18
+   St500003a 6.67 1.72 0.48 -0.11 -0.12 -0.12 0.15 0.16 0.12 0.20 0.15 0.19
+   St500004a 10.2 1.90 0.58 -0.21 -0.30 -0.39 0.15 0.15 0.16 0.15 0.14 0.16
 
-+-------------+----------------------------------------------------------------------------------+
-| Keyword     | Description                                                                      |
-+=============+==================================================================================+
-| ObjID       | Object identifier for each synthetic planetesimal simulated (string)             |
-+-------------+----------------------------------------------------------------------------------+
-| H           | Absolute Magnitude (magnitudes)                                                  |
-+-------------+----------------------------------------------------------------------------------+
-| GS          | Phase Curve Parameter (either G12 or β)                                          |
-+-------------+----------------------------------------------------------------------------------+
+Rubin Observatory will survey the sky in six broadband (optical filters), *u, g, r, i, z, and y* . In the physical parameters file, you will specify the object's absolute magnitude in the main filter (as specificed in the config file. usually this is g or r band) and then provide the synthetic planetesimal's color in other filters relative to the main filter.
 
-Phase Functions
-~~~~~~~~~~~~~~~~~~~~~
-This is done using the linear phase slope utilities in using `sbpy <https://sbpy.readthedocs.io/en/latest/api/sbpy.photometry.LinearPhaseFunc.html#sbpy.photometry.LinearPhaseFunc>`_.
+We have implemented several phase curve paramterizations that can be specified in the config file and the inputted through the physical parameters. **You can either specify one set of phase curve parameters for all filters or specify values for each filter examined by surveySimPP.** We are using the  `sbpy <https://sbpy.org/>`_  phase function utilities. The supported options are: `HG <https://sbpy.readthedocs.io/en/latest/api/sbpy.photometry.HG.html#sbpy.photometry.HG>`_, `HG1G2 <https://sbpy.readthedocs.io/en/latest/api/sbpy.photometry.HG1G2.html#sbpy.photometry.HG1G2>`_, `HG12 <https://sbpy.readthedocs.io/en/latest/api/sbpy.photometry.HG12.html#sbpy.photometry.HG12>`_, `linear <https://sbpy.readthedocs.io/en/latest/api/sbpy.photometry.LinearPhaseFunc.html#sbpy.photometry.LinearPhaseFunc>`_ (specified by S in the header of the physical parameters file), and none (if no columnss for phase curve are included in the physical parameters file than the synthetic object is considered to have a flat phase curve). 
 
+.. note::
+  *  In the config file you can decide which filters you want have surveySimPP run on and specify which filter is the main filter that the absolute magnitude is defined for. You only need to provide colors for those fliters specified in the config file. 
+
+.. warning::
+  * You must use the same phase curve prescription for all simulated objects. If you want to use different phase curve prescriptions for different synthetic populations, you will need to run them in separate input files to surveySimPP
+
+.. warning::
+  * All rows must have entries for all columns specified in the physical parameters file header. 
+
++------------------+----------------------------------------------------------------------------------+
+| Keyword          | Description                                                                      |
++==================+==================================================================================+
+| ObjID            | Object identifier for each synthetic planetesimal simulated (string)             |
++------------------+----------------------------------------------------------------------------------+
+| H                | Absolute Magnitude (magnitude) in the main filter                                |
++------------------+----------------------------------------------------------------------------------+
+| u-r,g-r,etc      | Optical colors                                                                   |
++------------------+----------------------------------------------------------------------------------+
+| G, G1&G2, G12, S | Phase Curve Parameter(s) for all filters (either G12, G1 & G2, or β) (optional)  |
++------------------+----------------------------------------------------------------------------------+
 
 Cometary Activity Parameters File (Optional)
 -----------------------------------------------
@@ -177,13 +186,13 @@ Cometary Activity Parameters File (Optional)
   The cometary activity file is used by  **surveySimPP**.
 
 This is an optional input file which describes how the object apparent magnitude will be augmented from 
-a standard non-active, atmosphereless body as it moves inwards and outwards towards the Sun.
+a standard non-active, atmosphereless body as it moves inwards and outwards towards the Sun. The file can be **white space separated**  or **comma value separated (CSV)** format.
 
 
 An example of a cometary activity parameter file::
 
-   ObjID                       afrho1 k
-   67P/Churyumov-Gerasimenko   1552  -3.35
+   ObjID afrho1 k
+   67P 1552 -3.35
 
 
 .. warning::
@@ -226,7 +235,7 @@ The latest version of rubin_sim cadence simulations can be found at https://lsst
 
 
 .. attention::
-   There may be changes to how this information is read in when the Rubin Observatory science operations begin in approximately mid-2024.
+   There may be changes to how this information is read in when the Rubin Observatory science operations begin at approximately the end of 2024.
 
 Ephemeris file (Objects in Field Output)
 -----------------------------------------
