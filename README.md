@@ -9,8 +9,6 @@ LSST stack based post-processing modules in python for the JPL survey simulator:
 
 Currently tested with the following fork: https://github.com/eggls6/objectsInField
 
-Currently requires latest development version of sbpy: https://github.com/NASA-Planetary-Science/sbpy.git
-
 Documentation: https://survey-simulator-post-processing.readthedocs.io/en/latest/
 
 ## developer best practices
@@ -20,50 +18,6 @@ Documentation: https://survey-simulator-post-processing.readthedocs.io/en/latest
 * Function/methods names should follow Rubin / LSST developer guide conventions: https://developer.lsst.io/
 * If you are working on addressing a specific issue ticket, assign yourself the ticket and set the status to "in progress"
 * When making a pull request that closes an issue, cite the issue ticket in the pull request summary
-
-## Installation
-
-We have some basic instructions below, but the best place to go is our documentation pages: https://survey-simulator-post-processing.readthedocs.io/en/latest/
-
-
-Set up a conda environment and activate:
-```
-conda create -n survey_sim_pp python=3.8 pip
-conda activate survey_sim_pp
-```
-Download repo via git clone
-
-```
-git clone https://github.com/dirac-institute/survey_simulator_post_processing.git
-```
-
-Cd into the directory:
-```
-cd survey_simulator_post_processing
-```
-
-The code can be installed by typing:
-```
-pip install -e .
-```
-
-Then the simulator can be run via:
-```
-surveySimPP -c ./demo/PPConfig.ini -l ./demo/colours_10mbas.txt -o ./demo/orbits_10mbas.des -p ./demo/oif_10mbas.txt -u ./data/out/ -t demorun
-```
-
-This will create a .csv file in /data/out/ called demorun.csv with the accompanying log files.
-
-
-You can also create config files for OIF and the survey simulator by typing:
-```
-makeConfigOIF
-```
-or
-```
-makeConfigPP
-```
-And adding any relevant config parameters.
 
 
 ## Making pip work
