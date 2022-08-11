@@ -197,7 +197,7 @@ An example of a cometary activity parameter file::
 
 .. warning::
 
-   **When running an instance of surveySimPP, either every synthetic planetesimal experiences cometary activity, or none do.** When running simulations of synthetic planetesimals exhibiting cometary activity, **every** object in that simulation must have an entry in the  associated cometary activity file.
+   **When running an instance of surveySimPP, either every synthetic planetesimal experiences cometary activity, or none do.** When running simulations of synthetic planetesimals exhibiting cometary activity, **every** object in that simulation must have an entry in the associated cometary activity file.
 
 +-------------+-----------------------------------------------------------------------------------+
 | Keyword     | Description                                                                       |

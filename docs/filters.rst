@@ -1,5 +1,5 @@
-Filters
-===========
+How SurveySimPP Works
+=====================
 
 Brightness Limit
 -----------------
