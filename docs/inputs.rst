@@ -213,6 +213,10 @@ An example of a cometary activity parameter file::
 | k           | Dust falling exponential value (dust falling at rh^k)                             |
 +-------------+-----------------------------------------------------------------------------------+
 
+.. attention::
+
+   *These parameters are only used to adjust the apparent brightness of the synthetic planetesimal. We do not account for non-gravitational effects on the ephemeris.
+
 LSST Pointing Database
 ------------------------
 

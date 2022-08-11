@@ -1,12 +1,8 @@
 surveySimPP.lsstcomet package
 =============================
 
-Subpackages
------------
-
-.. toctree::
-   :maxdepth: 4
-
+LSST Comet Submodules
+----------------------
 
 surveySimPP.lsstcomet.model module
 ----------------------------------
