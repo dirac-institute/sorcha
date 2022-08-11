@@ -3,7 +3,7 @@
 <!-- [![Build Status](https://travis-ci.org/dirac-institute/survey_simulator_post_processing.svg?branch=master)](https://travis-ci.org/dirac-institute/survey_simulator_post_processing) -->
 
 [![ci](https://github.com/dirac-institute/survey_simulator_post_processing/actions/workflows/ci.yml/badge.svg)](https://github.com/dirac-institute/survey_simulator_post_processing/actions/workflows/ci.yml)
-[![pytest](https://github.com/dirac-institute/survey_simulator_post_processing/actions/workflows/pytest.yml/badge.svg)](https://github.com/dirac-institute/survey_simulator_post_processing/actions/workflows/pytest.yml)
+[![pytest](https://github.com/dirac-institute/survey_simulator_post_processing/actions/workflows/pytest.yml/badge.svg)](https://github.com/dirac-institute/survey_simulator_post_processing/actions/workflows/pytest.yml) [![Documentation Status](https://readthedocs.org/projects/survey-simulator-post-processing/badge/?version=latest)](https://survey-simulator-post-processing.readthedocs.io/en/latest/?badge=latest)
 
 LSST stack based post-processing modules in python for the JPL survey simulator: https://github.com/AsteroidSurveySimulator/objectsInField
 
