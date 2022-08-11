@@ -10,3 +10,4 @@ astropy
 scipy
 sbpy
 matplotlib
+git+https://github.com/dirac-institute/survey_simulator_post_processing.git
