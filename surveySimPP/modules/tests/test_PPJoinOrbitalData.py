@@ -3,7 +3,7 @@
 from surveySimPP.tests.data import get_test_filepath
 
 
-def test_PPJoinCOrbitalData():
+def test_PPJoinOrbitalData():
 
     from surveySimPP.modules.PPJoinOrbitalData import PPJoinOrbitalData
     from surveySimPP.modules.PPJoinPhysicalParametersPointing import PPJoinPhysicalParametersPointing
@@ -18,7 +18,7 @@ def test_PPJoinCOrbitalData():
     padain = PPJoinPhysicalParametersPointing(padafr, padacl)
     padare = PPJoinOrbitalData(padain, padaor)
 
-    ncol = 35
+    ncol = 34
     ncolre = len(padare.columns)
 
     assert ncol == ncolre

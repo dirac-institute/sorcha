@@ -89,13 +89,21 @@ def PPWriteOutput(cmd_args, configs, observations_in, endChunk, verbose=False):
     verboselog = pplogger.info if verbose else lambda *a, **k: None
 
     if configs['outputsize'] == 'default':
-        observations = observations_in[['ObjID', 'FieldMJD', 'fieldRA', 'fieldDec',
-                                        'AstRA(deg)', 'AstDec(deg)', 'AstrometricSigma(deg)',
-                                        'optFilter', 'observedPSFMag', 'observedTrailedSourceMag',
-                                        'PhotometricSigmaPSF(mag)', 'PhotometricSigmaTrailedSource(mag)',
-                                        'fiveSigmaDepth', 'fiveSigmaDepthAtSource']]
-    # else:
-        # observations = observations_in
+        observations = observations_in.copy()[['ObjID', 'FieldMJD', 'fieldRA', 'fieldDec',
+                                               'AstRA(deg)', 'AstDec(deg)', 'AstrometricSigma(deg)',
+                                               'optFilter', 'observedPSFMag', 'observedTrailedSourceMag',
+                                               'PhotometricSigmaPSF(mag)', 'PhotometricSigmaTrailedSource(mag)',
+                                               'fiveSigmaDepth', 'fiveSigmaDepthAtSource']]
+    else:
+        observations = observations_in.copy()
+
+    observations['FieldMJD'] = observations['FieldMJD'].round(decimals=5)
+
+    for position_col in ['fieldRA', 'fieldDec', 'AstRA(deg)', 'AstDec(deg)', 'AstrometricSigma(deg)']:
+        observations[position_col] = observations[position_col].round(decimals=configs["position_decimals"])
+
+    for magnitude_col in ['observedPSFMag', 'observedTrailedSourceMag', 'PhotometricSigmaPSF(mag)', 'PhotometricSigmaTrailedSource(mag)', 'fiveSigmaDepth', 'fiveSigmaDepthAtSource']:
+        observations[magnitude_col] = observations[magnitude_col].round(decimals=configs["magnitude_decimals"])
 
     verboselog('Constructing output path...')
 

@@ -62,6 +62,8 @@ def test_PPConfigFileParser(setup_and_teardown_for_PPConfigFileParser):
                     'SSPLinkingOn': True,
                     'outputformat': 'csv',
                     'outputsize': 'default',
+                    'position_decimals': 7,
+                    'magnitude_decimals': 3,
                     'sizeSerialChunk': 10,
                     'rng_seed': None}
 

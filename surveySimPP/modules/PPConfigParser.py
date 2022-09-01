@@ -323,6 +323,13 @@ def PPConfigFileParser(configfile, survey_name):
         pplogger.error('ERROR: outputsize should be "default".')
         sys.exit('ERROR: outputsize should be "default".')
 
+    config_dict["position_decimals"] = PPGetIntOrExit(config, 'OUTPUTFORMAT', 'position_decimals', 'ERROR: positional decimal places not specified.')
+    config_dict["magnitude_decimals"] = PPGetIntOrExit(config, 'OUTPUTFORMAT', 'magnitude_decimals', 'ERROR: magnitude decimal places not specified.')
+
+    if config_dict["position_decimals"] < 0 or config_dict["magnitude_decimals"] < 0:
+        pplogger.error('ERROR: decimal places config variables cannot be negative.')
+        sys.exit('ERROR: decimal places config variables cannot be negative.')
+
     # size of chunk
 
     config_dict['sizeSerialChunk'] = PPGetIntOrExit(config, 'GENERAL', 'sizeSerialChunk', 'ERROR: sizeSerialChunk not specified.')
@@ -425,3 +432,5 @@ def PPPrintConfigsToLog(configs, cmd_args):
         pplogger.info('Solar System Processing linking filter is turned OFF.')
 
     pplogger.info('Output files will be saved in path: ' + cmd_args['outpath'] + ' with filestem ' + cmd_args['outfilestem'])
+    pplogger.info('In the output, positions will be rounded to ' + str(configs['position_decimals']) + ' decimal places.')
+    pplogger.info('In the output, magnitudes will be rounded to ' + str(configs['magnitude_decimals']) + ' decimal places.')

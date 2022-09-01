@@ -63,4 +63,4 @@ def PPReadEphemerides(eph_output, ephemerides_type, inputformat):
         pplogger.error('ERROR: PPReadEphemerides: essential columns missing from ephemerides input. Required columns are: {}'.format(cols))
         sys.exit('ERROR: PPReadEphemerides: essential columns missing from ephemerides input. Required columns are: {}'.format(cols))
 
-    return padafr
+    return padafr[cols]
