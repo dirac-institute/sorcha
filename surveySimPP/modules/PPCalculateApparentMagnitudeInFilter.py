@@ -43,9 +43,13 @@ def PPCalculateApparentMagnitudeInFilter(padain, function, colname="TrailedSourc
 
     # first, get H, r, delta and alpha as ndarrays
     r = padain['AstRange(km)'].values / 1.495978707e8
-    delta = np.sqrt(padain["Ast-Sun(J2000x)(km)"].values**2
-                    + padain["Ast-Sun(J2000y)(km)"].values**2
-                    + padain["Ast-Sun(J2000z)(km)"].values**2) / 1.495978707e8
+
+    try:
+        delta = padain["Ast-Sun(km)"] / 1.495978707e8
+    except KeyError:
+        delta = np.sqrt(padain["Ast-Sun(J2000x)(km)"].values**2
+                        + padain["Ast-Sun(J2000y)(km)"].values**2
+                        + padain["Ast-Sun(J2000z)(km)"].values**2) / 1.495978707e8
 
     alpha = padain['Sun-Ast-Obs(deg)'].values
     H = padain['H'].values
