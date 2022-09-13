@@ -14,7 +14,7 @@ def makeConfig(args):
 
     #get database info
     con = sql.connect(args.pointing)
-    database = pd.read_sql_query("SELECT observationStartMJD, observationId FROM SummaryAllProps ORDER BY observationStartMJD", con)
+    database = pd.read_sql_query("SELECT observationStartMJD, observationId FROM observations ORDER BY observationStartMJD", con)
     maxFields = len(database.index)
 
     #get what dates to check in database
@@ -83,7 +83,7 @@ def makeConfig(args):
                 'nFields':           str(fieldf - field1),
                 'MPCobscode file':   args.mpcfile,
                 'Telescope':         args.telescope, 
-                'Surveydbquery':     'SELECT observationId,observationStartMJD,fieldRA,fieldDEC,rotSkyPos FROM SummaryAllProps order by observationStartMJD'
+                'Surveydbquery':     'SELECT observationId,observationStartMJD,fieldRA,fieldDEC,rotSkyPos FROM observations order by observationStartMJD'
             },
             'CAMERA': {
                 'Threshold': '5',
