@@ -92,6 +92,8 @@ def runLSSTPostProcessing(cmd_args):
             incrStep = configs['sizeSerialChunk']
         else:
             incrStep = lenf - startChunk
+            
+        verboselog('Working on objects {}-{}.'.format(startChunk, endChunk)) 
 
         # Processing begins, all processing is done for chunks
 
