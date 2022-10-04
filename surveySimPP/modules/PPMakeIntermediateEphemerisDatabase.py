@@ -41,7 +41,7 @@ def PPMakeIntermediateEphemerisDatabase(oif_output, outf, inputformat):
         pplogger.error("ERROR: PPMakeIntermediateEphemerisDatabase: unknown format for ephemeris simulation results.")
         sys.exit("ERROR: PPMakeIntermediateEphemerisDatabase: unknown format for ephemeris simulation results.")
         
-    padafr.to_sql("interm", con=cnx, if_exists="append")
+    padafr.to_sql("interm", con=cnx, if_exists="append", index=False)
 
     return
     

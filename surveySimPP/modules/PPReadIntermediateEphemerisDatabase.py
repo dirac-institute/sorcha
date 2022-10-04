@@ -36,5 +36,13 @@ def PPReadIntermediateEphemerisDatabase(intermdb, part_objid_list):
         padafrtmp = pd.DataFrame(cur.fetchall(), columns=namespd)
         padafr.append(padafrtmp)
     padafr = pd.concat(padafr)
-
+    
+    padafr = padafr.drop(['V', 'V(H=0)'], axis=1, errors='ignore')
+    
+    try:
+        padafr['ObjID'] = padafr['ObjID'].astype(str)
+    except KeyError:
+        pplogger.error("ERROR: ephemeris input file does not have 'ObjID' column.")
+        sys.exit("ERROR: ephemeris input file does not have 'ObjID' column.")
+    
     return padafr
