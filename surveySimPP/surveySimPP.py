@@ -55,7 +55,7 @@ def runLSSTPostProcessing(cmd_args):
     # End of config parsing
 
     if cmd_args['makeIntermediateEphemerisDatabase']:
-        PPMakeIntermediateEphemerisDatabase(cmd_args['oifoutput'], cmd_args['outpath']+'interm.db', 100)
+        PPMakeIntermediateEphemerisDatabase(cmd_args['oifoutput'], cmd_args['outpath']+'interm.db', 100, configs["ephFormat"])
 
     verboselog('Reading pointing database and matching observationID with appropriate optical filter...')
 
