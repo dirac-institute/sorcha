@@ -32,9 +32,9 @@ def PPMakeIntermediateEphemerisDatabase(oif_output, outf, inputformat):
     cur.execute(cmd)
     
     if (inputformat == "whitespace"):
-        padafr = pd.read_csv(oif_output, delim_whitespace=True, index=False)
+        padafr = pd.read_csv(oif_output, delim_whitespace=True)
     elif (inputformat == "comma") or (inputformat == 'csv'):
-        padafr = pd.read_csv(oif_output, delimiter=',', index=False)
+        padafr = pd.read_csv(oif_output, delimiter=',')
     elif (inputformat == 'h5') or (inputformat == 'hdf5') or (inputformat == 'HDF5'):
         padafr = pd.read_hdf(oif_output).reset_index(drop=True)
     else:
