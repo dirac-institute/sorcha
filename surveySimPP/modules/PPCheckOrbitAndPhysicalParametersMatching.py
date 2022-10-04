@@ -27,9 +27,9 @@ def PPCheckOrbitAndPhysicalParametersMatching(orbin, colin, poiin):
     Usage: PPCheckOrbitAndPhysicalParametersMatching(orbin,colin,poiin)
 
     """
-    
+
     pplogger = logging.getLogger(__name__)
-    
+
     oif_objects = pd.unique(poiin['ObjID']).astype(str)
     orb_objects = pd.unique(orbin['ObjID']).astype(str)
     col_objects = pd.unique(colin['ObjID']).astype(str)

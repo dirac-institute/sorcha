@@ -2,8 +2,10 @@
 
 import pandas as pd
 import sqlite3
+import logging
+import sys
 
-# Author: Grigori fedorets
+# Author: Grigori fedorets and Steph Merritt
 
 
 def PPMakeIntermediateEphemerisDatabase(oif_output, outf, inputformat):
@@ -24,13 +26,15 @@ def PPMakeIntermediateEphemerisDatabase(oif_output, outf, inputformat):
 
     """
 
+    pplogger = logging.getLogger(__name__)
+
     cnx = sqlite3.connect(outf)
 
     cur = cnx.cursor()
 
     cmd = 'drop table if exists interm'
     cur.execute(cmd)
-    
+
     if (inputformat == "whitespace"):
         padafr = pd.read_csv(oif_output, delim_whitespace=True)
     elif (inputformat == "comma") or (inputformat == 'csv'):
@@ -40,9 +44,7 @@ def PPMakeIntermediateEphemerisDatabase(oif_output, outf, inputformat):
     else:
         pplogger.error("ERROR: PPMakeIntermediateEphemerisDatabase: unknown format for ephemeris simulation results.")
         sys.exit("ERROR: PPMakeIntermediateEphemerisDatabase: unknown format for ephemeris simulation results.")
-        
+
     padafr.to_sql("interm", con=cnx, if_exists="append", index=False)
 
     return
-    
-    

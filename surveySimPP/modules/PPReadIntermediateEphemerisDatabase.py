@@ -2,9 +2,11 @@
 
 import pandas as pd
 import sqlite3
-
+import logging
+import sys
 
 # Author: Grigori fedorets
+
 
 def PPReadIntermediateEphemerisDatabase(intermdb, part_objid_list):
     """
@@ -21,6 +23,8 @@ def PPReadIntermediateEphemerisDatabase(intermdb, part_objid_list):
     usage: padafr=PPReadIntermDatabase(intermdb,part_objid_list)
     """
 
+    pplogger = logging.getLogger(__name__)
+
     con = sqlite3.connect(intermdb)
     cursor1 = con.execute('select * from interm')
     namespd = list(map(lambda x: x[0], cursor1.description))
@@ -36,13 +40,13 @@ def PPReadIntermediateEphemerisDatabase(intermdb, part_objid_list):
         padafrtmp = pd.DataFrame(cur.fetchall(), columns=namespd)
         padafr.append(padafrtmp)
     padafr = pd.concat(padafr)
-    
+
     padafr = padafr.drop(['V', 'V(H=0)'], axis=1, errors='ignore')
-    
+
     try:
         padafr['ObjID'] = padafr['ObjID'].astype(str)
     except KeyError:
         pplogger.error("ERROR: ephemeris input file does not have 'ObjID' column.")
         sys.exit("ERROR: ephemeris input file does not have 'ObjID' column.")
-    
+
     return padafr
