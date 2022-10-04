@@ -47,4 +47,4 @@ def PPMakeIntermediateEphemerisDatabase(oif_output, outf, inputformat):
 
     padafr.to_sql("interm", con=cnx, if_exists="append", index=False)
 
-    return
+    return outf
