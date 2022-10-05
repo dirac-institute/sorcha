@@ -1,7 +1,5 @@
 #!/bin/python
 
-import pytest
-import pandas as pd
 import sqlite3
 
 from surveySimPP.tests.data import get_test_filepath
@@ -12,7 +10,7 @@ def test_PPMakeIntermediateEphemerisDatabase(tmp_path):
     from surveySimPP.modules.PPMakeIntermediateEphemerisDatabase import PPMakeIntermediateEphemerisDatabase
 
     testdb = str(tmp_path / "testdb_PPIntermDB.db")
-    daba = PPMakeIntermediateEphemerisDatabase(get_test_filepath('oiftestoutput.txt'), testdb, 10)
+    daba = PPMakeIntermediateEphemerisDatabase(get_test_filepath('oiftestoutput.txt'), testdb, 'whitespace')
 
     nlines = 9
 

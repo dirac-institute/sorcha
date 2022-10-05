@@ -2,11 +2,13 @@
 
 import pandas as pd
 import sqlite3
+import logging
+import sys
 
-# Author: Grigori fedorets
+# Author: Grigori fedorets and Steph Merritt
 
 
-def PPMakeIntermediateEphemerisDatabase(oif_output, outf, chunkSize):
+def PPMakeIntermediateEphemerisDatabase(oif_output, outf, inputformat):
     """
     PPMakeIntermediateEphemerisDatabase.py
 
@@ -24,6 +26,8 @@ def PPMakeIntermediateEphemerisDatabase(oif_output, outf, chunkSize):
 
     """
 
+    pplogger = logging.getLogger(__name__)
+
     cnx = sqlite3.connect(outf)
 
     cur = cnx.cursor()
@@ -31,25 +35,16 @@ def PPMakeIntermediateEphemerisDatabase(oif_output, outf, chunkSize):
     cmd = 'drop table if exists interm'
     cur.execute(cmd)
 
-    startChunk = 0
-    endChunk = 0
+    if (inputformat == "whitespace"):
+        padafr = pd.read_csv(oif_output, delim_whitespace=True)
+    elif (inputformat == "comma") or (inputformat == 'csv'):
+        padafr = pd.read_csv(oif_output, delimiter=',')
+    elif (inputformat == 'h5') or (inputformat == 'hdf5') or (inputformat == 'HDF5'):
+        padafr = pd.read_hdf(oif_output).reset_index(drop=True)
+    else:
+        pplogger.error("ERROR: PPMakeIntermediateEphemerisDatabase: unknown format for ephemeris simulation results.")
+        sys.exit("ERROR: PPMakeIntermediateEphemerisDatabase: unknown format for ephemeris simulation results.")
 
-    ii = -1
-    with open(oif_output) as f:
-        for ii, l in enumerate(f):
-            pass
-    lenf = ii
-
-    while(endChunk <= lenf):
-        endChunk = startChunk + chunkSize
-        if (lenf - startChunk >= chunkSize):
-            incrStep = chunkSize
-        else:
-            incrStep = lenf - startChunk
-
-        interm = pd.read_csv(oif_output, delim_whitespace=True, skiprows=range(1, startChunk + 1), nrows=incrStep, header=0)
-        interm.to_sql("interm", con=cnx, if_exists="append")
-
-        startChunk = startChunk + chunkSize
+    padafr.to_sql("interm", con=cnx, if_exists="append", index=False)
 
     return outf
