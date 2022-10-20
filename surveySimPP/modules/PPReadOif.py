@@ -38,9 +38,9 @@ def PPReadOif(oif_output, inputformat):
     pplogger = logging.getLogger(__name__)
 
     if (inputformat == "whitespace"):
-        padafr = pd.read_csv(oif_output, delim_whitespace=True)
+        padafr = PPSkipOifHeader(oif_output, 'ObjID', delim_whitespace=True)
     elif (inputformat == "comma") or (inputformat == 'csv'):
-        padafr = pd.read_csv(oif_output, delimiter=',')
+        padafr = PPSkipOifHeader(oif_output, 'ObjID', delimiter=',')
     elif (inputformat == 'h5') or (inputformat == 'hdf5') or (inputformat == 'HDF5'):
         padafr = pd.read_hdf(oif_output).reset_index(drop=True)
     else:
@@ -61,3 +61,28 @@ def PPReadOif(oif_output, inputformat):
         sys.exit("ERROR: ephemeris input file does not have 'ObjID' column.")
 
     return padafr
+
+
+def PPSkipOifHeader(filename, line_start='ObjID', **kwargs):
+    """Utility function that scans through the lines of OIF output looking for
+    the column names then passes the file object to pandas starting from that
+    line, thus skipping the long OIF header.
+    """
+
+    with open(filename) as f:
+
+        position = 0
+        current_line = f.readline()
+
+        # reads the file line by line looking for the line that starts with
+        # the expected string
+        while not current_line.startswith(line_start):
+            position = f.tell()
+            current_line = f.readline()
+
+        # changes the file position to the start of the line that begins
+        # with the desired string
+        f.seek(position)
+
+        # passes that file object to pandas
+        return pd.read_csv(f, **kwargs)

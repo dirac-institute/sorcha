@@ -4,6 +4,7 @@ import pandas as pd
 import sqlite3
 import logging
 import sys
+from .PPReadOif import PPSkipOifHeader
 
 # Author: Grigori fedorets and Steph Merritt
 
@@ -36,9 +37,9 @@ def PPMakeIntermediateEphemerisDatabase(oif_output, outf, inputformat):
     cur.execute(cmd)
 
     if (inputformat == "whitespace"):
-        padafr = pd.read_csv(oif_output, delim_whitespace=True)
+        padafr = PPSkipOifHeader(oif_output, 'ObjID', delim_whitespace=True)
     elif (inputformat == "comma") or (inputformat == 'csv'):
-        padafr = pd.read_csv(oif_output, delimiter=',')
+        padafr = PPSkipOifHeader(oif_output, 'ObjID', delimiter=',')
     elif (inputformat == 'h5') or (inputformat == 'hdf5') or (inputformat == 'HDF5'):
         padafr = pd.read_hdf(oif_output).reset_index(drop=True)
     else:
