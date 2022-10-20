@@ -65,24 +65,24 @@ def PPReadOif(oif_output, inputformat):
 
 def PPSkipOifHeader(filename, line_start='ObjID', **kwargs):
     """Utility function that scans through the lines of OIF output looking for
-    the column names then passes the file object to pandas starting from that 
+    the column names then passes the file object to pandas starting from that
     line, thus skipping the long OIF header.
     """
 
     with open(filename) as f:
-        
+
         position = 0
         current_line = f.readline()
-        
+
         # reads the file line by line looking for the line that starts with
         # the expected string
         while not current_line.startswith(line_start):
             position = f.tell()
             current_line = f.readline()
-        
+
         # changes the file position to the start of the line that begins
         # with the desired string
         f.seek(position)
-        
+
         # passes that file object to pandas
         return pd.read_csv(f, **kwargs)
