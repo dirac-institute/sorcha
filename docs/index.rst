@@ -28,6 +28,7 @@ if it is observable with LSST, and specific guides for near earth objects, Jupit
 
    overview
    installation
+   uninstall 
    inputs
    filters
    configfiles
