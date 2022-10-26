@@ -110,12 +110,6 @@ If everything has installed correctly, test.output will include::
 .. note::
    The first part of the OIF output is a header that describes how the software was configured. The next part is the ephemeris for the synthetic planetesimals that land within the field-of-view (FOV) of a specific survey observation based on the test input simulated LSST observation database. See :ref:`the outputs page<Outputs>` for further explanation.
 
-Uninstalling OIF
-~~~~~~~~~~~~~~~~~~~
-To uninstall::
-
-   python setup.py develop -u
-
 SurveySimPP
 -----------------------------
 
@@ -182,11 +176,5 @@ The first several lines of the csv file should look like::
    S1000000a,61800.344153,162.0635721181383,-18.898355290119376,163.54577400000005,-19.394424999999135,2.8689630537040696e-06,r,19.200045225924832,19.199929834302065,0.0047787067263324184,0.004768812259721885,23.96941267734908,23.922430803386348
    S1000000a,61800.354632,164.15684092068437,-20.943446580487446,163.54471499999818,-19.39445699999953,2.8543371304594317e-06,i,19.196071494621773,19.194335642506527,0.005549541530791749,0.00553047002321138,23.764541080701463,23.687053065953684
 
-
-Uninstalling surveySimPP
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
-To uninstall::
-
-   python setup.py develop -u
 
 
