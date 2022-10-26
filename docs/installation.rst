@@ -22,8 +22,8 @@ Initial Steps
    
 OIF
 -----------------------
-In order to use the Solar System survey simulator, we must first install 
-`Objects in Field <https://github.com/eggls6/objectsInField>`_. 
+In order to use the Solar System survey simulator, we must first install the specialized 
+`clone of Objects in Field <https://github.com/eggls6/objectsInField>`_ set up for use with surveysimPP. 
 This is used to generate candidate detections for an input population of 
 moving objects in a specified list of field pointings.
 
@@ -142,7 +142,7 @@ Installing the Survey Simulator Post Processing
    
 **Step 3** Install an editable (in-place) development version of surveySimPP. This will allow you to run the code from the source directory.::
 
-   cd ~/survey_simulator_post_processing
+   cd survey_simulator_post_processing
    pip install -e .
 
 
