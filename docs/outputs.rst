@@ -3,14 +3,14 @@ Outputs
   
 Objects in Field (OIF) Output
 ------------------------------
-The format of the OIF output looks something like::
+The format of the OIF output, that is printed after the header information that is at the top of the file, looks something like::
    
    ObjID, FieldID, FieldMJD, AstRange(km), AstRangeRate(km/s), AstRA(deg), AstRARate(deg/day), AstDec(deg), AstDecRate(deg/day), Ast-Sun(J2000x)(km), Ast-Sun(J2000y)(km), Ast-Sun(J2000z)(km), Ast-Sun(J2000vx)(km/s), Ast-Sun(J2000vy)(km/s), Ast-Sun(J2000vz)(km/s), Obs-Sun(J2000x)(km), Obs-Sun(J2000y)(km), Obs-Sun(J2000z)(km), Obs-Sun(J2000vx)(km/s), Obs-Sun(J2000vy)(km/s), Obs-Sun(J2000vz)(km/s), Sun-Ast-Obs(deg), V, V(H=0)
    S100003Ua,992,59855.012720,232764749.248562,19.381,313.391309,0.093855,-14.189297,-0.001147,302701424.872,-141376977.611,-47258199.518,10.938,16.381,6.838,147675817.300,22607836.793,9798564.669,-5.071,27.085,11.641,22.025168,12.229,3.789
    S100005xa,40,59854.002209,311895722.264139,18.108,312.493375,0.024745,-10.868628,-0.020284,355032405.197,-205593003.122,-50029660.233,8.437,15.234,7.005,148124584.428,20259701.559,8780700.962,-4.542,27.134,11.674,17.656392,14.416,4.726
 
 
-The output from OIF is directly input into surveySimPPr. The following table gives an overview of each of the output columns:
+The output from OIF is directly input into surveySimPP. The following table gives an overview of each of the output columns:
 
 +------------------------+----------------------------------------------------------------------------------+
 | Keyword                | Description                                                                      |
