@@ -28,19 +28,20 @@ if it is observable with LSST, and specific guides for near earth objects, Jupit
 
    overview
    installation
-   uninstall 
    inputs
    filters
    configfiles
    outputs
    gettingstarted
+   whatsspdoesnotdo
    troubleshooting
    support
    release
    contributors   
    acknowledgements
    cite
- 
+   uninstall 
+
 .. toctree::
    :maxdepth: 1
    :caption: Documentation:
