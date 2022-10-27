@@ -89,17 +89,17 @@ def main():
     parser.add_argument('--cameramodel', '-cammod', help='Choose between surface area equivalent or actual camera footprint, including chip gaps. Options: circle, footprint. Default is "footprint".', type=str, default='footprint')
 
     # FILTERINGPARAMETERS
-    parser.add_argument('--snrlimit', '-snr', help='SNR limit: drop observations below this SNR threshold. Omit for default 2.0 SNR cut.', type=float, default=None)
-    parser.add_argument('--maglimit', '-mag', help='Magnitude threshold: drop observations below this magnitude. Omit for no magnitude cut.', type=float, default=None)
+    parser.add_argument('--snrlimit', '-snr', help='SNR limit: drop observations below this SNR threshold. Omit/None for default 2.0 SNR cut.', type=float, default=None)
+    parser.add_argument('--maglimit', '-mag', help='Magnitude threshold: drop observations below this magnitude. Omit/None for no magnitude cut.', type=float, default=None)
     parser.add_argument('--fadingfunction', '-fade', help='Detection efficiency fading function on or off.', type=bool, default=True)
-    parser.add_argument('--fadingwidth', '-fadew', help='Width parameter for fading function. Default is 0.1 after Chelsey and Vereš (2017).', type=float, default=0.1)
+    parser.add_argument('--fadingwidth', '-fadew', help='Width parameter for fading function. Default is 0.1 after Chelsey and Vereš (2017) or None to omit.', type=float, default=0.1)
     parser.add_argument('--detectionefficiency', '-deteff', help='Which fraction of the detections will the automated solar system processing pipeline recognise? Expects a float. Default is 0.95.', type=float, default=0.95)
-    parser.add_argument('--fillfactor', '-ff', help='Fraction of detector surface area which contains CCD -- simulates chip gaps. Expects a float or None. Default is None.', default=None)
-    parser.add_argument('--mintracklet', '-mintrk', help='How many observations during one night are required to produce a valid tracklet? Expects an int. Default 2.', type=int, default=2)
-    parser.add_argument('--notracklets', '-ntrk', help='How many tracklets are required to classify as a detection? Expects an int. Default 3.', type=int, default=3)
-    parser.add_argument('--trackletinterval', '-inttrk', help='In what amount of time does the aforementioned number of tracklets needs to be discovered to constitute a complete detection? In days. Expects a float. Default 15.0.', type=float, default=15.0)
-    parser.add_argument('--brightlimit', '-brtlim', help='Limit of brightness: detections brighter than this are omitted assuming saturation. Expects a float. Default is 16.0.', type=float, default=16.0)
-    parser.add_argument('--insepthreshold', '-minsep', help='Minimum separation inside the tracklet for SSP distinguish motion between two images, in arcsec. Expects a float. Default is 0.5.', type=float, default=0.5)
+    parser.add_argument('--fillfactor', '-ff', help='Fraction of detector surface area which contains CCD -- simulates chip gaps. Expects a float or None to omit. Default is None.', type=float, default=None)
+    parser.add_argument('--mintracklet', '-mintrk', help='How many observations during one night are required to produce a valid tracklet? Expects an int or None to omit. Default 2.', type=int, default=2)
+    parser.add_argument('--notracklets', '-ntrk', help='How many tracklets are required to classify as a detection? Expects an int or None to omit. Default 3.', type=int, default=3)
+    parser.add_argument('--trackletinterval', '-inttrk', help='In what amount of time does the aforementioned number of tracklets needs to be discovered to constitute a complete detection? In days. Expects a float or None to omit. Default 15.0.', type=float, default=15.0)
+    parser.add_argument('--brightlimit', '-brtlim', help='Limit of brightness: detections brighter than this are omitted assuming saturation. Expects a float or None to omit. Default is 16.0.', type=float, default=16.0)
+    parser.add_argument('--insepthreshold', '-minsep', help='Minimum separation inside the tracklet for SSP distinguish motion between two images, in arcsec. Expects a float or None to omit. Default is 0.5.', type=float, default=0.5)
 
     # OUTPUTFORMAT
     parser.add_argument('--outputformat', '-outf', help='Output format. Options: csv, sqlite3, hdf5. Default is csv.', type=str, default='csv')
