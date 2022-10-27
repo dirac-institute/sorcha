@@ -148,12 +148,11 @@ Installing the Survey Simulator Post Processing
 
 Testing the surveySimPP Installation
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-**If you have not run and installed OIF from above**, you can check that the surveySimPP installation was done correctly, by running::
+You can check that the surveySimPP installation was done correctly, by running::
 
    surveySimPP -c ./demo/PPConfig_test.ini -l ./demo/sspp_testset_colours.txt -o ./demo/sspp_testset_orbits.des -p ./demo/example_oif_output.txt -u ./data/out/ -t testrun_e2e
    
-The output will appear in a csv file (testrun_e2e.csv) in .data/out (this pathway can be changed via the -u command line argument)
-The first several lines of the csv file should look like::
+The output will appear in a csv file (testrun_e2e.csv) in .data/out (this pathway can be changed via the -u command line argument). The first several lines of the csv file should look like::
 
    ObjID,FieldMJD,fieldRA,fieldDec,AstRA(deg),AstDec(deg),AstrometricSigma(deg),optFilter,observedPSFMag,observedTrailedSourceMag,PhotometricSigmaPSF(mag),PhotometricSigmaTrailedSource(mag),fiveSigmaDepth,fiveSigmaDepthAtSource
    632,60315.2441,141.4554595,8.1858813,142.5089386,8.434987,1.36e-05,r,22.672,22.822,0.084,0.084,23.783,23.771
@@ -175,3 +174,5 @@ The first several lines of the csv file should look like::
    632,60437.04671,138.9314847,10.5647336,137.7223925,10.8257878,2.98e-05,i,23.188,22.828,0.177,0.177,23.207,23.187
    39265,60347.2776,196.15222,-30.2579928,196.9513634,-31.5022433,2.8e-06,r,18.416,18.412,0.003,0.003,24.037,24.0
 
+.. note::
+   This test run is using pre-made ephemeris generasted by OIF already stored in the demo directory of the github surveysimPP repository. 
