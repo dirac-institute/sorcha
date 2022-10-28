@@ -10,7 +10,21 @@ def makeConfigFile(args):
 
     config = configparser.ConfigParser()
 
-    config.read_dict({
+    filtering_raw = {'brightLimit': str(args.brightlimit),
+                     'SNRLimit': str(args.snrlimit),
+                     'magLimit': str(args.maglimit),
+                     'fadingFunctionOn': str(args.fadingfunction),
+                     'fadingFunctionWidth': str(args.fadingwidth),
+                     'fillfactor': str(args.fillfactor),
+                     'SSPDetectionEfficiency': str(args.detectionefficiency),
+                     'minTracklet': str(args.mintracklet),
+                     'noTracklets': str(args.notracklets),
+                     'trackletInterval': str(args.trackletinterval),
+                     'inSepThreshold': str(args.insepthreshold)}
+
+    filtering_dict = {k: v for k, v in filtering_raw.items() if v != 'None'}
+
+    config_dict = {
             'OBJECTS':
             {'cometactivity': args.cometactivity},
             'INPUTFILES':
@@ -27,17 +41,7 @@ def makeConfigFile(args):
             'PERFORMANCE':
             {'trailingLossesOn': str(args.trailinglosseson),
                 'cameraModel': args.cameramodel},
-            'FILTERINGPARAMETERS':
-            {'brightLimit': str(args.brightlimit),
-                'SNRLimit': str(args.snrlimit),
-                'magLimit': str(args.maglimit),
-                'fadingFunctionOn': str(args.fadingfunction),
-                'fillfactor': str(args.fillfactor),
-                'SSPDetectionEfficiency': str(args.detectionefficiency),
-                'minTracklet': str(args.mintracklet),
-                'noTracklets': str(args.notracklets),
-                'trackletInterval': str(args.trackletinterval),
-                'inSepThreshold': str(args.insepthreshold)},
+            'FILTERINGPARAMETERS': filtering_dict,
             'OUTPUTFORMAT':
             {'outputformat': args.outputformat,
                 'outputsize': args.outputsize,
@@ -45,7 +49,9 @@ def makeConfigFile(args):
                 'magnitude_decimals': str(args.magnitudedecimals)},
             'GENERAL':
             {'sizeSerialChunk': str(args.sizeserialchunk)}
-                    })
+                    }
+
+    config.read_dict(config_dict)
 
     with open(args.filename, 'w') as f:
         config.write(f)
@@ -66,7 +72,7 @@ def main():
 
     # INPUTFILES
     parser.add_argument('--ephemeridestype', '-eph', help='Type of input ephemerides: default = oif. Options: currently only oif.', type=str, default='oif')
-    parser.add_argument('-pointingdatabase', '-inpt', help='Path to pointing database. Default is "./demo/baseline_v2.0_1yr.db".', type=str, default='./demo/baseline_v2.0_1yr.db')
+    parser.add_argument('--pointingdatabase', '-inpt', help='Path to pointing database. Default is "./demo/baseline_v2.0_1yr.db".', type=str, default='./demo/baseline_v2.0_1yr.db')
     parser.add_argument('--footprintpath', '-infoot', help='Path to camera footprint file. Default is "./data/detectors_corners.csv".', type=str, default='./data/detectors_corners.csv')
     parser.add_argument('--ephformat', '-inptf', help='Separator in ephemeris database: csv, whitespace, hdf5. Default is "whitespace".', type=str, default='whitespace')
     parser.add_argument('--auxformat', '-inauxf', help='Separator in orbit/colour/brightness/cometary data files: comma or whitespace. Default is "whitespace".', type=str, default='whitespace')
@@ -83,16 +89,17 @@ def main():
     parser.add_argument('--cameramodel', '-cammod', help='Choose between surface area equivalent or actual camera footprint, including chip gaps. Options: circle, footprint. Default is "footprint".', type=str, default='footprint')
 
     # FILTERINGPARAMETERS
-    parser.add_argument('--snrlimit', '-snr', help='SNR limit: drop observations below this SNR threshold. Omit for default 2.0 SNR cut.', type=float, default=None)
-    parser.add_argument('--maglimit', '-mag', help='Magnitude threshold: drop observations below this magnitude. Omit for no magnitude cut.', type=float, default=None)
+    parser.add_argument('--snrlimit', '-snr', help='SNR limit: drop observations below this SNR threshold. Omit/None for default 2.0 SNR cut.', type=float, default=None)
+    parser.add_argument('--maglimit', '-mag', help='Magnitude threshold: drop observations below this magnitude. Omit/None for no magnitude cut.', type=float, default=None)
     parser.add_argument('--fadingfunction', '-fade', help='Detection efficiency fading function on or off.', type=bool, default=True)
+    parser.add_argument('--fadingwidth', '-fadew', help='Width parameter for fading function. Default is 0.1 after Chelsey and Vereš (2017) or None to omit.', type=float, default=0.1)
     parser.add_argument('--detectionefficiency', '-deteff', help='Which fraction of the detections will the automated solar system processing pipeline recognise? Expects a float. Default is 0.95.', type=float, default=0.95)
-    parser.add_argument('--fillfactor', '-ff', help='Fraction of detector surface area which contains CCD -- simulates chip gaps. Expects a float. Default is 0.9.', type=float, default=0.9)
-    parser.add_argument('--mintracklet', '-mintrk', help='How many observations during one night are required to produce a valid tracklet? Expects an int. Default 2.', type=int, default=2)
-    parser.add_argument('--notracklets', '-ntrk', help='How many tracklets are required to classify as a detection? Expects an int. Default 3.', type=int, default=3)
-    parser.add_argument('--trackletinterval', '-inttrk', help='In what amount of time does the aforementioned number of tracklets needs to be discovered to constitute a complete detection? In days. Expects a float. Default 15.0.', type=float, default=15.0)
-    parser.add_argument('--brightlimit', '-brtlim', help='Limit of brightness: detections brighter than this are omitted assuming saturation. Expects a float. Default is 16.0.', type=float, default=16.0)
-    parser.add_argument('--insepthreshold', '-minsep', help='Minimum separation inside the tracklet for SSP distinguish motion between two images, in arcsec. Expects a float. Default is 0.5.', type=float, default=0.5)
+    parser.add_argument('--fillfactor', '-ff', help='Fraction of detector surface area which contains CCD -- simulates chip gaps. Expects a float or None to omit. Default is None.', type=float, default=None)
+    parser.add_argument('--mintracklet', '-mintrk', help='How many observations during one night are required to produce a valid tracklet? Expects an int or None to omit. Default 2.', type=int, default=2)
+    parser.add_argument('--notracklets', '-ntrk', help='How many tracklets are required to classify as a detection? Expects an int or None to omit. Default 3.', type=int, default=3)
+    parser.add_argument('--trackletinterval', '-inttrk', help='In what amount of time does the aforementioned number of tracklets needs to be discovered to constitute a complete detection? In days. Expects a float or None to omit. Default 15.0.', type=float, default=15.0)
+    parser.add_argument('--brightlimit', '-brtlim', help='Limit of brightness: detections brighter than this are omitted assuming saturation. Expects a float or None to omit. Default is 16.0.', type=float, default=16.0)
+    parser.add_argument('--insepthreshold', '-minsep', help='Minimum separation inside the tracklet for SSP distinguish motion between two images, in arcsec. Expects a float or None to omit. Default is 0.5.', type=float, default=0.5)
 
     # OUTPUTFORMAT
     parser.add_argument('--outputformat', '-outf', help='Output format. Options: csv, sqlite3, hdf5. Default is csv.', type=str, default='csv')
