@@ -369,3 +369,6 @@ The first several lines of  output will look something like::
    
 .. warning::
    Only one instance of surveySimPP can be run per output directory. Make sure to have different output pathways if you are running multiple instances on the same compute node. 
+
+.. note::
+   surveySimPP outputs a log file and error file. If all has gone well, the error file will be empty. The log file has the configuration parameters outputted to it as a record of the run setup. 
