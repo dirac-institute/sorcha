@@ -1,28 +1,35 @@
-#!/bin/python
-
-import pytest
 import pandas as pd
 import numpy as np
-from astropy import units as u
-from astropy.coordinates import SkyCoord
+from numpy.testing import assert_equal
 
 from surveySimPP.tests.data import get_test_filepath
 
 
 def test_PPFilterSSPLinking():
 
-    from surveySimPP.modules.PPReadOif import PPReadOif
     from surveySimPP.modules.PPFilterSSPLinking import PPFilterSSPLinking
 
-    padafr = PPReadOif(get_test_filepath('oiftestoutput.txt'), 'whitespace')
-    
-    rng = np.random.default_rng(2021)
-    
-    print(padafr)
-    padaout = PPFilterSSPLinking(padafr, 1, 2, 1, 15.0, 1.0, rng)
-    print(padaout)
-    nlc = 6
-    nlco = len(padaout.index)
+    test_data = pd.read_csv(get_test_filepath('test_input_fullobs.csv'))
 
-    assert nlc == nlco
+    rng = np.random.default_rng(2021)
+
+    detection_efficiency = 0.95
+    min_observations = 2
+    min_tracklets = 3
+    tracklet_interval = 15
+    minimum_separation = 0.5
+
+    test_data_out = PPFilterSSPLinking(test_data[0:20],
+                                       detection_efficiency,
+                                       min_observations,
+                                       min_tracklets,
+                                       tracklet_interval,
+                                       minimum_separation,
+                                       rng)
+
+    expected = [894816, 894838, 897478, 897521, 901987, 902035, 907363, 907416,
+                907470, 909426, 909452, 910850, 910872]
+
+    assert_equal(test_data_out['FieldID'].values, expected)
+
     return

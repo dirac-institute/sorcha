@@ -31,14 +31,14 @@ def PPCalculateApparentMagnitude(observations, phasefunction, mainfilter, otherc
     pplogger = logging.getLogger(__name__)
     verboselog = pplogger.info if verbose else lambda *a, **k: None
 
-    verboselog('Selecting and applying correct colour offset...')
-    observations = PPApplyColourOffsets(observations, phasefunction, othercolours, observing_filters, mainfilter)
-
-    verboselog('Calculating apparent magnitude in filter...')
-    observations = PPCalculateApparentMagnitudeInFilter(observations, phasefunction)
-
     if (object_type == 'comet'):
-        verboselog('Calculating cometary magnitude using a simple model...')
-        observations = PPCalculateSimpleCometaryMagnitude(observations, mainfilter)
+        verboselog('Calculating cometary magnitude using a simple model and applying colour offset...')
+        observations = PPCalculateSimpleCometaryMagnitude(observations, mainfilter, othercolours)
+    else:
+        verboselog('Selecting and applying correct colour offset...')
+        observations = PPApplyColourOffsets(observations, phasefunction, othercolours, observing_filters, mainfilter)
+
+        verboselog('Calculating apparent magnitude in filter...')
+        observations = PPCalculateApparentMagnitudeInFilter(observations, phasefunction)
 
     return observations

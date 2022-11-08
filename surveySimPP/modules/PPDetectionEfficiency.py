@@ -36,14 +36,6 @@ def PPDetectionEfficiency(padain, threshold, rng):
 
     padain_drop = padain.drop(padain[uniform_distr > threshold].index)
 
-    # nrows=len(padain.index)
-    # i=0
-    # while(i<nrows):
-    #     randn=random.random()
-    #     if (randn>threshold):
-    #         padain = padain[padain.index != i]
-    #     i=i+1
-
     # After dropping some lines, the indices should be updated.
     padain_drop = padain_drop.reset_index(drop=True)
 
