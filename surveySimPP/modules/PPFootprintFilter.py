@@ -31,7 +31,7 @@ deg2rad = np.radians
 sin = np.sin
 cos = np.cos
 
-__all__=['footPrintFilter']
+__all__=['Footprint']
 
 class Detector:
 
