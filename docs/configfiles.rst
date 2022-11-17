@@ -24,7 +24,7 @@ Object in Field's **Surveydbquery** config file parameter and surveySimPP's **pp
 
 From rubin_sim v2.0 simulations onward use the query::
 
-  SELECT observationId,observationStartMJD,fieldRA,fieldDEC,rotSkyPos FROM observations order by observationStartMJD
+  SELECT observationId, observationStartMJD, filter, seeingFwhmGeom, seeingFwhmEff, fiveSigmaDepth, fieldRA, fieldDec, rotSkyPos FROM observations order by observationId
 
 For past rubin_sim/OpSim simulations pre-v2.0 use the query::
 
