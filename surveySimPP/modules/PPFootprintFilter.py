@@ -21,7 +21,7 @@
 # numpy
 import numpy as np
 # numba
-from numba import jit
+# from numba import jit
 # pandas
 import pandas as pd
 # matplotlib
