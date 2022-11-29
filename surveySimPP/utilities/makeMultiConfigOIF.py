@@ -34,18 +34,18 @@ def makeConfig(args):
     # get range of fields for those days
     field1 = database.loc[(database["observationStartMJD"] - day1) < 1.0]["observationId"].iloc[0]
     fieldf = database.loc[(database["observationStartMJD"] - dayf) < 2.0]["observationId"].iloc[-1]  # this will likely overshoot a little bit
-    
-    orbits_list = glob.glob(args.o+'orbits*.txt')
-    
+
+    orbits_list = glob.glob(args.o + 'orbits*.txt')
+
     for fn in orbits_list:
-        
+
         if (args.inputformat == 'whitespace'):
             orbits = pd.read_csv(fn, delim_whitespace=True)
         else:
             orbits = pd.read_csv(fn)
 
         nOrbitsTotal = len(orbits.index)
-        
+
         orbits_name = os.path.basename(os.path.splitext(fn)[0])[7:]
 
         config.read_dict({
@@ -80,8 +80,7 @@ def makeConfig(args):
             }
         })
 
-        ndigits = len(str(len(orbits.index)))
-        with open(args.o+'config_' + orbits_name + '.ini', 'w') as file:
+        with open(args.o + 'config_' + orbits_name + '.ini', 'w') as file:
             config.write(file)
 
 
