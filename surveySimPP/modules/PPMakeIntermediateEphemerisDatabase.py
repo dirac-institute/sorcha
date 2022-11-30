@@ -4,6 +4,8 @@ import pandas as pd
 import sqlite3
 import logging
 import sys
+import os
+from datetime import datetime
 from .PPReadOif import PPSkipOifHeader
 
 # Author: Grigori fedorets and Steph Merritt
@@ -29,7 +31,12 @@ def PPMakeIntermediateEphemerisDatabase(oif_output, outf, inputformat):
 
     pplogger = logging.getLogger(__name__)
 
-    cnx = sqlite3.connect(outf)
+    dstr = datetime.now().strftime('%Y-%m-%d-%H-%M-%S')
+    cpid = os.getpid()
+
+    inter_name = dstr + '-p' + str(cpid) + '-' + 'interim.db'
+
+    cnx = sqlite3.connect(outf + inter_name)
 
     cur = cnx.cursor()
 
@@ -48,4 +55,4 @@ def PPMakeIntermediateEphemerisDatabase(oif_output, outf, inputformat):
 
     padafr.to_sql("interm", con=cnx, if_exists="append", index=False)
 
-    return outf
+    return outf + inter_name

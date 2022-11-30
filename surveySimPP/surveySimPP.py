@@ -4,6 +4,7 @@ import sys
 import time
 import numpy as np
 import argparse
+import os
 
 from surveySimPP.modules.PPMatchPointing import PPMatchPointing
 from surveySimPP.modules.PPFilterSSPLinking import PPFilterSSPLinking
@@ -55,7 +56,8 @@ def runLSSTPostProcessing(cmd_args):
     # End of config parsing
 
     if cmd_args['makeIntermediateEphemerisDatabase']:
-        PPMakeIntermediateEphemerisDatabase(cmd_args['oifoutput'], cmd_args['outpath']+'interm.db', configs["ephFormat"])
+        verboselog('Creating intermediate ephemeris database...')
+        cmd_args['readIntermediateEphemerisDatabase'] = PPMakeIntermediateEphemerisDatabase(cmd_args['oifoutput'], cmd_args['outpath'], configs["ephFormat"])
 
     verboselog('Reading pointing database and matching observationID with appropriate optical filter...')
 
@@ -92,8 +94,8 @@ def runLSSTPostProcessing(cmd_args):
             incrStep = configs['sizeSerialChunk']
         else:
             incrStep = lenf - startChunk
-            
-        verboselog('Working on objects {}-{}.'.format(startChunk, endChunk)) 
+
+        verboselog('Working on objects {}-{}.'.format(startChunk, endChunk))
 
         # Processing begins, all processing is done for chunks
 
@@ -176,6 +178,10 @@ def runLSSTPostProcessing(cmd_args):
         startChunk = startChunk + configs['sizeSerialChunk']
         # end for
 
+    if cmd_args['deleteIntermediateEphemerisDatabase']:
+        verboselog('Deleting the intermediate ephemeris database...')
+        os.remove(cmd_args['readIntermediateEphemerisDatabase'])
+
     pplogger.info('Post processing completed.')
 
 
@@ -208,7 +214,8 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("-c", "--config", help="Input configuration file name", type=str, dest='c', default='./PPConfig.ini', required=True)
     parser.add_argument("-dw", help="Make intermediate ephemeris database. Overwrites existing database if present.", dest='dw', action='store_true')
-    parser.add_argument("-dr", help="Read from existing/previous intermediate ephemeris database.", dest='dr', action='store_true')
+    parser.add_argument("-dr", help="Read from existing/previous intermediate ephemeris database.", dest='dr', type=str)
+    parser.add_argument("-dl", help="Delete the interim database after code has completed.", action='store_true', default=False)
     parser.add_argument("-m", "--comet", help="Comet parameter file name", type=str, dest='m')
     parser.add_argument("-l", "--params", help="Physical parameters file name", type=str, dest='l', default='./data/params', required=True)
     parser.add_argument("-o", "--orbit", help="Orbit file name", type=str, dest='o', default='./data/orbit.des', required=True)

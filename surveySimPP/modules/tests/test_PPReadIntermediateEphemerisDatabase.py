@@ -16,7 +16,7 @@ def test_PPReadIntermediateEphemerisDatabase(tmp_path):
     testdb = str(tmp_path / "testdb_PPIntermDB.db")
     daba = PPMakeIntermediateEphemerisDatabase(get_test_filepath('oiftestoutput.txt'), testdb, 'whitespace')
 
-    padafr = PPReadIntermediateEphemerisDatabase(testdb, objid_list)
+    padafr = PPReadIntermediateEphemerisDatabase(daba, objid_list)
 
     nlines = 9
 
