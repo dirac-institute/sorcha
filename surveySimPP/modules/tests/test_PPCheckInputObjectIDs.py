@@ -3,11 +3,11 @@
 from surveySimPP.tests.data import get_test_filepath
 
 
-def test_PPCheckOrbitAndPhysicalParametersMatching():
+def test_PPCheckInputObjectIDs():
 
     from surveySimPP.modules.PPReadOrbitFile import PPReadOrbitFile
     from surveySimPP.modules.PPReadPhysicalParameters import PPReadPhysicalParameters
-    from surveySimPP.modules.PPCheckOrbitAndPhysicalParametersMatching import PPCheckOrbitAndPhysicalParametersMatching
+    from surveySimPP.modules.PPCheckInputObjectIDs import PPCheckInputObjectIDs
     from surveySimPP.modules.PPReadOif import PPReadOif
 
     compval = 1
@@ -21,9 +21,9 @@ def test_PPCheckOrbitAndPhysicalParametersMatching():
     print(padapo)
 
     try:
-        PPCheckOrbitAndPhysicalParametersMatching(padaor, padacl, padapo)
+        PPCheckInputObjectIDs(padaor, padacl, padapo)
         ret = 1
-    except:
+    except Exception:
         ret = 0
 
     assert ret == compval

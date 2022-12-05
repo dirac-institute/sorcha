@@ -6,20 +6,20 @@ import numpy as np
 import argparse
 import os
 
-from surveySimPP.modules.PPMatchPointing import PPMatchPointing
-from surveySimPP.modules.PPFilterSSPLinking import PPFilterSSPLinking
+from surveySimPP.modules.PPReadPointingDatabase import PPReadPointingDatabase
+from surveySimPP.modules.PPLinkingFilter import PPLinkingFilter
 from surveySimPP.modules.PPTrailingLoss import PPTrailingLoss
 from surveySimPP.modules.PPBrightLimit import PPBrightLimit
-from surveySimPP.modules.PPMakeIntermediateEphemerisDatabase import PPMakeIntermediateEphemerisDatabase
+from surveySimPP.modules.PPMakeTemporaryEphemerisDatabase import PPMakeTemporaryEphemerisDatabase
 from surveySimPP.modules.PPCalculateApparentMagnitude import PPCalculateApparentMagnitude
 from surveySimPP.modules.PPApplyFOVFilter import PPApplyFOVFilter
 from surveySimPP.modules.PPSNRLimit import PPSNRLimit
 from surveySimPP.modules import PPAddUncertainties, PPRandomizeMeasurements
 from surveySimPP.modules import PPVignetting
-from surveySimPP.modules.PPFilterFadingFunction import PPFilterFadingFunction
+from surveySimPP.modules.PPFadingFunctionFilter import PPFadingFunctionFilter
 from surveySimPP.modules.PPConfigParser import PPConfigFileParser, PPPrintConfigsToLog
 from surveySimPP.modules.PPGetLogger import PPGetLogger
-from surveySimPP.modules.PPCMDLineParser import PPCMDLineParser
+from surveySimPP.modules.PPCommandLineParser import PPCommandLineParser
 from surveySimPP.modules.PPReadAllInput import PPReadAllInput
 from surveySimPP.modules.PPMagnitudeLimit import PPMagnitudeLimit
 from surveySimPP.modules.PPOutput import PPWriteOutput
@@ -55,13 +55,13 @@ def runLSSTPostProcessing(cmd_args):
 
     # End of config parsing
 
-    if cmd_args['makeIntermediateEphemerisDatabase']:
-        verboselog('Creating intermediate ephemeris database...')
-        cmd_args['readIntermediateEphemerisDatabase'] = PPMakeIntermediateEphemerisDatabase(cmd_args['oifoutput'], cmd_args['outpath'], configs["ephFormat"])
+    if cmd_args['makeTemporaryEphemerisDatabase']:
+        verboselog('Creating temporary ephemeris database...')
+        cmd_args['readTemporaryEphemerisDatabase'] = PPMakeTemporaryEphemerisDatabase(cmd_args['oifoutput'], cmd_args['outpath'], configs["ephFormat"])
 
     verboselog('Reading pointing database and matching observationID with appropriate optical filter...')
 
-    filterpointing = PPMatchPointing(configs['pointingdatabase'], configs['observing_filters'], configs['ppdbquery'])
+    filterpointing = PPReadPointingDatabase(configs['pointingdatabase'], configs['observing_filters'], configs['ppdbquery'])
 
     verboselog('Instantiating random number generator ... ')
 
@@ -151,7 +151,7 @@ def runLSSTPostProcessing(cmd_args):
 
         if configs['fadingFunctionOn']:
             verboselog('Applying detection efficiency fading function...')
-            observations = PPFilterFadingFunction(observations, configs['fillfactor'], configs['fadingFunctionWidth'], rng, verbose=cmd_args['verbose'])
+            observations = PPFadingFunctionFilter(observations, configs['fillfactor'], configs['fadingFunctionWidth'], rng, verbose=cmd_args['verbose'])
 
         if configs['brightLimitOn']:
             verboselog('Dropping observations that are too bright...')
@@ -161,13 +161,13 @@ def runLSSTPostProcessing(cmd_args):
             verboselog('Applying SSP linking filter...')
             verboselog('Number of rows BEFORE applying SSP linking filter: ' + str(len(observations.index)))
 
-            observations = PPFilterSSPLinking(observations,
-                                              configs['SSPDetectionEfficiency'],
-                                              configs['minTracklet'],
-                                              configs['noTracklets'],
-                                              configs['trackletInterval'],
-                                              configs['inSepThreshold'],
-                                              rng)
+            observations = PPLinkingFilter(observations,
+                                           configs['SSPDetectionEfficiency'],
+                                           configs['minTracklet'],
+                                           configs['noTracklets'],
+                                           configs['trackletInterval'],
+                                           configs['inSepThreshold'],
+                                           rng)
 
             observations.reset_index(drop=True, inplace=True)
             verboselog('Number of rows AFTER applying SSP linking filter: ' + str(len(observations.index)))
@@ -178,9 +178,9 @@ def runLSSTPostProcessing(cmd_args):
         startChunk = startChunk + configs['sizeSerialChunk']
         # end for
 
-    if cmd_args['deleteIntermediateEphemerisDatabase']:
-        verboselog('Deleting the intermediate ephemeris database...')
-        os.remove(cmd_args['readIntermediateEphemerisDatabase'])
+    if cmd_args['deleteTemporaryEphemerisDatabase']:
+        verboselog('Deleting the temporary ephemeris database...')
+        os.remove(cmd_args['readTemporaryEphemerisDatabase'])
 
     pplogger.info('Post processing completed.')
 
@@ -199,8 +199,9 @@ def main():
         optional arguments:
          -h, --help           show this help message and exit
          -c C, --config C     Input configuration file name
-         -dw                  Make intermediate ephemeris database
-         -dr                  Read from existing intermediate ephemeris database
+         -dw                  Make temporary ephemeris database
+         -dr                  Read from existing temporary ephemeris database at this location
+         -dl                  Delete the temporary ephemeris database on code completion.
          -m M, --comet M      Comet parameter file name
          -l L, --params L     Physical parameters file name
          -o O, --orbit O      Orbit file name
@@ -213,9 +214,9 @@ def main():
 
     parser = argparse.ArgumentParser()
     parser.add_argument("-c", "--config", help="Input configuration file name", type=str, dest='c', default='./PPConfig.ini', required=True)
-    parser.add_argument("-dw", help="Make intermediate ephemeris database. Overwrites existing database if present.", dest='dw', action='store_true')
-    parser.add_argument("-dr", help="Read from existing/previous intermediate ephemeris database.", dest='dr', type=str)
-    parser.add_argument("-dl", help="Delete the interim database after code has completed.", action='store_true', default=False)
+    parser.add_argument("-dw", help="Make temporary ephemeris database in output folder. Overwrites existing database if present.", dest='dw', action='store_true')
+    parser.add_argument("-dr", help="Location of existing/previous temporary ephemeris database to read from if wanted.", dest='dr', type=str)
+    parser.add_argument("-dl", help="Delete the temporary ephemeris database after code has completed.", action='store_true', default=False)
     parser.add_argument("-m", "--comet", help="Comet parameter file name", type=str, dest='m')
     parser.add_argument("-l", "--params", help="Physical parameters file name", type=str, dest='l', default='./data/params', required=True)
     parser.add_argument("-o", "--orbit", help="Orbit file name", type=str, dest='o', default='./data/orbit.des', required=True)
@@ -225,7 +226,7 @@ def main():
     parser.add_argument("-t", "--stem", help="Output file name stem.", type=str, dest="t", default='SSPPOutput')
     parser.add_argument("-v", "--verbose", help="Verbosity. Default currently true; include to turn off verbosity.", dest='v', default=True, action='store_false')
 
-    cmd_args = PPCMDLineParser(parser)
+    cmd_args = PPCommandLineParser(parser)
 
     if cmd_args['surveyname'] in ['LSST', 'lsst']:
         runLSSTPostProcessing(cmd_args)

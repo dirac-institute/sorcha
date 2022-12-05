@@ -3,10 +3,10 @@
 from surveySimPP.tests.data import get_test_filepath
 
 
-def test_PPJoinOrbitalData():
+def test_PPJoinEphemeridesAndOrbits():
 
-    from surveySimPP.modules.PPJoinOrbitalData import PPJoinOrbitalData
-    from surveySimPP.modules.PPJoinPhysicalParametersPointing import PPJoinPhysicalParametersPointing
+    from surveySimPP.modules.PPJoinEphemeridesAndOrbits import PPJoinEphemeridesAndOrbits
+    from surveySimPP.modules.PPJoinEphemeridesAndParameters import PPJoinEphemeridesAndParameters
     from surveySimPP.modules.PPReadOif import PPReadOif
     from surveySimPP.modules.PPReadPhysicalParameters import PPReadPhysicalParameters
     from surveySimPP.modules.PPReadOrbitFile import PPReadOrbitFile
@@ -15,8 +15,8 @@ def test_PPJoinOrbitalData():
     padacl = PPReadPhysicalParameters(get_test_filepath('testcolour.txt'), ['g-r', 'i-r', 'z-r'], 0, 5, "whitespace")
     padaor = PPReadOrbitFile(get_test_filepath('testorb.des'), 0, 5, "whitespace")
 
-    padain = PPJoinPhysicalParametersPointing(padafr, padacl)
-    padare = PPJoinOrbitalData(padain, padaor)
+    padain = PPJoinEphemeridesAndParameters(padafr, padacl)
+    padare = PPJoinEphemeridesAndOrbits(padain, padaor)
 
     ncol = 34
     ncolre = len(padare.columns)

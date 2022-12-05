@@ -3,7 +3,7 @@ from .PPDropObservations import PPDropObservations
 from .PPDetectionProbability import PPDetectionProbability
 
 
-def PPFilterFadingFunction(observations, fillfactor, width, rng, verbose=False):
+def PPFadingFunctionFilter(observations, fillfactor, width, rng, verbose=False):
     """Wrapper function for PPDetectionProbability and PPDropObservations.
 
     Calculates detection probability based on a fading function, then drops rows where the

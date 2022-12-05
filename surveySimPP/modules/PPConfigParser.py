@@ -364,8 +364,13 @@ def PPPrintConfigsToLog(configs, cmd_args):
     pplogger.info('The orbits file used is located at ' + cmd_args['orbinfile'])
     pplogger.info('The ephemerides file used is located at ' + cmd_args['oifoutput'])
     pplogger.info('The survey selected is: ' + cmd_args['surveyname'])
-    pplogger.info('Creation of intermediate ephemeris database is: ' + str(cmd_args['makeIntermediateEphemerisDatabase']))
-    pplogger.info('Reading from existing intermediate ephemeris database is: ' + str(cmd_args['readIntermediateEphemerisDatabase']))
+    pplogger.info('Creation of temporary ephemeris database is: ' + str(cmd_args['makeTemporaryEphemerisDatabase']))
+
+    if cmd_args['readTemporaryEphemerisDatabase']:
+        pplogger.info('Reading from existing temporary ephemeris database at ' + str(cmd_args['readTemporaryEphemerisDatabase']))
+
+    if cmd_args['deleteTemporaryEphemerisDatabase']:
+        pplogger.info('Temporary ephemeris database will be deleted upon code conclusion.')
 
     if configs['cometactivity'] == 'comet':
         pplogger.info('Cometary activity set to: ' + str(configs['cometary activity']))

@@ -7,10 +7,10 @@ import sys
 # Author: Grigori Fedorets
 
 
-def PPMatchPointing(bsdbname, observing_filters, dbquery):
+def PPReadPointingDatabase(bsdbname, observing_filters, dbquery):
 
     """
-    PPMatchPointing.py
+    PPReadPointingDatabase.py
 
 
 
@@ -25,7 +25,7 @@ def PPMatchPointing(bsdbname, observing_filters, dbquery):
     Output:               8*n pandas dataframe
 
 
-    usage: padafr=PPMatchPointing(bsdbname,observing_filters,dbquery)
+    usage: padafr=PPReadPointingDatabase(bsdbname,observing_filters,dbquery)
     """
 
     pplogger = logging.getLogger(__name__)
@@ -35,8 +35,8 @@ def PPMatchPointing(bsdbname, observing_filters, dbquery):
     try:
         df = pd.read_sql_query(dbquery, con)
     except Exception:
-        pplogger.error('ERROR: PPMatchPointing: SQL query on pointing database failed. Check that the query is correct in the config file.')
-        sys.exit('ERROR: PPMatchPointing: SQL query on pointing database failed. Check that the query is correct in the config file.')
+        pplogger.error('ERROR: PPReadPointingDatabase: SQL query on pointing database failed. Check that the query is correct in the config file.')
+        sys.exit('ERROR: PPReadPointingDatabase: SQL query on pointing database failed. Check that the query is correct in the config file.')
 
     # df = pd.read_sql_query('SELECT observationId, observationStartMJD, filter, seeingFwhmGeom, seeingFwhmEff, fiveSigmaDepth, fieldRA, fieldDec, rotSkyPos FROM SummaryAllProps order by observationId', con)
     df['observationId_'] = df['observationId']

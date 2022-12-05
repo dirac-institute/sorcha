@@ -1,16 +1,13 @@
 #!/bin/python
 
-import pytest
-import pandas as pd
-import sqlite3
-
 from surveySimPP.tests.data import get_test_filepath
 
 
-def test_PPMatchPointing():
+def test_PPReadPointingDatabase():
 
-    from surveySimPP.modules.PPMatchPointing import PPMatchPointing
-    padapo = PPMatchPointing(
+    from surveySimPP.modules.PPReadPointingDatabase import PPReadPointingDatabase
+
+    padapo = PPReadPointingDatabase(
         get_test_filepath('baseline_10yrs_10klines.db'),
         ['u', 'g', 'r', 'i', 'z', 'y'],
         'SELECT observationId, observationStartMJD, filter, seeingFwhmGeom, seeingFwhmEff, fiveSigmaDepth, fieldRA, fieldDec, rotSkyPos FROM SummaryAllProps order by observationId'

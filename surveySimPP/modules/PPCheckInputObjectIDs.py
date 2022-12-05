@@ -7,9 +7,9 @@ import sys
 # Author: Grigori Fedorets
 
 
-def PPCheckOrbitAndPhysicalParametersMatching(orbin, colin, poiin):
+def PPCheckInputObjectIDs(orbin, colin, poiin):
     """
-    PPCheckOrbitAndPhysicalParametersMatching
+    PPCheckInputObjectIDs
 
     Description: Checks whether orbit and physical parameter files contain the same object id:s, and
                additionally checks if the pointing database object id:s is a subset of
@@ -24,7 +24,7 @@ def PPCheckOrbitAndPhysicalParametersMatching(orbin, colin, poiin):
 
 
 
-    Usage: PPCheckOrbitAndPhysicalParametersMatching(orbin,colin,poiin)
+    Usage: PPCheckInputObjectIDs(orbin,colin,poiin)
 
     """
 
@@ -38,8 +38,8 @@ def PPCheckOrbitAndPhysicalParametersMatching(orbin, colin, poiin):
         if set(oif_objects).issubset(orb_objects):
             return
         else:
-            pplogger.error('ERROR: PPCheckOrbitAndPhysicalParametersMatching: input pointing and orbit files do not match.')
-            sys.exit('ERROR: PPCheckOrbitAndPhysicalParametersMatching: input pointing and orbit files do not match.')
+            pplogger.error('ERROR: PPCheckInputObjectIDs: input pointing and orbit files do not match.')
+            sys.exit('ERROR: PPCheckInputObjectIDs: input pointing and orbit files do not match.')
     else:
-        pplogger.error('ERROR: PPCheckOrbitAndPhysicalParametersMatching: input physical parameter and orbit files do not match.')
-        sys.exit('ERROR: PPCheckOrbitAndPhysicalParametersMatching: input physical parameter and orbit files do not match.')
+        pplogger.error('ERROR: PPCheckInputObjectIDs: input physical parameter and orbit files do not match.')
+        sys.exit('ERROR: PPCheckInputObjectIDs: input physical parameter and orbit files do not match.')

@@ -6,7 +6,7 @@ import logging
 from .PPConfigParser import PPFindFileOrExit
 
 
-def PPCMDLineParser(parser):
+def PPCommandLineParser(parser):
     """
     Author: Steph Merritt
 
@@ -36,9 +36,9 @@ def PPCMDLineParser(parser):
     if args.m:
         cmd_args_dict['cometinput'] = PPFindFileOrExit(args.m, '-m, --comet')
 
-    cmd_args_dict['makeIntermediateEphemerisDatabase'] = bool(args.dw)
-    cmd_args_dict['readIntermediateEphemerisDatabase'] = args.dr
-    cmd_args_dict['deleteIntermediateEphemerisDatabase'] = bool(args.dl)
+    cmd_args_dict['makeTemporaryEphemerisDatabase'] = bool(args.dw)
+    cmd_args_dict['readTemporaryEphemerisDatabase'] = args.dr
+    cmd_args_dict['deleteTemporaryEphemerisDatabase'] = bool(args.dl)
     cmd_args_dict['surveyname'] = args.s
     cmd_args_dict['outfilestem'] = args.t
     cmd_args_dict['verbose'] = args.v
@@ -52,7 +52,7 @@ def PPCMDLineParser(parser):
         sys.exit('ERROR: -dl flag set without either -dr or -dw.')
 
     if args.dr and not os.path.exists(args.dr):
-        pplogger.error('ERROR: interim ephemeris database not found at ' + args.dr + '. Rerun with command line flag -dw to create one.')
-        sys.exit('ERROR: interim ephemeris database not found at ' + args.dr + '. Rerun with command line flag -dw to create one.')
+        pplogger.error('ERROR: temporary ephemeris database not found at ' + args.dr + '. Rerun with command line flag -dw to create one.')
+        sys.exit('ERROR: temporary ephemeris database not found at ' + args.dr + '. Rerun with command line flag -dw to create one.')
 
     return cmd_args_dict

@@ -5,9 +5,9 @@ from numpy.testing import assert_equal
 from surveySimPP.tests.data import get_test_filepath
 
 
-def test_PPFilterSSPLinking():
+def test_PPLinkingFilter():
 
-    from surveySimPP.modules.PPFilterSSPLinking import PPFilterSSPLinking
+    from surveySimPP.modules.PPLinkingFilter import PPLinkingFilter
 
     test_data = pd.read_csv(get_test_filepath('test_input_fullobs.csv'))
 
@@ -19,13 +19,13 @@ def test_PPFilterSSPLinking():
     tracklet_interval = 15
     minimum_separation = 0.5
 
-    test_data_out = PPFilterSSPLinking(test_data[0:20],
-                                       detection_efficiency,
-                                       min_observations,
-                                       min_tracklets,
-                                       tracklet_interval,
-                                       minimum_separation,
-                                       rng)
+    test_data_out = PPLinkingFilter(test_data[0:20],
+                                    detection_efficiency,
+                                    min_observations,
+                                    min_tracklets,
+                                    tracklet_interval,
+                                    minimum_separation,
+                                    rng)
 
     expected = [894816, 894838, 897478, 897521, 901987, 902035, 907363, 907416,
                 907470, 909426, 909452, 910850, 910872]

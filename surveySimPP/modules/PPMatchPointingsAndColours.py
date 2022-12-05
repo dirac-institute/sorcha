@@ -1,26 +1,24 @@
 #!/usr/bin/python
 
-
 import pandas as pd
 import numpy as np
-import random
 import logging
-import os, sys
+import sys
 
 # Author: Grigori Fedorets
+# NOTE: this is currently only used in tests. Once the out-writing tests are
+# re-written this can be safely deleted.
 
 
-def PPMatchPointingsAndColours(padain,pointfildb):
+def PPMatchPointingsAndColours(padain, pointfildb):
     """
     PPMatchPointingsAndColours.py
 
-
-
-    Description: This task takes two pandas dataframes: one is output that includes all 
+    Description: This task takes two pandas dataframes: one is output that includes all
     relevant colours, the other is a two-column database that includes all the fieldId:s
     and the filters at the given pointing.
 
-    The task cross-matches the two databases, matches the pre-calculated colour in each 
+    The task cross-matches the two databases, matches the pre-calculated colour in each
     pointing with the relevant filter. Then it leaves only the relevant colour and the
     filter, and erases all the obsolete colours.
 
@@ -30,34 +28,30 @@ def PPMatchPointingsAndColours(padain,pointfildb):
 
     Output:               pandas dataframe
 
-
     usage: padafr=PPMatchPointingsAndColours(padain,pointfildb)
     """
 
+    resdf = padain.join(pointfildb.set_index('FieldID'), on='FieldID')
 
-    resdf=padain.join(pointfildb.set_index('FieldID'), on='FieldID')
-            
-    colour_values=resdf.optFilter.unique()
-    colour_values=pd.Series(colour_values).dropna()
-        
-    resdf=resdf.dropna(subset=['optFilter']).reset_index(drop=True)
+    colour_values = resdf.optFilter.unique()
+    colour_values = pd.Series(colour_values).dropna()
+
+    resdf = resdf.dropna(subset=['optFilter']).reset_index(drop=True)
     resdf['TrailedSourceMag'] = resdf.melt(id_vars='optFilter', value_vars=colour_values, ignore_index=False).query('optFilter == variable').loc[resdf.index, 'value']
+
     # Check if observation dates in joined dataframes match
-    
-    chktruemjd=np.isclose(resdf['observationStartMJD'], resdf['FieldMJD'])
-    chktrueid=np.isclose(resdf['observationId_'], resdf['FieldID'])
-    
+
+    chktruemjd = np.isclose(resdf['observationStartMJD'], resdf['FieldMJD'])
+    chktrueid = np.isclose(resdf['observationId_'], resdf['FieldID'])
+
     if not chktruemjd.all():
-           logging.error('ERROR: PPMatchPointingsAndColours: mismatch in pointing database and pointing output times.')
-           sys.exit('ERROR: PPMatchPointingsAndColours: mismatch in pointing database and pointing output times.')
+        logging.error('ERROR: PPMatchPointingsAndColours: mismatch in pointing database and pointing output times.')
+        sys.exit('ERROR: PPMatchPointingsAndColours: mismatch in pointing database and pointing output times.')
 
     if not chktrueid.all():
-           logging.error('ERROR: PPMatchPointingsAndColours: mismatch in pointing database and pointing output id:s.')
-           sys.exit('ERROR: PPMatchPointingsAndColours: mismatch in pointing database and pointing output id:s.')
-    
+        logging.error('ERROR: PPMatchPointingsAndColours: mismatch in pointing database and pointing output id:s.')
+        sys.exit('ERROR: PPMatchPointingsAndColours: mismatch in pointing database and pointing output id:s.')
 
-    resdf=resdf.drop(columns='observationId_')
+    resdf = resdf.drop(columns='observationId_')
 
     return resdf
-
-        

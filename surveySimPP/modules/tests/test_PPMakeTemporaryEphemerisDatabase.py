@@ -5,12 +5,12 @@ import sqlite3
 from surveySimPP.tests.data import get_test_filepath
 
 
-def test_PPMakeIntermediateEphemerisDatabase(tmp_path):
+def test_PPMakeTemporaryEphemerisDatabase(tmp_path):
 
-    from surveySimPP.modules.PPMakeIntermediateEphemerisDatabase import PPMakeIntermediateEphemerisDatabase
+    from surveySimPP.modules.PPMakeTemporaryEphemerisDatabase import PPMakeTemporaryEphemerisDatabase
 
     testdb = str(tmp_path / "testdb_PPIntermDB.db")
-    daba = PPMakeIntermediateEphemerisDatabase(get_test_filepath('oiftestoutput.txt'), testdb, 'whitespace')
+    daba = PPMakeTemporaryEphemerisDatabase(get_test_filepath('oiftestoutput.txt'), testdb, 'whitespace')
 
     nlines = 9
 

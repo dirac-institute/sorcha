@@ -10,7 +10,7 @@ from .PPDetectionEfficiency import PPDetectionEfficiency
 # Author: Steph Merritt
 
 
-def PPFilterSSPLinking(observations,
+def PPLinkingFilter(observations,
                        detection_efficiency,
                        min_observations,
                        min_tracklets,
