@@ -200,7 +200,14 @@ def PPConfigFileParser(configfile, survey_name):
     config_dict['observing_filters'] = [e.strip() for e in obsfilters.split(',')]
 
     config_dict['mainfilter'] = config_dict['observing_filters'][0]
-    config_dict['othercolours'] = [x + "-" + config_dict['mainfilter'] for x in config_dict['observing_filters'][1:]]
+
+    if len(config_dict['observing_filters']) > 1:
+        config_dict['othercolours'] = [x + "-" + config_dict['mainfilter'] for x in config_dict['observing_filters'][1:]]
+    elif len(config_dict['observing_filters']) == 1:
+        config_dict['othercolours'] = None
+    else:
+        pplogger.error('ERROR: could not parse filters supplied for observing_filters keyword. Check formatting and try again.')
+        sys.exit('ERROR: could not parse filters supplied for observing_filters keyword. Check formatting and try again.')
 
     PPCheckFiltersForSurvey(survey_name, config_dict['observing_filters'])
 
@@ -384,10 +391,12 @@ def PPPrintConfigsToLog(configs, cmd_args):
     pplogger.info('Pointing simulation result required query is: ' + configs['ppdbquery'])
 
     pplogger.info('The main filter in which brightness is defined is ' + configs['mainfilter'])
-    othcs = ' '.join(str(e) for e in configs['othercolours'])
-    pplogger.info('The colour indices included in the simulation are ' + othcs)
     rescs = ' '.join(str(f) for f in configs['observing_filters'])
-    pplogger.info('Hence, the filters included in the post-processing results are ' + rescs)
+    pplogger.info('The filters included in the post-processing results are ' + rescs)
+
+    if configs['othercolours']:
+        othcs = ' '.join(str(e) for e in configs['othercolours'])
+        pplogger.info('Thus, the colour indices included in the simulation are ' + othcs)
 
     pplogger.info('The apparent brightness is calculated using the following phase function model: ' + configs['phasefunction'])
 
