@@ -5,10 +5,7 @@ import os
 import sqlite3
 import logging
 
-#     Author: Grigori Fedorets
-
-__all__ = ['PPOutWriteCSV', 'PPOutWriteHDF5',
-           'PPOutWriteSqlite3']
+#     Author: Grigori Fedorets, Steph Merritt
 
 
 def PPOutWriteCSV(padain, outf):

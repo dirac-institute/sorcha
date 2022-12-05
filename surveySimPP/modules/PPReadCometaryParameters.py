@@ -7,10 +7,10 @@ import logging
 # Author: Grigori Fedorets
 
 
-def PPReadCometaryInput(comet_datafile, beginLoc, chunkSize, filesep):
+def PPReadCometaryParameters(comet_datafile, beginLoc, chunkSize, filesep):
 
     """
-    PPReadCometaryInput.py
+    PPReadCometaryParameters.py
 
     Description: This task reads in the cometary data file and puts it into a
     single pandas dataframe for further use downstream by other tasks.
@@ -31,9 +31,9 @@ def PPReadCometaryInput(comet_datafile, beginLoc, chunkSize, filesep):
 
     Output:               pandas dataframe
 
-    usage: padafr=PPReadCometaryInput(comet_datafile, beginLoc, chunkSize)
+    usage: padafr=PPReadCometaryParameters(comet_datafile, beginLoc, chunkSize)
     """
-    
+
     pplogger = logging.getLogger(__name__)
 
     if (filesep == "whitespace"):

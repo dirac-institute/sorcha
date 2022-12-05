@@ -8,19 +8,19 @@ import sys
 # Author: Grigori fedorets
 
 
-def PPReadIntermediateEphemerisDatabase(intermdb, part_objid_list):
+def PPReadTemporaryEphemerisDatabase(intermdb, part_objid_list):
     """
-    PPReadIntermediateEphemerisDatabase.py
+    PPReadTemporaryEphemerisDatabase.py
 
-    Description: This task reads in the intermediate pointing sqlite3 database specified
+    Description: This task reads in the temporary pointing sqlite3 database specified
     by a subset of object ids, and outputs a pandas dataframe.
 
-    Mandatory input:      string, intermdb, name of intermediate database sqlite3 database
+    Mandatory input:      string, intermdb, name of temporary database sqlite3 database
                           list(string), list of input ObjIDs
 
     Output:               pandas dataframe
 
-    usage: padafr=PPReadIntermDatabase(intermdb,part_objid_list)
+    usage: padafr=PPReadTemporaryEphemerisDatabase(intermdb,part_objid_list)
     """
 
     pplogger = logging.getLogger(__name__)

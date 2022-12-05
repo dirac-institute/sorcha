@@ -37,22 +37,22 @@ def PPReadPhysicalParameters(clr_datafile, othercolours, beginLoc, chunkSize, fi
     if (filesep == "whitespace"):
         padafr = pd.read_csv(clr_datafile, delim_whitespace=True, skiprows=range(1, beginLoc + 1), nrows=chunkSize, header=0)
     elif (filesep == "comma" or filesep == "csv"):
-        padafr=pd.read_csv(clr_datafile, skiprows=range(1, beginLoc + 1), nrows=chunkSize, header=0)
-        
+        padafr = pd.read_csv(clr_datafile, skiprows=range(1, beginLoc + 1), nrows=chunkSize, header=0)
+
     # check that the columns match up with the othercolours calculated from observing_filters config variable
-    if not all(colour in padafr.columns for colour in othercolours):
+    if othercolours and not all(colour in padafr.columns for colour in othercolours):
         pplogger.error('ERROR: colour offset columns in physical parameters file do not match with observing filters specified in config file.')
         sys.exit('ERROR: colour offset columns in physical parameters file do not match with observing filters specified in config file.')
-        
+
     # check for nans or nulls
 
     if padafr.isnull().values.any():
-         pdt = padafr[padafr.isna().any(axis=1)]
-         print(pdt)
-         inds = str(pdt['ObjID'].values)
-         outstr = "ERROR: uninitialised values when reading colour file. ObjID: " + str(inds)
-         pplogger.error(outstr)
-         sys.exit(outstr)
+        pdt = padafr[padafr.isna().any(axis=1)]
+        print(pdt)
+        inds = str(pdt['ObjID'].values)
+        outstr = "ERROR: uninitialised values when reading colour file. ObjID: " + str(inds)
+        pplogger.error(outstr)
+        sys.exit(outstr)
 
     padafr['ObjID'] = padafr['ObjID'].astype(str)
 

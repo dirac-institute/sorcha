@@ -10,7 +10,7 @@ from .PPDetectionEfficiency import PPDetectionEfficiency
 # Author: Steph Merritt
 
 
-def PPFilterSSPLinking(observations,
+def PPLinkingFilter(observations,
                        detection_efficiency,
                        min_observations,
                        min_tracklets,
@@ -104,11 +104,12 @@ def PPFilterSSPLinking(observations,
         unique_nights = obs_above_min_sep["night"].unique()
         valid = np.zeros(len(unique_nights), dtype=bool)
 
-        # can't find a way to avoid this loop (yet), pandas .rolling() is unhelpful.
         # checks to see if a track containing a number of tracklets >= min_tracklets
         # exists in a window of days <= tracklet_interval.
         # assumes all observations in a night are part of a valid tracklet
         # which should be true at this point
+        
+        # once a linking is made, the night on which the linking was made is stored
         for i, night in enumerate(unique_nights):
 
             if i + min_tracklets - 1 >= len(unique_nights):
@@ -117,18 +118,15 @@ def PPFilterSSPLinking(observations,
             diff = unique_nights[i + min_tracklets - 1] - night
 
             if diff < tracklet_interval:
-                # no minus one here because slicing is half-open
-                valid[i:i + min_tracklets] = True
-
-        valid_df = pd.DataFrame({"night": unique_nights, "valid": valid})
-
-        # merge on and drop all observations where the tracklets aren't part of a valid track
-        obs_final = pd.merge(obs_above_min_sep, valid_df, on="night")
-        obs_final_drop = obs_final.loc[obs_final["valid"] == 1]  # using == True upsets flake8
+                linked_night = night
+                break
+        
+        # get all observations of this object made on or after the night it was linked
+        obs_final_night = obs_object[obs_object["night"]>=linked_night]
 
         # get the original index numbers of the observations that made it through
         # append them to the final index
-        final_index = obs_final_drop["original_index"].values
+        final_index = obs_final_night["original_index"].values
         final_idx.append(final_index.tolist())
 
     # flatten the final index

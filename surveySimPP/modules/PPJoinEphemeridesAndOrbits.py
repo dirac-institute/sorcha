@@ -6,9 +6,9 @@ import logging
 # Author: Grigori Fedorets
 
 
-def PPJoinOrbitalData(padafr, padaor):
+def PPJoinEphemeridesAndOrbits(padafr, padaor):
     """
-    PPJoinOrbitalData.py
+    PPJoinEphemeridesAndOrbits.py
 
 
 
@@ -22,7 +22,7 @@ def PPJoinOrbitalData(padafr, padaor):
     Output:               new joined pandas dataframe
 
 
-    usage: padafr1=PPJoinOrbitalData(padafr,padaor)
+    usage: padafr1=PPJoinEphemeridesAndOrbits(padafr,padaor)
     """
 
     pplogger = logging.getLogger(__name__)
@@ -32,8 +32,8 @@ def PPJoinOrbitalData(padafr, padaor):
     # check if there is q in the resulting database
     if 'q' not in resdf.columns:
         if ('a' not in resdf.columns or 'e' not in resdf.columns):
-            pplogger.error('ERROR: PPJoinOrbitalData: unable to join cometary and orbital parameters: no a or e in input.')
-            sys.exit('ERROR: PPJoinOrbitalData: unable to join cometary and orbital parameters: no a or e in input.')
+            pplogger.error('ERROR: PPJoinEphemeridesAndOrbits: unable to join cometary and orbital parameters: no a or e in input.')
+            sys.exit('ERROR: PPJoinEphemeridesAndOrbits: unable to join cometary and orbital parameters: no a or e in input.')
         else:
             resdf['q'] = resdf['a'] * (1. - resdf['e'])
 

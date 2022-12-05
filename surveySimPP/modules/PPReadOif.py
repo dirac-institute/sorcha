@@ -57,8 +57,8 @@ def PPReadOif(oif_output, inputformat):
     try:
         padafr['ObjID'] = padafr['ObjID'].astype(str)
     except KeyError:
-        pplogger.error("ERROR: ephemeris input file does not have 'ObjID' column.")
-        sys.exit("ERROR: ephemeris input file does not have 'ObjID' column.")
+        pplogger.error("ERROR: PPReadOif: ephemeris input file does not have 'ObjID' column.")
+        sys.exit("ERROR: PPReadOif: ephemeris input file does not have 'ObjID' column.")
 
     return padafr
 
