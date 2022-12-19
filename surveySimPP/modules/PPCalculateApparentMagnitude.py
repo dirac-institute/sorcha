@@ -35,7 +35,6 @@ def PPCalculateApparentMagnitude(observations, phasefunction, mainfilter, otherc
         verboselog('Calculating cometary magnitude using a simple model and applying colour offset...')
         observations = PPCalculateSimpleCometaryMagnitude(observations, mainfilter, othercolours)
     else:
-
         # if user is only interested in one filter, we have no colour offsets to apply: assume H is in that filter
         if len(observing_filters) > 1:
             verboselog('Selecting and applying correct colour offset...')
