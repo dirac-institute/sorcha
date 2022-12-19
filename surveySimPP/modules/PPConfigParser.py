@@ -78,6 +78,8 @@ def PPGetValueAndFlag(config, section, key, type_wanted, none_message):
         except ValueError:
             logging.error("ERROR: expected a float for config parameter {}. Check value in config file.".format(key))
             sys.exit("ERROR: expected a float for config parameter {}. Check value in config file.".format(key))
+    elif type_wanted == "none":
+        value = config.get(section, key, fallback=None)
     else:
         logging.error("ERROR: internal error: type not recognised.")
         sys.exit("ERROR: internal error: type not recognised.")
@@ -244,7 +246,22 @@ def PPConfigFileParser(configfile, survey_name):
 
     # SNR, magnitude, bright limit filters
 
-    config_dict['brightLimit'], config_dict['brightLimitOn'] = PPGetValueAndFlag(config, 'FILTERINGPARAMETERS', 'brightLimit', 'float', 'Brightness limit not supplied. No brightness filter will be applied.')
+    bright_limits, config_dict['brightLimitOn'] = PPGetValueAndFlag(config, 'FILTERINGPARAMETERS', 'brightLimit', 'none', 'Brightness limit not supplied. No brightness filter will be applied.')
+
+    try:
+        bright_list = [float(e.strip()) for e in bright_limits.split(',')]
+    except ValueError:
+        pplogger.error('ERROR: could not parse brightness limits. Check formatting and try again.')
+        sys.exit('ERROR: could not parse brightness limits. Check formatting and try again.')
+
+    if len(bright_list) == 1:
+        config_dict['brightLimit'] = bright_list[0]
+    else:
+        if len(bright_list) != len(config_dict['observing_filters']):
+            pplogger.error('ERROR: list of saturation limits is not the same length as list of observing filters.')
+            sys.exit('ERROR: list of saturation limits is not the same length as list of observing filters.')
+        config_dict['brightLimit'] = bright_list
+
     config_dict['SNRLimit'], config_dict['SNRLimitOn'] = PPGetValueAndFlag(config, 'FILTERINGPARAMETERS', 'SNRLimit', 'float', 'SNR limit not supplied. SNR limit defaulting to 2 sigma.')
     config_dict['magLimit'], config_dict['magLimitOn'] = PPGetValueAndFlag(config, 'FILTERINGPARAMETERS', 'magLimit', 'float', 'Magnitude limit not supplied. No magnitude cut will be applied.')
 
@@ -414,7 +431,7 @@ def PPPrintConfigsToLog(configs, cmd_args):
         pplogger.info('The filling factor for the circular footprint is ' + str(configs["fillfactor"]))
 
     if configs['brightLimitOn']:
-        pplogger.info('The upper brightness limit is ' + str(configs['brightLimit']))
+        pplogger.info('The upper brightness limit(s) is/are ' + str(configs['brightLimit']))
     else:
         pplogger.info('Brightness limit is turned OFF.')
 

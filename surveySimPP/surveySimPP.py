@@ -155,7 +155,7 @@ def runLSSTPostProcessing(cmd_args):
 
         if configs['brightLimitOn']:
             verboselog('Dropping observations that are too bright...')
-            observations = PPBrightLimit(observations, configs['brightLimit'])
+            observations = PPBrightLimit(observations, configs['observing_filters'], configs['brightLimit'])
 
         if configs['SSPLinkingOn']:
             verboselog('Applying SSP linking filter...')
