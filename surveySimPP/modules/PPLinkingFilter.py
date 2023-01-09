@@ -110,6 +110,7 @@ def PPLinkingFilter(observations,
         # which should be true at this point
         
         # once a linking is made, the night on which the linking was made is stored
+        linked_night = False
         for i, night in enumerate(unique_nights):
 
             if i + min_tracklets - 1 >= len(unique_nights):
@@ -122,12 +123,13 @@ def PPLinkingFilter(observations,
                 break
         
         # get all observations of this object made on or after the night it was linked
-        obs_final_night = obs_object[obs_object["night"]>=linked_night]
+        if linked_night:
+            obs_final_night = obs_object[obs_object["night"]>=linked_night]
 
-        # get the original index numbers of the observations that made it through
-        # append them to the final index
-        final_index = obs_final_night["original_index"].values
-        final_idx.append(final_index.tolist())
+            # get the original index numbers of the observations that made it through
+            # append them to the final index
+            final_index = obs_final_night["original_index"].values
+            final_idx.append(final_index.tolist())
 
     # flatten the final index
     flat_idx = [x for xs in final_idx for x in xs]
