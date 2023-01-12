@@ -201,16 +201,6 @@ def PPConfigFileParser(configfile, survey_name):
     obsfilters = PPGetOrExit(config, 'FILTERS', 'observing_filters', 'ERROR: observing_filters config file variable not provided.')
     config_dict['observing_filters'] = [e.strip() for e in obsfilters.split(',')]
 
-    config_dict['mainfilter'] = config_dict['observing_filters'][0]
-
-    if len(config_dict['observing_filters']) > 1:
-        config_dict['othercolours'] = [x + "-" + config_dict['mainfilter'] for x in config_dict['observing_filters'][1:]]
-    elif len(config_dict['observing_filters']) == 1:
-        config_dict['othercolours'] = None
-    else:
-        pplogger.error('ERROR: could not parse filters supplied for observing_filters keyword. Check formatting and try again.')
-        sys.exit('ERROR: could not parse filters supplied for observing_filters keyword. Check formatting and try again.')
-
     PPCheckFiltersForSurvey(survey_name, config_dict['observing_filters'])
 
     # phase function, trailing losses

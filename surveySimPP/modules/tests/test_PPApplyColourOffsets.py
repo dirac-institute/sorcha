@@ -21,14 +21,14 @@ def test_PPApplyColourOffsets():
 
     test_obs = pd.DataFrame({'ObjID': objects, 'optFilter': optfilter,
                              'u-r': ur, 'g-r': gr, 'i-r': ir, 'z-r': zr,
-                             'H': H, 'GS': G})
+                             'H_r': H, 'GS': G})
 
     othercolours = ['u-r', 'g-r', 'i-r', 'z-r']
     observing_filters = ['r', 'u', 'g', 'i', 'z']
 
     func_test = PPApplyColourOffsets(test_obs.copy(), 'HG', othercolours, observing_filters, 'r')
 
-    assert_equal(func_test['H'].values, [10., 10.3, 10.5, 10.7, 12., 12.4, 12.8, 12.6])
+    assert_equal(func_test['H_r'].values, [10., 10.3, 10.5, 10.7, 12., 12.4, 12.8, 12.6])
 
     Gr = np.array([0.151, 0.151, 0.151, 0.151, 0.121, 0.121, 0.121, 0.121])
     Gu = np.array([0.152, 0.152, 0.152, 0.152, 0.122, 0.122, 0.122, 0.122])
@@ -46,7 +46,7 @@ def test_PPApplyColourOffsets():
 
     func_test_2 = PPApplyColourOffsets(test_obs.copy(), 'HG', othercolours, observing_filters, 'r')
 
-    assert_equal(func_test_2['H'].values, [10., 10.3, 10.5, 10.7, 12., 12.4, 12.8, 12.6])
+    assert_equal(func_test_2['H_r'].values, [10., 10.3, 10.5, 10.7, 12., 12.4, 12.8, 12.6])
     assert_equal(func_test_2['GS'].values, [0.151, 0.155, 0.153, 0.154, 0.121, 0.125, 0.124, 0.123])
 
     return
