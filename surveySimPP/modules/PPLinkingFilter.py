@@ -57,14 +57,14 @@ def PPLinkingFilter(observations,
     objid_list = observations['ObjID'].unique().tolist()
 
     # we need to take into account timezones when we determine whether an observation
-    # occurs on a specific night. this is implemented currently via survey_name
+    # occurs on a specific night. this is implemented via survey_name
     # i.e. LSST is on Chile time.
     # we then calculate the boundary time between one night and the next in UTC MJD.
 
     # I am ignoring daylight savings time here for reasons of my own sanity.
 
     if survey_name in ['lsst', 'LSST']:
-        UTC_night_boundary = 11. / 24.  # this corresponds to 11am UTC, or 2pm Chile time.
+        UTC_night_boundary = 17. / 24.  # this corresponds to 5pm UTC, or 2pm Chile time.
 
     # calculate night number from FieldMJD
     first_day = observations.loc[0, 'FieldMJD']
