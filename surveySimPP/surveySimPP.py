@@ -141,9 +141,6 @@ def runLSSTPostProcessing(cmd_args):
         if configs['SNRLimitOn']:
             verboselog('Dropping observations with signal to noise ratio less than {}...'.format(configs['SNRLimit']))
             observations = PPSNRLimit(observations, configs['SNRLimit'])
-        else:
-            verboselog('Dropping observations with signal to noise ratio less than 2...')
-            observations = PPSNRLimit(observations, 2.0)
 
         if configs['magLimitOn']:
             verboselog('Dropping detections fainter than user-defined magnitude limit... ')
