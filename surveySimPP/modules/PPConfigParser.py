@@ -60,7 +60,7 @@ def PPGetBoolOrExit(config, section, key, message):
         sys.exit(message)
 
 
-def PPGetValueAndFlag(config, section, key, type_wanted, none_message):
+def PPGetValueAndFlag(config, section, key, type_wanted):
     """Obtains a value from the config flag, forcing it to be the specified
     type and error-handling if it can't be forced. If the value is not present
     in the config fie, the flag is set to False; if it is, the flag is True.
@@ -201,22 +201,17 @@ def PPConfigFileParser(configfile, survey_name):
     obsfilters = PPGetOrExit(config, 'FILTERS', 'observing_filters', 'ERROR: observing_filters config file variable not provided.')
     config_dict['observing_filters'] = [e.strip() for e in obsfilters.split(',')]
 
-    config_dict['mainfilter'] = config_dict['observing_filters'][0]
-
-    if len(config_dict['observing_filters']) > 1:
-        config_dict['othercolours'] = [x + "-" + config_dict['mainfilter'] for x in config_dict['observing_filters'][1:]]
-    elif len(config_dict['observing_filters']) == 1:
-        config_dict['othercolours'] = None
-    else:
-        pplogger.error('ERROR: could not parse filters supplied for observing_filters keyword. Check formatting and try again.')
-        sys.exit('ERROR: could not parse filters supplied for observing_filters keyword. Check formatting and try again.')
-
     PPCheckFiltersForSurvey(survey_name, config_dict['observing_filters'])
 
     # phase function, trailing losses
 
     config_dict['phasefunction'] = PPGetOrExit(config, 'PHASE', 'phasefunction', 'ERROR: phase function not defined.')
-    config_dict['trailingLossesOn'] = PPGetBoolOrExit(config, 'PERFORMANCE', 'trailingLossesOn', 'ERROR: trailingLossesOn flag not present.')
+
+    try:
+        config_dict['trailingLossesOn'] = config.getboolean('EXPERT', 'trailingLossesOn', fallback=True)
+    except ValueError:
+        pplogger.error('ERROR: could not parse value for trailingLossesOn as a boolean. Check formatting and try again.')
+        sys.exit('ERROR: could not parse value for trailingLossesOn as a boolean. Check formatting and try again.')
 
     # camera model
 
@@ -246,7 +241,7 @@ def PPConfigFileParser(configfile, survey_name):
 
     # SNR, magnitude, bright limit filters
 
-    bright_limits, config_dict['brightLimitOn'] = PPGetValueAndFlag(config, 'FILTERINGPARAMETERS', 'brightLimit', 'none', 'Brightness limit not supplied. No brightness filter will be applied.')
+    bright_limits, config_dict['brightLimitOn'] = PPGetValueAndFlag(config, 'FILTERINGPARAMETERS', 'brightLimit', 'none')
 
     try:
         bright_list = [float(e.strip()) for e in bright_limits.split(',')]
@@ -262,8 +257,8 @@ def PPConfigFileParser(configfile, survey_name):
             sys.exit('ERROR: list of saturation limits is not the same length as list of observing filters.')
         config_dict['brightLimit'] = bright_list
 
-    config_dict['SNRLimit'], config_dict['SNRLimitOn'] = PPGetValueAndFlag(config, 'FILTERINGPARAMETERS', 'SNRLimit', 'float', 'SNR limit not supplied. SNR limit defaulting to 2 sigma.')
-    config_dict['magLimit'], config_dict['magLimitOn'] = PPGetValueAndFlag(config, 'FILTERINGPARAMETERS', 'magLimit', 'float', 'Magnitude limit not supplied. No magnitude cut will be applied.')
+    config_dict['SNRLimit'], config_dict['SNRLimitOn'] = PPGetValueAndFlag(config, 'EXPERT', 'SNRLimit', 'float')
+    config_dict['magLimit'], config_dict['magLimitOn'] = PPGetValueAndFlag(config, 'EXPERT', 'magLimit', 'float')
 
     if config_dict['SNRLimitOn'] and config_dict['SNRLimit'] < 0:
         pplogger.error('ERROR: SNR limit is negative.')
@@ -294,11 +289,11 @@ def PPConfigFileParser(configfile, survey_name):
 
     # SSP linking filter
 
-    config_dict['inSepThreshold'], _ = PPGetValueAndFlag(config, 'FILTERINGPARAMETERS', 'inSepThreshold', 'float', 'Separation threshold not supplied for SSP filtering.')
-    config_dict['minTracklet'], _ = PPGetValueAndFlag(config, 'FILTERINGPARAMETERS', 'minTracklet', 'int', 'Minimum tracklet length not supplied for SSP filtering.')
-    config_dict['noTracklets'], _ = PPGetValueAndFlag(config, 'FILTERINGPARAMETERS', 'noTracklets', 'int', 'Number of tracklets not supplied for SSP filtering.')
-    config_dict['trackletInterval'], _ = PPGetValueAndFlag(config, 'FILTERINGPARAMETERS', 'trackletInterval', 'float', 'Tracklet interval not supplied for SSP filtering.')
-    config_dict['SSPDetectionEfficiency'], _ = PPGetValueAndFlag(config, 'FILTERINGPARAMETERS', 'SSPDetectionEfficiency', 'float', 'Detection efficiency not supplied for SSP filtering.')
+    config_dict['inSepThreshold'], _ = PPGetValueAndFlag(config, 'FILTERINGPARAMETERS', 'inSepThreshold', 'float')
+    config_dict['minTracklet'], _ = PPGetValueAndFlag(config, 'FILTERINGPARAMETERS', 'minTracklet', 'int')
+    config_dict['noTracklets'], _ = PPGetValueAndFlag(config, 'FILTERINGPARAMETERS', 'noTracklets', 'int')
+    config_dict['trackletInterval'], _ = PPGetValueAndFlag(config, 'FILTERINGPARAMETERS', 'trackletInterval', 'float')
+    config_dict['SSPDetectionEfficiency'], _ = PPGetValueAndFlag(config, 'FILTERINGPARAMETERS', 'SSPDetectionEfficiency', 'float')
 
     SSPvariables = [config_dict['inSepThreshold'], config_dict['minTracklet'], config_dict['noTracklets'], config_dict['trackletInterval'], config_dict['SSPDetectionEfficiency']]
 
@@ -361,7 +356,7 @@ def PPConfigFileParser(configfile, survey_name):
         pplogger.error('ERROR: sizeSerialChunk is zero or negative.')
         sys.exit('ERROR: sizeSerialChunk is zero or negative.')
 
-    if config.has_option('GENERAL', 'rng_seed'):
+    if config.has_option('EXPERT', 'rng_seed'):
         config_dict['rng_seed'] = PPGetIntOrExit(config, 'GENERAL', 'rng_seed', 'ERROR: this error should not trigger.')
     else:
         config_dict['rng_seed'] = None

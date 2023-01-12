@@ -39,8 +39,6 @@ def test_PPConfigFileParser(setup_and_teardown_for_PPConfigFileParser):
                     'ppdbquery': 'SELECT observationId, observationStartMJD, filter, seeingFwhmGeom, seeingFwhmEff, fiveSigmaDepth, fieldRA, fieldDec, rotSkyPos FROM SummaryAllProps order by observationId',
                     'cometactivity': 'none',
                     'observing_filters': ['r', 'g', 'i', 'z'],
-                    'mainfilter': 'r',
-                    'othercolours': ['g-r', 'i-r', 'z-r'],
                     'phasefunction': 'HG',
                     'trailingLossesOn': True,
                     'cameraModel': 'footprint',

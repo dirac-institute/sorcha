@@ -9,7 +9,7 @@ import logging
 # Author: Grigori Fedorets, Steph Merritt
 
 
-def PPCalculateApparentMagnitudeInFilter(padain, function, colname="TrailedSourceMag"):
+def PPCalculateApparentMagnitudeInFilter(padain, function, mainfilter, colname="TrailedSourceMag"):
     """
     PPCalculateApparentMagnitudeInFilter.py
 
@@ -41,6 +41,8 @@ def PPCalculateApparentMagnitudeInFilter(padain, function, colname="TrailedSourc
 
     pplogger = logging.getLogger(__name__)
 
+    H_col = 'H_' + mainfilter
+
     # first, get H, r, delta and alpha as ndarrays
     r = padain['AstRange(km)'].values / 1.495978707e8
 
@@ -52,7 +54,7 @@ def PPCalculateApparentMagnitudeInFilter(padain, function, colname="TrailedSourc
                         + padain["Ast-Sun(J2000z)(km)"].values**2) / 1.495978707e8
 
     alpha = padain['Sun-Ast-Obs(deg)'].values
-    H = padain['H'].values
+    H = padain[H_col].values
 
     if (function == 'HG1G2'):
         G1 = padain['G1'].values

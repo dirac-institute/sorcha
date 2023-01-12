@@ -1,3 +1,16 @@
+# This code creates a very basic SLURM script for use with supercomputers.
+
+# The resulting script will probably need to be edited to include the correct
+# #SBATCH keywords for your specific setup.
+
+# The code assumes that your physical parameters and orbits files are
+# in the same folder and have filenames beginning with 'params' and 'orbits'
+# respectively.
+
+# Not that instead of implementing loops in bash the script lists every command
+# explicitly. This was DELIBERATE and allows a user to copy/paste commands
+# from the script if they want to rerun a specific part.
+
 import os
 import glob
 import argparse
@@ -36,7 +49,7 @@ def makeSLURM(args):
 
         rootname = os.path.basename(os.path.splitext(orbits_fn)[0])[7:]
 
-        colours_fn = args.inputs + 'colours_' + rootname + '.txt'
+        params_fn = args.inputs + 'params_' + rootname + '.txt'
         oif_fn = args.oifout + 'oif_' + rootname + '.txt'
 
         mkdir_command = 'mkdir ' + args.allout + rootname
@@ -44,7 +57,7 @@ def makeSLURM(args):
         output_path = args.allout + rootname + '/'
 
         call_command = 'nice -n 10 surveySimPP -c {} -l {} -o {} -p {} -u {} -t {} -dw &'.format(args.ssppcon,
-                                                                                                 colours_fn, orbits_fn,
+                                                                                                 params_fn, orbits_fn,
                                                                                                  oif_fn, output_path,
                                                                                                  rootname)
 

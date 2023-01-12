@@ -33,3 +33,4 @@ from . import PPSNRLimit
 from . import PPFadingFunctionFilter
 from . import PPMagnitudeLimit
 from . import PPApplyColourOffsets
+from . import PPGetMainFilterAndColourOffsets

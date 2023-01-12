@@ -11,8 +11,6 @@ def makeConfigFile(args):
     config = configparser.ConfigParser()
 
     filtering_raw = {'brightLimit': str(args.brightlimit),
-                     'SNRLimit': str(args.snrlimit),
-                     'magLimit': str(args.maglimit),
                      'fadingFunctionOn': str(args.fadingfunction),
                      'fadingFunctionWidth': str(args.fadingwidth),
                      'fillfactor': str(args.fillfactor),
@@ -39,8 +37,7 @@ def makeConfigFile(args):
             'PHASE':
             {'phasefunction': args.phasefunction},
             'PERFORMANCE':
-            {'trailingLossesOn': str(args.trailinglosseson),
-                'cameraModel': args.cameramodel},
+            {'cameraModel': args.cameramodel},
             'FILTERINGPARAMETERS': filtering_dict,
             'OUTPUTFORMAT':
             {'outputformat': args.outputformat,
@@ -48,8 +45,12 @@ def makeConfigFile(args):
                 'position_decimals': str(args.positiondecimals),
                 'magnitude_decimals': str(args.magnitudedecimals)},
             'GENERAL':
-            {'sizeSerialChunk': str(args.sizeserialchunk)}
-                    }
+            {'sizeSerialChunk': str(args.sizeserialchunk)},
+            'EXPERT':
+            {'SNRLimit': str(args.snrlimit),
+             'magLimit': str(args.maglimit),
+             'trailingLossesOn': str(args.trailinglosseson)}
+                  }
 
     config.read_dict(config_dict)
 

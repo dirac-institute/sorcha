@@ -23,6 +23,7 @@ from surveySimPP.modules.PPCommandLineParser import PPCommandLineParser
 from surveySimPP.modules.PPReadAllInput import PPReadAllInput
 from surveySimPP.modules.PPMagnitudeLimit import PPMagnitudeLimit
 from surveySimPP.modules.PPOutput import PPWriteOutput
+from surveySimPP.modules.PPGetMainFilterAndColourOffsets import PPGetMainFilterAndColourOffsets
 
 
 # Author: Samuel Cornwall, Siegfried Eggl, Grigori Fedorets, Steph Merritt, Meg Schwamb
@@ -50,6 +51,10 @@ def runLSSTPostProcessing(cmd_args):
     configs = PPConfigFileParser(cmd_args['configfile'], cmd_args['surveyname'])
 
     verboselog('Configuration file successfully read.')
+    
+    configs['mainfilter'], configs['othercolours'] = PPGetMainFilterAndColourOffsets(cmd_args['paramsinput'],
+                                                                                     configs['observing_filters'],
+                                                                                     configs['filesep'])
 
     PPPrintConfigsToLog(configs, cmd_args)
 
@@ -141,9 +146,6 @@ def runLSSTPostProcessing(cmd_args):
         if configs['SNRLimitOn']:
             verboselog('Dropping observations with signal to noise ratio less than {}...'.format(configs['SNRLimit']))
             observations = PPSNRLimit(observations, configs['SNRLimit'])
-        else:
-            verboselog('Dropping observations with signal to noise ratio less than 2...')
-            observations = PPSNRLimit(observations, 2.0)
 
         if configs['magLimitOn']:
             verboselog('Dropping detections fainter than user-defined magnitude limit... ')
