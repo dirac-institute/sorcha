@@ -56,7 +56,7 @@ def makeSLURM(args):
 
         output_path = args.allout + rootname + '/'
 
-        call_command = 'nice -n 10 surveySimPP -c {} -l {} -o {} -p {} -u {} -t {} -dw &'.format(args.ssppcon,
+        call_command = 'nice -n 10 surveySimPP -c {} -p {} -o {} -e {} -u {} -t {} -dw &'.format(args.ssppcon,
                                                                                                  params_fn, orbits_fn,
                                                                                                  oif_fn, output_path,
                                                                                                  rootname)
