@@ -27,9 +27,9 @@ def PPCommandLineParser(parser):
 
     cmd_args_dict = {}
 
-    cmd_args_dict['paramsinput'] = PPFindFileOrExit(args.l, '-l, --params')
+    cmd_args_dict['paramsinput'] = PPFindFileOrExit(args.l, '-p, --params')
     cmd_args_dict['orbinfile'] = PPFindFileOrExit(args.o, '-o, --orbit')
-    cmd_args_dict['oifoutput'] = PPFindFileOrExit(args.p, '-p, --pointing')
+    cmd_args_dict['oifoutput'] = PPFindFileOrExit(args.p, '-e, --ephem')
     cmd_args_dict['configfile'] = PPFindFileOrExit(args.c, '-c, --config')
     cmd_args_dict['outpath'] = PPFindFileOrExit(args.u, '-u, --outfile')
 
