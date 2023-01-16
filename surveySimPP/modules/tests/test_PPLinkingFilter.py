@@ -19,7 +19,12 @@ def test_PPLinkingFilter():
     tracklet_interval = 15
     minimum_separation = 0.5
 
-    test_data_out = PPLinkingFilter(test_data[0:20],
+    # this line may seem pointless but Pandas does NOT like operating on slices
+    # of dataframes as it can't tell if it's a view or a copy and will throw a
+    # warning if this line is removed, so the test will fail.
+    test_obs = test_data[0:20].copy()
+
+    test_data_out = PPLinkingFilter(test_obs,
                                     detection_efficiency,
                                     min_observations,
                                     min_tracklets,
@@ -27,9 +32,8 @@ def test_PPLinkingFilter():
                                     minimum_separation,
                                     rng)
 
-    expected = [894816, 894838, 897478, 897521, 901987, 902035, 907363, 907416,
-                907470, 909426, 909452, 910850, 910872, 915246, 922013, 922034,
-                922035, 926281, 926288]
+    expected = [907416, 907470, 909426, 909452, 910850, 910872, 915246, 922013,
+                922034, 922035, 926281, 926288]
 
     assert_equal(test_data_out['FieldID'].values, expected)
 

@@ -11,7 +11,7 @@ from .PPReadOif import PPSkipOifHeader
 # Author: Grigori fedorets and Steph Merritt
 
 
-def PPMakeTemporaryEphemerisDatabase(oif_output, outf, inputformat):
+def PPMakeTemporaryEphemerisDatabase(oif_output, outf, inputformat, chunksize=1e6, stemname=None):
     """
     PPMakeTemporaryEphemerisDatabase.py
 
@@ -20,8 +20,10 @@ def PPMakeTemporaryEphemerisDatabase(oif_output, outf, inputformat):
      to avoid memory problems.
 
      Mandatory input:      string, oifoutput, name of output of oif, a tab-separated (later csv) file
-                           string, outf, path and name of output temporary sqlite3 database
-                           int, chunkSize
+                           string, outf, path of output temporary sqlite3 database
+                           string, inputformat, string of input format
+                           int, chunksize, number of rows to chunk creation by
+                           string, stemname, name (without .db) of database
 
      Output:               sqlite3 temporary database
 
@@ -31,12 +33,14 @@ def PPMakeTemporaryEphemerisDatabase(oif_output, outf, inputformat):
 
     pplogger = logging.getLogger(__name__)
 
-    dstr = datetime.now().strftime('%Y-%m-%d-%H-%M-%S')
-    cpid = os.getpid()
+    if not stemname:
+        dstr = datetime.now().strftime('%Y-%m-%d-%H-%M-%S')
+        cpid = os.getpid()
+        inter_name = dstr + '-p' + str(cpid) + '-' + 'interim.db'
+    else:
+        inter_name = stemname + '.db'
 
-    inter_name = dstr + '-p' + str(cpid) + '-' + 'interim.db'
-
-    cnx = sqlite3.connect(outf + inter_name)
+    cnx = sqlite3.connect(os.path.join(outf, inter_name))
 
     cur = cnx.cursor()
 
@@ -44,15 +48,56 @@ def PPMakeTemporaryEphemerisDatabase(oif_output, outf, inputformat):
     cur.execute(cmd)
 
     if (inputformat == "whitespace"):
-        padafr = PPSkipOifHeader(oif_output, 'ObjID', delim_whitespace=True)
+        PPChunkedTemporaryDatabaseCreation(cnx, oif_output, chunksize, delimiter='whitespace')
     elif (inputformat == "comma") or (inputformat == 'csv'):
-        padafr = PPSkipOifHeader(oif_output, 'ObjID', delimiter=',')
+        PPChunkedTemporaryDatabaseCreation(cnx, oif_output, chunksize, delimiter=',')
     elif (inputformat == 'h5') or (inputformat == 'hdf5') or (inputformat == 'HDF5'):
         padafr = pd.read_hdf(oif_output).reset_index(drop=True)
+        padafr.to_sql("interm", con=cnx, if_exists="append", index=False)
     else:
         pplogger.error("ERROR: PPMakeTemporaryEphemerisDatabase: unknown format for ephemeris simulation results.")
         sys.exit("ERROR: PPMakeTemporaryEphemerisDatabase: unknown format for ephemeris simulation results.")
 
-    padafr.to_sql("interm", con=cnx, if_exists="append", index=False)
+    return os.path.join(outf, inter_name)
 
-    return outf + inter_name
+
+def PPChunkedTemporaryDatabaseCreation(cnx, oif_output, chunkSize, delimiter):
+    """
+     Description: This task splits up a .csv into chunks to create the temporary
+     ephemeris database, to avoid memory problems for very large ephemeris files.
+
+     Mandatory input:      sqlite3 connection object, cnx, connection to the temporary database
+                           string, oif_output, path and name of input ephemeris file
+                           int, chunkSize, number of rows to read at once
+                           delimiter, string, file delimiter
+
+     Output:               none
+
+
+    """
+
+    n_rows = -1
+    with open(oif_output) as f:
+        for n_rows, _ in enumerate(f):
+            pass
+
+    startChunk = 0
+    endChunk = 0
+
+    while(endChunk <= n_rows):
+        endChunk = startChunk + chunkSize
+
+        if (n_rows - startChunk >= chunkSize):
+            incrStep = chunkSize
+        else:
+            incrStep = n_rows - startChunk
+
+        if delimiter == 'whitespace':
+            interm = PPSkipOifHeader(oif_output, 'ObjID', delim_whitespace=True, skiprows=range(1, startChunk + 1), nrows=incrStep, header=0)
+        elif delimiter == ',':
+            interm = PPSkipOifHeader(oif_output, 'ObjID', delimiter=',', skiprows=range(1, startChunk + 1), nrows=incrStep, header=0)
+        interm.to_sql("interm", con=cnx, if_exists="append", index=False)
+
+        startChunk = startChunk + chunkSize
+
+    return

@@ -11,12 +11,13 @@ from .PPDetectionEfficiency import PPDetectionEfficiency
 
 
 def PPLinkingFilter(observations,
-                       detection_efficiency,
-                       min_observations,
-                       min_tracklets,
-                       tracklet_interval,
-                       minimum_separation,
-                       rng):
+                    detection_efficiency,
+                    min_observations,
+                    min_tracklets,
+                    tracklet_interval,
+                    minimum_separation,
+                    rng,
+                    survey_name='lsst'):
     """
     A function which mimics the effects of the SSP linking process by looking
     for valid tracklets within valid tracks and only outputting observations
@@ -35,6 +36,7 @@ def PPLinkingFilter(observations,
     minimum_separation (float):   the minimum separation inside a tracklet for it
                                   to be recognised as motion between images (in arcseconds)
     rng (numpy RNG object):       random number generator object
+    survey_name (str)             a string with the survey name. used for time-zone purposes.
 
 
     Returns:
@@ -44,29 +46,38 @@ def PPLinkingFilter(observations,
 
     """
 
-    # remove set percentage of entries at random based on linking efficiency
-    observations_deteff = PPDetectionEfficiency(observations, detection_efficiency, rng)
-    observations_deteff.reset_index(inplace=True, drop=True)
-
     # store original integer row indices as a column
-    # could just use drop=False above but I wanted an unambiguous column name
-    observations_deteff["original_index"] = np.arange(len(observations_deteff))
+    observations['original_index'] = np.arange(len(observations))
 
     # store copy of this original dataframe to select all valid observations from later
     # this is quicker than making a dataframe as we go, pd.concat() is slow
-    orig_observations = observations_deteff.copy()
+    orig_observations = observations.copy()
     final_idx = []
 
-    objid_list = observations_deteff['ObjID'].unique().tolist()
+    objid_list = observations['ObjID'].unique().tolist()
 
-    # calculate night number from FieldMJD (makes calculations easier)
-    observations_deteff["night"] = np.round(observations_deteff["FieldMJD"].values - 60218.001806).astype(int)
+    # we need to take into account timezones when we determine whether an observation
+    # occurs on a specific night. this is implemented via survey_name
+    # i.e. LSST is on Chile time.
+    # we then calculate the boundary time between one night and the next in UTC MJD.
+
+    # I am ignoring daylight savings time here for reasons of my own sanity.
+
+    if survey_name in ['lsst', 'LSST']:
+        UTC_night_boundary = 17. / 24.  # this corresponds to 5pm UTC, or 2pm Chile time.
+
+    # calculate night number from FieldMJD
+    first_day = observations.loc[0, 'FieldMJD']
+    observations["night"] = np.floor(observations["FieldMJD"].values - np.floor(first_day) + UTC_night_boundary).astype(int) + 1
 
     # this for-loop could possibly be avoided by using groupby().apply() but I suspect the
     # time saving would be negligible, .apply() is slow.
     for objID in objid_list:
 
-        obs_object = observations_deteff.loc[observations_deteff['ObjID'] == objID]
+        obs_single_object = observations.loc[observations['ObjID'] == objID]
+
+        # remove set percentage of entries at random based on linking efficiency
+        obs_object = PPDetectionEfficiency(obs_single_object, detection_efficiency, rng)
 
         # get dataframe of night and number of observations per night
         obs_per_night_df = pd.DataFrame({"frequency": obs_object.value_counts("night", sort=False)})
@@ -102,13 +113,12 @@ def PPLinkingFilter(observations,
             continue
 
         unique_nights = obs_above_min_sep["night"].unique()
-        valid = np.zeros(len(unique_nights), dtype=bool)
 
         # checks to see if a track containing a number of tracklets >= min_tracklets
         # exists in a window of days <= tracklet_interval.
         # assumes all observations in a night are part of a valid tracklet
         # which should be true at this point
-        
+
         # once a linking is made, the night on which the linking was made is stored
         linked_night = False
         for i, night in enumerate(unique_nights):
@@ -121,10 +131,10 @@ def PPLinkingFilter(observations,
             if diff < tracklet_interval:
                 linked_night = night
                 break
-        
+
         # get all observations of this object made on or after the night it was linked
         if linked_night:
-            obs_final_night = obs_object[obs_object["night"]>=linked_night]
+            obs_final_night = obs_object[obs_object["night"] >= linked_night]
 
             # get the original index numbers of the observations that made it through
             # append them to the final index
