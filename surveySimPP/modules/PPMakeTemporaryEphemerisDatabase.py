@@ -11,7 +11,7 @@ from .PPReadOif import PPSkipOifHeader
 # Author: Grigori fedorets and Steph Merritt
 
 
-def PPMakeTemporaryEphemerisDatabase(oif_output, outf, inputformat, chunksize=10000, stemname=None):
+def PPMakeTemporaryEphemerisDatabase(oif_output, outf, inputformat, chunksize=1e6, stemname=None):
     """
     PPMakeTemporaryEphemerisDatabase.py
 

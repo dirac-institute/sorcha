@@ -33,7 +33,7 @@ def main():
     # stem filename for outputs
     parser.add_argument('-s', '--stem', help='Stem filename of input ephemeris text files. Default is "oif_".', type=str, default='oif_')
     # chunk size for creating databases
-    parser.add_argument('-c', '--chunk', help="Chunking size for creation, where chunk=number of rows per chunk. Don't change this unless you know what you're doing.", type=int, default=10000)
+    parser.add_argument('-c', '--chunk', help="Chunking size for creation, where chunk=number of rows per chunk. Don't change this unless you know what you're doing.", type=int, default=1e6)
 
     args = parser.parse_args()
 
