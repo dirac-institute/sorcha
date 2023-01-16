@@ -20,8 +20,10 @@ def PPMakeTemporaryEphemerisDatabase(oif_output, outf, inputformat, chunksize=10
      to avoid memory problems.
 
      Mandatory input:      string, oifoutput, name of output of oif, a tab-separated (later csv) file
-                           string, outf, path and name of output temporary sqlite3 database
-                           int, chunkSize
+                           string, outf, path of output temporary sqlite3 database
+                           string, inputformat, string of input format
+                           int, chunksize, number of rows to chunk creation by
+                           string, stemname, name (without .db) of database
 
      Output:               sqlite3 temporary database
 
@@ -46,7 +48,7 @@ def PPMakeTemporaryEphemerisDatabase(oif_output, outf, inputformat, chunksize=10
     cur.execute(cmd)
 
     if (inputformat == "whitespace"):
-        PPChunkedTemporaryDatabaseCreation(cnx, oif_output, chunksize, delimiter=' ')
+        PPChunkedTemporaryDatabaseCreation(cnx, oif_output, chunksize, delimiter='whitespace')
     elif (inputformat == "comma") or (inputformat == 'csv'):
         PPChunkedTemporaryDatabaseCreation(cnx, oif_output, chunksize, delimiter=',')
     elif (inputformat == 'h5') or (inputformat == 'hdf5') or (inputformat == 'HDF5'):
@@ -90,7 +92,10 @@ def PPChunkedTemporaryDatabaseCreation(cnx, oif_output, chunkSize, delimiter):
         else:
             incrStep = n_rows - startChunk
 
-        interm = PPSkipOifHeader(oif_output, 'ObjID', delimiter=delimiter, skiprows=range(1, startChunk + 1), nrows=incrStep, header=0)
+        if delimiter == 'whitespace':
+            interm = PPSkipOifHeader(oif_output, 'ObjID', delim_whitespace=True, skiprows=range(1, startChunk + 1), nrows=incrStep, header=0)
+        elif delimiter == ',':
+            interm = PPSkipOifHeader(oif_output, 'ObjID', delimiter=',', skiprows=range(1, startChunk + 1), nrows=incrStep, header=0)
         interm.to_sql("interm", con=cnx, if_exists="append", index=False)
 
         startChunk = startChunk + chunkSize

@@ -1,6 +1,7 @@
 #!/bin/python
 
 from surveySimPP.tests.data import get_test_filepath
+import os
 
 
 def test_PPReadTemporaryEphemerisDatabase(tmp_path):
@@ -13,8 +14,9 @@ def test_PPReadTemporaryEphemerisDatabase(tmp_path):
     print(padacl)
     objid_list = padacl['ObjID'].unique().tolist()
 
-    testdb = str(tmp_path / "testdb_PPIntermDB.db")
-    daba = PPMakeTemporaryEphemerisDatabase(get_test_filepath('oiftestoutput.txt'), testdb, 'whitespace')
+    temp_path = os.path.dirname(get_test_filepath('oiftestoutput.txt'))
+    stem_name = ('testdb_PPIntermDB')
+    daba = PPMakeTemporaryEphemerisDatabase(get_test_filepath('oiftestoutput.txt'), temp_path, 'whitespace', stemname=stem_name)
 
     padafr = PPReadTemporaryEphemerisDatabase(daba, objid_list)
 
