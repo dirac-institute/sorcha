@@ -114,6 +114,27 @@ def PPFindFileOrExit(arg_fn, argname):
         sys.exit('ERROR: filename {} supplied for {} argument does not exist.'.format(arg_fn, argname))
 
 
+def PPFindDirectoryOrExit(arg_fn, argname):
+    """
+    Author: Steph Merritt
+
+    Description: Checks to see if the directory given by arg_fn actually exists. If it doesn't,
+    this fails gracefully and exits to the command line.
+
+    Mandatory input:    string, arg_fn, string directory passed by command line argument
+                        string, argname,  name/flag of the argument printed in error message
+
+    Output:             string, arg_fn unchanged
+    """
+    pplogger = logging.getLogger(__name__)
+
+    if os.path.isdir(arg_fn):
+        return arg_fn
+    else:
+        pplogger.error('ERROR: filename {} supplied for {} argument does not exist.'.format(arg_fn, argname))
+        sys.exit('ERROR: filename {} supplied for {} argument does not exist.'.format(arg_fn, argname))
+
+
 def PPCheckFiltersForSurvey(survey_name, observing_filters):
     """
     Author: Steph Merritt
