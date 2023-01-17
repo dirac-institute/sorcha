@@ -1,10 +1,7 @@
 surveySimPP package
 ===================
 
-Submodules
-----------
-
-surveySimPP.surveySimPP module
+surveySimPP main
 ------------------------------
 
 .. automodule:: surveySimPP.surveySimPP
@@ -20,11 +17,5 @@ Subpackages
 
    surveySimPP.lsstcomet
    surveySimPP.modules
+   surveySimPP.utilities
 
-Module contents
----------------
-
-.. automodule:: surveySimPP
-   :members:
-   :undoc-members:
-   :show-inheritance:

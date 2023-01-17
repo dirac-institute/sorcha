@@ -1,37 +1,17 @@
 #!/bin/python
 
-import pytest
 import pandas as pd
+from surveySimPP.tests.data import get_test_filepath
 
 
 def test_PPBrightLimit():
-
-    from surveySimPP.modules.PPJoinPhysicalParametersPointing import PPJoinPhysicalParametersPointing
-    from surveySimPP.modules.PPReadOif import PPReadOif
-    from surveySimPP.modules.PPReadPhysicalParameters import PPReadPhysicalParameters
-    from surveySimPP.modules.PPMatchPointing import PPMatchPointing
-    from surveySimPP.modules.PPMatchPointingsAndColours import PPMatchPointingsAndColours
     from surveySimPP.modules.PPBrightLimit import PPBrightLimit
 
-    padafr = PPReadOif('./data/test/oiftestoutput.txt', 'whitespace')
-    padacl = PPReadPhysicalParameters('./data/test/testcolour.txt', 0, 5, 'whitespace')
+    test_input = pd.read_csv(get_test_filepath("test_input_fullobs.csv"))
+    test_output = pd.read_csv(get_test_filepath("test_output_PPBrightLimit.csv"))
 
-    resdf = PPJoinPhysicalParametersPointing(padafr, padacl)
+    test_result = PPBrightLimit(test_input, 'r', 20.0)
 
-    dbq = 'SELECT observationId, observationStartMJD, filter, seeingFwhmGeom, seeingFwhmEff, fiveSigmaDepth, fieldRA, fieldDec, rotSkyPos FROM SummaryAllProps order by observationId'
-
-    pada5 = PPMatchPointing('./data/test/baseline_10yrs_10klines.db', ['r', 'g', 'i'], dbq)
-
-    # DRY COMMENT OUT BELOW - resdf3 NOT CREATED
-    # pada6=PPMatchPointingsAndColours(resdf3,pada5)
-
-    # print(pada6)
-
-    # pada7=PPBrightLimit(pada6,18.2)
-
-    # nros=5
-    # nrosre=len(pada7.index)
-
-    # assert nros==nrosre
+    pd.testing.assert_frame_equal(test_output, test_result)
 
     return

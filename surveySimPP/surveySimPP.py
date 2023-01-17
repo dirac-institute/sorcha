@@ -4,20 +4,26 @@ import sys
 import time
 import numpy as np
 import argparse
-from surveySimPP.modules.PPMatchPointing import PPMatchPointing
-from surveySimPP.modules.PPFilterSSPLinking import PPFilterSSPLinking
+import os
+
+from surveySimPP.modules.PPReadPointingDatabase import PPReadPointingDatabase
+from surveySimPP.modules.PPLinkingFilter import PPLinkingFilter
 from surveySimPP.modules.PPTrailingLoss import PPTrailingLoss
 from surveySimPP.modules.PPBrightLimit import PPBrightLimit
-from surveySimPP.modules.PPMakeIntermediatePointingDatabase import PPMakeIntermediatePointingDatabase
+from surveySimPP.modules.PPMakeTemporaryEphemerisDatabase import PPMakeTemporaryEphemerisDatabase
 from surveySimPP.modules.PPCalculateApparentMagnitude import PPCalculateApparentMagnitude
 from surveySimPP.modules.PPApplyFOVFilter import PPApplyFOVFilter
 from surveySimPP.modules.PPSNRLimit import PPSNRLimit
 from surveySimPP.modules import PPAddUncertainties, PPRandomizeMeasurements
 from surveySimPP.modules import PPVignetting
-from surveySimPP.modules.PPFilterFadingFunction import PPFilterFadingFunction
-from surveySimPP.modules.PPRunUtilities import PPGetLogger, PPConfigFileParser, PPPrintConfigsToLog, PPCMDLineParser, PPReadAllInput
+from surveySimPP.modules.PPFadingFunctionFilter import PPFadingFunctionFilter
+from surveySimPP.modules.PPConfigParser import PPConfigFileParser, PPPrintConfigsToLog
+from surveySimPP.modules.PPGetLogger import PPGetLogger
+from surveySimPP.modules.PPCommandLineParser import PPCommandLineParser
+from surveySimPP.modules.PPReadAllInput import PPReadAllInput
 from surveySimPP.modules.PPMagnitudeLimit import PPMagnitudeLimit
 from surveySimPP.modules.PPOutput import PPWriteOutput
+from surveySimPP.modules.PPGetMainFilterAndColourOffsets import PPGetMainFilterAndColourOffsets
 
 
 # Author: Samuel Cornwall, Siegfried Eggl, Grigori Fedorets, Steph Merritt, Meg Schwamb
@@ -35,28 +41,42 @@ def runLSSTPostProcessing(cmd_args):
     # Initialise argument parser and assign command line arguments
 
     pplogger = PPGetLogger(cmd_args['outpath'])
+    pplogger.info('Post-processing begun.')
 
-    pplogger.info('Reading configuration file...')
+    # if verbosity flagged, the verboselog function will log the message specified
+    # if not, verboselog does absolutely nothing
+    verboselog = pplogger.info if cmd_args['verbose'] else lambda *a, **k: None
+
+    verboselog('Reading configuration file...')
     configs = PPConfigFileParser(cmd_args['configfile'], cmd_args['surveyname'])
 
-    pplogger.info('Configuration file successfully read.')
-    PPPrintConfigsToLog(configs)
+    verboselog('Configuration file successfully read.')
+
+    configs['mainfilter'], configs['othercolours'] = PPGetMainFilterAndColourOffsets(cmd_args['paramsinput'],
+                                                                                     configs['observing_filters'],
+                                                                                     configs['filesep'])
+
+    PPPrintConfigsToLog(configs, cmd_args)
 
     # End of config parsing
 
-    if cmd_args['makeIntermediatePointingDatabase']:
-        PPMakeIntermediatePointingDatabase(cmd_args['oifoutput'], './data/interm.db', 100)
+    if cmd_args['makeTemporaryEphemerisDatabase']:
+        verboselog('Creating temporary ephemeris database...')
+        cmd_args['readTemporaryEphemerisDatabase'] = PPMakeTemporaryEphemerisDatabase(cmd_args['oifoutput'], cmd_args['outpath'], configs["ephFormat"])
 
-    pplogger.info('Reading pointing database and matching observationID with appropriate optical filter...')
-    filterpointing = PPMatchPointing(configs['pointingdatabase'], configs['observing_filters'], configs['ppdbquery'])
+    verboselog('Reading pointing database and matching observationID with appropriate optical filter...')
 
-    pplogger.info('Instantiating random number generator ... ')
-    rng_seed = int(time.time())
-    pplogger.info('Random number seed is {}.'.format(rng_seed))
+    filterpointing = PPReadPointingDatabase(configs['pointingdatabase'], configs['observing_filters'], configs['ppdbquery'])
+
+    verboselog('Instantiating random number generator ... ')
+
+    if configs['rng_seed']:
+        rng_seed = configs['rng_seed']
+    else:
+        rng_seed = int(time.time())
+
+    verboselog('Random number seed is {}.'.format(rng_seed))
     rng = np.random.default_rng(rng_seed)
-
-    # Extracting mainfilter, the first in observing_filters
-    mainfilter = configs['observing_filters'][0]
 
     # In case of a large input file, the data is read in chunks. The
     # "sizeSerialChunk" parameter in PPConfig.ini assigns the chunk.
@@ -80,82 +100,93 @@ def runLSSTPostProcessing(cmd_args):
         else:
             incrStep = lenf - startChunk
 
+        verboselog('Working on objects {}-{}.'.format(startChunk, endChunk))
+
         # Processing begins, all processing is done for chunks
 
         observations = PPReadAllInput(cmd_args, configs, filterpointing,
-                                      startChunk, incrStep)
+                                      startChunk, incrStep, verbose=cmd_args['verbose'])
 
-        pplogger.info('Calculating apparent magnitudes...')
+        verboselog('Calculating apparent magnitudes...')
         observations = PPCalculateApparentMagnitude(observations,
                                                     configs['phasefunction'],
-                                                    mainfilter,
+                                                    configs['mainfilter'],
                                                     configs['othercolours'],
                                                     configs['observing_filters'],
-                                                    configs['cometactivity'])
+                                                    configs['cometactivity'],
+                                                    verbose=cmd_args['verbose'])
 
         # ----------------------------------------------------------------------
         if configs['trailingLossesOn']:
-            pplogger.info('Calculating trailing losses...')
+            verboselog('Calculating trailing losses...')
             dmagDetect = PPTrailingLoss(observations, "circularPSF")
             observations['PSFMag'] = dmagDetect + observations['TrailedSourceMag']
         else:
             observations['PSFMag'] = observations['TrailedSourceMag']
         # ----------------------------------------------------------------------
 
-        pplogger.info('Calculating effects of vignetting on limiting magnitude...')
+        verboselog('Calculating effects of vignetting on limiting magnitude...')
         observations['fiveSigmaDepthAtSource'] = PPVignetting.vignettingEffects(observations)
 
-        pplogger.info('Calculating astrometric and photometric uncertainties, randomizing photometry...')
+        verboselog('Applying field-of-view filters...')
+        observations = PPApplyFOVFilter(observations, configs, rng, verbose=cmd_args['verbose'])
+
+        # Note that the below code creates observedTrailedSourceMag and observedPSFMag
+        # as columns in the observations dataframe.
+        # These are the columns that should be used moving forward for filters etc.
+        # Do NOT use TrailedSourceMag or PSFMag, these are cut later.
+        verboselog('Calculating astrometric and photometric uncertainties, randomizing photometry...')
         observations = PPAddUncertainties.addUncertainties(observations, configs, rng)
 
-        pplogger.info('Applying astrometric uncertainties...')
+        verboselog('Applying astrometric uncertainties...')
         observations["AstRATrue(deg)"] = observations["AstRA(deg)"]
         observations["AstDecTrue(deg)"] = observations["AstDec(deg)"]
-        observations["AstRA(deg)"], observations["AstDec(deg)"] = PPRandomizeMeasurements.randomizeAstrometry(observations, rng, sigName='AstrometricSigma(deg)')
+        observations["AstRA(deg)"], observations["AstDec(deg)"] = PPRandomizeMeasurements.randomizeAstrometry(observations, rng, sigName='AstrometricSigma(deg)', sigUnits='deg')
 
-        pplogger.info('Applying field-of-view filters...')
-        observations = PPApplyFOVFilter(observations, configs, rng)
+        if configs['cameraModel'] == 'footprint':
+            verboselog('Re-applying field-of-view filters...')
+            observations = PPApplyFOVFilter(observations, configs, rng, verbose=cmd_args['verbose'])
 
         if configs['SNRLimitOn']:
-            pplogger.info('Dropping observations with signal to noise ratio less than {}...'.format(configs['SNRLimit']))
+            verboselog('Dropping observations with signal to noise ratio less than {}...'.format(configs['SNRLimit']))
             observations = PPSNRLimit(observations, configs['SNRLimit'])
-        else:
-            pplogger.info('Dropping observations with signal to noise ratio less than 2...')
-            observations = PPSNRLimit(observations, 2.0)
 
         if configs['magLimitOn']:
-            pplogger.info('Dropping detections fainter than user-defined magnitude limit... ')
+            verboselog('Dropping detections fainter than user-defined magnitude limit... ')
             observations = PPMagnitudeLimit(observations, configs['magLimit'])
 
         if configs['fadingFunctionOn']:
-            pplogger.info('Applying detection efficiency fading function...')
-            observations = PPFilterFadingFunction(observations, configs['fillfactor'], rng)
+            verboselog('Applying detection efficiency fading function...')
+            observations = PPFadingFunctionFilter(observations, configs['fillfactor'], configs['fadingFunctionWidth'], rng, verbose=cmd_args['verbose'])
 
         if configs['brightLimitOn']:
-            pplogger.info('Dropping observations that are too bright...')
-            observations = PPBrightLimit(observations, configs['brightLimit'])
+            verboselog('Dropping observations that are too bright...')
+            observations = PPBrightLimit(observations, configs['observing_filters'], configs['brightLimit'])
 
         if configs['SSPLinkingOn']:
-            pplogger.info('Applying SSP linking filter...')
-            pplogger.info('Number of rows BEFORE applying SSP linking filter: ' + str(len(observations.index)))
+            verboselog('Applying SSP linking filter...')
+            verboselog('Number of rows BEFORE applying SSP linking filter: ' + str(len(observations.index)))
 
-            observations = PPFilterSSPLinking(observations,
-                                              configs['SSPDetectionEfficiency'],
-                                              configs['minTracklet'],
-                                              configs['noTracklets'],
-                                              configs['trackletInterval'],
-                                              configs['inSepThreshold'],
-                                              rng)
+            observations = PPLinkingFilter(observations,
+                                           configs['SSPDetectionEfficiency'],
+                                           configs['minTracklet'],
+                                           configs['noTracklets'],
+                                           configs['trackletInterval'],
+                                           configs['inSepThreshold'],
+                                           rng)
 
-            observations = observations.drop(['index'], axis='columns')
             observations.reset_index(drop=True, inplace=True)
-            pplogger.info('Number of rows AFTER applying SSP linking filter: ' + str(len(observations.index)))
+            verboselog('Number of rows AFTER applying SSP linking filter: ' + str(len(observations.index)))
 
         # write output
-        PPWriteOutput(cmd_args, configs, observations, endChunk)
+        PPWriteOutput(cmd_args, configs, observations, endChunk, verbose=cmd_args['verbose'])
 
         startChunk = startChunk + configs['sizeSerialChunk']
         # end for
+
+    if cmd_args['deleteTemporaryEphemerisDatabase']:
+        verboselog('Deleting the temporary ephemeris database...')
+        os.remove(cmd_args['readTemporaryEphemerisDatabase'])
 
     pplogger.info('Post processing completed.')
 
@@ -172,28 +203,36 @@ def main():
 
     usage: surveySimPP [-h] [-c C] [-d] [-m M] [-l L] [-o O] [-p P] [-s S]
         optional arguments:
-         -h, --help      show this help message and exit
-         -c C, --config C   Input configuration file name
-         -d          Make intermediate pointing database
-         -m M, --comet M    Comet parameter file name
-         -l L, --params L   Physical parameters file name
-         -o O, --orbit O    Orbit file name
-         -p P, --pointing P  Pointing simulation output file name
-         -s S, --survey S   Name of the survey you wish to simulate
+         -h, --help           show this help message and exit
+         -c C, --config C     Input configuration file name
+         -dw                  Make temporary ephemeris database
+         -dr                  Read from existing temporary ephemeris database at this location
+         -dl                  Delete the temporary ephemeris database on code completion.
+         -m M, --comet M      Comet parameter file name
+         -l L, --params L     Physical parameters file name
+         -o O, --orbit O      Orbit file name
+         -p P, --pointing P   Pointing simulation output file name
+         -s S, --survey S     Name of the survey you wish to simulate
+         -u U, --outfile U    Path in which to store output and logs
+         -t T, --stem T       Output file name stem
+         -v V, --verbose      Verbosity on or off: default is on
     """
 
     parser = argparse.ArgumentParser()
     parser.add_argument("-c", "--config", help="Input configuration file name", type=str, dest='c', default='./PPConfig.ini', required=True)
-    parser.add_argument("-d", help="Make intermediate pointing database", dest='d', action='store_true')
+    parser.add_argument("-dw", help="Make temporary ephemeris database in output folder. Overwrites existing database if present.", dest='dw', action='store_true')
+    parser.add_argument("-dr", help="Location of existing/previous temporary ephemeris database to read from if wanted.", dest='dr', type=str)
+    parser.add_argument("-dl", help="Delete the temporary ephemeris database after code has completed.", action='store_true', default=False)
     parser.add_argument("-m", "--comet", help="Comet parameter file name", type=str, dest='m')
-    parser.add_argument("-l", "--params", help="Physical parameters file name", type=str, dest='l', default='./data/params', required=True)
+    parser.add_argument("-p", "--params", help="Physical parameters file name", type=str, dest='l', default='./data/params', required=True)
     parser.add_argument("-o", "--orbit", help="Orbit file name", type=str, dest='o', default='./data/orbit.des', required=True)
-    parser.add_argument("-p", "--pointing", help="Pointing simulation output file name", type=str, dest='p', default='./data/oiftestoutput', required=True)
+    parser.add_argument("-e", "--ephem", help="Ephemeris simulation output file name", type=str, dest='p', default='./data/oiftestoutput', required=True)
     parser.add_argument("-s", "--survey", help="Survey to simulate", type=str, dest='s', default='LSST')
     parser.add_argument("-u", "--outfile", help="Path to store output and logs.", type=str, dest="u", default='./data/out/', required=True)
     parser.add_argument("-t", "--stem", help="Output file name stem.", type=str, dest="t", default='SSPPOutput')
+    parser.add_argument("-v", "--verbose", help="Verbosity. Default currently true; include to turn off verbosity.", dest='v', default=True, action='store_false')
 
-    cmd_args = PPCMDLineParser(parser)
+    cmd_args = PPCommandLineParser(parser)
 
     if cmd_args['surveyname'] in ['LSST', 'lsst']:
         runLSSTPostProcessing(cmd_args)

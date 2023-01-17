@@ -1,0 +1,2 @@
+ObjID                       H g-r i-r z-r y-r u-r GS
+67P/Churyumov-Gerasimenko   15.9 0.42 -0.12 0.0 0.0 0.0 0.15

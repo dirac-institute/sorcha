@@ -1,0 +1,13 @@
+numpy
+pandas
+pytest
+pytest-cov<2.6.0
+coveralls
+setuptools>=42
+wheel
+setuptools_scm>=3.4
+astropy
+scipy
+sbpy
+matplotlib
+git+https://github.com/dirac-institute/survey_simulator_post_processing.git

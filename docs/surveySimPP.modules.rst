@@ -1,20 +1,18 @@
 surveySimPP.modules package
 ===========================
 
-Subpackages
------------
-
-.. toctree::
-   :maxdepth: 4
-
-
-Submodules
-----------
-
 surveySimPP.modules.PPAddUncertainties module
 ---------------------------------------------
 
 .. automodule:: surveySimPP.modules.PPAddUncertainties
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+surveySimPP.modules.PPApplyColourOffsets module
+-----------------------------------------------
+
+.. automodule:: surveySimPP.modules.PPApplyColourOffsets
    :members:
    :undoc-members:
    :show-inheritance:
@@ -27,18 +25,18 @@ surveySimPP.modules.PPApplyFOVFilter module
    :undoc-members:
    :show-inheritance:
 
-surveySimPP.modules.PPAppmag\_to module
----------------------------------------
-
-.. automodule:: surveySimPP.modules.PPAppmag_to
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 surveySimPP.modules.PPBrightLimit module
 ----------------------------------------
 
 .. automodule:: surveySimPP.modules.PPBrightLimit
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+surveySimPP.modules.PPCMDLineParser module
+------------------------------------------
+
+.. automodule:: surveySimPP.modules.PPCMDLineParser
    :members:
    :undoc-members:
    :show-inheritance:
@@ -67,10 +65,26 @@ surveySimPP.modules.PPCalculateSimpleCometaryMagnitude module
    :undoc-members:
    :show-inheritance:
 
-surveySimPP.modules.PPCheckOrbitAndColoursMatching module
----------------------------------------------------------
+surveySimPP.modules.PPCheckOrbitAndPhysicalParametersMatching module
+--------------------------------------------------------------------
 
-.. automodule:: surveySimPP.modules.PPCheckOrbitAndColoursMatching
+.. automodule:: surveySimPP.modules.PPCheckOrbitAndPhysicalParametersMatching
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+surveySimPP.modules.PPConfigParser module
+-----------------------------------------
+
+.. automodule:: surveySimPP.modules.PPConfigParser
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+surveySimPP.modules.PPDetectionEfficiency module
+------------------------------------------------
+
+.. automodule:: surveySimPP.modules.PPDetectionEfficiency
    :members:
    :undoc-members:
    :show-inheritance:
@@ -91,18 +105,18 @@ surveySimPP.modules.PPDropObservations module
    :undoc-members:
    :show-inheritance:
 
-surveySimPP.modules.PPFilterDetectionEfficiencyThreshold module
----------------------------------------------------------------
+surveySimPP.modules.PPFilterFadingFunction module
+-------------------------------------------------
 
-.. automodule:: surveySimPP.modules.PPFilterDetectionEfficiencyThreshold
+.. automodule:: surveySimPP.modules.PPFilterFadingFunction
    :members:
    :undoc-members:
    :show-inheritance:
 
-surveySimPP.modules.PPFilterSSPCriterionEfficiency module
----------------------------------------------------------
+surveySimPP.modules.PPFilterSSPLinking module
+---------------------------------------------
 
-.. automodule:: surveySimPP.modules.PPFilterSSPCriterionEfficiency
+.. automodule:: surveySimPP.modules.PPFilterSSPLinking
    :members:
    :undoc-members:
    :show-inheritance:
@@ -115,10 +129,10 @@ surveySimPP.modules.PPFootprintFilter module
    :undoc-members:
    :show-inheritance:
 
-surveySimPP.modules.PPJoinColourPointing module
------------------------------------------------
+surveySimPP.modules.PPGetLogger module
+--------------------------------------
 
-.. automodule:: surveySimPP.modules.PPJoinColourPointing
+.. automodule:: surveySimPP.modules.PPGetLogger
    :members:
    :undoc-members:
    :show-inheritance:
@@ -131,18 +145,26 @@ surveySimPP.modules.PPJoinOrbitalData module
    :undoc-members:
    :show-inheritance:
 
-surveySimPP.modules.PPMakeIntermediatePointingDatabase module
--------------------------------------------------------------
+surveySimPP.modules.PPJoinPhysicalParametersPointing module
+-----------------------------------------------------------
 
-.. automodule:: surveySimPP.modules.PPMakeIntermediatePointingDatabase
+.. automodule:: surveySimPP.modules.PPJoinPhysicalParametersPointing
    :members:
    :undoc-members:
    :show-inheritance:
 
-surveySimPP.modules.PPMatchFieldConditions module
--------------------------------------------------
+surveySimPP.modules.PPMagnitudeLimit module
+-------------------------------------------
 
-.. automodule:: surveySimPP.modules.PPMatchFieldConditions
+.. automodule:: surveySimPP.modules.PPMagnitudeLimit
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+surveySimPP.modules.PPMakeIntermediateEphemerisDatabase module
+--------------------------------------------------------------
+
+.. automodule:: surveySimPP.modules.PPMakeIntermediateEphemerisDatabase
    :members:
    :undoc-members:
    :show-inheritance:
@@ -171,34 +193,10 @@ surveySimPP.modules.PPMatchPointingsAndColours module
    :undoc-members:
    :show-inheritance:
 
-surveySimPP.modules.PPOutWriteCSV module
-----------------------------------------
+surveySimPP.modules.PPOutput module
+-----------------------------------
 
-.. automodule:: surveySimPP.modules.PPOutWriteCSV
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-surveySimPP.modules.PPOutWriteHDF5 module
------------------------------------------
-
-.. automodule:: surveySimPP.modules.PPOutWriteHDF5
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-surveySimPP.modules.PPOutWriteSqlite3 module
---------------------------------------------
-
-.. automodule:: surveySimPP.modules.PPOutWriteSqlite3
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-surveySimPP.modules.PPRandomize module
---------------------------------------
-
-.. automodule:: surveySimPP.modules.PPRandomize
+.. automodule:: surveySimPP.modules.PPOutput
    :members:
    :undoc-members:
    :show-inheritance:
@@ -211,10 +209,10 @@ surveySimPP.modules.PPRandomizeMeasurements module
    :undoc-members:
    :show-inheritance:
 
-surveySimPP.modules.PPReadColours module
-----------------------------------------
+surveySimPP.modules.PPReadAllInput module
+-----------------------------------------
 
-.. automodule:: surveySimPP.modules.PPReadColours
+.. automodule:: surveySimPP.modules.PPReadAllInput
    :members:
    :undoc-members:
    :show-inheritance:
@@ -235,10 +233,10 @@ surveySimPP.modules.PPReadEphemerides module
    :undoc-members:
    :show-inheritance:
 
-surveySimPP.modules.PPReadIntermDatabase module
------------------------------------------------
+surveySimPP.modules.PPReadIntermediateEphemerisDatabase module
+--------------------------------------------------------------
 
-.. automodule:: surveySimPP.modules.PPReadIntermDatabase
+.. automodule:: surveySimPP.modules.PPReadIntermediateEphemerisDatabase
    :members:
    :undoc-members:
    :show-inheritance:
@@ -259,18 +257,10 @@ surveySimPP.modules.PPReadOrbitFile module
    :undoc-members:
    :show-inheritance:
 
-surveySimPP.modules.PPResolveMagnitudeInFilter module
------------------------------------------------------
+surveySimPP.modules.PPReadPhysicalParameters module
+---------------------------------------------------
 
-.. automodule:: surveySimPP.modules.PPResolveMagnitudeInFilter
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-surveySimPP.modules.PPRunUtilities module
------------------------------------------
-
-.. automodule:: surveySimPP.modules.PPRunUtilities
+.. automodule:: surveySimPP.modules.PPReadPhysicalParameters
    :members:
    :undoc-members:
    :show-inheritance:
@@ -283,26 +273,10 @@ surveySimPP.modules.PPSNRLimit module
    :undoc-members:
    :show-inheritance:
 
-surveySimPP.modules.PPSimpleSensorArea module
----------------------------------------------
-
-.. automodule:: surveySimPP.modules.PPSimpleSensorArea
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 surveySimPP.modules.PPTrailingLoss module
 -----------------------------------------
 
 .. automodule:: surveySimPP.modules.PPTrailingLoss
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-surveySimPP.modules.PPTranslateMagnitude module
------------------------------------------------
-
-.. automodule:: surveySimPP.modules.PPTranslateMagnitude
    :members:
    :undoc-members:
    :show-inheritance:
@@ -315,18 +289,3 @@ surveySimPP.modules.PPVignetting module
    :undoc-members:
    :show-inheritance:
 
-surveySimPP.modules.PPreadColoursUser module
---------------------------------------------
-
-.. automodule:: surveySimPP.modules.PPreadColoursUser
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-Module contents
----------------
-
-.. automodule:: surveySimPP.modules
-   :members:
-   :undoc-members:
-   :show-inheritance:

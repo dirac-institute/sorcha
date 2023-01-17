@@ -2,13 +2,12 @@
 
 <!-- [![Build Status](https://travis-ci.org/dirac-institute/survey_simulator_post_processing.svg?branch=master)](https://travis-ci.org/dirac-institute/survey_simulator_post_processing) -->
 
-![pytest](https://github.com/dirac-institute/survey_simulator_post_processing/actions/workflows/pytest.yml/badge.svg)
+[![ci](https://github.com/dirac-institute/survey_simulator_post_processing/actions/workflows/ci.yml/badge.svg)](https://github.com/dirac-institute/survey_simulator_post_processing/actions/workflows/ci.yml)
+[![pytest](https://github.com/dirac-institute/survey_simulator_post_processing/actions/workflows/pytest.yml/badge.svg)](https://github.com/dirac-institute/survey_simulator_post_processing/actions/workflows/pytest.yml) [![Documentation Status](https://readthedocs.org/projects/survey-simulator-post-processing/badge/?version=latest)](https://survey-simulator-post-processing.readthedocs.io/en/latest/?badge=latest)
 
 LSST stack based post-processing modules in python for the JPL survey simulator: https://github.com/AsteroidSurveySimulator/objectsInField
 
 Currently tested with the following fork: https://github.com/eggls6/objectsInField
-
-Currently requires latest development version of sbpy: https://github.com/NASA-Planetary-Science/sbpy.git
 
 Documentation: https://survey-simulator-post-processing.readthedocs.io/en/latest/
 
@@ -19,49 +18,6 @@ Documentation: https://survey-simulator-post-processing.readthedocs.io/en/latest
 * Function/methods names should follow Rubin / LSST developer guide conventions: https://developer.lsst.io/
 * If you are working on addressing a specific issue ticket, assign yourself the ticket and set the status to "in progress"
 * When making a pull request that closes an issue, cite the issue ticket in the pull request summary
-
-## Installation
-Set up a conda environment and activate:
-```
-conda create -n survey_sim_pp python=3.8 pip
-conda activate survey_sim_pp
-```
-Download repo via git clone
-
-```
-git clone https://github.com/dirac-institute/survey_simulator_post_processing.git
-```
-
-Cd into the directory:
-```
-cd survey_simulator_post_processing
-```
-
-The code can be installed by typing:
-```
-pip install -e .
-```
-
-Next, install the pointing database to the ./demo/ folder. This can be found [here](http://astro-lsst-01.astro.washington.edu:8080/?runId=1): click one of the links entitled 'baseline_v2.0_10yrs.db' near the top in the SQLite file column.
-
-
-Then the simulator can be run via:
-```
-surveySimPP -c ./demo/PPConfig.ini -l ./demo/colours_10mbas.txt -o ./demo/orbits_10mbas.des -p ./demo/oif_10mbas.txt -u ./data/out/ -t demorun
-```
-
-This will create a .csv file in /data/out/ called demorun.csv with the accompanying log files.
-
-
-You can also create config files for OIF and the survey simulator by typing:
-```
-makeConfigOIF
-```
-or
-```
-makeConfigPP
-```
-And adding any relevant config parameters.
 
 
 ## Making pip work

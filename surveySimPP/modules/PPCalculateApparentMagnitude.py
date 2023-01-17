@@ -1,19 +1,21 @@
 #!/usr/bin/python
 
-from . import PPCalculateApparentMagnitudeInFilter, PPResolveMagnitudeInFilter
-from . import PPCalculateSimpleCometaryMagnitude
+from .PPCalculateApparentMagnitudeInFilter import PPCalculateApparentMagnitudeInFilter
+from .PPCalculateSimpleCometaryMagnitude import PPCalculateSimpleCometaryMagnitude
+from .PPApplyColourOffsets import PPApplyColourOffsets
 import logging
 
-# Author: Grigori Fedorets
+# Author: Steph Merritt
 
 
-def PPCalculateApparentMagnitude(observations, phasefunction, mainfilter, othercolours, observing_filters, object_type):
+def PPCalculateApparentMagnitude(observations, phasefunction, mainfilter, othercolours, observing_filters, object_type, verbose=False):
 
     """
-    PPCalculateApparentMagnitude(observations, phasefunction, mainfilter, othercolours, observing_filters)
+    PPNewCalculateApparentMagnitude(observations, phasefunction, mainfilter, othercolours, observing_filters)
 
-    This task combines calculating the apparent magnitude in the main filter, combining the brightness information with
-    colours for appropriate filter, and then, finally, selecting the correct colour and applying the correct offset.
+    This task applies the correct colour offset to H for the relevant filter, checks to make sure
+    the correct columns are included (with additional functionality for colour-specific phase curves),
+    then calculates the apparent magnitude.
 
     Input: observations   : pandas DataFrame
            phasefunction  : string
@@ -27,18 +29,18 @@ def PPCalculateApparentMagnitude(observations, phasefunction, mainfilter, otherc
     """
 
     pplogger = logging.getLogger(__name__)
-
-    pplogger.info('Calculating apparent magnitudes...')
-    observations = PPCalculateApparentMagnitudeInFilter.PPCalculateApparentMagnitudeInFilter(observations, phasefunction, mainfilter)
+    verboselog = pplogger.info if verbose else lambda *a, **k: None
 
     if (object_type == 'comet'):
-        pplogger.info('Calculating cometary magnitude using a simple model...')
-        observations = PPCalculateSimpleCometaryMagnitude.PPCalculateSimpleCometaryMagnitude(observations, mainfilter)
+        verboselog('Calculating cometary magnitude using a simple model and applying colour offset...')
+        observations = PPCalculateSimpleCometaryMagnitude(observations, mainfilter, othercolours)
+    else:
+        # if user is only interested in one filter, we have no colour offsets to apply: assume H is in that filter
+        if len(observing_filters) > 1:
+            verboselog('Selecting and applying correct colour offset...')
+            observations = PPApplyColourOffsets(observations, phasefunction, othercolours, observing_filters, mainfilter)
 
-    pplogger.info('Selecting and applying correct colour offset...')
-    observations = PPResolveMagnitudeInFilter.PPResolveMagnitudeInFilter(observations, mainfilter, othercolours, observing_filters)
+        verboselog('Calculating apparent magnitude in filter...')
+        observations = PPCalculateApparentMagnitudeInFilter(observations, phasefunction, mainfilter)
 
-    observations_drop = observations.drop(mainfilter, axis=1)
-    observations_drop.reset_index(drop=True, inplace=True)
-
-    return observations_drop
+    return observations

@@ -1,41 +1,25 @@
 #!/bin/python
 
-import pytest
 import pandas as pd
 import numpy as np
-#from filtering import PPFilterDetectionEfficiencyThreshold
+from numpy.testing import assert_equal
 
-
-"""
-test_detectionEfficencyThreshold.py
-
-
-Input:  1. file 'oiftrestoutput' 
-
-
-Action: 1. count lines from raw output
-        2. count lines after applying filter
-        3. see if threshold is statistically solid
-        
-Author: Grigori Fedorets
-"""
+from surveySimPP.tests.data import get_test_filepath
 
 
 def test_PPDetectionEfficiency():
 
-    from surveySimPP.modules.PPReadOif import PPReadOif
     from surveySimPP.modules.PPDetectionEfficiency import PPDetectionEfficiency
 
     rng = np.random.default_rng(2021)
 
-    padafr = PPReadOif('./data/test/oiftestoutput.txt', 'whitespace')
-    nrows = len(padafr.index)
-    pada1 = PPDetectionEfficiency(padafr, 1.00, rng)
-    nr1 = len(pada1.index)
-    pada2 = PPDetectionEfficiency(padafr, 0.00, rng)
-    nr2 = len(pada2.index)
+    test_data = pd.read_csv(get_test_filepath('test_input_fullobs.csv'))
 
-    assert nr1 == nrows
-    assert nr2 == 0
+    test_out = PPDetectionEfficiency(test_data[0:15], 0.95, rng)
+
+    expected = [894816, 894838, 897478, 897521, 901987, 902035, 907363, 907416,
+                907470, 909426, 909452, 910850, 910872, 915246]
+
+    assert_equal(test_out['FieldID'].values, expected)
 
     return

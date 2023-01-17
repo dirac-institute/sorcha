@@ -6,3 +6,13 @@
 .DS_Store
 __pycache__
 /data/test/testdb_PPIntermDB.db
+
+#demo_files_run
+_cache/
+
+# Sphinx
+docs/_build
+
+.tox
+.tmp
+.idea

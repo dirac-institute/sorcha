@@ -5,7 +5,7 @@ import logging
 import numpy as np
 
 
-def PPApplyFOVFilter(observations, configs, rng):
+def PPApplyFOVFilter(observations, configs, rng, verbose=False):
     """
     PPApplyFootprint.py
 
@@ -24,14 +24,15 @@ def PPApplyFOVFilter(observations, configs, rng):
     """
 
     pplogger = logging.getLogger(__name__)
+    verboselog = pplogger.info if verbose else lambda *a, **k: None
 
     if configs['cameraModel'] == 'circle' and not configs['fadingFunctionOn']:
-        pplogger.info('FOV is circular and fading function is off. Removing random observations.')
+        verboselog('FOV is circular and fading function is off. Removing random observations.')
 
         observations = PPSimpleSensorArea(observations, rng, configs['fillfactor'])
 
     elif configs['cameraModel'] == 'footprint':
-        pplogger.info('Applying sensor footprint filter...')
+        verboselog('Applying sensor footprint filter...')
         footprintf = PPFootprintFilter.Footprint(configs['footprintPath'])
         onSensor, detectorIDs = footprintf.applyFootprint(observations)
 
@@ -41,7 +42,7 @@ def PPApplyFOVFilter(observations, configs, rng):
         observations = observations.sort_index()
 
     else:
-        pplogger.info('FOV is circular and fading function is on. Skipping FOV filter.')
+        verboselog('FOV is circular and fading function is on. Skipping FOV filter.')
 
     return observations
 

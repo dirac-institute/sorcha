@@ -1,8 +1,6 @@
 #!/bin/python
 
-import os
 import sys
-import pandas as pd
 import logging
 from . import PPReadOif
 
@@ -21,18 +19,15 @@ def PPReadEphemerides(eph_output, ephemerides_type, inputformat):
 
     For correct performance, the read-in data needs to contain all of the following columns:
 
-    ['ObjID', 'FieldID', 'FieldMJD', 'AstRange(km)', 'AstRangeRate(km/s)', 'AstRA(deg)', 
+    ['ObjID', 'FieldID', 'FieldMJD', 'AstRange(km)', 'AstRangeRate(km/s)', 'AstRA(deg)',
     'AstRARate(deg/day)', 'AstDec(deg)', 'AstDecRate(deg/day)', 'Ast-Sun(J2000x)(km)', 'Ast-Sun(J2000y)(km)',
-    'Ast-Sun(J2000z)(km)', 'Ast-Sun(J2000vx)(km/s)', 'Ast-Sun(J2000vy)(km/s)', 'Ast-Sun(J2000vz)(km/s)', 
-    'Obs-Sun(J2000x)(km)', 'Obs-Sun(J2000y)(km)', 'Obs-Sun(J2000z)(km)', 'Obs-Sun(J2000vx)(km/s)', 
+    'Ast-Sun(J2000z)(km)', 'Ast-Sun(J2000vx)(km/s)', 'Ast-Sun(J2000vy)(km/s)', 'Ast-Sun(J2000vz)(km/s)',
+    'Obs-Sun(J2000x)(km)', 'Obs-Sun(J2000y)(km)', 'Obs-Sun(J2000z)(km)', 'Obs-Sun(J2000vx)(km/s)',
     'Obs-Sun(J2000vy)(km/s)', 'Obs-Sun(J2000vz)(km/s)', 'Sun-Ast-Obs(deg)']
 
 
-
-
-
     Mandatory input:      string, eph_output, name of text file including Output from ephemerides file
-                          string, ephemerides_type, type of ephemerides pointing simulation (oif) 
+                          string, ephemerides_type, type of ephemerides pointing simulation (oif)
                           string, inputformat, input format of pointing putput (csv, whitespace, hdf5)
 
 
@@ -42,17 +37,16 @@ def PPReadEphemerides(eph_output, ephemerides_type, inputformat):
 
     usage: PPReadEphemerides(padafr, ephemerides_type, inputformat)
     """
-    #from surveySimPP.modules.PPRunUtilities import PPGetLogger
+
     pplogger = logging.getLogger(__name__)
-    
-    ephtypeci=ephemerides_type.casefold()
+
+    ephtypeci = ephemerides_type.casefold()
 
     if (ephtypeci == 'oif'):
         padafr = PPReadOif.PPReadOif(eph_output, inputformat)
-        
     else:
-       pplogger.error("PPReadEphemerides: invalid value for ephemerides_type: " + str(ephemerides_type))
-       sys.exit("PPReadEphemerides: invalid value for ephemerides_type: " + str(ephemerides_type))
+        pplogger.error("PPReadEphemerides: invalid value for ephemerides_type: " + str(ephemerides_type))
+        sys.exit("PPReadEphemerides: invalid value for ephemerides_type: " + str(ephemerides_type))
 
     # Functions for adding alternative types of ephemerides can be added here
     # See below for self-explanatory columns required for the ephemerides input
@@ -65,9 +59,8 @@ def PPReadEphemerides(eph_output, ephemerides_type, inputformat):
             'Obs-Sun(J2000x)(km)', 'Obs-Sun(J2000y)(km)', 'Obs-Sun(J2000z)(km)', 'Obs-Sun(J2000vx)(km/s)',
             'Obs-Sun(J2000vy)(km/s)', 'Obs-Sun(J2000vz)(km/s)', 'Sun-Ast-Obs(deg)']
 
-    for col in cols:
-        if col not in padafr:
-            pplogger.error('ERROR: PPReadEphemerides: essential columns missing from ephemerides input: ', col)
-            sys.exit('ERROR: PPReadEphemerides: essential columns missing from ephemerides input: ', col)
+    if not all(col in padafr.columns for col in cols):
+        pplogger.error('ERROR: PPReadEphemerides: essential columns missing from ephemerides input. Required columns are: {}'.format(cols))
+        sys.exit('ERROR: PPReadEphemerides: essential columns missing from ephemerides input. Required columns are: {}'.format(cols))
 
-    return padafr
+    return padafr[cols]
