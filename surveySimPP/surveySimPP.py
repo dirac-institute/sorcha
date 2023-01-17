@@ -64,7 +64,7 @@ def runLSSTPostProcessing(cmd_args):
         verboselog('Creating temporary ephemeris database...')
         cmd_args['readTemporaryEphemerisDatabase'] = PPMakeTemporaryEphemerisDatabase(cmd_args['oifoutput'], cmd_args['outpath'], configs["ephFormat"])
 
-    verboselog('Reading pointing database and matching observationID with appropriate optical filter...')
+    verboselog('Reading pointing database...')
 
     filterpointing = PPReadPointingDatabase(configs['pointingdatabase'], configs['observing_filters'], configs['ppdbquery'])
 
@@ -143,7 +143,7 @@ def runLSSTPostProcessing(cmd_args):
         observations["AstDecTrue(deg)"] = observations["AstDec(deg)"]
         observations["AstRA(deg)"], observations["AstDec(deg)"] = PPRandomizeMeasurements.randomizeAstrometry(observations, rng, sigName='AstrometricSigma(deg)', sigUnits='deg')
 
-        if configs['cameraModel'] == 'footprint':
+        if configs['fillfactor'] == 1:
             verboselog('Re-applying field-of-view filters...')
             observations = PPApplyFOVFilter(observations, configs, rng, verbose=cmd_args['verbose'])
 
