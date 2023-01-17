@@ -12,6 +12,7 @@ import sqlite3
 import glob
 import argparse
 import sys
+from surveySimPP.modules.PPConfigParser import PPFindDirectoryOrExit
 
 
 def create_results_table(cnx_out, output_path, output_stem, table_name='pp_results'):
@@ -110,6 +111,9 @@ def main():
     parser.add_argument('-c', '--comet', help='Toggle whether to look for cometary activity files. Default False.', default=False, action='store_true')
 
     args = parser.parse_args()
+
+    _ = PPFindDirectoryOrExit(args.inputs, '-i, --inputs')
+    _ = PPFindDirectoryOrExit(args.outputs, '-o, --outputs')
 
     create_results_database(args)
 
