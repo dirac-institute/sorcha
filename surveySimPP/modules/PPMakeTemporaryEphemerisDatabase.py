@@ -96,6 +96,8 @@ def PPChunkedTemporaryDatabaseCreation(cnx, oif_output, chunkSize, delimiter):
             interm = PPSkipOifHeader(oif_output, 'ObjID', delim_whitespace=True, skiprows=range(1, startChunk + 1), nrows=incrStep, header=0)
         elif delimiter == ',':
             interm = PPSkipOifHeader(oif_output, 'ObjID', delimiter=',', skiprows=range(1, startChunk + 1), nrows=incrStep, header=0)
+        
+        interm.drop(['V', 'V(H=0)'], axis=1, inplace=True, errors='ignore')
         interm.to_sql("interm", con=cnx, if_exists="append", index=False)
 
         startChunk = startChunk + chunkSize
