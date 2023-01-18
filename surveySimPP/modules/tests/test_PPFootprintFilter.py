@@ -1,8 +1,10 @@
 import numpy as np
-
-from surveySimPP.modules.PPFootprintFilter import Detector, radec2focalplane
-
+import pandas as pd
 from numpy.random import default_rng
+from numpy.testing import assert_equal
+
+from surveySimPP.tests.data import get_test_filepath
+from surveySimPP.modules.PPFootprintFilter import Detector, radec2focalplane
 
 rng = default_rng()
 
@@ -65,3 +67,18 @@ def test_areas():
 def test_radec2focalplane():
     out = radec2focalplane(1., 1., 0., 0.)
     assert len(out) == 2
+
+
+def test_applyFootprint():
+
+    import surveySimPP.modules.PPFootprintFilter as PPFootprintFilter
+
+    observations = pd.read_csv(get_test_filepath('test_input_fullobs.csv'), nrows=10)
+
+    footprintf = PPFootprintFilter.Footprint(get_test_filepath('detectors_corners.csv'))
+    onSensor, detectorIDs = footprintf.applyFootprint(observations)
+
+    assert_equal(onSensor, [1, 0, 2, 3, 8, 7, 4, 5, 6, 9])
+    assert_equal(detectorIDs, [59., 66., 87., 87., 100., 106., 127., 131., 144., 152.])
+
+    return
