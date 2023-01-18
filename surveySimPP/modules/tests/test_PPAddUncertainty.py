@@ -125,7 +125,7 @@ def test_uncertainties():
 
     from surveySimPP.modules.PPAddUncertainties import uncertainties
 
-    observations = pd.read_csv('./surveySimPP/tests/data/test_input_fullobs.csv', nrows=1)
+    observations = pd.read_csv(get_test_filepath('test_input_fullobs.csv'), nrows=1)
     configs = {'trailingLossesOn': False}
 
     ast_sig_deg, photo_sig, SNR = uncertainties(observations, configs)
