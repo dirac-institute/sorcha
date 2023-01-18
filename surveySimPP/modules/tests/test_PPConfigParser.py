@@ -75,7 +75,7 @@ def test_PPGetOrExit():
     from surveySimPP.modules.PPConfigParser import PPGetOrExit
 
     config = configparser.ConfigParser()
-    config.read(get_test_filepath('test_PPconfig.ini'))
+    config.read(get_test_filepath('test_PPConfig.ini'))
 
     test_value = PPGetOrExit(config, 'INPUTFILES', 'ephFormat', 'none')
 
@@ -94,7 +94,7 @@ def test_PPGetFloatOrExit():
     from surveySimPP.modules.PPConfigParser import PPGetFloatOrExit
 
     config = configparser.ConfigParser()
-    config.read(get_test_filepath('test_PPconfig.ini'))
+    config.read(get_test_filepath('test_PPConfig.ini'))
 
     test_value = PPGetFloatOrExit(config, 'FILTERINGPARAMETERS', 'fadingFunctionWidth', 'none')
 
@@ -114,7 +114,7 @@ def test_PPGetIntOrExit():
     from surveySimPP.modules.PPConfigParser import PPGetIntOrExit
 
     config = configparser.ConfigParser()
-    config.read(get_test_filepath('test_PPconfig.ini'))
+    config.read(get_test_filepath('test_PPConfig.ini'))
 
     test_value = PPGetIntOrExit(config, 'OUTPUTFORMAT', 'position_decimals', 'none')
 
@@ -134,7 +134,7 @@ def test_PPGetBoolOrExit():
     from surveySimPP.modules.PPConfigParser import PPGetBoolOrExit
 
     config = configparser.ConfigParser()
-    config.read(get_test_filepath('test_PPconfig.ini'))
+    config.read(get_test_filepath('test_PPConfig.ini'))
 
     test_value = PPGetBoolOrExit(config, 'FILTERINGPARAMETERS', 'fadingFunctionOn', 'none')
 
@@ -154,7 +154,7 @@ def test_PPGetValueAndFlag():
     from surveySimPP.modules.PPConfigParser import PPGetValueAndFlag
 
     config = configparser.ConfigParser()
-    config.read(get_test_filepath('test_PPconfig.ini'))
+    config.read(get_test_filepath('test_PPConfig.ini'))
 
     test_value_1, test_flag_1 = PPGetValueAndFlag(config, 'FILTERINGPARAMETERS', 'fillfactor', 'float')
     test_value_2, test_flag_2 = PPGetValueAndFlag(config, 'FILTERINGPARAMETERS', 'brightLimit', 'float')
