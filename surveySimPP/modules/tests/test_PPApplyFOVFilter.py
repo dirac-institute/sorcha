@@ -78,7 +78,7 @@ def test_PPApplyFOVFilters():
     assert_equal(new_obs['FieldID'].values, expected)
 
     configs = {'cameraModel': 'footprint',
-               'footprintPath': './data/detectors_corners.csv',
+               'footprintPath': get_test_filepath('detectors_corners.csv'),
                'fillfactor': 1}
 
     new_obs = PPApplyFOVFilter(observations, configs, rng)
