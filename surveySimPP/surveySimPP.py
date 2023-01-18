@@ -64,7 +64,7 @@ def runLSSTPostProcessing(cmd_args):
         verboselog('Creating temporary ephemeris database...')
         cmd_args['readTemporaryEphemerisDatabase'] = PPMakeTemporaryEphemerisDatabase(cmd_args['oifoutput'], cmd_args['outpath'], configs["ephFormat"])
 
-    verboselog('Reading pointing database and matching observationID with appropriate optical filter...')
+    verboselog('Reading pointing database...')
 
     filterpointing = PPReadPointingDatabase(configs['pointingdatabase'], configs['observing_filters'], configs['ppdbquery'])
 
@@ -143,7 +143,7 @@ def runLSSTPostProcessing(cmd_args):
         observations["AstDecTrue(deg)"] = observations["AstDec(deg)"]
         observations["AstRA(deg)"], observations["AstDec(deg)"] = PPRandomizeMeasurements.randomizeAstrometry(observations, rng, sigName='AstrometricSigma(deg)', sigUnits='deg')
 
-        if configs['cameraModel'] == 'footprint':
+        if configs['fillfactor'] == 1:
             verboselog('Re-applying field-of-view filters...')
             observations = PPApplyFOVFilter(observations, configs, rng, verbose=cmd_args['verbose'])
 
@@ -224,15 +224,16 @@ def main():
     parser.add_argument("-dr", help="Location of existing/previous temporary ephemeris database to read from if wanted.", dest='dr', type=str)
     parser.add_argument("-dl", help="Delete the temporary ephemeris database after code has completed.", action='store_true', default=False)
     parser.add_argument("-m", "--comet", help="Comet parameter file name", type=str, dest='m')
-    parser.add_argument("-p", "--params", help="Physical parameters file name", type=str, dest='l', default='./data/params', required=True)
+    parser.add_argument("-p", "--params", help="Physical parameters file name", type=str, dest='p', default='./data/params', required=True)
     parser.add_argument("-o", "--orbit", help="Orbit file name", type=str, dest='o', default='./data/orbit.des', required=True)
-    parser.add_argument("-e", "--ephem", help="Ephemeris simulation output file name", type=str, dest='p', default='./data/oiftestoutput', required=True)
+    parser.add_argument("-e", "--ephem", help="Ephemeris simulation output file name", type=str, dest='e', default='./data/oiftestoutput', required=True)
     parser.add_argument("-s", "--survey", help="Survey to simulate", type=str, dest='s', default='LSST')
     parser.add_argument("-u", "--outfile", help="Path to store output and logs.", type=str, dest="u", default='./data/out/', required=True)
     parser.add_argument("-t", "--stem", help="Output file name stem.", type=str, dest="t", default='SSPPOutput')
     parser.add_argument("-v", "--verbose", help="Verbosity. Default currently true; include to turn off verbosity.", dest='v', default=True, action='store_false')
 
-    cmd_args = PPCommandLineParser(parser)
+    args = parser.parse_args()
+    cmd_args = PPCommandLineParser(args)
 
     if cmd_args['surveyname'] in ['LSST', 'lsst']:
         runLSSTPostProcessing(cmd_args)
