@@ -48,3 +48,44 @@ def test_PPGetSeparation():
     assert sep2 == 0
 
     return
+
+
+def test_PPApplyFOVFilters():
+
+    from surveySimPP.modules.PPApplyFOVFilter import PPApplyFOVFilter
+
+    observations = pd.read_csv(get_test_filepath('test_input_fullobs.csv'), nrows=20)
+
+    rng = np.random.default_rng(2021)
+
+    configs = {'cameraModel': 'circle',
+               'fadingFunctionOn': True,
+               'circleRadius': 1.1}
+
+    new_obs = PPApplyFOVFilter(observations, configs, rng)
+    expected = [897478, 897521, 901987, 902035, 907363, 907416, 907470, 910850,
+                910872]
+
+    assert_equal(new_obs['FieldID'].values, expected)
+
+    configs = {'cameraModel': 'circle',
+               'fadingFunctionOn': False,
+               'fillfactor': 0.5}
+
+    new_obs = PPApplyFOVFilter(observations, configs, rng)
+    expected = [897521, 902035, 907363, 907416, 907470, 910872, 915246, 922013]
+
+    assert_equal(new_obs['FieldID'].values, expected)
+
+    configs = {'cameraModel': 'footprint',
+               'footprintPath': './data/detectors_corners.csv',
+               'fillfactor': 1}
+
+    new_obs = PPApplyFOVFilter(observations, configs, rng)
+    expected = [894816, 894838, 897478, 897521, 901987, 902035, 907363, 907416,
+                907470, 909426, 909452, 910850, 910872, 915246, 915268, 922013,
+                922034, 922035, 926281, 926288]
+
+    assert_equal(new_obs['FieldID'].values, expected)
+
+    return

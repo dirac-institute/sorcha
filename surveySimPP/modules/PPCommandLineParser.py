@@ -6,7 +6,7 @@ import logging
 from .PPConfigParser import PPFindFileOrExit
 
 
-def PPCommandLineParser(parser):
+def PPCommandLineParser(args):
     """
     Author: Steph Merritt
 
@@ -23,13 +23,11 @@ def PPCommandLineParser(parser):
 
     pplogger = logging.getLogger(__name__)
 
-    args = parser.parse_args()
-
     cmd_args_dict = {}
 
-    cmd_args_dict['paramsinput'] = PPFindFileOrExit(args.l, '-p, --params')
+    cmd_args_dict['paramsinput'] = PPFindFileOrExit(args.p, '-p, --params')
     cmd_args_dict['orbinfile'] = PPFindFileOrExit(args.o, '-o, --orbit')
-    cmd_args_dict['oifoutput'] = PPFindFileOrExit(args.p, '-e, --ephem')
+    cmd_args_dict['oifoutput'] = PPFindFileOrExit(args.e, '-e, --ephem')
     cmd_args_dict['configfile'] = PPFindFileOrExit(args.c, '-c, --config')
     cmd_args_dict['outpath'] = PPFindFileOrExit(args.u, '-u, --outfile')
 

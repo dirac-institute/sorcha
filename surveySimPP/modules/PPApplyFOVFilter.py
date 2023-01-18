@@ -42,7 +42,7 @@ def PPApplyFOVFilter(observations, configs, rng, verbose=False):
 
         observations = observations.sort_index()
 
-    elif configs['cameraModel'] == 'circle' and configs['fadingFunctionOn']:
+    elif configs['cameraModel'] == 'circle' and configs['circleRadius']:
         verboselog('Applying circular footprint filter...')
         observations = PPCircleFootprint(observations, configs['circleRadius'])
 
