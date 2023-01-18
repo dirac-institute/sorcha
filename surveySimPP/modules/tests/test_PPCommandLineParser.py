@@ -22,10 +22,10 @@ def test_PPCommandLineParser():
     from surveySimPP.modules.PPCommandLineParser import PPCommandLineParser
 
     cmd_dict_1 = PPCommandLineParser(args(False, False, None, False))
-    expected_1 = {'paramsinput': '/Users/stephaniemerritt/Projects/survey_simulator_post_processing/surveySimPP/tests/data/testcolour.txt',
-                  'orbinfile': '/Users/stephaniemerritt/Projects/survey_simulator_post_processing/surveySimPP/tests/data/testorb.des',
-                  'oifoutput': '/Users/stephaniemerritt/Projects/survey_simulator_post_processing/surveySimPP/tests/data/oiftestoutput.txt',
-                  'configfile': '/Users/stephaniemerritt/Projects/survey_simulator_post_processing/surveySimPP/tests/data/test_PPConfig.ini',
+    expected_1 = {'paramsinput': get_test_filepath('testcolour.txt'),
+                  'orbinfile': get_test_filepath('testorb.des'),
+                  'oifoutput': get_test_filepath('oiftestoutput.txt'),
+                  'configfile': get_test_filepath('test_PPConfig.ini'),
                   'outpath': './',
                   'makeTemporaryEphemerisDatabase': False,
                   'readTemporaryEphemerisDatabase': None,
@@ -35,24 +35,24 @@ def test_PPCommandLineParser():
                   'verbose': True}
 
     cmd_dict_2 = PPCommandLineParser(args(get_test_filepath('testcomet.txt'), False, get_test_filepath('test_data_mag.csv'), True))
-    expected_2 = {'paramsinput': '/Users/stephaniemerritt/Projects/survey_simulator_post_processing/surveySimPP/tests/data/testcolour.txt',
-                  'orbinfile': '/Users/stephaniemerritt/Projects/survey_simulator_post_processing/surveySimPP/tests/data/testorb.des',
-                  'oifoutput': '/Users/stephaniemerritt/Projects/survey_simulator_post_processing/surveySimPP/tests/data/oiftestoutput.txt',
-                  'configfile': '/Users/stephaniemerritt/Projects/survey_simulator_post_processing/surveySimPP/tests/data/test_PPConfig.ini',
+    expected_2 = {'paramsinput': get_test_filepath('testcolour.txt'),
+                  'orbinfile': get_test_filepath('testorb.des'),
+                  'oifoutput': get_test_filepath('oiftestoutput.txt'),
+                  'configfile': get_test_filepath('test_PPConfig.ini'),
                   'outpath': './',
-                  'cometinput': '/Users/stephaniemerritt/Projects/survey_simulator_post_processing/surveySimPP/tests/data/testcomet.txt',
+                  'cometinput': get_test_filepath('testcomet.txt'),
                   'makeTemporaryEphemerisDatabase': False,
-                  'readTemporaryEphemerisDatabase': '/Users/stephaniemerritt/Projects/survey_simulator_post_processing/surveySimPP/tests/data/test_data_mag.csv',
+                  'readTemporaryEphemerisDatabase': get_test_filepath('test_data_mag.csv'),
                   'deleteTemporaryEphemerisDatabase': True,
                   'surveyname': 'lsst',
                   'outfilestem': 'testout',
                   'verbose': True}
 
     cmd_dict_3 = PPCommandLineParser(args(False, True, None, True))
-    expected_3 = {'paramsinput': '/Users/stephaniemerritt/Projects/survey_simulator_post_processing/surveySimPP/tests/data/testcolour.txt',
-                  'orbinfile': '/Users/stephaniemerritt/Projects/survey_simulator_post_processing/surveySimPP/tests/data/testorb.des',
-                  'oifoutput': '/Users/stephaniemerritt/Projects/survey_simulator_post_processing/surveySimPP/tests/data/oiftestoutput.txt',
-                  'configfile': '/Users/stephaniemerritt/Projects/survey_simulator_post_processing/surveySimPP/tests/data/test_PPConfig.ini',
+    expected_3 = {'paramsinput': get_test_filepath('testcolour.txt'),
+                  'orbinfile': get_test_filepath('testorb.des'),
+                  'oifoutput': get_test_filepath('oiftestoutput.txt'),
+                  'configfile': get_test_filepath('test_PPConfig.ini'),
                   'outpath': './',
                   'makeTemporaryEphemerisDatabase': True,
                   'readTemporaryEphemerisDatabase': None,
