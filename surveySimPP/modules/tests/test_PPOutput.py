@@ -88,12 +88,10 @@ def test_PPWriteOutput():
 
     PPWriteOutput(cmd_args, configs, observations, 10)
     csv_test_in = pd.read_csv(os.path.join(tmp_path, 'PPOutput_test_out.csv'))
-    os.remove(os.path.join(tmp_path, 'PPOutput_test_out.csv'))
 
     configs['outputformat'] = 'separatelycsv'
     PPWriteOutput(cmd_args, configs, observations, 10)
     sep_test_in = pd.read_csv(os.path.join(tmp_path, 'S1000000a_PPOutput_test_out.csv'))
-    os.remove(os.path.join(tmp_path, 'S1000000a_PPOutput_test_out.csv'))
 
     configs['outputformat'] = 'sqlite3'
     PPWriteOutput(cmd_args, configs, observations, 10)
@@ -102,7 +100,6 @@ def test_PPWriteOutput():
     cur.execute('select * from pp_results')
     col_names = list(map(lambda x: x[0], cur.description))
     sql_test_in = pd.DataFrame(cur.fetchall(), columns=col_names)
-    os.remove(os.path.join(tmp_path, 'PPOutput_test_out.db'))
 
     expected = np.array(['S1000000a', 61769.32062, 163.8754209, -18.8432714, 164.037713,
                          -17.582575, 3e-06, 'r', 19.647, 19.648, 0.007, 0.007, 23.864,
@@ -111,5 +108,9 @@ def test_PPWriteOutput():
     assert_equal(csv_test_in.loc[0, :].values, expected)
     assert_equal(sep_test_in.loc[0, :].values, expected)
     assert_equal(sql_test_in.loc[0, :].values, expected)
+    
+    os.remove(os.path.join(tmp_path, 'PPOutput_test_out.csv'))
+    os.remove(os.path.join(tmp_path, 'S1000000a_PPOutput_test_out.csv'))
+    os.remove(os.path.join(tmp_path, 'PPOutput_test_out.db'))
 
     return
