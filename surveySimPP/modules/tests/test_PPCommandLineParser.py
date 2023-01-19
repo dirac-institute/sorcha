@@ -1,25 +1,31 @@
+import os
+import pytest
+
 from surveySimPP.tests.data import get_test_filepath
 
 
 class args:
-    def __init__(self, m, dw, dr, dl):
+    def __init__(self, m, dw, dr, dl, t='testout', u='./', f=False):
         self.p = get_test_filepath('testcolour.txt')
         self.o = get_test_filepath('testorb.des')
         self.e = get_test_filepath('oiftestoutput.txt')
         self.c = get_test_filepath('test_PPConfig.ini')
-        self.u = './'
+        self.u = u
         self.m = m
         self.s = 'lsst'
-        self.t = 'testout'
+        self.t = t
         self.v = True
         self.dw = dw
         self.dr = dr
         self.dl = dl
+        self.f = f
 
 
 def test_PPCommandLineParser():
 
     from surveySimPP.modules.PPCommandLineParser import PPCommandLineParser
+
+    tmp_path = os.path.dirname(get_test_filepath('test_input_fullobs.csv'))
 
     cmd_dict_1 = PPCommandLineParser(args(False, False, None, False))
     expected_1 = {'paramsinput': get_test_filepath('testcolour.txt'),
@@ -61,8 +67,18 @@ def test_PPCommandLineParser():
                   'outfilestem': 'testout',
                   'verbose': True}
 
+    with open(os.path.join(tmp_path, 'dummy_file.txt'), 'w') as _:
+        pass
+
+    with pytest.raises(SystemExit) as e:
+        _ = PPCommandLineParser(args(False, False, None, False, u=tmp_path, t='dummy_file'))
+
+    _ = PPCommandLineParser(args(False, False, None, False, u=tmp_path, t='dummy_file', f=True))
+
     assert cmd_dict_1 == expected_1
     assert cmd_dict_2 == expected_2
     assert cmd_dict_3 == expected_3
+    assert e.type == SystemExit
+    assert not os.path.isfile(os.path.join(tmp_path, 'dummy_file.txt'))
 
     return
