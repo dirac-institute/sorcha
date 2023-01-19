@@ -13,7 +13,6 @@ from . import PPJoinEphemeridesAndParameters
 from . import PPJoinEphemeridesAndOrbits
 from . import PPMakeTemporaryEphemerisDatabase
 from . import PPReadPointingDatabase
-from . import PPMatchPointingsAndColours
 from . import PPMatchPointingToObservations
 from . import PPOutput
 from . import PPRandomizeMeasurements
