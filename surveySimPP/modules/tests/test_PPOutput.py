@@ -2,12 +2,45 @@ import pandas as pd
 import sqlite3
 import os
 import numpy as np
+import pytest
 from numpy.testing import assert_equal
 
 from surveySimPP.tests.data import get_test_filepath
 
 
-def test_PPOutWriteCSV():
+@pytest.fixture
+def setup_and_teardown_for_PPOutWriteCSV():
+
+    yield
+
+    tmp_path = os.path.dirname(get_test_filepath('test_input_fullobs.csv'))
+
+    os.remove(os.path.join(tmp_path, 'test_csv_out.csv'))
+
+
+@pytest.fixture
+def setup_and_teardown_for_PPOutWriteSqlite3():
+
+    yield
+
+    tmp_path = os.path.dirname(get_test_filepath('test_input_fullobs.csv'))
+
+    os.remove(os.path.join(tmp_path, 'test_sql_out.db'))
+
+
+@pytest.fixture
+def setup_and_teardown_for_PPWriteOutput():
+
+    yield
+
+    tmp_path = os.path.dirname(get_test_filepath('test_input_fullobs.csv'))
+
+    os.remove(os.path.join(tmp_path, 'PPOutput_test_out.csv'))
+    os.remove(os.path.join(tmp_path, 'S1000000a_PPOutput_test_out.csv'))
+    os.remove(os.path.join(tmp_path, 'PPOutput_test_out.db'))
+
+
+def test_PPOutWriteCSV(setup_and_teardown_for_PPOutWriteCSV):
 
     from surveySimPP.modules.PPOutput import PPOutWriteCSV
 
@@ -20,12 +53,10 @@ def test_PPOutWriteCSV():
 
     pd.testing.assert_frame_equal(observations, test_in)
 
-    os.remove(os.path.join(tmp_path, 'test_csv_out.csv'))
-
     return
 
 
-def test_PPOutWriteSqlite3():
+def test_PPOutWriteSqlite3(setup_and_teardown_for_PPOutWriteSqlite3):
 
     from surveySimPP.modules.PPOutput import PPOutWriteSqlite3
 
@@ -42,8 +73,6 @@ def test_PPOutWriteSqlite3():
     test_in = pd.DataFrame(cur.fetchall(), columns=col_names)
 
     pd.testing.assert_frame_equal(observations, test_in)
-
-    os.remove(os.path.join(tmp_path, 'test_sql_out.db'))
 
     return
 
@@ -71,7 +100,7 @@ def test_PPOutWriteSqlite3():
 #     return
 
 
-def test_PPWriteOutput():
+def test_PPWriteOutput(setup_and_teardown_for_PPWriteOutput):
 
     from surveySimPP.modules.PPOutput import PPWriteOutput
 
@@ -108,9 +137,5 @@ def test_PPWriteOutput():
     assert_equal(csv_test_in.loc[0, :].values, expected)
     assert_equal(sep_test_in.loc[0, :].values, expected)
     assert_equal(sql_test_in.loc[0, :].values, expected)
-    
-    os.remove(os.path.join(tmp_path, 'PPOutput_test_out.csv'))
-    os.remove(os.path.join(tmp_path, 'S1000000a_PPOutput_test_out.csv'))
-    os.remove(os.path.join(tmp_path, 'PPOutput_test_out.db'))
 
     return
