@@ -44,13 +44,12 @@ def PPCommandLineParser(args):
 
     file_exists = glob.glob(os.path.join(cmd_args_dict['outpath'], cmd_args_dict['outfilestem'] + '.*'))
 
-    if file_exists:
-        if args.f:
-            pplogger.info('Existing file found at {}. -f flag set: deleting existing file.'.format(os.path.join(cmd_args_dict['outpath'], cmd_args_dict['outfilestem'] + '.*')))
-            os.remove(file_exists[0])
-        else:
-            pplogger.error('ERROR: existing file found at output location {}. Set -f flag to overwrite this file.'.format(os.path.join(cmd_args_dict['outpath'], cmd_args_dict['outfilestem'] + '.*')))
-            sys.exit('ERROR: existing file found at output location {}. Set -f flag to overwrite this file.'.format(os.path.join(cmd_args_dict['outpath'], cmd_args_dict['outfilestem'] + '.*')))
+    if file_exists and args.f:
+        pplogger.info('Existing file found at {}. -f flag set: deleting existing file.'.format(os.path.join(cmd_args_dict['outpath'], cmd_args_dict['outfilestem'] + '.*')))
+        os.remove(file_exists[0])
+    elif file_exists and not args.f:
+        pplogger.error('ERROR: existing file found at output location {}. Set -f flag to overwrite this file.'.format(os.path.join(cmd_args_dict['outpath'], cmd_args_dict['outfilestem'] + '.*')))
+        sys.exit('ERROR: existing file found at output location {}. Set -f flag to overwrite this file.'.format(os.path.join(cmd_args_dict['outpath'], cmd_args_dict['outfilestem'] + '.*')))
 
     if args.dr and args.dw:
         pplogger.error('ERROR: both -dr and -dw flags set at command line. Please use only one.')
