@@ -17,6 +17,16 @@ def setup_and_teardown_for_PPOutWriteCSV():
 
     os.remove(os.path.join(tmp_path, 'test_csv_out.csv'))
 
+    
+@pytest.fixture
+def setup_and_teardown_for_PPOutWriteHDF5():
+
+    yield
+
+    tmp_path = os.path.dirname(get_test_filepath('test_input_fullobs.csv'))
+
+    os.remove(os.path.join(tmp_path, 'test_hdf5_out.h5'))
+
 
 @pytest.fixture
 def setup_and_teardown_for_PPOutWriteSqlite3():
@@ -77,27 +87,20 @@ def test_PPOutWriteSqlite3(setup_and_teardown_for_PPOutWriteSqlite3):
     return
 
 
-# def test_PPOutWriteHDF5():
-#
-#     from surveySimPP.modules.PPOutput import PPOutWriteHDF5
-#     import warnings
-#     warnings.filterwarnings("ignore", message="numpy.dtype size changed")
-#     warnings.filterwarnings("ignore", message="numpy.ufunc size changed")
-#     warnings.filterwarnings("ignore", message="`np.typeDict` is a deprecated alias")
-#     warnings.filterwarnings("ignore", message="distutils Version classes are deprecated")
-#
-#     observations = pd.read_csv(get_test_filepath('test_input_fullobs.csv'), nrows=1)
-#     tmp_path = os.path.dirname(get_test_filepath('test_input_fullobs.csv'))
-#
-#     PPOutWriteHDF5(observations, os.path.join(tmp_path, 'test_hdf5_out.h5'), 'testchunk')
-#
-#     test_in = pd.read_hdf(os.path.join(tmp_path, 'test_hdf5_out.h5'), key='testchunk')
-#
-#     pd.testing.assert_frame_equal(observations, test_in)
-#
-#     os.remove(os.path.join(tmp_path, 'test_hdf5_out.h5'))
-#
-#     return
+def test_PPOutWriteHDF5():
+
+    from surveySimPP.modules.PPOutput import PPOutWriteHDF5
+
+    observations = pd.read_csv(get_test_filepath('test_input_fullobs.csv'), nrows=1)
+    tmp_path = os.path.dirname(get_test_filepath('test_input_fullobs.csv'))
+
+    PPOutWriteHDF5(observations, os.path.join(tmp_path, 'test_hdf5_out.h5'), 'testchunk')
+
+    test_in = pd.read_hdf(os.path.join(tmp_path, 'test_hdf5_out.h5'), key='testchunk')
+
+    pd.testing.assert_frame_equal(observations, test_in)
+
+    return
 
 
 def test_PPWriteOutput(setup_and_teardown_for_PPWriteOutput):
