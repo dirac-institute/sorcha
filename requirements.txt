@@ -10,3 +10,4 @@ astropy
 scipy
 sbpy
 matplotlib
+pytables
