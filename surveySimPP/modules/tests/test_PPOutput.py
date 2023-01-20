@@ -87,7 +87,7 @@ def test_PPOutWriteSqlite3(setup_and_teardown_for_PPOutWriteSqlite3):
     return
 
 
-def test_PPOutWriteHDF5():
+def test_PPOutWriteHDF5(setup_and_teardown_for_PPOutWriteHDF5):
 
     from surveySimPP.modules.PPOutput import PPOutWriteHDF5
 
