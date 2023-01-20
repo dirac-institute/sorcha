@@ -231,6 +231,7 @@ def main():
     parser.add_argument("-u", "--outfile", help="Path to store output and logs.", type=str, dest="u", default='./data/out/', required=True)
     parser.add_argument("-t", "--stem", help="Output file name stem.", type=str, dest="t", default='SSPPOutput')
     parser.add_argument("-v", "--verbose", help="Verbosity. Default currently true; include to turn off verbosity.", dest='v', default=True, action='store_false')
+    parser.add_argument("-f", "--force", help="Force deletion/overwrite of existing output file. Default False.", dest='f', action='store_true', default=False)
 
     args = parser.parse_args()
     cmd_args = PPCommandLineParser(args)
