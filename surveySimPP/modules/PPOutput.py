@@ -45,7 +45,7 @@ def PPOutWriteHDF5(pp_results, outf, keyin):
     usage: padafr=PPOutWriteHDF5(padain,outf)
     """
 
-    of = pp_results.astype(str).to_hdf(outf, mode='a', format='table', append=True, key=keyin)
+    of = pp_results.to_hdf(outf, mode='a', format='table', append=True, key=keyin)
 
     return of
 
