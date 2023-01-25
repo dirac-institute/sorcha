@@ -3,7 +3,7 @@
 # tables SSPP_results, physical_parameters, orbits, cometary_parameters (if used)
 
 # The code assumes that your physical/cometary parameters and orbits files are
-# in the same folder and begin with 'colours', 'comet' and 'orbits' respectively.
+# in the same folder and begin with 'params', 'comet' and 'orbits' respectively.
 # It also assumes that they are whitespace-separated. Feel free to adapt for your
 # own use-case :)
 
@@ -12,12 +12,16 @@ import sqlite3
 import glob
 import argparse
 import sys
+import os
 from surveySimPP.modules.PPConfigParser import PPFindDirectoryOrExit
 
 
-def create_results_table(cnx_out, output_path, output_stem, table_name='pp_results'):
+def create_results_table(cnx_out, filename, output_path, output_stem, table_name='pp_results'):
 
-    output_list = glob.glob(output_path + '/**/' + output_stem + '*.db', recursive=True)
+    output_list = glob.glob(os.path.join(output_path, '**', output_stem + '*.db'), recursive=True)
+
+    if filename in output_list:
+        output_list.remove(filename)
 
     if not output_list:
         sys.exit('Could not find any .db files using given filepath and stem.')
@@ -75,7 +79,12 @@ def create_results_database(args):
 
     cnx_out = sqlite3.connect(args.filename)
 
-    create_results_table(cnx_out, args.outputs, args.stem)
+    if args.stem:
+        stemname = args.stem
+    else:
+        stemname = ''
+
+    create_results_table(cnx_out, args.filename, args.outputs, stemname)
 
     create_inputs_table(cnx_out, args.inputs, 'params')
     create_inputs_table(cnx_out, args.inputs, 'orbits')
@@ -106,11 +115,15 @@ def main():
     # path to outputs
     parser.add_argument('-o', '--outputs', help='Path location of SSPP output files/folders. Code will search subdirectories recursively.', type=str, required=True)
     # stem filename for outputs
-    parser.add_argument('-s', '--stem', help='Stem filename of outputs. Used to find output filenames.', type=str, required=True)
+    parser.add_argument('-s', '--stem', help='Stem filename of outputs. Used to find output filenames. Use if you want to specify.', type=str)
     # include cometary?
     parser.add_argument('-c', '--comet', help='Toggle whether to look for cometary activity files. Default False.', default=False, action='store_true')
 
     args = parser.parse_args()
+
+    args.filename = os.path.abspath(args.filename)
+    args.inputs = os.path.abspath(args.inputs)
+    args.outputs = os.path.abspath(args.outputs)
 
     _ = PPFindDirectoryOrExit(args.inputs, '-i, --inputs')
     _ = PPFindDirectoryOrExit(args.outputs, '-o, --outputs')
