@@ -42,7 +42,7 @@ def makeSLURM(args):
     for config in configfiles:
         rootname = 'oif_' + os.path.basename(os.path.splitext(config)[0])[7:]
 
-        os_command = 'nice -n 10 oif -f ' + config + ' > ' + os.path.join(args.oifout, rootname + '.txt') + ' &'
+        os_command = 'oif -f ' + config + ' > ' + os.path.join(args.oifout, rootname + '.txt') + ' &'
 
         with open(args.filename, 'a') as the_file:
             the_file.write(os_command + '\n')
@@ -50,10 +50,15 @@ def makeSLURM(args):
     with open(args.filename, 'a') as the_file:
         the_file.write('wait\n')
 
-    orbits = glob.glob(args.inputs + 'orbits*.txt')
+    if args.dc:
+        with open(args.filename, 'a') as the_file:
+            the_file.write('createTemporaryDatabases -i {} &\n'.format(args.oifout))
+            the_file.write('wait\n')
+
+    orbits = glob.glob(os.path.join(args.inputs, 'orbits*'))
 
     if not orbits:
-        sys.exit('Could not find any orbits files on given input path.')
+        sys.exit('Could not find any orbits files on given input path {}.'.format(args.inputs + 'orbits*'))
 
     for orbits_fn in orbits:
 
@@ -67,10 +72,10 @@ def makeSLURM(args):
         output_path = os.path.join(args.allout, rootname)
         mkdir_command = 'mkdir ' + output_path
 
-        call_command = 'nice -n 10 surveySimPP -c {} -p {} -o {} -e {} -u {} -t {}'.format(args.ssppcon,
-                                                                                           params_fn, orbits_fn,
-                                                                                           oif_fn, output_path,
-                                                                                           rootname)
+        call_command = 'surveySimPP -c {} -p {} -o {} -e {} -u {} -t {}'.format(args.ssppcon,
+                                                                                params_fn, orbits_fn,
+                                                                                oif_fn, output_path,
+                                                                                rootname)
 
         if args.comet:
             comets_fn = os.path.join(args.inputs, 'comet_' + rootname + '.txt')
@@ -96,6 +101,17 @@ def makeSLURM(args):
         the_file.write('wait\n')
 
 
+def convert_args_to_absolute_paths(args):
+
+    args.filename = os.path.abspath(args.filename)
+    args.inputs = os.path.abspath(args.inputs)
+    args.ssppcon = os.path.abspath(args.ssppcon)
+    args.oifout = os.path.abspath(args.oifout)
+    args.allout = os.path.abspath(args.allout)
+
+    return args
+
+
 def main():
 
     parser = argparse.ArgumentParser(description='Creating a SLURM script for OIF+SSPP.')
@@ -114,8 +130,10 @@ def main():
     parser.add_argument('-m', '--comet', help="Include cometary activity files?", action='store_true', default=False)
     # read from temporary databases?
     parser.add_argument("-dr", help="Read from existing temporary ephemeris databases.", action='store_true', default=False)
+    # create temporary ephemeris database in advance?
+    parser.add_argument("-dc", help="Creates the temporary ephemeris databases in output folder before SSPP code execution.", default=False, action='store_true')
     # write temporary databases?
-    parser.add_argument("-dw", help="Make temporary ephemeris database in output folder. Overwrites existing database if present.", default=False, action='store_true')
+    parser.add_argument("-dw", help="Make temporary ephemeris database in output folder during SSPP code execution. Overwrites existing database if present.", default=False, action='store_true')
     # delete temporary databases?
     parser.add_argument("-dl", help="Delete the temporary ephemeris databases after code has completed.", action='store_true', default=False)
     # cores to utilise (default: one core per orbits input file)
@@ -127,6 +145,13 @@ def main():
 
     if args.dr and args.dw:
         sys.exit('Cannot have both -dr and -dw command flag arguments.')
+    if args.dw and args.dc:
+        sys.exit('Cannot have both -dc and -dw command flag arguments.')
+
+    if os.path.isfile(os.path.abspath(args.filename)):
+        sys.exit('File already exists at given location/name.')
+
+    args = convert_args_to_absolute_paths(args)
 
     _ = PPFindDirectoryOrExit(args.inputs, '-i, --inputs')
     _ = PPFindDirectoryOrExit(args.oifout, '-oo, --oifout')
