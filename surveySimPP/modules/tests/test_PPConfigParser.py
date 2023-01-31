@@ -199,7 +199,7 @@ def test_PPFindDirectoryOrExit():
 
     assert test_dir == './'
     assert e.type == SystemExit
-    assert e.value.code == 'ERROR: filename ./fake_dir/ supplied for test argument does not exist.'
+    assert e.value.code == 'ERROR: filepath ./fake_dir/ supplied for test argument does not exist.'
 
     return
 
