@@ -131,8 +131,8 @@ def PPFindDirectoryOrExit(arg_fn, argname):
     if os.path.isdir(arg_fn):
         return arg_fn
     else:
-        pplogger.error('ERROR: filename {} supplied for {} argument does not exist.'.format(arg_fn, argname))
-        sys.exit('ERROR: filename {} supplied for {} argument does not exist.'.format(arg_fn, argname))
+        pplogger.error('ERROR: filepath {} supplied for {} argument does not exist.'.format(arg_fn, argname))
+        sys.exit('ERROR: filepath {} supplied for {} argument does not exist.'.format(arg_fn, argname))
 
 
 def PPCheckFiltersForSurvey(survey_name, observing_filters):

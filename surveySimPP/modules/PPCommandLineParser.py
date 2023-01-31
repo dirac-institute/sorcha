@@ -4,7 +4,7 @@ import os
 import sys
 import logging
 import glob
-from .PPConfigParser import PPFindFileOrExit
+from .PPConfigParser import PPFindFileOrExit, PPFindDirectoryOrExit
 
 
 def PPCommandLineParser(args):
@@ -40,6 +40,7 @@ def PPCommandLineParser(args):
         stem_name = oifpath_split[1].split('.')[0] + '.db'
         cmd_args_dict['makeTemporaryEphemerisDatabase'] = os.path.join(oifpath_split[0], 'temp_' + stem_name)
     elif args.dw:
+        _ = PPFindDirectoryOrExit(os.path.dirname(args.dw), '-dw')
         cmd_args_dict['makeTemporaryEphemerisDatabase'] = args.dw
 
     cmd_args_dict['readTemporaryEphemerisDatabase'] = args.dr
