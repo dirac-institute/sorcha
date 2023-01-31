@@ -4,14 +4,12 @@ import pandas as pd
 import sqlite3
 import logging
 import sys
-import os
-from datetime import datetime
 from .PPReadOif import PPSkipOifHeader
 
 # Author: Grigori fedorets and Steph Merritt
 
 
-def PPMakeTemporaryEphemerisDatabase(oif_output, outf, inputformat, chunksize=1e6, stemname=None):
+def PPMakeTemporaryEphemerisDatabase(oif_output, out_fn, inputformat, chunksize=1e6):
     """
     PPMakeTemporaryEphemerisDatabase.py
 
@@ -33,14 +31,7 @@ def PPMakeTemporaryEphemerisDatabase(oif_output, outf, inputformat, chunksize=1e
 
     pplogger = logging.getLogger(__name__)
 
-    if not stemname:
-        dstr = datetime.now().strftime('%Y-%m-%d-%H-%M-%S')
-        cpid = os.getpid()
-        inter_name = dstr + '-p' + str(cpid) + '-' + 'interim.db'
-    else:
-        inter_name = stemname + '.db'
-
-    cnx = sqlite3.connect(os.path.join(outf, inter_name))
+    cnx = sqlite3.connect(out_fn)
 
     cur = cnx.cursor()
 
@@ -58,7 +49,7 @@ def PPMakeTemporaryEphemerisDatabase(oif_output, outf, inputformat, chunksize=1e
         pplogger.error("ERROR: PPMakeTemporaryEphemerisDatabase: unknown format for ephemeris simulation results.")
         sys.exit("ERROR: PPMakeTemporaryEphemerisDatabase: unknown format for ephemeris simulation results.")
 
-    return os.path.join(outf, inter_name)
+    return out_fn
 
 
 def PPChunkedTemporaryDatabaseCreation(cnx, oif_output, chunkSize, delimiter):

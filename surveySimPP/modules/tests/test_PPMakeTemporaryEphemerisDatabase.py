@@ -13,8 +13,8 @@ def test_PPMakeTemporaryEphemerisDatabase(tmp_path):
     from surveySimPP.modules.PPReadOif import PPReadOif
 
     temp_path = os.path.dirname(get_test_filepath('oiftestoutput.txt'))
-    stem_name = ('testdb_PPIntermDB')
-    daba = PPMakeTemporaryEphemerisDatabase(get_test_filepath('oiftestoutput.txt'), temp_path, 'whitespace', stemname=stem_name)
+    stem_name = ('testdb_PPIntermDB.db')
+    daba = PPMakeTemporaryEphemerisDatabase(get_test_filepath('oiftestoutput.txt'), os.path.join(temp_path, stem_name), 'whitespace')
 
     cnx = sqlite3.connect(daba)
     cur = cnx.cursor()

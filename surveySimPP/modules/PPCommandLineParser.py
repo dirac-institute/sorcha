@@ -35,7 +35,13 @@ def PPCommandLineParser(args):
     if args.m:
         cmd_args_dict['cometinput'] = PPFindFileOrExit(args.m, '-m, --comet')
 
-    cmd_args_dict['makeTemporaryEphemerisDatabase'] = bool(args.dw)
+    if args.dw == 'default':
+        oifpath_split = os.path.split(cmd_args_dict['oifoutput'])
+        stem_name = oifpath_split[1].split('.')[0] + '.db'
+        cmd_args_dict['makeTemporaryEphemerisDatabase'] = os.path.join(oifpath_split[0], 'temp_' + stem_name)
+    elif args.dw:
+        cmd_args_dict['makeTemporaryEphemerisDatabase'] = args.dw
+
     cmd_args_dict['readTemporaryEphemerisDatabase'] = args.dr
     cmd_args_dict['deleteTemporaryEphemerisDatabase'] = bool(args.dl)
     cmd_args_dict['surveyname'] = args.s
@@ -62,5 +68,12 @@ def PPCommandLineParser(args):
     if args.dr and not os.path.exists(args.dr):
         pplogger.error('ERROR: temporary ephemeris database not found at ' + args.dr + '. Rerun with command line flag -dw to create one.')
         sys.exit('ERROR: temporary ephemeris database not found at ' + args.dr + '. Rerun with command line flag -dw to create one.')
+
+    if args.dw and os.path.exists(cmd_args_dict['makeTemporaryEphemerisDatabase']) and args.f:
+        pplogger.info('Existing file found at {}. -f flag set: deleting existing file.'.format(cmd_args_dict['makeTemporaryEphemerisDatabase']))
+        os.remove(file_exists[0])
+    elif args.dw and os.path.exists(cmd_args_dict['makeTemporaryEphemerisDatabase']) and not args.f:
+        pplogger.error('ERROR: existing file found at output location {}. Set -f flag to overwrite this file.'.format(cmd_args_dict['makeTemporaryEphemerisDatabase']))
+        sys.exit('ERROR: existing file found at output location {}. Set -f flag to overwrite this file.'.format(cmd_args_dict['makeTemporaryEphemerisDatabase']))
 
     return cmd_args_dict

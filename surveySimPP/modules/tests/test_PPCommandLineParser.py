@@ -33,7 +33,6 @@ def test_PPCommandLineParser():
                   'oifoutput': get_test_filepath('oiftestoutput.txt'),
                   'configfile': get_test_filepath('test_PPConfig.ini'),
                   'outpath': './',
-                  'makeTemporaryEphemerisDatabase': False,
                   'readTemporaryEphemerisDatabase': None,
                   'deleteTemporaryEphemerisDatabase': False,
                   'surveyname': 'lsst',
@@ -47,20 +46,19 @@ def test_PPCommandLineParser():
                   'configfile': get_test_filepath('test_PPConfig.ini'),
                   'outpath': './',
                   'cometinput': get_test_filepath('testcomet.txt'),
-                  'makeTemporaryEphemerisDatabase': False,
                   'readTemporaryEphemerisDatabase': get_test_filepath('test_data_mag.csv'),
                   'deleteTemporaryEphemerisDatabase': True,
                   'surveyname': 'lsst',
                   'outfilestem': 'testout',
                   'verbose': True}
 
-    cmd_dict_3 = PPCommandLineParser(args(False, True, None, True))
+    cmd_dict_3 = PPCommandLineParser(args(False, 'test/path/test.db', None, True))
     expected_3 = {'paramsinput': get_test_filepath('testcolour.txt'),
                   'orbinfile': get_test_filepath('testorb.des'),
                   'oifoutput': get_test_filepath('oiftestoutput.txt'),
                   'configfile': get_test_filepath('test_PPConfig.ini'),
                   'outpath': './',
-                  'makeTemporaryEphemerisDatabase': True,
+                  'makeTemporaryEphemerisDatabase': 'test/path/test.db',
                   'readTemporaryEphemerisDatabase': None,
                   'deleteTemporaryEphemerisDatabase': True,
                   'surveyname': 'lsst',
