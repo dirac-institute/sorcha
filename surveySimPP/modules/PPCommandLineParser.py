@@ -42,6 +42,8 @@ def PPCommandLineParser(args):
     elif args.dw:
         _ = PPFindDirectoryOrExit(os.path.dirname(args.dw), '-dw')
         cmd_args_dict['makeTemporaryEphemerisDatabase'] = args.dw
+    else:
+        cmd_args_dict['makeTemporaryEphemerisDatabase'] = False
 
     cmd_args_dict['readTemporaryEphemerisDatabase'] = args.dr
     cmd_args_dict['deleteTemporaryEphemerisDatabase'] = bool(args.dl)

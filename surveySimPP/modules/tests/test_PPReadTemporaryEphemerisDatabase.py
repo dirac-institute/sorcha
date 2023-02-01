@@ -10,7 +10,7 @@ def test_PPReadTemporaryEphemerisDatabase(tmp_path):
     from surveySimPP.modules.PPReadTemporaryEphemerisDatabase import PPReadTemporaryEphemerisDatabase
     from surveySimPP.modules.PPReadPhysicalParameters import PPReadPhysicalParameters
 
-    padacl = PPReadPhysicalParameters(get_test_filepath('testcolour.txt'), ['g-r', 'i-r', 'z-r'], 0, 5, 'whitespace')
+    padacl = PPReadPhysicalParameters(get_test_filepath('testcolour.txt'), 0, 5, 'whitespace')
     print(padacl)
     objid_list = padacl['ObjID'].unique().tolist()
 
