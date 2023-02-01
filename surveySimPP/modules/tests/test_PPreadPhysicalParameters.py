@@ -20,6 +20,8 @@ def test_PPReadPhysicalParameters():
 
     assert_equal(params.iloc[0].values, expected_first_line)
     assert_equal(params.columns.values, expected_columns)
+    
+    assert len(params) == 3
 
     with pytest.raises(SystemExit) as e1:
         params = PPReadPhysicalParameters(get_test_filepath('testcolour.txt'), 0, 3, "csv")

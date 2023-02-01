@@ -26,7 +26,6 @@ def test_PPReadOrbitFile():
     assert_equal(expected_columns, orbit_file.columns.values)
 
     assert len(orbit_file) == 5
-    assert len(orbit_file.columns) == 8
 
     with pytest.raises(SystemExit) as e1:
         orbit_file = PPReadOrbitFile(get_test_filepath('testcometcolour.txt'), 0, 14, 'whitespace')

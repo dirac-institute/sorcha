@@ -38,7 +38,6 @@ def PPReadPointingDatabase(bsdbname, observing_filters, dbquery):
         pplogger.error('ERROR: PPReadPointingDatabase: SQL query on pointing database failed. Check that the query is correct in the config file.')
         sys.exit('ERROR: PPReadPointingDatabase: SQL query on pointing database failed. Check that the query is correct in the config file.')
 
-    # df = pd.read_sql_query('SELECT observationId, observationStartMJD, filter, seeingFwhmGeom, seeingFwhmEff, fiveSigmaDepth, fieldRA, fieldDec, rotSkyPos FROM SummaryAllProps order by observationId', con)
     df['observationId_'] = df['observationId']
     df = df.rename(columns={'observationId': 'FieldID'})
     df = df.rename(columns={'observationId': 'FieldID'})

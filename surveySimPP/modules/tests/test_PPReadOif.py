@@ -36,7 +36,6 @@ def test_PPReadOif():
     assert_equal(column_headings, oif_file.columns.values)
 
     assert len(oif_file) == 9
-    assert len(oif_file.columns) == 22
 
     with pytest.raises(SystemExit) as e:
         oif_file = PPReadOif(get_test_filepath('testcolour.txt'), 'whitespace')
