@@ -249,16 +249,35 @@ def PPConfigFileParser(configfile, survey_name):
         if config.has_option('FILTERINGPARAMETERS', 'fillfactor'):
             pplogger.error('ERROR: fill factor supplied in config file but camera model is not "circle".')
             sys.exit('ERROR: fill factor supplied in config file but camera model is not "circle".')
+        elif config.has_option('CAMERA', 'circleRadius'):
+            pplogger.error('ERROR: circle radius supplied in config file but camera model is not "circle".')
+            sys.exit('ERROR: circle radius supplied in config file but camera model is not "circle".')
         else:
             config_dict['fillfactor'] = 1.0
 
     elif (config_dict['cameraModel']) == 'circle':
 
-        config_dict['fillfactor'] = PPGetFloatOrExit(config, 'FILTERINGPARAMETERS', 'fillfactor', 'ERROR: fillfactor must be specified for circle camera footprint.')
+        if config.has_option('FILTERINGPARAMETERS', 'fillfactor'):
+            config_dict['fillfactor'] = PPGetFloatOrExit(config, 'FILTERINGPARAMETERS', 'fillfactor', 'ERROR: fillfactor must be specified for circle camera footprint.')
 
-        if config_dict['fillfactor'] < 0.0 or config_dict['fillfactor'] > 1.0:
-            pplogger.error('ERROR: fillfactor out of bounds. Must be between 0 and 1.')
-            sys.exit('ERROR: fillfactor out of bounds. Must be between 0 and 1.')
+        config_dict['fillfactor'], _ = PPGetValueAndFlag(config, 'FILTERINGPARAMETERS', 'fillfactor', 'float')
+        config_dict['circleRadius'], _ = PPGetValueAndFlag(config, 'PERFORMANCE', 'circleRadius', 'float')
+
+        if config_dict['fillfactor'] and config_dict['circleRadius']:
+            pplogger.error('ERROR: either "fillfactor" or "circleRadius" must be specified for circular footprint, not both.')
+            sys.exit('ERROR: either "fillfactor" or "circleRadius" must be specified for circular footprint, not both.')
+        if not config_dict['fillfactor'] and not config_dict['circleRadius']:
+            pplogger.error('ERROR: either "fillfactor" or "circleRadius" must be specified for circular footprint.')
+            sys.exit('ERROR: either "fillfactor" or "circleRadius" must be specified for circular footprint.')
+        elif config_dict['fillfactor']:
+            if config_dict['fillfactor'] < 0.0 or config_dict['fillfactor'] > 1.0:
+                pplogger.error('ERROR: fillfactor out of bounds. Must be between 0 and 1.')
+                sys.exit('ERROR: fillfactor out of bounds. Must be between 0 and 1.')
+        elif config_dict['circleRadius']:
+            config_dict['fillfactor'] = 1.0
+            if config_dict['circleRadius'] < 0.0:
+                pplogger.error('ERROR: circleRadius is negative.')
+                sys.exit('ERROR: circleRadius is negative.')
 
     # SNR, magnitude, bright limit filters
 
@@ -355,8 +374,8 @@ def PPConfigFileParser(configfile, survey_name):
 
     config_dict['outputformat'] = PPGetOrExit(config, 'OUTPUTFORMAT', 'outputformat', 'ERROR: output format not specified.').lower()
     if config_dict['outputformat'] not in ['csv', 'separatelycsv', 'sqlite3', 'hdf5', 'h5']:
-        pplogger.error('ERROR: outputformat should be either csv, separatelyCSV, sqlite3 or hdf5.')
-        sys.exit('ERROR: outputformat should be either csv, separatelyCSV, sqlite3 or hdf5.')
+        pplogger.error('ERROR: outputformat should be either csv, separatelycsv, sqlite3 or hdf5.')
+        sys.exit('ERROR: outputformat should be either csv, separatelycsv, sqlite3 or hdf5.')
 
     config_dict['outputsize'] = PPGetOrExit(config, 'OUTPUTFORMAT', 'outputsize', 'ERROR: output size not specified.').lower()
     if config_dict['outputsize'] not in ['default']:
@@ -444,7 +463,11 @@ def PPPrintConfigsToLog(configs, cmd_args):
         pplogger.info('The filling factor has been set to ' + str(configs["fillfactor"]))
     else:
         pplogger.info('Footprint is circular')
-        pplogger.info('The filling factor for the circular footprint is ' + str(configs["fillfactor"]))
+        if configs['fillfactor'] != 1:
+            pplogger.info('The filling factor for the circular footprint is ' + str(configs["fillfactor"]))
+        elif configs['circleRadius']:
+            pplogger.info('The radius of the circular footprint is ' + str(configs["circleRadius"]))
+            pplogger.info('The filling factor has been set to ' + str(configs["fillfactor"]))
 
     if configs['brightLimitOn']:
         pplogger.info('The upper brightness limit(s) is/are ' + str(configs['brightLimit']))

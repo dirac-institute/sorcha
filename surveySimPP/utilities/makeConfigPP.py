@@ -20,7 +20,12 @@ def makeConfigFile(args):
                      'trackletInterval': str(args.trackletinterval),
                      'inSepThreshold': str(args.insepthreshold)}
 
+    expert_raw = {'SNRLimit': str(args.snrlimit),
+                  'magLimit': str(args.maglimit),
+                  'trailingLossesOn': str(args.trailinglosseson)}
+
     filtering_dict = {k: v for k, v in filtering_raw.items() if v != 'None'}
+    expert_dict = {k: v for k, v in expert_raw.items() if v != 'None'}
 
     config_dict = {
             'OBJECTS':
@@ -46,20 +51,13 @@ def makeConfigFile(args):
                 'magnitude_decimals': str(args.magnitudedecimals)},
             'GENERAL':
             {'sizeSerialChunk': str(args.sizeserialchunk)},
-            'EXPERT':
-            {'SNRLimit': str(args.snrlimit),
-             'magLimit': str(args.maglimit),
-             'trailingLossesOn': str(args.trailinglosseson)}
-                  }
+            'EXPERT': expert_dict
+                 }
 
     config.read_dict(config_dict)
 
     with open(args.filename, 'w') as f:
         config.write(f)
-
-#    for filename in filenames:
-#        with open(filename, 'w') as f:
-#            config.write(f)
 
 
 def main():
@@ -86,12 +84,12 @@ def main():
     parser.add_argument('--phasefunction', '-phfunc', help='Define the used input phase function. Options: HG, HG1G2, HG12, linear, none. Default is "HG".', type=str, default='HG')
 
     # PERFORMANCE
-    parser.add_argument('--trailinglosseson', '-tloss', help='Switch on trailing losses. Relevant for close-approaching NEOs. Default False.', type=bool, default=False)
+    parser.add_argument('--trailinglosseson', '-tloss', help='Switch on trailing losses. Relevant for close-approaching NEOs. Default True.', type=bool, default=True)
     parser.add_argument('--cameramodel', '-cammod', help='Choose between surface area equivalent or actual camera footprint, including chip gaps. Options: circle, footprint. Default is "footprint".', type=str, default='footprint')
 
     # FILTERINGPARAMETERS
-    parser.add_argument('--snrlimit', '-snr', help='SNR limit: drop observations below this SNR threshold. Omit/None for default 2.0 SNR cut.', type=float, default=None)
-    parser.add_argument('--maglimit', '-mag', help='Magnitude threshold: drop observations below this magnitude. Omit/None for no magnitude cut.', type=float, default=None)
+    parser.add_argument('--snrlimit', '-snr', help='SNR limit: drop observations below this SNR threshold. Omit for no SNR cut.', type=float, default=None)
+    parser.add_argument('--maglimit', '-mag', help='Magnitude threshold: drop observations below this magnitude. Omit for no magnitude cut.', type=float, default=None)
     parser.add_argument('--fadingfunction', '-fade', help='Detection efficiency fading function on or off.', type=bool, default=True)
     parser.add_argument('--fadingwidth', '-fadew', help='Width parameter for fading function. Default is 0.1 after Chelsey and Vereš (2017) or None to omit.', type=float, default=0.1)
     parser.add_argument('--detectionefficiency', '-deteff', help='Which fraction of the detections will the automated solar system processing pipeline recognise? Expects a float. Default is 0.95.', type=float, default=0.95)

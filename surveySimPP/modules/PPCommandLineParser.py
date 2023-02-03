@@ -3,10 +3,11 @@
 import os
 import sys
 import logging
+import glob
 from .PPConfigParser import PPFindFileOrExit
 
 
-def PPCommandLineParser(parser):
+def PPCommandLineParser(args):
     """
     Author: Steph Merritt
 
@@ -23,13 +24,11 @@ def PPCommandLineParser(parser):
 
     pplogger = logging.getLogger(__name__)
 
-    args = parser.parse_args()
-
     cmd_args_dict = {}
 
-    cmd_args_dict['paramsinput'] = PPFindFileOrExit(args.l, '-p, --params')
+    cmd_args_dict['paramsinput'] = PPFindFileOrExit(args.p, '-p, --params')
     cmd_args_dict['orbinfile'] = PPFindFileOrExit(args.o, '-o, --orbit')
-    cmd_args_dict['oifoutput'] = PPFindFileOrExit(args.p, '-e, --ephem')
+    cmd_args_dict['oifoutput'] = PPFindFileOrExit(args.e, '-e, --ephem')
     cmd_args_dict['configfile'] = PPFindFileOrExit(args.c, '-c, --config')
     cmd_args_dict['outpath'] = PPFindFileOrExit(args.u, '-u, --outfile')
 
@@ -42,6 +41,15 @@ def PPCommandLineParser(parser):
     cmd_args_dict['surveyname'] = args.s
     cmd_args_dict['outfilestem'] = args.t
     cmd_args_dict['verbose'] = args.v
+
+    file_exists = glob.glob(os.path.join(cmd_args_dict['outpath'], cmd_args_dict['outfilestem'] + '.*'))
+
+    if file_exists and args.f:
+        pplogger.info('Existing file found at {}. -f flag set: deleting existing file.'.format(os.path.join(cmd_args_dict['outpath'], cmd_args_dict['outfilestem'] + '.*')))
+        os.remove(file_exists[0])
+    elif file_exists and not args.f:
+        pplogger.error('ERROR: existing file found at output location {}. Set -f flag to overwrite this file.'.format(os.path.join(cmd_args_dict['outpath'], cmd_args_dict['outfilestem'] + '.*')))
+        sys.exit('ERROR: existing file found at output location {}. Set -f flag to overwrite this file.'.format(os.path.join(cmd_args_dict['outpath'], cmd_args_dict['outfilestem'] + '.*')))
 
     if args.dr and args.dw:
         pplogger.error('ERROR: both -dr and -dw flags set at command line. Please use only one.')
