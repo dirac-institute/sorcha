@@ -1,7 +1,7 @@
 # Creates temporary ephemeris databases in SQL. These can take a while to create,
 # especially for large OIF/ephemeris files, but greatly speed up the actual
 # running of SSPP. The databases will be named temp_[input_filename].db and will
-# be saved in the same folder.
+# be saved in the same folder as the OIF files.
 
 import glob
 import argparse
@@ -20,8 +20,8 @@ def make_temporary_databases(args):
         sys.exit('Could not find any files using given input path and stem.')
 
     for input_name in file_list:
-        stem_filename = 'temp_' + os.path.basename(input_name).split('.')[0]
-        PPMakeTemporaryEphemerisDatabase(input_name, input_path, 'csv', stemname=stem_filename)
+        stem_filename = 'temp_' + os.path.basename(input_name).split('.')[0] + '.db'
+        PPMakeTemporaryEphemerisDatabase(input_name, os.path.join(input_path, stem_filename), 'csv')
 
 
 def main():

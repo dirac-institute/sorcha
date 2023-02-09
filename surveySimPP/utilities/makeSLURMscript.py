@@ -82,10 +82,9 @@ def makeSLURM(args):
             _ = PPFindFileOrExit(comets_fn, 'cometary activity parameters file')
             call_command = call_command + ' -m ' + comets_fn
 
-        if args.dr:
+        if args.dr or args.dc:
             temp_fn = os.path.join(args.oifout, 'temp_oif_' + rootname + '.db')
-            _ = PPFindFileOrExit(temp_fn, 'temporary ephemeris database')
-            call_command = call_command + ' -dr ' + temp_fn
+            call_command = call_command + ' -dr ' + temp_fn 
 
         if args.dw:
             call_command = call_command + ' -dw'

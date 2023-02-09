@@ -46,21 +46,34 @@ def test_PPCommandLineParser():
                   'oifoutput': get_test_filepath('oiftestoutput.txt'),
                   'configfile': get_test_filepath('test_PPConfig.ini'),
                   'outpath': './',
-                  'cometinput': get_test_filepath('testcomet.txt'),
                   'makeTemporaryEphemerisDatabase': False,
+                  'cometinput': get_test_filepath('testcomet.txt'),
                   'readTemporaryEphemerisDatabase': get_test_filepath('test_data_mag.csv'),
                   'deleteTemporaryEphemerisDatabase': True,
                   'surveyname': 'lsst',
                   'outfilestem': 'testout',
                   'verbose': True}
 
-    cmd_dict_3 = PPCommandLineParser(args(False, True, None, True))
+    cmd_dict_3 = PPCommandLineParser(args(False, os.path.join(tmp_path, 'test.db'), None, True))
     expected_3 = {'paramsinput': get_test_filepath('testcolour.txt'),
                   'orbinfile': get_test_filepath('testorb.des'),
                   'oifoutput': get_test_filepath('oiftestoutput.txt'),
                   'configfile': get_test_filepath('test_PPConfig.ini'),
                   'outpath': './',
-                  'makeTemporaryEphemerisDatabase': True,
+                  'makeTemporaryEphemerisDatabase': os.path.join(tmp_path, 'test.db'),
+                  'readTemporaryEphemerisDatabase': None,
+                  'deleteTemporaryEphemerisDatabase': True,
+                  'surveyname': 'lsst',
+                  'outfilestem': 'testout',
+                  'verbose': True}
+
+    cmd_dict_4 = PPCommandLineParser(args(False, 'default', None, True))
+    expected_4 = {'paramsinput': get_test_filepath('testcolour.txt'),
+                  'orbinfile': get_test_filepath('testorb.des'),
+                  'oifoutput': get_test_filepath('oiftestoutput.txt'),
+                  'configfile': get_test_filepath('test_PPConfig.ini'),
+                  'outpath': './',
+                  'makeTemporaryEphemerisDatabase': os.path.join(tmp_path, 'temp_oiftestoutput.db'),
                   'readTemporaryEphemerisDatabase': None,
                   'deleteTemporaryEphemerisDatabase': True,
                   'surveyname': 'lsst',
@@ -78,6 +91,7 @@ def test_PPCommandLineParser():
     assert cmd_dict_1 == expected_1
     assert cmd_dict_2 == expected_2
     assert cmd_dict_3 == expected_3
+    assert cmd_dict_4 == expected_4
     assert e.type == SystemExit
     assert not os.path.isfile(os.path.join(tmp_path, 'dummy_file.txt'))
 

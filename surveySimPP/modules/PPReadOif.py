@@ -2,6 +2,7 @@
 
 import sys
 import pandas as pd
+import numpy as np
 import logging
 
 # Author: Grigori Fedorets
@@ -49,16 +50,23 @@ def PPReadOif(oif_output, inputformat):
 
     padafr = padafr.rename(columns=lambda x: x.strip())
 
-    # Here, we drop the magnitudes calculated by oif as they are calculated elsewhere
-    # as they can be calculated with a variety of phase functions, and in different filters
-
     padafr = padafr.drop(['V', 'V(H=0)'], axis=1, errors='ignore')
 
-    try:
-        padafr['ObjID'] = padafr['ObjID'].astype(str)
-    except KeyError:
-        pplogger.error("ERROR: PPReadOif: ephemeris input file does not have 'ObjID' column.")
-        sys.exit("ERROR: PPReadOif: ephemeris input file does not have 'ObjID' column.")
+    oif_cols = np.array(['ObjID', 'FieldID', 'FieldMJD', 'AstRange(km)', 'AstRangeRate(km/s)',
+                         'AstRA(deg)', 'AstRARate(deg/day)', 'AstDec(deg)',
+                         'AstDecRate(deg/day)', 'Ast-Sun(J2000x)(km)', 'Ast-Sun(J2000y)(km)',
+                         'Ast-Sun(J2000z)(km)', 'Ast-Sun(J2000vx)(km/s)',
+                         'Ast-Sun(J2000vy)(km/s)', 'Ast-Sun(J2000vz)(km/s)',
+                         'Obs-Sun(J2000x)(km)', 'Obs-Sun(J2000y)(km)', 'Obs-Sun(J2000z)(km)',
+                         'Obs-Sun(J2000vx)(km/s)', 'Obs-Sun(J2000vy)(km/s)',
+                         'Obs-Sun(J2000vz)(km/s)', 'Sun-Ast-Obs(deg)'],
+                        dtype='object')
+
+    if not set(padafr.columns.values).issubset(oif_cols):
+        pplogger.error("ERROR: PPReadOif: column headings do not match expected OIF column headings.")
+        sys.exit("ERROR: PPReadOif: column headings do not match expected OIF column headings.")
+
+    padafr['ObjID'] = padafr['ObjID'].astype(str)
 
     return padafr
 

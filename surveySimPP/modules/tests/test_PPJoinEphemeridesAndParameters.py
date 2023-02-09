@@ -9,7 +9,7 @@ def test_PPJoinEphemeridesAndParameters():
     from surveySimPP.modules.PPReadPhysicalParameters import PPReadPhysicalParameters
 
     oif_file = PPReadOif(get_test_filepath('oiftestoutput.txt'), 'whitespace')
-    params_file = PPReadPhysicalParameters(get_test_filepath('testcolour.txt'), ['g-r', 'i-r', 'z-r'], 0, 5, 'whitespace')
+    params_file = PPReadPhysicalParameters(get_test_filepath('testcolour.txt'), 0, 5, 'whitespace')
 
     joined_df = PPJoinEphemeridesAndParameters(oif_file, params_file)
 

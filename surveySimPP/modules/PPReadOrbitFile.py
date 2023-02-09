@@ -36,10 +36,17 @@ def PPReadOrbitFile(orbin, beginLoc, chunkSize, filesep):
         padafr = pd.read_csv(orbin, delimiter=',', skiprows=range(1, beginLoc + 1), nrows=chunkSize, header=0)
 
     if 'H' in padafr.columns:
-        pplogger.error('H column present in orbits data file. H must be included in physical parameters file only.')
-        sys.exit('H column present in orbits data file. H must be included in physical parameters file only.')
+        pplogger.error('ERROR: PPReadOrbitFile: H column present in orbits data file. H must be included in physical parameters file only.')
+        sys.exit('ERROR: PPReadOrbitFile: H column present in orbits data file. H must be included in physical parameters file only.')
 
     padafr = padafr.rename(columns=lambda x: x.strip())
+
+    try:
+        padafr['ObjID'] = padafr['ObjID'].astype(str)
+    except KeyError:
+        pplogger.error('ERROR: PPReadOrbitFile: Cannot find ObjID in column headings. Check input and input format.')
+        sys.exit('ERROR: PPReadOrbitFile: Cannot find ObjID in column headings. Check input and input format.')
+
     # rename i to incl to avoid confusion with the colour i
     padafr = padafr.rename(columns={"i": "incl"})
 
@@ -53,6 +60,5 @@ def PPReadOrbitFile(orbin, beginLoc, chunkSize, filesep):
         sys.exit(outstr)
 
     padafr = padafr.drop(['INDEX', 'N_PAR', 'MOID', 'COMPCODE', 'FORMAT'], axis=1, errors='ignore')
-    padafr['ObjID'] = padafr['ObjID'].astype(str)
 
     return padafr
