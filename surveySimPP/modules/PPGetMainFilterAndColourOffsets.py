@@ -32,14 +32,14 @@ def PPGetMainFilterAndColourOffsets(filename, observing_filters, filesep):
     H_loc = first_line.find('H_')
 
     if H_loc == -1:
-        pplogger.error('ERROR: PPGetMainFilter: cannot find column of H_{main filter} format in physical parameters file.')
-        sys.exit('ERROR: PPGetMainFilter: cannot find column of H_{main filter} format in physical parameters file.')
+        pplogger.error('ERROR: PPGetMainFilterAndColourOffsets: cannot find column of H_{main filter} format in physical parameters file.')
+        sys.exit('ERROR: PPGetMainFilterAndColourOffsets: cannot find column of H_{main filter} format in physical parameters file.')
 
     mainfilter = first_line[H_loc + 2]
 
     if mainfilter not in observing_filters:
-        pplogger.error('ERROR: PPGetMainFilter: H is given in {}, but {} is not listed as a requested observation filter in config file.'.format(mainfilter, mainfilter))
-        sys.exit('ERROR: PPGetMainFilter: H is given in {}, but {} is not listed as a requested observation filter in config file.'.format(mainfilter, mainfilter))
+        pplogger.error('ERROR: PPGetMainFilterAndColourOffsets: H is given in {}, but {} is not listed as a requested observation filter in config file.'.format(mainfilter, mainfilter))
+        sys.exit('ERROR: PPGetMainFilterAndColourOffsets: H is given in {}, but {} is not listed as a requested observation filter in config file.'.format(mainfilter, mainfilter))
 
     if len(observing_filters) > 1:
         colour_offsets = [x + "-" + mainfilter for x in observing_filters[1:]]

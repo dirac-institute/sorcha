@@ -39,7 +39,7 @@ def PPReadAllInput(cmd_args, configs, filterpointing, startChunk, incrStep, verb
     padaor = PPReadOrbitFile(cmd_args['orbinfile'], startChunk, incrStep, configs['filesep'])
 
     verboselog('Reading input physical parameters: ' + cmd_args['paramsinput'])
-    padacl = PPReadPhysicalParameters(cmd_args['paramsinput'], configs['othercolours'], startChunk, incrStep, configs['filesep'])
+    padacl = PPReadPhysicalParameters(cmd_args['paramsinput'], startChunk, incrStep, configs['filesep'])
     if (configs['cometactivity'] == 'comet'):
         verboselog('Reading cometary parameters: ' + cmd_args['cometinput'])
         padaco = PPReadCometaryParameters(cmd_args['cometinput'], startChunk, incrStep, configs['filesep'])

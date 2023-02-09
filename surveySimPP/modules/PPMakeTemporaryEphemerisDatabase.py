@@ -4,14 +4,12 @@ import pandas as pd
 import sqlite3
 import logging
 import sys
-import os
-from datetime import datetime
 from .PPReadOif import PPSkipOifHeader
 
 # Author: Grigori fedorets and Steph Merritt
 
 
-def PPMakeTemporaryEphemerisDatabase(oif_output, outf, inputformat, chunksize=1e6, stemname=None):
+def PPMakeTemporaryEphemerisDatabase(oif_output, out_fn, inputformat, chunksize=1e6):
     """
     PPMakeTemporaryEphemerisDatabase.py
 
@@ -33,14 +31,7 @@ def PPMakeTemporaryEphemerisDatabase(oif_output, outf, inputformat, chunksize=1e
 
     pplogger = logging.getLogger(__name__)
 
-    if not stemname:
-        dstr = datetime.now().strftime('%Y-%m-%d-%H-%M-%S')
-        cpid = os.getpid()
-        inter_name = dstr + '-p' + str(cpid) + '-' + 'interim.db'
-    else:
-        inter_name = stemname + '.db'
-
-    cnx = sqlite3.connect(os.path.join(outf, inter_name))
+    cnx = sqlite3.connect(out_fn)
 
     cur = cnx.cursor()
 
@@ -58,7 +49,7 @@ def PPMakeTemporaryEphemerisDatabase(oif_output, outf, inputformat, chunksize=1e
         pplogger.error("ERROR: PPMakeTemporaryEphemerisDatabase: unknown format for ephemeris simulation results.")
         sys.exit("ERROR: PPMakeTemporaryEphemerisDatabase: unknown format for ephemeris simulation results.")
 
-    return os.path.join(outf, inter_name)
+    return out_fn
 
 
 def PPChunkedTemporaryDatabaseCreation(cnx, oif_output, chunkSize, delimiter):
@@ -84,8 +75,8 @@ def PPChunkedTemporaryDatabaseCreation(cnx, oif_output, chunkSize, delimiter):
     startChunk = 0
     endChunk = 0
 
-    while(endChunk <= n_rows):
-        endChunk = startChunk + chunkSize
+    while (endChunk <= n_rows):
+        endChunk = int(startChunk + chunkSize)
 
         if (n_rows - startChunk >= chunkSize):
             incrStep = chunkSize
@@ -96,10 +87,10 @@ def PPChunkedTemporaryDatabaseCreation(cnx, oif_output, chunkSize, delimiter):
             interm = PPSkipOifHeader(oif_output, 'ObjID', delim_whitespace=True, skiprows=range(1, startChunk + 1), nrows=incrStep, header=0)
         elif delimiter == ',':
             interm = PPSkipOifHeader(oif_output, 'ObjID', delimiter=',', skiprows=range(1, startChunk + 1), nrows=incrStep, header=0)
-        
+
         interm.drop(['V', 'V(H=0)'], axis=1, inplace=True, errors='ignore')
         interm.to_sql("interm", con=cnx, if_exists="append", index=False)
 
-        startChunk = startChunk + chunkSize
+        startChunk = int(startChunk + chunkSize)
 
     return

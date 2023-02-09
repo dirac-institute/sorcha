@@ -7,7 +7,7 @@ import logging
 # Author: Grigori Fedorets
 
 
-def PPReadPhysicalParameters(clr_datafile, othercolours, beginLoc, chunkSize, filesep):
+def PPReadPhysicalParameters(clr_datafile, beginLoc, chunkSize, filesep):
     """
     PPReadPhysicalParameters.py
 
@@ -49,6 +49,10 @@ def PPReadPhysicalParameters(clr_datafile, othercolours, beginLoc, chunkSize, fi
         pplogger.error(outstr)
         sys.exit(outstr)
 
-    padafr['ObjID'] = padafr['ObjID'].astype(str)
+    try:
+        padafr['ObjID'] = padafr['ObjID'].astype(str)
+    except KeyError:
+        pplogger.error('ERROR: PPReadPhysicalParameters: Cannot find ObjID in column headings. Check input and input format.')
+        sys.exit('ERROR: PPReadPhysicalParameters: Cannot find ObjID in column headings. Check input and input format.')
 
     return padafr

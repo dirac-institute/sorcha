@@ -16,7 +16,7 @@ def test_PPMatchPointingToObservations():
 
     oif_file = PPReadOif(get_test_filepath('oiftestoutput.txt'), 'whitespace')
     orbit_file = PPReadOrbitFile(get_test_filepath('testorb.des'), 0, 5, 'whitespace')
-    params_file = PPReadPhysicalParameters(get_test_filepath('testcolour.txt'), ['g-r', 'i-r', 'z-r'], 0, 5, 'whitespace')
+    params_file = PPReadPhysicalParameters(get_test_filepath('testcolour.txt'), 0, 5, 'whitespace')
 
     joined_df = PPJoinEphemeridesAndParameters(oif_file, params_file)
     joined_df_2 = PPJoinEphemeridesAndOrbits(joined_df, orbit_file)
