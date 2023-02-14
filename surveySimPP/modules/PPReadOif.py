@@ -77,20 +77,21 @@ def PPSkipOifHeader(filename, line_start='ObjID', **kwargs):
     line, thus skipping the long OIF header.
     """
 
-    with open(filename) as f:
+    pplogger = logging.getLogger(__name__)
 
-        position = 0
-        current_line = f.readline()
+    found = 'no'
 
-        # reads the file line by line looking for the line that starts with
-        # the expected string
-        while not current_line.startswith(line_start):
-            position = f.tell()
-            current_line = f.readline()
+    with open(filename) as fh:
+        for i, line in enumerate(fh):
+            if line.startswith('ObjID'):
+                found = i
+                break
+            if i > 100:  # because we don't want to scan infinitely - OIF headers are ~30 lines long.
+                pplogger.error('ERROR: PPReadOif: column headings not found. Ensure column headings exist in OIF output and first column is ObjID.')
+                sys.exit('ERROR: PPReadOif: column headings not found. Ensure column headings exist in OIF output and first column is ObjID.')
 
-        # changes the file position to the start of the line that begins
-        # with the desired string
-        f.seek(position)
+    if found == 'no':
+        pplogger.error('ERROR: PPReadOif: column headings not found. Ensure column headings exist in OIF output and first column is ObjID.')
+        sys.exit('ERROR: PPReadOif: column headings not found. Ensure column headings exist in OIF output and first column is ObjID.')
 
-        # passes that file object to pandas
-        return pd.read_csv(f, **kwargs)
+    return pd.read_csv(filename, header=found, **kwargs)

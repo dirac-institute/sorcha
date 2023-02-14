@@ -4,6 +4,7 @@
 
 import argparse
 import configparser
+import os
 
 
 def makeConfigFile(args):
@@ -32,8 +33,8 @@ def makeConfigFile(args):
             {'cometactivity': args.cometactivity},
             'INPUTFILES':
             {'ephemerides_type': args.ephemeridestype,
-                'pointingdatabase': args.pointingdatabase,
-                'footprintPath': args.footprintpath,
+                'pointingdatabase': os.path.abspath(args.pointingdatabase),
+                'footprintPath': os.path.abspath(args.footprintpath),
                 'ppsqldbquery': args.ppsqldbquery,
                 'ephFormat': args.ephformat,
                 'auxFormat': args.auxformat},
@@ -56,7 +57,7 @@ def makeConfigFile(args):
 
     config.read_dict(config_dict)
 
-    with open(args.filename, 'w') as f:
+    with open(os.path.abspath(args.filename), 'w') as f:
         config.write(f)
 
 
