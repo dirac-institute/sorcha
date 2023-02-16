@@ -39,65 +39,67 @@ def makeSLURM(args):
         the_file.write('\n')
         the_file.write('\n')
 
-    for config in configfiles:
-        rootname = 'oif_' + os.path.basename(os.path.splitext(config)[0])[7:]
+    if not args.ss:
+        for config in configfiles:
+            rootname = 'oif_' + os.path.basename(os.path.splitext(config)[0])[7:]
 
-        os_command = 'oif -f ' + config + ' > ' + os.path.join(args.oifout, rootname + '.txt') + ' &'
+            os_command = 'srun --exclusive -N1 -n1 -c1 oif -f ' + config + ' > ' + os.path.join(args.oifout, rootname + '.txt') + ' &'
+
+            with open(args.filename, 'a') as the_file:
+                the_file.write(os_command + '\n')
 
         with open(args.filename, 'a') as the_file:
-            the_file.write(os_command + '\n')
-
-    with open(args.filename, 'a') as the_file:
-        the_file.write('wait\n')
-
-    if args.dc:
-        with open(args.filename, 'a') as the_file:
-            the_file.write('createTemporaryDatabases -i {} &\n'.format(args.oifout))
             the_file.write('wait\n')
 
-    orbits = glob.glob(os.path.join(args.inputs, 'orbits*'))
+    if not args.os:
+        if args.dc:
+            with open(args.filename, 'a') as the_file:
+                the_file.write('createTemporaryDatabases -i {} &\n'.format(args.oifout))
+                the_file.write('wait\n')
 
-    if not orbits:
-        sys.exit('Could not find any orbits files on given input path {}.'.format(args.inputs + 'orbits*'))
+        orbits = glob.glob(os.path.join(args.inputs, 'orbits*'))
 
-    for orbits_fn in orbits:
+        if not orbits:
+            sys.exit('Could not find any orbits files on given input path {}.'.format(args.inputs + 'orbits*'))
 
-        rootname = os.path.basename(os.path.splitext(orbits_fn)[0])[7:]
+        for orbits_fn in orbits:
 
-        params_fn = os.path.join(args.inputs, 'params_' + rootname + '.txt')
-        _ = PPFindFileOrExit(params_fn, 'physical parameters file')
+            rootname = os.path.basename(os.path.splitext(orbits_fn)[0])[7:]
 
-        oif_fn = os.path.join(args.oifout, 'oif_' + rootname + '.txt')
+            params_fn = os.path.join(args.inputs, 'params_' + rootname + '.txt')
+            _ = PPFindFileOrExit(params_fn, 'physical parameters file')
 
-        output_path = os.path.join(args.allout, rootname)
-        mkdir_command = 'mkdir ' + output_path
+            oif_fn = os.path.join(args.oifout, 'oif_' + rootname + '.txt')
 
-        call_command = 'surveySimPP -c {} -p {} -o {} -e {} -u {} -t {}'.format(args.ssppcon,
-                                                                                params_fn, orbits_fn,
-                                                                                oif_fn, output_path,
-                                                                                rootname)
+            output_path = os.path.join(args.allout, rootname)
+            mkdir_command = 'mkdir ' + output_path
 
-        if args.comet:
-            comets_fn = os.path.join(args.inputs, 'comet_' + rootname + '.txt')
-            _ = PPFindFileOrExit(comets_fn, 'cometary activity parameters file')
-            call_command = call_command + ' -m ' + comets_fn
+            call_command = 'srun --exclusive -N1 -n1 -c1 surveySimPP -c {} -p {} -o {} -e {} -u {} -t {}'.format(args.ssppcon,
+                                                                                                                 params_fn, orbits_fn,
+                                                                                                                 oif_fn, output_path,
+                                                                                                                 rootname)
 
-        if args.dr or args.dc:
-            temp_fn = os.path.join(args.oifout, 'temp_oif_' + rootname + '.db')
-            call_command = call_command + ' -dr ' + temp_fn 
+            if args.comet:
+                comets_fn = os.path.join(args.inputs, 'comet_' + rootname + '.txt')
+                _ = PPFindFileOrExit(comets_fn, 'cometary activity parameters file')
+                call_command = call_command + ' -m ' + comets_fn
 
-        if args.dw:
-            call_command = call_command + ' -dw'
+            if args.dr or args.dc:
+                temp_fn = os.path.join(args.oifout, 'temp_oif_' + rootname + '.db')
+                call_command = call_command + ' -dr ' + temp_fn
 
-        if args.dl:
-            call_command = call_command + ' -dl'
+            if args.dw:
+                call_command = call_command + ' -dw'
+
+            if args.dl:
+                call_command = call_command + ' -dl'
+
+            with open(args.filename, 'a') as the_file:
+                the_file.write(mkdir_command + '\n')
+                the_file.write(call_command + ' & \n')
 
         with open(args.filename, 'a') as the_file:
-            the_file.write(mkdir_command + '\n')
-            the_file.write(call_command + ' & \n')
-
-    with open(args.filename, 'a') as the_file:
-        the_file.write('wait\n')
+            the_file.write('wait\n')
 
 
 def convert_args_to_absolute_paths(args):
@@ -119,12 +121,16 @@ def main():
     parser.add_argument('-f', '--filename', help='Filepath and name where you want to save the SLURM script.', type=str, required=True)
     # path to inputs
     parser.add_argument('-i', '--inputs', help='Path location of input text files (orbits, colours and config files).', type=str, required=True)
+    # flag to run only OIF
+    parser.add_argument('-os', '-oifonly', help='Include only commands for OIF.', action='store_true', default=False)
+    # flag to run only SSPP
+    parser.add_argument('-ss', '-sspponly', help='Include only commands for SSPP.', action='store_true', default=False)
     # SSPP config pathname
-    parser.add_argument('-c', '--ssppcon', help='Filepath and name of SSPP config file.', type=str, required=True)
+    parser.add_argument('-c', '--ssppcon', help='Filepath and name of SSPP config file.', type=str)
     # path where oif output will be stored
-    parser.add_argument('-oo', '--oifout', help='Path where OIF output will be stored.', type=str, required=True)
+    parser.add_argument('-oo', '--oifout', help='Path where OIF output is/will be stored.', type=str, required=True)
     # final output pathname
-    parser.add_argument('-ao', '--allout', help='Path where final output will be stored.', type=str, required=True)
+    parser.add_argument('-ao', '--allout', help='Path where final output will be stored.', type=str)
     # cometary activity?
     parser.add_argument('-m', '--comet', help="Include cometary activity files?", action='store_true', default=False)
     # read from temporary databases?
@@ -146,6 +152,11 @@ def main():
         sys.exit('Cannot have both -dr and -dw command flag arguments.')
     if args.dw and args.dc:
         sys.exit('Cannot have both -dc and -dw command flag arguments.')
+    if args.os and args.ss:
+        sys.exit('Cannot have both -os and -ss command flag arguments.')
+
+    if not args.ss and 'ao' not in args or 'c' not in args:
+        sys.exit('-ao and -c arguments are required if running SSPP.')
 
     if os.path.isfile(os.path.abspath(args.filename)):
         sys.exit('File already exists at given location/name.')
