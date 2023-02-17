@@ -5,12 +5,13 @@
 import argparse
 import configparser
 import os
+import sys
 
 
 def makeConfigFile(args):
 
     config = configparser.ConfigParser()
-    
+
     bright_raw = {'bright_limit': str(args.brightlimit)}
 
     linking_raw = {'SSP_detection_efficiency': str(args.detectionefficiency),
@@ -18,15 +19,15 @@ def makeConfigFile(args):
                    'SSP_number_tracklets': str(args.numtracklets),
                    'SSP_track_window': str(args.trackwindow),
                    'SSP_separation_threshold': str(args.septhreshold)}
-    
+
     fov_raw = {'camera_model': str(args.cameramodel),
                'footprint_path': str(args.footprintpath),
                'fill_factor': str(args.fillfactor),
                'circle_radius': str(args.circleradius)}
-    
-    fading_raw =  {'fading_function_on': str(args.fadingfunction),
-                   'fading_function_width': str(args.fadingwidth),
-                   'fading_function_peak_efficiency': str(args.fadingpeak)}
+
+    fading_raw = {'fading_function_on': str(args.fadingfunction),
+                  'fading_function_width': str(args.fadingwidth),
+                  'fading_function_peak_efficiency': str(args.fadingpeak)}
 
     expert_raw = {'SNR_limit': str(args.snrlimit),
                   'mag_limit': str(args.maglimit),
@@ -44,10 +45,10 @@ def makeConfigFile(args):
             {'comet_activity': args.cometactivity},
             'INPUT':
             {'ephemerides_type': args.ephemeridestype,
-            'pointing_database': os.path.abspath(args.pointingdatabase),
-            'eph_format': args.ephformat,
-            'aux_format': args.auxformat,
-            'size_serial_chunk': str(args.sizeserialchunk)},
+             'pointing_database': os.path.abspath(args.pointingdatabase),
+             'eph_format': args.ephformat,
+             'aux_format': args.auxformat,
+             'size_serial_chunk': str(args.sizeserialchunk)},
             'FILTERS':
             {'observing_filters': args.observingfilters},
             'SATURATION': bright_dict,
@@ -82,7 +83,7 @@ def main():
     parser.add_argument('--ephformat', '-inptf', help='Separator in ephemeris database: csv, whitespace, hdf5. Default is "whitespace".', type=str, default='whitespace')
     parser.add_argument('--auxformat', '-inauxf', help='Separator in orbit/colour/brightness/cometary data files: comma or whitespace. Default is "whitespace".', type=str, default='whitespace')
     parser.add_argument('--sizeserialchunk', '-chunk', help='Size of chunk of objects to be processed serially. Default is 10.', type=int, default=10)
-    
+
     # ACTIVITY
     parser.add_argument('--cometactivity', '-com', help='Type of cometary activity. Options are "comet" or None. Default is none.', type=str, default='none')
 
@@ -105,7 +106,7 @@ def main():
     parser.add_argument('--fadingfunction', '-fade', help='Detection efficiency fading function on or off.', type=bool, default=True)
     parser.add_argument('--fadingwidth', '-fadew', help='Width parameter for fading function. Default is 0.1 after Chelsey and Vereš (2017) or None to omit.', type=float, default=0.1)
     parser.add_argument('--fadingpeak', '-fadep', help='Peak efficiency parameter for fading function. Default is 1 or None to omit.', type=float, default=1.)
-    
+
     # LINKINGFILTER
     parser.add_argument('--detectionefficiency', '-deteff', help='Which fraction of the detections will the automated solar system processing pipeline recognise? Expects a float. Default is 0.95.', type=float, default=0.95)
     parser.add_argument('--numobservations', '-nobs', help='How many observations during one night are required to produce a valid tracklet? Expects an int or None to omit. Default 2.', type=int, default=2)
@@ -126,6 +127,14 @@ def main():
     parser.add_argument('--trailinglosseson', '-tloss', help='Switch on trailing losses. Relevant for close-approaching NEOs. Default True.', type=bool, default=True)
 
     args = parser.parse_args()
+
+    # error handling
+
+    if not os.path.isfile(args.pointingdatabase):
+        sys.exit('ERROR: file not found at supplied pointing database location.')
+
+    if not os.path.isfile(args.footprintpath):
+        sys.exit('ERROR: file not found at supplied footprint location.')
 
     makeConfigFile(args)
 
