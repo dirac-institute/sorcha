@@ -85,7 +85,7 @@ def PPWriteOutput(cmd_args, configs, observations_in, endChunk, verbose=False):
     pplogger = logging.getLogger(__name__)
     verboselog = pplogger.info if verbose else lambda *a, **k: None
 
-    if configs['outputsize'] == 'default':
+    if configs['output_size'] == 'default':
         observations = observations_in.copy()[['ObjID', 'FieldMJD', 'fieldRA', 'fieldDec',
                                                'AstRA(deg)', 'AstDec(deg)', 'AstrometricSigma(deg)',
                                                'optFilter', 'observedPSFMag', 'observedTrailedSourceMag',
@@ -97,38 +97,38 @@ def PPWriteOutput(cmd_args, configs, observations_in, endChunk, verbose=False):
     observations['FieldMJD'] = observations['FieldMJD'].round(decimals=5)
 
     for position_col in ['fieldRA', 'fieldDec', 'AstRA(deg)', 'AstDec(deg)', 'AstrometricSigma(deg)']:
-        observations[position_col] = observations[position_col].round(decimals=configs["position_decimals"])
+        observations[position_col] = observations[position_col].round(decimals=configs['position_decimals'])
 
     for magnitude_col in ['observedPSFMag', 'observedTrailedSourceMag', 'PhotometricSigmaPSF(mag)', 'PhotometricSigmaTrailedSource(mag)', 'fiveSigmaDepth', 'fiveSigmaDepthAtSource']:
-        observations[magnitude_col] = observations[magnitude_col].round(decimals=configs["magnitude_decimals"])
+        observations[magnitude_col] = observations[magnitude_col].round(decimals=configs['magnitude_decimals'])
 
     verboselog('Constructing output path...')
 
-    if (configs['outputformat'] == 'csv'):
+    if (configs['output_format'] == 'csv'):
         outputsuffix = '.csv'
         out = os.path.join(cmd_args['outpath'], cmd_args['outfilestem'] + outputsuffix)
         verboselog('Output to CSV file...')
         observations = PPOutWriteCSV(observations, out)
 
-    elif (configs['outputformat'] == 'separatelycsv'):
+    elif (configs['output_format'] == 'separatelycsv'):
         outputsuffix = '.csv'
         objid_list = observations['ObjID'].unique().tolist()
         verboselog('Output to ' + str(len(objid_list)) + ' separate output CSV files...')
 
         i = 0
-        while(i < len(objid_list)):
+        while (i < len(objid_list)):
             single_object_df = pd.DataFrame(observations[observations['ObjID'] == objid_list[i]])
             out = os.path.join(cmd_args['outpath'], str(objid_list[i]) + '_' + cmd_args['outfilestem'] + outputsuffix)
             observations = PPOutWriteCSV(single_object_df, out)
             i = i + 1
 
-    elif (configs['outputformat'] == 'sqlite3'):
+    elif (configs['output_format'] == 'sqlite3'):
         outputsuffix = '.db'
         out = os.path.join(cmd_args['outpath'], cmd_args['outfilestem'] + outputsuffix)
         verboselog('Output to sqlite3 database...')
         observations = PPOutWriteSqlite3(observations, out)
 
-    elif (configs['outputformat'] == 'hdf5' or configs['outputformat'] == 'h5'):
+    elif (configs['output_format'] == 'hdf5' or configs['output_format'] == 'h5'):
         outputsuffix = ".h5"
         out = os.path.join(cmd_args['outpath'], cmd_args['outfilestem'] + outputsuffix)
         verboselog('Output to HDF5 binary file...')

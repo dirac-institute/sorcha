@@ -32,37 +32,37 @@ def test_PPConfigFileParser(setup_and_teardown_for_PPConfigFileParser):
 
     configs = PPConfigFileParser(get_test_filepath('test_PPConfig.ini'), 'lsst')
 
-    test_configs = {'ephFormat': 'whitespace',
-                    'filesep': 'whitespace',
+    test_configs = {'eph_format': 'csv',
+                    'aux_format': 'whitespace',
                     'ephemerides_type': 'oif',
-                    'pointingdatabase': './baseline_10yrs_10klines.db',
-                    'ppdbquery': 'SELECT observationId, observationStartMJD, filter, seeingFwhmGeom, seeingFwhmEff, fiveSigmaDepth, fieldRA, fieldDec, rotSkyPos FROM SummaryAllProps order by observationId',
-                    'cometactivity': 'none',
+                    'pointing_database': './baseline_10yrs_10klines.db',
+                    'pointing_sql_query': 'SELECT observationId, observationStartMJD, filter, seeingFwhmGeom, seeingFwhmEff, fiveSigmaDepth, fieldRA, fieldDec, rotSkyPos FROM SummaryAllProps order by observationId',
+                    'comet_activity': 'none',
                     'observing_filters': ['r', 'g', 'i', 'z'],
-                    'phasefunction': 'HG',
-                    'trailingLossesOn': True,
-                    'cameraModel': 'footprint',
-                    'footprintPath': './detectors_corners.csv',
-                    'fillfactor': 1.0,
-                    'brightLimit': 16.0,
-                    'brightLimitOn': True,
-                    'SNRLimit': None,
-                    'SNRLimitOn': False,
-                    'magLimit': None,
-                    'magLimitOn': False,
-                    'fadingFunctionOn': True,
-                    'fadingFunctionWidth': 0.1,
-                    'inSepThreshold': 0.5,
-                    'minTracklet': 2,
-                    'noTracklets': 3,
-                    'trackletInterval': 15.0,
-                    'SSPDetectionEfficiency': 0.95,
-                    'SSPLinkingOn': True,
-                    'outputformat': 'csv',
-                    'outputsize': 'default',
+                    'phase_function': 'HG',
+                    'trailing_losses_on': True,
+                    'camera_model': 'footprint',
+                    'footprint_path': './detectors_corners.csv',
+                    'bright_limit': 16.0,
+                    'bright_limit_on': True,
+                    'SNR_limit': None,
+                    'SNR_limit_on': False,
+                    'mag_limit': None,
+                    'mag_limit_on': False,
+                    'fading_function_on': True,
+                    'fading_function_width': 0.1,
+                    'fading_function_peak_efficiency': 1.,
+                    'SSP_separation_threshold': 0.5,
+                    'SSP_number_observations': 2,
+                    'SSP_number_tracklets': 3,
+                    'SSP_track_window': 15.0,
+                    'SSP_detection_efficiency': 0.95,
+                    'SSP_linking_on': True,
+                    'output_format': 'csv',
+                    'output_size': 'default',
                     'position_decimals': 7,
                     'magnitude_decimals': 3,
-                    'sizeSerialChunk': 10,
+                    'size_serial_chunk': 10,
                     'rng_seed': None}
 
     assert configs == test_configs
@@ -77,12 +77,12 @@ def test_PPGetOrExit():
     config = configparser.ConfigParser()
     config.read(get_test_filepath('test_PPConfig.ini'))
 
-    test_value = PPGetOrExit(config, 'INPUTFILES', 'ephFormat', 'none')
+    test_value = PPGetOrExit(config, 'INPUT', 'eph_format', 'none')
 
     with pytest.raises(SystemExit) as e:
-        PPGetOrExit(config, 'INPUTFILES', 'veryFakeKey', 'this key does not exist!')
+        PPGetOrExit(config, 'INPUT', 'veryFakeKey', 'this key does not exist!')
 
-    assert test_value == 'whitespace'
+    assert test_value == 'csv'
     assert e.type == SystemExit
     assert e.value.code == 'this key does not exist!'
 
@@ -96,15 +96,15 @@ def test_PPGetFloatOrExit():
     config = configparser.ConfigParser()
     config.read(get_test_filepath('test_PPConfig.ini'))
 
-    test_value = PPGetFloatOrExit(config, 'FILTERINGPARAMETERS', 'fadingFunctionWidth', 'none')
+    test_value = PPGetFloatOrExit(config, 'FADINGFUNCTION', 'fading_function_width', 'none')
 
     with pytest.raises(SystemExit) as e:
-        PPGetFloatOrExit(config, 'FILTERINGPARAMETERS', 'fadingFunctionOn', 'none')
+        PPGetFloatOrExit(config, 'FADINGFUNCTION', 'fading_function_on', 'none')
 
     assert test_value == 0.1
     assert isinstance(test_value, float)
     assert e.type == SystemExit
-    assert e.value.code == 'ERROR: expected a float for config parameter fadingFunctionOn. Check value in config file.'
+    assert e.value.code == 'ERROR: expected a float for config parameter fading_function_on. Check value in config file.'
 
     return
 
@@ -116,15 +116,15 @@ def test_PPGetIntOrExit():
     config = configparser.ConfigParser()
     config.read(get_test_filepath('test_PPConfig.ini'))
 
-    test_value = PPGetIntOrExit(config, 'OUTPUTFORMAT', 'position_decimals', 'none')
+    test_value = PPGetIntOrExit(config, 'OUTPUT', 'position_decimals', 'none')
 
     with pytest.raises(SystemExit) as e:
-        PPGetIntOrExit(config, 'FILTERINGPARAMETERS', 'fadingFunctionOn', 'none')
+        PPGetIntOrExit(config, 'FADINGFUNCTION', 'fading_function_on', 'none')
 
     assert test_value == 7
     assert isinstance(test_value, int)
     assert e.type == SystemExit
-    assert e.value.code == 'ERROR: expected an int for config parameter fadingFunctionOn. Check value in config file.'
+    assert e.value.code == 'ERROR: expected an int for config parameter fading_function_on. Check value in config file.'
 
     return
 
@@ -136,10 +136,10 @@ def test_PPGetBoolOrExit():
     config = configparser.ConfigParser()
     config.read(get_test_filepath('test_PPConfig.ini'))
 
-    test_value = PPGetBoolOrExit(config, 'FILTERINGPARAMETERS', 'fadingFunctionOn', 'none')
+    test_value = PPGetBoolOrExit(config, 'FADINGFUNCTION', 'fading_function_on', 'none')
 
     with pytest.raises(SystemExit) as e:
-        PPGetBoolOrExit(config, 'OUTPUTFORMAT', 'position_decimals', 'none')
+        PPGetBoolOrExit(config, 'OUTPUT', 'position_decimals', 'none')
 
     assert test_value is True
     assert isinstance(test_value, bool)
@@ -156,18 +156,18 @@ def test_PPGetValueAndFlag():
     config = configparser.ConfigParser()
     config.read(get_test_filepath('test_PPConfig.ini'))
 
-    test_value_1, test_flag_1 = PPGetValueAndFlag(config, 'FILTERINGPARAMETERS', 'fillfactor', 'float')
-    test_value_2, test_flag_2 = PPGetValueAndFlag(config, 'FILTERINGPARAMETERS', 'brightLimit', 'float')
+    test_value_1, test_flag_1 = PPGetValueAndFlag(config, 'FOV', 'fill_factor', 'float')
+    test_value_2, test_flag_2 = PPGetValueAndFlag(config, 'SATURATION', 'bright_limit', 'float')
 
     with pytest.raises(SystemExit) as e:
-        PPGetValueAndFlag(config, 'FILTERINGPARAMETERS', 'brightLimit', 'int')
+        PPGetValueAndFlag(config, 'SATURATION', 'bright_limit', 'int')
 
     assert test_value_1 is None
     assert test_flag_1 is False
     assert test_value_2 == 16.
     assert test_flag_2 is True
     assert e.type == SystemExit
-    assert e.value.code == 'ERROR: expected an int for config parameter brightLimit. Check value in config file.'
+    assert e.value.code == 'ERROR: expected an int for config parameter bright_limit. Check value in config file.'
 
     return
 

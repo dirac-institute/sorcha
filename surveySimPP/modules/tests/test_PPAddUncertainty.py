@@ -82,7 +82,7 @@ def test_addUncertainties():
 
     observations = pd.read_csv(get_test_filepath('test_input_fullobs.csv'), nrows=1)
 
-    configs = {'trailingLossesOn': True}
+    configs = {'trailing_losses_on': True}
     rng = np.random.default_rng(2021)
 
     test_obs = addUncertainties(observations, configs, rng)
@@ -103,7 +103,7 @@ def test_addUncertainties():
 
     rng = np.random.default_rng(2021)
 
-    configs = {'trailingLossesOn': False}
+    configs = {'trailing_losses_on': False}
     test_obs = addUncertainties(observations, configs, rng)
 
     expected_astrosig = 0.000003
@@ -126,7 +126,7 @@ def test_uncertainties():
     from surveySimPP.modules.PPAddUncertainties import uncertainties
 
     observations = pd.read_csv(get_test_filepath('test_input_fullobs.csv'), nrows=1)
-    configs = {'trailingLossesOn': False}
+    configs = {'trailing_losses_on': False}
 
     ast_sig_deg, photo_sig, SNR = uncertainties(observations, configs)
 
@@ -134,7 +134,7 @@ def test_uncertainties():
     assert_almost_equal(photo_sig[0], 0.006736, decimal=6)
     assert_almost_equal(SNR[0], 160.6781779, decimal=6)
 
-    configs = {'trailingLossesOn': True}
+    configs = {'trailing_losses_on': True}
     ast_sig_deg, photo_sig, SNR = uncertainties(observations, configs)
 
     assert_almost_equal(ast_sig_deg[0], 0.000003, decimal=6)

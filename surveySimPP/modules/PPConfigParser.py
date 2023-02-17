@@ -1,6 +1,5 @@
 #!/usr/bin/python
 # Parsing and error handling of the config file.
-# Should probably be overhauled. OOP would help here.
 
 import logging
 import os
@@ -192,96 +191,48 @@ def PPConfigFileParser(configfile, survey_name):
 
     config_dict = {}
 
-    # formatting and input
+    # INPUT
 
-    config_dict['ephFormat'] = PPGetOrExit(config, 'INPUTFILES', 'ephFormat', 'ERROR: no ephemerides file format is specified.').lower()
-    if config_dict['ephFormat'] not in ['csv', 'whitespace', 'hdf5']:
-        pplogger.error('ERROR: ephFormat should be either csv, whitespace, or hdf5.')
-        sys.exit('ERROR: ephFormat should be either either csv, whitespace, or hdf5.')
+    config_dict['eph_format'] = PPGetOrExit(config, 'INPUT', 'eph_format', 'ERROR: no ephemerides file format is specified.').lower()
+    if config_dict['eph_format'] not in ['csv', 'whitespace', 'hdf5']:
+        pplogger.error('ERROR: eph_format should be either csv, whitespace, or hdf5.')
+        sys.exit('ERROR: eph_format should be either either csv, whitespace, or hdf5.')
 
-    config_dict['filesep'] = PPGetOrExit(config, 'INPUTFILES', 'auxFormat', 'ERROR: no auxiliary data format specified.').lower()
-    if config_dict['filesep'] not in ['comma', 'whitespace']:
-        pplogger.error('ERROR: auxFormat should be either comma, csv, or whitespace.')
-        sys.exit('ERROR: auxFormat should be either comma, csv, or whitespace.')
+    config_dict['aux_format'] = PPGetOrExit(config, 'INPUT', 'aux_format', 'ERROR: no auxiliary data format specified.').lower()
+    if config_dict['aux_format'] not in ['comma', 'whitespace']:
+        pplogger.error('ERROR: aux_format should be either comma, csv, or whitespace.')
+        sys.exit('ERROR: aux_format should be either comma, csv, or whitespace.')
 
-    config_dict['ephemerides_type'] = PPGetOrExit(config, 'INPUTFILES', 'ephemerides_type', 'ERROR: no ephemerides type provided.')
-    config_dict['pointingdatabase'] = PPGetOrExit(config, 'INPUTFILES', 'pointingdatabase', 'ERROR: no pointing database provided.')
-    PPFindFileOrExit(config_dict['pointingdatabase'], 'pointingdatabase')
+    config_dict['ephemerides_type'] = PPGetOrExit(config, 'INPUT', 'ephemerides_type', 'ERROR: no ephemerides type provided.').lower()
+    if config_dict['ephemerides_type'] not in ['oif']:
+        pplogger.error('ERROR: ephemerides_type not recognised.')
+        sys.exit('ERROR: ephemerides_type not recognised.')
 
-    config_dict['ppdbquery'] = PPGetOrExit(config, 'INPUTFILES', 'ppsqldbquery', 'ERROR: no pointing database SQLite3 query provided.')
+    config_dict['pointing_database'] = PPGetOrExit(config, 'INPUT', 'pointing_database', 'ERROR: no pointing database provided.')
+    PPFindFileOrExit(config_dict['pointing_database'], 'pointing_database')
 
-    # cometary activity checking
+    config_dict['size_serial_chunk'] = PPGetIntOrExit(config, 'INPUT', 'size_serial_chunk', 'ERROR: size_serial_chunk not specified.')
+    if config_dict['size_serial_chunk'] < 1:
+        pplogger.error('ERROR: size_serial_chunk is zero or negative.')
+        sys.exit('ERROR: size_serial_chunk is zero or negative.')
 
-    config_dict['cometactivity'] = PPGetOrExit(config, 'OBJECTS', 'cometactivity', 'ERROR: no comet activity specified.').lower()
-    if config_dict['cometactivity'] not in ['comet', 'none']:
-        pplogger.error('ERROR: cometactivity must be "comet" or "none".')
-        sys.exit('ERROR: cometactivity must be "comet" or "none".')
+    # ACTIVITY
 
-    # filters
+    config_dict['comet_activity'] = PPGetOrExit(config, 'ACTIVITY', 'comet_activity', 'ERROR: no comet activity specified.').lower()
+    if config_dict['comet_activity'] not in ['comet', 'none']:
+        pplogger.error('ERROR: comet_activity must be "comet" or "none".')
+        sys.exit('ERROR: comet_activity must be "comet" or "none".')
+
+    # FILTERS
 
     obsfilters = PPGetOrExit(config, 'FILTERS', 'observing_filters', 'ERROR: observing_filters config file variable not provided.')
     config_dict['observing_filters'] = [e.strip() for e in obsfilters.split(',')]
 
     PPCheckFiltersForSurvey(survey_name, config_dict['observing_filters'])
 
-    # phase function, trailing losses
+    # SATURATION
 
-    config_dict['phasefunction'] = PPGetOrExit(config, 'PHASE', 'phasefunction', 'ERROR: phase function not defined.')
-
-    try:
-        config_dict['trailingLossesOn'] = config.getboolean('EXPERT', 'trailingLossesOn', fallback=True)
-    except ValueError:
-        pplogger.error('ERROR: could not parse value for trailingLossesOn as a boolean. Check formatting and try again.')
-        sys.exit('ERROR: could not parse value for trailingLossesOn as a boolean. Check formatting and try again.')
-
-    # camera model
-
-    config_dict['cameraModel'] = PPGetOrExit(config, 'PERFORMANCE', 'cameraModel', 'ERROR: camera model not defined.')
-
-    if config_dict['cameraModel'] not in ['circle', 'footprint']:
-        pplogger.error('ERROR: cameraModel should be either "circle" or "footprint".')
-        sys.exit('ERROR: cameraModel should be either "circle" or "footprint".')
-
-    elif (config_dict['cameraModel'] == 'footprint'):
-        config_dict['footprintPath'] = PPGetOrExit(config, 'INPUTFILES', 'footprintPath', 'ERROR: no camera footprint provided.')
-        PPFindFileOrExit(config_dict['footprintPath'], 'footprintPath')
-
-        if config.has_option('FILTERINGPARAMETERS', 'fillfactor'):
-            pplogger.error('ERROR: fill factor supplied in config file but camera model is not "circle".')
-            sys.exit('ERROR: fill factor supplied in config file but camera model is not "circle".')
-        elif config.has_option('CAMERA', 'circleRadius'):
-            pplogger.error('ERROR: circle radius supplied in config file but camera model is not "circle".')
-            sys.exit('ERROR: circle radius supplied in config file but camera model is not "circle".')
-        else:
-            config_dict['fillfactor'] = 1.0
-
-    elif (config_dict['cameraModel']) == 'circle':
-
-        if config.has_option('FILTERINGPARAMETERS', 'fillfactor'):
-            config_dict['fillfactor'] = PPGetFloatOrExit(config, 'FILTERINGPARAMETERS', 'fillfactor', 'ERROR: fillfactor must be specified for circle camera footprint.')
-
-        config_dict['fillfactor'], _ = PPGetValueAndFlag(config, 'FILTERINGPARAMETERS', 'fillfactor', 'float')
-        config_dict['circleRadius'], _ = PPGetValueAndFlag(config, 'PERFORMANCE', 'circleRadius', 'float')
-
-        if config_dict['fillfactor'] and config_dict['circleRadius']:
-            pplogger.error('ERROR: either "fillfactor" or "circleRadius" must be specified for circular footprint, not both.')
-            sys.exit('ERROR: either "fillfactor" or "circleRadius" must be specified for circular footprint, not both.')
-        if not config_dict['fillfactor'] and not config_dict['circleRadius']:
-            pplogger.error('ERROR: either "fillfactor" or "circleRadius" must be specified for circular footprint.')
-            sys.exit('ERROR: either "fillfactor" or "circleRadius" must be specified for circular footprint.')
-        elif config_dict['fillfactor']:
-            if config_dict['fillfactor'] < 0.0 or config_dict['fillfactor'] > 1.0:
-                pplogger.error('ERROR: fillfactor out of bounds. Must be between 0 and 1.')
-                sys.exit('ERROR: fillfactor out of bounds. Must be between 0 and 1.')
-        elif config_dict['circleRadius']:
-            config_dict['fillfactor'] = 1.0
-            if config_dict['circleRadius'] < 0.0:
-                pplogger.error('ERROR: circleRadius is negative.')
-                sys.exit('ERROR: circleRadius is negative.')
-
-    # SNR, magnitude, bright limit filters
-
-    bright_limits, config_dict['brightLimitOn'] = PPGetValueAndFlag(config, 'FILTERINGPARAMETERS', 'brightLimit', 'none')
+    bright_limits, config_dict['bright_limit_on'] = PPGetValueAndFlag(config, 'SATURATION', 'bright_limit', 'none')
 
     try:
         bright_list = [float(e.strip()) for e in bright_limits.split(',')]
@@ -290,114 +241,162 @@ def PPConfigFileParser(configfile, survey_name):
         sys.exit('ERROR: could not parse brightness limits. Check formatting and try again.')
 
     if len(bright_list) == 1:
-        config_dict['brightLimit'] = bright_list[0]
+        config_dict['bright_limit'] = bright_list[0]
     else:
         if len(bright_list) != len(config_dict['observing_filters']):
             pplogger.error('ERROR: list of saturation limits is not the same length as list of observing filters.')
             sys.exit('ERROR: list of saturation limits is not the same length as list of observing filters.')
-        config_dict['brightLimit'] = bright_list
+        config_dict['bright_limit'] = bright_list
 
-    config_dict['SNRLimit'], config_dict['SNRLimitOn'] = PPGetValueAndFlag(config, 'EXPERT', 'SNRLimit', 'float')
-    config_dict['magLimit'], config_dict['magLimitOn'] = PPGetValueAndFlag(config, 'EXPERT', 'magLimit', 'float')
+    # PHASECURVES
 
-    if config_dict['SNRLimitOn'] and config_dict['SNRLimit'] < 0:
-        pplogger.error('ERROR: SNR limit is negative.')
-        sys.exit('ERROR: SNR limit is negative.')
+    config_dict['phase_function'] = PPGetOrExit(config, 'PHASECURVES', 'phase_function', 'ERROR: phase function not defined.')
 
-    if config_dict['magLimitOn'] and config_dict['magLimit'] < 0:
-        pplogger.error('ERROR: magnitude limit is negative.')
-        sys.exit('ERROR: magnitude limit is negative.')
+    # FOV
 
-    if config_dict['magLimitOn'] and config_dict['SNRLimitOn']:
-        pplogger.error('ERROR: SNR limit and magnitude limit are mutually exclusive. Please delete one or both from config file.')
-        sys.exit('ERROR: SNR limit and magnitude limit are mutually exclusive. Please delete one or both from config file.')
+    config_dict['camera_model'] = PPGetOrExit(config, 'FOV', 'camera_model', 'ERROR: camera model not defined.')
 
-    # fading function
+    if config_dict['camera_model'] not in ['circle', 'footprint']:
+        pplogger.error('ERROR: camera_model should be either "circle" or "footprint".')
+        sys.exit('ERROR: camera_model should be either "circle" or "footprint".')
 
-    config_dict['fadingFunctionOn'] = PPGetBoolOrExit(config, 'FILTERINGPARAMETERS', 'fadingFunctionOn', 'ERROR: fadingFunctionOn flag not present.')
+    elif (config_dict['camera_model'] == 'footprint'):
+        config_dict['footprint_path'] = PPGetOrExit(config, 'FOV', 'footprint_path', 'ERROR: no camera footprint provided.')
+        PPFindFileOrExit(config_dict['footprint_path'], 'footprint_path')
 
-    if config_dict['fadingFunctionOn']:
-        config_dict['fadingFunctionWidth'] = PPGetFloatOrExit(config, 'FILTERINGPARAMETERS', 'fadingFunctionWidth', 'ERROR: fading function is on but no fadingFunctionWidth supplied.')
+        if config.has_option('FOV', 'fill_factor'):
+            pplogger.error('ERROR: fill factor supplied in config file but camera model is not "circle".')
+            sys.exit('ERROR: fill factor supplied in config file but camera model is not "circle".')
+        elif config.has_option('FOV', 'circle_radius'):
+            pplogger.error('ERROR: circle radius supplied in config file but camera model is not "circle".')
+            sys.exit('ERROR: circle radius supplied in config file but camera model is not "circle".')
 
-        if config_dict['fadingFunctionWidth'] <= 0.0 or config_dict['fadingFunctionWidth'] > 0.5:
-            pplogger.error('ERROR: fadingFunctionWidth out of bounds. Must be greater than zero and less than 0.5.')
-            sys.exit('ERROR: fadingFunctionWidth out of bounds. Must be greater than zero and less than 0.5.')
+    elif (config_dict['camera_model']) == 'circle':
 
-    elif config.has_option('FILTERINGPARAMETERS', 'fadingFunctionWidth'):
-        pplogger.error('ERROR: fadingFunctionWidth supplied in config file but FadingFunctionOn is False.')
-        sys.exit('ERROR: fadingFunctionWidth supplied in config file but FadingFunctionOn is False.')
+        config_dict['fill_factor'], _ = PPGetValueAndFlag(config, 'FILTERINGPARAMETERS', 'fillfactor', 'float')
+        config_dict['circle_radius'], _ = PPGetValueAndFlag(config, 'PERFORMANCE', 'circleRadius', 'float')
 
-    # SSP linking filter
+        if not config_dict['fill_factor'] and not config_dict['circle_radius']:
+            pplogger.error('ERROR: either "fill_factor" or "circle_radius" must be specified for circular footprint.')
+            sys.exit('ERROR: either "fill_factor" or "circle_radius" must be specified for circular footprint.')
+        elif config_dict['fill_factor']:
+            if config_dict['fill_factor'] < 0.0 or config_dict['fill_factor'] > 1.0:
+                pplogger.error('ERROR: fill_factor out of bounds. Must be between 0 and 1.')
+                sys.exit('ERROR: fill_factor out of bounds. Must be between 0 and 1.')
+        elif config_dict['circle_radius']:
+            if config_dict['circle_radius'] < 0.0:
+                pplogger.error('ERROR: circle_radius is negative.')
+                sys.exit('ERROR: circle_radius is negative.')
 
-    config_dict['inSepThreshold'], _ = PPGetValueAndFlag(config, 'FILTERINGPARAMETERS', 'inSepThreshold', 'float')
-    config_dict['minTracklet'], _ = PPGetValueAndFlag(config, 'FILTERINGPARAMETERS', 'minTracklet', 'int')
-    config_dict['noTracklets'], _ = PPGetValueAndFlag(config, 'FILTERINGPARAMETERS', 'noTracklets', 'int')
-    config_dict['trackletInterval'], _ = PPGetValueAndFlag(config, 'FILTERINGPARAMETERS', 'trackletInterval', 'float')
-    config_dict['SSPDetectionEfficiency'], _ = PPGetValueAndFlag(config, 'FILTERINGPARAMETERS', 'SSPDetectionEfficiency', 'float')
+    # FADINGFUNCTION
 
-    SSPvariables = [config_dict['inSepThreshold'], config_dict['minTracklet'], config_dict['noTracklets'], config_dict['trackletInterval'], config_dict['SSPDetectionEfficiency']]
+    config_dict['fading_function_on'] = PPGetBoolOrExit(config, 'FADINGFUNCTION', 'fading_function_on', 'ERROR: fading_function_on flag not present.')
+
+    if config_dict['fading_function_on']:
+        config_dict['fading_function_width'] = PPGetFloatOrExit(config, 'FADINGFUNCTION', 'fading_function_width', 'ERROR: fading function is on but no fading_function_width supplied.')
+        config_dict['fading_function_peak_efficiency'] = PPGetFloatOrExit(config, 'FADINGFUNCTION', 'fading_function_peak_efficiency', 'ERROR: fading function is on but no fading_function_peak_efficiency supplied.')
+
+        if config_dict['fading_function_width'] <= 0.0 or config_dict['fading_function_width'] > 0.5:
+            pplogger.error('ERROR: fading_function_width out of bounds. Must be greater than zero and less than 0.5.')
+            sys.exit('ERROR: fading_function_width out of bounds. Must be greater than zero and less than 0.5.')
+
+        if config_dict['fading_function_peak_efficiency'] < 0.0 or config_dict['fading_function_peak_efficiency'] > 1.0:
+            pplogger.error('ERROR: fading_function_peak_efficiency out of bounds. Must be between 0 and 1.')
+            sys.exit('ERROR: fading_function_peak_efficiency out of bounds. Must be between 0 and 1.')
+
+    elif config.has_option('FADINGFUNCTION', 'fading_function_width'):
+        pplogger.error('ERROR: fading_function_width supplied in config file but fading_function_on is False.')
+        sys.exit('ERROR: fading_function_width supplied in config file but fading_function_on is False.')
+    elif config.has_option('FADINGFUNCTION', 'fading_function_peak_efficiency'):
+        pplogger.error('ERROR: fading_function_peak_efficiency supplied in config file but fading_function_on is False.')
+        sys.exit('ERROR: fading_function_peak_efficiency supplied in config file but fading_function_on is False.')
+
+    # LINKINGFILTER
+
+    config_dict['SSP_separation_threshold'], _ = PPGetValueAndFlag(config, 'LINKINGFILTER', 'SSP_separation_threshold', 'float')
+    config_dict['SSP_number_observations'], _ = PPGetValueAndFlag(config, 'LINKINGFILTER', 'SSP_number_observations', 'int')
+    config_dict['SSP_number_tracklets'], _ = PPGetValueAndFlag(config, 'LINKINGFILTER', 'SSP_number_tracklets', 'int')
+    config_dict['SSP_track_window'], _ = PPGetValueAndFlag(config, 'LINKINGFILTER', 'SSP_track_window', 'float')
+    config_dict['SSP_detection_efficiency'], _ = PPGetValueAndFlag(config, 'LINKINGFILTER', 'SSP_detection_efficiency', 'float')
+
+    SSPvariables = [config_dict['SSP_separation_threshold'], config_dict['SSP_number_observations'], config_dict['SSP_number_tracklets'], config_dict['SSP_track_window'], config_dict['SSP_detection_efficiency']]
 
     # the below if-statement explicitly checks for None so a zero triggers the correct error
     if all(v is not None for v in SSPvariables):
-        # only error handles these values if they are supplied
-        if config_dict['minTracklet'] < 1:
-            pplogger.error('ERROR: minTracklet is zero or negative.')
-            sys.exit('ERROR: minTracklet is zero or negative.')
+        if config_dict['SSP_number_observations'] < 1:
+            pplogger.error('ERROR: SSP_number_observations is zero or negative.')
+            sys.exit('ERROR: SSP_number_observations is zero or negative.')
 
-        if config_dict['noTracklets'] < 1:
-            pplogger.error('ERROR: noTracklets is zero or less.')
-            sys.exit('ERROR: noTracklets is zero or less.')
+        if config_dict['SSP_number_tracklets'] < 1:
+            pplogger.error('ERROR: SSP_number_tracklets is zero or less.')
+            sys.exit('ERROR: SSP_number_tracklets is zero or less.')
 
-        if config_dict['trackletInterval'] <= 0.0:
-            pplogger.error('ERROR: trackletInterval is negative.')
-            sys.exit('ERROR: trackletInterval is negative.')
+        if config_dict['SSP_track_window'] <= 0.0:
+            pplogger.error('ERROR: SSP_track_window is negative.')
+            sys.exit('ERROR: SSP_track_window is negative.')
 
-        if (config_dict['SSPDetectionEfficiency'] > 1.0 or config_dict['SSPDetectionEfficiency'] > 1.0):
-            pplogger.error('ERROR: SSPDetectionEfficiency out of bounds (should be between 0 and 1).')
-            sys.exit('ERROR: SSPDetectionEfficiency out of bounds (should be between 0 and 1).')
+        if (config_dict['SSP_detection_efficiency'] > 1.0 or config_dict['SSP_detection_efficiency'] > 1.0):
+            pplogger.error('ERROR: SSP_detection_efficiency out of bounds (should be between 0 and 1).')
+            sys.exit('ERROR: SSP_detection_efficiency out of bounds (should be between 0 and 1).')
 
-        if config_dict['inSepThreshold'] <= 0.0:
-            pplogger.error('ERROR: inSepThreshold is zero or negative.')
-            sys.exit('ERROR: inSepThreshold is zero or negative.')
+        if config_dict['SSP_separation_threshold'] <= 0.0:
+            pplogger.error('ERROR: SSP_separation_threshold is zero or negative.')
+            sys.exit('ERROR: SSP_separation_threshold is zero or negative.')
 
-        config_dict['SSPLinkingOn'] = True
+        config_dict['SSP_linking_on'] = True
 
     elif not any(SSPvariables):
-
-        config_dict['SSPLinkingOn'] = False
+        config_dict['SSP_linking_on'] = False
 
     else:
         pplogger.error('ERROR: only some SSP linking variables supplied. Supply all five required variables for SSP linking filter, or none to turn filter off.')
         sys.exit('ERROR: only some SSP linking variables supplied. Supply all five required variables for SSP linking filter, or none to turn filter off.')
 
-    # output format and size
+    # OUTPUT
 
-    config_dict['outputformat'] = PPGetOrExit(config, 'OUTPUTFORMAT', 'outputformat', 'ERROR: output format not specified.').lower()
-    if config_dict['outputformat'] not in ['csv', 'separatelycsv', 'sqlite3', 'hdf5', 'h5']:
-        pplogger.error('ERROR: outputformat should be either csv, separatelycsv, sqlite3 or hdf5.')
-        sys.exit('ERROR: outputformat should be either csv, separatelycsv, sqlite3 or hdf5.')
+    config_dict['output_format'] = PPGetOrExit(config, 'OUTPUT', 'output_format', 'ERROR: output format not specified.').lower()
+    if config_dict['output_format'] not in ['csv', 'separatelycsv', 'sqlite3', 'hdf5', 'h5']:
+        pplogger.error('ERROR: output_format should be either csv, separatelycsv, sqlite3 or hdf5.')
+        sys.exit('ERROR: output_format should be either csv, separatelycsv, sqlite3 or hdf5.')
 
-    config_dict['outputsize'] = PPGetOrExit(config, 'OUTPUTFORMAT', 'outputsize', 'ERROR: output size not specified.').lower()
-    if config_dict['outputsize'] not in ['default']:
-        pplogger.error('ERROR: outputsize should be "default".')
-        sys.exit('ERROR: outputsize should be "default".')
+    config_dict['output_size'] = PPGetOrExit(config, 'OUTPUT', 'output_size', 'ERROR: output size not specified.').lower()
+    if config_dict['output_size'] not in ['default', 'all']:
+        pplogger.error('ERROR: output_size not recognised.')
+        sys.exit('ERROR: output_size not recognised.')
 
-    config_dict["position_decimals"] = PPGetIntOrExit(config, 'OUTPUTFORMAT', 'position_decimals', 'ERROR: positional decimal places not specified.')
-    config_dict["magnitude_decimals"] = PPGetIntOrExit(config, 'OUTPUTFORMAT', 'magnitude_decimals', 'ERROR: magnitude decimal places not specified.')
+    config_dict['position_decimals'] = PPGetIntOrExit(config, 'OUTPUT', 'position_decimals', 'ERROR: positional decimal places not specified.')
+    config_dict['magnitude_decimals'] = PPGetIntOrExit(config, 'OUTPUT', 'magnitude_decimals', 'ERROR: magnitude decimal places not specified.')
 
-    if config_dict["position_decimals"] < 0 or config_dict["magnitude_decimals"] < 0:
+    if config_dict['position_decimals'] < 0 or config_dict['magnitude_decimals'] < 0:
         pplogger.error('ERROR: decimal places config variables cannot be negative.')
         sys.exit('ERROR: decimal places config variables cannot be negative.')
 
-    # size of chunk
+    # EXPERT
 
-    config_dict['sizeSerialChunk'] = PPGetIntOrExit(config, 'GENERAL', 'sizeSerialChunk', 'ERROR: sizeSerialChunk not specified.')
-    if config_dict['sizeSerialChunk'] < 1:
-        pplogger.error('ERROR: sizeSerialChunk is zero or negative.')
-        sys.exit('ERROR: sizeSerialChunk is zero or negative.')
+    config_dict['SNR_limit'], config_dict['SNR_limit_on'] = PPGetValueAndFlag(config, 'EXPERT', 'SNR_limit', 'float')
+    config_dict['mag_limit'], config_dict['mag_limit_on'] = PPGetValueAndFlag(config, 'EXPERT', 'mag_limit', 'float')
+
+    if config_dict['SNR_limit_on'] and config_dict['SNR_limit'] < 0:
+        pplogger.error('ERROR: SNR limit is negative.')
+        sys.exit('ERROR: SNR limit is negative.')
+
+    if config_dict['mag_limit_on'] and config_dict['mag_limit'] < 0:
+        pplogger.error('ERROR: magnitude limit is negative.')
+        sys.exit('ERROR: magnitude limit is negative.')
+
+    if config_dict['mag_limit_on'] and config_dict['SNR_limit_on']:
+        pplogger.error('ERROR: SNR limit and magnitude limit are mutually exclusive. Please delete one or both from config file.')
+        sys.exit('ERROR: SNR limit and magnitude limit are mutually exclusive. Please delete one or both from config file.')
+    try:
+        config_dict['trailing_losses_on'] = config.getboolean('EXPERT', 'trailing_losses_on', fallback=True)
+    except ValueError:
+        pplogger.error('ERROR: could not parse value for trailing_losses_on as a boolean. Check formatting and try again.')
+        sys.exit('ERROR: could not parse value for trailing_losses_on as a boolean. Check formatting and try again.')
+
+    config_dict['pointing_sql_query'] = PPGetOrExit(config, 'EXPERT', 'pointing_sql_query', 'ERROR: no pointing database SQLite3 query provided.')
 
     if config.has_option('EXPERT', 'rng_seed'):
-        config_dict['rng_seed'] = PPGetIntOrExit(config, 'GENERAL', 'rng_seed', 'ERROR: this error should not trigger.')
+        config_dict['rng_seed'] = PPGetIntOrExit(config, 'EXPERT', 'rng_seed', 'ERROR: this error should not trigger.')
     else:
         config_dict['rng_seed'] = None
 
@@ -433,18 +432,19 @@ def PPPrintConfigsToLog(configs, cmd_args):
     if cmd_args['deleteTemporaryEphemerisDatabase']:
         pplogger.info('Temporary ephemeris database will be deleted upon code conclusion.')
 
-    if configs['cometactivity'] == 'comet':
+    if configs['comet_activity'] == 'comet':
         pplogger.info('Cometary activity set to: ' + str(configs['cometary activity']))
-    elif configs['cometactivity'] == 'none':
+    elif configs['comet_activity'] == 'none':
         pplogger.info('No cometary activity selected.')
 
-    pplogger.info('Format of ephemerides file is: ' + configs['ephFormat'])
-    pplogger.info('Format of auxiliary files is: ' + configs['filesep'])
+    pplogger.info('Format of ephemerides file is: ' + configs['eph_format'])
+    pplogger.info('Format of auxiliary files is: ' + configs['aux_format'])
 
-    pplogger.info('Pointing simulation result path is: ' + configs['pointingdatabase'])
-    pplogger.info('Pointing simulation result required query is: ' + configs['ppdbquery'])
+    pplogger.info('Pointing database path is: ' + configs['pointing_database'])
+    pplogger.info('Pointing database required query is: ' + configs['pointing_sql_query'])
 
-    pplogger.info('The main filter in which brightness is defined is ' + configs['mainfilter'])
+    pplogger.info('The number of objects processed in a single chunk is: ' + str(configs['size_serial_chunk']))
+    pplogger.info('The main filter in which H is defined is ' + configs['mainfilter'])
     rescs = ' '.join(str(f) for f in configs['observing_filters'])
     pplogger.info('The filters included in the post-processing results are ' + rescs)
 
@@ -452,57 +452,58 @@ def PPPrintConfigsToLog(configs, cmd_args):
         othcs = ' '.join(str(e) for e in configs['othercolours'])
         pplogger.info('Thus, the colour indices included in the simulation are ' + othcs)
 
-    pplogger.info('The apparent brightness is calculated using the following phase function model: ' + configs['phasefunction'])
+    pplogger.info('The apparent brightness is calculated using the following phase function model: ' + configs['phase_function'])
 
-    if configs['trailingLossesOn']:
+    if configs['trailing_losses_on']:
         pplogger.info('Computation of trailing losses is switched ON.')
     else:
         pplogger.info('Computation of trailing losses is switched OFF.')
 
-    if (configs['cameraModel'] == 'footprint'):
+    if (configs['camera_model'] == 'footprint'):
         pplogger.info('Footprint is modelled after the actual camera footprint.')
-        pplogger.info('Loading camera footprint from ' + configs['footprintPath'])
-        pplogger.info('The filling factor has been set to ' + str(configs["fillfactor"]))
+        pplogger.info('Loading camera footprint from ' + configs['footprint_path'])
     else:
-        pplogger.info('Footprint is circular')
-        if configs['fillfactor'] != 1:
-            pplogger.info('The filling factor for the circular footprint is ' + str(configs["fillfactor"]))
+        pplogger.info('Footprint is circular.')
+        if configs['fill_factor']:
+            pplogger.info('The code will approximate chip gaps using filling factor: ' + str(configs['fill_factor']))
         elif configs['circleRadius']:
-            pplogger.info('The radius of the circular footprint is ' + str(configs["circleRadius"]))
-            pplogger.info('The filling factor has been set to ' + str(configs["fillfactor"]))
+            pplogger.info('A circular footprint will be applied with radius: ' + str(configs['circle_radius']))
 
-    if configs['brightLimitOn']:
-        pplogger.info('The upper brightness limit(s) is/are ' + str(configs['brightLimit']))
+    if configs['bright_limit_on']:
+        pplogger.info('The upper saturation limit(s) is/are: ' + str(configs['bright_limit']))
     else:
-        pplogger.info('Brightness limit is turned OFF.')
+        pplogger.info('Saturation limit is turned OFF.')
 
-    if configs['SNRLimitOn']:
-        pplogger.info('The lower SNR limit is ' + str(configs['SNRLimit']))
+    if configs['SNR_limit_on']:
+        pplogger.info('The lower SNR limit is: ' + str(configs['SNR_limit']))
     else:
         pplogger.info('SNR limit is turned OFF.')
 
-    if configs['magLimitOn']:
-        pplogger.info('The magnitude limit is ' + str(configs['magLimit']))
+    if configs['mag_limit_on']:
+        pplogger.info('The magnitude limit is: ' + str(configs['mag_limit']))
     else:
         pplogger.info('Magnitude limit is turned OFF.')
 
-    if configs['fadingFunctionOn']:
+    if configs['fading_function_on']:
         pplogger.info('The detection efficiency fading function is ON.')
-        pplogger.info('The width parameter of the fading function has been set to: ' + str(configs['fadingFunctionWidth']))
+        pplogger.info('The width parameter of the fading function has been set to: ' + str(configs['fading_function_width']))
+        pplogger.info('The peak efficiency of the fading function has been set to: ' + str(configs['fading_function_peak_efficiency']))
     else:
         pplogger.info('The detection efficiency fading function is OFF.')
 
-    if configs['SSPLinkingOn']:
+    if configs['SSP_linking_on']:
         pplogger.info('Solar System Processing linking filter is turned ON.')
         pplogger.info('For SSP linking...')
-        pplogger.info('...the fractional detection efficiency is ' + str(configs["SSPDetectionEfficiency"]))
-        pplogger.info('...the minimum required number of observations in a tracklet is ' + str(configs['minTracklet']))
-        pplogger.info('...the minimum required number of tracklets is ' + str(configs['noTracklets']))
-        pplogger.info('...the maximum interval of time in days of tracklets to be contained in is ' + str(configs['trackletInterval']))
-        pplogger.info('...the minimum angular separation between observations in arcseconds is ' + str(configs['inSepThreshold']))
+        pplogger.info('...the fractional detection efficiency is: ' + str(configs["SSP_detection_efficiency"]))
+        pplogger.info('...the minimum required number of observations in a tracklet is: ' + str(configs['SSP_number_observations']))
+        pplogger.info('...the minimum required number of tracklets to form a track is: ' + str(configs['SSP_number_tracklets']))
+        pplogger.info('...the maximum window of time in days of tracklets to be contained in to form a track is: ' + str(configs['SSP_track_window']))
+        pplogger.info('...the minimum angular separation between observations in arcseconds is: ' + str(configs['SSP_separation_threshold']))
     else:
         pplogger.info('Solar System Processing linking filter is turned OFF.')
 
     pplogger.info('Output files will be saved in path: ' + cmd_args['outpath'] + ' with filestem ' + cmd_args['outfilestem'])
+    pplogger.info('Output files will be saved as format: ' + configs['output_format'])
     pplogger.info('In the output, positions will be rounded to ' + str(configs['position_decimals']) + ' decimal places.')
     pplogger.info('In the output, magnitudes will be rounded to ' + str(configs['magnitude_decimals']) + ' decimal places.')
+    pplogger.info('The output size is set to: ' + configs['output_size'])
