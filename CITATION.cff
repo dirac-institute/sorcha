@@ -1,0 +1,82 @@
+cff-version: 1.2.0
+title: surveySimPP
+message: 'If you use this software, please cite it as below.'
+type: software
+authors:
+  - given-names: Stephanie R.
+    family-names: Merritt
+    email: s.merritt@qub.ac.uk
+    affiliation: Queen's University Belfast
+    orcid: 'https://orcid.org/0000-0001-5930-2829'
+  - given-names: Grigori
+    family-names: Fedorets
+    email: g.fedorets@qub.ac.uk
+    affiliation: Queen's University Belfast
+    orcid: 'https://orcid.org/0000-0002-8418-4809'
+  - given-names: Megan E.
+    family-names: Schwamb
+    orcid: 'https://orcid.org/0000-0003-4365-1455'
+    affiliation: Queen's University Belfast
+    email: m.schwamb@qub.ac.uk
+  - given-names: Samuel
+    family-names: Cornwall
+    affiliation: University of Washington
+  - given-names: Siegfried
+    family-names: Eggl
+    orcid: 'https://orcid.org/0000-0002-1398-6302'
+    affiliation: University of Washington
+  - given-names: Mario
+    family-names: Jurić
+    affiliation: University of Washington
+    orcid: 'https://orcid.org/0000-0003-1996-9252'
+  - given-names: Aidan
+    family-names: Berres
+    affiliation: ' University of Illinois Urbana-Champaign'
+  - given-names: R. Lynne
+    family-names: Jones
+    orcid: 'https://orcid.org/0000-0001-5916-0031'
+  - given-names: Michael S. P.
+    family-names: Kelley
+    orcid: 'https://orcid.org/0000-0002-6702-7676'
+    affiliation: University of Maryland
+  - given-names: Conor
+    family-names: MacBride
+    orcid: 'https://orcid.org/0000-0002-9901-8723'
+  - given-names: Shannon
+    family-names: Matthews
+  - given-names: Shantanu
+    family-names: Naidu
+    orcid: 'https://orcid.org/0000-0003-4439-7014'
+    affiliation: >-
+      Jet Propulsion Laboratory, California Institute of
+      Technology
+  - given-names: Brian
+    family-names: Rogers
+  - given-names: Colin
+    family-names: Snodgrass
+    orcid: 'https://orcid.org/0000-0001-9328-2905'
+    affiliation: University of Edinburgh
+  - given-names: David
+    family-names: Young
+    affiliation: Queen's University Belfast
+    orcid: 'https://orcid.org/0000-0002-1229-2499'
+repository-code: >-
+  https://github.com/dirac-institute/survey_simulator_post_processing
+abstract: >-
+  surveySimPP is a survey simulator post-processing layer
+  built for the upcoming Legacy Survey of Space and Time.
+  With this code, the user is able to create a synthetic
+  Solar System small body population and run them through
+  the Survey Simulator, which applies the specific
+  observational biases from the LSST. In this way, a
+  synthetic population can be compared to real LSST
+  observations. The Survey Simulator is formed of two Python
+  packages working in tandem. The first part is an
+  ephemerides generator. While the user can use any relevant
+  ephemerides generator, we recommend using Objects in Field
+  (OIF) package for this. The second piece of software is
+  Post Processing (surveySimPP), which applies the relevant
+  observational biases to simulate what would be detected by
+  LSST, using what we have called filters.
+license: GPL-3.0
+version: 0.0.0
