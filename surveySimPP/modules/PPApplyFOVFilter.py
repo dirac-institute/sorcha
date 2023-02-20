@@ -27,14 +27,9 @@ def PPApplyFOVFilter(observations, configs, rng, verbose=False):
     pplogger = logging.getLogger(__name__)
     verboselog = pplogger.info if verbose else lambda *a, **k: None
 
-    if configs['cameraModel'] == 'circle' and not configs['fadingFunctionOn']:
-        verboselog('FOV is circular and fading function is off. Removing random observations.')
-
-        observations = PPSimpleSensorArea(observations, rng, configs['fillfactor'])
-
-    elif configs['cameraModel'] == 'footprint':
+    if configs['camera_model'] == 'footprint':
         verboselog('Applying sensor footprint filter...')
-        footprintf = PPFootprintFilter.Footprint(configs['footprintPath'])
+        footprintf = PPFootprintFilter.Footprint(configs['footprint_path'])
         onSensor, detectorIDs = footprintf.applyFootprint(observations)
 
         observations = observations.iloc[onSensor].copy()
@@ -42,9 +37,14 @@ def PPApplyFOVFilter(observations, configs, rng, verbose=False):
 
         observations = observations.sort_index()
 
-    elif configs['cameraModel'] == 'circle' and configs['circleRadius']:
-        verboselog('Applying circular footprint filter...')
-        observations = PPCircleFootprint(observations, configs['circleRadius'])
+    if configs['camera_model'] == 'circle':
+        verboselog('FOV is circular...')
+        if configs['circle_radius']:
+            verboselog('Circle radius is set. Applying circular footprint filter...')
+            observations = PPCircleFootprint(observations, configs['circle_radius'])
+        if configs['fill_factor']:
+            verboselog('Fill factor is set. Removing random observations to mimic chip gaps.')
+            observations = PPSimpleSensorArea(observations, rng, configs['fill_factor'])
 
     return observations
 

@@ -18,15 +18,15 @@ def test_PPReadAllInput():
                 'readTemporaryEphemerisDatabase': None,
                 'verbose': False}
 
-    configs = {'cometactivity': 'none',
-               'filesep': 'whitespace',
+    configs = {'comet_activity': 'none',
+               'aux_format': 'whitespace',
                'ephemerides_type': 'oif',
-               'ephFormat': 'whitespace',
-               'pointingdatabase': get_test_filepath('baseline_10yrs_10klines.db'),
+               'eph_format': 'whitespace',
+               'pointing_database': get_test_filepath('baseline_10yrs_10klines.db'),
                'observing_filters': ['u', 'g', 'r', 'i', 'z', 'y'],
-               'ppdbquery': 'SELECT observationId, observationStartMJD, filter, seeingFwhmGeom, seeingFwhmEff, fiveSigmaDepth, fieldRA, fieldDec, rotSkyPos FROM SummaryAllProps order by observationId'}
+               'pointing_sql_query': 'SELECT observationId, observationStartMJD, filter, seeingFwhmGeom, seeingFwhmEff, fiveSigmaDepth, fieldRA, fieldDec, rotSkyPos FROM SummaryAllProps order by observationId'}
 
-    filterpointing = PPReadPointingDatabase(configs['pointingdatabase'], configs['observing_filters'], configs['ppdbquery'])
+    filterpointing = PPReadPointingDatabase(configs['pointing_database'], configs['observing_filters'], configs['pointing_sql_query'])
 
     observations = PPReadAllInput(cmd_args, configs, filterpointing, 0, 10)
 

@@ -102,6 +102,14 @@ def main():
 
     args = parser.parse_args()
 
+    # check that mandatory arguments exist
+
+    if not os.path.exists(args.o):
+        sys.exit('ERROR: supplied filepath for location of orbits files not found.')
+
+    if not os.path.isfile(args.pointing):
+        sys.exit('ERROR: file not found at supplied pointing database location.')
+
     # error checks that optional inputs are within the right range
 
     if (args.inputformat != 'whitespace') and (args.inputformat != 'CSV'):

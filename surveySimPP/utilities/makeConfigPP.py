@@ -5,53 +5,63 @@
 import argparse
 import configparser
 import os
+import sys
 
 
 def makeConfigFile(args):
 
     config = configparser.ConfigParser()
 
-    filtering_raw = {'brightLimit': str(args.brightlimit),
-                     'fadingFunctionOn': str(args.fadingfunction),
-                     'fadingFunctionWidth': str(args.fadingwidth),
-                     'fillfactor': str(args.fillfactor),
-                     'SSPDetectionEfficiency': str(args.detectionefficiency),
-                     'minTracklet': str(args.mintracklet),
-                     'noTracklets': str(args.notracklets),
-                     'trackletInterval': str(args.trackletinterval),
-                     'inSepThreshold': str(args.insepthreshold)}
+    bright_raw = {'bright_limit': str(args.brightlimit)}
 
-    expert_raw = {'SNRLimit': str(args.snrlimit),
-                  'magLimit': str(args.maglimit),
-                  'trailingLossesOn': str(args.trailinglosseson)}
+    linking_raw = {'SSP_detection_efficiency': str(args.detectionefficiency),
+                   'SSP_number_observations': str(args.numobservations),
+                   'SSP_number_tracklets': str(args.numtracklets),
+                   'SSP_track_window': str(args.trackwindow),
+                   'SSP_separation_threshold': str(args.septhreshold)}
 
-    filtering_dict = {k: v for k, v in filtering_raw.items() if v != 'None'}
+    fov_raw = {'camera_model': str(args.cameramodel),
+               'footprint_path': str(args.footprintpath),
+               'fill_factor': str(args.fillfactor),
+               'circle_radius': str(args.circleradius)}
+
+    fading_raw = {'fading_function_on': str(args.fadingfunction),
+                  'fading_function_width': str(args.fadingwidth),
+                  'fading_function_peak_efficiency': str(args.fadingpeak)}
+
+    expert_raw = {'SNR_limit': str(args.snrlimit),
+                  'mag_limit': str(args.maglimit),
+                  'trailing_losses_on': str(args.trailinglosseson),
+                  'pointing_sql_query': str(args.sqlquery)}
+
+    bright_dict = {k: v for k, v in bright_raw.items() if v != 'None'}
+    fov_dict = {k: v for k, v in fov_raw.items() if v != 'None'}
+    linking_dict = {k: v for k, v in linking_raw.items() if v != 'None'}
+    fading_dict = {k: v for k, v in fading_raw.items() if v != 'None'}
     expert_dict = {k: v for k, v in expert_raw.items() if v != 'None'}
 
     config_dict = {
-            'OBJECTS':
-            {'cometactivity': args.cometactivity},
-            'INPUTFILES':
+            'ACTIVITY':
+            {'comet_activity': args.cometactivity},
+            'INPUT':
             {'ephemerides_type': args.ephemeridestype,
-                'pointingdatabase': os.path.abspath(args.pointingdatabase),
-                'footprintPath': os.path.abspath(args.footprintpath),
-                'ppsqldbquery': args.ppsqldbquery,
-                'ephFormat': args.ephformat,
-                'auxFormat': args.auxformat},
+             'pointing_database': os.path.abspath(args.pointingdatabase),
+             'eph_format': args.ephformat,
+             'aux_format': args.auxformat,
+             'size_serial_chunk': str(args.sizeserialchunk)},
             'FILTERS':
             {'observing_filters': args.observingfilters},
-            'PHASE':
-            {'phasefunction': args.phasefunction},
-            'PERFORMANCE':
-            {'cameraModel': args.cameramodel},
-            'FILTERINGPARAMETERS': filtering_dict,
-            'OUTPUTFORMAT':
-            {'outputformat': args.outputformat,
-                'outputsize': args.outputsize,
-                'position_decimals': str(args.positiondecimals),
-                'magnitude_decimals': str(args.magnitudedecimals)},
-            'GENERAL':
-            {'sizeSerialChunk': str(args.sizeserialchunk)},
+            'SATURATION': bright_dict,
+            'PHASECURVES':
+            {'phase_function': args.phasefunction},
+            'FOV': fov_dict,
+            'FADINGFUNCTION': fading_dict,
+            'LINKINGFILTER': linking_dict,
+            'OUTPUT':
+            {'output_format': args.outputformat,
+             'output_size': args.outputsize,
+             'position_decimals': str(args.positiondecimals),
+             'magnitude_decimals': str(args.magnitudedecimals)},
             'EXPERT': expert_dict
                  }
 
@@ -67,50 +77,64 @@ def main():
 
     parser.add_argument('filename', help='Filepath where you want to store the config file.', type=str)
 
-    # OBJECTS
-    parser.add_argument('--cometactivity', '-com', help='Type of cometary activity. Options are "comet" or None. Default is none.', type=str, default='none')
-
-    # INPUTFILES
+    # INPUT
     parser.add_argument('--ephemeridestype', '-eph', help='Type of input ephemerides: default = oif. Options: currently only oif.', type=str, default='oif')
     parser.add_argument('--pointingdatabase', '-inpt', help='Path to pointing database. Default is "./demo/baseline_v2.0_1yr.db".', type=str, default='./demo/baseline_v2.0_1yr.db')
-    parser.add_argument('--footprintpath', '-infoot', help='Path to camera footprint file. Default is "./data/detectors_corners.csv".', type=str, default='./data/detectors_corners.csv')
     parser.add_argument('--ephformat', '-inptf', help='Separator in ephemeris database: csv, whitespace, hdf5. Default is "whitespace".', type=str, default='whitespace')
     parser.add_argument('--auxformat', '-inauxf', help='Separator in orbit/colour/brightness/cometary data files: comma or whitespace. Default is "whitespace".', type=str, default='whitespace')
-    parser.add_argument('--ppsqldbquery', '-query', help='Database query for extracting data for pointing database.', type=str, default='SELECT observationId, observationStartMJD, filter, seeingFwhmGeom, seeingFwhmEff, fiveSigmaDepth, fieldRA, fieldDec, rotSkyPos FROM observations order by observationId')
+    parser.add_argument('--sizeserialchunk', '-chunk', help='Size of chunk of objects to be processed serially. Default is 10.', type=int, default=10)
+
+    # ACTIVITY
+    parser.add_argument('--cometactivity', '-com', help='Type of cometary activity. Options are "comet" or None. Default is none.', type=str, default='none')
 
     # FILTERS
     parser.add_argument('--observingfilters', '-rfilt', help='Observing filters: main filter in which H is calculated, followed by resolved colours, such as, e.g. \'r\'+\'g-r\'=\'g\'. Should be separated by comma. Default is "r,g,i,z"', type=str, default='r,g,i,z')
 
-    # PHASE
+    # SATURATION
+    parser.add_argument('--brightlimit', '-brtlim', help='Limit of brightness: detections brighter than this are omitted assuming saturation. Expects a float or None to omit. Default is 16.0.', type=float, default=16.0)
+
+    # PHASECURVES
     parser.add_argument('--phasefunction', '-phfunc', help='Define the used input phase function. Options: HG, HG1G2, HG12, linear, none. Default is "HG".', type=str, default='HG')
 
-    # PERFORMANCE
-    parser.add_argument('--trailinglosseson', '-tloss', help='Switch on trailing losses. Relevant for close-approaching NEOs. Default True.', type=bool, default=True)
+    # FOV
     parser.add_argument('--cameramodel', '-cammod', help='Choose between surface area equivalent or actual camera footprint, including chip gaps. Options: circle, footprint. Default is "footprint".', type=str, default='footprint')
+    parser.add_argument('--footprintpath', '-infoot', help='Path to camera footprint file. Default is "./data/detectors_corners.csv".', type=str, default='./data/detectors_corners.csv')
+    parser.add_argument('--fillfactor', '-ff', help='Fraction of detector surface area which contains CCD -- simulates chip gaps. Expects a float or None to omit. Default is None.', type=float, default=None)
+    parser.add_argument('--circleradius', '-circ', help='Radius of the circle for a circular footprint (in degrees). Default is None.', type=float, default=None)
 
-    # FILTERINGPARAMETERS
-    parser.add_argument('--snrlimit', '-snr', help='SNR limit: drop observations below this SNR threshold. Omit for no SNR cut.', type=float, default=None)
-    parser.add_argument('--maglimit', '-mag', help='Magnitude threshold: drop observations below this magnitude. Omit for no magnitude cut.', type=float, default=None)
+    # FADINGFUNCTION
     parser.add_argument('--fadingfunction', '-fade', help='Detection efficiency fading function on or off.', type=bool, default=True)
     parser.add_argument('--fadingwidth', '-fadew', help='Width parameter for fading function. Default is 0.1 after Chelsey and Vereš (2017) or None to omit.', type=float, default=0.1)
-    parser.add_argument('--detectionefficiency', '-deteff', help='Which fraction of the detections will the automated solar system processing pipeline recognise? Expects a float. Default is 0.95.', type=float, default=0.95)
-    parser.add_argument('--fillfactor', '-ff', help='Fraction of detector surface area which contains CCD -- simulates chip gaps. Expects a float or None to omit. Default is None.', type=float, default=None)
-    parser.add_argument('--mintracklet', '-mintrk', help='How many observations during one night are required to produce a valid tracklet? Expects an int or None to omit. Default 2.', type=int, default=2)
-    parser.add_argument('--notracklets', '-ntrk', help='How many tracklets are required to classify as a detection? Expects an int or None to omit. Default 3.', type=int, default=3)
-    parser.add_argument('--trackletinterval', '-inttrk', help='In what amount of time does the aforementioned number of tracklets needs to be discovered to constitute a complete detection? In days. Expects a float or None to omit. Default 15.0.', type=float, default=15.0)
-    parser.add_argument('--brightlimit', '-brtlim', help='Limit of brightness: detections brighter than this are omitted assuming saturation. Expects a float or None to omit. Default is 16.0.', type=float, default=16.0)
-    parser.add_argument('--insepthreshold', '-minsep', help='Minimum separation inside the tracklet for SSP distinguish motion between two images, in arcsec. Expects a float or None to omit. Default is 0.5.', type=float, default=0.5)
+    parser.add_argument('--fadingpeak', '-fadep', help='Peak efficiency parameter for fading function. Default is 1 or None to omit.', type=float, default=1.)
 
-    # OUTPUTFORMAT
+    # LINKINGFILTER
+    parser.add_argument('--detectionefficiency', '-deteff', help='Which fraction of the detections will the automated solar system processing pipeline recognise? Expects a float. Default is 0.95.', type=float, default=0.95)
+    parser.add_argument('--numobservations', '-nobs', help='How many observations during one night are required to produce a valid tracklet? Expects an int or None to omit. Default 2.', type=int, default=2)
+    parser.add_argument('--numtracklets', '-ntrk', help='How many tracklets are required to classify as a detection? Expects an int or None to omit. Default 3.', type=int, default=3)
+    parser.add_argument('--trackwindow', '-trkwin', help='In what amount of time does the aforementioned number of tracklets needs to be discovered to constitute a complete detection? In days. Expects a float or None to omit. Default 15.0.', type=float, default=15.0)
+    parser.add_argument('--septhreshold', '-minsep', help='Minimum separation inside the tracklet for SSP distinguish motion between two images, in arcsec. Expects a float or None to omit. Default is 0.5.', type=float, default=0.5)
+
+    # OUTPUT
     parser.add_argument('--outputformat', '-outf', help='Output format. Options: csv, sqlite3, hdf5. Default is csv.', type=str, default='csv')
     parser.add_argument('--outputsize', '-outs', help='Size of output. Controls which columns are in the output files. Options are "default" only.', type=str, default='default')
     parser.add_argument('--positiondecimals', '-posd', help='Decimal places RA and Dec should be rounded to in output. Default is 7.', type=int, default=7)
     parser.add_argument('--magnitudedecimals', '-magd', help='Decimal places magnitudes should be rounded to in output. Default is 3.', type=int, default=3)
 
-    # GENERAL
-    parser.add_argument('--sizeserialchunk', '-chunk', help='Size of chunk of objects to be processed serially. Default is 10.', type=int, default=10)
+    # EXPERT
+    parser.add_argument('--snrlimit', '-snr', help='SNR limit: drop observations below this SNR threshold. Omit for no SNR cut.', type=float, default=None)
+    parser.add_argument('--maglimit', '-mag', help='Magnitude threshold: drop observations below this magnitude. Omit for no magnitude cut.', type=float, default=None)
+    parser.add_argument('--sqlquery', '-query', help='Database query for extracting data for pointing database.', type=str, default='SELECT observationId, observationStartMJD, filter, seeingFwhmGeom, seeingFwhmEff, fiveSigmaDepth, fieldRA, fieldDec, rotSkyPos FROM observations order by observationId')
+    parser.add_argument('--trailinglosseson', '-tloss', help='Switch on trailing losses. Relevant for close-approaching NEOs. Default True.', type=bool, default=True)
 
     args = parser.parse_args()
+
+    # error handling
+
+    if not os.path.isfile(args.pointingdatabase):
+        sys.exit('ERROR: file not found at supplied pointing database location.')
+
+    if not os.path.isfile(args.footprintpath):
+        sys.exit('ERROR: file not found at supplied footprint location.')
 
     makeConfigFile(args)
 

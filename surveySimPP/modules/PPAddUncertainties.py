@@ -42,7 +42,7 @@ def addUncertainties(detDF, configs, rng):
 
     detDF['AstrometricSigma(deg)'], detDF['PhotometricSigmaTrailedSource(mag)'], detDF['SNR'] = uncertainties(detDF, configs, filterMagName='TrailedSourceMag')
 
-    if configs['trailingLossesOn']:
+    if configs['trailing_losses_on']:
         _, detDF['PhotometricSigmaPSF(mag)'], detDF['SNR'] = uncertainties(detDF, configs, filterMagName='PSFMag')
     else:
         detDF['PhotometricSigmaPSF(mag)'] = detDF['PhotometricSigmaTrailedSource(mag)']
@@ -51,7 +51,7 @@ def addUncertainties(detDF, configs, rng):
                                             detDF, rng, magName="TrailedSourceMag",
                                             sigName="PhotometricSigmaTrailedSource(mag)")
 
-    if configs['trailingLossesOn']:
+    if configs['trailing_losses_on']:
         detDF["observedPSFMag"] = PPRandomizeMeasurements.randomizePhotometry(
                                                 detDF, rng, magName="PSFMag",
                                                 sigName="PhotometricSigmaPSF(mag)")
@@ -79,7 +79,7 @@ def uncertainties(detDF, configs,
     ephemsOut ... ephems Pandas dataFrame (observations with added uncertainties)
     """
 
-    if configs['trailingLossesOn']:
+    if configs['trailing_losses_on']:
         dMag = PPTrailingLoss.calcTrailingLoss(detDF[dra_name] * degCos(detDF[dec_name]),
                                                detDF[ddec_name],
                                                detDF[seeingName])

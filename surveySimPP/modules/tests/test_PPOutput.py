@@ -17,7 +17,7 @@ def setup_and_teardown_for_PPOutWriteCSV():
 
     os.remove(os.path.join(tmp_path, 'test_csv_out.csv'))
 
-    
+
 @pytest.fixture
 def setup_and_teardown_for_PPOutWriteHDF5():
 
@@ -113,19 +113,19 @@ def test_PPWriteOutput(setup_and_teardown_for_PPWriteOutput):
     cmd_args = {'outpath': tmp_path,
                 'outfilestem': 'PPOutput_test_out'}
 
-    configs = {'outputsize': 'default',
+    configs = {'output_size': 'default',
                'position_decimals': 7,
                'magnitude_decimals': 3,
-               'outputformat': 'csv'}
+               'output_format': 'csv'}
 
     PPWriteOutput(cmd_args, configs, observations, 10)
     csv_test_in = pd.read_csv(os.path.join(tmp_path, 'PPOutput_test_out.csv'))
 
-    configs['outputformat'] = 'separatelycsv'
+    configs['output_format'] = 'separatelycsv'
     PPWriteOutput(cmd_args, configs, observations, 10)
     sep_test_in = pd.read_csv(os.path.join(tmp_path, 'S1000000a_PPOutput_test_out.csv'))
 
-    configs['outputformat'] = 'sqlite3'
+    configs['output_format'] = 'sqlite3'
     PPWriteOutput(cmd_args, configs, observations, 10)
     cnx = sqlite3.connect(os.path.join(tmp_path, 'PPOutput_test_out.db'))
     cur = cnx.cursor()

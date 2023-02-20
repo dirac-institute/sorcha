@@ -58,9 +58,9 @@ def test_PPApplyFOVFilters():
 
     rng = np.random.default_rng(2021)
 
-    configs = {'cameraModel': 'circle',
-               'fadingFunctionOn': True,
-               'circleRadius': 1.1}
+    configs = {'camera_model': 'circle',
+               'circle_radius': 1.1,
+               'fill_factor': None}
 
     new_obs = PPApplyFOVFilter(observations, configs, rng)
     expected = [897478, 897521, 901987, 902035, 907363, 907416, 907470, 910850,
@@ -68,18 +68,17 @@ def test_PPApplyFOVFilters():
 
     assert_equal(new_obs['FieldID'].values, expected)
 
-    configs = {'cameraModel': 'circle',
-               'fadingFunctionOn': False,
-               'fillfactor': 0.5}
+    configs = {'camera_model': 'circle',
+               'fill_factor': 0.5,
+               'circle_radius': None}
 
     new_obs = PPApplyFOVFilter(observations, configs, rng)
     expected = [897521, 902035, 907363, 907416, 907470, 910872, 915246, 922013]
 
     assert_equal(new_obs['FieldID'].values, expected)
 
-    configs = {'cameraModel': 'footprint',
-               'footprintPath': get_test_filepath('detectors_corners.csv'),
-               'fillfactor': 1}
+    configs = {'camera_model': 'footprint',
+               'footprint_path': get_test_filepath('detectors_corners.csv')}
 
     new_obs = PPApplyFOVFilter(observations, configs, rng)
     expected = [894816, 894838, 897478, 897521, 901987, 902035, 907363, 907416,

@@ -54,7 +54,7 @@ def runLSSTPostProcessing(cmd_args):
 
     configs['mainfilter'], configs['othercolours'] = PPGetMainFilterAndColourOffsets(cmd_args['paramsinput'],
                                                                                      configs['observing_filters'],
-                                                                                     configs['filesep'])
+                                                                                     configs['aux_format'])
 
     PPPrintConfigsToLog(configs, cmd_args)
 
@@ -62,11 +62,11 @@ def runLSSTPostProcessing(cmd_args):
 
     if cmd_args['makeTemporaryEphemerisDatabase']:
         verboselog('Creating temporary ephemeris database...')
-        cmd_args['readTemporaryEphemerisDatabase'] = PPMakeTemporaryEphemerisDatabase(cmd_args['oifoutput'], cmd_args['makeTemporaryEphemerisDatabase'], configs["ephFormat"])
+        cmd_args['readTemporaryEphemerisDatabase'] = PPMakeTemporaryEphemerisDatabase(cmd_args['oifoutput'], cmd_args['makeTemporaryEphemerisDatabase'], configs['eph_format'])
 
     verboselog('Reading pointing database...')
 
-    filterpointing = PPReadPointingDatabase(configs['pointingdatabase'], configs['observing_filters'], configs['ppdbquery'])
+    filterpointing = PPReadPointingDatabase(configs['pointing_database'], configs['observing_filters'], configs['pointing_sql_query'])
 
     verboselog('Instantiating random number generator ... ')
 
@@ -94,9 +94,9 @@ def runLSSTPostProcessing(cmd_args):
     lenf = ii
 
     while (endChunk < lenf):
-        endChunk = startChunk + configs['sizeSerialChunk']
-        if (lenf - startChunk > configs['sizeSerialChunk']):
-            incrStep = configs['sizeSerialChunk']
+        endChunk = startChunk + configs['size_serial_chunk']
+        if (lenf - startChunk > configs['size_serial_chunk']):
+            incrStep = configs['size_serial_chunk']
         else:
             incrStep = lenf - startChunk
 
@@ -109,21 +109,19 @@ def runLSSTPostProcessing(cmd_args):
 
         verboselog('Calculating apparent magnitudes...')
         observations = PPCalculateApparentMagnitude(observations,
-                                                    configs['phasefunction'],
+                                                    configs['phase_function'],
                                                     configs['mainfilter'],
                                                     configs['othercolours'],
                                                     configs['observing_filters'],
-                                                    configs['cometactivity'],
+                                                    configs['comet_activity'],
                                                     verbose=cmd_args['verbose'])
 
-        # ----------------------------------------------------------------------
-        if configs['trailingLossesOn']:
+        if configs['trailing_losses_on']:
             verboselog('Calculating trailing losses...')
             dmagDetect = PPTrailingLoss(observations, "circularPSF")
             observations['PSFMag'] = dmagDetect + observations['TrailedSourceMag']
         else:
             observations['PSFMag'] = observations['TrailedSourceMag']
-        # ----------------------------------------------------------------------
 
         verboselog('Calculating effects of vignetting on limiting magnitude...')
         observations['fiveSigmaDepthAtSource'] = PPVignetting.vignettingEffects(observations)
@@ -143,36 +141,36 @@ def runLSSTPostProcessing(cmd_args):
         observations["AstDecTrue(deg)"] = observations["AstDec(deg)"]
         observations["AstRA(deg)"], observations["AstDec(deg)"] = PPRandomizeMeasurements.randomizeAstrometry(observations, rng, sigName='AstrometricSigma(deg)', sigUnits='deg')
 
-        if configs['fillfactor'] == 1:
-            verboselog('Re-applying field-of-view filters...')
+        if configs['camera_model'] == 'footprint':
+            verboselog('Re-applying field-of-view filter...')
             observations = PPApplyFOVFilter(observations, configs, rng, verbose=cmd_args['verbose'])
 
-        if configs['SNRLimitOn']:
-            verboselog('Dropping observations with signal to noise ratio less than {}...'.format(configs['SNRLimit']))
-            observations = PPSNRLimit(observations, configs['SNRLimit'])
+        if configs['SNR_limit_on']:
+            verboselog('Dropping observations with signal to noise ratio less than {}...'.format(configs['SNR_limit']))
+            observations = PPSNRLimit(observations, configs['SNR_limit'])
 
-        if configs['magLimitOn']:
+        if configs['mag_limit_on']:
             verboselog('Dropping detections fainter than user-defined magnitude limit... ')
-            observations = PPMagnitudeLimit(observations, configs['magLimit'])
+            observations = PPMagnitudeLimit(observations, configs['mag_limit'])
 
-        if configs['fadingFunctionOn']:
+        if configs['fading_function_on']:
             verboselog('Applying detection efficiency fading function...')
-            observations = PPFadingFunctionFilter(observations, configs['fillfactor'], configs['fadingFunctionWidth'], rng, verbose=cmd_args['verbose'])
+            observations = PPFadingFunctionFilter(observations, configs['fading_function_peak_efficiency'], configs['fading_function_width'], rng, verbose=cmd_args['verbose'])
 
-        if configs['brightLimitOn']:
+        if configs['bright_limit_on']:
             verboselog('Dropping observations that are too bright...')
-            observations = PPBrightLimit(observations, configs['observing_filters'], configs['brightLimit'])
+            observations = PPBrightLimit(observations, configs['observing_filters'], configs['bright_limit'])
 
-        if configs['SSPLinkingOn']:
+        if configs['SSP_linking_on']:
             verboselog('Applying SSP linking filter...')
             verboselog('Number of rows BEFORE applying SSP linking filter: ' + str(len(observations.index)))
 
             observations = PPLinkingFilter(observations,
-                                           configs['SSPDetectionEfficiency'],
-                                           configs['minTracklet'],
-                                           configs['noTracklets'],
-                                           configs['trackletInterval'],
-                                           configs['inSepThreshold'],
+                                           configs['SSP_detection_efficiency'],
+                                           configs['SSP_number_observations'],
+                                           configs['SSP_number_tracklets'],
+                                           configs['SSP_track_window'],
+                                           configs['SSP_separation_threshold'],
                                            rng)
 
             observations.reset_index(drop=True, inplace=True)
@@ -181,7 +179,7 @@ def runLSSTPostProcessing(cmd_args):
         # write output
         PPWriteOutput(cmd_args, configs, observations, endChunk, verbose=cmd_args['verbose'])
 
-        startChunk = startChunk + configs['sizeSerialChunk']
+        startChunk = startChunk + configs['size_serial_chunk']
         # end for
 
     if cmd_args['deleteTemporaryEphemerisDatabase']:
