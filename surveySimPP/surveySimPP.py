@@ -161,6 +161,11 @@ def runLSSTPostProcessing(cmd_args):
             verboselog('Dropping observations that are too bright...')
             observations = PPBrightLimit(observations, configs['observing_filters'], configs['bright_limit'])
 
+        if len(observations) == 0:
+            verboselog('No observations left in chunk. Skipping to next chunk...')
+            startChunk = startChunk + configs['size_serial_chunk']
+            continue
+
         if configs['SSP_linking_on']:
             verboselog('Applying SSP linking filter...')
             verboselog('Number of rows BEFORE applying SSP linking filter: ' + str(len(observations.index)))
