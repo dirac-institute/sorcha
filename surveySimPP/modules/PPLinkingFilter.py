@@ -1,13 +1,9 @@
-#!/usr/bin/python
-
 import pandas as pd
 import numpy as np
 from astropy import units as u
 from astropy.coordinates import SkyCoord
 
 from .PPDetectionEfficiency import PPDetectionEfficiency
-
-# Author: Steph Merritt
 
 
 def PPLinkingFilter(observations,
@@ -26,23 +22,28 @@ def PPLinkingFilter(observations,
     Parameters:
     -----------
     detection_efficiency (float): the fractional percentage of successfully linked
-                                  detections
-    min_observations (int):       the minimum number of observations in a night required
-                                  to form a tracklet
-    min_tracklets (int):          the minimum number of tracklets required to
-                                  form a valid track
-    tracklet_interval (int):      the time window (in days) in which the minimum number of
-                                  tracklets must occur to form a valid track
-    minimum_separation (float):   the minimum separation inside a tracklet for it
-                                  to be recognised as motion between images (in arcseconds)
-    rng (numpy RNG object):       random number generator object
-    survey_name (str)             a string with the survey name. used for time-zone purposes.
+    detections.
 
+    min_observations (int): the minimum number of observations in a night required
+    to form a tracklet.
+
+    min_tracklets (int): the minimum number of tracklets required to form a valid track.
+
+    tracklet_interval (int): the time window (in days) in which the minimum number of
+    tracklets must occur to form a valid track.
+
+    minimum_separation (float): the minimum separation inside a tracklet for it
+    to be recognised as motion between images (in arcseconds).
+
+    rng (numpy Generator object): numpy random number generator object.
+
+    survey_name (str): a string with the survey name. used for time-zone purposes.
+    Currently only accepts "lsst", "LSST".
 
     Returns:
     -----------
     observations_out (pandas dataframe): a pandas dataframe containing observations
-                                         of linked objects
+    of linked objects only.
 
     """
 

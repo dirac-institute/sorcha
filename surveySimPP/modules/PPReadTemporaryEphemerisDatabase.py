@@ -1,26 +1,24 @@
-#!/usr/bin/python
-
 import pandas as pd
 import sqlite3
 import logging
 import sys
 
-# Author: Grigori fedorets
-
 
 def PPReadTemporaryEphemerisDatabase(intermdb, part_objid_list):
     """
-    PPReadTemporaryEphemerisDatabase.py
+    Reads in the temporary pointing sqlite3 database specified
+    by a subset of object IDs, and outputs a pandas dataframe.
 
-    Description: This task reads in the temporary pointing sqlite3 database specified
-    by a subset of object ids, and outputs a pandas dataframe.
+    Parameters:
+    -----------
+    intermdb (string): filepath/name of temporary database.
 
-    Mandatory input:      string, intermdb, name of temporary database sqlite3 database
-                          list(string), list of input ObjIDs
+    part_objid_list (list): list of object IDs to read in from temporary database.
 
-    Output:               pandas dataframe
+    Returns:
+    -----------
+    padafr (Pandas dataframe): dataframe pulled from temporary database.
 
-    usage: padafr=PPReadTemporaryEphemerisDatabase(intermdb,part_objid_list)
     """
 
     pplogger = logging.getLogger(__name__)

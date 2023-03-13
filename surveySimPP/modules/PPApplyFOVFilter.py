@@ -1,5 +1,3 @@
-#!/usr/bin/python
-
 from . import PPFootprintFilter
 import logging
 import numpy as np
@@ -8,20 +6,23 @@ from astropy.coordinates import SkyCoord
 
 def PPApplyFOVFilter(observations, configs, rng, verbose=False):
     """
-    PPApplyFootprint.py
-
-    Author: Steph Merritt
-
     Wrapper function for PPFootprintFilter and PPFilterDetectionEfficiency. Checks to see
     whether a camera footprint filter should be applied or if a simple fraction of the
     circular footprint should be used, then applies the required filter.
 
-    Input:
-    --------
-    observations: Pandas dataframe of simulation data joined with pointing info.
-    configs: dictionary of config variables
+    Parameters:
+    -----------
+    observations (Pandas dataframe): dataframe of observations.
 
+    configs (dictionary): dictionary of variables from config file.
 
+    rng (numpy Generator): numpy random number generator object.
+
+    verbose (boolean): Verbose mode on or off.
+
+    Returns:
+    -----------
+    observations (Pandas dataframe): dataframe of observations after FOV filters have been applied.
     """
 
     pplogger = logging.getLogger(__name__)
@@ -50,20 +51,23 @@ def PPApplyFOVFilter(observations, configs, rng, verbose=False):
 
 
 def PPGetSeparation(obj_RA, obj_Dec, cen_RA, cen_Dec):
-    """Function to calculate the distance of
-    an object from the field centre if given RA and Dec for them both.
+    """
+    Function to calculate the distance of an object from the field centre.
 
     Parameters:
     -----------
-    obj_RA: float of RA of object in decimal degrees
-    obj_Dec: float of Dec of object in decimal degrees
-    cen_RA: float of RA of field centre in decimal degrees
-    cen_Dec: float of Dec of field centre in decimal degrees
+    obj_RA (float): RA of object in decimal degrees.
+
+    obj_Dec (float): Dec of object in decimal degrees.
+
+    cen_RA (float): RA of field centre in decimal degrees.
+
+    cen_Dec (float): Dec of field centre in decimal degrees.
 
     Returns:
-    ----------
-    sep_degree: The separation of the object from the centre of the field, in decimal
-    degrees, as a float.
+    -----------
+    sep_degree (float): The separation of the object from the centre of the field, in decimal
+    degrees.
 
     """
 
@@ -81,12 +85,14 @@ def PPCircleFootprint(observations, circle_radius):
 
     Parameters:
     -----------
-    observations: Pandas dataframe of observations
-    circle_radius: Radius of circle footprint in degrees (int)
+    observations (Pandas dataframe): dataframe of observations.
+
+    circle_radius (float): radius of circle footprint in degrees.
 
     Returns:
     ----------
-    Pandas dataframe of observations with all lying beyond the circle radius dropped.
+    new_observations (Pandas dataframe): dataframe of observations with all lying
+    beyond the circle radius dropped.
 
     """
 
@@ -109,19 +115,24 @@ def PPCircleFootprint(observations, circle_radius):
 
 
 def PPSimpleSensorArea(ephemsdf, rng, fillfactor=0.9):
-    '''Randomly removes a number of observations proportional to the
+    """
+    Randomly removes a number of observations proportional to the
     fraction of the field not covered by the detector.
 
     Parameters:
+    -----------
+    ephemsdf (Pandas dataframe): dataframe containing observations.
+
+    rng (numpy Generator): numpy random number generator object.
+
+    fillfactor (float): fraction of FOV covered by the sensor.
+
+    Returns:
     ----------
-    ephemsdf   ... pandas dataFrame containing observations
-    fillfactor ... fraction of FOV covered by the sensor
+    ephemsOut (Pandas dataframe): dataframe of observations with fraction removed.
 
-    Returns
-    -------
-    ephemsOut  ... pandas dataFrame
+    """
 
-    '''
     n = len(ephemsdf)
 
     randomNum = rng.random(n)

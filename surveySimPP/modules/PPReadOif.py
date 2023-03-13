@@ -1,39 +1,27 @@
-#!/bin/python
-
 import sys
 import pandas as pd
 import numpy as np
 import logging
 
-# Author: Grigori Fedorets
-
 
 def PPReadOif(oif_output, inputformat):
     """
-    PPReadOif.py
-
-
-
-    Description: This task reads in the output of oif (objectsInField) and puts it into a
+    Reads in the output of OIF (objectsInField) and puts it into a
     single pandas dataframe for further use downstream by other tasks.
-
-    This task should be used as the first one in the collection of subsequent tasks
-    called recipes.
 
     Any other relevant data (e.g. magnitudes and colours) are read and amended to the
     main pandas dataframe by separate tasks.
 
+    Parameters:
+    -----------
+    oif_output (string): location/name of OIF output file.
 
+    inputformat (string): format of input file ("whitespace"/"comma"/"csv"/"h5"/"hdf5").
 
-    Mandatory input:      string, oif_output, name of text file including Output from objectsInField (oif)
-                         string, inputformat, input format of pointing putput (csv, whitespace, hdf5)
+    Returns:
+    -----------
+    padafr (Pandas dataframe): dataframe of OIF output.
 
-
-
-    Output:               pandas dataframe
-
-
-    usage: padafr=PPReadOif(oif_output,inputformat)
     """
 
     pplogger = logging.getLogger(__name__)
@@ -75,6 +63,19 @@ def PPSkipOifHeader(filename, line_start='ObjID', **kwargs):
     """Utility function that scans through the lines of OIF output looking for
     the column names then passes the file object to pandas starting from that
     line, thus skipping the long OIF header.
+
+    Parameters:
+    -----------
+    filename (string): location/name of OIF output file.
+
+    line_start (string): Column heading of first column.
+
+    **kwargs: keyword arguments to pass to pd.read_csv.
+
+    Returns:
+    -----------
+    padafr (Pandas dataframe): dataframe of OIF output.
+
     """
 
     pplogger = logging.getLogger(__name__)

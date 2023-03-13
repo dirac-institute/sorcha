@@ -1,26 +1,25 @@
-#!/usr/bin/python
-
 import pandas as pd
 import numpy as np
 import logging
 import sys
 
-# Author: Steph Merritt (based on Grigori's PPMatchPointingAndColours)
-
 
 def PPMatchPointingToObservations(padain, pointfildb):
     """
-    Description: Merges all relevant columns of each observation from the pointing
+    Merges all relevant columns of each observation from the pointing
     database onto the observations dataframe, then drops all observations which are not
     in one of the requested filters and any duplicate columns.
 
-    Mandatory input:      Output from objectsInField (oif) or similar (pandas dataframe)
-                          Pointing and filter dataframe (pandas dataframe)
+    Parameters:
+    -----------
+    padain (Pandas dataframe): dataframe of observations.
 
-    Output:               pandas dataframe
+    pointfildb (Pandas dataframe): dataframe of the pointing database.
 
-
-    usage: padafr=PPMatchFilterToObservations(padain,pointfildb)
+    Returns:
+    -----------
+    res_df (Pandas dataframe): Merged dataframe of observations with pointing
+    database, with all superfluous observations dropped.
 
     """
 

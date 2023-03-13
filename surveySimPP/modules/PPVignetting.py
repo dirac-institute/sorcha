@@ -9,7 +9,20 @@ cos = np.cos
 def vignettingEffects(oifdf, raNameOIF="AstRA(deg)", decNameOIF="AstDec(deg)", fieldNameOIF="FieldID",
                       raNameSurvey="fieldRA", decNameSurvey="fieldDec"):
 
-    """Calculates effective limiting magnitude at source, taking vignetting into account.
+    """
+    Calculates effective limiting magnitude at source, taking vignetting into account.
+    Wrapper for calcVignettingLosses.
+
+    Parameters:
+    -----------
+    oif_df (Pandas dataframe): dataframe of observations.
+
+    *NameOIF (strings): column names of object RA, object Dec, field ID, field RA and field Dec respectively.
+
+    Returns:
+    -----------
+    Pandas series: five sigma depth at object location, adjusted for vignetting.
+
     """
 
     dmagVignet = calcVignettingLosses(oifdf[raNameOIF], oifdf[decNameOIF], oifdf[raNameSurvey], oifdf[decNameSurvey])
@@ -18,8 +31,25 @@ def vignettingEffects(oifdf, raNameOIF="AstRA(deg)", decNameOIF="AstDec(deg)", f
 
 
 def calcVignettingLosses(ra, dec, fieldra, fielddec):
-    """Calculates magnitude loss due to vignetting for a point with the telescope
-    centered on fieldra, fielddec."""
+    """
+    Calculates magnitude loss due to vignetting for a point with the telescope
+    centered on fieldra, fielddec.
+
+    Parameters:
+    -----------
+    ra (float/array of floats): RA of object(s).
+
+    dec (float/array of floats): Dec of object(s).
+
+    fieldra (float/array of floats): RA of field(s).
+
+    fielddec (float/array of floats): Dec of field(s).
+
+    Returns:
+    -----------
+    Magnitude loss due to vignetting at object position (float/array of floats).
+
+    """
 
     RA = deg2rad(ra)
     Dec = deg2rad(dec)
@@ -27,21 +57,50 @@ def calcVignettingLosses(ra, dec, fieldra, fielddec):
     fieldDec = deg2rad(fielddec)
 
     theta = rad2deg(haversine(RA, Dec, fieldRA, fieldDec))
-    
+
     return vignetFunc(theta)
 
 
 def haversine(ra1, dec1, ra2, dec2):
-    """Calculates angular distance between two points. Can produce floating point
+    """
+    Calculates angular distance between two points. Can produce floating point
     errors for antipodal points, which are not intended to be encountered within
-    the scope of this module."""
+    the scope of this module.
+
+    Parameters:
+    -----------
+    ra1 (float/array of floats): RA of first point.
+
+    dec1 (float/array of floats): Dec of first point.
+
+    ra2 (float/array of floats): RA of second point.
+
+    dec2 (float/array of floats): Dec of second point.
+
+    Returns:
+    -----------
+    Angular distance between two points (float/array of floats).
+
+    """
 
     return 2. * np.arcsin(np.sqrt(sin((dec2 - dec1) / 2.) ** 2 + cos(dec1) * cos(dec2) * sin((ra2 - ra1) / 2.) ** 2))
 
 
 def vignetFunc(x):
-    """Grabbed from sims_selfcal. From VignettingFunc_v3.3.TXT.  r is in degrees, frac is fraction of rays which were not vignetted.
-    returns the magnitudes of dimming caused by the vingetting relative to the center of the field"""
+    """
+    Grabbed from sims_selfcal. From VignettingFunc_v3.3.TXT. r is in degrees,
+    frac is fraction of rays which were not vignetted. Returns the magnitudes
+    of dimming caused by the vignetting relative to the center of the field.
+
+    Parameters:
+    -----------
+    x (float/array of floats): angular separation of point from field centre.
+
+    Returns:
+    -----------
+    Magnitude of dimming due to vignetting at object position (float/array of floats).
+
+    """
 
     if not hasattr(vignetFunc, 'r'):
         vignetFunc.r = np.array([0.000000, 0.020000, 0.040000, 0.060000, 0.080000, 0.100000, 0.120000, 0.140000,

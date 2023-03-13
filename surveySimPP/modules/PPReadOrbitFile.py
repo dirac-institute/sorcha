@@ -1,30 +1,24 @@
-#!/usr/bin/python
-
 import pandas as pd
 import sys
 import logging
 
-# Author: Grigori Fedorets
-
 
 def PPReadOrbitFile(orbin, beginLoc, chunkSize, filesep):
-    """
-    PPReadOrbitFile
+    """Read orbits file, and store in a pandas dataframe.
 
-    Description: Read orbit file, and store in a pandas dataframe. Note, that here, no
-    orbit class is initialised
+    Parameters:
+    -----------
+    orbin (string): location/name of orbits data file.
 
+    beginLoc (int): location in file where reading begins.
 
-    Mandatory input:   string, orbin (name of input orbit file)
-                      integer, beginLoc, location in file where reading begins
-                      integer, chunkSize, length of chunk to be read in
-                      string, filesep, separator used in input file, whitespace or csv
+    chunkSize (int): length of chunk to be read in.
 
+    filesep (string): format of input file ("whitespace"/"comma"/"csv").
 
-    Output:            pandas dataframe
-
-
-    Usage: padafr=PPreadOrbitFile(orbin, beginLoc, chunkSize, filesep)
+    Returns:
+    -----------
+    padafr (Pandas dataframe): dataframe of orbital data.
 
     """
 

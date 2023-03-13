@@ -1,41 +1,39 @@
-#!/usr/bin/python
-
 import sys
 import numpy as np
 import astropy.units as u
 from sbpy.photometry import HG, HG1G2, HG12_Pen16, LinearPhaseFunc
 import logging
 
-# Author: Grigori Fedorets, Steph Merritt
-
 
 def PPCalculateApparentMagnitudeInFilter(padain, function, mainfilter, colname="TrailedSourceMag"):
     """
-    PPCalculateApparentMagnitudeInFilter.py
-
-    Description: This task calculates the apparent brightness of an
-    object in the mail filter (as defined in the config file) at a given pointing
+    This task calculates the apparent brightness of an object at a given pointing
     according to one of the following photometric phase function models:
-          HG:                Bowell et al. (1989) Asteroids II book.
-          HG1G2:             Muinonen et al. (2010) Icarus 209 542.
-          HG12:              Penttilä et al. (2016) PSS 123 117.
-          linear             (as implemented in sbpy)
+        - HG:                Bowell et al. (1989) Asteroids II book.
+        - HG1G2:             Muinonen et al. (2010) Icarus 209 542.
+        - HG12:              Penttilä et al. (2016) PSS 123 117.
+        - linear:             (as implemented in sbpy)
 
     The apparent magnitude is calculated in the filter for which the H and
-    phase function variables are given. PPResolveMagnitudeInFilter should be
+    phase function variables are given. PPApplyColourOffsets should be
     run beforehand to apply any needed colour offset to H and ensure correct
     variables are present.
 
-    The function makes use of the implementations in the sbpy library.
+    The function makes use of implementations in the sbpy library.
 
-    Mandatory input:      string, padain, name of input pandas dataframe
-                          string, function, selected photometric phase function
-                                  (HG, HG1G2, HG12, linear)
-                          string, colname, column name of apparent magnitude
+    Parameters:
+    -----------
+    padain (Pandas dataframe): dataframe of observations.
 
-    Output:        updated padain
+    function (string): desired phase function model. Options are HG, HG12, HG1G2, linear, none.
 
-    usage: padaout=PPCalculateApparentMagnitudeInFilter(padain, function, colname):
+    mainfilter (string): the main filter in which H is given and all colour offsets are calculated against.
+
+    colname (string): column name in which to store calculated magnitude.
+
+    Returns:
+    ----------
+    padain (Pandas dataframe): dataframe of observations with calculated magnitude column.
 
     """
 

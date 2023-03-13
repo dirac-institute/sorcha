@@ -1,14 +1,14 @@
 # This code creates a very basic SLURM script for use with supercomputers.
-
+#
 # The resulting script will probably need to be edited to include the correct
 # #SBATCH keywords for your specific setup.
-
+#
 # The code assumes that your physical parameters and orbits files are
 # in the same folder and have filenames beginning with 'params' and 'orbits'
 # respectively. COmetary activity files must begin with 'comets', and
 # temporary ephemeris simulation databases must begin with "temp_" and then the
 # filename of the ephemeris file they were created from.
-
+#
 # Note that instead of implementing loops in bash the script lists every command
 # explicitly. This was DELIBERATE and allows a user to copy/paste commands
 # from the script if they want to rerun a specific part.
@@ -21,6 +21,18 @@ from surveySimPP.modules.PPConfigParser import PPFindFileOrExit, PPFindDirectory
 
 
 def makeSLURM(args):
+    """
+    Generates a SLURM script from the arguments supplied at the command line.
+
+    Parameters:
+    -----------
+    args (argparse ArgumentParser object): command line arguments.
+
+    Returns:
+    -----------
+    None.
+
+    """
 
     configfiles = glob.glob(os.path.join(args.inputs, 'config_*.ini'))
     configfiles.sort()
@@ -121,6 +133,43 @@ def convert_args_to_absolute_paths(args):
 
 
 def main():
+    """
+    This code creates a very basic SLURM script for use with supercomputers.
+
+    The resulting script will probably need to be edited to include the correct
+    #SBATCH keywords for your specific setup. Or feel free to edit this script
+    directly!
+
+    The code assumes that your physical parameters and orbits files are
+    in the same folder and have filenames beginning with 'params' and 'orbits'
+    respectively. Cometary activity files must begin with 'comets', and
+    temporary ephemeris simulation databases must begin with "temp_" and then the
+    filename of the ephemeris file they were created from.
+
+    Note that instead of implementing loops in bash the script lists every command
+    explicitly. This was DELIBERATE and allows a user to copy/paste commands
+    from the script if they want to rerun a specific part.
+
+    usage: makeSLURMscript [-h] -f FILENAME -i INPUTS [-del] [-os] [-ss] [-c SSPPCON] -oo OIFOUT [-ao ALLOUT] [-m] [-dr] [-dc] [-dw] [-dl] [-n NCORES] [-jn JOBNAME]
+        arguments:
+          -h, --help                            show this help message and exit
+          -f FILENAME, --filename FILENAME      Filepath and name where you want to save the SLURM script.
+          -i INPUTS, --inputs INPUTS            Path location of input text files (orbits, colours and config files).
+          -del, --deletecache                   Delete the OIF cache once OIF has been run.
+          -os, -oifonly                         Include only commands for OIF.
+          -ss, -sspponly                        Include only commands for SSPP.
+          -c SSPPCON, --ssppcon SSPPCON         Filepath and name of SSPP config file.
+          -oo OIFOUT, --oifout OIFOUT           Path where OIF output is/will be stored.
+          -ao ALLOUT, --allout ALLOUT           Path where final output will be stored.
+          -m, --comet                           Include cometary activity files?
+          -dr                                   Read from existing temporary ephemeris databases.
+          -dc                                   Creates the temporary ephemeris databases in output folder before SSPP code execution.
+          -dw                                   Make temporary ephemeris database in output folder during SSPP code execution. Overwrites existing database if present.
+          -dl                                   Delete the temporary ephemeris databases after code has completed.
+          -n NCORES, --ncores NCORES            Number of cores. Default will be one core per orbits input file.
+          -jn JOBNAME, --jobname JOBNAME        Job name. Default is OIF+SSPP.
+
+    """
 
     parser = argparse.ArgumentParser(description='Creating a SLURM script for OIF+SSPP.')
 

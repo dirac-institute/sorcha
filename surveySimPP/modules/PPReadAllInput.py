@@ -1,5 +1,3 @@
-#!/usr/bin/python
-
 import logging
 import sys
 
@@ -16,20 +14,29 @@ from .PPReadPhysicalParameters import PPReadPhysicalParameters
 
 def PPReadAllInput(cmd_args, configs, filterpointing, startChunk, incrStep, verbose=True):
     """
-    Author: Grigori Federets and Steph Merritt
-
-    Description: Reads in the simulation data and the orbit and physical parameter files, and then
+    Reads in the simulation data and the orbit and physical parameter files, and then
     joins them with the pointing database to create a single Pandas dataframe of simulation
     data with all necessary orbit, physical parameter and pointing information.
 
-    Mandatory input:	dict, cmd_args, dictionary of command line variables created by PPCommandLineParser
-                        dict, configs, dictionary of config variables created by PPConfigFileParser
-                        pandas DataFrame, filterpointing, pointing database
-                        int, startChunk, start of chunk
-                        int, incrStep, size of chunk
+    Parameters:
+    -----------
+    cmd_args (dictionary): dictonary of command line arguments.
 
-    Output:             pandas Dataframe, observations, dataframe of simulation data with all
-                        necessary orbit, physical parameter and pointing information.
+    configs (dictionary): dictionary of config file arguments.
+
+    filterpointing (Pandas dataframe): dataframe of pointing database.
+
+    startChunk (int): object number at which chunk should start.
+
+    incrStep (int): chunk size.
+
+    verbose (Boolean): verbose mode on or off.
+
+    Returns:
+    -----------
+    observations (Pandas dataframe): dataframe of all observations with orbital
+    data, physical parameters and pointing information merged on.
+
     """
 
     pplogger = logging.getLogger(__name__)

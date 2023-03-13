@@ -1,6 +1,3 @@
-#!/usr/bin/python
-# Parsing and error handling of the config file.
-
 import logging
 import os
 import sys
@@ -9,6 +6,25 @@ import configparser
 
 
 def PPGetOrExit(config, section, key, message):
+    """
+    Checks to see if the config file parser has a key. If it does not, this
+    function errors out and the code stops.
+
+    Parameters:
+    -----------
+    config (ConfigParser object): ConfigParser object containing configs.
+
+    section (string): section of the key being checked.
+
+    key (string): the key being checked.
+
+    message (string): the message to log and display if the key is not found.
+
+    Returns:
+    ----------
+    None.
+
+    """
 
     if config.has_option(section, key):
         return config[section][key]
@@ -18,6 +34,25 @@ def PPGetOrExit(config, section, key, message):
 
 
 def PPGetFloatOrExit(config, section, key, message):
+    """
+    Checks to see if a key in the config parser is present and can be read as a
+    float. If it cannot, this function errors out and the code stops.
+
+    Parameters:
+    -----------
+    config (ConfigParser object): ConfigParser object containing configs.
+
+    section (string): section of the key being checked.
+
+    key (string): the key being checked.
+
+    message (string): the message to log and display if the key is not found.
+
+    Returns:
+    ----------
+    None.
+
+    """
 
     if config.has_option(section, key):
         try:
@@ -32,6 +67,25 @@ def PPGetFloatOrExit(config, section, key, message):
 
 
 def PPGetIntOrExit(config, section, key, message):
+    """
+    Checks to see if a key in the config parser is present and can be read as an
+    int. If it cannot, this function errors out and the code stops.
+
+    Parameters:
+    -----------
+    config (ConfigParser object): ConfigParser object containing configs.
+
+    section (string): section of the key being checked.
+
+    key (string): the key being checked.
+
+    message (string): the message to log and display if the key is not found.
+
+    Returns:
+    ----------
+    None.
+
+    """
 
     if config.has_option(section, key):
         try:
@@ -46,6 +100,25 @@ def PPGetIntOrExit(config, section, key, message):
 
 
 def PPGetBoolOrExit(config, section, key, message):
+    """
+    Checks to see if a key in the config parser is present and can be read as a
+    Boolean. If it cannot, this function errors out and the code stops.
+
+    Parameters:
+    -----------
+    config (ConfigParser object): ConfigParser object containing configs.
+
+    section (string): section of the key being checked.
+
+    key (string): the key being checked.
+
+    message (string): the message to log and display if the key is not found.
+
+    Returns:
+    ----------
+    None.
+
+    """
 
     if config.has_option(section, key):
         try:
@@ -60,9 +133,30 @@ def PPGetBoolOrExit(config, section, key, message):
 
 
 def PPGetValueAndFlag(config, section, key, type_wanted):
-    """Obtains a value from the config flag, forcing it to be the specified
+    """
+    Obtains a value from the config flag, forcing it to be the specified
     type and error-handling if it can't be forced. If the value is not present
     in the config fie, the flag is set to False; if it is, the flag is True.
+
+    Parameters:
+    -----------
+    config (ConfigParser object): ConfigParser object containing configs.
+
+    section (string): section of the key being checked.
+
+    key (string): the key being checked.
+
+    type_wanted (string): the type the value should be forced to. Accepts int,
+    float, none (for no type-forcing).
+
+    Returns:
+    ----------
+    value (any type): the value of the key, with type dependent on type_wanted.
+    Will be None if the key is not present.
+
+    flag (Boolean): will be False if the key is not present in the config file
+    and True if it is.
+
     """
 
     if type_wanted == "int":
@@ -92,16 +186,20 @@ def PPGetValueAndFlag(config, section, key, type_wanted):
 
 
 def PPFindFileOrExit(arg_fn, argname):
-    """
-    Author: Steph Merritt
-
-    Description: Checks to see if the filename given by arg_fn actually exists. If it doesn't,
+    """Checks to see if a file given by a filename exists. If it doesn't,
     this fails gracefully and exits to the command line.
 
-    Mandatory input:    string, arg_fn, string filename passed by command line argument
-                        string, argname,  name/flag of the argument printed in error message
+    Parameters:
+    -----------
+    arg_fn (string): the filepath/name of the file to be checked.
 
-    Output:             string, arg_fn unchanged
+    argname (string): the name of the argument being checked. Used for error
+    message.
+
+    Returns:
+    ----------
+    arg_fn (string): the filepath/name of the file to be checked.
+
     """
 
     pplogger = logging.getLogger(__name__)
@@ -114,17 +212,22 @@ def PPFindFileOrExit(arg_fn, argname):
 
 
 def PPFindDirectoryOrExit(arg_fn, argname):
-    """
-    Author: Steph Merritt
-
-    Description: Checks to see if the directory given by arg_fn actually exists. If it doesn't,
+    """Checks to see if a directory given by a filepath exists. If it doesn't,
     this fails gracefully and exits to the command line.
 
-    Mandatory input:    string, arg_fn, string directory passed by command line argument
-                        string, argname,  name/flag of the argument printed in error message
+    Parameters:
+    -----------
+    arg_fn (string): the filepath of the directory to be checked.
 
-    Output:             string, arg_fn unchanged
+    argname (string): the name of the argument being checked. Used for error
+    message.
+
+    Returns:
+    ----------
+    arg_fn (string): the filepath of the directory to be checked.
+
     """
+
     pplogger = logging.getLogger(__name__)
 
     if os.path.isdir(arg_fn):
@@ -136,8 +239,6 @@ def PPFindDirectoryOrExit(arg_fn, argname):
 
 def PPCheckFiltersForSurvey(survey_name, observing_filters):
     """
-    Author: Steph Merritt
-
     When given a list of filters, this function checks to make sure they exist in the
     user-selected survey. Currently only has options for LSST, but can be expanded upon
     later. If the filters given in the config file do not match the survey filters,
@@ -145,8 +246,13 @@ def PPCheckFiltersForSurvey(survey_name, observing_filters):
 
     Parameters:
     -----------
-    survey_name: string containing survey name
-    observing_filters: list of strings with colour filters.
+    survey_name (string): survey name. Currently only "LSST", "lsst" accepted.
+
+    observing_filters (list of strings): observation filters of interest.
+
+    Returns:
+    ----------
+    None.
 
     """
 
@@ -167,20 +273,23 @@ def PPCheckFiltersForSurvey(survey_name, observing_filters):
 
 def PPConfigFileParser(configfile, survey_name):
     """
-    Author: Steph Merritt
-
-    Description: Parses the config file, error-handles, then assigns the values into a single
-    dictionary, which is passed out. Mostly copied out of old version of run script.
+    Parses the config file, error-handles, then assigns the values into a single
+    dictionary, which is passed out.
 
     Chose not to use the original ConfigParser object for readability: it's a dict of
     dicts, so calling the various values can become quite unwieldy.
 
     This could easily be broken up even more, and probably should be.
 
-    Mandatory input:    string, configfile, string filepath of the config file
-                        string, survey_name, command-line argument containing survey name
+    Parameters:
+    -----------
+    configfile (string): filepath/name of config file.
 
-    Output:             dictionary of variables taken from the config file
+    survey_name (string): survey name. Currently only "LSST", "lsst" accepted.
+
+    Returns:
+    ----------
+    config_dict (dictionary): dictionary of config file variables.
 
     """
 
@@ -405,13 +514,17 @@ def PPConfigFileParser(configfile, survey_name):
 
 def PPPrintConfigsToLog(configs, cmd_args):
     """
-    Author: Steph Merritt
+    Prints all the values from the config file and command line to the log.
 
-    Description: Prints all the values from the config file to the log.
+    Parameters:
+    -----------
+    configs (dictionary): dictionary of config file variables.
 
-    Mandatory input:    dict, configs, dictionary of config variables created by PPConfigFileParser
+    cmd_args (dictionary): dictionary of command line arguments.
 
-    Output: none
+    Returns:
+    ----------
+    None.
 
     """
 

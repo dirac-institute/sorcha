@@ -1,37 +1,32 @@
-#!/bin/python
-
 import pandas as pd
 import sys
 import logging
 
-# Author: Grigori Fedorets
-
 
 def PPReadCometaryParameters(comet_datafile, beginLoc, chunkSize, filesep):
-
     """
-    PPReadCometaryParameters.py
-
-    Description: This task reads in the cometary data file and puts it into a
+    Reads in the cometary data file and puts it into a
     single pandas dataframe for further use downstream by other tasks.
 
-    The format of the colours is:
+    The columns required are: ObjID, afrho, k.
 
-    ObjID   afrho k
+    NB: the R parameter is not given explicitly, but rather calculated through
+    the absolute magnitude, assuming geometric albedo pv=0.04.
 
-    NB, the R parameter is not given explicitly, but rather calculated through
-    the absolute magnitude, assuming geometric albedo pv=0.04
+    Parameters:
+    -----------
+    comet_datafile (string): location/name of comet data file.
 
+    beginLoc (int): location in file where reading begins.
 
-    Mandatory input:      string, comet_datafile, name of comet data file
-                          integer, beginLoc, location in file where reading begins
-                          integer, chunkSize, length of chunk to be read in
-                          string, filesep, separator used in input file, blank or comma
+    chunkSize (int): length of chunk to be read in.
 
+    filesep (string): format of input file ("whitespace"/"comma"/"csv").
 
-    Output:               pandas dataframe
+    Returns:
+    -----------
+    padafr (Pandas dataframe): dataframe of cometary data.
 
-    usage: padafr=PPReadCometaryParameters(comet_datafile, beginLoc, chunkSize)
     """
 
     pplogger = logging.getLogger(__name__)

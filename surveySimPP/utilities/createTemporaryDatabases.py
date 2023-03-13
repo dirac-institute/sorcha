@@ -12,6 +12,18 @@ from surveySimPP.modules.PPMakeTemporaryEphemerisDatabase import PPMakeTemporary
 
 
 def make_temporary_databases(args):
+    """
+    Creates temporary ephemeris SQLite databases.
+
+    Parameters:
+    -----------
+    args (argparse ArgumentParser object): command line arguments.
+
+    Returns:
+    -----------
+    None.
+
+    """
 
     print('Making temporary ephemerides databases.')
 
@@ -34,6 +46,21 @@ def make_temporary_databases(args):
 
 
 def main():
+    """
+    Creates temporary ephemeris databases in SQL. These can take a while to create,
+    especially for large OIF/ephemeris files, but greatly speed up the actual
+    running of SSPP. The databases will be named temp_[input_filename].db and will
+    be saved in the same folder as the OIF files.
+
+    usage: createTemporaryDatabases [-h] -i INPUTS [-s STEM] [-c CHUNK] [-f]
+        arguments:
+          -h, --help                    show this help message and exit
+          -i INPUTS, --inputs INPUTS    Path location of input ephemeris text files.
+          -s STEM, --stem STEM          Stem filename of input ephemeris text files. Default is "oif_".
+          -c CHUNK, --chunk CHUNK       Chunking size for creation, where chunk=number of rows per chunk. Don't change this unless you know what you're doing.
+          -f, --force                   Force deletion/overwrite of existing output file(s). Default False.
+
+    """
 
     parser = argparse.ArgumentParser(description='Creating the temporary SQL ephemeris databses.')
 

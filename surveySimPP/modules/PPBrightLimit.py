@@ -1,25 +1,20 @@
-#!/usr/bin/python
-
-# Author: Steph Merritt
-
 def PPBrightLimit(observations, observing_filters, bright_limit):
-
     """
-    Task: PPBrightLimit
-
-    Description: Drops observations brighter than the user-defined saturation
+    Drops observations brighter than the user-defined saturation
     limit. Can take either a single saturation limit for a straight cut, or
     filter-specific saturation limits.
 
+    Parameters:
+    -----------
+    observations (Pandas dataframe): dataframe of observations.
 
-    Input: observations: pandas dataframe
-    observing_filters: list of strings, observing filters in the data
-    bright_limit: either a float or a list of floats, saturation limits either
-    single or per-filter.
+    observing_filters (list of strings): observing filters present in the data.
 
+    bright_limit (float or list of floats): saturation limits: either single or per-filter.
 
-    Output: pandas dataframe (modified)
-
+    Returns:
+    ----------
+    observations_out (Pandas dataframe): dataframe of filtered observations.
 
     """
 

@@ -1,6 +1,5 @@
 # Creates config files for post-processing from the command line, for use in scripts.
 # python makeConfigFilePP.py --help will give usage instructions
-# Needs some error handling.
 
 import argparse
 import configparser
@@ -9,6 +8,18 @@ import sys
 
 
 def makeConfigFile(args):
+    """
+    Makes an SSPP config file from the variables defined at the command line.
+
+    Parameters:
+    -----------
+    args (argparse ArgumentParser object): command line arguments.
+
+    Returns:
+    -----------
+    None.
+
+    """
 
     config = configparser.ConfigParser()
 
@@ -72,6 +83,52 @@ def makeConfigFile(args):
 
 
 def main():
+    """
+    Creates an SSPP config file from variables defined at the command line.
+
+    usage: makeConfigPP [-h] [--ephemeridestype EPHEMERIDESTYPE] [--pointingdatabase POINTINGDATABASE] [--ephformat EPHFORMAT] [--auxformat AUXFORMAT]
+                    [--sizeserialchunk SIZESERIALCHUNK] [--cometactivity COMETACTIVITY] [--observingfilters OBSERVINGFILTERS] [--brightlimit BRIGHTLIMIT]
+                    [--phasefunction PHASEFUNCTION] [--cameramodel CAMERAMODEL] [--footprintpath FOOTPRINTPATH] [--fillfactor FILLFACTOR] [--circleradius CIRCLERADIUS]
+                    [--fadingfunction FADINGFUNCTION] [--fadingwidth FADINGWIDTH] [--fadingpeak FADINGPEAK] [--detectionefficiency DETECTIONEFFICIENCY]
+                    [--numobservations NUMOBSERVATIONS] [--numtracklets NUMTRACKLETS] [--trackwindow TRACKWINDOW] [--septhreshold SEPTHRESHOLD] [--outputformat OUTPUTFORMAT]
+                    [--outputsize OUTPUTSIZE] [--positiondecimals POSITIONDECIMALS] [--magnitudedecimals MAGNITUDEDECIMALS] [--snrlimit SNRLIMIT] [--maglimit MAGLIMIT]
+                    [--sqlquery SQLQUERY] [--trailinglosseson TRAILINGLOSSESON]
+                    filename
+        positional arguments:
+            filename              Filepath where you want to store the config file.
+        arguments:
+          -h, --help                                                                show this help message and exit
+          --ephemeridestype EPHEMERIDESTYPE, -eph EPHEMERIDESTYPE                   Type of input ephemerides: default = oif. Options: currently only oif.
+          --pointingdatabase POINTINGDATABASE, -inpt POINTINGDATABASE               Path to pointing database. Default is "./demo/baseline_v2.0_1yr.db".
+          --ephformat EPHFORMAT, -inptf EPHFORMAT                                   Separator in ephemeris database: csv, whitespace, hdf5. Default is "whitespace".
+          --auxformat AUXFORMAT, -inauxf AUXFORMAT                                  Separator in orbit/colour/brightness/cometary data files: comma or whitespace. Default is "whitespace".
+          --sizeserialchunk SIZESERIALCHUNK, -chunk SIZESERIALCHUNK                 Size of chunk of objects to be processed serially. Default is 10.
+          --cometactivity COMETACTIVITY, -com COMETACTIVITY                         Type of cometary activity. Options are "comet" or None. Default is none.
+          --observingfilters OBSERVINGFILTERS, -rfilt OBSERVINGFILTERS              Observing filters: main filter in which H is calculated, followed by resolved colours, such as, e.g. 'r'+'g-r'='g'. Should be separated by comma. Default is "r,g,i,z"
+          --brightlimit BRIGHTLIMIT, -brtlim BRIGHTLIMIT                            Limit of brightness: detections brighter than this are omitted assuming saturation. Expects a float or None to omit. Default is 16.0.
+          --phasefunction PHASEFUNCTION, -phfunc PHASEFUNCTION                      Define the used input phase function. Options: HG, HG1G2, HG12, linear, none. Default is "HG".
+          --cameramodel CAMERAMODEL, -cammod CAMERAMODEL                            Choose between surface area equivalent or actual camera footprint, including chip gaps. Options: circle, footprint. Default is "footprint".
+          --footprintpath FOOTPRINTPATH, -infoot FOOTPRINTPATH                      Path to camera footprint file. Default is "./data/detectors_corners.csv".
+          --fillfactor FILLFACTOR, -ff FILLFACTOR                                   Fraction of detector surface area which contains CCD -- simulates chip gaps. Expects a float or None to omit. Default is None.
+          --circleradius CIRCLERADIUS, -circ CIRCLERADIUS                           Radius of the circle for a circular footprint (in degrees). Default is None.
+          --fadingfunction FADINGFUNCTION, -fade FADINGFUNCTION                     Detection efficiency fading function on or off.
+          --fadingwidth FADINGWIDTH, -fadew FADINGWIDTH                             Width parameter for fading function. Default is 0.1 after Chelsey and Vereš (2017) or None to omit.
+          --fadingpeak FADINGPEAK, -fadep FADINGPEAK                                Peak efficiency parameter for fading function. Default is 1 or None to omit.
+          --detectionefficiency DETECTIONEFFICIENCY, -deteff DETECTIONEFFICIENCY    Which fraction of the detections will the automated solar system processing pipeline recognise? Expects a float. Default is 0.95.
+          --numobservations NUMOBSERVATIONS, -nobs NUMOBSERVATIONS                  How many observations during one night are required to produce a valid tracklet? Expects an int or None to omit. Default 2.
+          --numtracklets NUMTRACKLETS, -ntrk NUMTRACKLETS                           How many tracklets are required to classify as a detection? Expects an int or None to omit. Default 3.
+          --trackwindow TRACKWINDOW, -trkwin TRACKWINDOW                            In what amount of time does the aforementioned number of tracklets needs to be discovered to constitute a complete detection? In days. Expects a float or None to omit. Default 15.0.
+          --septhreshold SEPTHRESHOLD, -minsep SEPTHRESHOLD                         Minimum separation inside the tracklet for SSP distinguish motion between two images, in arcsec. Expects a float or None to omit. Default is 0.5.
+          --outputformat OUTPUTFORMAT, -outf OUTPUTFORMAT                           Output format. Options: csv, sqlite3, hdf5. Default is csv.
+          --outputsize OUTPUTSIZE, -outs OUTPUTSIZE                                 Size of output. Controls which columns are in the output files. Options are "default" only.
+          --positiondecimals POSITIONDECIMALS, -posd POSITIONDECIMALS               Decimal places RA and Dec should be rounded to in output. Default is 7.
+          --magnitudedecimals MAGNITUDEDECIMALS, -magd MAGNITUDEDECIMALS            Decimal places magnitudes should be rounded to in output. Default is 3.
+          --snrlimit SNRLIMIT, -snr SNRLIMIT                                        SNR limit: drop observations below this SNR threshold. Omit for no SNR cut.
+          --maglimit MAGLIMIT, -mag MAGLIMIT                                        Magnitude threshold: drop observations below this magnitude. Omit for no magnitude cut.
+          --sqlquery SQLQUERY, -query SQLQUERY                                      Database query for extracting data for pointing database.
+          --trailinglosseson TRAILINGLOSSESON, -tloss TRAILINGLOSSESON              Switch on trailing losses. Relevant for close-approaching NEOs. Default True.
+
+    """
 
     parser = argparse.ArgumentParser(description='Creating the config file for SSP.')
 

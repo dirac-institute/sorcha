@@ -1,31 +1,25 @@
-#!/usr/bin/python
 import sqlite3
 import pandas as pd
 import logging
 import sys
 
-# Author: Grigori Fedorets
-
 
 def PPReadPointingDatabase(bsdbname, observing_filters, dbquery):
-
     """
-    PPReadPointingDatabase.py
+    Reads in the pointing database as a Pandas dataframe.
 
+    Parameters:
+    -----------
+    bsdbname (string): file location of pointing database.
 
+    observing_filters (list of strings): list of observation filters of interest.
 
-    Description: This task reads in the main baseline database, and extracts observationID,
-    observationsStartMJD, used filter and three seeing parameters at a given pointing and outputs a 6*n pandas dataframe.
+    dbquery (string): database query to perform on pointing database.
 
+    Returns:
+    -----------
+    dfo (Pandas dataframe): dataframe of pointing database.
 
-    Mandatory input:      bsdbname:   string, name of database
-                          observing_filters: array of strings, filters required for output
-                          dbquery:    string, SQLite3 query for querying the pointing database (defined in configuration file)
-
-    Output:               8*n pandas dataframe
-
-
-    usage: padafr=PPReadPointingDatabase(bsdbname,observing_filters,dbquery)
     """
 
     pplogger = logging.getLogger(__name__)
