@@ -37,8 +37,8 @@ def PPMatchPointingToObservations(padain, pointfildb):
     chktruemjd = np.isclose(resdf['observationStartMJD'], resdf['FieldMJD'])
 
     if not chktruemjd.all():
-        logging.error('ERROR: PPMatchFilterToObservations: mismatch in pointing database and pointing output times.')
-        sys.exit('ERROR:: PPMatchFilterToObservations: mismatch in pointing database and pointing output times.')
+        logging.error('ERROR: PPMatchPointingToObservations: mismatch in pointing database and pointing output times.')
+        sys.exit('ERROR:: PPMatchPointingToObservations: mismatch in pointing database and pointing output times.')
 
     resdf = resdf.drop(columns=['observationStartMJD', "observationId_"])
 
