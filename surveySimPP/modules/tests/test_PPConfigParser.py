@@ -27,20 +27,6 @@ def setup_and_teardown_for_PPConfigFileParser(tmp_path):
     os.chdir(initial_wd)
 
 
-@pytest.fixture
-def setup_and_teardown_for_PPPrintConfigsToLog():
-
-    yield
-
-    test_path = os.path.dirname(get_test_filepath('test_input_fullobs.csv'))
-
-    errlog = glob.glob(os.path.join(test_path, '*-postprocessing.err'))
-    datalog = glob.glob(os.path.join(test_path, '*-postprocessing.log'))
-
-    os.remove(errlog[0])
-    os.remove(datalog[0])
-
-
 def test_PPConfigFileParser(setup_and_teardown_for_PPConfigFileParser):
 
     from surveySimPP.modules.PPConfigParser import PPConfigFileParser
@@ -231,14 +217,14 @@ def test_PPCheckFiltersForSurvey():
     assert e.type == SystemExit
 
 
-def test_PPPrintConfigsToLog(setup_and_teardown_for_PPPrintConfigsToLog):
+def test_PPPrintConfigsToLog(tmp_path):
 
     from surveySimPP.modules.PPGetLogger import PPGetLogger
     from surveySimPP.modules.PPConfigParser import PPPrintConfigsToLog
 
     test_path = os.path.dirname(get_test_filepath('test_input_fullobs.csv'))
 
-    PPGetLogger(test_path, log_format='%(name)-12s %(levelname)-8s %(message)s ')
+    PPGetLogger(tmp_path, log_format='%(name)-12s %(levelname)-8s %(message)s ')
 
     cmd_args = {'paramsinput': 'testcolour.txt',
                 'orbinfile': 'testorb.des',
@@ -289,7 +275,7 @@ def test_PPPrintConfigsToLog(setup_and_teardown_for_PPPrintConfigsToLog):
 
     PPPrintConfigsToLog(configs, cmd_args)
 
-    datalog = glob.glob(os.path.join(test_path, '*-postprocessing.log'))
+    datalog = glob.glob(os.path.join(tmp_path, '*-postprocessing.log'))
 
     testfile = open(os.path.join(test_path, 'test_log.txt'), mode='r')
     newfile = open(datalog[0], mode='r')
