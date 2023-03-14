@@ -198,7 +198,7 @@ class Detector:
         """
 
         # convert corners to angles (radians)
-        θ = np.arctan2(self.y - self.centery / self.x - self.centerx)
+        θ = np.arctan2(self.y - self.centery, self.x - self.centerx)
 
         neworder = np.argsort(θ)
         self.x = self.x[neworder]
@@ -348,7 +348,7 @@ class Footprint:
 
         # sort the corners of each detector
         for i in range(self.N):
-            self.detectors[i].sortCorners
+            self.detectors[i].sortCorners()
 
     def plot(self, θ=0., color='gray', units='rad', annotate=False):
         """
