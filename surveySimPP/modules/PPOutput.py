@@ -1,27 +1,23 @@
-#!/usr/bin/python
-
 import pandas as pd
 import os
 import sqlite3
 import logging
 
-#     Author: Grigori Fedorets, Steph Merritt
-
 
 def PPOutWriteCSV(padain, outf):
     """
-    PPOutWriteCSV.py
+    Writes a pandas dataframe out to a CSV file at a location given by the user.
 
+    Parameters:
+    -----------
+    padain (Pandas dataframe): dataframe of output.
 
-    Description: This task reads in the pandas database, and writes out a CSV file by a name given by the user.
+    outf (string): location to which file should be written.
 
+    Returns:
+    -----------
+    None.
 
-    Mandatory input:      name of database, name of output file
-
-    Output:               CSV file
-
-
-    usage: padafr=PPOutWriteCSV(padain,outf)
     """
 
     padain = padain.to_csv(path_or_buf=outf, mode='a', header=not os.path.exists(outf), index=False)
@@ -31,18 +27,20 @@ def PPOutWriteCSV(padain, outf):
 
 def PPOutWriteHDF5(pp_results, outf, keyin):
     """
-    PPOutWriteHDF5.py
+    Writes a pandas dataframe out to a HDF5 file at a location given by the user.
 
+    Parameters:
+    -----------
+    padain (Pandas dataframe): dataframe of output.
 
-    Description: This task reads in the pandas database, and writes out a HDF5 binary file by a name given by the user.
+    outf (string): location to which file should be written.
 
+    keyin (string): key at which data will be located.
 
-    Mandatory input:      name of database, name of output file
+    Returns:
+    -----------
+    None.
 
-    Output:               HDF5 binary database
-
-
-    usage: padafr=PPOutWriteHDF5(padain,outf)
     """
 
     of = pp_results.to_hdf(outf, mode='a', format='table', append=True, key=keyin)
@@ -52,19 +50,20 @@ def PPOutWriteHDF5(pp_results, outf, keyin):
 
 def PPOutWriteSqlite3(pp_results, outf):
     """
-    PPOutWriteSqlite3.py
+    Writes a pandas dataframe out to a CSV file at a location given by the user.
 
+    Parameters:
+    -----------
+    pp_results (Pandas dataframe): dataframe of output.
 
-    Description: This task reads in the pandas database, and writes out a Sqlite3 database file by a name given by the user.
+    outf (string): location to which file should be written.
 
+    Returns:
+    -----------
+    None.
 
-    Mandatory input:      name of database, name of output file
-
-    Output:               Sqlite3 database
-
-
-    usage: padafr=PPOutWriteSqlite3(padain,outf)
     """
+
     pp_results = pp_results.drop('level_0', axis=1, errors='ignore')
 
     cnx = sqlite3.connect(outf)
@@ -72,14 +71,27 @@ def PPOutWriteSqlite3(pp_results, outf):
     pp_results.to_sql("pp_results", con=cnx, if_exists="append", index=False)
 
 
-def PPWriteOutput(cmd_args, configs, observations_in, endChunk, verbose=False):
+def PPWriteOutput(cmd_args, configs, observations_in, endChunk=0, verbose=False):
     """
-    Author: Steph Merritt
+    Writes the output in the format specified in the config file to a location
+    specified by the user.
 
-    Description: Writes out the output in the format specified in the config file.
+    Parameters:
+    -----------
+    cmd_args (dictionary): dictonary of command line arguments.
 
-    Mandatory input:    dict, configs, dictionary of config variables created by PPConfigFileParser
-                        pandas DataFrame, observations, table of observations for output
+    configs (dictionary): dictionary of config file arguments.
+
+    observations_in (Pandas dataframe): dataframe of output.
+
+    endChunk (int): integer of last object in chunk. Used only for HDF5 output key.
+
+    verbose (Boolean): verbose mode on or off.
+
+    Returns:
+    -----------
+    None.
+
     """
 
     pplogger = logging.getLogger(__name__)

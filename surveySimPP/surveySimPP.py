@@ -29,13 +29,19 @@ from surveySimPP.modules.PPGetMainFilterAndColourOffsets import PPGetMainFilterA
 # Author: Samuel Cornwall, Siegfried Eggl, Grigori Fedorets, Steph Merritt, Meg Schwamb
 
 def runLSSTPostProcessing(cmd_args):
-
     """
     Runs the post processing survey simulator functions that apply a series of
-    filters to bias a model Solar System smallbody population to what the
+    filters to bias a model Solar System small body population to what the
     Vera C. Rubin Observatory Legacy Survey of Space and Time would observe.
 
-    Output:               csv, hdf5, or sqlite file
+    Parameters:
+    -----------
+    cmd_args (dictionary): dictionary of command-line arguments.
+
+    Returns:
+    -----------
+    None.
+
     """
 
     # Initialise argument parser and assign command line arguments
@@ -161,6 +167,11 @@ def runLSSTPostProcessing(cmd_args):
             verboselog('Dropping observations that are too bright...')
             observations = PPBrightLimit(observations, configs['observing_filters'], configs['bright_limit'])
 
+        if len(observations) == 0:
+            verboselog('No observations left in chunk. Skipping to next chunk...')
+            startChunk = startChunk + configs['size_serial_chunk']
+            continue
+
         if configs['SSP_linking_on']:
             verboselog('Applying SSP linking filter...')
             verboselog('Number of rows BEFORE applying SSP linking filter: ' + str(len(observations.index)))
@@ -191,29 +202,26 @@ def runLSSTPostProcessing(cmd_args):
 
 def main():
     """
+    A post processing survey simulator that applies a series of filters to bias a
+    model Solar System small body population to what the specified wide-field
+    survey would observe.
 
-    A post processing survey simulator that applies a series of filters to bias a model Solar System small body population to what the specified wide-field survey would observe.
-
-    Mandatory input:      configuration file, orbit file, physical parameters file, and optional cometary activity properties file
-
-    Output:               csv, hdf5, or sqlite file
-
-
-    usage: surveySimPP [-h] [-c C] [-d] [-m M] [-l L] [-o O] [-p P] [-s S]
-        optional arguments:
-         -h, --help           show this help message and exit
-         -c C, --config C     Input configuration file name
-         -dw                  Make temporary ephemeris database
-         -dr                  Read from existing temporary ephemeris database at this location
-         -dl                  Delete the temporary ephemeris database on code completion.
-         -m M, --comet M      Comet parameter file name
-         -l L, --params L     Physical parameters file name
-         -o O, --orbit O      Orbit file name
-         -p P, --pointing P   Pointing simulation output file name
-         -s S, --survey S     Name of the survey you wish to simulate
-         -u U, --outfile U    Path in which to store output and logs
-         -t T, --stem T       Output file name stem
-         -v V, --verbose      Verbosity on or off: default is on
+    usage: surveySimPP [-h] -c C [-dw [DW]] [-dr DR] [-dl] [-m M] -p P -o O -e E [-s S] -u U [-t T] [-v] [-f]
+        arguments:
+          -h, --help         show this help message and exit
+          -c C, --config C   Input configuration file name
+          -dw [DW]           Make temporary ephemeris database. If no filepath/name supplied, default name and ephemeris input location used.
+          -dr DR             Location of existing/previous temporary ephemeris database to read from if wanted.
+          -dl                Delete the temporary ephemeris database after code has completed.
+          -m M, --comet M    Comet parameter file name
+          -p P, --params P   Physical parameters file name
+          -o O, --orbit O    Orbit file name
+          -e E, --ephem E    Ephemeris simulation output file name
+          -s S, --survey S   Survey to simulate
+          -u U, --outfile U  Path to store output and logs.
+          -t T, --stem T     Output file name stem.
+          -v, --verbose      Verbosity. Default currently true; include to turn off verbosity.
+          -f, --force        Force deletion/overwrite of existing output file(s). Default False.
     """
 
     parser = argparse.ArgumentParser()

@@ -26,26 +26,29 @@ deg2rad = np.radians
 sin = np.sin
 cos = np.cos
 
-__all__ = ['Footprint']
-
 
 class Detector:
 
     def __init__(self, points, ID=0, units='radians'):
-        """ initiates a detector object.
+        """
+        Initiates a detector object.
 
-        INPUT
-        -----
-        points      ... array of shape (2, n) describing the corners of the sensor
-        ID          ... An integer ID for the sensor
-        units       ... units that points is provided in, radians or degrees from
+        Parameters:
+        -----------
+        points (array): array of shape (2, n) describing the corners of the sensor.
+
+        ID (int): an integer ID for the sensor.
+
+        units (string): units that points is provided in, "radians" or "degrees" from
                         center of the focal plane.
 
-        RETURNS
-        -------
-        detector    ...a detector instance
+        Returns:
+        ----------
+        detector (Detector): a detector instance.
+
         """
-    # points  --->   should be shape dims, n points
+
+        # points  --->   should be shape dims, n points
         self.ID = ID
         self.ra = points[0]
         self.dec = points[1]
@@ -69,18 +72,23 @@ class Detector:
         self.centery = np.sum(self.y) / len(self.y)
 
     def ison(self, point, ϵ=10.**(-11), plot=False):
-        """ Determines whether a point (or array of points) falls on the
+        """
+        Determines whether a point (or array of points) falls on the
         detector.
 
-        INPUT
-        -----
-        point   ... array of shape (2, n) for n points
-        plot    ... whether to plot the detector and the point
+        Parameters:
+        -----------
+        point (array): array of shape (2, n) for n points.
 
-        RETURNS
-        -------
-        ison    ... indices of points in point array that fall on the sensor.
+        ϵ (float): threshold for whether point is on detector.
+
+        plot (Boolean): whether to plot the detector and the point.
+
+        Returns:
+        ----------
+        ison (array): indices of points in point array that fall on the sensor.
         """
+
         # points needs to be shape 2,n
         # if single point, needs to be an array of single element arrays
 
@@ -108,9 +116,19 @@ class Detector:
         return selectedidx[detectedidx]
 
     def trueArea(self):
-        """ Uses the same method as segmented area, but the test point is the
-        mean of the corner coordinates. Will probably fail if the sensor is
-        not convex.
+        """
+        Returns the area of the detector. Uses the same method as
+        segmentedArea, but the test point is the mean of the corner coordinates.
+        Will probably fail if the sensor is not convex.
+
+        Parameters:
+        -----------
+        None.
+
+        Returns:
+        ----------
+        area (float): the area of the detector.
+
         """
         x = self.x - self.centerx
         y = self.y - self.centery
@@ -125,20 +143,24 @@ class Detector:
         return area
 
     def segmentedArea(self, point):
-        """ Returns the area of the detector by calculating the area of each
+        """
+        Returns the area of the detector by calculating the area of each
         triangle segment defined by each pair of adjacent corners and a point
         inside the sensor.
         Fails if the point is not inside the sensor or if the sensor is not
         convex.
 
-        INPUT
-        -----
-        point       ... a point inside the sensor
+        Parameters:
+        -----------
+        None.
 
-        RETURNS
-        area        ... area of the sensor
+        Returns:
+        ----------
+        area (float): the area of the detector.
+
         """
-        # so that poth a single and many points work
+
+        # so that both a single and many points work
         ncorners = self.x.shape[0]
 
         if len(point.shape) == 1:
@@ -161,28 +183,42 @@ class Detector:
         return 0.5 * (np.sum(area, axis=0))
 
     def sortCorners(self):
-        """ Sorts the corners to be counterclockwise by angle from center of
-        the detector. Modifies self.
         """
+        Sorts the corners to be counterclockwise by angle from center of
+        the detector. Modifies self.
+
+        Parameters:
+        -----------
+        None.
+
+        Returns:
+        ----------
+        None.
+
+        """
+
         # convert corners to angles (radians)
-        θ = np.arctan2(self.y - self.centery / self.x - self.centerx)
+        θ = np.arctan2(self.y - self.centery, self.x - self.centerx)
 
         neworder = np.argsort(θ)
         self.x = self.x[neworder]
         self.y = self.y[neworder]
 
     def rotateDetector(self, θ):
-        """ Rotates a sensor around the origin of the coordinate system its
+        """
+        Rotates a sensor around the origin of the coordinate system its
         corner locations are provided in.
 
-        INPUT
-        -----
-        θ   ... Angle to rotate by, in radians.
+        Parameters:
+        -----------
+        θ (float): angle to rotate by, in radians.
 
-        RETURNS
-        -------
-        Detector    ... New Detector instance
+        Returns:
+        ----------
+        Detector: new Detector instance.
+
         """
+
         # convert rotation angle to complex number
         q = cos(θ) + sin(θ) * 1.0j
 
@@ -194,8 +230,19 @@ class Detector:
         return Detector(np.array((np.real(newcoords), np.imag(newcoords))), self.ID)
 
     def rad2deg(self):
-        """ Converts corners from radians to degrees.
         """
+        Converts corners from radians to degrees.
+
+        Parameters:
+        -----------
+        None.
+
+        Returns:
+        ----------
+        None.
+
+        """
+
         if self.units == 'radians':
             self.x = np.degrees(self.x)
             self.y = np.degrees(self.y)
@@ -206,8 +253,19 @@ class Detector:
             print("Units are already degrees")
 
     def deg2rad(self):
-        """ Converts corners from degrees to radians.
         """
+        Converts corners from degrees to radians.
+
+        Parameters:
+        -----------
+        None.
+
+        Returns:
+        ----------
+        None.
+
+        """
+
         if self.units == "degrees":
             self.x = np.radians(self.x)
             self.y = np.radians(self.y)
@@ -218,20 +276,30 @@ class Detector:
             print("Units are already radians")
 
     def plot(self, θ=0.0, color='gray', units='rad', annotate=False):
-        """ Plots the footprint for an individual sensor. Currently not on the
+        """
+        Plots the footprint for an individual sensor. Currently not on the
         focal plane, just the sky coordinates. Relatively minor difference
         (width of footprint for LSST is <2.1 degrees), so should be fine for
         internal demonstration purposes, but not for confirming algorithms or
         for offical plots.
 
-        INPUT
-        -----
-        θ           ... Angle to rotate footprint by, radians or degrees
-        color       ... line color
-        units       ... units θ is provided in
-        annote      ... whether to annotate each sensor with its index in
-                        self.detectors
+        Parameters:
+        -----------
+        θ (float): angle to rotate footprint by, radians or degrees.
+
+        color  (string): line color.
+
+        units (string): units θ is provided in ("deg" or "rad").
+
+        annotate (Boolean): whether to annotate each sensor with its index in
+        self.detectors.
+
+        Returns:
+        ----------
+        None.
+
         """
+
         detector = self.rotateDetector(θ)
         if units == 'deg':
             detector.rad2deg()
@@ -251,18 +319,22 @@ class Detector:
 class Footprint:
 
     def __init__(self, path, detectorName="detector"):
-        """ Initiates a Footprint object.
-
-        INPUT
-        -----
-        path            ... path to a .csv file containing detector corners
-        detectorName    ... name of column in detector file inidicating to
-                            which sensor a corner belongs.
-
-        RETURNS
-        -------
-        Footprint       ... Footprint object for the provided sensors.
         """
+        Initiates a Footprint object.
+
+        Parameters:
+        -----------
+        path (string): path to a .csv file containing detector corners.
+
+        detectorName (string): name of column in detector file indicating to
+        which sensor a corner belongs.
+
+        Returns:
+        ----------
+        Footprint: Footprint object for the provided sensors.
+
+        """
+
         # file should be a .csv (and should be actually comma seperated)
         # the center of the camera should be the origin
         allcornersdf = pd.read_csv(path)
@@ -276,22 +348,32 @@ class Footprint:
 
         # sort the corners of each detector
         for i in range(self.N):
-            self.detectors[i].sortCorners
+            self.detectors[i].sortCorners()
 
     def plot(self, θ=0., color='gray', units='rad', annotate=False):
-        """ Plots the footprint. Currently not on the focal plane, just the sky
+        """
+        Plots the footprint. Currently not on the focal plane, just the sky
         coordinates. Relatively minor difference (width of footprint for LSST
         is <2.1 degrees), so should be fine for internal demonstration
         purposes, but not for confirming algorithms or for offical plots.
 
-        INPUT
-        -----
-        θ           ... Angle to rotate footprint by, radians or degrees
-        color       ... line color
-        units       ... units θ is provided in
-        annote      ... whether to annotate each sensor with its index in
-                        self.detectors
+        Parameters:
+        -----------
+        θ (float): angle to rotate footprint by, radians or degrees.
+
+        color  (string): line color.
+
+        units (string): units θ is provided in ("deg" or "rad").
+
+        annotate (Boolean): whether to annotate each sensor with its index in
+        self.detectors.
+
+        Returns:
+        ----------
+        None.
+
         """
+
         for i in range(self.N):
             self.detectors[i].plot(θ=θ, color=color, units=units, annotate=annotate)
 
@@ -303,29 +385,28 @@ class Footprint:
         ra_name_field='fieldRA',
         dec_name_field="fieldDec",
         rot_name_field="rotSkyPos",
-        method="direct projection",
                       ):
-        """ Determine whether detections fall on the sensors defined by the
+        """
+        Determine whether detections fall on the sensors defined by the
         footprint. Also returns the an ID for the sensor a detection is made
         on.
 
-        Includes option to use old algorithm, for testing purposes.
+        Parameters:
+        -----------
+        field_df (Pandas dataframe): dataframe containing detection information with pointings.
 
-        INPUT
-        -----
-        field_df        ... Pandas DataFrame containing detection information with pointings
-        *_name          ... column names for object RA and Dec
-        *_name_field    ... column names for field RA and Dec
-        method          ... which algorthim to use to convert on sky location
-                            to focal plane coordinates
+        *_name (string): column names for object RA and Dec and field name.
 
-        RETURNS
-        -------
-        detected        ... Indices of rows in oifDF which fall on the sensor(s)
-        detecorID       ... Index corresponding to a detector in
-                            self.detectors for each entry in detected
+        *_name_field (string): column names for field RA and Dec and rotation.
+
+        Returns:
+        ----------
+        detected (array): indices of rows in oifDF which fall on the sensor(s).
+
+        detectorID  (array): index corresponding to a detector in
+        self.detectors for each entry in detected.
+
         """
-        # TODO: only grab pointings that have detections in oifDF
 
         # convert detections to xyz on unit sphere
         ra = deg2rad(field_df[ra_name])
@@ -336,19 +417,8 @@ class Footprint:
         fielddec = deg2rad(field_df[dec_name_field])
         rotSkyPos = deg2rad(field_df[rot_name_field])
 
-        # convert detections to x, y in focal plane
-        # if method == "Quaternion" or method == "quaternion": #rotation on 3d unit sphere
-        #     x, y, z = RADEC2fovXYZ(ra, dec, fieldra, fielddec, np.zeros(rotSkyPos.shape))#rotSkyPos) # y,z in 3d -> x, y in focal plane
-        #     y /= x #*= 2. / (1.+x)
-        #     z /= x #*= 2. / (1.+x)
-
-        #     #x = y
-        #     #y = z
-        #     #del(z)
-        #     plt.scatter(y, z, s=3.0)
-        #     points = np.array((y, z))
-
-        # else: use direct projection method (no rotation on 3d unit sphere)
+        # quaternion method has been removed. uses direct projection method
+        # (no rotation on 3d unit sphere):
         x, y = radec2focalplane(ra, dec, fieldra, fielddec)
 
         # apply field rotation
@@ -379,22 +449,28 @@ class Footprint:
 
 
 def radec2focalplane(ra, dec, fieldra, fielddec, fieldID=None):
-    """ Converts ra and dec to xy on the focal plane. Projects all pointings to
+    """
+    Converts ra and dec to xy on the focal plane. Projects all pointings to
     the same focal plane, but does not account for field rotation. Maintains
     alignment with the meridian passing through the field center.
 
-    INPUT
-    -----
-    ra          ... Observation Right Ascension, radians
-    dec         ... Observation Declination, radians
-    fieldra     ... Field Pointing Right Ascension, radians
-    fielddec    ... Field Pointing Declination, radians
-    fieldID     ... Field ID, Integer, optional.
+    Parameters:
+    -----------
+    ra (float/array of floats): observation Right Ascension, radians.
 
-    RETURNS
-    -------
-    x, y        ... Coordinates on the focal plane, radians projected
-                    to the plane tangent to the unit sphere.
+    dec (float/array of floats): observation Declination, radians.
+
+    fieldra (float/array of floats): field pointing Right Ascension, radians.
+
+    fielddec (float/array of floats): field pointing Declination, radians.
+
+    fieldID (float/array of floats): Field ID, optional.
+
+    Returns:
+    ----------
+    x, y (float/array of floats): Coordinates on the focal plane, radians projected
+    to the plane tangent to the unit sphere.
+
     """
 
     # convert to cartesian coordiantes on unit sphere

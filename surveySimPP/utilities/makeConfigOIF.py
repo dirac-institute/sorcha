@@ -8,6 +8,18 @@ import sys
 
 
 def makeConfig(args):
+    """
+    Makes an OIF config file from the variables defined at the command line.
+
+    Parameters:
+    -----------
+    args (argparse ArgumentParser object): command line arguments.
+
+    Returns:
+    -----------
+    None.
+
+    """
 
     # grab defaults from a template config file
     config = configparser.ConfigParser()
@@ -101,6 +113,30 @@ def makeConfig(args):
 
 
 def main():
+    """
+    Creates an OIF config file from variables defined at the command line.
+
+    usage: makeConfigOIF [-h] [-no NO] [-ndays NDAYS] [-day1 DAY1] [-prefix PREFIX] [-camerafov CAMERAFOV] [-inputformat INPUTFORMAT] [-cache CACHE] [-mpcfile MPCFILE]
+                     [-spkstep SPKSTEP] [-telescope TELESCOPE] [-query QUERY]
+                     o pointing
+        positional arguments:
+          o                     orbits file
+          pointing              pointing database
+        arguments:
+          -h, --help                show this help message and exit
+          -no NO                    number of orbits per config file, -1 runs all the orbits in one config file. Default value = 300
+          -ndays NDAYS              number of days in survey to run, -1 runs entire survey. Default value = -1
+          -day1 DAY1                first day in survey to run. Default value = 1
+          -prefix PREFIX            config file name prefix, Default value is an empty string
+          -camerafov CAMERAFOV      path and file name of the camera fov. Default value = instrument_polygon.dat
+          -inputformat INPUTFORMAT  input format (CSV or whitespace). Default value = whitespace
+          -cache CACHE              base cache directory name. Default value = _cache
+          -mpcfile MPCFILE          name of the file containing the MPC observatory codes. Default value = obslist.dat
+          -spkstep SPKSTEP          Integration step in days. Default value = 30
+          -telescope TELESCOPE      Observatory MPC Code. Default value = I11 (Gemini South to be changed to Rubin Observatory)
+          -query QUERY              SQL query for pointing database.
+
+    """
 
     parser = argparse.ArgumentParser(description='creating config file(s) for Objects in Field')
     parser.add_argument("o", help="orbits file", type=str)

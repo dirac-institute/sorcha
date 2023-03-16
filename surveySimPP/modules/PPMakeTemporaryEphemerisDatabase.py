@@ -1,31 +1,29 @@
-#!/usr/bin/python
-
 import pandas as pd
 import sqlite3
 import logging
 import sys
 from .PPReadOif import PPSkipOifHeader
 
-# Author: Grigori fedorets and Steph Merritt
-
 
 def PPMakeTemporaryEphemerisDatabase(oif_output, out_fn, inputformat, chunksize=1e6):
     """
-    PPMakeTemporaryEphemerisDatabase.py
+    Makes an temporary ephemeris database from the output of ObjectsInField/other
+    ephemeris simulation output. This database is done in chunks to avoid memory problems.
 
-     Description: This task makes an temporary ephemeris database from the output of
-     ObjectsInField/other ephemeris simulation output. This database is done in chunks
-     to avoid memory problems.
+    Parameters:
+    -----------
+    oif_output (string): location of OIF/other output to be converted to database.
 
-     Mandatory input:      string, oifoutput, name of output of oif, a tab-separated (later csv) file
-                           string, outf, path of output temporary sqlite3 database
-                           string, inputformat, string of input format
-                           int, chunksize, number of rows to chunk creation by
-                           string, stemname, name (without .db) of database
+    out_fn (string): filepath where the temporary database should be saved.
 
-     Output:               sqlite3 temporary database
+    inputformat (string): format of OIF/other output. Should be "whitespace", "comma"/"csv",
+    or "h5"/"hdf5"/"HDF5".
 
-     usage: intermdb=PPMakeTemporaryEphemerisDatabase(oif_output,outf,chunkSize)
+    chunksize (int): number of rows in which to chunk database creation.
+
+    Returns:
+    -----------
+    out_fn (string): as input.
 
     """
 
@@ -38,32 +36,38 @@ def PPMakeTemporaryEphemerisDatabase(oif_output, out_fn, inputformat, chunksize=
     cmd = 'drop table if exists interm'
     cur.execute(cmd)
 
-    if (inputformat == "whitespace"):
+    if (inputformat == 'whitespace'):
         PPChunkedTemporaryDatabaseCreation(cnx, oif_output, chunksize, delimiter='whitespace')
-    elif (inputformat == "comma") or (inputformat == 'csv'):
+    elif (inputformat == 'comma') or (inputformat == 'csv'):
         PPChunkedTemporaryDatabaseCreation(cnx, oif_output, chunksize, delimiter=',')
     elif (inputformat == 'h5') or (inputformat == 'hdf5') or (inputformat == 'HDF5'):
         padafr = pd.read_hdf(oif_output).reset_index(drop=True)
-        padafr.to_sql("interm", con=cnx, if_exists="append", index=False)
+        padafr.to_sql('interm', con=cnx, if_exists='append', index=False)
     else:
-        pplogger.error("ERROR: PPMakeTemporaryEphemerisDatabase: unknown format for ephemeris simulation results.")
-        sys.exit("ERROR: PPMakeTemporaryEphemerisDatabase: unknown format for ephemeris simulation results.")
+        pplogger.error('ERROR: PPMakeTemporaryEphemerisDatabase: unknown format for ephemeris simulation results.')
+        sys.exit('ERROR: PPMakeTemporaryEphemerisDatabase: unknown format for ephemeris simulation results.')
 
     return out_fn
 
 
 def PPChunkedTemporaryDatabaseCreation(cnx, oif_output, chunkSize, delimiter):
     """
-     Description: This task splits up a .csv into chunks to create the temporary
-     ephemeris database, to avoid memory problems for very large ephemeris files.
+    Splits up a .csv into chunks to create the temporary ephemerides database,
+    to avoid memory problems for very large ephemerides files.
 
-     Mandatory input:      sqlite3 connection object, cnx, connection to the temporary database
-                           string, oif_output, path and name of input ephemeris file
-                           int, chunkSize, number of rows to read at once
-                           delimiter, string, file delimiter
+    Parameters:
+    -----------
+    cnx (sqlite3 connection object): the connection object of the SQLite database.
 
-     Output:               none
+    oif_output (string): the location of OIF/other output to be converted to database.
 
+    chunkSize (int): number of rows in which to chunk database creation.
+
+    delimiter (string): character used as delimiter in OIF/other output.
+
+    Returns:
+    -----------
+    None.
 
     """
 

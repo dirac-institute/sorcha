@@ -4,20 +4,23 @@ from .PPDetectionProbability import PPDetectionProbability
 
 
 def PPFadingFunctionFilter(observations, fillfactor, width, rng, verbose=False):
-    """Wrapper function for PPDetectionProbability and PPDropObservations.
+    """
+    Wrapper function for PPDetectionProbability and PPDropObservations.
 
     Calculates detection probability based on a fading function, then drops rows where the
     probabilty of detection is less than sample drawn from a uniform distribution.
 
-    Input
-    -----
-    observations ... pandas dataframe of observations with a column containing the probability of detection
-    fillfactor  ... float of fill factor for camera footprint
-    rng          ... Numpy random number generator.
+    Parameters:
+    -----------
+    observations (Pandas dataframe): dataframe of observations with a column containing the probability of detection.
 
-    Returns
-    -------
-    observations ... new dataframe without observations that could not be observed
+    fillFactor (float): fraction of FOV covered by the camera sensor.
+
+    rng (numpy Generator): numpy random number Generator object.
+
+    Returns:
+    ----------
+    observations_drop (Pandas dataframe): new dataframe without observations that could not be observed.
 
     """
 

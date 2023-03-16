@@ -3,6 +3,7 @@ import os
 import shutil
 import configparser
 import pytest
+import glob
 
 from surveySimPP.tests.data import get_test_filepath
 
@@ -214,3 +215,77 @@ def test_PPCheckFiltersForSurvey():
         PPCheckFiltersForSurvey('lsst', ['j'])
 
     assert e.type == SystemExit
+
+
+def test_PPPrintConfigsToLog(tmp_path):
+
+    from surveySimPP.modules.PPGetLogger import PPGetLogger
+    from surveySimPP.modules.PPConfigParser import PPPrintConfigsToLog
+
+    test_path = os.path.dirname(get_test_filepath('test_input_fullobs.csv'))
+
+    PPGetLogger(tmp_path, log_format='%(name)-12s %(levelname)-8s %(message)s ')
+
+    cmd_args = {'paramsinput': 'testcolour.txt',
+                'orbinfile': 'testorb.des',
+                'oifoutput': 'oiftestoutput.txt',
+                'configfile': 'test_PPConfig.ini',
+                'outpath': './',
+                'makeTemporaryEphemerisDatabase': False,
+                'readTemporaryEphemerisDatabase': None,
+                'deleteTemporaryEphemerisDatabase': False,
+                'surveyname': 'lsst',
+                'outfilestem': 'testout',
+                'verbose': True}
+
+    configs = {'eph_format': 'csv',
+               'aux_format': 'whitespace',
+               'ephemerides_type': 'oif',
+               'pointing_database': './baseline_10yrs_10klines.db',
+               'pointing_sql_query': 'SELECT observationId, observationStartMJD, filter, seeingFwhmGeom, seeingFwhmEff, fiveSigmaDepth, fieldRA, fieldDec, rotSkyPos FROM SummaryAllProps order by observationId',
+               'comet_activity': 'none',
+               'observing_filters': ['r', 'g', 'i', 'z'],
+               'phase_function': 'HG',
+               'trailing_losses_on': True,
+               'camera_model': 'footprint',
+               'footprint_path': './detectors_corners.csv',
+               'bright_limit': 16.0,
+               'bright_limit_on': True,
+               'SNR_limit': None,
+               'SNR_limit_on': False,
+               'mag_limit': None,
+               'mag_limit_on': False,
+               'fading_function_on': True,
+               'fading_function_width': 0.1,
+               'fading_function_peak_efficiency': 1.,
+               'SSP_separation_threshold': 0.5,
+               'SSP_number_observations': 2,
+               'SSP_number_tracklets': 3,
+               'SSP_track_window': 15.0,
+               'SSP_detection_efficiency': 0.95,
+               'SSP_linking_on': True,
+               'output_format': 'csv',
+               'output_size': 'default',
+               'position_decimals': 7,
+               'magnitude_decimals': 3,
+               'size_serial_chunk': 10,
+               'rng_seed': None,
+               'mainfilter': 'r',
+               'othercolours': ['g-r', 'i-r', 'z-r']}
+
+    PPPrintConfigsToLog(configs, cmd_args)
+
+    datalog = glob.glob(os.path.join(tmp_path, '*-postprocessing.log'))
+
+    testfile = open(os.path.join(test_path, 'test_log.txt'), mode='r')
+    newfile = open(datalog[0], mode='r')
+
+    alltest = testfile.readlines()
+    allnew = newfile.readlines()
+
+    assert alltest == allnew
+
+    testfile.close()
+    newfile.close()
+
+    return

@@ -1,28 +1,23 @@
-#!/usr/bin/python
-
 import sys
 import logging
-
-# Author: Grigori Fedorets
 
 
 def PPJoinEphemeridesAndOrbits(padafr, padaor):
     """
-    PPJoinEphemeridesAndOrbits.py
+    Joins the ephemerides pandas dataframe with the orbital pandas dataframe. Each
+    dataframe has to have same ObjIDs: NaNs will populate the fields for the
+    missing objects.
 
+    Parameters:
+    -----------
+    padafr (Pandas dataframe): dataframe of ephemerides/OIF output.
 
+    padaor (Pandas dataframe): dataframe of orbital information.
 
-    Description: This task  joins the pointing pandas database with the
-    orbital pandas database (including brightness H). Each database has to have same ObjID:s: NaN:s will
-    be populate the fields for the missing objects.
+    Returns:
+    ----------
+    resdf (Pandas dataframe): joined dataframe.
 
-
-    Mandatory input:      oif pandas database and colour/cometary database
-
-    Output:               new joined pandas dataframe
-
-
-    usage: padafr1=PPJoinEphemeridesAndOrbits(padafr,padaor)
     """
 
     pplogger = logging.getLogger(__name__)

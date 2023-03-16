@@ -1,30 +1,25 @@
-#!/usr/bin/python
-
 import pandas as pd
 import logging
 import sys
 
-# Author: Grigori Fedorets
-
 
 def PPCheckInputObjectIDs(orbin, colin, poiin):
     """
-    PPCheckInputObjectIDs
+    Checks whether orbit and physical parameter files contain the same object IDs, and
+    additionally checks if the pointing database object iIDs is a subset of
+    all the object id:s found in the orbit/physical parameter files.}
 
-    Description: Checks whether orbit and physical parameter files contain the same object id:s, and
-               additionally checks if the pointing database object id:s is a subset of
-               all the object id:s found in the orbit/physical parameter files.
+    Parameters:
+    -----------
+    orbin (Pandas dataframe): dataframe of orbital information.
 
+    colin (Pandas dataframe): dataframe of physical parameters.
 
-    Mandatory input:   pandas dataframe: orbin -- orbits
-                      pandas dataframe: colin -- physical parameters
-                      pandas dataframe: poiin -- pointing database
+    poiin (Pandas dataframe): dataframe of pointing database.
 
-    Output:            None; return if there is a match, throw error and quit if mismatch.
-
-
-
-    Usage: PPCheckInputObjectIDs(orbin,colin,poiin)
+    Returns:
+    ----------
+    None: will error out if a mismatch is found.
 
     """
 

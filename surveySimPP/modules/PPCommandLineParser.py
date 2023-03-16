@@ -1,5 +1,3 @@
-#!/usr/bin/python
-
 import os
 import sys
 import logging
@@ -9,16 +7,17 @@ from .PPConfigParser import PPFindFileOrExit, PPFindDirectoryOrExit
 
 def PPCommandLineParser(args):
     """
-    Author: Steph Merritt
-
-    Description: Parses the command line arguments, makes sure the filenames given actually exist,
-    then stores them in a single dict.
+    Parses the command line arguments, error-handles them, then stores them in a single dict.
 
     Will only look for the comet parameters file if it's actually given at the command line.
 
-    Mandatory input:    ArgumentParser object, parser, of command line arguments
+    Parameters:
+    -----------
+    args (ArgumentParser object): argparse object of command line arguments
 
-    output:             dictionary of variables taken from command line arguments
+    Returns:
+    ----------
+    cmd_args_dict (dictionary): dictionary of variables taken from command line arguments
 
     """
 

@@ -1,10 +1,21 @@
-#!/bin/python
+import os
+import pytest
 
 from surveySimPP.tests.data import get_test_filepath
-import os
 
 
-def test_PPReadTemporaryEphemerisDatabase(tmp_path):
+@pytest.fixture
+def setup_and_teardown_for_PPReadTemporaryEphemerisDatabase():
+
+    yield
+
+    temp_path = os.path.dirname(get_test_filepath('oiftestoutput.txt'))
+    stem_name = ('testdb_PPIntermDB.db')
+
+    os.remove(os.path.join(temp_path, stem_name))
+
+
+def test_PPReadTemporaryEphemerisDatabase(setup_and_teardown_for_PPReadTemporaryEphemerisDatabase):
 
     from surveySimPP.modules.PPMakeTemporaryEphemerisDatabase import PPMakeTemporaryEphemerisDatabase
     from surveySimPP.modules.PPReadTemporaryEphemerisDatabase import PPReadTemporaryEphemerisDatabase

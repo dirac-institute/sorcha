@@ -2,22 +2,29 @@ import logging
 import sys
 import numpy as np
 
-# Author: Steph Merritt
-
 
 def PPApplyColourOffsets(observations, function, othercolours, observing_filters, mainfilter):
-    """Adds the correct colour offset to H based on the filter of each observation,
+    """
+    Adds the correct colour offset to H based on the filter of each observation,
     then checks to make sure the appropriate columns exist for each phase function model.
     If phase model variables exist for each colour, this function also selects the
     correct variables for each observation based on filter.
 
-    parameters:
-    -------------
-    observations (Pandas dataframe): pandas dataframe of observations
-    function (string): string of desired phase function model
-    othercolours (list of strings): list of colour offsets present in input files
-    observing_filters (list of strings): list of observing filters
-    mainfilter (string): the main filter in which H is given and all colour offsets are calculated against
+    Parameters:
+    -----------
+    observations (Pandas dataframe): dataframe of observations.
+
+    function (string): string of desired phase function model. Options are HG, HG12, HG1G2, linear, H.
+
+    othercolours (list of strings): list of colour offsets present in input files.
+
+    observing_filters (list of strings): list of observation filters of interest.
+
+    mainfilter (string): the main filter in which H is given and all colour offsets are calculated against.
+
+    Returns:
+    -----------
+    observations (Pandas dataframe): dataframe of observations with H calculated in relevant filter.
 
     """
 
@@ -93,7 +100,7 @@ def PPApplyColourOffsets(observations, function, othercolours, observing_filters
             pplogger.error('ERROR: PPApplyColourOffsets: linear function requires the following input data columns: H, S.')
             sys.exit('ERROR: PPApplyColourOffsets: linear function requires the following input data columns: H, S.')
 
-    elif function == 'H':
+    elif function == 'none':
         pass
 
     else:

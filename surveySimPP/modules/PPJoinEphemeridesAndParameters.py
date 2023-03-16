@@ -1,21 +1,19 @@
-#!/usr/bin/python
-
-# Author: Grigori Fedorets
-
-
 def PPJoinEphemeridesAndParameters(padafr, padacl):
     """
-    PPJoinEphemeridesAndParameters.py
-
-    Description: This task  joins the ephemeris pandas database with the
-    physical parameters pandas database. Each database has to have same ObjID:s: NaN:s will
+    Joins the ephemerides pandas dataframe with the physical parameters pandas
+    dataframe. Each database has to have same ObjIDs: NaNs will
     be populate the fields for the missing objects.
 
-    Mandatory input:      oif pandas database and physical parameters database
+    Parameters:
+    -----------
+    padafr (Pandas dataframe): dataframe of ephemerides/OIF output.
 
-    Output:               new joined pandas dataframe
+    padacl (Pandas dataframe): dataframe of physical parameters information.
 
-    usage: padafr1=PPPJoinEphemeridesAndParameters(padafr,padacl)
+    Returns:
+    ----------
+    resdf (Pandas dataframe): joined dataframe.
+
     """
 
     resdf = padafr.join(padacl.set_index('ObjID'), on='ObjID')

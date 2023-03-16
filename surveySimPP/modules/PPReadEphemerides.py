@@ -1,21 +1,12 @@
-#!/bin/python
-
 import sys
 import logging
 from . import PPReadOif
 
 
-# Author: Grigori Fedorets
-
-
 def PPReadEphemerides(eph_output, ephemerides_type, inputformat):
     """
-    PPReadEphemerides.py
-
-
-    Description: This task reads in the ephemerides as output by the pointing simulation.
+    Reads in the ephemerides as output by simulation (whether OIF or otherwise).
     The type of ephemerides is assigned in the PPConfig.ini file.
-
 
     For correct performance, the read-in data needs to contain all of the following columns:
 
@@ -25,17 +16,19 @@ def PPReadEphemerides(eph_output, ephemerides_type, inputformat):
     'Obs-Sun(J2000x)(km)', 'Obs-Sun(J2000y)(km)', 'Obs-Sun(J2000z)(km)', 'Obs-Sun(J2000vx)(km/s)',
     'Obs-Sun(J2000vy)(km/s)', 'Obs-Sun(J2000vz)(km/s)', 'Sun-Ast-Obs(deg)']
 
+    Parameters:
+    -----------
+    eph_output (string): location/name of ephemerides output file.
 
-    Mandatory input:      string, eph_output, name of text file including Output from ephemerides file
-                          string, ephemerides_type, type of ephemerides pointing simulation (oif)
-                          string, inputformat, input format of pointing putput (csv, whitespace, hdf5)
+    ephemerides_type (string): type of ephemerides pointing simulation. Currently only
+    "oif" allowed.
 
+    inputformat (string): format of input file ("whitespace"/"comma"/"csv"/"h5"/"hdf5").
 
+    Returns:
+    -----------
+    padafr (Pandas dataframe): dataframe of ephemerides simulation data.
 
-    Output:               pandas dataframe
-
-
-    usage: PPReadEphemerides(padafr, ephemerides_type, inputformat)
     """
 
     pplogger = logging.getLogger(__name__)
