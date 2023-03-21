@@ -1,5 +1,6 @@
 import configparser
 import os
+import sys
 import pytest
 
 from surveySimPP.utilities.makeConfigOIF import makeConfig
