@@ -4,8 +4,10 @@ import pytest
 
 from surveySimPP.tests.data import get_test_filepath
 
+# These tests won't work on Windows because Windows uses backslashes for paths.
+# Hence, the asserts will always fail.
 if sys.platform.startswith("win"):
-    pytest.skip("These tests will not work on Windows.", allow_module_level=True)
+    pytest.skip("These tests do not work on Windows.", allow_module_level=True)
 
 class args:
     def __init__(self, filename, oss, sss, dc, dr=False, dw=False, dl=False):
@@ -13,11 +15,11 @@ class args:
         abspath = os.path.dirname(get_test_filepath('oiftestoutput.txt'))
 
         args.filename = filename
-        args.inputs = '../../tests/data/'
+        args.inputs = os.path.relpath(abspath)
         args.deletecache = True
         args.os = oss
         args.ss = sss
-        args.ssppcon = '../../tests/data/test_PPConfig.ini'
+        args.ssppcon = os.path.join(os.path.relpath(abspath), 'test_PPConfig.ini')
         args.oifout = os.path.relpath(abspath)
         args.allout = os.path.relpath(abspath)
         args.comet = False
