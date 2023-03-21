@@ -38,7 +38,7 @@ def makeSLURM(args):
     configfiles.sort()
 
     if not configfiles:
-        sys.exit('Could not find any OIF config files files on given input path.')
+        sys.exit('Could not find any OIF config files on given input path: {}'.format(args.inputs))
 
     if args.ncores:
         numcores = args.ncores
@@ -203,8 +203,13 @@ def main():
     parser.add_argument('-n', '--ncores', help='Number of cores. Default will be one core per orbits input file.', type=int, default=0)
     # job name
     parser.add_argument('-jn', '--jobname', help='Job name. Default is OIF+SSPP.', type=str, default='OIF+SSPP')
+    # force?
+    parser.add_argument("-f", "--force", help='Force deletion/overwrite of existing output file(s). Default False.', dest='f', action='store_true', default=False)
 
     args = parser.parse_args()
+
+    # NOTE: it would be nice to move all of the error handling into a function
+    # so it can be unit tested.
 
     if args.dr and args.dw:
         sys.exit('Cannot have both -dr and -dw command flag arguments.')
@@ -218,8 +223,10 @@ def main():
     elif not args.os and not args.ssppcon:
         sys.exit('-c argument is required if running SSPP.')
 
-    if os.path.isfile(os.path.abspath(args.filename)):
+    if os.path.isfile(os.path.abspath(args.filename)) and not args.f:
         sys.exit('File already exists at given location/name.')
+    elif os.path.isfile(os.path.abspath(args.filename)) and args.f:
+        os.remove(args.filename)
 
     args = convert_args_to_absolute_paths(args)
 

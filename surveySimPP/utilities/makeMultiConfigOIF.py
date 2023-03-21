@@ -27,7 +27,7 @@ def makeConfig(args):
 
     # get database info
     con = sql.connect(args.pointing)
-    database = pd.read_sql_query("SELECT observationStartMJD, observationId FROM observations ORDER BY observationStartMJD", con)
+    database = pd.read_sql_query(args.query, con)
     # maxFields = len(database.index)
 
     # get what dates to check in database
@@ -47,7 +47,7 @@ def makeConfig(args):
     field1 = database.loc[(database["observationStartMJD"] - day1) < 1.0]["observationId"].iloc[0]
     fieldf = database.loc[(database["observationStartMJD"] - dayf) < 2.0]["observationId"].iloc[-1]  # this will likely overshoot a little bit
 
-    orbits_list = glob.glob(args.o + 'orbits*.txt')
+    orbits_list = glob.glob(os.path.join(args.o, 'orbits*.txt'))
 
     for fn in orbits_list:
 
@@ -92,7 +92,7 @@ def makeConfig(args):
             }
         })
 
-        with open(args.o + 'config_' + orbits_name + '.ini', 'w') as file:
+        with open(os.path.join(args.o, 'config_' + orbits_name + '.ini'), 'w') as file:
             config.write(file)
 
 
@@ -102,7 +102,7 @@ def main():
     Assumes all orbits files lie in one folder and take the form "orbits*".
 
     usage: makeMultiConfigOIF [-h] [-no NO] [-ndays NDAYS] [-day1 DAY1] [-prefix PREFIX] [-camerafov CAMERAFOV] [-inputformat INPUTFORMAT] [-cache CACHE] [-mpcfile MPCFILE]
-                          [-spkstep SPKSTEP] [-telescope TELESCOPE]
+                          [-spkstep SPKSTEP] [-telescope TELESCOPE] [-query QUERY]
                           o pointing
         positional arguments:
             o                     orbits file path location
@@ -119,6 +119,7 @@ def main():
           -mpcfile MPCFILE          name of the file containing the MPC observatory codes. Default value = obslist.dat
           -spkstep SPKSTEP          Integration step in days. Default value = 30
           -telescope TELESCOPE      Observatory MPC Code. Default value = I11 (Gemini South to be changed to Rubin Observatory)
+          -query QUERY              SQL query for pointing database
 
     """
 
@@ -135,6 +136,7 @@ def main():
     parser.add_argument("-mpcfile", help='name of the file containing the MPC observatory codes. Default value = obslist.dat', type=str, default='obslist.dat')
     parser.add_argument("-spkstep", help="Integration step in days. Default value = 30", type=int, default=30)
     parser.add_argument("-telescope", help="Observatory MPC Code. Default value = I11 (Gemini South to be changed to Rubin Observatory)", type=str, default='I11')
+    parser.add_argument("-query", help="SQL query for pointing database.", type=str, default="SELECT observationStartMJD, observationId FROM observations ORDER BY observationStartMJD")
 
     args = parser.parse_args()
 

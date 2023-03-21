@@ -17,7 +17,7 @@ def setup_and_teardown_for_PPMakeTemporaryEphemerisDatabase():
     os.remove(os.path.join(temp_path, stem_name))
 
 
-def test_PPMakeTemporaryEphemerisDatabase():
+def test_PPMakeTemporaryEphemerisDatabase(setup_and_teardown_for_PPMakeTemporaryEphemerisDatabase):
 
     from surveySimPP.modules.PPMakeTemporaryEphemerisDatabase import PPMakeTemporaryEphemerisDatabase
     from surveySimPP.modules.PPReadOif import PPReadOif

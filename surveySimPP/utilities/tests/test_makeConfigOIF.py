@@ -1,7 +1,9 @@
-from ..makeConfigOIF import makeConfig
-from surveySimPP.tests.data import get_test_filepath
 import configparser
 import os
+import pytest
+
+from surveySimPP.utilities.makeConfigOIF import makeConfig
+from surveySimPP.tests.data import get_test_filepath
 
 
 class args:
@@ -21,7 +23,22 @@ class args:
         self.telescope = 'I11'
 
 
-def test_makeConfigOIF():
+@pytest.fixture
+def teardown_for_makeConfigOIF():
+
+    yield
+
+    temp_path = os.path.dirname(get_test_filepath('oiftestoutput.txt'))
+    file1 = 'testorb-1-5.ini'
+    file2 = 'testorb-1-3.ini'
+    file3 = 'testorb-4-5.ini'
+
+    os.remove(os.path.join(temp_path, file1))
+    os.remove(os.path.join(temp_path, file2))
+    os.remove(os.path.join(temp_path, file3))
+
+
+def test_makeConfigOIF(teardown_for_makeConfigOIF):
 
     outpath = os.path.dirname(get_test_filepath('testorb.des'))
     argv = args(get_test_filepath('testorb.des'), get_test_filepath('baseline_10yrs_10klines.db'), -1, outpath)
@@ -31,6 +48,7 @@ def test_makeConfigOIF():
     config = configparser.ConfigParser()
     config.read(get_test_filepath('testorb-1-5.ini'))
 
+    # have to change the paths - makeConfig gives absolute paths, machine-dependent
     config.set('ASTEROID', 'population model', '../tests/data/testorb.des')
     config.set('SURVEY', 'survey database', '../tests/data/baseline_10yrs_10klines.db')
 
