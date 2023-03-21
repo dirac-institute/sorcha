@@ -5,6 +5,11 @@ import pytest
 from surveySimPP.utilities.makeConfigOIF import makeConfig
 from surveySimPP.tests.data import get_test_filepath
 
+# It looks to me like on Windows, makeConfigOIF is making the tests in an unexpected
+# place.
+#if sys.platform.startswith("win"):
+#    pytest.skip("Skipping tests that fail on Windows.", allow_module_level=True)
+
 
 class args:
     def __init__(self, o, pointing, no, prefix):

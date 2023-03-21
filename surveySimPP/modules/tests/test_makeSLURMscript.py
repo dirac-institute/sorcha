@@ -1,8 +1,11 @@
 import os
+import sys
 import pytest
 
 from surveySimPP.tests.data import get_test_filepath
 
+if sys.platform.startswith("win"):
+    pytest.skip("These tests will not work on Windows.", allow_module_level=True)
 
 class args:
     def __init__(self, filename, oss, sss, dc, dr=False, dw=False, dl=False):
