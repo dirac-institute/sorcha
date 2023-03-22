@@ -106,7 +106,11 @@ def create_inputs_table(cnx_out, input_path, table_type):
     cur_out.execute('DROP TABLE if exists ' + table_type)
 
     for filename in input_list:
-        df = pd.read_csv(filename, sep=' ')
+        df = pd.read_csv(filename, delim_whitespace=True)
+
+        if 'INDEX' in df.columns:
+            df = df.rename(columns={'INDEX': 'orig_index'})
+
         df.to_sql(table_type, cnx_out, if_exists='append')
 
     cur_out.close()
