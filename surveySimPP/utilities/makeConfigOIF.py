@@ -108,6 +108,9 @@ def makeConfig(args):
         })
 
         ndigits = len(str(len(orbits.index)))
+        
+        print(os.path.join(args.prefix, orbitsName + "-" + str(startingOrbits[i]).zfill(ndigits) + '-' + str(startingOrbits[i] + nOrbits - 1).zfill(ndigits) + '.ini'))
+        
         with open(os.path.join(args.prefix, orbitsName + "-" + str(startingOrbits[i]).zfill(ndigits) + '-' + str(startingOrbits[i] + nOrbits - 1).zfill(ndigits) + '.ini'), 'w') as file:
             config.write(file)
 
