@@ -1,7 +1,6 @@
 import pandas as pd
 import numpy as np
 from numpy.testing import assert_almost_equal, assert_equal
-from surveySimPP.tests.data import get_test_filepath
 
 
 def test_PPCalculateApparentMagnitudeInFilter():
@@ -9,7 +8,7 @@ def test_PPCalculateApparentMagnitudeInFilter():
     from surveySimPP.modules.PPCalculateApparentMagnitudeInFilter import PPCalculateApparentMagnitudeInFilter
 
     test_observations = pd.DataFrame({'MJD': [2459215.5],
-                                      'H_r': [7.3],
+                                      'H_filter': [7.3],
                                       'GS': [0.19],
                                       'G1': [0.62],
                                       'G2': [0.14],
@@ -36,19 +35,22 @@ def test_PPCalculateSimpleCometaryMagnitude():
 
     from surveySimPP.modules.PPCalculateSimpleCometaryMagnitude import PPCalculateSimpleCometaryMagnitude
 
-    test_cometary_df = pd.read_csv(get_test_filepath('cometary_test_df.csv'), sep=' ')
+    cometary_obs = pd.DataFrame({'AstRange(km)': [7.35908481e+08],
+                                 'Ast-Sun(J2000x)(km)': [-5.61871308e+08],
+                                 'Ast-Sun(J2000y)(km)': [-5.47551402e+08],
+                                 'Ast-Sun(J2000z)(km)': [-2.48566276e+08],
+                                 'Sun-Ast-Obs(deg)': [8.899486],
+                                 'optFilter': ['i'],
+                                 'H_r': [15.9],
+                                 'afrho1': [1552],
+                                 'q': [1.21050916],
+                                 'k': [-3.35],
+                                 'i-r': [-0.12]})
 
-    othercolours = ['u-r', 'g-r', 'i-r', 'z-r', 'y-r']
+    df_comet = PPCalculateSimpleCometaryMagnitude(cometary_obs, 'r', ['i-r'])
 
-    df_comet = PPCalculateSimpleCometaryMagnitude(test_cometary_df.copy(), 'r', othercolours)
-
-    expected = [15.77970706, 15.89970703, 15.77970697, 15.89970695, 15.89970149,
-                15.89970147, 15.89970144, 16.31969998, 15.89969995, 15.77969533,
-                15.8996953, 16.31969374, 15.89969371, 15.89969053, 15.7796905,
-                16.31969043, 15.8996904, 16.31968699, 15.89968696, 15.89968691,
-                15.77968688]
-
-    assert_almost_equal(df_comet["TrailedSourceMag"], expected, decimal=5)
+    assert_almost_equal(df_comet['coma'].values[0], 24.82220145)
+    assert_almost_equal(df_comet['TrailedSourceMag'].values[0], 15.77970706)
 
     return
 
@@ -78,7 +80,7 @@ def test_PPApplyColourOffsets():
 
     func_test = PPApplyColourOffsets(test_obs.copy(), 'HG', othercolours, observing_filters, 'r')
 
-    assert_equal(func_test['H_r'].values, [10., 10.3, 10.5, 10.7, 12., 12.4, 12.8, 12.6])
+    assert_equal(func_test['H_filter'].values, [10., 10.3, 10.5, 10.7, 12., 12.4, 12.8, 12.6])
 
     Gr = np.array([0.151, 0.151, 0.151, 0.151, 0.121, 0.121, 0.121, 0.121])
     Gu = np.array([0.152, 0.152, 0.152, 0.152, 0.122, 0.122, 0.122, 0.122])
@@ -96,7 +98,7 @@ def test_PPApplyColourOffsets():
 
     func_test_2 = PPApplyColourOffsets(test_obs.copy(), 'HG', othercolours, observing_filters, 'r')
 
-    assert_equal(func_test_2['H_r'].values, [10., 10.3, 10.5, 10.7, 12., 12.4, 12.8, 12.6])
+    assert_equal(func_test_2['H_filter'].values, [10., 10.3, 10.5, 10.7, 12., 12.4, 12.8, 12.6])
     assert_equal(func_test_2['GS'].values, [0.151, 0.155, 0.153, 0.154, 0.121, 0.125, 0.124, 0.123])
 
     return
@@ -106,22 +108,54 @@ def test_PPCalculateApparentMagnitude():
 
     from surveySimPP.modules.PPCalculateApparentMagnitude import PPCalculateApparentMagnitude
 
-    othercolours = ['u-r', 'g-r', 'i-r', 'z-r', 'y-r']
-    observing_filters = ['r', 'u', 'g', 'i', 'z']
+    cometary_obs = pd.DataFrame({'AstRange(km)': [7.35908481e+08],
+                                 'Ast-Sun(J2000x)(km)': [-5.61871308e+08],
+                                 'Ast-Sun(J2000y)(km)': [-5.47551402e+08],
+                                 'Ast-Sun(J2000z)(km)': [-2.48566276e+08],
+                                 'Sun-Ast-Obs(deg)': [8.899486],
+                                 'optFilter': ['i'],
+                                 'H_r': [15.9],
+                                 'afrho1': [1552],
+                                 'q': [1.21050916],
+                                 'k': [-3.35],
+                                 'i-r': [-0.12]})
 
-    observations_comet = pd.read_csv(get_test_filepath('cometary_test_df.csv'), sep=' ', nrows=1)
-    comet_out = PPCalculateApparentMagnitude(observations_comet.copy(), 'HG', 'r', othercolours, observing_filters, 'comet')
+    asteroid_obs = pd.DataFrame({'MJD': [2459215.5],
+                                 'H_r': [7.3],
+                                 'GS': [0.19],
+                                 'G1': [0.62],
+                                 'G2': [0.14],
+                                 'G12': [0.68],
+                                 'S': [0.04],
+                                 'AstRange(km)': [4.899690e+08],
+                                 'Ast-Sun(km)': [6.301740e+08],
+                                 'Sun-Ast-Obs(deg)': [4.5918],
+                                 'optFilter': ['i'],
+                                 'i-r': [-0.11]})
 
-    assert_almost_equal(comet_out['TrailedSourceMag'][0], 15.779707, decimal=6)
+    asteroid_obs_single = pd.DataFrame({'MJD': [2459215.5],
+                                        'H_r': [7.3],
+                                        'GS': [0.19],
+                                        'G1': [0.62],
+                                        'G2': [0.14],
+                                        'G12': [0.68],
+                                        'S': [0.04],
+                                        'AstRange(km)': [4.899690e+08],
+                                        'Ast-Sun(km)': [6.301740e+08],
+                                        'Sun-Ast-Obs(deg)': [4.5918],
+                                        'optFilter': ['r']})
 
-    observations_mult = pd.read_csv(get_test_filepath('test_data_mag.csv'), nrows=1)
-    mult_out = PPCalculateApparentMagnitude(observations_mult.copy(), 'HG', 'r', othercolours, observing_filters, 'none')
+    comet_out = PPCalculateApparentMagnitude(cometary_obs, 'HG', 'r', ['i-r'], ['r', 'i'], 'comet')
+    asteroid_out = PPCalculateApparentMagnitude(asteroid_obs, 'HG', 'r', ['i-r'], ['r', 'i'], 'none')
+    asteroid_single = PPCalculateApparentMagnitude(asteroid_obs_single, 'HG', 'r', ['r-r'], ['r'], 'none')
 
-    assert_almost_equal(mult_out['TrailedSourceMag'][0], 22.994074, decimal=6)
+    assert_almost_equal(comet_out['coma'].values[0], 24.822201, decimal=6)
+    assert_almost_equal(comet_out['TrailedSourceMag'].values[0], 15.779707, decimal=6)
 
-    observations_single = pd.read_csv(get_test_filepath('test_data_single.csv'))
-    single_out = PPCalculateApparentMagnitude(observations_single.copy(), 'HG', 'r', None, ['r'], 'none')
+    assert_almost_equal(asteroid_out['TrailedSourceMag'].values[0], 13.281578, decimal=6)
+    assert_almost_equal(asteroid_out['H_filter'].values[0], 7.19, decimal=6)
 
-    assert_almost_equal(single_out['TrailedSourceMag'][0], 22.994074, decimal=6)
+    assert_almost_equal(asteroid_single['TrailedSourceMag'].values[0], 13.391578, decimal=6)
+    assert_almost_equal(asteroid_single['H_filter'].values[0], 7.3, decimal=6)
 
     return

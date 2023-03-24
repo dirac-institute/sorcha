@@ -40,7 +40,7 @@ def test_PPCommandLineParser():
                   'outfilestem': 'testout',
                   'verbose': True}
 
-    cmd_dict_2 = PPCommandLineParser(args(get_test_filepath('testcomet.txt'), False, get_test_filepath('test_data_mag.csv'), True))
+    cmd_dict_2 = PPCommandLineParser(args(get_test_filepath('testcomet.txt'), False, get_test_filepath('sqlresults.db'), True))
     expected_2 = {'paramsinput': get_test_filepath('testcolour.txt'),
                   'orbinfile': get_test_filepath('testorb.des'),
                   'oifoutput': get_test_filepath('oiftestoutput.txt'),
@@ -48,7 +48,7 @@ def test_PPCommandLineParser():
                   'outpath': './',
                   'makeTemporaryEphemerisDatabase': False,
                   'cometinput': get_test_filepath('testcomet.txt'),
-                  'readTemporaryEphemerisDatabase': get_test_filepath('test_data_mag.csv'),
+                  'readTemporaryEphemerisDatabase': get_test_filepath('sqlresults.db'),
                   'deleteTemporaryEphemerisDatabase': True,
                   'surveyname': 'lsst',
                   'outfilestem': 'testout',

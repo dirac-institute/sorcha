@@ -22,7 +22,6 @@
 import numpy as np
 import pandas as pd
 from numpy.testing import assert_almost_equal
-from surveySimPP.tests.data import get_test_filepath
 
 
 def test_calcAstrometricUncertainty():
@@ -80,7 +79,14 @@ def test_addUncertainties():
 
     from surveySimPP.modules.PPAddUncertainties import addUncertainties
 
-    observations = pd.read_csv(get_test_filepath('test_input_fullobs.csv'), nrows=1)
+    observations = pd.DataFrame({'ObjID': ['S1000000a'],
+                                 'fiveSigmaDepthAtSource': [23.839404],
+                                 'seeingFwhmGeom': [1.058538],
+                                 'TrailedSourceMag': [19.655346],
+                                 'PSFMag': [19.659713],
+                                 'AstRARate(deg/day)': [0.059181],
+                                 'AstDecRate(deg/day)': [-0.103034],
+                                 'AstDec(deg)': [-17.582575]})
 
     configs = {'trailing_losses_on': True}
     rng = np.random.default_rng(2021)
@@ -92,7 +98,7 @@ def test_addUncertainties():
     expected_photosig_psf = 0.006776
     expected_trailed_mag = 19.65488
     expected_psf_mag = 19.655059
-    expected_snr = 159.741315
+    expected_snr = 159.7413779
 
     assert_almost_equal(test_obs.loc[0, 'AstrometricSigma(deg)'], expected_astrosig, decimal=6)
     assert_almost_equal(test_obs.loc[0, 'PhotometricSigmaTrailedSource(mag)'], expected_photosig_trailed, decimal=6)
@@ -109,7 +115,7 @@ def test_addUncertainties():
     expected_astrosig = 0.000003
     expected_photosig_trailed = 0.006736
     expected_trailed_mag = 19.654882
-    expected_snr = 160.678178
+    expected_snr = 160.678154
 
     assert_almost_equal(test_obs.loc[0, 'AstrometricSigma(deg)'], expected_astrosig, decimal=6)
     assert_almost_equal(test_obs.loc[0, 'PhotometricSigmaTrailedSource(mag)'], expected_photosig_trailed, decimal=6)
@@ -125,21 +131,29 @@ def test_uncertainties():
 
     from surveySimPP.modules.PPAddUncertainties import uncertainties
 
-    observations = pd.read_csv(get_test_filepath('test_input_fullobs.csv'), nrows=1)
+    observations = pd.DataFrame({'ObjID': ['S1000000a'],
+                                 'fiveSigmaDepthAtSource': [23.839404],
+                                 'seeingFwhmGeom': [1.058538],
+                                 'TrailedSourceMag': [19.655346],
+                                 'PSFMag': [19.659713],
+                                 'AstRARate(deg/day)': [0.059181],
+                                 'AstDecRate(deg/day)': [-0.103034],
+                                 'AstDec(deg)': [-17.582575]})
+
     configs = {'trailing_losses_on': False}
 
     ast_sig_deg, photo_sig, SNR = uncertainties(observations, configs)
 
     assert_almost_equal(ast_sig_deg[0], 0.000003, decimal=6)
     assert_almost_equal(photo_sig[0], 0.006736, decimal=6)
-    assert_almost_equal(SNR[0], 160.6781779, decimal=6)
+    assert_almost_equal(SNR[0], 160.678154, decimal=6)
 
     configs = {'trailing_losses_on': True}
     ast_sig_deg, photo_sig, SNR = uncertainties(observations, configs)
 
     assert_almost_equal(ast_sig_deg[0], 0.000003, decimal=6)
     assert_almost_equal(photo_sig[0], 0.006756, decimal=6)
-    assert_almost_equal(SNR[0], 160.20922231, decimal=6)
+    assert_almost_equal(SNR[0], 160.209198, decimal=6)
 
     return
 

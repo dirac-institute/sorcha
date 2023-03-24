@@ -6,8 +6,8 @@ import pytest
 from surveySimPP.utilities.makeConfigOIF import makeConfig
 from surveySimPP.tests.data import get_test_filepath
 
-# It looks to me like on Windows, makeConfigOIF is making the tests in an unexpected
-# place.
+# On Windows, the test is apparently not creating the files in the expected place.
+# Not sure why, will troubleshoot later.
 if sys.platform.startswith("win"):
     pytest.skip("These tests do not work on Windows.", allow_module_level=True)
 
@@ -24,7 +24,7 @@ class args:
         self.cache = '_cache'
         self.mpcfile = 'obslist.dat'
         self.inputformat = 'whitespace'
-        self.query = 'SELECT observationId,observationStartMJD,fieldRA,fieldDEC,rotSkyPos FROM SummaryAllProps order by observationStartMJD'
+        self.query = 'SELECT observationId,observationStartMJD,fieldRA,fieldDEC,rotSkyPos FROM observations order by observationStartMJD'
         self.spkstep = 30
         self.telescope = 'I11'
 
@@ -47,7 +47,7 @@ def teardown_for_makeConfigOIF():
 def test_makeConfigOIF(teardown_for_makeConfigOIF):
 
     outpath = os.path.dirname(get_test_filepath('testorb.des'))
-    argv = args(get_test_filepath('testorb.des'), get_test_filepath('baseline_10yrs_10klines.db'), -1, outpath)
+    argv = args(get_test_filepath('testorb.des'), get_test_filepath('baseline_10klines_2.0.db'), -1, outpath)
 
     makeConfig(argv)
 
@@ -56,14 +56,14 @@ def test_makeConfigOIF(teardown_for_makeConfigOIF):
 
     # have to change the paths - makeConfig gives absolute paths, machine-dependent
     config.set('ASTEROID', 'population model', '../tests/data/testorb.des')
-    config.set('SURVEY', 'survey database', '../tests/data/baseline_10yrs_10klines.db')
+    config.set('SURVEY', 'survey database', '../tests/data/baseline_10klines_2.0.db')
 
     config2 = configparser.ConfigParser()
-    config2.read(get_test_filepath('test_oif_1.ini'))
+    config2.read(get_test_filepath('makeConfigOIF_1.ini'))
 
     assert (config == config2)
 
-    argv = args(get_test_filepath('testorb.des'), get_test_filepath('baseline_10yrs_10klines.db'), 3, outpath)
+    argv = args(get_test_filepath('testorb.des'), get_test_filepath('baseline_10klines_2.0.db'), 3, outpath)
 
     makeConfig(argv)
 
@@ -71,19 +71,19 @@ def test_makeConfigOIF(teardown_for_makeConfigOIF):
     config.read(get_test_filepath('testorb-1-3.ini'))
 
     config.set('ASTEROID', 'population model', '../tests/data/testorb.des')
-    config.set('SURVEY', 'survey database', '../tests/data/baseline_10yrs_10klines.db')
+    config.set('SURVEY', 'survey database', '../tests/data/baseline_10klines_2.0.db')
 
     config1 = configparser.ConfigParser()
     config1.read(get_test_filepath('testorb-4-5.ini'))
 
     config1.set('ASTEROID', 'population model', '../tests/data/testorb.des')
-    config1.set('SURVEY', 'survey database', '../tests/data/baseline_10yrs_10klines.db')
+    config1.set('SURVEY', 'survey database', '../tests/data/baseline_10klines_2.0.db')
 
     config2 = configparser.ConfigParser()
-    config2.read(get_test_filepath('test_oif_2.ini'))
+    config2.read(get_test_filepath('makeConfigOIF_2.ini'))
 
     config3 = configparser.ConfigParser()
-    config3.read(get_test_filepath('test_oif_3.ini'))
+    config3.read(get_test_filepath('makeConfigOIF_3.ini'))
 
     assert (config == config2)
     assert (config1 == config3)

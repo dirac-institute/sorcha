@@ -9,6 +9,7 @@ from surveySimPP.tests.data import get_test_filepath
 if sys.platform.startswith("win"):
     pytest.skip("These tests do not work on Windows.", allow_module_level=True)
 
+
 class args:
     def __init__(self, filename, oss, sss, dc, dr=False, dw=False, dl=False):
 
@@ -98,7 +99,7 @@ def test_makeSLURM(setup_and_teardown_for_makeSLURM):
     makeSLURM(test_args1)
 
     testfile1 = open(get_test_filepath('testSLURMout_1.sh'), mode='r')
-    newfile1 = open(get_test_filepath('testSLURM_1.sh'), mode='r')
+    newfile1 = open(get_test_filepath('makeSLURMscript_1.sh'), mode='r')
 
     alltest1 = testfile1.readlines()
     allnew1 = newfile1.readlines()
@@ -114,7 +115,7 @@ def test_makeSLURM(setup_and_teardown_for_makeSLURM):
     makeSLURM(test_args2)
 
     testfile2 = open(get_test_filepath('testSLURMout_2.sh'), mode='r')
-    newfile2 = open(get_test_filepath('testSLURM_2.sh'), mode='r')
+    newfile2 = open(get_test_filepath('makeSLURMscript_2.sh'), mode='r')
 
     alltest2 = testfile2.readlines()
     allnew2 = newfile2.readlines()
@@ -130,7 +131,7 @@ def test_makeSLURM(setup_and_teardown_for_makeSLURM):
     makeSLURM(test_args3)
 
     testfile3 = open(get_test_filepath('testSLURMout_3.sh'), mode='r')
-    newfile3 = open(get_test_filepath('testSLURM_3.sh'), mode='r')
+    newfile3 = open(get_test_filepath('makeSLURMscript_3.sh'), mode='r')
 
     alltest3 = testfile3.readlines()
     allnew3 = newfile3.readlines()
@@ -146,7 +147,7 @@ def test_makeSLURM(setup_and_teardown_for_makeSLURM):
     makeSLURM(test_args4)
 
     testfile4 = open(get_test_filepath('testSLURMout_4.sh'), mode='r')
-    newfile4 = open(get_test_filepath('testSLURM_4.sh'), mode='r')
+    newfile4 = open(get_test_filepath('makeSLURMscript_4.sh'), mode='r')
 
     alltest4 = testfile4.readlines()
     allnew4 = newfile4.readlines()
@@ -162,7 +163,7 @@ def test_makeSLURM(setup_and_teardown_for_makeSLURM):
     makeSLURM(test_args5)
 
     testfile5 = open(get_test_filepath('testSLURMout_5.sh'), mode='r')
-    newfile5 = open(get_test_filepath('testSLURM_5.sh'), mode='r')
+    newfile5 = open(get_test_filepath('makeSLURMscript_5.sh'), mode='r')
 
     alltest5 = testfile5.readlines()
     allnew5 = newfile5.readlines()
@@ -178,11 +179,11 @@ def test_convert_args_to_absolute_paths(setup_for_convert_args_to_absolute_paths
     from surveySimPP.utilities.makeSLURMscript import convert_args_to_absolute_paths
 
     temp_path = os.path.dirname(get_test_filepath('oiftestoutput.txt'))
-    test_args = args(os.path.join(temp_path, 'testSLURM_5.sh'), False, False, False, dw=True, dl=True)
+    test_args = args(os.path.join(temp_path, 'makeSLURMscript_5.sh'), False, False, False, dw=True, dl=True)
 
     convargs = convert_args_to_absolute_paths(test_args)
 
-    assert convargs.filename == get_test_filepath('testSLURM_5.sh')
+    assert convargs.filename == get_test_filepath('makeSLURMscript_5.sh')
     assert convargs.inputs == temp_path
     assert convargs.ssppcon == get_test_filepath('test_PPConfig.ini')
     assert convargs.oifout == temp_path

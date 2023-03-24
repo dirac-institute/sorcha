@@ -88,7 +88,7 @@ def test_create_results_table(tmp_path):
     data_path = os.path.dirname(get_test_filepath('oiftestoutput.txt'))
 
     cnx_out = sqlite3.connect(os.path.join(tmp_path, 'test_results_table.db'))
-    create_results_table(cnx_out, get_test_filepath('comet_pointing.db'), data_path, 'sqlresults')
+    create_results_table(cnx_out, get_test_filepath('baseline_10klines_2.0.db'), data_path, 'sqlresults')
     cnx_out.close()
 
     cnx_in = sqlite3.connect(os.path.join(tmp_path, 'test_results_table.db'))
@@ -104,7 +104,7 @@ def test_create_results_table(tmp_path):
 
     with pytest.raises(SystemExit) as e:
         cnx_out = sqlite3.connect(os.path.join(tmp_path, 'test_dummy.db'))
-        create_results_table(cnx_out, get_test_filepath('comet_pointing.db'), data_path, 'dummy')
+        create_results_table(cnx_out, get_test_filepath('baseline_10klines_2.0.db'), data_path, 'dummy')
         cnx_out.close()
 
     assert e.type == SystemExit

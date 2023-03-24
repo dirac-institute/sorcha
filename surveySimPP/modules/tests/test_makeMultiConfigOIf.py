@@ -17,7 +17,7 @@ class args:
         self.cache = '_cache'
         self.mpcfile = 'obslist.dat'
         self.inputformat = 'whitespace'
-        self.query = 'SELECT observationId,observationStartMJD,fieldRA,fieldDEC,rotSkyPos FROM SummaryAllProps order by observationStartMJD'
+        self.query = 'SELECT observationId,observationStartMJD,fieldRA,fieldDEC,rotSkyPos FROM observations order by observationStartMJD'
         self.spkstep = 30
         self.telescope = 'I11'
 
@@ -28,15 +28,15 @@ def test_makeMultiConfigOIF():
     # deliberate: the files are used by another test.
 
     outpath = os.path.dirname(get_test_filepath('testorb.des'))
-    argv = args(outpath, get_test_filepath('baseline_10yrs_10klines.db'), -1, outpath)
+    argv = args(outpath, get_test_filepath('baseline_10klines_2.0.db'), -1, outpath)
 
     makeConfig(argv)
 
     config_ex1 = configparser.ConfigParser()
-    config_ex1.read(get_test_filepath('multiconfig_test1.ini'))
+    config_ex1.read(get_test_filepath('makeMultiConfigOIF_test1.ini'))
 
     config_ex2 = configparser.ConfigParser()
-    config_ex2.read(get_test_filepath('multiconfig_test2.ini'))
+    config_ex2.read(get_test_filepath('makeMultiConfigOIF_test2.ini'))
 
     config_1 = configparser.ConfigParser()
     config_1.read(get_test_filepath('config_test1.ini'))
@@ -46,10 +46,10 @@ def test_makeMultiConfigOIF():
 
     # have to change the paths - makeConfig gives absolute paths, machine-dependent
     config_1.set('ASTEROID', 'population model', '../tests/data/orbits_test1.txt')
-    config_1.set('SURVEY', 'survey database', '../tests/data/baseline_10yrs_10klines.db')
+    config_1.set('SURVEY', 'survey database', '../tests/data/baseline_10klines_2.0.db')
 
     config_2.set('ASTEROID', 'population model', '../tests/data/orbits_test2.txt')
-    config_2.set('SURVEY', 'survey database', '../tests/data/baseline_10yrs_10klines.db')
+    config_2.set('SURVEY', 'survey database', '../tests/data/baseline_10klines_2.0.db')
 
     assert (config_1 == config_ex1)
     assert (config_2 == config_ex2)

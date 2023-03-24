@@ -1,5 +1,3 @@
-#!/bin/python
-
 from surveySimPP.tests.data import get_test_filepath
 
 
