@@ -27,6 +27,11 @@ Used by:
 - test_makeConfigPP.py  
 - test_PPFootprintFilter.py
 
+**lsst-total-r.dat**  
+Throughput of LSST per wavelength.  
+Used by:  
+- /surveySimPP/lsstcomet/tests/test_model.py
+
 **makeConfigOIF_*.ini**  
 Example OIF config files.  
 Used by:  
