@@ -1,7 +1,5 @@
 # DEMO NOTEBOOKS README
 
-
-
 ## Files:
 
 **OIFconfig_test.ini** - example OIF config file  
