@@ -9,7 +9,7 @@ def test_PPLinkingFilter():
 
     from surveySimPP.modules.PPLinkingFilter import PPLinkingFilter
 
-    test_data = pd.read_csv(get_test_filepath('test_input_fullobs.csv'))
+    test_data = pd.read_csv(get_test_filepath('test_input_fullobs.csv'), nrows=20)
 
     rng = np.random.default_rng(2021)
 
@@ -19,12 +19,7 @@ def test_PPLinkingFilter():
     tracklet_interval = 15
     minimum_separation = 0.5
 
-    # this line may seem pointless but Pandas does NOT like operating on slices
-    # of dataframes as it can't tell if it's a view or a copy and will throw a
-    # warning if this line is removed, so the test will fail.
-    test_obs = test_data[0:20].copy()
-
-    test_data_out = PPLinkingFilter(test_obs,
+    test_data_out = PPLinkingFilter(test_data,
                                     detection_efficiency,
                                     min_observations,
                                     min_tracklets,

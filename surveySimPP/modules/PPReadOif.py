@@ -51,8 +51,8 @@ def PPReadOif(oif_output, inputformat):
                         dtype='object')
 
     if not set(padafr.columns.values).issubset(oif_cols):
-        pplogger.error("ERROR: PPReadOif: column headings do not match expected OIF column headings.")
-        sys.exit("ERROR: PPReadOif: column headings do not match expected OIF column headings.")
+        pplogger.error("ERROR: PPReadOif: column headings do not match expected OIF column headings. Check format of file.")
+        sys.exit("ERROR: PPReadOif: column headings do not match expected OIF column headings. Check format of file.")
 
     padafr['ObjID'] = padafr['ObjID'].astype(str)
 

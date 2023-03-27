@@ -8,11 +8,11 @@ def test_PPSimpleSensorArea():
 
     from surveySimPP.modules.PPApplyFOVFilter import PPSimpleSensorArea
 
-    test_data = pd.read_csv(get_test_filepath('test_input_fullobs.csv'))
+    test_data = pd.read_csv(get_test_filepath('test_input_fullobs.csv'), nrows=15)
 
     rng = np.random.default_rng(2021)
 
-    test_out = PPSimpleSensorArea(test_data[0:15], rng, fillfactor=0.9)
+    test_out = PPSimpleSensorArea(test_data, rng, fillfactor=0.9)
 
     expected = [894816, 897478, 897521, 901987, 902035, 907363, 907416, 907470,
                 909426, 910872, 915246]
@@ -26,9 +26,9 @@ def test_PPCircleFootprint():
 
     from surveySimPP.modules.PPApplyFOVFilter import PPCircleFootprint
 
-    test_data = pd.read_csv(get_test_filepath('test_input_fullobs.csv'))
+    test_data = pd.read_csv(get_test_filepath('test_input_fullobs.csv'), nrows=10)
 
-    test_out = PPCircleFootprint(test_data[:10].copy(), 1.1)
+    test_out = PPCircleFootprint(test_data, 1.1)
 
     expected = [897478, 897521, 901987, 902035, 907363, 907416, 907470]
 

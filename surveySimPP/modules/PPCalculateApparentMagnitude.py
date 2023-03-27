@@ -42,6 +42,8 @@ def PPCalculateApparentMagnitude(observations, phasefunction, mainfilter, otherc
         if len(observing_filters) > 1:
             verboselog('Selecting and applying correct colour offset...')
             observations = PPApplyColourOffsets(observations, phasefunction, othercolours, observing_filters, mainfilter)
+        else:
+            observations.rename(columns={'H_' + mainfilter: 'H_filter'}, inplace=True)
 
         verboselog('Calculating apparent magnitude in filter...')
         observations = PPCalculateApparentMagnitudeInFilter(observations, phasefunction, mainfilter)

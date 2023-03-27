@@ -28,7 +28,7 @@ def test_PPReadOrbitFile():
     assert len(orbit_file) == 5
 
     with pytest.raises(SystemExit) as e1:
-        orbit_file = PPReadOrbitFile(get_test_filepath('testcometcolour.txt'), 0, 14, 'whitespace')
+        orbit_file = PPReadOrbitFile(get_test_filepath('PPReadOrbitFile_bad.txt'), 0, 14, 'whitespace')
 
     assert e1.type == SystemExit
     assert e1.value.code == 'ERROR: PPReadOrbitFile: H column present in orbits data file. H must be included in physical parameters file only.'

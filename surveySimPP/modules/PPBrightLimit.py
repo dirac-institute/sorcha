@@ -1,3 +1,7 @@
+import logging
+import sys
+
+
 def PPBrightLimit(observations, observing_filters, bright_limit):
     """
     Drops observations brighter than the user-defined saturation
@@ -34,6 +38,10 @@ def PPBrightLimit(observations, observing_filters, bright_limit):
         # then drop all at once (it's probably faster this way)
         flat_index = [x for xs in drop_index for x in xs]
         observations_out = observations.drop(flat_index)
+
+    else:
+        logging.error('ERROR: PPBrightLimit: expected a float or list of floats for bright_limit.')
+        sys.exit('ERROR: PPBrightLimit: expected a float or list of floats for bright_limit.')
 
     observations_out.reset_index(drop=True, inplace=True)
 

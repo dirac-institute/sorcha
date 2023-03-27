@@ -29,6 +29,8 @@ def PPCalculateSimpleCometaryMagnitude(padain, mainfilter, othercolours, colname
 
     """
 
+    H_col = 'H_' + mainfilter
+
     # calculate rho and delta in au
     delta = padain['AstRange(km)'].values / 1.495978707e8
 
@@ -39,14 +41,14 @@ def PPCalculateSimpleCometaryMagnitude(padain, mainfilter, othercolours, colname
                       + padain["Ast-Sun(J2000y)(km)"].values**2
                       + padain["Ast-Sun(J2000z)(km)"].values**2) / 1.495978707e8
 
-    com = Comet(Hv=padain.H, afrho1=padain.afrho1, q=padain.q, k=padain.k)
+    com = Comet(Hv=padain[H_col], afrho1=padain.afrho1, q=padain.q, k=padain.k)
 
     g = {'rh': rho, 'delta': delta, 'phase': padain['Sun-Ast-Obs(deg)']}
 
     padain['coma'] = com.mag(g, mainfilter, rap=1, nucleus=False)
 
     # The contribution of the nucleus is taken from the absolute brightness
-    padain[colname] = -2.5 * np.log10(10 ** (-0.4 * padain['coma']) + 10 ** (-0.4 * padain['H']))
+    padain[colname] = -2.5 * np.log10(10 ** (-0.4 * padain['coma']) + 10 ** (-0.4 * padain[H_col]))
 
     # We then calculate the colour offset.
     padain[mainfilter + "-" + mainfilter] = np.zeros(len(padain))

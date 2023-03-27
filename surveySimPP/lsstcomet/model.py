@@ -207,5 +207,5 @@ class ChuryumovGerasimenko(Comet):
     def __init__(self):
         afrho1 = 1552  # cm
         R = 2.04  # km
-        k = -3.35
+        # k = -3.35
         return super().__init__(R=R, afrho1=afrho1, k=-3.35)

@@ -41,7 +41,7 @@ def test_PPReadOif():
         oif_file = PPReadOif(get_test_filepath('testcolour.txt'), 'whitespace')
 
     assert e.type == SystemExit
-    assert e.value.code == 'ERROR: PPReadOif: column headings do not match expected OIF column headings.'
+    assert e.value.code == 'ERROR: PPReadOif: column headings do not match expected OIF column headings. Check format of file.'
 
     return
 

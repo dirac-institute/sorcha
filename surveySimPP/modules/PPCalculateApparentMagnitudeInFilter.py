@@ -27,7 +27,7 @@ def PPCalculateApparentMagnitudeInFilter(padain, function, mainfilter, colname="
 
     function (string): desired phase function model. Options are HG, HG12, HG1G2, linear, none.
 
-    mainfilter (string): the main filter in which H is given and all colour offsets are calculated against.
+    mainfilter (string): the main filter in which H is originally given and all colour offsets are calculated against.
 
     colname (string): column name in which to store calculated magnitude.
 
@@ -39,7 +39,7 @@ def PPCalculateApparentMagnitudeInFilter(padain, function, mainfilter, colname="
 
     pplogger = logging.getLogger(__name__)
 
-    H_col = 'H_' + mainfilter
+    H_col = 'H_filter'
 
     # first, get H, r, delta and alpha as ndarrays
     r = padain['AstRange(km)'].values / 1.495978707e8

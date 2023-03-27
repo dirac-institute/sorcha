@@ -9,7 +9,7 @@ class args:
     def __init__(self, filename):
         args.filename = filename
         self.ephemeridestype = 'oif'
-        self.pointingdatabase = get_test_filepath('baseline_10yrs_10klines.db')
+        self.pointingdatabase = get_test_filepath('baseline_10klines_2.0.db')
         self.ephformat = 'whitespace'
         self.auxformat = 'whitespace'
         self.sizeserialchunk = 10
@@ -46,12 +46,12 @@ def test_makeConfigPP(tmp_path):
     makeConfigFile(arg_test)
 
     config_expected = configparser.ConfigParser()
-    config_expected.read(get_test_filepath('makePPconfig.ini'))
+    config_expected.read(get_test_filepath('makeConfigPP_config.ini'))
 
     config_test = configparser.ConfigParser()
     config_test.read(os.path.join(tmp_path, 'testconfig.ini'))
 
-    config_test.set('INPUT', 'pointing_database', '../tests/data/baseline_10yrs_10klines.db')
+    config_test.set('INPUT', 'pointing_database', '../tests/data/baseline_10klines_2.0.db')
 
     assert config_expected == config_test
 

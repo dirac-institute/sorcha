@@ -6,8 +6,8 @@ surveySimPP.modules.PPConfigParser INFO     The survey selected is: lsst
 surveySimPP.modules.PPConfigParser INFO     No cometary activity selected. 
 surveySimPP.modules.PPConfigParser INFO     Format of ephemerides file is: csv 
 surveySimPP.modules.PPConfigParser INFO     Format of auxiliary files is: whitespace 
-surveySimPP.modules.PPConfigParser INFO     Pointing database path is: ./baseline_10yrs_10klines.db 
-surveySimPP.modules.PPConfigParser INFO     Pointing database required query is: SELECT observationId, observationStartMJD, filter, seeingFwhmGeom, seeingFwhmEff, fiveSigmaDepth, fieldRA, fieldDec, rotSkyPos FROM SummaryAllProps order by observationId 
+surveySimPP.modules.PPConfigParser INFO     Pointing database path is: ./baseline_10klines_2.0.db 
+surveySimPP.modules.PPConfigParser INFO     Pointing database required query is: SELECT observationId, observationStartMJD, filter, seeingFwhmGeom, seeingFwhmEff, fiveSigmaDepth, fieldRA, fieldDec, rotSkyPos FROM observations order by observationId 
 surveySimPP.modules.PPConfigParser INFO     The number of objects processed in a single chunk is: 10 
 surveySimPP.modules.PPConfigParser INFO     The main filter in which H is defined is r 
 surveySimPP.modules.PPConfigParser INFO     The filters included in the post-processing results are r g i z 

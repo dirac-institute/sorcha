@@ -1,6 +1,5 @@
 import glob
 import os
-import pytest
 
 
 def test_PPGetLogger(tmp_path):

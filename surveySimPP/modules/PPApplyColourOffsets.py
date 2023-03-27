@@ -111,4 +111,7 @@ def PPApplyColourOffsets(observations, function, othercolours, observing_filters
     observations.drop(mainfilter + "-" + mainfilter, axis=1, inplace=True)
     observations.drop(othercolours, axis=1, inplace=True)
 
+    # rename H
+    observations.rename(columns={H_col: 'H_filter'}, inplace=True)
+
     return observations

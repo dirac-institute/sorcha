@@ -14,7 +14,7 @@ def setup_and_teardown_for_PPConfigFileParser(tmp_path):
     initial_wd = os.getcwd()
 
     # Copy files mentioned in config file into the temp directory
-    shutil.copy(get_test_filepath("baseline_10yrs_10klines.db"), tmp_path)
+    shutil.copy(get_test_filepath("baseline_10klines_2.0.db"), tmp_path)
     shutil.copy(get_test_filepath("detectors_corners.csv"), tmp_path)
 
     # Move to the temp directory
@@ -36,8 +36,8 @@ def test_PPConfigFileParser(setup_and_teardown_for_PPConfigFileParser):
     test_configs = {'eph_format': 'csv',
                     'aux_format': 'whitespace',
                     'ephemerides_type': 'oif',
-                    'pointing_database': './baseline_10yrs_10klines.db',
-                    'pointing_sql_query': 'SELECT observationId, observationStartMJD, filter, seeingFwhmGeom, seeingFwhmEff, fiveSigmaDepth, fieldRA, fieldDec, rotSkyPos FROM SummaryAllProps order by observationId',
+                    'pointing_database': './baseline_10klines_2.0.db',
+                    'pointing_sql_query': 'SELECT observationId, observationStartMJD, filter, seeingFwhmGeom, seeingFwhmEff, fiveSigmaDepth, fieldRA, fieldDec, rotSkyPos FROM observations order by observationId',
                     'comet_activity': 'none',
                     'observing_filters': ['r', 'g', 'i', 'z'],
                     'phase_function': 'HG',
@@ -241,8 +241,8 @@ def test_PPPrintConfigsToLog(tmp_path):
     configs = {'eph_format': 'csv',
                'aux_format': 'whitespace',
                'ephemerides_type': 'oif',
-               'pointing_database': './baseline_10yrs_10klines.db',
-               'pointing_sql_query': 'SELECT observationId, observationStartMJD, filter, seeingFwhmGeom, seeingFwhmEff, fiveSigmaDepth, fieldRA, fieldDec, rotSkyPos FROM SummaryAllProps order by observationId',
+               'pointing_database': './baseline_10klines_2.0.db',
+               'pointing_sql_query': 'SELECT observationId, observationStartMJD, filter, seeingFwhmGeom, seeingFwhmEff, fiveSigmaDepth, fieldRA, fieldDec, rotSkyPos FROM observations order by observationId',
                'comet_activity': 'none',
                'observing_filters': ['r', 'g', 'i', 'z'],
                'phase_function': 'HG',
@@ -277,7 +277,7 @@ def test_PPPrintConfigsToLog(tmp_path):
 
     datalog = glob.glob(os.path.join(tmp_path, '*-postprocessing.log'))
 
-    testfile = open(os.path.join(test_path, 'test_log.txt'), mode='r')
+    testfile = open(os.path.join(test_path, 'test_PPPrintConfigsToLog.txt'), mode='r')
     newfile = open(datalog[0], mode='r')
 
     alltest = testfile.readlines()
