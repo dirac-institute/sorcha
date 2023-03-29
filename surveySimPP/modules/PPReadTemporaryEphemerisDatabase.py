@@ -24,27 +24,19 @@ def PPReadTemporaryEphemerisDatabase(intermdb, part_objid_list):
     pplogger = logging.getLogger(__name__)
 
     con = sqlite3.connect(intermdb)
-    cursor1 = con.execute('select * from interm')
-    namespd = list(map(lambda x: x[0], cursor1.description))
 
-    part_objid_list_ = tuple(part_objid_list)
-    part_objid_list_ = [(i,) for i in part_objid_list]
+    prm_list = ', '.join('?' for _ in part_objid_list)
 
-    cur = con.cursor()
+    sql = 'SELECT * FROM interm WHERE ObjID IN ({})'.format(prm_list)
 
-    padafr = []
-    for j in part_objid_list_:
-        cur.execute("SELECT * from interm WHERE ObjID IN (?);", j)
-        padafrtmp = pd.DataFrame(cur.fetchall(), columns=namespd)
-        padafr.append(padafrtmp)
-    padafr = pd.concat(padafr)
+    padafr = pd.read_sql(sql, con=con, params=part_objid_list)
 
     padafr = padafr.drop(['V', 'V(H=0)'], axis=1, errors='ignore')
 
     try:
         padafr['ObjID'] = padafr['ObjID'].astype(str)
     except KeyError:
-        pplogger.error("ERROR: ephemeris input file does not have 'ObjID' column.")
-        sys.exit("ERROR: ephemeris input file does not have 'ObjID' column.")
+        pplogger.error('ERROR: ephemeris input file does not have "ObjID" column.')
+        sys.exit('ERROR: ephemeris input file does not have "ObjID" column.')
 
     return padafr
