@@ -81,6 +81,7 @@ def PPChunkedTemporaryDatabaseCreation(cnx, oif_output, chunkSize, delimiter):
 
     while (endChunk <= n_rows):
         endChunk = int(startChunk + chunkSize)
+        print(startChunk, endChunk)
 
         if (n_rows - startChunk >= chunkSize):
             incrStep = chunkSize

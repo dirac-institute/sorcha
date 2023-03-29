@@ -95,4 +95,11 @@ def PPSkipOifHeader(filename, line_start='ObjID', **kwargs):
         pplogger.error('ERROR: PPReadOif: column headings not found. Ensure column headings exist in OIF output and first column is ObjID.')
         sys.exit('ERROR: PPReadOif: column headings not found. Ensure column headings exist in OIF output and first column is ObjID.')
 
+    # cludge to make sure PPMakeTemporaryEphemerisDatabase works with chunking, sorry
+    if 'skiprows' in kwargs:
+        try:
+            kwargs['skiprows'] = range(kwargs['skiprows'][0] + found, kwargs['skiprows'][-1] + found + 1)
+        except IndexError:
+            pass
+
     return pd.read_csv(filename, header=found, **kwargs)
