@@ -102,4 +102,30 @@ def PPSkipOifHeader(filename, line_start='ObjID', **kwargs):
         except IndexError:
             pass
 
-    return pd.read_csv(filename, header=found, **kwargs)
+    # ought to speed up reading from OIF files a bit
+    dtypes = {'ObjID': object,
+              'FieldID': 'int64',
+              'FieldMJD': 'float64',
+              'AstRange(km)': 'float64',
+              'AstRangeRate(km/s)': 'float64',
+              'AstRA(deg)': 'float64',
+              'AstRARate(deg/day)': 'float64',
+              'AstDec(deg)': 'float64',
+              'AstDecRate(deg/day)': 'float64',
+              'Ast-Sun(J2000x)(km)': 'float64',
+              'Ast-Sun(J2000y)(km)': 'float64',
+              'Ast-Sun(J2000z)(km)': 'float64',
+              'Ast-Sun(J2000vx)(km/s)': 'float64',
+              'Ast-Sun(J2000vy)(km/s) ': 'float64',
+              'Ast-Sun(J2000vz)(km/s) ': 'float64',
+              'Obs-Sun(J2000x)(km)': 'float64',
+              'Obs-Sun(J2000y)(km)': 'float64',
+              'Obs-Sun(J2000z)(km)': 'float64',
+              'Obs-Sun(J2000vx)(km/s)': 'float64',
+              'Obs-Sun(J2000vy)(km/s)': 'float64',
+              'Obs-Sun(J2000vz)(km/s)': 'float64',
+              'Sun-Ast-Obs(deg)': 'float64',
+              'V': 'float64',
+              'V(H=0)': 'float64'}
+
+    return pd.read_csv(filename, header=found, dtype=dtypes, **kwargs)
