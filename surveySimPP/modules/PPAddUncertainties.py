@@ -18,8 +18,10 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import numpy as np
+import logging
 from surveySimPP.modules import PPTrailingLoss
 from surveySimPP.modules import PPRandomizeMeasurements
+from surveySimPP.modules.PPSNRLimit import PPSNRLimit
 
 
 def degCos(x):
@@ -54,7 +56,7 @@ def degSin(x):
     return np.sin(x * np.pi / 180.)
 
 
-def addUncertainties(detDF, configs, rng):
+def addUncertainties(detDF, configs, rng, verbose=True):
     """
     Generates astrometric and photometric uncertainties, and SNR. Uses uncertainties
     to randomize the photometry. Accounts for trailing losses.
@@ -74,6 +76,9 @@ def addUncertainties(detDF, configs, rng):
 
     """
 
+    pplogger = logging.getLogger(__name__)
+    verboselog = pplogger.info if verbose else lambda *a, **k: None
+
     detDF['AstrometricSigma(deg)'], detDF['PhotometricSigmaTrailedSource(mag)'], detDF['SNR'] = uncertainties(detDF, configs, filterMagName='TrailedSourceMag')
 
     if configs['trailing_losses_on']:
@@ -81,6 +86,14 @@ def addUncertainties(detDF, configs, rng):
     else:
         detDF['PhotometricSigmaPSF(mag)'] = detDF['PhotometricSigmaTrailedSource(mag)']
 
+    # default SNR cut can be disabled in the config file under EXPERT
+    # at low SNR, high photometric sigma causes randomisation to sometimes
+    # grossly inflate/decrease magnitudes.
+    if configs['default_SNR_cut']:
+        verboselog('Removing all observations with SNR < 2.0...')
+        detDF = PPSNRLimit(detDF, 2.)
+
+    verboselog('Randomising photometry...')
     detDF["observedTrailedSourceMag"] = PPRandomizeMeasurements.randomizePhotometry(
                                             detDF, rng, magName="TrailedSourceMag",
                                             sigName="PhotometricSigmaTrailedSource(mag)")
