@@ -91,7 +91,7 @@ def addUncertainties(detDF, configs, rng, verbose=True):
     # grossly inflate/decrease magnitudes.
     if configs['default_SNR_cut']:
         verboselog('Removing all observations with SNR < 2.0...')
-        detDF = PPSNRLimit(detDF, 2.)
+        detDF = PPSNRLimit(detDF.copy(), 2.)
 
     verboselog('Randomising photometry...')
     detDF["observedTrailedSourceMag"] = PPRandomizeMeasurements.randomizePhotometry(
