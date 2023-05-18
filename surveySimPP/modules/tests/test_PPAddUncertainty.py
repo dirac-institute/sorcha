@@ -88,7 +88,9 @@ def test_addUncertainties():
                                  'AstDecRate(deg/day)': [-0.103034],
                                  'AstDec(deg)': [-17.582575]})
 
-    configs = {'trailing_losses_on': True}
+    configs = {'trailing_losses_on': True,
+               'default_SNR_cut': False}
+
     rng = np.random.default_rng(2021)
 
     test_obs = addUncertainties(observations, configs, rng)
@@ -109,7 +111,8 @@ def test_addUncertainties():
 
     rng = np.random.default_rng(2021)
 
-    configs = {'trailing_losses_on': False}
+    configs = {'trailing_losses_on': False,
+               'default_SNR_cut': False}
     test_obs = addUncertainties(observations, configs, rng)
 
     expected_astrosig = 0.000003

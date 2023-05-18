@@ -18,6 +18,7 @@ surveySimPP.modules.PPConfigParser INFO     Footprint is modelled after the actu
 surveySimPP.modules.PPConfigParser INFO     Loading camera footprint from ./detectors_corners.csv 
 surveySimPP.modules.PPConfigParser INFO     The upper saturation limit(s) is/are: 16.0 
 surveySimPP.modules.PPConfigParser INFO     SNR limit is turned OFF. 
+surveySimPP.modules.PPConfigParser INFO     Default SNR cut is ON. All observations with SNR < 2.0 will be removed. 
 surveySimPP.modules.PPConfigParser INFO     Magnitude limit is turned OFF. 
 surveySimPP.modules.PPConfigParser INFO     The detection efficiency fading function is ON. 
 surveySimPP.modules.PPConfigParser INFO     The width parameter of the fading function has been set to: 0.1 
