@@ -88,7 +88,7 @@ def test_addUncertainties():
     astDecrate = [-0.01, -0.01, -0.01, -0.01]
     astRA = [260., 260., 260., 260.]
     astDec = [-5., -5., -5., -5]
-    
+
     test_data = pd.DataFrame({'ObjID': obj_ids,
                               'TrailedSourceMag': obj_mags,
                               'PSFMag': psf_mags,
@@ -103,30 +103,30 @@ def test_addUncertainties():
                'default_SNR_cut': False}
 
     rng = np.random.default_rng(2021)
-    
+
     obs_uncert = addUncertainties(test_data, configs, rng)
-    
+
     assert_almost_equal(obs_uncert['AstrometricSigma(deg)'], [6.27294202e-06, 1.38053193e-05, 3.34595607e-05, 8.27032813e-01], decimal=6)
     assert_almost_equal(obs_uncert['PhotometricSigmaPSF(mag)'], [0.04268156, 0.10056753, 0.23357527, 9.43936686], decimal=6)
     assert_almost_equal(obs_uncert['PhotometricSigmaTrailedSource(mag)'], [0.03603496, 0.08470267, 0.19801133, 9.23940376], decimal=6)
     assert_almost_equal(obs_uncert['SNR'], [2.49413372e+01, 1.03038085e+01, 4.16624919e+00, 1.67620081e-04], decimal=6)
     assert_almost_equal(obs_uncert['observedTrailedSourceMag'], [20.99751859, 21.94181218, 22.84387068, 43.94166172], decimal=6)
-    assert_almost_equal(obs_uncert['observedPSFMag'], [21.19955081, 22.15417614, 23.19096964,  9.45473387], decimal=6)
-    
+    assert_almost_equal(obs_uncert['observedPSFMag'], [21.19955081, 22.15417614, 23.19096964, 9.45473387], decimal=6)
+
     configs_notrail = {'trailing_losses_on': False,
                        'default_SNR_cut': False}
-    
+
     obs_notrail = addUncertainties(test_data, configs_notrail, rng)
-    
+
     assert_equal(obs_notrail['PhotometricSigmaPSF(mag)'].values, obs_notrail['PhotometricSigmaTrailedSource(mag)'].values)
-    
+
     configs_SNRcut = {'trailing_losses_on': False,
                       'default_SNR_cut': True}
-    
+
     obs_SNRcut = addUncertainties(test_data, configs_SNRcut, rng)
-    
+
     assert_equal(obs_SNRcut['ObjID'].values, ['a21', 'b22', 'c23'])
-    
+
     return
 
 
@@ -152,7 +152,7 @@ def test_uncertainties():
     assert_almost_equal(SNR[0], 67.673075, decimal=6)
 
     configs_trail = {'trailing_losses_on': True}
-    
+
     ast_sig_deg_T, photo_sig_T, SNR_T = uncertainties(observations, configs_trail)
 
     assert_almost_equal(ast_sig_deg_T[0], 0.000004, decimal=6)

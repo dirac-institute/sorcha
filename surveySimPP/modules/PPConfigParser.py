@@ -598,7 +598,7 @@ def PPPrintConfigsToLog(configs, cmd_args):
         pplogger.info('The lower SNR limit is: ' + str(configs['SNR_limit']))
     else:
         pplogger.info('SNR limit is turned OFF.')
-    
+
     if configs['default_SNR_cut']:
         pplogger.info('Default SNR cut is ON. All observations with SNR < 2.0 will be removed.')
 
