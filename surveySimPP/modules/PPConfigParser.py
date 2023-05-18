@@ -308,7 +308,7 @@ def PPConfigFileParser(configfile, survey_name):
         sys.exit('ERROR: eph_format should be either either csv, whitespace, or hdf5.')
 
     config_dict['aux_format'] = PPGetOrExit(config, 'INPUT', 'aux_format', 'ERROR: no auxiliary data format specified.').lower()
-    if config_dict['aux_format'] not in ['comma', 'whitespace']:
+    if config_dict['aux_format'] not in ['comma', 'whitespace', 'csv']:
         pplogger.error('ERROR: aux_format should be either comma, csv, or whitespace.')
         sys.exit('ERROR: aux_format should be either comma, csv, or whitespace.')
 
