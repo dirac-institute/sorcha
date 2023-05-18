@@ -150,7 +150,7 @@ def main():
     explicitly. This was DELIBERATE and allows a user to copy/paste commands
     from the script if they want to rerun a specific part.
 
-    usage: makeSLURMscript [-h] -f FILENAME -i INPUTS [-del] [-os] [-ss] [-c SSPPCON] -oo OIFOUT [-ao ALLOUT] [-m] [-dr] [-dc] [-dw] [-dl] [-n NCORES] [-jn JOBNAME]
+    usage: makeSLURMscript [-h] -f FILENAME -i INPUTS [-del] [-os] [-ss] [-c SSPPCON] -oo OIFOUT [-ao ALLOUT] [-m] [-dr] [-dc] [-dw] [-dl] [-n NCORES] [-jn JOBNAME] [-fo FORCE]
         arguments:
           -h, --help                            show this help message and exit
           -f FILENAME, --filename FILENAME      Filepath and name where you want to save the SLURM script.
@@ -168,6 +168,7 @@ def main():
           -dl                                   Delete the temporary ephemeris databases after code has completed.
           -n NCORES, --ncores NCORES            Number of cores. Default will be one core per orbits input file.
           -jn JOBNAME, --jobname JOBNAME        Job name. Default is OIF+SSPP.
+          -fo, --force                          Force deletion/overwrite of existing output file(s). Default False.
 
     """
 
@@ -204,7 +205,7 @@ def main():
     # job name
     parser.add_argument('-jn', '--jobname', help='Job name. Default is OIF+SSPP.', type=str, default='OIF+SSPP')
     # force?
-    parser.add_argument("-f", "--force", help='Force deletion/overwrite of existing output file(s). Default False.', dest='f', action='store_true', default=False)
+    parser.add_argument("-fo", "--force", help='Force deletion/overwrite of existing output file(s). Default False.', dest='f', action='store_true', default=False)
 
     args = parser.parse_args()
 

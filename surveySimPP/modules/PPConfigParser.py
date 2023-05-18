@@ -308,7 +308,7 @@ def PPConfigFileParser(configfile, survey_name):
         sys.exit('ERROR: eph_format should be either either csv, whitespace, or hdf5.')
 
     config_dict['aux_format'] = PPGetOrExit(config, 'INPUT', 'aux_format', 'ERROR: no auxiliary data format specified.').lower()
-    if config_dict['aux_format'] not in ['comma', 'whitespace']:
+    if config_dict['aux_format'] not in ['comma', 'whitespace', 'csv']:
         pplogger.error('ERROR: aux_format should be either comma, csv, or whitespace.')
         sys.exit('ERROR: aux_format should be either comma, csv, or whitespace.')
 
@@ -496,11 +496,18 @@ def PPConfigFileParser(configfile, survey_name):
     if config_dict['mag_limit_on'] and config_dict['SNR_limit_on']:
         pplogger.error('ERROR: SNR limit and magnitude limit are mutually exclusive. Please delete one or both from config file.')
         sys.exit('ERROR: SNR limit and magnitude limit are mutually exclusive. Please delete one or both from config file.')
+
     try:
         config_dict['trailing_losses_on'] = config.getboolean('EXPERT', 'trailing_losses_on', fallback=True)
     except ValueError:
         pplogger.error('ERROR: could not parse value for trailing_losses_on as a boolean. Check formatting and try again.')
         sys.exit('ERROR: could not parse value for trailing_losses_on as a boolean. Check formatting and try again.')
+
+    try:
+        config_dict['default_SNR_cut'] = config.getboolean('EXPERT', 'default_SNR_cut', fallback=True)
+    except ValueError:
+        pplogger.error('ERROR: could not parse value for default_SNR_cut as a boolean. Check formatting and try again.')
+        sys.exit('ERROR: could not parse value for default_SNR_cut as a boolean. Check formatting and try again.')
 
     config_dict['pointing_sql_query'] = PPGetOrExit(config, 'EXPERT', 'pointing_sql_query', 'ERROR: no pointing database SQLite3 query provided.')
 
@@ -591,6 +598,9 @@ def PPPrintConfigsToLog(configs, cmd_args):
         pplogger.info('The lower SNR limit is: ' + str(configs['SNR_limit']))
     else:
         pplogger.info('SNR limit is turned OFF.')
+
+    if configs['default_SNR_cut']:
+        pplogger.info('Default SNR cut is ON. All observations with SNR < 2.0 will be removed.')
 
     if configs['mag_limit_on']:
         pplogger.info('The magnitude limit is: ' + str(configs['mag_limit']))

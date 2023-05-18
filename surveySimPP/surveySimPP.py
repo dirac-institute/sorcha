@@ -139,10 +139,10 @@ def runLSSTPostProcessing(cmd_args):
         # as columns in the observations dataframe.
         # These are the columns that should be used moving forward for filters etc.
         # Do NOT use TrailedSourceMag or PSFMag, these are cut later.
-        verboselog('Calculating astrometric and photometric uncertainties, randomizing photometry...')
-        observations = PPAddUncertainties.addUncertainties(observations, configs, rng)
+        verboselog('Calculating astrometric and photometric uncertainties...')
+        observations = PPAddUncertainties.addUncertainties(observations, configs, rng, verbose=cmd_args['verbose'])
 
-        verboselog('Applying astrometric uncertainties...')
+        verboselog('Randomising astrometry...')
         observations["AstRATrue(deg)"] = observations["AstRA(deg)"]
         observations["AstDecTrue(deg)"] = observations["AstDec(deg)"]
         observations["AstRA(deg)"], observations["AstDec(deg)"] = PPRandomizeMeasurements.randomizeAstrometry(observations, rng, sigName='AstrometricSigma(deg)', sigUnits='deg')

@@ -14,7 +14,6 @@
 
 
 **footprintFilterValidationObservations.csv** - needed for demo notebook  
-**uncertaintiesDemo.csv** - needed for demo notebook  
 **lsst-total-r.dat** - needed for demo notebook  
 **oneline_v2.0.db** - needed for demo notebook
 
@@ -51,4 +50,4 @@ demo_TrailingLossesValidation
 
 demo_UncertaintiesAndRandomization
 - **Validates:** PPAddUncertainty, PPRandomizeMeasurements
-- **Files:** uncertaintiesDemo.csv
+- **Files:** none
