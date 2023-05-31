@@ -154,7 +154,7 @@ def main():
     parser.add_argument("-mpcfile", help='name of the file containing the MPC observatory codes. Default value = obslist.dat', type=str, default='obslist.dat')
     parser.add_argument("-spkstep", help="Integration step in days. Default value = 30", type=int, default=30)
     parser.add_argument("-telescope", help="Observatory MPC Code. Default value = I11 (Gemini South to be changed to Rubin Observatory)", type=str, default='I11')
-    parser.add_argument("-query", help="SQL query for pointing database.", type=str, default="SELECT observationStartMJD, observationId FROM observations ORDER BY observationStartMJD")
+    parser.add_argument("-query", help="SQL query for pointing database.", type=str, default="SELECT observationId,observationStartMJD,fieldRA,fieldDEC,rotSkyPos FROM observations order by observationStartMJD")
 
     args = parser.parse_args()
 
