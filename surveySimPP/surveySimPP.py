@@ -113,6 +113,11 @@ def runLSSTPostProcessing(cmd_args):
         observations = PPReadAllInput(cmd_args, configs, filterpointing,
                                       startChunk, incrStep, verbose=cmd_args['verbose'])
 
+        if len(observations) == 0:
+            verboselog('WARNING: no observations in merged dataframe. Skipping to next chunk...')
+            startChunk = startChunk + configs['size_serial_chunk']
+            continue
+
         verboselog('Calculating apparent magnitudes...')
         observations = PPCalculateApparentMagnitude(observations,
                                                     configs['phase_function'],
