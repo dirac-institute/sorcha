@@ -91,7 +91,6 @@ def runLSSTPostProcessing(cmd_args):
     # avoid memory overflow
     startChunk = 0
     endChunk = 0
-    # number of rows in an entire orbit file
 
     ii = -1
     with open(cmd_args['orbinfile']) as f:
@@ -113,8 +112,10 @@ def runLSSTPostProcessing(cmd_args):
         observations = PPReadAllInput(cmd_args, configs, filterpointing,
                                       startChunk, incrStep, verbose=cmd_args['verbose'])
 
+        # If the ephemeris file doesn't have any observations for the objects in the chunk
+        # PPReadAllInput will return an empty dataframe. We thus log a warning.
         if len(observations) == 0:
-            verboselog('WARNING: no observations in merged dataframe. Skipping to next chunk...')
+            pplogger.info('WARNING: no observations in merged dataframe. Skipping to next chunk...')
             startChunk = startChunk + configs['size_serial_chunk']
             continue
 
