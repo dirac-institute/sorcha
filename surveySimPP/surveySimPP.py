@@ -115,7 +115,7 @@ def runLSSTPostProcessing(cmd_args):
         # If the ephemeris file doesn't have any observations for the objects in the chunk
         # PPReadAllInput will return an empty dataframe. We thus log a warning.
         if len(observations) == 0:
-            pplogger.info('WARNING: no observations in merged dataframe. Skipping to next chunk...')
+            pplogger.info('WARNING: no ephemeris observations found for these objects. Skipping to next chunk...')
             startChunk = startChunk + configs['size_serial_chunk']
             continue
 
