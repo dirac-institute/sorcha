@@ -15,7 +15,7 @@ def test_PPBrightLimit():
 
     observations = pd.DataFrame({'ObjID': observation_ID,
                                  'optFilter': observation_filter,
-                                 'observedTrailedSourceMag': observation_mag})
+                                 'observedPSFMag': observation_mag})
 
     observing_filters = ['r', 'g']
 
