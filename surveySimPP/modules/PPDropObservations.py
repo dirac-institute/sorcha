@@ -1,20 +1,20 @@
-__all__ = ['PPDropObservations']
-
-
 def PPDropObservations(observations, rng, probability="detection probability"):
     """
     Drops rows where the probabilty of detection is less than sample drawn
-    from a uniform distribution.
+    from a uniform distribution. Used by PPFadingFunctionFilter.
 
-    Input
-    -----
-    observations ... pandas dataframe of observations with a column containing the probability of detection
-    probability  ... name of the column containing the probability of detection
-    rng          ... Numpy random number generator.
+    Parameters:
+    -----------
+    observations (Pandas dataframe): dataframe of observations with a column containing the probability of detection.
 
-    Returns
-    -------
-    out ... new dataframe without observations that could not be observed
+    rng (numpy Generator): numpy random number Generator object.
+
+    probability (string): name of column containing detection probability.
+
+    Returns:
+    ----------
+    out (Pandas dataframe): new dataframe without observations that could not be observed.
+
     """
 
     num_obs = len(observations.index)

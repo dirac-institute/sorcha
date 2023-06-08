@@ -1,24 +1,25 @@
-#!/usr/bin/python
-
 import sys
 import logging
-
-# Author: Grigori Fedorets
 
 
 def PPDetectionEfficiency(padain, threshold, rng):
     """
-    Task: PPDetectionEfficiency
+    Applies a random cut to the observations dataframe based on an efficiency
+    threshold: if the threshold is 0.95, for example, 5% of observations will be
+    randomly dropped. Used by PPLinkingFilter.
 
-    Input: padain: pandas dataframe, in objectsInField (oif) format,
-           threshold: float, between 0 and 1
-           rng: Numpy random number generator.
+    Parameters:
+    -----------
+    padain (Pandas dataframe): dataframe of observations.
 
-    Action: Goes through every row in pandas dataframe and accepts/declines based on
-    pre-determined acceptance threshold (between 0 and 1).
+    threshold (float): Fraction between 0 and 1 of detections retained in the dataframe.
 
-    Output: pandas dataframe (modified)
+    rng (numpy Generator): numpy random number Generator object.
 
+    Returns:
+    ----------
+    padain_drop: dataframe of observations with a fraction equal to 1-threshold
+    randomly dropped.
 
     """
 

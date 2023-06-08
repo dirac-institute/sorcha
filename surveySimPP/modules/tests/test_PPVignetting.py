@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 from numpy.testing import assert_almost_equal
 
 
@@ -21,5 +22,41 @@ def test_PPVignetting():
     expected = [23.83940373, 22.39012774, 23.35663436, 22.3797003, 22.44707285]
 
     assert_almost_equal(test_df['fiveSigmaDepthAtSource'].values, expected, decimal=6)
+
+    return
+
+
+def test_calcVignettingLosses():
+
+    from surveySimPP.modules.PPVignetting import calcVignettingLosses
+
+    test_loss = calcVignettingLosses(164.037713, -17.582575, 163.87542091, -18.84327137)
+    assert_almost_equal(test_loss, 0.02416062)
+
+    return
+
+
+def test_haversine():
+
+    from surveySimPP.modules.PPVignetting import haversine
+
+    test_haversine = haversine(164.037713, -17.582575, 163.87542091, -18.84327137)
+    test_haversine_zero = haversine(164.037713, -17.582575, 164.037713, -17.582575)
+
+    assert_almost_equal(test_haversine, 1.2648216)
+    assert_almost_equal(test_haversine_zero, 0.0)
+
+    return
+
+
+def test_vignetFunc():
+
+    from surveySimPP.modules.PPVignetting import vignetFunc
+
+    test_theta = np.rad2deg(1.2648216148765565)
+    test_mag = vignetFunc(test_theta)
+
+    assert_almost_equal(test_mag, 1.2245226)
+    assert_almost_equal(vignetFunc(0.0), 0.0)
 
     return
