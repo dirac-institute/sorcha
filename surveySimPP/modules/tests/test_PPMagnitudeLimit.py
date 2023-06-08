@@ -1,16 +1,18 @@
-#!/bin/python
-
 import pandas as pd
-from surveySimPP.tests.data import get_test_filepath
+import numpy as np
+from numpy.testing import assert_equal
 
 
 def test_PPMagnitudeLimit():
     from surveySimPP.modules.PPMagnitudeLimit import PPMagnitudeLimit
 
-    test_input = pd.read_csv(get_test_filepath("test_input_fullobs.csv"))
+    test_input = pd.DataFrame({'observedPSFMag': np.arange(15, 25)})
 
-    test_output = pd.read_csv(get_test_filepath("test_output_PPMagnitudeLimit.csv"))
+    test_output = PPMagnitudeLimit(test_input, 18.)
+    assert_equal(test_output['observedPSFMag'].values, [15, 16, 17])
 
-    test_result = PPMagnitudeLimit(test_input, 20.0)
+    test_zero = PPMagnitudeLimit(test_input, 14.)
+    assert len(test_zero) == 0
 
-    pd.testing.assert_frame_equal(test_output, test_result)
+    test_all = PPMagnitudeLimit(test_input, 25.)
+    assert len(test_all) == 10

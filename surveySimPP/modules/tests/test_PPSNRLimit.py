@@ -1,16 +1,22 @@
-#!/bin/python
-
 import pandas as pd
-from surveySimPP.tests.data import get_test_filepath
+import numpy as np
+from numpy.testing import assert_equal
+
 
 def test_PPSNRLimit():
 
     from surveySimPP.modules.PPSNRLimit import PPSNRLimit
 
-    test_input = pd.read_csv(get_test_filepath("test_input_fullobs.csv"))
+    observations = pd.DataFrame({'SNR': np.arange(1., 15.)})
 
-    test_output = pd.read_csv(get_test_filepath("test_output_PPSNRLimit.csv"))
+    new_obs = PPSNRLimit(observations, 9.)
+    expected_SNR = np.array([10., 11., 12., 13., 14.])
+    assert_equal(new_obs['SNR'].values, expected_SNR)
 
-    test_result = PPSNRLimit(test_input, 15.0)
+    zero_obs = PPSNRLimit(observations, 15.)
+    assert len(zero_obs) == 0
 
-    pd.testing.assert_frame_equal(test_output, test_result)
+    all_obs = PPSNRLimit(observations, 0.5)
+    assert len(all_obs) == 14
+
+    return

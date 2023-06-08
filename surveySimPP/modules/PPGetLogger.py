@@ -1,5 +1,3 @@
-#!/usr/bin/python
-
 import logging
 import os
 from datetime import datetime
@@ -11,8 +9,27 @@ def PPGetLogger(
         log_name='',
         log_file_info='postprocessing.log',
         log_file_error='postprocessing.err'):
+    """
+    Initialises log and error files.
 
-    # log_format     = '',
+    Parameters:
+    -----------
+    log_location (string): filepath to directory in which to save logs.
+
+    log_format (string): format for log filename.
+
+    log_name (string): name of log.
+
+    log_file_info (string): name with which to save info log.
+
+    log_file_error (string): name with which to save error log.
+
+    Returns:
+    ----------
+    log (logging object): log object.
+
+    """
+
     log = logging.getLogger(log_name)
     log_formatter = logging.Formatter(log_format)
 
@@ -24,8 +41,8 @@ def PPGetLogger(
     dstr = datetime.now().strftime('%Y-%m-%d-%H-%M-%S')
     cpid = os.getpid()
 
-    log_file_info = str(log_location + dstr + '-p' + str(cpid) + '-' + log_file_info)
-    log_file_error = str(log_location + dstr + '-p' + str(cpid) + '-' + log_file_error)
+    log_file_info = os.path.join(log_location, dstr + '-p' + str(cpid) + '-' + log_file_info)
+    log_file_error = os.path.join(log_location, dstr + '-p' + str(cpid) + '-' + log_file_error)
 
     file_handler_info = logging.FileHandler(log_file_info, mode='w')
     file_handler_info.setFormatter(log_formatter)

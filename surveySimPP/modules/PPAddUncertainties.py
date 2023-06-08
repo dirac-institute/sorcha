@@ -17,116 +17,93 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-"""
-Calculate Astrometric and Photometric Uncertainties for ground based observations.
-
-"""
-
 import numpy as np
+import logging
 from surveySimPP.modules import PPTrailingLoss
 from surveySimPP.modules import PPRandomizeMeasurements
-
-# lambda functions as variables are not PEP8 compliant. should be defs.
-# degCos = lambda x: np.cos(x * np.pi / 180.)
-# degSin = lambda x: np.sin(x * np.pi / 180.)
+from surveySimPP.modules.PPSNRLimit import PPSNRLimit
 
 
 def degCos(x):
+    """
+    Calculate cosine of an angle in degrees.
+
+    Parameters:
+    -----------
+    x (float): angle in degrees.
+
+    Returns:
+    -----------
+    The cosine of x.
+    """
+
     return np.cos(x * np.pi / 180.)
 
 
 def degSin(x):
+    """
+    Calculate sine of an angle in degrees.
+
+    Parameters:
+    -----------
+    x (float): angle in degrees.
+
+    Returns:
+    -----------
+    The sine of x.
+    """
+
     return np.sin(x * np.pi / 180.)
 
 
-__all__ = ['calcAstrometricUncertainty', 'calcPhotometricUncertainty',
-           'calcRandomAstrometricErrorPerCoord', 'magErrorFromSNR']
-
-
-############################################
-# MODULE SPECIFIC EXCEPTION
-###########################################
-class Error(Exception):
-    """Vector module specific exception."""
-
-    pass
-
-
-############################################
-
-# def addUncertainties(ephemsdf,obsdf,raName='fieldRA',decName='fieldDec',obsIdName='FieldID',
-#                     obsEpochName='observationStartMJD',
-#                     raNameEph='AstRA(deg)',decNameEph='AstDec(deg)',
-#                     obsIdNameEph='observationId',ephEpochName='FieldMJD',
-#                     limMagName='fiveSigmaDepth',seeingName='seeingFwhmGeom',
-#                     filterMagName='MagnitudeInFilter'):
-
-#   """Add astrometric and photometric uncertainties to observations generated through JPL ephemeris simulator.
-#
-#   Parameters:
-#   -----------
-#   ephemsdf   ... Pandas dataFrame containing output of JPL ephemeris simulator
-#   obsdf    ... Pandas dataFrame containing survey simulator output such as LSST opsim
-#   *Name    ... relevant column names in obsdf
-#   *NameEph ... relevant column names in ephemsdf
-
-#   Returns:
-#   --------
-#   ephemsOut ... ephems Pandas dataFrame (observations with added uncertainties)
-#   """
-
-# Check whether the observations dataframe covers the whole ephemeris time
-# --------------------------------------------------------------------------
-# Should be handled somewhere else
-# --------------------------------------------------------------------------
-# tobsmin=obsdf[obsEpochName].min()
-# tobsmax=obsdf[obsEpochName].max()
-# tephmin=ephemsdf[ephEpochName].min()
-# tephmax=ephemsdf[ephEpochName].max()
-
-# if(tephmin<tobsmin or tephmax>tobsmax):
-#    print('observations tmin, ephemeris tmin:',tobsmin, tephmin)
-#    print('observations tmax, ephemeris tmax:',tobsmax, tephmax)
-#    raise Exception('Observations do not cover the entire ephemeris timespan.')
-# --------------------------------------------------------------------------
-
-# Remove
-# tempdf = pd.merge(
-#    ephemsdf[[obsIdNameEph]],
-#    obsdf[[obsIdName, limMagName, seeingName]],
-#    left_on=obsIdNameEph,
-#    right_on=obsIdName,
-#    how="left"
-# )
-
-#    astrSig,SNR,_=calcAstrometricUncertainty(ephemsdf[filterMagName], tempdf[limMagName],
-#                                            FWHMeff=tempdf[seeingName]*1000, output_units='mas')
-#    photometric_sigma = magErrorFromSNR(SNR)
-
-#   return (astrSig, photometric_sigma, SNR)
-
-def addUncertainties(detDF, configs, rng):
+def addUncertainties(detDF, configs, rng, verbose=True):
     """
-    Generates astrometric and photometric unvertainties, and SNR. Uses uncertainties to randomize the photometry.
+    Generates astrometric and photometric uncertainties, and SNR. Uses uncertainties
+    to randomize the photometry. Accounts for trailing losses.
+
+    Parameters:
+    -----------
+    detDF (Pandas dataframe): Dataframe of observations.
+
+    configs (dictionary): dictionary of configurations from config file.
+
+    rng (numpy Generator): numpy random number Generator object.
+
+    Returns:
+    -----------
+    detDF (Pandas dataframe): dataframe of observations, with new columns for observed
+    magnitudes, SNR, and astrometric/photometric uncertainties.
+
     """
+
+    pplogger = logging.getLogger(__name__)
+    verboselog = pplogger.info if verbose else lambda *a, **k: None
 
     detDF['AstrometricSigma(deg)'], detDF['PhotometricSigmaTrailedSource(mag)'], detDF['SNR'] = uncertainties(detDF, configs, filterMagName='TrailedSourceMag')
 
-    if configs['trailingLossesOn']:
+    if configs['trailing_losses_on']:
         _, detDF['PhotometricSigmaPSF(mag)'], detDF['SNR'] = uncertainties(detDF, configs, filterMagName='PSFMag')
     else:
         detDF['PhotometricSigmaPSF(mag)'] = detDF['PhotometricSigmaTrailedSource(mag)']
 
+    # default SNR cut can be disabled in the config file under EXPERT
+    # at low SNR, high photometric sigma causes randomisation to sometimes
+    # grossly inflate/decrease magnitudes.
+    if configs['default_SNR_cut']:
+        verboselog('Removing all observations with SNR < 2.0...')
+        detDF = PPSNRLimit(detDF.copy(), 2.)
+
+    verboselog('Randomising photometry...')
     detDF["observedTrailedSourceMag"] = PPRandomizeMeasurements.randomizePhotometry(
                                             detDF, rng, magName="TrailedSourceMag",
                                             sigName="PhotometricSigmaTrailedSource(mag)")
-    
-    if configs['trailingLossesOn']:
+
+    if configs['trailing_losses_on']:
         detDF["observedPSFMag"] = PPRandomizeMeasurements.randomizePhotometry(
                                                 detDF, rng, magName="PSFMag",
                                                 sigName="PhotometricSigmaPSF(mag)")
     else:
-       detDF["observedPSFMag"] = detDF["observedTrailedSourceMag"]
+        detDF["observedPSFMag"] = detDF["observedTrailedSourceMag"]
 
     return detDF
 
@@ -137,19 +114,29 @@ def uncertainties(detDF, configs,
                   dra_name='AstRARate(deg/day)',
                   ddec_name='AstDecRate(deg/day)', dec_name='AstDec(deg)'
                   ):
-    """Add astrometric and photometric uncertainties to observations generated through JPL ephemeris simulator.
+    """
+    Add astrometric and photometric uncertainties to observations.
 
     Parameters:
     -----------
-    detDF    ... Pandas dataFrame containing output of JPL ephemeris simulator
-    *Name    ... relevant column names in detDF
+    detDF (Pandas dataframe): dataframe containing observations.
+
+    configs (dictionary): dictionary of configurations from config file.
+
+    limMagName, seeingName, filterMagName, dra_name, ddec_name, dec_name (strings): column
+    names of the limiting magnitude, seeing, magnitude, RA rate, DEC rate and DEC.
 
     Returns:
-    --------
-    ephemsOut ... ephems Pandas dataFrame (observations with added uncertainties)
+    -----------
+    astrSigDeg (numpy array): astrometric uncertainties in degrees.
+
+    photometric_sigma (numpy array): photometric uncertainties in magnitude.
+
+    SNR (numpy array): signal-to-noise ratio.
+
     """
 
-    if configs['trailingLossesOn']:
+    if configs['trailing_losses_on']:
         dMag = PPTrailingLoss.calcTrailingLoss(detDF[dra_name] * degCos(detDF[dec_name]),
                                                detDF[ddec_name],
                                                detDF[seeingName])
@@ -158,7 +145,7 @@ def uncertainties(detDF, configs,
 
     astrSig, SNR, _ = calcAstrometricUncertainty(detDF[filterMagName] + dMag, detDF[limMagName],
                                                  FWHMeff=detDF[seeingName] * 1000, output_units='mas')
-    photometric_sigma = magErrorFromSNR(SNR)
+    photometric_sigma = calcPhotometricUncertainty(SNR)
     astrSigDeg = astrSig / 3600. / 1000.
 
     return (astrSigDeg, photometric_sigma, SNR)
@@ -176,21 +163,28 @@ def calcAstrometricUncertainty(mag, m5, nvisit=1, FWHMeff=700.0, error_sys=10.0,
 
     Parameters:
     -----------
-        mag            ...    magnitude of the observation
-        m5             ...    5-sigma limiting magnitude
-        nvisit         ...    number of visits to consider
-        FWHMeff        ...    effective Full Width at Half Maximum of Point Spread Function [mas]
-        error_sys      ...    sytstematic error [mas]
-        output_units   ...    'mas' (default): milliarcseconds, 'arcsec': arcseconds
+    mag (float/array of floats): magnitude of the observation.
+
+    m5 (float/array of floats): 5-sigma limiting magnitude.
+
+    nvisit (int): number of visits to consider.
+
+    FWHMeff (float): effective Full Width at Half Maximum of Point Spread Function [mas].
+
+    error_sys (float): systematic error [mas].
+
+    output_units (string): 'mas' (default): milliarcseconds, 'arcsec': arcseconds.
 
     Returns:
-    ---------
-        astrom_error   ...    astrometric error
-        SNR            ...    signal to noise ratio
-        error_rand     ...    random error
+    -----------
+    astrom_error (float/array of floats): astrometric error.
+
+    SNR (float/array of floats): signal to noise ratio.
+
+    error_rand (float/array of floats): random error.
 
     Description:
-    ------------
+    -----------
     The astrometric error can be applied to parallax or proper motion (for nvisit>1).
     If applying to proper motion, should also divide by the # of years of the survey.
     This is also referenced in the LSST overview paper (arXiv:0805.2366, ls.st/lop)
@@ -201,9 +195,6 @@ def calcAstrometricUncertainty(mag, m5, nvisit=1, FWHMeff=700.0, error_sys=10.0,
     - the systematic error, error_sys = 10 mas, corresponds to the
       design spec from the LSST Science Requirements Document (ls.st/srd)
 
-    Requirements:
-    --------------
-    numpy as np
     """
 
     # external functions
@@ -229,23 +220,6 @@ def calcAstrometricUncertainty(mag, m5, nvisit=1, FWHMeff=700.0, error_sys=10.0,
     return astrom_error, SNR, error_rand
 
 
-def calcPhotometricUncertainty(SNR):
-    """Photometric uncertainty in magnitudes from flux signal to noise ratio.
-
-    Parameters:
-    -----------
-          snr ... is the signal to noise ratio in flux
-
-    Returns:
-    --------
-          photSig ... photometric uncertainty [mag]
-
-    """
-
-    photSig = magErrorFromSNR(SNR)
-    return photSig
-
-
 def calcRandomAstrometricErrorPerCoord(FWHMeff, SNR, AstromErrCoeff=0.60):
     """Calculate the random astrometric uncertainty, as a function of
     effective FWHMeff and signal-to-noise ratio SNR
@@ -256,20 +230,23 @@ def calcRandomAstrometricErrorPerCoord(FWHMeff, SNR, AstromErrCoeff=0.60):
 
     Parameters:
     -----------
-         FWHMeff        ...    effective Full Width at Half Maximum of Point Spread Function [mas]
-         SNR            ...    signal to noise ratio
-         AstromErrCoeff ...    Astrometric error coefficient (see description below)
+    FWHMeff (float/array of floats): Effective Full Width at Half Maximum of Point Spread Function [mas].
 
+    SNR (float/array of floats): Signal-to-noise ratio.
+
+    AstromErrCoeff (float): Astrometric error coefficient (see description below).
 
     Returns:
-    --------
-         RandomAstrometricErrorPerCoord ... random astrometric uncertainty per coordinate
+    -----------
+    RandomAstrometricErrorPerCoord (float/array of floats): random astrometric uncertainty per coordinate.
 
     Description:
-    ------------
+    -----------
     The coefficient AstromErrCoeff for Maximum Likelihood
     solution is given by
+
        AstromErrCoeff = <P^2> / <|dP/dx|^2> * 1/FWHMeff
+
     where P is the point spread function, P(x,y).
 
     For a single-Gaussian PSF, AstromErrCoeff = 0.60
@@ -283,29 +260,28 @@ def calcRandomAstrometricErrorPerCoord(FWHMeff, SNR, AstromErrCoeff=0.60):
     of the free atmospheric seeing than single Gaussian seeing,
     the default value of AstromErrCoeff is set to the
     more conservative value.
+
     Note also that AstromErrCoeff = 1.0 is often used in
     practice to empirically account for other error sources.
     """
 
     RandomAstrometricErrorPerCoord = AstromErrCoeff * FWHMeff / SNR
+
     return RandomAstrometricErrorPerCoord
 
 
-def magErrorFromSNR(snr):
+def calcPhotometricUncertainty(snr):
     """
     Convert flux signal to noise ratio to an uncertainty in magnitude.
 
     Parameters:
     -----------
-          snr ... is the signal to noise ratio in flux
+    snr (float/array of floats): The signal-to-noise-ratio in flux.
 
     Returns:
-    --------
-          magerr ... the resulting uncertainty in magnitude
+    -----------
+    magerr (float/array of floats): The resulting uncertainty in magnitude.
 
-    Requirements:
-    --------------
-    numpy as np
     """
 
     # external functions
@@ -313,4 +289,5 @@ def magErrorFromSNR(snr):
 
     # see e.g. www.ucolick.org/~bolte/AY257/s_n.pdf section 3.1
     magerr = 2.5 * log10(1.0 + 1.0 / snr)
+
     return magerr

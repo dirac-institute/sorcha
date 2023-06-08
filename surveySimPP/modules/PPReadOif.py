@@ -1,38 +1,27 @@
-#!/bin/python
-
 import sys
 import pandas as pd
+import numpy as np
 import logging
-
-# Author: Grigori Fedorets
 
 
 def PPReadOif(oif_output, inputformat):
     """
-    PPReadOif.py
-
-
-
-    Description: This task reads in the output of oif (objectsInField) and puts it into a
+    Reads in the output of OIF (objectsInField) and puts it into a
     single pandas dataframe for further use downstream by other tasks.
-
-    This task should be used as the first one in the collection of subsequent tasks
-    called recipes.
 
     Any other relevant data (e.g. magnitudes and colours) are read and amended to the
     main pandas dataframe by separate tasks.
 
+    Parameters:
+    -----------
+    oif_output (string): location/name of OIF output file.
 
+    inputformat (string): format of input file ("whitespace"/"comma"/"csv"/"h5"/"hdf5").
 
-    Mandatory input:      string, oif_output, name of text file including Output from objectsInField (oif)
-                         string, inputformat, input format of pointing putput (csv, whitespace, hdf5)
+    Returns:
+    -----------
+    padafr (Pandas dataframe): dataframe of OIF output.
 
-
-
-    Output:               pandas dataframe
-
-
-    usage: padafr=PPReadOif(oif_output,inputformat)
     """
 
     pplogger = logging.getLogger(__name__)
@@ -49,16 +38,23 @@ def PPReadOif(oif_output, inputformat):
 
     padafr = padafr.rename(columns=lambda x: x.strip())
 
-    # Here, we drop the magnitudes calculated by oif as they are calculated elsewhere
-    # as they can be calculated with a variety of phase functions, and in different filters
-
     padafr = padafr.drop(['V', 'V(H=0)'], axis=1, errors='ignore')
 
-    try:
-        padafr['ObjID'] = padafr['ObjID'].astype(str)
-    except KeyError:
-        pplogger.error("ERROR: ephemeris input file does not have 'ObjID' column.")
-        sys.exit("ERROR: ephemeris input file does not have 'ObjID' column.")
+    oif_cols = np.array(['ObjID', 'FieldID', 'FieldMJD', 'AstRange(km)', 'AstRangeRate(km/s)',
+                         'AstRA(deg)', 'AstRARate(deg/day)', 'AstDec(deg)',
+                         'AstDecRate(deg/day)', 'Ast-Sun(J2000x)(km)', 'Ast-Sun(J2000y)(km)',
+                         'Ast-Sun(J2000z)(km)', 'Ast-Sun(J2000vx)(km/s)',
+                         'Ast-Sun(J2000vy)(km/s)', 'Ast-Sun(J2000vz)(km/s)',
+                         'Obs-Sun(J2000x)(km)', 'Obs-Sun(J2000y)(km)', 'Obs-Sun(J2000z)(km)',
+                         'Obs-Sun(J2000vx)(km/s)', 'Obs-Sun(J2000vy)(km/s)',
+                         'Obs-Sun(J2000vz)(km/s)', 'Sun-Ast-Obs(deg)'],
+                        dtype='object')
+
+    if not set(padafr.columns.values).issubset(oif_cols):
+        pplogger.error("ERROR: PPReadOif: column headings do not match expected OIF column headings. Check format of file.")
+        sys.exit("ERROR: PPReadOif: column headings do not match expected OIF column headings. Check format of file.")
+
+    padafr['ObjID'] = padafr['ObjID'].astype(str)
 
     return padafr
 
@@ -67,22 +63,69 @@ def PPSkipOifHeader(filename, line_start='ObjID', **kwargs):
     """Utility function that scans through the lines of OIF output looking for
     the column names then passes the file object to pandas starting from that
     line, thus skipping the long OIF header.
+
+    Parameters:
+    -----------
+    filename (string): location/name of OIF output file.
+
+    line_start (string): Column heading of first column.
+
+    **kwargs: keyword arguments to pass to pd.read_csv.
+
+    Returns:
+    -----------
+    padafr (Pandas dataframe): dataframe of OIF output.
+
     """
 
-    with open(filename) as f:
+    pplogger = logging.getLogger(__name__)
 
-        position = 0
-        current_line = f.readline()
+    found = 'no'
 
-        # reads the file line by line looking for the line that starts with
-        # the expected string
-        while not current_line.startswith(line_start):
-            position = f.tell()
-            current_line = f.readline()
+    with open(filename) as fh:
+        for i, line in enumerate(fh):
+            if line.startswith('ObjID'):
+                found = i
+                break
+            if i > 100:  # because we don't want to scan infinitely - OIF headers are ~30 lines long.
+                pplogger.error('ERROR: PPReadOif: column headings not found. Ensure column headings exist in OIF output and first column is ObjID.')
+                sys.exit('ERROR: PPReadOif: column headings not found. Ensure column headings exist in OIF output and first column is ObjID.')
 
-        # changes the file position to the start of the line that begins
-        # with the desired string
-        f.seek(position)
+    if found == 'no':
+        pplogger.error('ERROR: PPReadOif: column headings not found. Ensure column headings exist in OIF output and first column is ObjID.')
+        sys.exit('ERROR: PPReadOif: column headings not found. Ensure column headings exist in OIF output and first column is ObjID.')
 
-        # passes that file object to pandas
-        return pd.read_csv(f, **kwargs)
+    # cludge to make sure PPMakeTemporaryEphemerisDatabase works with chunking, sorry
+    if 'skiprows' in kwargs:
+        try:
+            kwargs['skiprows'] = range(kwargs['skiprows'][0] + found, kwargs['skiprows'][-1] + found + 1)
+        except IndexError:
+            pass
+
+    # ought to speed up reading from OIF files a bit
+    dtypes = {'ObjID': object,
+              'FieldID': 'int64',
+              'FieldMJD': 'float64',
+              'AstRange(km)': 'float64',
+              'AstRangeRate(km/s)': 'float64',
+              'AstRA(deg)': 'float64',
+              'AstRARate(deg/day)': 'float64',
+              'AstDec(deg)': 'float64',
+              'AstDecRate(deg/day)': 'float64',
+              'Ast-Sun(J2000x)(km)': 'float64',
+              'Ast-Sun(J2000y)(km)': 'float64',
+              'Ast-Sun(J2000z)(km)': 'float64',
+              'Ast-Sun(J2000vx)(km/s)': 'float64',
+              'Ast-Sun(J2000vy)(km/s) ': 'float64',
+              'Ast-Sun(J2000vz)(km/s) ': 'float64',
+              'Obs-Sun(J2000x)(km)': 'float64',
+              'Obs-Sun(J2000y)(km)': 'float64',
+              'Obs-Sun(J2000z)(km)': 'float64',
+              'Obs-Sun(J2000vx)(km/s)': 'float64',
+              'Obs-Sun(J2000vy)(km/s)': 'float64',
+              'Obs-Sun(J2000vz)(km/s)': 'float64',
+              'Sun-Ast-Obs(deg)': 'float64',
+              'V': 'float64',
+              'V(H=0)': 'float64'}
+
+    return pd.read_csv(filename, header=found, dtype=dtypes, **kwargs)

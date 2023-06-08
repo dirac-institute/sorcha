@@ -2,36 +2,45 @@ import logging
 import sys
 import numpy as np
 
-# Author: Steph Merritt
-
 
 def PPApplyColourOffsets(observations, function, othercolours, observing_filters, mainfilter):
-    """Adds the correct colour offset to H based on the filter of each observation,
+    """
+    Adds the correct colour offset to H based on the filter of each observation,
     then checks to make sure the appropriate columns exist for each phase function model.
     If phase model variables exist for each colour, this function also selects the
     correct variables for each observation based on filter.
 
-    parameters:
-    -------------
-    observations (Pandas dataframe): pandas dataframe of observations
-    function (string): string of desired phase function model
-    othercolours (list of strings): list of colour offsets present in input files
-    observing_filters (list of strings): list of observing filters
-    mainfilter (string): the main filter in which H is given and all colour offsets are calculated against
+    Parameters:
+    -----------
+    observations (Pandas dataframe): dataframe of observations.
+
+    function (string): string of desired phase function model. Options are HG, HG12, HG1G2, linear, H.
+
+    othercolours (list of strings): list of colour offsets present in input files.
+
+    observing_filters (list of strings): list of observation filters of interest.
+
+    mainfilter (string): the main filter in which H is given and all colour offsets are calculated against.
+
+    Returns:
+    -----------
+    observations (Pandas dataframe): dataframe of observations with H calculated in relevant filter.
 
     """
 
     pplogger = logging.getLogger(__name__)
+
+    H_col = 'H_' + mainfilter
 
     # create a zero-offset column for mainfilter-mainfilter
     observations[mainfilter + "-" + mainfilter] = np.zeros(len(observations))
 
     # first apply the H offset for every observation
     try:
-        observations["H"] = observations.apply(lambda row: row['H'] + row[row["optFilter"] + "-" + mainfilter], axis=1)
+        observations[H_col] = observations.apply(lambda row: row[H_col] + row[row["optFilter"] + "-" + mainfilter], axis=1)
     except KeyError:
         pplogger.error('ERROR: PPApplyColourOffsets: H column missing!')
-        sys.exist('ERROR: PPApplyColourOffsets: H column missing!')
+        sys.exit('ERROR: PPApplyColourOffsets: H column missing!')
 
     # then check the function
     # for each function, see if the basic columns exist: if so, leave them
@@ -40,9 +49,9 @@ def PPApplyColourOffsets(observations, function, othercolours, observing_filters
     if function == 'HG1G2':
         G1list = ['G1' + filt for filt in observing_filters]
         G2list = ['G2' + filt for filt in observing_filters]
-        col_list = ['H'] + G1list + G2list
+        col_list = [H_col] + G1list + G2list
 
-        if set(['H', 'G1', 'G2']).issubset(observations.columns):
+        if set([H_col, 'G1', 'G2']).issubset(observations.columns):
             pass
         elif set(col_list).issubset(observations.columns):
             observations["G1"] = observations.apply(lambda row: row["G1" + row["optFilter"]], axis=1)
@@ -54,9 +63,9 @@ def PPApplyColourOffsets(observations, function, othercolours, observing_filters
 
     elif function == 'HG':
         Glist = ['GS' + filt for filt in observing_filters]
-        col_list = ['H'] + Glist
+        col_list = [H_col] + Glist
 
-        if set(['H', 'GS']).issubset(observations.columns):
+        if set([H_col, 'GS']).issubset(observations.columns):
             pass
         elif set(col_list).issubset(observations.columns):
             observations["GS"] = observations.apply(lambda row: row["GS" + row["optFilter"]], axis=1)
@@ -67,9 +76,9 @@ def PPApplyColourOffsets(observations, function, othercolours, observing_filters
 
     elif function == 'HG12':
         G12list = ['G12' + filt for filt in observing_filters]
-        col_list = ['H'] + G12list
+        col_list = [H_col] + G12list
 
-        if set(['H', 'G12']).issubset(observations.columns):
+        if set([H_col, 'G12']).issubset(observations.columns):
             pass
         elif set(col_list).issubset(observations.columns):
             observations["G12"] = observations.apply(lambda row: row["G12" + row["optFilter"]], axis=1)
@@ -80,9 +89,9 @@ def PPApplyColourOffsets(observations, function, othercolours, observing_filters
 
     elif function == 'linear':
         Slist = ['S' + filt for filt in observing_filters]
-        col_list = ['H'] + Slist
+        col_list = [H_col] + Slist
 
-        if set(['H', 'S']).issubset(observations.columns):
+        if set([H_col, 'S']).issubset(observations.columns):
             pass
         elif set(col_list).issubset(observations.columns):
             observations["S"] = observations.apply(lambda row: row["S" + row["optFilter"]], axis=1)
@@ -91,7 +100,7 @@ def PPApplyColourOffsets(observations, function, othercolours, observing_filters
             pplogger.error('ERROR: PPApplyColourOffsets: linear function requires the following input data columns: H, S.')
             sys.exit('ERROR: PPApplyColourOffsets: linear function requires the following input data columns: H, S.')
 
-    elif function == 'H':
+    elif function == 'none':
         pass
 
     else:
@@ -101,5 +110,8 @@ def PPApplyColourOffsets(observations, function, othercolours, observing_filters
     # drop a few more unneeded columns to reduce size of dataframe :)
     observations.drop(mainfilter + "-" + mainfilter, axis=1, inplace=True)
     observations.drop(othercolours, axis=1, inplace=True)
+
+    # rename H
+    observations.rename(columns={H_col: 'H_filter'}, inplace=True)
 
     return observations

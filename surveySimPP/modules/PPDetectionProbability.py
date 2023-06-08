@@ -17,80 +17,66 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-"""
-Calculate probability of detection due to fading
-
-"""
-
 import numpy as np
-import sys
-import logging
-
-__all__ = ['PPDetectionProbability']
-
-
-############################################
-# MODULE SPECIFIC EXCEPTION
-###########################################
-class Error(Exception):
-    """Vector module specific exception."""
-
-    pass
-
-# -----------------------------------------------------------------------------------------------
 
 
 def calcDetectionProbability(mag, limmag, fillFactor=1.0, w=0.1):
-    """ Find the probability of a detection given a visual magnitude,
-    limiting magnitude, and fillfactor,
-    determined by the fading function from Veres & Chesley (2017).
+    """
+    Find the probability of a detection given a visual magnitude,
+    limiting magnitude, and fill factor, determined by the fading function
+    from Veres & Chesley (2017).
 
-    Parameters
+    Parameters:
+    -----------
+    mag (float/array of floats): magnitude of object in filter used for that field.
+
+    limmag (float/array of floats): limiting magnitude of the field.
+
+    fillFactor (float): fraction of FOV covered by the camera sensor.
+
+    w (float): distribution parameter.
+
+    Returns:
     ----------
-    mag: float
-            magnitude of object in filter used for that field
-    limmag: float
-         limiting magnitude of the field
-    fillfactor: float
-         fraction of FOV covered by the camera sensor
-    w: float
-         distribution parameter
-
-    Returns
-    -------
-    P: float
-        Probability of detection
+    P (float/array of floats): probability of detection.
     """
 
     P = fillFactor / (1. + np.exp((mag - limmag) / w))
 
     return P
 
-# -----------------------------------------------------------------------------------------------
-
 
 def PPDetectionProbability(oif_df, trailing_losses=False, trailing_loss_name='dmagDetect',
-                           magnitude_name="observedTrailedSourceMag",
+                           magnitude_name="observedPSFMag",
                            limiting_magnitude_name="fiveSigmaDepthAtSource",
                            field_id_name="FieldID",
                            fillFactor=1.0, w=0.1):
 
     """
-    Probability of observations being observable for objectInField output.
+    Find probability of observations being observable for objectInField output.
+    Wrapper for calcDetectionProbability which takes into account column names
+    and trailing losses. Used by PPFadingFunctionFilter.
 
-    Input
-    -----
-    oif_df          ... pandas dataframe containing simulation output joined to pointing.
-    *_name          ... names of columns in oif_df
-    fillFactor      ... fraction of the field of view covered by sensors.
-    w               ... distribution parameter
+    Parameters:
+    -----------
+    oif_df (Pandas dataframe): dataframe of observations.
+
+    trailing_losses (Boolean): are trailing losses being applied?
+
+    *_name (string): Column names for trailing losses, magnitude, limiting magnitude
+    and field ID respectively.
+
+    fillFactor (float): fraction of FOV covered by the camera sensor.
+
+    w (float): distribution parameter.
+
+    Returns:
+    ----------
+    P (float/array of floats): probability of detection.
+
     """
 
     if not trailing_losses:
         return calcDetectionProbability(oif_df[magnitude_name], oif_df[limiting_magnitude_name], fillFactor, w)
     elif trailing_losses:
         return calcDetectionProbability(oif_df[magnitude_name] + oif_df[trailing_loss_name], oif_df[limiting_magnitude_name], fillFactor, w)
-    else:
-        pplogger = logging.getLogger(__name__)
-        pplogger.error('ERROR: PPDetectionProbability: trailing_losses should be True or False.')
-        sys.exit('ERROR: PPDetectionProbability: trailing_losses should be True or False.')

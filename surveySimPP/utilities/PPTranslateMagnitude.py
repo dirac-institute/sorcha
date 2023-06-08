@@ -1,8 +1,6 @@
 import pandas as pd
 import numpy as np
 
-__all__ = ['PPTranslateMagnitude']
-
 
 def PPTranslateMagnitude(oif_output, survey_db, colors,
                          oifFieldIDName='FieldID', surveyFieldIDName='observationId',
@@ -14,16 +12,24 @@ def PPTranslateMagnitude(oif_output, survey_db, colors,
     Uses filter and color information from survey and color tables
     to translate V band magnitude to appropriate sdss filter magnitude.
 
-    Input
-    -----
-    oif_output   ...   pandas table containing output of objectsInField simulator
-    survey_db    ...   pandas table containing field conditions for each observation
-    colors       ...   pandas table containing color difference between V band
-                       appropriate filter bands for each object.
+    Parameters:
+    -----------
+    oif_output (Pandas dataframe): dataframe containing output of objectsInField simulator
 
-    Returns
-    -------
-    MaginFil     ...   pandas series containing translated magnitudes
+    survey_db (Pandas dataframe): dataframe of pointing database
+
+    colors (Pandas dataframe):  dataframe containing color difference between V band
+    appropriate filter bands for each object.
+
+    *Name (strings): column names for field ID in OIf, field ID in the pointing database,
+    the filters in the pointing database, the ObjectID in OIF and the ObjectID in the colours dataframe.
+
+    oif_filter (string): The filter in which the magnitude is given in the OIF output.
+
+    Returns:
+    -----------
+    MaginFil (Pandas series): series of translated magnitudes.
+
     """
 
     df = pd.merge(
