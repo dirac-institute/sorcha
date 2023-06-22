@@ -78,6 +78,37 @@ def PPGetSeparation(obj_RA, obj_Dec, cen_RA, cen_Dec):
 
     return sep.degree
 
+def PPGetObservationSeparations(data):
+    """
+    Function to calculate the distance of a set of objects from the field centre.
+
+    Parameters:
+    -----------
+    data (Pandas dataframe): dataframe of observations that have the same field
+    centre. typically passed to the function via the pandas groupby.apply method.
+
+    Returns:
+    -----------
+    the dataframe with the resulting orbital seperations for each datapoint.
+    """
+    field_centre_ra = data.fieldRA.iloc[0]
+    field_centre_dec = data.fieldDec.iloc[0]
+
+    if not np.all(data.fieldRA.values == field_centre_ra):
+        raise ValueError("all field centres ra coordinates must be the same.")
+
+    if not np.all(data.fieldDec.values == field_centre_dec):
+        raise ValueError("all field centres dec coordinates must be the same.")
+
+    ras = data["AstRA(deg)"].values
+    decs = data["AstDec(deg)"].values
+
+    cen_sc = SkyCoord(ra=field_centre_ra, dec=field_centre_dec, unit="deg")
+    data_sc = SkyCoord(ra=ras, dec=decs, unit="deg")
+
+    separations = cen_sc.separation(data_sc).degree
+    data["object_separation"] = separations
+    return data
 
 def PPCircleFootprint(observations, circle_radius):
     """Simple function which removes objects which lay outside of a circle
@@ -99,14 +130,9 @@ def PPCircleFootprint(observations, circle_radius):
     # note the slightly convoluted syntax in this function seems to be necessary
     # to avoid the dreaded chained indexing Pandas warnings.
 
-    object_separation = observations.apply(lambda x: PPGetSeparation(x["AstRA(deg)"],
-                                                                     x["AstDec(deg)"],
-                                                                     x.fieldRA,
-                                                                     x.fieldDec),
-                                           axis=1)
+    obs_with_seps = observations.groupby(["fieldRA", "fieldDec"], group_keys=False).apply(PPGetObservationSeparations)
 
-    observations['object_separation'] = object_separation
-    new_observations = observations[observations['object_separation'] < circle_radius]
+    new_observations = obs_with_seps[obs_with_seps['object_separation'] < circle_radius]
 
     new_observations.reset_index(drop=True, inplace=True)
     new_observations = new_observations.drop('object_separation', axis=1)
