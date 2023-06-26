@@ -2,6 +2,8 @@ name: Run benchmarks
 
 on:
   workflow_dispatch:
+  schedule:
+    - cron: '*/15 * * * *'  # Every day at 07:00 UTC
 
 env:
   BENCHMARK_ENV: 'github-ci'
@@ -23,7 +25,8 @@ jobs:
         pip install flake8 pytest
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
         pip install -e .
+        pip install -e .[benchmark]
 
     - name: Test with pytest
       run: |
-        pytest ./surveySimPP/modules/benchmarks/* -vvv
+        pytest -s -vv ./surveySimPP/modules/benchmarks/*
