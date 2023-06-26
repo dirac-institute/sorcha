@@ -27,6 +27,6 @@ jobs:
         pip install -e .
         pip install -e .[benchmark]
 
-    - name: Test with pytest
+    - name: Benchmark with pytest
       run: |
         pytest -s -vv ./surveySimPP/modules/benchmarks/*
