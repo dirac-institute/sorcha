@@ -37,12 +37,15 @@ def PPApplyColourOffsets(observations, function, othercolours, observing_filters
 
     # first apply the H offset for every observation
     try:
-        # observations[H_col] = observations.apply(lambda row: row[H_col] + row[row["optFilter"] + "-" + mainfilter], axis=1)
-        unique_opt_filters = observations["optFilter"].unique()
-        for filter in unique_opt_filters:
-            mask = observations["optFilter"] == filter
-            diff_column_name = f"{filter}-{mainfilter}"
-            observations.loc[mask, H_col] = observations[H_col] + observations[diff_column_name]
+        # baseline implementation
+        observations[H_col] = observations.apply(lambda row: row[H_col] + row[row["optFilter"] + "-" + mainfilter], axis=1)
+
+        # vectorized implementation
+        # unique_opt_filters = observations["optFilter"].unique()
+        # for filter in unique_opt_filters:
+        #     mask = observations["optFilter"] == filter
+        #     diff_column_name = f"{filter}-{mainfilter}"
+        #     observations.loc[mask, H_col] = observations[H_col] + observations[diff_column_name]
 
     except KeyError:
         pplogger.error('ERROR: PPApplyColourOffsets: H column missing!')
