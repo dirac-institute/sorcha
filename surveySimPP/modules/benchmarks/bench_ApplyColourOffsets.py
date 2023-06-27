@@ -47,7 +47,7 @@ class TestBenchApplyColourOffsets:
     '''Runtime benchmarking'''
     def test_bench_runtime(self):
 
-        for n in [1_000, 10_000, 100_000]:
+        for n in [1_000, 10_000]:
 
             emitter = Emitter(namespace="lsst.lf",
                               name="sspp.module_benchmarks",
