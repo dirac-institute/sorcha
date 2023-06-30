@@ -2,8 +2,6 @@ name: Run benchmarks
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: '*/15 * * * *'  # Every day at 07:00 UTC
 
 env:
   BENCHMARK_ENV: 'github-ci'
