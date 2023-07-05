@@ -1,0 +1,16 @@
+# Changes here will be overwritten by Copier
+_commit: v1.4.0
+_src_path: gh:lincc-frameworks/python-project-template
+author_email: m.schwamb@qub.ac.uk
+author_name: Meg Schwamb
+create_example_module: false
+custom_install: true
+include_docs: true
+include_notebooks: true
+mypy_type_checking: none
+package_name: survey_sim_pp
+preferred_linter: black
+project_license: none
+project_name: survey_simulator_post_processing
+use_gitlfs: disabled
+use_isort: false

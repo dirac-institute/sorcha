@@ -1,7 +1,110 @@
+[project]
+name = "surveySimPP"
+license = {file = "LICENSE.txt"}
+readme = "README.md"
+authors = [
+    { name = "Meg Schwamb", email = "m.schwamb@qub.ac.uk" }
+]
+description = "The Survey Simulator Post Processing code for the LSST"
+requires-python = ">=3.8"
+classifiers = [
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Topic :: Scientific/Engineering :: Astronomy",
+    "Topic :: Scientific/Engineering :: Physics",
+]
+dynamic = ["version"]
+dependencies = [
+    "numpy==1.24.3",
+    "pandas",
+    "scipy",
+    "astropy",
+    "matplotlib",
+    "sbpy",
+    "tables",
+]
+
+[project.scripts]
+surveySimPP = "surveySimPP.surveySimPP:main"
+makeConfigOIF = "surveySimPP.utilities.makeConfigOIF:main"
+makeConfigPP = "surveySimPP.utilities.makeConfigPP:main"
+makeMultiConfigOIF = "surveySimPP.utilities.makeMultiConfigOIF:main"
+makeSLURMscript = "surveySimPP.utilities.makeSLURMscript:main"
+createResultsSQLDatabase = "surveySimPP.utilities.createResultsSQLDatabase:main"
+createTemporaryDatabases = "surveySimPP.utilities.createTemporaryDatabases:main"
+
+[project.urls]
+"Documentation" = "https://survey-simulator-post-processing.readthedocs.io/en/latest/"
+"Source" = "https://github.com/dirac-institute/survey_simulator_post_processing"
+
+# On a mac, install optional dependencies with `pip install '.[dev]'` (include the single quotes)
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "pytest-cov", # Used to report total code coverage
+    "pre-commit", # Used to run checks before finalizing a git commit
+    "sphinx==6.1.3", # Used to automatically generate documentation
+    "sphinx-rtd-theme==1.2.0", # Used to render documentation
+    "sphinx-autoapi==2.0.1", # Used to automatically generate api documentation
+    "black", # Used for static linting of files
+    # if you add dependencies here while experimenting in a notebook and you
+    # want that notebook to render in your documentation, please add the
+    # dependencies to ./docs/requirements.txt as well.
+    "nbconvert", # Needed for pre-commit check to clear output from Python notebooks
+    "nbsphinx", # Used to integrate Python notebooks into Sphinx documentation
+    "ipython", # Also used in building notebooks into Sphinx
+    "matplotlib", # Used in sample notebook intro_notebook.ipynb
+    "numpy", # Used in sample notebook intro_notebook.ipynb
+]
+
+test = [
+    "pytest",
+    "pytest-cov",
+    "black", #TODO: Make sure that this is what people want
+]
+
+docs = [
+    "sphinx==6.1.3", # Used to automatically generate documentation
+    "sphinx-rtd-theme==1.2.0", # Used to render documentation
+    "sphinx-autoapi==2.0.1", # Used to automatically generate api documentation
+    "nbconvert",
+    "nbsphinx",
+]
+
+benchmark = [
+    "lf-metric-emitter", # Used to send metrics to t
+    "memory-profiler"
+]
+
 [build-system]
-requires = ["setuptools>=42",
-            "setuptools_scm[toml]>=6.2",
-            "wheel"]
+requires = [
+    "setuptools>=62", # Used to build and package the Python project
+    "setuptools_scm>=6.2", # Gets release version from git. Makes it available programmatically
+]
 build-backend = "setuptools.build_meta"
 
+[tool.setuptools]
+zip-safe = false
+
+[tool.setuptools.package-data]
+surveySimPP = ["tests/data/*", "tests/data/*/*"]
+
 [tool.setuptools_scm]
+write_to = "src/survey_sim_pp/_version.py"
+
+[tool.pytest.ini_options]
+testpaths = [
+    "tests",
+    "surveySimPP",
+]
+filterwarnings = "error"
+
+[tool.black]
+line-length = 110
+
