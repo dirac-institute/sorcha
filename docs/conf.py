@@ -12,6 +12,8 @@
 #
 import os
 import sys
+from pkg_resources import get_distribution
+
 sys.path.insert(0, os.path.abspath('../'))
 
 # -- Project information -----------------------------------------------------
@@ -21,7 +23,6 @@ copyright = '2022'
 author = 'surveySimPP development team'
 
 # The full version, including alpha/beta/rc tags
-from pkg_resources import get_distribution
 release = get_distribution('surveySimPP').version
 
 
@@ -51,6 +52,4 @@ html_theme = 'sphinx_rtd_theme'
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-#html_static_path = ['_static']
-
-
+# html_static_path = ['_static']
