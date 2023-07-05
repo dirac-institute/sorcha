@@ -22,17 +22,21 @@ def setup_test_obs(num_copies=1):
     G = np.array([0.15, 0.15, 0.15, 0.15, 0.12, 0.12, 0.12, 0.12]*num_copies)
 
     return pd.DataFrame({'ObjID': objects, 'optFilter': optfilter,
-                                    'u-r': ur, 'g-r': gr, 'i-r': ir, 'z-r': zr,
-                                    'H_r': H, 'GS': G})
+                         'u-r': ur, 'g-r': gr, 'i-r': ir, 'z-r': zr,
+                         'H_r': H, 'GS': G})
+
 
 def setup_other_colors():
     return ['u-r', 'g-r', 'i-r', 'z-r']
 
+
 def setup_obs_filters():
     return ['r', 'u', 'g', 'i', 'z']
 
+
 def create_runtime_statement():
     return 'PPApplyColourOffsets(test_obs.copy(), "HG", othercolours, observing_filters, "r")'
+
 
 def create_setup_str(num_copies=1):
     return f'''
@@ -41,9 +45,8 @@ othercolours = setup_other_colors()
 observing_filters = setup_obs_filters()
 '''
 
-class TestBenchApplyColourOffsets:
-    
 
+class TestBenchApplyColourOffsets:
     '''Runtime benchmarking'''
     def test_bench_runtime(self):
 
@@ -58,12 +61,7 @@ class TestBenchApplyColourOffsets:
             t = timeit.Timer(
                 stmt=create_runtime_statement(),
                 setup=create_setup_str(n),
-                globals={
-                    'PPApplyColourOffsets': PPApplyColourOffsets,
-                    'setup_other_colors': setup_other_colors,
-                    'setup_test_obs': setup_test_obs,
-                    'setup_obs_filters': setup_obs_filters,
-                    },
+                globals=globals(),
                 )
 
             output = t.repeat(repeat=11, number=1)
