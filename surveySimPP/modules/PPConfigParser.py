@@ -382,8 +382,8 @@ def PPConfigFileParser(configfile, survey_name):
 
     elif (config_dict['camera_model']) == 'circle':
 
-        config_dict['fill_factor'], _ = PPGetValueAndFlag(config, 'FILTERINGPARAMETERS', 'fillfactor', 'float')
-        config_dict['circle_radius'], _ = PPGetValueAndFlag(config, 'PERFORMANCE', 'circleRadius', 'float')
+        config_dict['fill_factor'], _ = PPGetValueAndFlag(config, 'FOV', 'fill_factor', 'float')
+        config_dict['circle_radius'], _ = PPGetValueAndFlag(config, 'FOV', 'circle_radius', 'float')
 
         if not config_dict['fill_factor'] and not config_dict['circle_radius']:
             pplogger.error('ERROR: either "fill_factor" or "circle_radius" must be specified for circular footprint.')

@@ -24,7 +24,7 @@ def PPBrightLimit(observations, observing_filters, bright_limit):
 
     if type(bright_limit) is float:
 
-        observations_out = observations.drop(observations[observations['observedTrailedSourceMag'] < bright_limit].index)
+        observations_out = observations.drop(observations[observations['observedPSFMag'] < bright_limit].index)
 
     elif type(bright_limit) is list:
 
@@ -32,7 +32,7 @@ def PPBrightLimit(observations, observing_filters, bright_limit):
 
         # get the index of everything brighter than its designated saturation limit in filter
         for i, filt in enumerate(observing_filters):
-            ind = observations[(observations['optFilter'] == filt) & (observations['observedTrailedSourceMag'] < bright_limit[i])].index.values
+            ind = observations[(observations['optFilter'] == filt) & (observations['observedPSFMag'] < bright_limit[i])].index.values
             drop_index.append(ind.tolist())
 
         # then drop all at once (it's probably faster this way)
