@@ -96,12 +96,12 @@ zip-safe = false
 surveySimPP = ["tests/data/*", "tests/data/*/*"]
 
 [tool.setuptools_scm]
-write_to = "src/survey_sim_pp/_version.py"
+write_to = "src/surveySimPP/_version.py"
 
 [tool.pytest.ini_options]
 testpaths = [
     "tests",
-    "surveySimPP",
+    "src/surveySimPP",
 ]
 filterwarnings = "error"
 
