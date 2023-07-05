@@ -80,7 +80,8 @@ def PPGetSeparation(obj_RA, obj_Dec, cen_RA, cen_Dec):
 
 
 def PPCircleFootprint(observations, circle_radius):
-    """Simple function which removes objects which lay outside of a circle
+    """
+    Simple function which removes objects which lay outside of a circle
     of given radius centred on the field centre.
 
     Parameters:
@@ -96,16 +97,21 @@ def PPCircleFootprint(observations, circle_radius):
 
     """
 
-    # note the slightly convoluted syntax in this function seems to be necessary
-    # to avoid the dreaded chained indexing Pandas warnings.
+    data_coords = SkyCoord(
+        ra=observations["AstRA(deg)"].values,
+        dec=observations["AstDec(deg)"].values,
+        unit="deg"
+    )
 
-    object_separation = observations.apply(lambda x: PPGetSeparation(x["AstRA(deg)"],
-                                                                     x["AstDec(deg)"],
-                                                                     x.fieldRA,
-                                                                     x.fieldDec),
-                                           axis=1)
+    field_coords = SkyCoord(
+        ra=observations["fieldRA"].values,
+        dec=observations["fieldDec"].values,
+        unit="deg"
+    )
 
-    observations['object_separation'] = object_separation
+    separations = data_coords.separation(field_coords).degree
+    observations["object_separation"] = separations
+
     new_observations = observations[observations['object_separation'] < circle_radius]
 
     new_observations.reset_index(drop=True, inplace=True)
