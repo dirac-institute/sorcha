@@ -36,7 +36,7 @@ def PPreadColoursUser(oif_out, colour, mean, stdev, indataf=None):
 
     nr = oif_out.shape[0]
 
-    new_padafr = oif_out[['ObjID']]
+    new_padafr = oif_out[["ObjID"]]
 
     clrsnp = np.random.random(size=nr)
     clrsnp = (clrsnp - 0.5) * stdev + mean

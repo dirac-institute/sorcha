@@ -20,10 +20,17 @@
 import numpy as np
 
 
-def randomizeAstrometry(df, rng, raName='AstRA(deg)', decName='AstDec(deg)',
-                        raRndName='AstRARnd(deg)', decRndName='AstDecRnd(deg)',
-                        sigName='AstSig(deg)', radecUnits='deg', sigUnits='mas'):
-
+def randomizeAstrometry(
+    df,
+    rng,
+    raName="AstRA(deg)",
+    decName="AstDec(deg)",
+    raRndName="AstRARnd(deg)",
+    decRndName="AstDecRnd(deg)",
+    sigName="AstSig(deg)",
+    radecUnits="deg",
+    sigUnits="mas",
+):
     """
     Randomize astrometry with a normal distribution around the actual RADEC pointing.
     The randomized values are added to the input pandas data frame.
@@ -54,20 +61,20 @@ def randomizeAstrometry(df, rng, raName='AstRA(deg)', decName='AstDec(deg)',
     deg2rad = np.deg2rad
     zeros = np.zeros
 
-    if (radecUnits == 'deg'):
+    if radecUnits == "deg":
         center = radec2icrf(df[raName], df[decName]).T
-    elif (radecUnits == 'mas'):
-        center = radec2icrf(df[raName] / 3600000., df[decName] / 3600000.).T
-    elif (radecUnits == 'rad'):
+    elif radecUnits == "mas":
+        center = radec2icrf(df[raName] / 3600000.0, df[decName] / 3600000.0).T
+    elif radecUnits == "rad":
         center = radec2icrf(df[raName], df[decName], deg=False).T
     else:
         print("Bad units were provided for RA and Dec.")
 
-    if (sigUnits == 'deg'):
+    if sigUnits == "deg":
         sigmarad = deg2rad(df[sigName])
-    elif (sigUnits == 'mas'):
-        sigmarad = deg2rad(df[sigName] / 3600000.)
-    elif (sigUnits == 'rad'):
+    elif sigUnits == "mas":
+        sigmarad = deg2rad(df[sigName] / 3600000.0)
+    elif sigUnits == "rad":
         sigmarad = df[sigName]
     else:
         print("Bad units were provided for astrometric uncertainty.")
@@ -77,7 +84,7 @@ def randomizeAstrometry(df, rng, raName='AstRA(deg)', decName='AstDec(deg)',
 
     xyz = sampleNormalFOV(center, sigmarad, rng, ndim=3)
 
-    if (radecUnits == 'deg'):
+    if radecUnits == "deg":
         [ra, dec] = icrf2radec(xyz[:, 0], xyz[:, 1], xyz[:, 2], deg=True)
 
     else:
@@ -133,7 +140,7 @@ def sampleNormalFOV(center, sigma, rng, ndim=3):
     return vec
 
 
-def randomizePhotometry(df, rng, magName='Filtermag', magRndName='FiltermagRnd', sigName='FiltermagSig'):
+def randomizePhotometry(df, rng, magName="Filtermag", magRndName="FiltermagRnd", sigName="FiltermagSig"):
     """
     Randomize photometry with normal distribution around magName value.
 
@@ -232,10 +239,10 @@ def icrf2radec(x, y, z, deg=True):
     arcsin = np.arcsin
     rad2deg = np.rad2deg
     modulo = np.mod
-    pix2 = 2. * np.pi
+    pix2 = 2.0 * np.pi
 
     pos = array([x, y, z])
-    if (pos.ndim > 1):
+    if pos.ndim > 1:
         r = norm(pos, axis=0)
     else:
         r = norm(pos)
@@ -247,7 +254,7 @@ def icrf2radec(x, y, z, deg=True):
     phi = arctan2(yu, xu)
     delta = arcsin(zu)
 
-    if (deg):
+    if deg:
         ra = modulo(rad2deg(phi) + 360, 360)
         dec = rad2deg(delta)
     else:
@@ -280,7 +287,7 @@ def radec2icrf(ra, dec, deg=True):
     cos = np.cos
     sin = np.sin
 
-    if (deg):
+    if deg:
         a = deg2rad(ra)
         d = deg2rad(dec)
     else:

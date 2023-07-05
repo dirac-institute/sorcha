@@ -41,17 +41,21 @@ def calcDetectionProbability(mag, limmag, fillFactor=1.0, w=0.1):
     P (float/array of floats): probability of detection.
     """
 
-    P = fillFactor / (1. + np.exp((mag - limmag) / w))
+    P = fillFactor / (1.0 + np.exp((mag - limmag) / w))
 
     return P
 
 
-def PPDetectionProbability(oif_df, trailing_losses=False, trailing_loss_name='dmagDetect',
-                           magnitude_name="observedPSFMag",
-                           limiting_magnitude_name="fiveSigmaDepthAtSource",
-                           field_id_name="FieldID",
-                           fillFactor=1.0, w=0.1):
-
+def PPDetectionProbability(
+    oif_df,
+    trailing_losses=False,
+    trailing_loss_name="dmagDetect",
+    magnitude_name="observedPSFMag",
+    limiting_magnitude_name="fiveSigmaDepthAtSource",
+    field_id_name="FieldID",
+    fillFactor=1.0,
+    w=0.1,
+):
     """
     Find probability of observations being observable for objectInField output.
     Wrapper for calcDetectionProbability which takes into account column names
@@ -77,6 +81,13 @@ def PPDetectionProbability(oif_df, trailing_losses=False, trailing_loss_name='dm
     """
 
     if not trailing_losses:
-        return calcDetectionProbability(oif_df[magnitude_name], oif_df[limiting_magnitude_name], fillFactor, w)
+        return calcDetectionProbability(
+            oif_df[magnitude_name], oif_df[limiting_magnitude_name], fillFactor, w
+        )
     elif trailing_losses:
-        return calcDetectionProbability(oif_df[magnitude_name] + oif_df[trailing_loss_name], oif_df[limiting_magnitude_name], fillFactor, w)
+        return calcDetectionProbability(
+            oif_df[magnitude_name] + oif_df[trailing_loss_name],
+            oif_df[limiting_magnitude_name],
+            fillFactor,
+            w,
+        )

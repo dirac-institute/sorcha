@@ -1,4 +1,4 @@
-def PPSNRLimit(observations, sigma_limit=2.):
+def PPSNRLimit(observations, sigma_limit=2.0):
     """
     Filter that performs a straight SNR cut based on a limit.
 
@@ -15,7 +15,7 @@ def PPSNRLimit(observations, sigma_limit=2.):
 
     """
 
-    observations = observations[observations['SNR'] > sigma_limit]
+    observations = observations[observations["SNR"] > sigma_limit]
     observations.reset_index(drop=True, inplace=True)
 
     return observations

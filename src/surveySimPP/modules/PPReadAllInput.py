@@ -42,46 +42,56 @@ def PPReadAllInput(cmd_args, configs, filterpointing, startChunk, incrStep, verb
     pplogger = logging.getLogger(__name__)
     verboselog = pplogger.info if verbose else lambda *a, **k: None
 
-    verboselog('Reading input orbit file: ' + cmd_args['orbinfile'])
-    padaor = PPReadOrbitFile(cmd_args['orbinfile'], startChunk, incrStep, configs['aux_format'])
+    verboselog("Reading input orbit file: " + cmd_args["orbinfile"])
+    padaor = PPReadOrbitFile(cmd_args["orbinfile"], startChunk, incrStep, configs["aux_format"])
 
-    verboselog('Reading input physical parameters: ' + cmd_args['paramsinput'])
-    padacl = PPReadPhysicalParameters(cmd_args['paramsinput'], startChunk, incrStep, configs['aux_format'])
-    if (configs['comet_activity'] == 'comet'):
-        verboselog('Reading cometary parameters: ' + cmd_args['cometinput'])
-        padaco = PPReadCometaryParameters(cmd_args['cometinput'], startChunk, incrStep, configs['aux_format'])
+    verboselog("Reading input physical parameters: " + cmd_args["paramsinput"])
+    padacl = PPReadPhysicalParameters(cmd_args["paramsinput"], startChunk, incrStep, configs["aux_format"])
+    if configs["comet_activity"] == "comet":
+        verboselog("Reading cometary parameters: " + cmd_args["cometinput"])
+        padaco = PPReadCometaryParameters(cmd_args["cometinput"], startChunk, incrStep, configs["aux_format"])
 
-    objid_list = padacl['ObjID'].unique().tolist()
+    objid_list = padacl["ObjID"].unique().tolist()
 
-    if cmd_args['makeTemporaryEphemerisDatabase'] or cmd_args['readTemporaryEphemerisDatabase']:
+    if cmd_args["makeTemporaryEphemerisDatabase"] or cmd_args["readTemporaryEphemerisDatabase"]:
         # read from temporary database
-        verboselog('Reading from temporary ephemeris database.')
-        padafr = PPReadTemporaryEphemerisDatabase(cmd_args['readTemporaryEphemerisDatabase'], objid_list)
+        verboselog("Reading from temporary ephemeris database.")
+        padafr = PPReadTemporaryEphemerisDatabase(cmd_args["readTemporaryEphemerisDatabase"], objid_list)
     else:
         try:
-            verboselog('Reading input ephemerides from: ' + cmd_args['oifoutput'])
-            padafr = PPReadEphemerides(cmd_args['oifoutput'], configs['ephemerides_type'], configs["eph_format"])
+            verboselog("Reading input ephemerides from: " + cmd_args["oifoutput"])
+            padafr = PPReadEphemerides(
+                cmd_args["oifoutput"], configs["ephemerides_type"], configs["eph_format"]
+            )
 
-            padafr = padafr[padafr['ObjID'].isin(objid_list)]
+            padafr = padafr[padafr["ObjID"].isin(objid_list)]
 
         except MemoryError:
-            pplogger.error('ERROR: insufficient memory. Try to run with -dw command line flag or reduce sizeSerialChunk.')
-            sys.exit('ERROR: insufficient memory. Try to run with -dw command line flag or reduce sizeSerialChunk.')
+            pplogger.error(
+                "ERROR: insufficient memory. Try to run with -dw command line flag or reduce sizeSerialChunk."
+            )
+            sys.exit(
+                "ERROR: insufficient memory. Try to run with -dw command line flag or reduce sizeSerialChunk."
+            )
 
-    verboselog('Checking if object IDs in orbits, physical parameters and pointing simulation input files match...')
+    verboselog(
+        "Checking if object IDs in orbits, physical parameters and pointing simulation input files match..."
+    )
     PPCheckInputObjectIDs(padaor, padacl, padafr)
 
-    if (configs['comet_activity'] == 'comet'):
+    if configs["comet_activity"] == "comet":
         PPCheckInputObjectIDs(padaor, padaco, padafr)
 
-    verboselog('Joining physical parameters and orbital data with simulation data...')
+    verboselog("Joining physical parameters and orbital data with simulation data...")
     observations = PPJoinEphemeridesAndParameters(padafr, padacl)
     observations = PPJoinEphemeridesAndOrbits(observations, padaor)
-    if (configs['comet_activity'] == 'comet'):
-        verboselog('Joining cometary data...')
+    if configs["comet_activity"] == "comet":
+        verboselog("Joining cometary data...")
         observations = PPJoinEphemeridesAndParameters(observations, padaco)
 
-    verboselog('Joining info from pointing database with simulation data and dropping observations in non-requested filters...')
+    verboselog(
+        "Joining info from pointing database with simulation data and dropping observations in non-requested filters..."
+    )
     observations = PPMatchPointingToObservations(observations, filterpointing)
 
     return observations

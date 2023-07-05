@@ -29,13 +29,17 @@ def PPReadPointingDatabase(bsdbname, observing_filters, dbquery):
     try:
         df = pd.read_sql_query(dbquery, con)
     except Exception:
-        pplogger.error('ERROR: PPReadPointingDatabase: SQL query on pointing database failed. Check that the query is correct in the config file.')
-        sys.exit('ERROR: PPReadPointingDatabase: SQL query on pointing database failed. Check that the query is correct in the config file.')
+        pplogger.error(
+            "ERROR: PPReadPointingDatabase: SQL query on pointing database failed. Check that the query is correct in the config file."
+        )
+        sys.exit(
+            "ERROR: PPReadPointingDatabase: SQL query on pointing database failed. Check that the query is correct in the config file."
+        )
 
-    df['observationId_'] = df['observationId']
-    df = df.rename(columns={'observationId': 'FieldID'})
-    df = df.rename(columns={'observationId': 'FieldID'})
-    df = df.rename(columns={'filter': 'optFilter'})  # not to confuse with the pandas filter command
+    df["observationId_"] = df["observationId"]
+    df = df.rename(columns={"observationId": "FieldID"})
+    df = df.rename(columns={"observationId": "FieldID"})
+    df = df.rename(columns={"filter": "optFilter"})  # not to confuse with the pandas filter command
     dfo = df[df.optFilter.isin(observing_filters)]
 
     return dfo

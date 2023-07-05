@@ -28,9 +28,9 @@ def PPApplyFOVFilter(observations, configs, rng, verbose=False):
     pplogger = logging.getLogger(__name__)
     verboselog = pplogger.info if verbose else lambda *a, **k: None
 
-    if configs['camera_model'] == 'footprint':
-        verboselog('Applying sensor footprint filter...')
-        footprintf = PPFootprintFilter.Footprint(configs['footprint_path'])
+    if configs["camera_model"] == "footprint":
+        verboselog("Applying sensor footprint filter...")
+        footprintf = PPFootprintFilter.Footprint(configs["footprint_path"])
         onSensor, detectorIDs = footprintf.applyFootprint(observations)
 
         observations = observations.iloc[onSensor].copy()
@@ -38,14 +38,14 @@ def PPApplyFOVFilter(observations, configs, rng, verbose=False):
 
         observations = observations.sort_index()
 
-    if configs['camera_model'] == 'circle':
-        verboselog('FOV is circular...')
-        if configs['circle_radius']:
-            verboselog('Circle radius is set. Applying circular footprint filter...')
-            observations = PPCircleFootprint(observations, configs['circle_radius'])
-        if configs['fill_factor']:
-            verboselog('Fill factor is set. Removing random observations to mimic chip gaps.')
-            observations = PPSimpleSensorArea(observations, rng, configs['fill_factor'])
+    if configs["camera_model"] == "circle":
+        verboselog("FOV is circular...")
+        if configs["circle_radius"]:
+            verboselog("Circle radius is set. Applying circular footprint filter...")
+            observations = PPCircleFootprint(observations, configs["circle_radius"])
+        if configs["fill_factor"]:
+            verboselog("Fill factor is set. Removing random observations to mimic chip gaps.")
+            observations = PPSimpleSensorArea(observations, rng, configs["fill_factor"])
 
     return observations
 
@@ -99,17 +99,15 @@ def PPCircleFootprint(observations, circle_radius):
     # note the slightly convoluted syntax in this function seems to be necessary
     # to avoid the dreaded chained indexing Pandas warnings.
 
-    object_separation = observations.apply(lambda x: PPGetSeparation(x["AstRA(deg)"],
-                                                                     x["AstDec(deg)"],
-                                                                     x.fieldRA,
-                                                                     x.fieldDec),
-                                           axis=1)
+    object_separation = observations.apply(
+        lambda x: PPGetSeparation(x["AstRA(deg)"], x["AstDec(deg)"], x.fieldRA, x.fieldDec), axis=1
+    )
 
-    observations['object_separation'] = object_separation
-    new_observations = observations[observations['object_separation'] < circle_radius]
+    observations["object_separation"] = object_separation
+    new_observations = observations[observations["object_separation"] < circle_radius]
 
     new_observations.reset_index(drop=True, inplace=True)
-    new_observations = new_observations.drop('object_separation', axis=1)
+    new_observations = new_observations.drop("object_separation", axis=1)
 
     return new_observations
 

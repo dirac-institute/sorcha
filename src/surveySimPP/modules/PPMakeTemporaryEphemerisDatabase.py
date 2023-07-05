@@ -33,19 +33,21 @@ def PPMakeTemporaryEphemerisDatabase(oif_output, out_fn, inputformat, chunksize=
 
     cur = cnx.cursor()
 
-    cmd = 'drop table if exists interm'
+    cmd = "drop table if exists interm"
     cur.execute(cmd)
 
-    if (inputformat == 'whitespace'):
-        PPChunkedTemporaryDatabaseCreation(cnx, oif_output, chunksize, delimiter='whitespace')
-    elif (inputformat == 'comma') or (inputformat == 'csv'):
-        PPChunkedTemporaryDatabaseCreation(cnx, oif_output, chunksize, delimiter=',')
-    elif (inputformat == 'h5') or (inputformat == 'hdf5') or (inputformat == 'HDF5'):
+    if inputformat == "whitespace":
+        PPChunkedTemporaryDatabaseCreation(cnx, oif_output, chunksize, delimiter="whitespace")
+    elif (inputformat == "comma") or (inputformat == "csv"):
+        PPChunkedTemporaryDatabaseCreation(cnx, oif_output, chunksize, delimiter=",")
+    elif (inputformat == "h5") or (inputformat == "hdf5") or (inputformat == "HDF5"):
         padafr = pd.read_hdf(oif_output).reset_index(drop=True)
-        padafr.to_sql('interm', con=cnx, if_exists='append', index=False)
+        padafr.to_sql("interm", con=cnx, if_exists="append", index=False)
     else:
-        pplogger.error('ERROR: PPMakeTemporaryEphemerisDatabase: unknown format for ephemeris simulation results.')
-        sys.exit('ERROR: PPMakeTemporaryEphemerisDatabase: unknown format for ephemeris simulation results.')
+        pplogger.error(
+            "ERROR: PPMakeTemporaryEphemerisDatabase: unknown format for ephemeris simulation results."
+        )
+        sys.exit("ERROR: PPMakeTemporaryEphemerisDatabase: unknown format for ephemeris simulation results.")
 
     return out_fn
 
@@ -79,20 +81,24 @@ def PPChunkedTemporaryDatabaseCreation(cnx, oif_output, chunkSize, delimiter):
     startChunk = 0
     endChunk = 0
 
-    while (endChunk <= n_rows):
+    while endChunk <= n_rows:
         endChunk = int(startChunk + chunkSize)
 
-        if (n_rows - startChunk >= chunkSize):
+        if n_rows - startChunk >= chunkSize:
             incrStep = chunkSize
         else:
             incrStep = n_rows - startChunk
 
-        if delimiter == 'whitespace':
-            interm = PPSkipOifHeader(oif_output, 'ObjID', delim_whitespace=True, skiprows=range(1, startChunk + 1), nrows=incrStep)
-        elif delimiter == ',':
-            interm = PPSkipOifHeader(oif_output, 'ObjID', delimiter=',', skiprows=range(1, startChunk + 1), nrows=incrStep)
+        if delimiter == "whitespace":
+            interm = PPSkipOifHeader(
+                oif_output, "ObjID", delim_whitespace=True, skiprows=range(1, startChunk + 1), nrows=incrStep
+            )
+        elif delimiter == ",":
+            interm = PPSkipOifHeader(
+                oif_output, "ObjID", delimiter=",", skiprows=range(1, startChunk + 1), nrows=incrStep
+            )
 
-        interm.drop(['V', 'V(H=0)'], axis=1, inplace=True, errors='ignore')
+        interm.drop(["V", "V(H=0)"], axis=1, inplace=True, errors="ignore")
         interm.to_sql("interm", con=cnx, if_exists="append", index=False)
 
         startChunk = int(startChunk + chunkSize)

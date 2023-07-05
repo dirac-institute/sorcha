@@ -1,7 +1,4 @@
-__all__ = [
-    'Comet',
-    'ChuryumovGerasimenko'
-]
+__all__ = ["Comet", "ChuryumovGerasimenko"]
 
 import numpy as np
 
@@ -51,30 +48,21 @@ class Comet:
 
     # Willmer 2018, ApJS 236, 47
     mv_sun = -26.76  # Vega mag
-    m_sun = {  # AB mag
-        'u': -25.30,
-        'g': -26.52,
-        'r': -26.93,
-        'i': -27.05,
-        'z': -27.07,
-        'y': -27.07
-    }
+    m_sun = {"u": -25.30, "g": -26.52, "r": -26.93, "i": -27.05, "z": -27.07, "y": -27.07}  # AB mag
 
     def __init__(self, **kwargs):
-        self.Hv = kwargs.get(
-            'Hv', R2H(kwargs.get('R', 1.0), self.mv_sun))
+        self.Hv = kwargs.get("Hv", R2H(kwargs.get("R", 1.0), self.mv_sun))
 
-        self.R = kwargs.get(
-            'R', H2R(kwargs.get('Hv', self.Hv), self.mv_sun))
+        self.R = kwargs.get("R", H2R(kwargs.get("Hv", self.Hv), self.mv_sun))
 
-        self.k = kwargs.get('k', -2)
+        self.k = kwargs.get("k", -2)
 
-        self.afrho1 = kwargs.get('afrho1')
+        self.afrho1 = kwargs.get("afrho1")
         if self.afrho1 is None:
-            self.afrho1 = kwargs.get('afrho_q') * kwargs.get('q')**-self.k
+            self.afrho1 = kwargs.get("afrho_q") * kwargs.get("q") ** -self.k
 
-        self.Phi_c = kwargs.get('Phi_c', phase_HalleyMarcus)
-        self.Phi_n = kwargs.get('Phi_n', make_phase_LogLinear(0.04))
+        self.Phi_c = kwargs.get("Phi_c", phase_HalleyMarcus)
+        self.Phi_n = kwargs.get("Phi_n", make_phase_LogLinear(0.04))
 
         # self.activity = kwargs.get('Afrho2A', 100 / 4 / np.pi)
         # self.nu_range = kwargs.get('nu_range', [-180, 180])
@@ -99,17 +87,17 @@ class Comet:
 
         R = H2R(Hv, cls.mv_sun)
 
-        if comet_class.lower() == 'short':
+        if comet_class.lower() == "short":
             k = -4
             afrho1 = 100 * R**2
-        elif comet_class.lower() == 'oort':
+        elif comet_class.lower() == "oort":
             k = -2
             afrho1 = 100 * R**2
-        elif comet_class.lower() == 'mbc':
+        elif comet_class.lower() == "mbc":
             k = -6
             afrho1 = 100 * R**2
         else:
-            raise ValueError('Invalid comet_class: {}'.format(comet_class))
+            raise ValueError("Invalid comet_class: {}".format(comet_class))
 
         return cls(R=R, afrho1=afrho1, k=k)
 
@@ -133,9 +121,9 @@ class Comet:
         # allows for sbpy Ephem objects, LSST MAF ssObs, and plain
         # dictionaries
         return {
-            'rh': self._get_value(geom, ('rh', 'helio_dist'), 'au'),
-            'delta': self._get_value(geom, ('delta', 'geo_dist'), 'au'),
-            'phase': self._get_value(geom, ('phase', 'alpha'), 'deg')
+            "rh": self._get_value(geom, ("rh", "helio_dist"), "au"),
+            "delta": self._get_value(geom, ("delta", "geo_dist"), "au"),
+            "phase": self._get_value(geom, ("phase", "alpha"), "deg"),
         }
 
     def afrho(self, geom):
@@ -154,7 +142,7 @@ class Comet:
 
         """
         g = self._normalize_geom(geom)
-        afrho = self.afrho1 * g['rh']**self.k * self.Phi_c(g['phase'])
+        afrho = self.afrho1 * g["rh"] ** self.k * self.Phi_c(g["phase"])
         return afrho
 
     def mag(self, geom, bandpass, rap=1, nucleus=True):
@@ -177,20 +165,21 @@ class Comet:
 
         """
         g = self._normalize_geom(geom)
-        delta = 14959787070000 * g['delta']  # au to cm
+        delta = 14959787070000 * g["delta"]  # au to cm
 
         afrho = self.afrho(g)
-        rho = 725e5 * g['delta'] * rap  # arcsec to projected cm
-        dm = -2.5 * np.log10(afrho * rho / (2 * g['rh'] * delta)**2)
+        rho = 725e5 * g["delta"] * rap  # arcsec to projected cm
+        dm = -2.5 * np.log10(afrho * rho / (2 * g["rh"] * delta) ** 2)
         coma = self.m_sun[bandpass] + dm
 
         if nucleus:
             color = self.m_sun[bandpass] - self.mv_sun
             H = self.Hv + color
-            nucleus = (H + 5 * np.log10(g['rh']) + 5 * np.log10(g['delta'])
-                       - 2.5 * np.log10(self.Phi_n(g['phase'])))
+            nucleus = (
+                H + 5 * np.log10(g["rh"]) + 5 * np.log10(g["delta"]) - 2.5 * np.log10(self.Phi_n(g["phase"]))
+            )
 
-            m = -2.5 * np.log10(10**(-0.4 * coma) + 10**(-0.4 * nucleus))
+            m = -2.5 * np.log10(10 ** (-0.4 * coma) + 10 ** (-0.4 * nucleus))
         else:
             m = coma
 

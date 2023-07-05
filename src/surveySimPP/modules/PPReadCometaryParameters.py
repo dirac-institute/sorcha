@@ -31,10 +31,14 @@ def PPReadCometaryParameters(comet_datafile, beginLoc, chunkSize, filesep):
 
     pplogger = logging.getLogger(__name__)
 
-    if (filesep == "whitespace"):
-        padafr = pd.read_csv(comet_datafile, delim_whitespace=True, skiprows=range(1, beginLoc + 1), nrows=chunkSize, header=0)
-    elif (filesep == "csv" or filesep == "comma"):
-        padafr = pd.read_csv(comet_datafile, delimiter=',', skiprows=range(1, beginLoc + 1), nrows=chunkSize, header=0)
+    if filesep == "whitespace":
+        padafr = pd.read_csv(
+            comet_datafile, delim_whitespace=True, skiprows=range(1, beginLoc + 1), nrows=chunkSize, header=0
+        )
+    elif filesep == "csv" or filesep == "comma":
+        padafr = pd.read_csv(
+            comet_datafile, delimiter=",", skiprows=range(1, beginLoc + 1), nrows=chunkSize, header=0
+        )
 
     padafr = padafr.rename(columns=lambda x: x.strip())
 
@@ -42,11 +46,11 @@ def PPReadCometaryParameters(comet_datafile, beginLoc, chunkSize, filesep):
 
     if padafr.isnull().values.any():
         pdt = padafr[padafr.isna().any(axis=1)]
-        inds = str(pdt['ObjID'].values)
+        inds = str(pdt["ObjID"].values)
         outstr = "ERROR: uninitialised values when reading comet data file. ObjID: " + str(inds)
         pplogger.error(outstr)
         sys.exit(outstr)
 
-    padafr['ObjID'] = padafr['ObjID'].astype(str)
+    padafr["ObjID"] = padafr["ObjID"].astype(str)
 
     return padafr

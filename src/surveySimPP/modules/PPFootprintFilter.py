@@ -28,8 +28,7 @@ cos = np.cos
 
 
 class Detector:
-
-    def __init__(self, points, ID=0, units='radians'):
+    def __init__(self, points, ID=0, units="radians"):
         """
         Initiates a detector object.
 
@@ -54,7 +53,7 @@ class Detector:
         self.dec = points[1]
         self.units = units
 
-        if units == 'degrees' or units == 'deg':
+        if units == "degrees" or units == "deg":
             self.deg2rad()
 
         # generate focal plane coordinates
@@ -71,7 +70,7 @@ class Detector:
         self.centerx = np.sum(self.x) / len(self.x)
         self.centery = np.sum(self.y) / len(self.y)
 
-    def ison(self, point, ϵ=10.**(-11), plot=False):
+    def ison(self, point, ϵ=10.0 ** (-11), plot=False):
         """
         Determines whether a point (or array of points) falls on the
         detector.
@@ -93,8 +92,8 @@ class Detector:
         # if single point, needs to be an array of single element arrays
 
         # check whether point is in circle bounding the detector
-        r2 = np.max((self.x - self.centerx)**2 + (self.y - self.centery)**2)
-        selectedidx = np.where((point[0] - self.centerx)**2 + (point[1] - self.centery)**2 <= r2)[0]
+        r2 = np.max((self.x - self.centerx) ** 2 + (self.y - self.centery) ** 2)
+        selectedidx = np.where((point[0] - self.centerx) ** 2 + (point[1] - self.centery) ** 2 <= r2)[0]
 
         selected = point[:, selectedidx]
         xselected = point[0][selectedidx]
@@ -103,15 +102,13 @@ class Detector:
         # check whether selected fall on the detector
         # compare true area to the segmented area
 
-        detectedidx = np.where(
-            np.abs(self.segmentedArea(selected) - self.trueArea()) <= ϵ
-        )[0]
+        detectedidx = np.where(np.abs(self.segmentedArea(selected) - self.trueArea()) <= ϵ)[0]
 
         if plot:
             x = xselected[detectedidx]
             y = yselected[detectedidx]
 
-            plt.scatter(x, y, color='red', s=3.)
+            plt.scatter(x, y, color="red", s=3.0)
 
         return selectedidx[detectedidx]
 
@@ -136,9 +133,7 @@ class Detector:
         xrolled = np.roll(x, 1)
         yrolled = np.roll(y, 1)
 
-        area = 0.5 * np.sum(
-            np.abs(x * yrolled - y * xrolled)
-        )
+        area = 0.5 * np.sum(np.abs(x * yrolled - y * xrolled))
 
         return area
 
@@ -168,17 +163,17 @@ class Detector:
             y = self.y - point[1]
 
         else:
-            x = ((np.zeros((ncorners, point.shape[1])).T + self.x).T - point[0])
-            y = ((np.zeros((ncorners, point.shape[1])).T + self.y).T - point[1])  # copy over an array to make broadcasting work
+            x = (np.zeros((ncorners, point.shape[1])).T + self.x).T - point[0]
+            y = (np.zeros((ncorners, point.shape[1])).T + self.y).T - point[
+                1
+            ]  # copy over an array to make broadcasting work
 
         xrolled = np.roll(x, 1, axis=0)
         yrolled = np.roll(y, 1, axis=0)
         area = []
 
         for i in range(len(self.x)):
-            area.append(
-                np.abs(x[i] * yrolled[i] - y[i] * xrolled[i])
-            )
+            area.append(np.abs(x[i] * yrolled[i] - y[i] * xrolled[i]))
 
         return 0.5 * (np.sum(area, axis=0))
 
@@ -243,12 +238,12 @@ class Detector:
 
         """
 
-        if self.units == 'radians':
+        if self.units == "radians":
             self.x = np.degrees(self.x)
             self.y = np.degrees(self.y)
             self.centerx = np.degrees(self.centerx)
             self.centery = np.degrees(self.centery)
-            self.units = 'degrees'
+            self.units = "degrees"
         else:
             print("Units are already degrees")
 
@@ -275,7 +270,7 @@ class Detector:
         else:
             print("Units are already radians")
 
-    def plot(self, θ=0.0, color='gray', units='rad', annotate=False):
+    def plot(self, θ=0.0, color="gray", units="rad", annotate=False):
         """
         Plots the footprint for an individual sensor. Currently not on the
         focal plane, just the sky coordinates. Relatively minor difference
@@ -301,7 +296,7 @@ class Detector:
         """
 
         detector = self.rotateDetector(θ)
-        if units == 'deg':
+        if units == "deg":
             detector.rad2deg()
         nd = len(self.x)
         x = np.zeros(nd + 1)
@@ -317,7 +312,6 @@ class Detector:
 
 
 class Footprint:
-
     def __init__(self, path, detectorName="detector"):
         """
         Initiates a Footprint object.
@@ -339,10 +333,18 @@ class Footprint:
         # the center of the camera should be the origin
         allcornersdf = pd.read_csv(path)
 
-        self.detectors = [Detector(np.array((
-            allcornersdf.loc[allcornersdf[detectorName] == i, 'x'],
-            allcornersdf.loc[allcornersdf[detectorName] == i, 'y'])), i)
-            for i in range(len(allcornersdf[detectorName].unique()))]
+        self.detectors = [
+            Detector(
+                np.array(
+                    (
+                        allcornersdf.loc[allcornersdf[detectorName] == i, "x"],
+                        allcornersdf.loc[allcornersdf[detectorName] == i, "y"],
+                    )
+                ),
+                i,
+            )
+            for i in range(len(allcornersdf[detectorName].unique()))
+        ]
 
         self.N = len(self.detectors)
 
@@ -350,7 +352,7 @@ class Footprint:
         for i in range(self.N):
             self.detectors[i].sortCorners()
 
-    def plot(self, θ=0., color='gray', units='rad', annotate=False):
+    def plot(self, θ=0.0, color="gray", units="rad", annotate=False):
         """
         Plots the footprint. Currently not on the focal plane, just the sky
         coordinates. Relatively minor difference (width of footprint for LSST
@@ -378,14 +380,15 @@ class Footprint:
             self.detectors[i].plot(θ=θ, color=color, units=units, annotate=annotate)
 
     def applyFootprint(
-        self, field_df,
+        self,
+        field_df,
         ra_name="AstRA(deg)",
         dec_name="AstDec(deg)",
         field_name="FieldID",
-        ra_name_field='fieldRA',
+        ra_name_field="fieldRA",
         dec_name_field="fieldDec",
         rot_name_field="rotSkyPos",
-                      ):
+    ):
         """
         Determine whether detections fall on the sensors defined by the
         footprint. Also returns the an ID for the sensor a detection is made
@@ -474,15 +477,11 @@ def radec2focalplane(ra, dec, fieldra, fielddec, fieldID=None):
     """
 
     # convert to cartesian coordiantes on unit sphere
-    observation_vectors = np.array(
-        [cos(ra) * np.cos(dec),  # x
-         sin(ra) * np.cos(dec),  # y
-         sin(dec)])              # z
+    observation_vectors = np.array([cos(ra) * np.cos(dec), sin(ra) * np.cos(dec), sin(dec)])  # x  # y  # z
 
     field_vectors = np.array(
-        [cos(fieldra) * np.cos(fielddec),  # x
-         sin(fieldra) * np.cos(fielddec),  # y
-         sin(fielddec)])                   # z
+        [cos(fieldra) * np.cos(fielddec), sin(fieldra) * np.cos(fielddec), sin(fielddec)]  # x  # y
+    )  # z
 
     # make the basis vectors for the fields of view
     # the "x" basis is easy, 90 d rotation of the x, y components
@@ -501,7 +500,7 @@ def radec2focalplane(ra, dec, fieldra, fielddec, fieldID=None):
     # may or may not add, benefits are likely negligible
 
     # extend observation vectors to plane tangent to field pointings
-    k = 1. / np.sum(field_vectors * observation_vectors, axis=0)
+    k = 1.0 / np.sum(field_vectors * observation_vectors, axis=0)
     # np.sum(field_vectors * field_vectors, axis=0) / np.sum(field_vectors * observation_vectors, axis=0)
     observation_vectors *= k
 

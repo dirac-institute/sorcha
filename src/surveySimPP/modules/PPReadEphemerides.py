@@ -35,7 +35,7 @@ def PPReadEphemerides(eph_output, ephemerides_type, inputformat):
 
     ephtypeci = ephemerides_type.casefold()
 
-    if (ephtypeci == 'oif'):
+    if ephtypeci == "oif":
         padafr = PPReadOif.PPReadOif(eph_output, inputformat)
     else:
         pplogger.error("PPReadEphemerides: invalid value for ephemerides_type: " + str(ephemerides_type))
@@ -46,14 +46,41 @@ def PPReadEphemerides(eph_output, ephemerides_type, inputformat):
 
     # check the necessary columns exist
 
-    cols = ['ObjID', 'FieldID', 'FieldMJD', 'AstRange(km)', 'AstRangeRate(km/s)', 'AstRA(deg)',
-            'AstRARate(deg/day)', 'AstDec(deg)', 'AstDecRate(deg/day)', 'Ast-Sun(J2000x)(km)', 'Ast-Sun(J2000y)(km)',
-            'Ast-Sun(J2000z)(km)', 'Ast-Sun(J2000vx)(km/s)', 'Ast-Sun(J2000vy)(km/s)', 'Ast-Sun(J2000vz)(km/s)',
-            'Obs-Sun(J2000x)(km)', 'Obs-Sun(J2000y)(km)', 'Obs-Sun(J2000z)(km)', 'Obs-Sun(J2000vx)(km/s)',
-            'Obs-Sun(J2000vy)(km/s)', 'Obs-Sun(J2000vz)(km/s)', 'Sun-Ast-Obs(deg)']
+    cols = [
+        "ObjID",
+        "FieldID",
+        "FieldMJD",
+        "AstRange(km)",
+        "AstRangeRate(km/s)",
+        "AstRA(deg)",
+        "AstRARate(deg/day)",
+        "AstDec(deg)",
+        "AstDecRate(deg/day)",
+        "Ast-Sun(J2000x)(km)",
+        "Ast-Sun(J2000y)(km)",
+        "Ast-Sun(J2000z)(km)",
+        "Ast-Sun(J2000vx)(km/s)",
+        "Ast-Sun(J2000vy)(km/s)",
+        "Ast-Sun(J2000vz)(km/s)",
+        "Obs-Sun(J2000x)(km)",
+        "Obs-Sun(J2000y)(km)",
+        "Obs-Sun(J2000z)(km)",
+        "Obs-Sun(J2000vx)(km/s)",
+        "Obs-Sun(J2000vy)(km/s)",
+        "Obs-Sun(J2000vz)(km/s)",
+        "Sun-Ast-Obs(deg)",
+    ]
 
     if not all(col in padafr.columns for col in cols):
-        pplogger.error('ERROR: PPReadEphemerides: essential columns missing from ephemerides input. Required columns are: {}'.format(cols))
-        sys.exit('ERROR: PPReadEphemerides: essential columns missing from ephemerides input. Required columns are: {}'.format(cols))
+        pplogger.error(
+            "ERROR: PPReadEphemerides: essential columns missing from ephemerides input. Required columns are: {}".format(
+                cols
+            )
+        )
+        sys.exit(
+            "ERROR: PPReadEphemerides: essential columns missing from ephemerides input. Required columns are: {}".format(
+                cols
+            )
+        )
 
     return padafr[cols]

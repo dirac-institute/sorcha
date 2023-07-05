@@ -15,7 +15,7 @@ def PPMagnitudeLimit(observations, mag_limit):
 
     """
 
-    observations = observations[observations['observedPSFMag'] < mag_limit]
+    observations = observations[observations["observedPSFMag"] < mag_limit]
     observations.reset_index(drop=True, inplace=True)
 
     return observations

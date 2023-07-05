@@ -18,27 +18,25 @@ class args:
 
 @pytest.fixture
 def teardown_for_createTemporaryDatabase():
-
     yield
 
-    temp_path = os.path.dirname(get_test_filepath('oiftestoutput.txt'))
-    file1 = 'temp_oif_temptest.db'
+    temp_path = os.path.dirname(get_test_filepath("oiftestoutput.txt"))
+    file1 = "temp_oif_temptest.db"
 
     os.remove(os.path.join(temp_path, file1))
 
 
 def test_createTemporaryDatabase(teardown_for_createTemporaryDatabase):
-
-    temp_path = os.path.dirname(get_test_filepath('oiftestoutput.txt'))
-    test_args = args(temp_path, 'oif_')
+    temp_path = os.path.dirname(get_test_filepath("oiftestoutput.txt"))
+    test_args = args(temp_path, "oif_")
     make_temporary_databases(test_args)
 
-    expected = pd.read_csv(get_test_filepath('oiftestoutput.txt'), delim_whitespace=True)
-    expected_database = expected.drop(['V', 'V(H=0)'], axis=1)
+    expected = pd.read_csv(get_test_filepath("oiftestoutput.txt"), delim_whitespace=True)
+    expected_database = expected.drop(["V", "V(H=0)"], axis=1)
 
-    cnx = sqlite3.connect(get_test_filepath('temp_oif_temptest.db'))
+    cnx = sqlite3.connect(get_test_filepath("temp_oif_temptest.db"))
     cur = cnx.cursor()
-    cur.execute('select * from interm')
+    cur.execute("select * from interm")
     col_names = list(map(lambda x: x[0], cur.description))
 
     test_database = pd.DataFrame(cur.fetchall(), columns=col_names)

@@ -27,9 +27,9 @@ def PPDetectionEfficiency(padain, threshold, rng):
 
     padain = padain.reset_index(drop=True)
 
-    if (threshold > 1.0 or threshold < 0.0):
-        pplogger.error('ERROR: PPDetectionEfficiency: threshold out of bounds.')
-        sys.exit('ERROR: PPDetectionEfficiency: threshold out of bounds.')
+    if threshold > 1.0 or threshold < 0.0:
+        pplogger.error("ERROR: PPDetectionEfficiency: threshold out of bounds.")
+        sys.exit("ERROR: PPDetectionEfficiency: threshold out of bounds.")
 
     num_obs = len(padain.index)
 

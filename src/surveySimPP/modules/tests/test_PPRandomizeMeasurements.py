@@ -6,14 +6,15 @@ from surveySimPP.tests.data import get_test_filepath
 
 
 def test_randomizePhotometry():
-
     from surveySimPP.modules.PPRandomizeMeasurements import randomizePhotometry
 
     rng = np.random.default_rng(2021)
 
-    test_data = pd.read_csv(get_test_filepath('test_input_fullobs.csv'))
+    test_data = pd.read_csv(get_test_filepath("test_input_fullobs.csv"))
 
-    test_out = randomizePhotometry(test_data[0:1], rng, magName="TrailedSourceMag", sigName="PhotometricSigmaTrailedSource(mag)")
+    test_out = randomizePhotometry(
+        test_data[0:1], rng, magName="TrailedSourceMag", sigName="PhotometricSigmaTrailedSource(mag)"
+    )
 
     np.testing.assert_almost_equal(test_out.values[0], 19.654880, decimal=5)
 
@@ -21,14 +22,13 @@ def test_randomizePhotometry():
 
 
 def test_randomizeAstrometry():
-
     from surveySimPP.modules.PPRandomizeMeasurements import randomizeAstrometry
 
     rng = np.random.default_rng(2021)
 
-    test_data = pd.read_csv(get_test_filepath('test_input_fullobs.csv'))
+    test_data = pd.read_csv(get_test_filepath("test_input_fullobs.csv"))
 
-    test_out = randomizeAstrometry(test_data[0:1], rng, sigName='AstrometricSigma(deg)', sigUnits='deg')
+    test_out = randomizeAstrometry(test_data[0:1], rng, sigName="AstrometricSigma(deg)", sigUnits="deg")
 
     np.testing.assert_almost_equal(test_out[0][0], 164.03771597, decimal=5)
     np.testing.assert_almost_equal(test_out[1][0], -17.58257153, decimal=5)
@@ -37,34 +37,30 @@ def test_randomizeAstrometry():
 
 
 def test_radec_icrf_conversion():
-
     from surveySimPP.modules.PPRandomizeMeasurements import radec2icrf, icrf2radec
 
-    observations = pd.read_csv(get_test_filepath('test_input_fullobs.csv'), nrows=1)
+    observations = pd.read_csv(get_test_filepath("test_input_fullobs.csv"), nrows=1)
 
-    centre = radec2icrf(observations['AstRA(deg)'], observations['AstDec(deg)'])
-    expected_centre = np.array([[-0.91652679],
-                                [0.26215707],
-                                [-0.30207999]])
+    centre = radec2icrf(observations["AstRA(deg)"], observations["AstDec(deg)"])
+    expected_centre = np.array([[-0.91652679], [0.26215707], [-0.30207999]])
 
     ra, dec = icrf2radec(centre[0, :], centre[1, :], centre[2, :])
 
     assert_almost_equal(centre, expected_centre)
-    assert_almost_equal(ra[0], observations['AstRA(deg)'][0])
-    assert_almost_equal(dec[0], observations['AstDec(deg)'][0])
+    assert_almost_equal(ra[0], observations["AstRA(deg)"][0])
+    assert_almost_equal(dec[0], observations["AstDec(deg)"][0])
 
     return
 
 
 def test_sampleNormalFOV():
-
     from surveySimPP.modules.PPRandomizeMeasurements import sampleNormalFOV
     from surveySimPP.modules.PPRandomizeMeasurements import radec2icrf
 
-    observations = pd.read_csv(get_test_filepath('test_input_fullobs.csv'), nrows=1)
+    observations = pd.read_csv(get_test_filepath("test_input_fullobs.csv"), nrows=1)
 
-    centre = radec2icrf(observations['AstRA(deg)'], observations['AstDec(deg)'])
-    sigmarad = np.deg2rad(observations['AstrometricSigma(deg)'])
+    centre = radec2icrf(observations["AstRA(deg)"], observations["AstDec(deg)"])
+    sigmarad = np.deg2rad(observations["AstrometricSigma(deg)"])
 
     rng = np.random.default_rng(2021)
 
@@ -72,9 +68,11 @@ def test_sampleNormalFOV():
     xyz = np.zeros([n, 3])
 
     xyz = sampleNormalFOV(centre, sigmarad, rng, ndim=3)
-    expected_xyz = [[-0.57735025, -0.57735027, -0.57735028],
-                    [0.57735032, 0.57735025, 0.57735024],
-                    [-0.57735022, -0.57735029, -0.5773503]]
+    expected_xyz = [
+        [-0.57735025, -0.57735027, -0.57735028],
+        [0.57735032, 0.57735025, 0.57735024],
+        [-0.57735022, -0.57735029, -0.5773503],
+    ]
 
     assert_almost_equal(xyz, expected_xyz)
 
@@ -82,17 +80,16 @@ def test_sampleNormalFOV():
 
 
 def test_flux_mag_conversion():
-
     from surveySimPP.modules.PPRandomizeMeasurements import flux2mag, mag2flux
 
-    observations = pd.read_csv(get_test_filepath('test_input_fullobs.csv'), nrows=1)
+    observations = pd.read_csv(get_test_filepath("test_input_fullobs.csv"), nrows=1)
 
-    flux_test = mag2flux(observations['observedTrailedSourceMag'])
+    flux_test = mag2flux(observations["observedTrailedSourceMag"])
     mag_test = flux2mag(flux_test)
 
     expected_flux = 5.02107917e-05
 
     assert_almost_equal(flux_test.values[0], expected_flux)
-    assert_almost_equal(observations['observedTrailedSourceMag'][0], mag_test.values[0])
+    assert_almost_equal(observations["observedTrailedSourceMag"][0], mag_test.values[0])
 
     return

@@ -37,7 +37,7 @@ def degCos(x):
     The cosine of x.
     """
 
-    return np.cos(x * np.pi / 180.)
+    return np.cos(x * np.pi / 180.0)
 
 
 def degSin(x):
@@ -53,7 +53,7 @@ def degSin(x):
     The sine of x.
     """
 
-    return np.sin(x * np.pi / 180.)
+    return np.sin(x * np.pi / 180.0)
 
 
 def addUncertainties(detDF, configs, rng, verbose=True):
@@ -79,41 +79,49 @@ def addUncertainties(detDF, configs, rng, verbose=True):
     pplogger = logging.getLogger(__name__)
     verboselog = pplogger.info if verbose else lambda *a, **k: None
 
-    detDF['AstrometricSigma(deg)'], detDF['PhotometricSigmaTrailedSource(mag)'], detDF['SNR'] = uncertainties(detDF, configs, filterMagName='TrailedSourceMag')
+    detDF["AstrometricSigma(deg)"], detDF["PhotometricSigmaTrailedSource(mag)"], detDF["SNR"] = uncertainties(
+        detDF, configs, filterMagName="TrailedSourceMag"
+    )
 
-    if configs['trailing_losses_on']:
-        _, detDF['PhotometricSigmaPSF(mag)'], detDF['SNR'] = uncertainties(detDF, configs, filterMagName='PSFMag')
+    if configs["trailing_losses_on"]:
+        _, detDF["PhotometricSigmaPSF(mag)"], detDF["SNR"] = uncertainties(
+            detDF, configs, filterMagName="PSFMag"
+        )
     else:
-        detDF['PhotometricSigmaPSF(mag)'] = detDF['PhotometricSigmaTrailedSource(mag)']
+        detDF["PhotometricSigmaPSF(mag)"] = detDF["PhotometricSigmaTrailedSource(mag)"]
 
     # default SNR cut can be disabled in the config file under EXPERT
     # at low SNR, high photometric sigma causes randomisation to sometimes
     # grossly inflate/decrease magnitudes.
-    if configs['default_SNR_cut']:
-        verboselog('Removing all observations with SNR < 2.0...')
-        detDF = PPSNRLimit(detDF.copy(), 2.)
+    if configs["default_SNR_cut"]:
+        verboselog("Removing all observations with SNR < 2.0...")
+        detDF = PPSNRLimit(detDF.copy(), 2.0)
 
-    verboselog('Randomising photometry...')
+    verboselog("Randomising photometry...")
     detDF["observedTrailedSourceMag"] = PPRandomizeMeasurements.randomizePhotometry(
-                                            detDF, rng, magName="TrailedSourceMag",
-                                            sigName="PhotometricSigmaTrailedSource(mag)")
+        detDF, rng, magName="TrailedSourceMag", sigName="PhotometricSigmaTrailedSource(mag)"
+    )
 
-    if configs['trailing_losses_on']:
+    if configs["trailing_losses_on"]:
         detDF["observedPSFMag"] = PPRandomizeMeasurements.randomizePhotometry(
-                                                detDF, rng, magName="PSFMag",
-                                                sigName="PhotometricSigmaPSF(mag)")
+            detDF, rng, magName="PSFMag", sigName="PhotometricSigmaPSF(mag)"
+        )
     else:
         detDF["observedPSFMag"] = detDF["observedTrailedSourceMag"]
 
     return detDF
 
 
-def uncertainties(detDF, configs,
-                  limMagName='fiveSigmaDepthAtSource', seeingName='seeingFwhmGeom',
-                  filterMagName='TrailedSourceMag',
-                  dra_name='AstRARate(deg/day)',
-                  ddec_name='AstDecRate(deg/day)', dec_name='AstDec(deg)'
-                  ):
+def uncertainties(
+    detDF,
+    configs,
+    limMagName="fiveSigmaDepthAtSource",
+    seeingName="seeingFwhmGeom",
+    filterMagName="TrailedSourceMag",
+    dra_name="AstRARate(deg/day)",
+    ddec_name="AstDecRate(deg/day)",
+    dec_name="AstDec(deg)",
+):
     """
     Add astrometric and photometric uncertainties to observations.
 
@@ -136,23 +144,25 @@ def uncertainties(detDF, configs,
 
     """
 
-    if configs['trailing_losses_on']:
-        dMag = PPTrailingLoss.calcTrailingLoss(detDF[dra_name] * degCos(detDF[dec_name]),
-                                               detDF[ddec_name],
-                                               detDF[seeingName])
+    if configs["trailing_losses_on"]:
+        dMag = PPTrailingLoss.calcTrailingLoss(
+            detDF[dra_name] * degCos(detDF[dec_name]), detDF[ddec_name], detDF[seeingName]
+        )
     else:
         dMag = 0.0
 
-    astrSig, SNR, _ = calcAstrometricUncertainty(detDF[filterMagName] + dMag, detDF[limMagName],
-                                                 FWHMeff=detDF[seeingName] * 1000, output_units='mas')
+    astrSig, SNR, _ = calcAstrometricUncertainty(
+        detDF[filterMagName] + dMag, detDF[limMagName], FWHMeff=detDF[seeingName] * 1000, output_units="mas"
+    )
     photometric_sigma = calcPhotometricUncertainty(SNR)
-    astrSigDeg = astrSig / 3600. / 1000.
+    astrSigDeg = astrSig / 3600.0 / 1000.0
 
     return (astrSigDeg, photometric_sigma, SNR)
 
 
-def calcAstrometricUncertainty(mag, m5, nvisit=1, FWHMeff=700.0, error_sys=10.0,
-                               astErrCoeff=0.60, output_units='mas'):
+def calcAstrometricUncertainty(
+    mag, m5, nvisit=1, FWHMeff=700.0, error_sys=10.0, astErrCoeff=0.60, output_units="mas"
+):
     """Calculate the astrometric uncertainty, for object catalog purposes.
     The effective FWHMeff MUST BE given in miliarcsec (NOT arcsec!).
     Systematic error, error_sys, must be given in miliarcsec.
@@ -204,16 +214,16 @@ def calcAstrometricUncertainty(mag, m5, nvisit=1, FWHMeff=700.0, error_sys=10.0,
     # first compute SNR
     rgamma = 0.039
     xval = power(10, 0.4 * (mag - m5))
-    SNR = 1. / sqrt((0.04 - rgamma) * xval + rgamma * xval * xval)
+    SNR = 1.0 / sqrt((0.04 - rgamma) * xval + rgamma * xval * xval)
     # random astrometric error for a single visit
     error_rand = calcRandomAstrometricErrorPerCoord(FWHMeff, SNR, astErrCoeff)
     # random astrometric error for nvisit observations
-    if (nvisit > 1):
+    if nvisit > 1:
         error_rand = error_rand / sqrt(nvisit)
     # add systematic error floor:
     astrom_error = sqrt(error_sys * error_sys + error_rand * error_rand)
 
-    if (output_units == 'arcsec'):
+    if output_units == "arcsec":
         astrom_error = astrom_error / 1000
         error_rand = error_rand / 1000
 

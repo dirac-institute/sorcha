@@ -23,22 +23,23 @@ def PPMatchPointingToObservations(padain, pointfildb):
 
     """
 
-    resdf = pd.merge(padain, pointfildb,
-                     left_on="FieldID",
-                     right_on="FieldID",
-                     how="left")
+    resdf = pd.merge(padain, pointfildb, left_on="FieldID", right_on="FieldID", how="left")
 
     colour_values = resdf.optFilter.unique()
     colour_values = pd.Series(colour_values).dropna()
 
-    resdf = resdf.dropna(subset=['optFilter']).reset_index(drop=True)
+    resdf = resdf.dropna(subset=["optFilter"]).reset_index(drop=True)
 
-    chktruemjd = np.isclose(resdf['observationStartMJD'], resdf['FieldMJD'])
+    chktruemjd = np.isclose(resdf["observationStartMJD"], resdf["FieldMJD"])
 
     if not chktruemjd.all():
-        logging.error('ERROR: PPMatchPointingToObservations: mismatch in pointing database and pointing output times.')
-        sys.exit('ERROR:: PPMatchPointingToObservations: mismatch in pointing database and pointing output times.')
+        logging.error(
+            "ERROR: PPMatchPointingToObservations: mismatch in pointing database and pointing output times."
+        )
+        sys.exit(
+            "ERROR:: PPMatchPointingToObservations: mismatch in pointing database and pointing output times."
+        )
 
-    resdf = resdf.drop(columns=['observationStartMJD', "observationId_"])
+    resdf = resdf.drop(columns=["observationStartMJD", "observationId_"])
 
     return resdf

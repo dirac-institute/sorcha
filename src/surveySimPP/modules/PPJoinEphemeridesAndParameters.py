@@ -16,6 +16,6 @@ def PPJoinEphemeridesAndParameters(padafr, padacl):
 
     """
 
-    resdf = padafr.join(padacl.set_index('ObjID'), on='ObjID')
+    resdf = padafr.join(padacl.set_index("ObjID"), on="ObjID")
 
     return resdf

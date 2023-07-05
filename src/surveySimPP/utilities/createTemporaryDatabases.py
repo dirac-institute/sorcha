@@ -25,24 +25,29 @@ def make_temporary_databases(args):
 
     """
 
-    print('Making temporary ephemerides databases.')
+    print("Making temporary ephemerides databases.")
 
     input_path = os.path.abspath(args.inputs)
-    file_list = glob.glob(os.path.join(input_path, args.stem) + '*')
-    output_list = [os.path.join(input_path, 'temp_' + os.path.basename(input_name).split('.')[0]) + '.db' for input_name in file_list]
+    file_list = glob.glob(os.path.join(input_path, args.stem) + "*")
+    output_list = [
+        os.path.join(input_path, "temp_" + os.path.basename(input_name).split(".")[0]) + ".db"
+        for input_name in file_list
+    ]
 
     if any([os.path.exists(out_name) for out_name in output_list]) and not args.f:
-        sys.exit('Temporary ephemeris databases already found in input location. Run with -f flag to overwrite.')
+        sys.exit(
+            "Temporary ephemeris databases already found in input location. Run with -f flag to overwrite."
+        )
 
     if not file_list:
-        sys.exit('Could not find any ephemerides files using given input path and stem.')
+        sys.exit("Could not find any ephemerides files using given input path and stem.")
 
     for input_name in file_list:
-        print('Creating temporary database for file: {}'.format(input_name))
-        stem_filename = 'temp_' + os.path.basename(input_name).split('.')[0] + '.db'
-        PPMakeTemporaryEphemerisDatabase(input_name, os.path.join(input_path, stem_filename), 'csv')
+        print("Creating temporary database for file: {}".format(input_name))
+        stem_filename = "temp_" + os.path.basename(input_name).split(".")[0] + ".db"
+        PPMakeTemporaryEphemerisDatabase(input_name, os.path.join(input_path, stem_filename), "csv")
 
-    print('Done.')
+    print("Done.")
 
 
 def main():
@@ -62,23 +67,44 @@ def main():
 
     """
 
-    parser = argparse.ArgumentParser(description='Creating the temporary SQL ephemeris databses.')
+    parser = argparse.ArgumentParser(description="Creating the temporary SQL ephemeris databses.")
 
     # path to inputs
-    parser.add_argument('-i', '--inputs', help='Path location of input ephemeris text files.', type=str, required=True)
+    parser.add_argument(
+        "-i", "--inputs", help="Path location of input ephemeris text files.", type=str, required=True
+    )
     # stem filename for outputs
-    parser.add_argument('-s', '--stem', help='Stem filename of input ephemeris text files. Default is "oif_".', type=str, default='oif_')
+    parser.add_argument(
+        "-s",
+        "--stem",
+        help='Stem filename of input ephemeris text files. Default is "oif_".',
+        type=str,
+        default="oif_",
+    )
     # chunk size for creating databases
-    parser.add_argument('-c', '--chunk', help="Chunking size for creation, where chunk=number of rows per chunk. Don't change this unless you know what you're doing.", type=int, default=1e6)
+    parser.add_argument(
+        "-c",
+        "--chunk",
+        help="Chunking size for creation, where chunk=number of rows per chunk. Don't change this unless you know what you're doing.",
+        type=int,
+        default=1e6,
+    )
     # force overwrite?
-    parser.add_argument("-f", "--force", help='Force deletion/overwrite of existing output file(s). Default False.', dest='f', action='store_true', default=False)
+    parser.add_argument(
+        "-f",
+        "--force",
+        help="Force deletion/overwrite of existing output file(s). Default False.",
+        dest="f",
+        action="store_true",
+        default=False,
+    )
 
     args = parser.parse_args()
 
-    _ = PPFindDirectoryOrExit(args.inputs, '-i, --inputs')
+    _ = PPFindDirectoryOrExit(args.inputs, "-i, --inputs")
 
     make_temporary_databases(args)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

@@ -4,7 +4,9 @@ from .PPApplyColourOffsets import PPApplyColourOffsets
 import logging
 
 
-def PPCalculateApparentMagnitude(observations, phasefunction, mainfilter, othercolours, observing_filters, object_type, verbose=False):
+def PPCalculateApparentMagnitude(
+    observations, phasefunction, mainfilter, othercolours, observing_filters, object_type, verbose=False
+):
     """
     This function applies the correct colour offset to H for the relevant filter, checks to make sure
     the correct columns are included (with additional functionality for colour-specific phase curves),
@@ -34,18 +36,20 @@ def PPCalculateApparentMagnitude(observations, phasefunction, mainfilter, otherc
     pplogger = logging.getLogger(__name__)
     verboselog = pplogger.info if verbose else lambda *a, **k: None
 
-    if (object_type == 'comet'):
-        verboselog('Calculating cometary magnitude using a simple model and applying colour offset...')
+    if object_type == "comet":
+        verboselog("Calculating cometary magnitude using a simple model and applying colour offset...")
         observations = PPCalculateSimpleCometaryMagnitude(observations, mainfilter, othercolours)
     else:
         # if user is only interested in one filter, we have no colour offsets to apply: assume H is in that filter
         if len(observing_filters) > 1:
-            verboselog('Selecting and applying correct colour offset...')
-            observations = PPApplyColourOffsets(observations, phasefunction, othercolours, observing_filters, mainfilter)
+            verboselog("Selecting and applying correct colour offset...")
+            observations = PPApplyColourOffsets(
+                observations, phasefunction, othercolours, observing_filters, mainfilter
+            )
         else:
-            observations.rename(columns={'H_' + mainfilter: 'H_filter'}, inplace=True)
+            observations.rename(columns={"H_" + mainfilter: "H_filter"}, inplace=True)
 
-        verboselog('Calculating apparent magnitude in filter...')
+        verboselog("Calculating apparent magnitude in filter...")
         observations = PPCalculateApparentMagnitudeInFilter(observations, phasefunction, mainfilter)
 
     return observations

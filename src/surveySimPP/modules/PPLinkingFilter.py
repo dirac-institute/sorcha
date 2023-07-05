@@ -6,14 +6,16 @@ from astropy.coordinates import SkyCoord
 from .PPDetectionEfficiency import PPDetectionEfficiency
 
 
-def PPLinkingFilter(observations,
-                    detection_efficiency,
-                    min_observations,
-                    min_tracklets,
-                    tracklet_interval,
-                    minimum_separation,
-                    rng,
-                    survey_name='lsst'):
+def PPLinkingFilter(
+    observations,
+    detection_efficiency,
+    min_observations,
+    min_tracklets,
+    tracklet_interval,
+    minimum_separation,
+    rng,
+    survey_name="lsst",
+):
     """
     A function which mimics the effects of the SSP linking process by looking
     for valid tracklets within valid tracks and only outputting observations
@@ -48,14 +50,14 @@ def PPLinkingFilter(observations,
     """
 
     # store original integer row indices as a column
-    observations['original_index'] = np.arange(len(observations))
+    observations["original_index"] = np.arange(len(observations))
 
     # store copy of this original dataframe to select all valid observations from later
     # this is quicker than making a dataframe as we go, pd.concat() is slow
     orig_observations = observations.copy()
     final_idx = []
 
-    objid_list = observations['ObjID'].unique().tolist()
+    objid_list = observations["ObjID"].unique().tolist()
 
     # we need to take into account timezones when we determine whether an observation
     # occurs on a specific night. this is implemented via survey_name
@@ -64,18 +66,19 @@ def PPLinkingFilter(observations,
 
     # I am ignoring daylight savings time here for reasons of my own sanity.
 
-    if survey_name in ['lsst', 'LSST']:
-        UTC_night_boundary = 17. / 24.  # this corresponds to 5pm UTC, or 2pm Chile time.
+    if survey_name in ["lsst", "LSST"]:
+        UTC_night_boundary = 17.0 / 24.0  # this corresponds to 5pm UTC, or 2pm Chile time.
 
     # calculate night number from FieldMJD
-    first_day = observations.loc[0, 'FieldMJD']
-    observations["night"] = np.floor(observations["FieldMJD"].values - np.floor(first_day) + UTC_night_boundary).astype(int) + 1
+    first_day = observations.loc[0, "FieldMJD"]
+    observations["night"] = (
+        np.floor(observations["FieldMJD"].values - np.floor(first_day) + UTC_night_boundary).astype(int) + 1
+    )
 
     # this for-loop could possibly be avoided by using groupby().apply() but I suspect the
     # time saving would be negligible, .apply() is slow.
     for objID in objid_list:
-
-        obs_single_object = observations.loc[observations['ObjID'] == objID]
+        obs_single_object = observations.loc[observations["ObjID"] == objID]
 
         # remove set percentage of entries at random based on linking efficiency
         obs_object = PPDetectionEfficiency(obs_single_object, detection_efficiency, rng)
@@ -89,7 +92,7 @@ def PPLinkingFilter(observations,
         obs_above_min.reset_index(inplace=True, drop=True)
 
         # group this dataframe by night
-        grouped_by_night = obs_above_min.groupby(['night'])
+        grouped_by_night = obs_above_min.groupby(["night"])
 
         # calculate separation between first and last observation of the night
         first_ra = grouped_by_night.head(1)["AstRA(deg)"].reset_index(drop=True).values
@@ -101,7 +104,7 @@ def PPLinkingFilter(observations,
         last_coord = SkyCoord(last_ra * u.degree, last_dec * u.degree)
         separation = first_coord.separation(last_coord).arcsecond
 
-        separation_df = pd.DataFrame({'night': obs_above_min["night"].unique(), "separation": separation})
+        separation_df = pd.DataFrame({"night": obs_above_min["night"].unique(), "separation": separation})
 
         # merge on and drop all observations where separation < minimum separation
         obs_sep = pd.merge(obs_above_min, separation_df, on="night")
@@ -123,7 +126,6 @@ def PPLinkingFilter(observations,
         # once a linking is made, the night on which the linking was made is stored
         linked_night = False
         for i, night in enumerate(unique_nights):
-
             if i + min_tracklets - 1 >= len(unique_nights):
                 break
 

@@ -22,7 +22,17 @@ import logging
 import sys
 
 
-def calcTrailingLoss(dRaCosDec, dDec, seeing, texp=30.0, model='circularPSF', a_trail=0.761, b_trail=1.162, a_det=0.420, b_det=0.003):
+def calcTrailingLoss(
+    dRaCosDec,
+    dDec,
+    seeing,
+    texp=30.0,
+    model="circularPSF",
+    a_trail=0.761,
+    b_trail=1.162,
+    a_det=0.420,
+    b_det=0.003,
+):
     """
     Find the trailing loss from trailing and detection (Veres & Chesley 2017)
 
@@ -56,16 +66,16 @@ def calcTrailingLoss(dRaCosDec, dDec, seeing, texp=30.0, model='circularPSF', a_
 
     pplogger = logging.getLogger(__name__)
 
-    vel = np.sqrt(dRaCosDec ** 2 + dDec ** 2)
-    vel = vel / 24.  # convert to arcsec / sec
+    vel = np.sqrt(dRaCosDec**2 + dDec**2)
+    vel = vel / 24.0  # convert to arcsec / sec
 
     x = vel * texp / seeing
 
-    if (model == 'trailedSource'):
-        dmagTrail = 1.25 * np.log10(1. + a_trail * x ** 2 / (1. + b_trail * x))
+    if model == "trailedSource":
+        dmagTrail = 1.25 * np.log10(1.0 + a_trail * x**2 / (1.0 + b_trail * x))
         dmag = dmagTrail
-    elif (model == 'circularPSF'):
-        dmagDetect = 1.25 * np.log10(1. + a_det * x ** 2 / (1. + b_det * x))
+    elif model == "circularPSF":
+        dmagDetect = 1.25 * np.log10(1.0 + a_det * x**2 / (1.0 + b_det * x))
         dmag = dmagDetect
     else:
         pplogger.error("PPTrailingLoss.calcTrailingLoss: model unknown.")
@@ -74,9 +84,14 @@ def calcTrailingLoss(dRaCosDec, dDec, seeing, texp=30.0, model='circularPSF', a_
     return dmag
 
 
-def PPTrailingLoss(oif_df, model='circularPSF', dra_name='AstRARate(deg/day)',
-                   ddec_name='AstDecRate(deg/day)', dec_name='AstDec(deg)',
-                   seeing_name_survey='seeingFwhmEff'):
+def PPTrailingLoss(
+    oif_df,
+    model="circularPSF",
+    dra_name="AstRARate(deg/day)",
+    ddec_name="AstDecRate(deg/day)",
+    dec_name="AstDec(deg)",
+    seeing_name_survey="seeingFwhmEff",
+):
     """
     Calculates detection trailing losses. Wrapper for calcTrailingLoss.
 
@@ -96,6 +111,11 @@ def PPTrailingLoss(oif_df, model='circularPSF', dra_name='AstRARate(deg/day)',
 
     """
 
-    dmag = calcTrailingLoss(oif_df[dra_name] * np.cos(oif_df[dec_name] * np.pi / 180), oif_df[ddec_name], oif_df[seeing_name_survey], model=model)
+    dmag = calcTrailingLoss(
+        oif_df[dra_name] * np.cos(oif_df[dec_name] * np.pi / 180),
+        oif_df[ddec_name],
+        oif_df[seeing_name_survey],
+        model=model,
+    )
 
     return dmag

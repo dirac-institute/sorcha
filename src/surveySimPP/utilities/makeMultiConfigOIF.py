@@ -45,13 +45,14 @@ def makeConfig(args):
 
     # get range of fields for those days
     field1 = database.loc[(database["observationStartMJD"] - day1) < 1.0]["observationId"].iloc[0]
-    fieldf = database.loc[(database["observationStartMJD"] - dayf) < 2.0]["observationId"].iloc[-1]  # this will likely overshoot a little bit
+    fieldf = database.loc[(database["observationStartMJD"] - dayf) < 2.0]["observationId"].iloc[
+        -1
+    ]  # this will likely overshoot a little bit
 
-    orbits_list = glob.glob(os.path.join(args.o, 'orbits*.txt'))
+    orbits_list = glob.glob(os.path.join(args.o, "orbits*.txt"))
 
     for fn in orbits_list:
-
-        if (args.inputformat == 'whitespace'):
+        if args.inputformat == "whitespace":
             orbits = pd.read_csv(fn, delim_whitespace=True)
         else:
             orbits = pd.read_csv(fn)
@@ -60,39 +61,36 @@ def makeConfig(args):
 
         orbits_name = os.path.basename(os.path.splitext(fn)[0])[7:]
 
-        config.read_dict({
-            'CONF': {
-                'Cache dir': args.cache + "/" + orbits_name
-            },
-            'ASTEROID': {
-                'population model': os.path.abspath(fn),
-                'SPK T0': str(day1 - 30),
-                'nDays': str(ndays + 30),
-                'Object1': 1,
-                'nObjects': str(nOrbitsTotal),
-                'SPK step': str(args.spkstep),
-                'nbody': 'T',
-                'input format': args.inputformat
-            },
-            'SURVEY': {
-                'Survey database': os.path.abspath(args.pointing),
-                'Field1': str(field1 + 1),
-                'nFields': str(fieldf - field1),
-                'MPCobscode file': args.mpcfile,
-                'Telescope': args.telescope,
-                'Surveydbquery': 'SELECT observationId,observationStartMJD,fieldRA,fieldDEC,rotSkyPos FROM observations order by observationStartMJD'
-            },
-            'CAMERA': {
-                'Threshold': '5',
-                'Camera': args.camerafov,
-            },
-            'OUTPUT': {
-                'Output file': 'stdout',
-                'Output format': 'csv'
+        config.read_dict(
+            {
+                "CONF": {"Cache dir": args.cache + "/" + orbits_name},
+                "ASTEROID": {
+                    "population model": os.path.abspath(fn),
+                    "SPK T0": str(day1 - 30),
+                    "nDays": str(ndays + 30),
+                    "Object1": 1,
+                    "nObjects": str(nOrbitsTotal),
+                    "SPK step": str(args.spkstep),
+                    "nbody": "T",
+                    "input format": args.inputformat,
+                },
+                "SURVEY": {
+                    "Survey database": os.path.abspath(args.pointing),
+                    "Field1": str(field1 + 1),
+                    "nFields": str(fieldf - field1),
+                    "MPCobscode file": args.mpcfile,
+                    "Telescope": args.telescope,
+                    "Surveydbquery": "SELECT observationId,observationStartMJD,fieldRA,fieldDEC,rotSkyPos FROM observations order by observationStartMJD",
+                },
+                "CAMERA": {
+                    "Threshold": "5",
+                    "Camera": args.camerafov,
+                },
+                "OUTPUT": {"Output file": "stdout", "Output format": "csv"},
             }
-        })
+        )
 
-        with open(os.path.join(args.o, 'config_' + orbits_name + '.ini'), 'w') as file:
+        with open(os.path.join(args.o, "config_" + orbits_name + ".ini"), "w") as file:
             config.write(file)
 
 
@@ -123,48 +121,95 @@ def main():
 
     """
 
-    parser = argparse.ArgumentParser(description='creating config file(s) for Objects in Field')
+    parser = argparse.ArgumentParser(description="creating config file(s) for Objects in Field")
     parser.add_argument("o", help="orbits file path location", type=str)
     parser.add_argument("pointing", help="pointing database location", type=str)
-    parser.add_argument("-no", help="number of orbits per config file, -1 runs all the orbits in one config file. Default value = 300", type=int, default=300)
-    parser.add_argument("-ndays", help="number of days in survey to run, -1 runs entire survey. Default value = -1", type=int, default=-1)
+    parser.add_argument(
+        "-no",
+        help="number of orbits per config file, -1 runs all the orbits in one config file. Default value = 300",
+        type=int,
+        default=300,
+    )
+    parser.add_argument(
+        "-ndays",
+        help="number of days in survey to run, -1 runs entire survey. Default value = -1",
+        type=int,
+        default=-1,
+    )
     parser.add_argument("-day1", help="first day in survey to run. Default value = 1", type=int, default=1)
-    parser.add_argument("-prefix", help="config file name prefix, Default value is an empty string", type=str, default='')
-    parser.add_argument("-camerafov", help='path and file name of the camera fov. Default value = instrument_polygon.dat', type=str, default='instrument_polygon.dat')
-    parser.add_argument("-inputformat", help='input format (CSV or whitespace). Default value = whitespace', type=str, default='whitespace')
-    parser.add_argument("-cache", help='base cache directory name. Default value = _cache', type=str, default='_cache')
-    parser.add_argument("-mpcfile", help='name of the file containing the MPC observatory codes. Default value = obslist.dat', type=str, default='obslist.dat')
+    parser.add_argument(
+        "-prefix", help="config file name prefix, Default value is an empty string", type=str, default=""
+    )
+    parser.add_argument(
+        "-camerafov",
+        help="path and file name of the camera fov. Default value = instrument_polygon.dat",
+        type=str,
+        default="instrument_polygon.dat",
+    )
+    parser.add_argument(
+        "-inputformat",
+        help="input format (CSV or whitespace). Default value = whitespace",
+        type=str,
+        default="whitespace",
+    )
+    parser.add_argument(
+        "-cache", help="base cache directory name. Default value = _cache", type=str, default="_cache"
+    )
+    parser.add_argument(
+        "-mpcfile",
+        help="name of the file containing the MPC observatory codes. Default value = obslist.dat",
+        type=str,
+        default="obslist.dat",
+    )
     parser.add_argument("-spkstep", help="Integration step in days. Default value = 30", type=int, default=30)
-    parser.add_argument("-telescope", help="Observatory MPC Code. Default value = I11 (Gemini South to be changed to Rubin Observatory)", type=str, default='I11')
-    parser.add_argument("-query", help="SQL query for pointing database.", type=str, default="SELECT observationStartMJD, observationId FROM observations ORDER BY observationStartMJD")
+    parser.add_argument(
+        "-telescope",
+        help="Observatory MPC Code. Default value = I11 (Gemini South to be changed to Rubin Observatory)",
+        type=str,
+        default="I11",
+    )
+    parser.add_argument(
+        "-query",
+        help="SQL query for pointing database.",
+        type=str,
+        default="SELECT observationStartMJD, observationId FROM observations ORDER BY observationStartMJD",
+    )
 
     args = parser.parse_args()
 
     # check that mandatory arguments exist
 
     if not os.path.exists(args.o):
-        sys.exit('ERROR: supplied filepath for location of orbits files not found.')
+        sys.exit("ERROR: supplied filepath for location of orbits files not found.")
 
     if not os.path.isfile(args.pointing):
-        sys.exit('ERROR: file not found at supplied pointing database location.')
+        sys.exit("ERROR: file not found at supplied pointing database location.")
 
     # error checks that optional inputs are within the right range
 
-    if (args.inputformat != 'whitespace') and (args.inputformat != 'CSV'):
-        sys.exit('ERROR: Invalid option for input format of the orbits file.  Try --help to see the command line options')
+    if (args.inputformat != "whitespace") and (args.inputformat != "CSV"):
+        sys.exit(
+            "ERROR: Invalid option for input format of the orbits file.  Try --help to see the command line options"
+        )
 
-    if (args.no < -1):
-        sys.exit('ERROR: Invalid option for number of orbits per config file.  Try --help to see the command line options')
+    if args.no < -1:
+        sys.exit(
+            "ERROR: Invalid option for number of orbits per config file.  Try --help to see the command line options"
+        )
 
-    if (args.day1 < 1):
-        sys.exit('ERROR: Invalid option for first day in survey to run.  Try --help to see the command line options')
+    if args.day1 < 1:
+        sys.exit(
+            "ERROR: Invalid option for first day in survey to run.  Try --help to see the command line options"
+        )
 
     if (args.ndays == 0) or (args.ndays < -1):
-        sys.exit('ERROR: Invalid option for number of days in survey to run.  Try --help to see the command line options')
+        sys.exit(
+            "ERROR: Invalid option for number of days in survey to run.  Try --help to see the command line options"
+        )
 
     # make config file
     makeConfig(args)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

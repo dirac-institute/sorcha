@@ -17,16 +17,24 @@ def test_calcDetectionProbability():
 
 
 def test_PPDetectionProbabilty():
-
     from surveySimPP.modules.PPDetectionProbability import PPDetectionProbability
 
-    test_in = pd.DataFrame({'FieldID': [0, 0], 'MagnitudeInFilter': [21.9, 21.9], 'fiveSigmaDepth': [22.0, 22.0]})
+    test_in = pd.DataFrame(
+        {"FieldID": [0, 0], "MagnitudeInFilter": [21.9, 21.9], "fiveSigmaDepth": [22.0, 22.0]}
+    )
 
-    test_target = pd.DataFrame({'FieldID': [0, 0], 'MagnitudeInFilter': [21.9, 21.9],
-                                'detection_probability': [0.7310585786300077, 0.7310585786300077]})
+    test_target = pd.DataFrame(
+        {
+            "FieldID": [0, 0],
+            "MagnitudeInFilter": [21.9, 21.9],
+            "detection_probability": [0.7310585786300077, 0.7310585786300077],
+        }
+    )
 
     test_out = test_in.copy()
-    test_out['detection_probability'] = PPDetectionProbability(oif_df=test_in, magnitude_name='MagnitudeInFilter', limiting_magnitude_name='fiveSigmaDepth')
+    test_out["detection_probability"] = PPDetectionProbability(
+        oif_df=test_in, magnitude_name="MagnitudeInFilter", limiting_magnitude_name="fiveSigmaDepth"
+    )
 
-    assert test_out['detection_probability'][0] == test_target['detection_probability'][0]
+    assert test_out["detection_probability"][0] == test_target["detection_probability"][0]
     return

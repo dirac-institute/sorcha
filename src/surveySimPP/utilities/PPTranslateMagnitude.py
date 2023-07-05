@@ -2,12 +2,17 @@ import pandas as pd
 import numpy as np
 
 
-def PPTranslateMagnitude(oif_output, survey_db, colors,
-                         oifFieldIDName='FieldID', surveyFieldIDName='observationId',
-                         surveyFilterName='filter',
-                         oifObjIDName='ObjID', colorsObjIDName='ObjID',
-                         oif_filter='V'
-                         ):
+def PPTranslateMagnitude(
+    oif_output,
+    survey_db,
+    colors,
+    oifFieldIDName="FieldID",
+    surveyFieldIDName="observationId",
+    surveyFilterName="filter",
+    oifObjIDName="ObjID",
+    colorsObjIDName="ObjID",
+    oif_filter="V",
+):
     """
     Uses filter and color information from survey and color tables
     to translate V band magnitude to appropriate sdss filter magnitude.
@@ -37,20 +42,14 @@ def PPTranslateMagnitude(oif_output, survey_db, colors,
         survey_db[[surveyFieldIDName, surveyFilterName]],
         left_on=oifFieldIDName,
         right_on=surveyFieldIDName,
-        how="left"
+        how="left",
     ).drop(columns=[surveyFieldIDName])
 
-    df = pd.merge(
-        df,
-        colors,
-        left_on=oifObjIDName,
-        right_on=colorsObjIDName,
-        how="left"
-    )
+    df = pd.merge(df, colors, left_on=oifObjIDName, right_on=colorsObjIDName, how="left")
 
-    df['filter diff name'] = oif_filter + '-' + df[surveyFilterName]
-    idx, cols = pd.factorize(df['filter diff name'])
+    df["filter diff name"] = oif_filter + "-" + df[surveyFilterName]
+    idx, cols = pd.factorize(df["filter diff name"])
 
     filterDiff = df.reindex(cols, axis=1).to_numpy()[np.arange(len(df)), idx]
 
-    return (oif_output[oif_filter] - filterDiff)
+    return oif_output[oif_filter] - filterDiff

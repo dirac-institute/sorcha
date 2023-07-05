@@ -25,16 +25,16 @@ def PPCheckInputObjectIDs(orbin, colin, poiin):
 
     pplogger = logging.getLogger(__name__)
 
-    oif_objects = pd.unique(poiin['ObjID']).astype(str)
-    orb_objects = pd.unique(orbin['ObjID']).astype(str)
-    col_objects = pd.unique(colin['ObjID']).astype(str)
+    oif_objects = pd.unique(poiin["ObjID"]).astype(str)
+    orb_objects = pd.unique(orbin["ObjID"]).astype(str)
+    col_objects = pd.unique(colin["ObjID"]).astype(str)
 
     if set(col_objects) == set(orb_objects):
         if set(oif_objects).issubset(orb_objects):
             return
         else:
-            pplogger.error('ERROR: PPCheckInputObjectIDs: input pointing and orbit files do not match.')
-            sys.exit('ERROR: PPCheckInputObjectIDs: input pointing and orbit files do not match.')
+            pplogger.error("ERROR: PPCheckInputObjectIDs: input pointing and orbit files do not match.")
+            sys.exit("ERROR: PPCheckInputObjectIDs: input pointing and orbit files do not match.")
     else:
-        pplogger.error('ERROR: PPCheckInputObjectIDs: input physical parameter and orbit files do not match.')
-        sys.exit('ERROR: PPCheckInputObjectIDs: input physical parameter and orbit files do not match.')
+        pplogger.error("ERROR: PPCheckInputObjectIDs: input physical parameter and orbit files do not match.")
+        sys.exit("ERROR: PPCheckInputObjectIDs: input physical parameter and orbit files do not match.")
