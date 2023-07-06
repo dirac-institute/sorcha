@@ -16,10 +16,10 @@ sys.path.insert(0, os.path.abspath('../src/'))
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-project = "survey_simulator_post_processing"
+project = "surveySimPP"
 copyright = "2023, Meg Schwamb"
 author = "Meg Schwamb"
-release = version("survey_simulator_post_processing")
+release = version("surveySimPP")
 # for example take major/minor
 version = ".".join(release.split(".")[:2])
 

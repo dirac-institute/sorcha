@@ -66,7 +66,7 @@ dev = [
 test = [
     "pytest",
     "pytest-cov",
-    "black", #TODO: Make sure that this is what people want
+    "black",
 ]
 
 docs = [
@@ -75,11 +75,12 @@ docs = [
     "sphinx-autoapi==2.0.1", # Used to automatically generate api documentation
     "nbconvert",
     "nbsphinx",
+    "ipython",
 ]
 
 benchmark = [
     "lf-metric-emitter", # Used to send metrics to t
-    "memory-profiler"
+    "memory-profiler",
 ]
 
 [build-system]
