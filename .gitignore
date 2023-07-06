@@ -29,6 +29,19 @@ MANIFEST
 _version.py
 *.pyc
 .DS_Store
+__pycache__
+/data/test/testdb_PPIntermDB.db
+/data/out/testrun_e2e.csv
+
+#demo_files_run
+_cache/
+
+# Sphinx
+docs/_build
+
+.tox
+.tmp
+.idea
 build/*
 
 # PyInstaller

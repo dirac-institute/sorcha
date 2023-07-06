@@ -59,6 +59,7 @@ dev = [
     "nbconvert", # Needed for pre-commit check to clear output from Python notebooks
     "nbsphinx", # Used to integrate Python notebooks into Sphinx documentation
     "ipython", # Also used in building notebooks into Sphinx
+    "ipykernel",
     "matplotlib", # Used in sample notebook intro_notebook.ipynb
     "numpy", # Used in sample notebook intro_notebook.ipynb
 ]
@@ -76,6 +77,7 @@ docs = [
     "nbconvert",
     "nbsphinx",
     "ipython",
+    "ipykernel",
 ]
 
 benchmark = [

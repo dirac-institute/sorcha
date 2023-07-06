@@ -12,16 +12,19 @@ from importlib.metadata import version
 
 # Define path to the code to be documented **relative to where conf.py (this file) is kept**
 sys.path.insert(0, os.path.abspath('../src/'))
+from pkg_resources import get_distribution
 
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-project = "surveySimPP"
-copyright = "2023, Meg Schwamb"
-author = "Meg Schwamb"
+
+copyright = "2023"
+project = 'Solar System Survey Simulator Post Processing'
+author = 'surveySimPP development team'
 release = version("surveySimPP")
 # for example take major/minor
 version = ".".join(release.split(".")[:2])
+
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
