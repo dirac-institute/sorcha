@@ -121,7 +121,6 @@ SurveySimPP Requirements
 *  pandas
 *  pytest
 *  pytest-cov<2.6.0
-*  coveralls
 *  setuptools>=42
 *  wheel
 *  setuptools_scm>=3.4
