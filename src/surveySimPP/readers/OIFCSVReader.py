@@ -119,6 +119,10 @@ class OIFCSVReader(EphemerisReader):
             pplogger.error(f"ERROR: Unrecognized delimiter ({filesep})")
             sys.exit(f"ERROR: Unrecognized delimiter ({filesep})")
 
+
+        # Maybe just save the values???
+        self.obj_id_map = self.obj_id_map["ObjID"].values
+
             
     def read_objects(self, obj_ids=None):
         """Read in a chunk of data for given object IDs.
@@ -133,6 +137,7 @@ class OIFCSVReader(EphemerisReader):
         """
         self._build_id_map()
 
+        # Redo if we only save the values...
         goodrows = self.obj_id_map["ObjID"].isin(obj_ids).index
         goodrows = goodrows.insert(self.header_row, 0)
 
