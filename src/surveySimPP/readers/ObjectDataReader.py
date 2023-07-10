@@ -4,9 +4,10 @@ can be used for joining and filtering.
 """
 import abc
 
+
 class ObjectDataReader(abc.ABC):
     """The base class for reading in the object data."""
-    
+
     def __init__(self, *args, **kwargs):
         pass
 
@@ -33,7 +34,7 @@ class ObjectDataReader(abc.ABC):
         pass
 
     @abc.abstractmethod
-    def read_objects(self, obj_ids):
+    def read_objects(self, obj_ids, **kwargs):
         """Read in a chunk of data corresponding to all rows for
         a given set of object IDs.
 

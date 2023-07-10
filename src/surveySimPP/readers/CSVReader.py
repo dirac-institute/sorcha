@@ -11,7 +11,7 @@ class CSVDataReader(ObjectDataReader):
 
     Requires that the file's first column is ObjID.
     """
-    
+
     def __init__(self, filename, sep="csv", header=-1, *args, **kwargs):
         """A class for reading the object data from a CSV file.
 
@@ -31,8 +31,10 @@ class CSVDataReader(ObjectDataReader):
             self.header_row = self._find_header_line()
         else:
             self.header_row = header
-        self.obj_id_map = None
 
+        # A table holding just the object ID for each row. Only populated
+        # if we try to read data for specific object IDs.
+        self.obj_id_table = None
 
     def _find_header_line(self):
         """Find the line number of the CSV header. Used for cases
@@ -59,7 +61,6 @@ class CSVDataReader(ObjectDataReader):
         )
         return 0
 
-
     def read_rows(self, block_start=0, block_size=None, **kwargs):
         """Reads in a set number of rows from the input.
 
@@ -83,7 +84,7 @@ class CSVDataReader(ObjectDataReader):
         """
         pplogger = logging.getLogger(__name__)
 
-        # Skip the rows before the header and then begin_loc rows after the header.            
+        # Skip the rows before the header and then begin_loc rows after the header.
         skip_rows = []
         if self.header_row > 0:
             skip_rows = [i for i in range(0, self.header_row)]
@@ -97,7 +98,6 @@ class CSVDataReader(ObjectDataReader):
                 delim_whitespace=True,
                 skiprows=skip_rows,
                 nrows=block_size,
-                header=self.header_row,
             )
         elif self.sep == "comma" or self.sep == "csv":
             res_df = pd.read_csv(
@@ -105,12 +105,10 @@ class CSVDataReader(ObjectDataReader):
                 delimiter=",",
                 skiprows=skip_rows,
                 nrows=block_size,
-                header=self.header_row,
             )
         else:
             pplogger.error(f"ERROR: Unrecognized delimiter ({filesep})")
             sys.exit(f"ERROR: Unrecognized delimiter ({filesep})")
-
 
         # Strip out the whitespace from the column names.
         res_df = res_df.rename(columns=lambda x: x.strip())
@@ -134,10 +132,29 @@ class CSVDataReader(ObjectDataReader):
 
         return res_df
 
+    def _build_id_map(self):
+        """Builds a table of just the object IDs"""
+        if self.obj_id_table is not None:
+            return
 
-    def read_objects(self, obj_ids):
-        """Read in a chunk of data corresponding to all rows for
-        a given set of object IDs.
+        if self.sep == "whitespace":
+            self.obj_id_table = pd.read_csv(
+                self.filename,
+                delim_whitespace=True,
+                header=self.header_row,
+            )
+        elif self.sep == "comma" or self.sep == "csv":
+            self.obj_id_table = pd.read_csv(
+                self.filename,
+                delimiter=",",
+                header=self.header_row,
+            )
+        else:
+            pplogger.error(f"ERROR: Unrecognized delimiter ({filesep})")
+            sys.exit(f"ERROR: Unrecognized delimiter ({filesep})")
+
+    def read_objects(self, obj_ids, **kwargs):
+        """Read in a chunk of data for given object IDs.
 
         Parameters:
         -----------
@@ -147,4 +164,28 @@ class CSVDataReader(ObjectDataReader):
         -----------
         res_df (Pandas dataframe): The dataframe for the ephemerides.
         """
-        return None
+        self._build_id_map()
+
+        # Create list of only the matching rows for these object IDs and the header row.
+        row_good = [False] * self.header_row  # pre-header
+        row_good = [True]  # the header
+        row_good.extend(self.obj_id_table["ObjID"].isin(obj_ids).values)
+
+        # Read the rows.
+        if self.sep == "whitespace":
+            res_df = pd.read_csv(
+                self.filename,
+                delim_whitespace=True,
+                skiprows=(lambda x: not row_good[x]),
+            )
+        elif self.sep == "comma" or self.sep == "csv":
+            res_df = pd.read_csv(
+                self.filename,
+                delimiter=",",
+                skiprows=(lambda x: not row_good[x]),
+            )
+        else:
+            pplogger.error(f"ERROR: Unrecognized delimiter ({filesep})")
+            sys.exit(f"ERROR: Unrecognized delimiter ({filesep})")
+
+        return res_df

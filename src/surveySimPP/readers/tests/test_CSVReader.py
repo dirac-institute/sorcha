@@ -6,7 +6,232 @@ from pandas.testing import assert_frame_equal
 
 from surveySimPP.readers.CSVReader import CSVDataReader
 from surveySimPP.tests.data import get_test_filepath
-    
+
+
+def test_CSVDataReader_oif():
+    """Test that we can read in the OIF data from a CSV.
+
+    This test does not perform any transformations, filtering, or validation of the data.
+    It just loads it directly from a CSV.
+    """
+    csv_reader = CSVDataReader(get_test_filepath("oiftestoutput.csv"), "csv")
+    assert csv_reader.header_row == 0
+
+    # Read in all 9 rows.
+    oif_data = csv_reader.read_rows()
+    assert len(oif_data) == 9
+
+    expected_first_row = np.array(
+        [
+            "S00000t",
+            379,
+            59853.205174,
+            283890475.515,
+            -1.12,
+            11.969664,
+            -0.280799,
+            -0.19939,
+            -0.132793,
+            426166274.581,
+            77286024.759,
+            6987943.309,
+            -2.356,
+            11.386,
+            4.087,
+            148449956.422,
+            18409281.409,
+            7975891.432,
+            -4.574,
+            27.377,
+            11.699,
+            2.030016,
+        ],
+        dtype="object",
+    )
+    assert_equal(expected_first_row, oif_data.iloc[0].values)
+
+    column_headings = np.array(
+        [
+            "ObjID",
+            "FieldID",
+            "FieldMJD",
+            "AstRange(km)",
+            "AstRangeRate(km/s)",
+            "AstRA(deg)",
+            "AstRARate(deg/day)",
+            "AstDec(deg)",
+            "AstDecRate(deg/day)",
+            "Ast-Sun(J2000x)(km)",
+            "Ast-Sun(J2000y)(km)",
+            "Ast-Sun(J2000z)(km)",
+            "Ast-Sun(J2000vx)(km/s)",
+            "Ast-Sun(J2000vy)(km/s)",
+            "Ast-Sun(J2000vz)(km/s)",
+            "Obs-Sun(J2000x)(km)",
+            "Obs-Sun(J2000y)(km)",
+            "Obs-Sun(J2000z)(km)",
+            "Obs-Sun(J2000vx)(km/s)",
+            "Obs-Sun(J2000vy)(km/s)",
+            "Obs-Sun(J2000vz)(km/s)",
+            "Sun-Ast-Obs(deg)",
+        ],
+        dtype=object,
+    )
+    assert_equal(column_headings, oif_data.columns.values)
+
+    # Read in rows 3, 4, 5, 6 + the header
+    oif_data = csv_reader.read_rows(3, 4)
+    assert len(oif_data) == 4
+    assert_equal(column_headings, oif_data.columns.values)
+    assert_equal("S000021", oif_data.iloc[0].values[0])
+
+
+def test_CSVDataReader_oif_header():
+    """Test that we can read in the OIF data from a CSV when the header is NOT at row 0."""
+    csv_reader = CSVDataReader(get_test_filepath("oiftestoutput_comment.csv"), "csv")
+    assert csv_reader.header_row == 2
+
+    # Read in all 9 rows.
+    oif_data = csv_reader.read_rows()
+    assert len(oif_data) == 9
+
+    expected_first_row = np.array(
+        [
+            "S00000t",
+            379,
+            59853.205174,
+            283890475.515,
+            -1.12,
+            11.969664,
+            -0.280799,
+            -0.19939,
+            -0.132793,
+            426166274.581,
+            77286024.759,
+            6987943.309,
+            -2.356,
+            11.386,
+            4.087,
+            148449956.422,
+            18409281.409,
+            7975891.432,
+            -4.574,
+            27.377,
+            11.699,
+            2.030016,
+        ],
+        dtype="object",
+    )
+    assert_equal(expected_first_row, oif_data.iloc[0].values)
+
+    column_headings = np.array(
+        [
+            "ObjID",
+            "FieldID",
+            "FieldMJD",
+            "AstRange(km)",
+            "AstRangeRate(km/s)",
+            "AstRA(deg)",
+            "AstRARate(deg/day)",
+            "AstDec(deg)",
+            "AstDecRate(deg/day)",
+            "Ast-Sun(J2000x)(km)",
+            "Ast-Sun(J2000y)(km)",
+            "Ast-Sun(J2000z)(km)",
+            "Ast-Sun(J2000vx)(km/s)",
+            "Ast-Sun(J2000vy)(km/s)",
+            "Ast-Sun(J2000vz)(km/s)",
+            "Obs-Sun(J2000x)(km)",
+            "Obs-Sun(J2000y)(km)",
+            "Obs-Sun(J2000z)(km)",
+            "Obs-Sun(J2000vx)(km/s)",
+            "Obs-Sun(J2000vy)(km/s)",
+            "Obs-Sun(J2000vz)(km/s)",
+            "Sun-Ast-Obs(deg)",
+        ],
+        dtype=object,
+    )
+    assert_equal(column_headings, oif_data.columns.values)
+
+    # Read in rows 3, 4, 5, 6 + the header
+    oif_data = csv_reader.read_rows(3, 4)
+    assert len(oif_data) == 4
+    assert_equal(column_headings, oif_data.columns.values)
+    assert_equal("S000021", oif_data.iloc[0].values[0])
+
+
+def test_CSVDataReader_specific_oif():
+    """Test that we can read in the OIF data for specific object IDs only."""
+    csv_reader = CSVDataReader(get_test_filepath("oiftestoutput.csv"), "csv")
+    oif_data = csv_reader.read_objects(["S000015", "S000044"])
+    assert len(oif_data) == 5
+
+    # Check that we correctly loaded the header information.
+    column_headings = np.array(
+        [
+            "ObjID",
+            "FieldID",
+            "FieldMJD",
+            "AstRange(km)",
+            "AstRangeRate(km/s)",
+            "AstRA(deg)",
+            "AstRARate(deg/day)",
+            "AstDec(deg)",
+            "AstDecRate(deg/day)",
+            "Ast-Sun(J2000x)(km)",
+            "Ast-Sun(J2000y)(km)",
+            "Ast-Sun(J2000z)(km)",
+            "Ast-Sun(J2000vx)(km/s)",
+            "Ast-Sun(J2000vy)(km/s)",
+            "Ast-Sun(J2000vz)(km/s)",
+            "Obs-Sun(J2000x)(km)",
+            "Obs-Sun(J2000y)(km)",
+            "Obs-Sun(J2000z)(km)",
+            "Obs-Sun(J2000vx)(km/s)",
+            "Obs-Sun(J2000vy)(km/s)",
+            "Obs-Sun(J2000vz)(km/s)",
+            "Sun-Ast-Obs(deg)",
+        ],
+        dtype=object,
+    )
+    assert_equal(column_headings, oif_data.columns.values)
+
+    # Check that the first row matches.
+    expected_first_row = np.array(
+        [
+            "S000015",
+            60,
+            59853.050544,
+            668175640.541,
+            23.682,
+            312.82599,
+            -0.143012,
+            -49.366779,
+            0.060345,
+            444295081.174,
+            -301086798.179,
+            -499254823.262,
+            1.334,
+            2.899,
+            -0.966,
+            148508007.817,
+            18043717.331,
+            7819571.632,
+            -4.132,
+            27.288,
+            11.702,
+            11.073412,
+        ],
+        dtype="object",
+    )
+    assert_equal(expected_first_row, oif_data.iloc[0].values)
+
+    # Check that the remaining rows have the correct IDs.
+    assert_equal(oif_data.iloc[1].values[0], "S000015")
+    assert_equal(oif_data.iloc[2].values[0], "S000044")
+    assert_equal(oif_data.iloc[3].values[0], "S000044")
+    assert_equal(oif_data.iloc[4].values[0], "S000044")
+
 
 def test_CSVDataReader_orbits():
     """Test that we can read in the orbit data.
@@ -38,18 +263,18 @@ def test_CSVDataReader_orbits():
             54486.32292808,
             54466.0,
             1,
-            6, 
+            6,
             0.0158834222877167,
-            "MOPS"
+            "MOPS",
         ],
         dtype=object,
     )
-    
+
     expected_columns = np.array(
         [
             "ObjID",
             "FORMAT",
-             "q",
+            "q",
             "e",
             "i",
             "node",
@@ -60,7 +285,8 @@ def test_CSVDataReader_orbits():
             "N_PAR",
             "MOID",
             "COMPCODE",
-        ], dtype=object
+        ],
+        dtype=object,
     )
     assert_equal(expected_first_row, orbit_des.iloc[0].values)
     assert_equal(expected_columns, orbit_des.columns.values)
@@ -68,7 +294,7 @@ def test_CSVDataReader_orbits():
 
     with pytest.raises(SystemExit) as e2:
         bad_reader = CSVDataReader(get_test_filepath("testorb.csv"), "whitespace")
-        bad_table = bad_reader.read_rows()        
+        bad_table = bad_reader.read_rows()
     assert e2.type == SystemExit
 
 
@@ -89,12 +315,8 @@ def test_CSVDataReader_parameters():
     params_csv = csv_reader.read_rows(0, 2)
     assert len(params_txt) == 2
 
-    expected_first_line = np.array(
-        ["S00000t", 17.615, 0.3, 0.0, 0.1, 0.15], dtype=object
-    )
-    expected_columns = np.array(
-        ["ObjID", "H_r", "g-r", "i-r", "z-r", "GS"], dtype=object
-    )
+    expected_first_line = np.array(["S00000t", 17.615, 0.3, 0.0, 0.1, 0.15], dtype=object)
+    expected_columns = np.array(["ObjID", "H_r", "g-r", "i-r", "z-r", "GS"], dtype=object)
     assert_frame_equal(params_txt, params_csv)
 
     assert_equal(params_txt.iloc[0].values, expected_first_line)
@@ -103,7 +325,7 @@ def test_CSVDataReader_parameters():
     # Check a bad read.
     with pytest.raises(SystemExit) as e1:
         bad_reader = CSVDataReader(get_test_filepath("testcolour.txt"), "csv")
-        bad_table = bad_reader.read_rows()        
+        bad_table = bad_reader.read_rows()
     assert e1.type == SystemExit
 
     # Test reading the full text file.
