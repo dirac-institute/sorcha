@@ -1,5 +1,4 @@
 import numpy as np
-import pandas as pd
 import pytest
 from numpy.testing import assert_equal
 from pandas.testing import assert_frame_equal
@@ -294,7 +293,7 @@ def test_CSVDataReader_orbits():
 
     with pytest.raises(SystemExit) as e2:
         bad_reader = CSVDataReader(get_test_filepath("testorb.csv"), "whitespace")
-        bad_table = bad_reader.read_rows()
+        _ = bad_reader.read_rows()
     assert e2.type == SystemExit
 
 
@@ -325,7 +324,7 @@ def test_CSVDataReader_parameters():
     # Check a bad read.
     with pytest.raises(SystemExit) as e1:
         bad_reader = CSVDataReader(get_test_filepath("testcolour.txt"), "csv")
-        bad_table = bad_reader.read_rows()
+        _ = bad_reader.read_rows()
     assert e1.type == SystemExit
 
     # Test reading the full text file.

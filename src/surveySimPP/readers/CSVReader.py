@@ -107,8 +107,8 @@ class CSVDataReader(ObjectDataReader):
                 nrows=block_size,
             )
         else:
-            pplogger.error(f"ERROR: Unrecognized delimiter ({filesep})")
-            sys.exit(f"ERROR: Unrecognized delimiter ({filesep})")
+            pplogger.error(f"ERROR: Unrecognized delimiter ({self.sep})")
+            sys.exit(f"ERROR: Unrecognized delimiter ({self.sep})")
 
         # Strip out the whitespace from the column names.
         res_df = res_df.rename(columns=lambda x: x.strip())
@@ -126,7 +126,9 @@ class CSVDataReader(ObjectDataReader):
             if res_df.isnull().values.any():
                 pdt = res_df[res_df.isna().any(axis=1)]
                 inds = str(pdt["ObjID"].values)
-                outstr = f"ERROR: While reading {filename} found uninitialised values ObjID: {str(inds)}."
+                outstr = (
+                    f"ERROR: While reading {self.filename} found uninitialised values ObjID: {str(inds)}."
+                )
                 pplogger.error(outstr)
                 sys.exit(outstr)
 
@@ -150,8 +152,9 @@ class CSVDataReader(ObjectDataReader):
                 header=self.header_row,
             )
         else:
-            pplogger.error(f"ERROR: Unrecognized delimiter ({filesep})")
-            sys.exit(f"ERROR: Unrecognized delimiter ({filesep})")
+            pplogger = logging.getLogger(__name__)
+            pplogger.error(f"ERROR: Unrecognized delimiter ({self.sep})")
+            sys.exit(f"ERROR: Unrecognized delimiter ({self.sep})")
 
     def read_objects(self, obj_ids, **kwargs):
         """Read in a chunk of data for given object IDs.
@@ -185,7 +188,8 @@ class CSVDataReader(ObjectDataReader):
                 skiprows=(lambda x: not row_good[x]),
             )
         else:
-            pplogger.error(f"ERROR: Unrecognized delimiter ({filesep})")
-            sys.exit(f"ERROR: Unrecognized delimiter ({filesep})")
+            pplogger = logging.getLogger(__name__)
+            pplogger.error(f"ERROR: Unrecognized delimiter ({self.sep})")
+            sys.exit(f"ERROR: Unrecognized delimiter ({self.sep})")
 
         return res_df
