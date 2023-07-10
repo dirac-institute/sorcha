@@ -72,28 +72,29 @@ class TestBenchApplyColourOffsets:
     """Runtime benchmarking"""
 
     def test_bench_runtime(self):
-        for n in [1_000, 10_000]:
-            emitter = Emitter(
-                namespace="lsst.lf",
-                name="sspp.module_benchmarks",
-                module=PPApplyColourOffsets.__name__,
-                benchmark_type=f"run_{n}",
-                benchmark_unit="s",
-            )
+        num_copies = 1_000
 
-            t = timeit.Timer(
-                stmt=create_runtime_statement(),
-                setup=create_setup_str(n),
-                globals=globals(),
-            )
+        emitter = Emitter(
+            namespace="lsst.lf",
+            name="sspp.module_benchmarks",
+            module=PPApplyColourOffsets.__name__,
+            benchmark_type=f"run_{num_copies}",
+            benchmark_unit="s",
+        )
 
-            output = t.repeat(repeat=11, number=1)
+        t = timeit.Timer(
+            stmt=create_runtime_statement(),
+            setup=create_setup_str(num_copies),
+            globals=globals(),
+        )
 
-            # We take 11 samples, but we only emit the last 10.
-            # The first sample is considered a warm up.
-            for sample in output[1:]:
-                emitter.set_value(sample)
-                emitter.emit()
+        output = t.repeat(repeat=11, number=1)
+
+        # We take 11 samples, but we only emit the last 10.
+        # The first sample is considered a warm up.
+        for sample in output[1:]:
+            emitter.set_value(sample)
+            emitter.emit()
 
     """Memory usage benchmarking"""
 
