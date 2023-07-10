@@ -342,6 +342,19 @@ def test_CSVDataReader_parameters():
     assert len(params_txt2) == 5
 
 
+def test_CSVDataReader_parameters_objects():
+    """Test that we can read in the parameters data by object ID."""
+    # Only read in the first two lines.
+    txt_reader = CSVDataReader(get_test_filepath("testcolour.txt"), "whitespace")
+    params_txt = txt_reader.read_objects(["S000015", "NonsenseID"])
+    assert len(params_txt) == 1
+
+    expected_first_line = np.array(["S000015", 22.08, 0.3, 0.0, 0.1, 0.15], dtype=object)
+    expected_columns = np.array(["ObjID", "H_r", "g-r", "i-r", "z-r", "GS"], dtype=object)
+    assert_equal(params_txt.iloc[0].values, expected_first_line)
+    assert_equal(params_txt.columns.values, expected_columns)
+
+
 def test_CSVDataReader_delims():
     """Test that we check the delimiter during reader creation."""
     for delim in ["whitespace", "comma", "csv"]:

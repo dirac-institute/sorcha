@@ -31,7 +31,7 @@ class ObjectDataReader(abc.ABC):
         res_df (Pandas dataframe): dataframe of the auxilary data.
 
         """
-        pass
+        pass  # pragma: no cover
 
     @abc.abstractmethod
     def read_objects(self, obj_ids, **kwargs):
@@ -46,4 +46,4 @@ class ObjectDataReader(abc.ABC):
         -----------
         res_df (Pandas dataframe): The dataframe for the ephemerides.
         """
-        pass
+        pass  # pragma: no cover

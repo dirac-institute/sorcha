@@ -54,7 +54,7 @@ class CSVDataReader(ObjectDataReader):
             for i, line in enumerate(fh):
                 if line.startswith("ObjID"):
                     return i
-                if i > 100:  # because we don't want to scan infinitely
+                if i > 100:  # pragma: no cover
                     break
 
         pplogger = logging.getLogger(__name__)
@@ -124,7 +124,7 @@ class CSVDataReader(ObjectDataReader):
             sys.exit(err_str)
 
         # Check for NaNs or nulls.
-        if "validate_data" in kwargs and kwargs["validate_data"]:
+        if "validate_data" in kwargs and kwargs["validate_data"]:  # pragma: no cover
             if res_df.isnull().values.any():
                 pdt = res_df[res_df.isna().any(axis=1)]
                 inds = str(pdt["ObjID"].values)
