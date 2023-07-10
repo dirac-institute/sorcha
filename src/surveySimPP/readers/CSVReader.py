@@ -2,7 +2,7 @@ import pandas as pd
 import logging
 import sys
 
-from surveySimPP.readers import ObjectDataReader
+from surveySimPP.readers.ObjectDataReader import ObjectDataReader
 
 
 class CSVDataReader(ObjectDataReader):
@@ -12,20 +12,25 @@ class CSVDataReader(ObjectDataReader):
     Requires that the file's first column is ObjID.
     """
     
-    def __init__(self, filename, sep="csv", *args, **kwargs):
-        """A class for reading the ephemerides from a database.
+    def __init__(self, filename, sep="csv", header=-1, *args, **kwargs):
+        """A class for reading the object data from a CSV file.
 
         Parameters:
         -----------
         filename (string): location/name of the data file.
 
         sep (string, optional): format of input file ("whitespace"/"comma"/"csv").
+
+        header (int): The row number of the header. If not provided, does an automatic search.
         """
         super().__init__(*args, **kwargs)
         self.filename = filename
         self.sep = sep
 
-        self.header_row = self._find_header_line()
+        if header < 0:
+            self.header_row = self._find_header_line()
+        else:
+            self.header_row = header
         self.obj_id_map = None
 
 
@@ -42,8 +47,8 @@ class CSVDataReader(ObjectDataReader):
             for i, line in enumerate(fh):
                 if line.startswith("ObjID"):
                     return i
-            if i > 250:  # because we don't want to scan infinitely
-                break
+                if i > 100:  # because we don't want to scan infinitely
+                    break
 
         pplogger = logging.getLogger(__name__)
         pplogger.error(
@@ -69,7 +74,7 @@ class CSVDataReader(ObjectDataReader):
             Use block_size=None to read in all available data.
             [Default = None]
 
-        validate_data (bool, optional): if true then checks the data for
+        validate_data (bool, optional): if True then checks the data for
             NaNs or nulls.
 
         Returns:
@@ -82,24 +87,24 @@ class CSVDataReader(ObjectDataReader):
         skip_rows = []
         if self.header_row > 0:
             skip_rows = [i for i in range(0, self.header_row)]
-        if begin_loc > 0:
-            skip_rows.extend([i for i in range(self.header_row + 1, self.header_row + 1 + begin_loc)]
+        if block_start > 0:
+            skip_rows.extend([i for i in range(self.header_row + 1, self.header_row + 1 + block_start)])
 
         # Read the rows.
         if self.sep == "whitespace":
             res_df = pd.read_csv(
                 self.filename,
                 delim_whitespace=True,
-                skiprows=skip_rows
-                nrows=chunk_size,
+                skiprows=skip_rows,
+                nrows=block_size,
                 header=self.header_row,
             )
-        elif self.sep == "comma" or filesep == "csv":
+        elif self.sep == "comma" or self.sep == "csv":
             res_df = pd.read_csv(
                 self.filename,
                 delimiter=",",
-                skiprows=skip_rows
-                nrows=chunk_size,
+                skiprows=skip_rows,
+                nrows=block_size,
                 header=self.header_row,
             )
         else:
@@ -114,7 +119,7 @@ class CSVDataReader(ObjectDataReader):
         try:
             res_df["ObjID"] = res_df["ObjID"].astype(str)
         except KeyError:
-            err_str = f"ERROR: Unable to find ObjID column headings in {filename}."
+            err_str = f"ERROR: Unable to find ObjID column headings in {self.filename}."
             pplogger.error(err_str)
             sys.exit(err_str)
 
