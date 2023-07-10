@@ -173,7 +173,7 @@ class CSVDataReader(ObjectDataReader):
 
         # Create list of only the matching rows for these object IDs and the header row.
         row_good = [False] * self.header_row  # pre-header
-        row_good = [True]  # the header
+        row_good.extend([True])  # the header
         row_good.extend(self.obj_id_table["ObjID"].isin(obj_ids).values)
 
         # Read the rows.
