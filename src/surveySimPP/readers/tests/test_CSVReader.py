@@ -158,6 +158,11 @@ def test_CSVDataReader_oif_header():
     assert_equal(column_headings, oif_data.columns.values)
     assert_equal("S000021", oif_data.iloc[0].values[0])
 
+    # Everything still works if we manually provide the header line.
+    csv_reader2 = CSVDataReader(get_test_filepath("oiftestoutput_comment.csv"), "csv", header=2)
+    oif_data2 = csv_reader2.read_rows()
+    assert len(oif_data2) == 9
+
 
 def test_CSVDataReader_specific_oif():
     """Test that we can read in the OIF data for specific object IDs only."""
@@ -230,6 +235,11 @@ def test_CSVDataReader_specific_oif():
     assert_equal(oif_data.iloc[2].values[0], "S000044")
     assert_equal(oif_data.iloc[3].values[0], "S000044")
     assert_equal(oif_data.iloc[4].values[0], "S000044")
+
+    # Read different object IDs.
+    oif_data2 = csv_reader.read_objects(["S000021"])
+    assert len(oif_data2) == 1
+    assert_equal(oif_data2.iloc[0].values[0], "S000021")
 
 
 def test_CSVDataReader_orbits():
@@ -330,3 +340,17 @@ def test_CSVDataReader_parameters():
     # Test reading the full text file.
     params_txt2 = txt_reader.read_rows()
     assert len(params_txt2) == 5
+
+
+def test_CSVDataReader_delims():
+    """Test that we check the delimiter during reader creation."""
+    for delim in ["whitespace", "comma", "csv"]:
+        _ = CSVDataReader(get_test_filepath("testcolour.txt"), delim)
+
+    with pytest.raises(SystemExit) as e1:
+        _ = CSVDataReader(get_test_filepath("testcolour.txt"), "many_commas")
+    assert e1.type == SystemExit
+
+    with pytest.raises(SystemExit) as e2:
+        _ = CSVDataReader(get_test_filepath("testcolour.txt"), "")
+    assert e2.type == SystemExit

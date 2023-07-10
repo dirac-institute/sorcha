@@ -25,6 +25,11 @@ class CSVDataReader(ObjectDataReader):
         """
         super().__init__(*args, **kwargs)
         self.filename = filename
+
+        if sep not in ["whitespace", "comma", "csv"]:
+            pplogger = logging.getLogger(__name__)
+            pplogger.error(f"ERROR: Unrecognized delimiter ({sep})")
+            sys.exit(f"ERROR: Unrecognized delimiter ({sep})")
         self.sep = sep
 
         if header < 0:
@@ -99,16 +104,13 @@ class CSVDataReader(ObjectDataReader):
                 skiprows=skip_rows,
                 nrows=block_size,
             )
-        elif self.sep == "comma" or self.sep == "csv":
+        else:
             res_df = pd.read_csv(
                 self.filename,
                 delimiter=",",
                 skiprows=skip_rows,
                 nrows=block_size,
             )
-        else:
-            pplogger.error(f"ERROR: Unrecognized delimiter ({self.sep})")
-            sys.exit(f"ERROR: Unrecognized delimiter ({self.sep})")
 
         # Strip out the whitespace from the column names.
         res_df = res_df.rename(columns=lambda x: x.strip())
@@ -146,17 +148,13 @@ class CSVDataReader(ObjectDataReader):
                 usecols=["ObjID"],
                 header=self.header_row,
             )
-        elif self.sep == "comma" or self.sep == "csv":
+        else:
             self.obj_id_table = pd.read_csv(
                 self.filename,
                 delimiter=",",
                 usecols=["ObjID"],
                 header=self.header_row,
             )
-        else:
-            pplogger = logging.getLogger(__name__)
-            pplogger.error(f"ERROR: Unrecognized delimiter ({self.sep})")
-            sys.exit(f"ERROR: Unrecognized delimiter ({self.sep})")
 
     def read_objects(self, obj_ids, **kwargs):
         """Read in a chunk of data for given object IDs.
@@ -183,15 +181,11 @@ class CSVDataReader(ObjectDataReader):
                 delim_whitespace=True,
                 skiprows=(lambda x: not row_good[x]),
             )
-        elif self.sep == "comma" or self.sep == "csv":
+        else:
             res_df = pd.read_csv(
                 self.filename,
                 delimiter=",",
                 skiprows=(lambda x: not row_good[x]),
             )
-        else:
-            pplogger = logging.getLogger(__name__)
-            pplogger.error(f"ERROR: Unrecognized delimiter ({self.sep})")
-            sys.exit(f"ERROR: Unrecognized delimiter ({self.sep})")
 
         return res_df
