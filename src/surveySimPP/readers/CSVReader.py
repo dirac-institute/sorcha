@@ -143,12 +143,14 @@ class CSVDataReader(ObjectDataReader):
             self.obj_id_table = pd.read_csv(
                 self.filename,
                 delim_whitespace=True,
+                usecols=["ObjID"],
                 header=self.header_row,
             )
         elif self.sep == "comma" or self.sep == "csv":
             self.obj_id_table = pd.read_csv(
                 self.filename,
                 delimiter=",",
+                usecols=["ObjID"],
                 header=self.header_row,
             )
         else:
