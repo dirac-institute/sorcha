@@ -16,11 +16,8 @@ from . import PPReadPointingDatabase
 from . import PPMatchPointingToObservations
 from . import PPOutput
 from . import PPRandomizeMeasurements
-from . import PPReadPhysicalParameters
-from . import PPReadCometaryParameters
 from . import PPReadTemporaryEphemerisDatabase
 from . import PPReadOif
-from . import PPReadOrbitFile
 from . import PPTrailingLoss
 from . import PPVignetting
 from . import PPConfigParser

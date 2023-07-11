@@ -1,15 +1,14 @@
 import logging
 import sys
 
-from .PPReadOrbitFile import PPReadOrbitFile
 from .PPCheckInputObjectIDs import PPCheckInputObjectIDs
-from .PPReadCometaryParameters import PPReadCometaryParameters
 from .PPReadTemporaryEphemerisDatabase import PPReadTemporaryEphemerisDatabase
 from .PPReadEphemerides import PPReadEphemerides
 from .PPJoinEphemeridesAndParameters import PPJoinEphemeridesAndParameters
 from .PPJoinEphemeridesAndOrbits import PPJoinEphemeridesAndOrbits
 from .PPMatchPointingToObservations import PPMatchPointingToObservations
-from .PPReadPhysicalParameters import PPReadPhysicalParameters
+from surveySimPP.readers.CSVReader import CSVDataReader
+from surveySimPP.readers.OrbitAuxReader import OrbitAuxReader
 
 
 def PPReadAllInput(cmd_args, configs, filterpointing, startChunk, incrStep, verbose=True):
@@ -43,13 +42,17 @@ def PPReadAllInput(cmd_args, configs, filterpointing, startChunk, incrStep, verb
     verboselog = pplogger.info if verbose else lambda *a, **k: None
 
     verboselog("Reading input orbit file: " + cmd_args["orbinfile"])
-    padaor = PPReadOrbitFile(cmd_args["orbinfile"], startChunk, incrStep, configs["aux_format"])
+    orbit_reader = OrbitAuxReader(cmd_args["orbinfile"], configs["aux_format"])
+    padaor = orbit_reader.read_rows(startChunk, incrStep)
 
     verboselog("Reading input physical parameters: " + cmd_args["paramsinput"])
-    padacl = PPReadPhysicalParameters(cmd_args["paramsinput"], startChunk, incrStep, configs["aux_format"])
+    param_reader = CSVDataReader(cmd_args["paramsinput"], configs["aux_format"])
+    padacl = param_reader.read_rows(startChunk, incrStep)
+
     if configs["comet_activity"] == "comet":
         verboselog("Reading cometary parameters: " + cmd_args["cometinput"])
-        padaco = PPReadCometaryParameters(cmd_args["cometinput"], startChunk, incrStep, configs["aux_format"])
+        comet_reader = CSVDataReader(cmd_args["cometinput"], configs["aux_format"])
+        padaco = PPReadCometaryParameters(startChunk, incrStep)
 
     objid_list = padacl["ObjID"].unique().tolist()
 

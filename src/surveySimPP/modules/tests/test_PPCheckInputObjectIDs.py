@@ -2,15 +2,19 @@ from surveySimPP.tests.data import get_test_filepath
 
 
 def test_PPCheckInputObjectIDs():
-    from surveySimPP.modules.PPReadOrbitFile import PPReadOrbitFile
-    from surveySimPP.modules.PPReadPhysicalParameters import PPReadPhysicalParameters
     from surveySimPP.modules.PPCheckInputObjectIDs import PPCheckInputObjectIDs
     from surveySimPP.modules.PPReadOif import PPReadOif
-
+    from surveySimPP.readers.CSVReader import CSVDataReader
+    from surveySimPP.readers.OrbitAuxReader import OrbitAuxReader
+    
     compval = 1
 
-    padaor = PPReadOrbitFile(get_test_filepath("testorb.des"), 0, 10, "whitespace")
-    padacl = PPReadPhysicalParameters(get_test_filepath("testcolour.txt"), 0, 10, "whitespace")
+    orbit_reader = OrbitAuxReader(get_test_filepath("testorb.des"), "whitespace")
+    padaor = orbit_reader.read_rows(0, 10)
+
+    param_reader = CSVDataReader(get_test_filepath("testcolour.txt"), "whitespace")
+    padacl = param_reader.read_rows(0, 10)
+
     padapo = PPReadOif(get_test_filepath("oiftestoutput.txt"), "whitespace")
 
     print(padaor)
