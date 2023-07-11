@@ -6,7 +6,7 @@ def test_PPCheckInputObjectIDs():
     from surveySimPP.modules.PPReadOif import PPReadOif
     from surveySimPP.readers.CSVReader import CSVDataReader
     from surveySimPP.readers.OrbitAuxReader import OrbitAuxReader
-    
+
     compval = 1
 
     orbit_reader = OrbitAuxReader(get_test_filepath("testorb.des"), "whitespace")

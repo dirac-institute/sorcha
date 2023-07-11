@@ -52,7 +52,7 @@ def PPReadAllInput(cmd_args, configs, filterpointing, startChunk, incrStep, verb
     if configs["comet_activity"] == "comet":
         verboselog("Reading cometary parameters: " + cmd_args["cometinput"])
         comet_reader = CSVDataReader(cmd_args["cometinput"], configs["aux_format"])
-        padaco = PPReadCometaryParameters(startChunk, incrStep)
+        padaco = comet_reader.read_rows(startChunk, incrStep)
 
     objid_list = padacl["ObjID"].unique().tolist()
 
