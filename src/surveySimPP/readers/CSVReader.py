@@ -156,6 +156,16 @@ class CSVDataReader(ObjectDataReader):
                 header=self.header_row,
             )
 
+        # Confirm that the ObjID column exists and convert it to a string.
+        try:
+            self.obj_id_table["ObjID"] = self.obj_id_table["ObjID"].astype(str)
+        except KeyError:    # pragma: no cover
+            pplogger = logging.getLogger(__name__)
+            err_str = f"ERROR: Unable to find ObjID column headings in {self.filename}."
+            pplogger.error(err_str)
+            sys.exit(err_str)
+
+
     def read_objects(self, obj_ids, **kwargs):
         """Read in a chunk of data for given object IDs.
 
@@ -170,22 +180,22 @@ class CSVDataReader(ObjectDataReader):
         self._build_id_map()
 
         # Create list of only the matching rows for these object IDs and the header row.
-        row_good = [False] * self.header_row  # pre-header
-        row_good.extend([True])  # the header
-        row_good.extend(self.obj_id_table["ObjID"].isin(obj_ids).values)
+        skipped_row = [True] * self.header_row  # skip the pre-header
+        skipped_row.extend([False])  # Keep the the column header
+        skipped_row.extend(~self.obj_id_table["ObjID"].isin(obj_ids).values)
 
         # Read the rows.
         if self.sep == "whitespace":
             res_df = pd.read_csv(
                 self.filename,
                 delim_whitespace=True,
-                skiprows=(lambda x: not row_good[x]),
+                skiprows=(lambda x: skipped_row[x]),
             )
         else:
             res_df = pd.read_csv(
                 self.filename,
                 delimiter=",",
-                skiprows=(lambda x: not row_good[x]),
+                skiprows=(lambda x: skipped_row[x]),
             )
 
         return res_df
