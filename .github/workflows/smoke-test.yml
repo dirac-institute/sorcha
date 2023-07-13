@@ -3,7 +3,7 @@
 # See documentation for help debugging smoke test issues:
 #    https://lincc-ppt.readthedocs.io/en/latest/practices/ci_testing.html#version-culprit
 
-name: Unit test smoke test
+name: Daily unit smoke test
 
 on:
   schedule:
@@ -11,15 +11,15 @@ on:
 
 jobs:
   build:
-
-    runs-on: ubuntu-latest
     strategy:
       matrix:
+        os: ['ubuntu-latest', 'macos-latest']
         python-version: ['3.8', '3.9', '3.10']
 
+    runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v3
-    - name: Set up Python ${{ matrix.python-version }}
+    - name: Set up - ${{ matrix.os }} - Python ${{ matrix.python-version }}
       uses: actions/setup-python@v4
       with:
         python-version: ${{ matrix.python-version }}
@@ -27,8 +27,8 @@ jobs:
       run: |
         sudo apt-get update
         python -m pip install --upgrade pip
-        pip install .
-        pip install .[dev]
+        pip install -e .
+        pip install -e .[dev]
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     - name: List dependencies
       run: |
