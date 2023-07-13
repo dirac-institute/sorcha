@@ -28,4 +28,4 @@ jobs:
 
     - name: Benchmark with pytest
       run: |
-        pytest -s -vv ./src/surveySimPP/modules/benchmarks/*
+        pytest -s -vv ./benchmarks/*
