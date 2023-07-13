@@ -6,7 +6,7 @@ from surveySimPP.readers.ObjectDataReader import ObjectDataReader
 
 
 class CSVDataReader(ObjectDataReader):
-    """A class to read in object data files stores as CSV or whitespace
+    """A class to read in object data files stored as CSV or whitespace
     separated values.
 
     Requires that the file's first column is ObjID.
@@ -134,6 +134,7 @@ class CSVDataReader(ObjectDataReader):
                 pplogger.error(outstr)
                 sys.exit(outstr)
 
+        res_df = self.process_and_validate_input_table(res_df)
         return res_df
 
     def _build_id_map(self):
@@ -196,5 +197,6 @@ class CSVDataReader(ObjectDataReader):
                 delimiter=",",
                 skiprows=(lambda x: skipped_row[x]),
             )
+        res_df = self.process_and_validate_input_table(res_df)
 
         return res_df

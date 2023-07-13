@@ -1,4 +1,5 @@
 import numpy as np
+import pandas as pd
 import pytest
 from numpy.testing import assert_equal
 from pandas.testing import assert_frame_equal
@@ -353,6 +354,14 @@ def test_CSVDataReader_parameters_objects():
     expected_columns = np.array(["ObjID", "H_r", "g-r", "i-r", "z-r", "GS"], dtype=object)
     assert_equal(params_txt.iloc[0].values, expected_first_line)
     assert_equal(params_txt.columns.values, expected_columns)
+
+
+def test_CSVDataReader_comets():
+    reader = CSVDataReader(get_test_filepath("testcomet.txt"), "whitespace")
+    observations = reader.read_rows(0, 1)
+
+    expected = pd.DataFrame({"ObjID": ["67P/Churyumov-Gerasimenko"], "afrho1": [1552], "k": [-3.35]})
+    assert_frame_equal(observations, expected)
 
 
 def test_CSVDataReader_delims():

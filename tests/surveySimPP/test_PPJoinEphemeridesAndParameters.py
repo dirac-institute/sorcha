@@ -5,10 +5,11 @@ from numpy.testing import assert_equal
 def test_PPJoinEphemeridesAndParameters():
     from surveySimPP.modules.PPJoinEphemeridesAndParameters import PPJoinEphemeridesAndParameters
     from surveySimPP.modules.PPReadOif import PPReadOif
-    from surveySimPP.modules.PPReadPhysicalParameters import PPReadPhysicalParameters
+    from surveySimPP.readers.CSVReader import CSVDataReader
 
     oif_file = PPReadOif(get_test_filepath("oiftestoutput.txt"), "whitespace")
-    params_file = PPReadPhysicalParameters(get_test_filepath("testcolour.txt"), 0, 5, "whitespace")
+    param_reader = CSVDataReader(get_test_filepath("testcolour.txt"), "whitespace")
+    params_file = param_reader.read_rows(0, 5)
 
     joined_df = PPJoinEphemeridesAndParameters(oif_file, params_file)
 

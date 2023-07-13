@@ -18,9 +18,10 @@ def setup_and_teardown_for_PPReadTemporaryEphemerisDatabase():
 def test_PPReadTemporaryEphemerisDatabase(setup_and_teardown_for_PPReadTemporaryEphemerisDatabase):
     from surveySimPP.modules.PPMakeTemporaryEphemerisDatabase import PPMakeTemporaryEphemerisDatabase
     from surveySimPP.modules.PPReadTemporaryEphemerisDatabase import PPReadTemporaryEphemerisDatabase
-    from surveySimPP.modules.PPReadPhysicalParameters import PPReadPhysicalParameters
+    from surveySimPP.readers.CSVReader import CSVDataReader
 
-    padacl = PPReadPhysicalParameters(get_test_filepath("testcolour.txt"), 0, 5, "whitespace")
+    param_reader = CSVDataReader(get_test_filepath("testcolour.txt"), "whitespace")
+    padacl = param_reader.read_rows(0, 5)
     print(padacl)
     objid_list = padacl["ObjID"].unique().tolist()
 

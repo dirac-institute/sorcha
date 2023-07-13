@@ -28,7 +28,7 @@ class ObjectDataReader(abc.ABC):
 
         Returns:
         -----------
-        res_df (Pandas dataframe): dataframe of the auxilary data.
+        res_df (Pandas dataframe): dataframe of the object data.
 
         """
         pass  # pragma: no cover
@@ -44,6 +44,20 @@ class ObjectDataReader(abc.ABC):
 
         Returns:
         -----------
-        res_df (Pandas dataframe): The dataframe for the ephemerides.
+        res_df (Pandas dataframe): The dataframe for the object data.
         """
         pass  # pragma: no cover
+
+    def process_and_validate_input_table(self, input_table, **kwargs):
+        """Perform any input-specific processing and validation on the input table.
+        Modifies the input dataframe in place.
+
+        Parameters:
+        -----------
+        input_table (Pandas dataframe): A loaded table.
+
+        Returns:
+        -----------
+        res_df (Pandas dataframe): Returns the input dataframe modified in-place.
+        """
+        return input_table
