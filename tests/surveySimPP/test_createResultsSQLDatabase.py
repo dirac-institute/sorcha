@@ -4,7 +4,7 @@ import sqlite3
 import os
 from pandas.testing import assert_frame_equal
 
-from surveySimPP.utilities.test_data_utilities import get_test_filepath
+from surveySimPP.utilities.dataUtilitiesForTests import get_test_filepath
 
 
 class args:

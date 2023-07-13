@@ -1,7 +1,7 @@
 import numpy as np
 from numpy.testing import assert_equal
 
-from surveySimPP.utilities.test_data_utilities import get_test_filepath
+from surveySimPP.utilities.dataUtilitiesForTests import get_test_filepath
 
 
 def test_PPReadAllInput():

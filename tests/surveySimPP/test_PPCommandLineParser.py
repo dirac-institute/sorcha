@@ -1,7 +1,7 @@
 import os
 import pytest
 
-from surveySimPP.utilities.test_data_utilities import get_test_filepath
+from surveySimPP.utilities.dataUtilitiesForTests import get_test_filepath
 
 
 class args:

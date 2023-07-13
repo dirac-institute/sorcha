@@ -2,7 +2,7 @@ import os
 import sys
 import pytest
 
-from surveySimPP.utilities.test_data_utilities import get_test_filepath
+from surveySimPP.utilities.dataUtilitiesForTests import get_test_filepath
 
 # These tests won't work on Windows because Windows uses backslashes for paths.
 # Hence, the asserts will always fail.

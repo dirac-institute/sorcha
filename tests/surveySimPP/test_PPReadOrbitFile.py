@@ -3,7 +3,7 @@ import pytest
 from numpy.testing import assert_equal
 from pandas.testing import assert_frame_equal
 
-from surveySimPP.utilities.test_data_utilities import get_test_filepath
+from surveySimPP.utilities.dataUtilitiesForTests import get_test_filepath
 
 
 def test_PPReadOrbitFile():

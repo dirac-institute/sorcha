@@ -4,7 +4,7 @@ import sys
 import pytest
 
 from surveySimPP.utilities.makeConfigOIF import makeConfig
-from surveySimPP.utilities.test_data_utilities import get_test_filepath
+from surveySimPP.utilities.dataUtilitiesForTests import get_test_filepath
 
 # On Windows, the test is apparently not creating the files in the expected place.
 # Not sure why, will troubleshoot later.

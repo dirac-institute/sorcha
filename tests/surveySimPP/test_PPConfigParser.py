@@ -5,7 +5,7 @@ import configparser
 import pytest
 import glob
 
-from surveySimPP.utilities.test_data_utilities import get_test_filepath
+from surveySimPP.utilities.dataUtilitiesForTests import get_test_filepath
 
 
 @pytest.fixture
