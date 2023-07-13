@@ -4,7 +4,7 @@ from numpy.testing import assert_equal
 from pandas.testing import assert_frame_equal
 
 from surveySimPP.readers.OrbitAuxReader import OrbitAuxReader
-from surveySimPP.tests.data import get_test_filepath
+from surveySimPP.utilities.dataUtilitiesForTests import get_test_filepath
 
 
 def test_OrbitAuxReader():
