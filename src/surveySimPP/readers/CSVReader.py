@@ -132,7 +132,7 @@ class CSVDataReader(ObjectDataReader):
                 header=self.header_row,
             )
 
-        self.obj_id_table = self.process_and_validate_input_table(self.obj_id_table)
+        self.obj_id_table = self._validate_object_id_column(self.obj_id_table)
 
     def read_objects(self, obj_ids, **kwargs):
         """Read in a chunk of data for given object IDs.
@@ -190,10 +190,21 @@ class CSVDataReader(ObjectDataReader):
         -----------
         input_table (Pandas dataframe): Returns the input dataframe modified in-place.
         """
-        # Perform the parent class's validation.
+        # Perform the parent class's validation (checking object ID column).
         input_table = super().process_and_validate_input_table(input_table, **kwargs)
 
         # Strip out the whitespace from the column names.
         input_table = input_table.rename(columns=lambda x: x.strip())
+
+        # Check for NaNs or nulls.
+        if "disallow_nan" in kwargs and kwargs["disallow_nan"]:  # pragma: no cover
+            if input_table.isnull().values.any():
+                pdt = input_table[input_table.isna().any(axis=1)]
+                inds = str(pdt["ObjID"].values)
+                outstr = f"ERROR: While reading table {self.filename} found uninitialised values ObjID: {str(inds)}."
+
+                pplogger = logging.getLogger(__name__)
+                pplogger.error(outstr)
+                sys.exit(outstr)
 
         return input_table
