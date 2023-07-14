@@ -4,10 +4,10 @@ from numpy.testing import assert_equal
 
 def test_PPJoinEphemeridesAndOrbits():
     from surveySimPP.modules.PPJoinEphemeridesAndOrbits import PPJoinEphemeridesAndOrbits
-    from surveySimPP.modules.PPReadOif import PPReadOif
+    from surveySimPP.readers.OIFReader import read_full_oif_table
     from surveySimPP.readers.OrbitAuxReader import OrbitAuxReader
 
-    oif_file = PPReadOif(get_test_filepath("oiftestoutput.txt"), "whitespace")
+    oif_file = read_full_oif_table(get_test_filepath("oiftestoutput.txt"), "whitespace")
     orbit_reader = OrbitAuxReader(get_test_filepath("testorb.des"), "whitespace")
     orbit_file = orbit_reader.read_rows(0, 5)
 

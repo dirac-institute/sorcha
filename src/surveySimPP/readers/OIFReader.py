@@ -100,35 +100,32 @@ class OIFDataReader(ObjectDataReader):
         input_table = input_table.rename(columns=lambda x: x.strip())
         input_table = input_table.drop(["V", "V(H=0)"], axis=1, errors="ignore")
 
-        oif_cols = np.array(
-            [
-                "ObjID",
-                "FieldID",
-                "FieldMJD",
-                "AstRange(km)",
-                "AstRangeRate(km/s)",
-                "AstRA(deg)",
-                "AstRARate(deg/day)",
-                "AstDec(deg)",
-                "AstDecRate(deg/day)",
-                "Ast-Sun(J2000x)(km)",
-                "Ast-Sun(J2000y)(km)",
-                "Ast-Sun(J2000z)(km)",
-                "Ast-Sun(J2000vx)(km/s)",
-                "Ast-Sun(J2000vy)(km/s)",
-                "Ast-Sun(J2000vz)(km/s)",
-                "Obs-Sun(J2000x)(km)",
-                "Obs-Sun(J2000y)(km)",
-                "Obs-Sun(J2000z)(km)",
-                "Obs-Sun(J2000vx)(km/s)",
-                "Obs-Sun(J2000vy)(km/s)",
-                "Obs-Sun(J2000vz)(km/s)",
-                "Sun-Ast-Obs(deg)",
-            ],
-            dtype="object",
-        )
+        oif_cols = [
+            "ObjID",
+            "FieldID",
+            "FieldMJD",
+            "AstRange(km)",
+            "AstRangeRate(km/s)",
+            "AstRA(deg)",
+            "AstRARate(deg/day)",
+            "AstDec(deg)",
+            "AstDecRate(deg/day)",
+            "Ast-Sun(J2000x)(km)",
+            "Ast-Sun(J2000y)(km)",
+            "Ast-Sun(J2000z)(km)",
+            "Ast-Sun(J2000vx)(km/s)",
+            "Ast-Sun(J2000vy)(km/s)",
+            "Ast-Sun(J2000vz)(km/s)",
+            "Obs-Sun(J2000x)(km)",
+            "Obs-Sun(J2000y)(km)",
+            "Obs-Sun(J2000z)(km)",
+            "Obs-Sun(J2000vx)(km/s)",
+            "Obs-Sun(J2000vy)(km/s)",
+            "Obs-Sun(J2000vz)(km/s)",
+            "Sun-Ast-Obs(deg)",
+        ]
 
-        if not set(input_table.columns.values).issubset(oif_cols):
+        if not set(input_table.columns.values).issubset(np.array(oif_cols)):
             pplogger = logging.getLogger(__name__)
             pplogger.error(
                 "ERROR: OIFDataReader: column headings do not match expected OIF column headings. Check format of file."
@@ -137,4 +134,24 @@ class OIFDataReader(ObjectDataReader):
                 "ERROR: OIFDataReader: column headings do not match expected OIF column headings. Check format of file."
             )
 
-        return input_table
+        # Return only the columns of interest.
+        return input_table[oif_cols]
+
+
+def read_full_oif_table(filename, inputformat):
+    """A helper function for testing that reads and returns an entire OIF table.
+
+    Parameters:
+    -----------
+    filename (string): location/name of the data file.
+
+    inputformat (string): format of input file ("whitespace"/"comma"/"csv"/"h5"/"hdf5").
+
+    Returns:
+    -----------
+    res_df (Pandas dataframe): dataframe of the object data.
+
+    """
+    reader = OIFDataReader(filename, inputformat)
+    res_df = reader.read_rows()
+    return res_df
