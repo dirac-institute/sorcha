@@ -84,8 +84,6 @@ class CSVDataReader(ObjectDataReader):
         -----------
         res_df (Pandas dataframe): dataframe of the auxilary data.
         """
-        pplogger = logging.getLogger(__name__)
-
         # Skip the rows before the header and then begin_loc rows after the header.
         skip_rows = []
         if self.header_row > 0:
