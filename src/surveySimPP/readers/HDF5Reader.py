@@ -8,21 +8,21 @@ from surveySimPP.readers.ObjectDataReader import ObjectDataReader
 class HDF5DataReader(ObjectDataReader):
     """A class to read in object data files stored as HDF5 files."""
 
-    def __init__(self, filename, *args, **kwargs):
+    def __init__(self, filename, **kwargs):
         """A class for reading the object data from an HDF5 file.
 
         Parameters:
         -----------
         filename (string): location/name of the data file.
         """
-        super().__init__(*args, **kwargs)
+        super().__init__(**kwargs)
         self.filename = filename
 
         # A table holding just the object ID for each row. Only populated
         # if we try to read data for specific object IDs.
         self.obj_id_table = None
 
-    def read_rows(self, block_start=0, block_size=None, **kwargs):
+    def _read_rows_internal(self, block_start=0, block_size=None, **kwargs):
         """Reads in a set number of rows from the input.
 
         Parameters:
@@ -54,7 +54,6 @@ class HDF5DataReader(ObjectDataReader):
                 start=block_start,
                 stop=block_start + block_size,
             )
-        res_df = self.process_and_validate_input_table(res_df, **kwargs)
         return res_df
 
     def _build_id_map(self):
@@ -64,7 +63,7 @@ class HDF5DataReader(ObjectDataReader):
         self.obj_id_table = pd.read_hdf(self.filename, columns=["ObjID"])
         self.obj_id_table = self._validate_object_id_column(self.obj_id_table)
 
-    def read_objects(self, obj_ids, **kwargs):
+    def _read_objects_internal(self, obj_ids, **kwargs):
         """Read in a chunk of data for given object IDs.
 
         Parameters:
@@ -78,12 +77,10 @@ class HDF5DataReader(ObjectDataReader):
         self._build_id_map()
         row_match = self.obj_id_table["ObjID"].isin(obj_ids)
         match_inds = self.obj_id_table[row_match].index
-
         res_df = pd.read_hdf(self.filename, where="index=match_inds")  # noqa: F841
-        res_df = self.process_and_validate_input_table(res_df, **kwargs)
         return res_df
 
-    def process_and_validate_input_table(self, input_table, **kwargs):
+    def _process_and_validate_input_table(self, input_table, **kwargs):
         """Perform any input-specific processing and validation on the input table.
         Modifies the input dataframe in place.
 
@@ -105,7 +102,7 @@ class HDF5DataReader(ObjectDataReader):
         input_table (Pandas dataframe): Returns the input dataframe modified in-place.
         """
         # Perform the parent class's validation (checking object ID column).
-        input_table = super().process_and_validate_input_table(input_table, **kwargs)
+        input_table = super()._process_and_validate_input_table(input_table, **kwargs)
 
         # Check for NaNs or nulls.
         if "disallow_nan" in kwargs and kwargs["disallow_nan"]:  # pragma: no cover

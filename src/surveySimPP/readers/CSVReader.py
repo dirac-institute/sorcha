@@ -12,7 +12,7 @@ class CSVDataReader(ObjectDataReader):
     Requires that the file's first column is ObjID.
     """
 
-    def __init__(self, filename, sep="csv", header=-1, *args, **kwargs):
+    def __init__(self, filename, sep="csv", header=-1, **kwargs):
         """A class for reading the object data from a CSV file.
 
         Parameters:
@@ -21,9 +21,9 @@ class CSVDataReader(ObjectDataReader):
 
         sep (string, optional): format of input file ("whitespace"/"comma"/"csv").
 
-        header (int): The row number of the header. If not provided, does an automatic search.
+        header (int, optional): The row number of the header. If not provided, does an automatic search.
         """
-        super().__init__(*args, **kwargs)
+        super().__init__(**kwargs)
         self.filename = filename
 
         if sep not in ["whitespace", "comma", "csv"]:
@@ -66,7 +66,7 @@ class CSVDataReader(ObjectDataReader):
         )
         return 0
 
-    def read_rows(self, block_start=0, block_size=None, **kwargs):
+    def _read_rows_internal(self, block_start=0, block_size=None, **kwargs):
         """Reads in a set number of rows from the input.
 
         Parameters:
@@ -106,8 +106,6 @@ class CSVDataReader(ObjectDataReader):
                 skiprows=skip_rows,
                 nrows=block_size,
             )
-
-        res_df = self.process_and_validate_input_table(res_df, **kwargs)
         return res_df
 
     def _build_id_map(self):
@@ -132,7 +130,7 @@ class CSVDataReader(ObjectDataReader):
 
         self.obj_id_table = self._validate_object_id_column(self.obj_id_table)
 
-    def read_objects(self, obj_ids, **kwargs):
+    def _read_objects_internal(self, obj_ids, **kwargs):
         """Read in a chunk of data for given object IDs.
 
         Parameters:
@@ -163,11 +161,9 @@ class CSVDataReader(ObjectDataReader):
                 delimiter=",",
                 skiprows=(lambda x: skipped_row[x]),
             )
-        res_df = self.process_and_validate_input_table(res_df, **kwargs)
-
         return res_df
 
-    def process_and_validate_input_table(self, input_table, **kwargs):
+    def _process_and_validate_input_table(self, input_table, **kwargs):
         """Perform any input-specific processing and validation on the input table.
         Modifies the input dataframe in place.
 
@@ -189,7 +185,7 @@ class CSVDataReader(ObjectDataReader):
         input_table (Pandas dataframe): Returns the input dataframe modified in-place.
         """
         # Perform the parent class's validation (checking object ID column).
-        input_table = super().process_and_validate_input_table(input_table, **kwargs)
+        input_table = super()._process_and_validate_input_table(input_table, **kwargs)
 
         # Strip out the whitespace from the column names.
         input_table = input_table.rename(columns=lambda x: x.strip())
