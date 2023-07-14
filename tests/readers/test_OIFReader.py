@@ -85,9 +85,13 @@ def test_OIFDataReader():
     with pytest.raises(SystemExit) as e:
         reader_ws2 = OIFDataReader(get_test_filepath("testcolour.txt"), inputformat="whitespace")
         _ = reader_ws2.read_rows()
-
     assert e.type == SystemExit
     assert (
         e.value.code
         == "ERROR: OIFDataReader: column headings do not match expected OIF column headings. Check format of file."
     )
+
+    # Check an invalid file type.
+    with pytest.raises(SystemExit) as e:
+        reader_ws2 = OIFDataReader(get_test_filepath("testcolour.txt"), inputformat="invalid")
+    assert e.type == SystemExit
