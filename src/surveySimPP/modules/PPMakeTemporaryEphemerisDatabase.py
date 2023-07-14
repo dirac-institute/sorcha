@@ -1,7 +1,4 @@
-import pandas as pd
 import sqlite3
-import logging
-import sys
 
 from surveySimPP.readers.OIFReader import OIFDataReader
 
@@ -27,9 +24,6 @@ def PPMakeTemporaryEphemerisDatabase(oif_output, out_fn, inputformat, chunksize=
     out_fn (string): as input.
 
     """
-
-    pplogger = logging.getLogger(__name__)
-
     cnx = sqlite3.connect(out_fn)
 
     cur = cnx.cursor()
