@@ -8,7 +8,14 @@ from surveySimPP.readers.ObjectDataReader import ObjectDataReader
 
 
 class OIFDataReader(ObjectDataReader):
-    """A class to read in ephemeris from a OIF file."""
+    """A class to read in ephemeris from a OIF file.
+
+    Instead of subclassing the various readers (CSV, HDF5, etc.) individually, this class instantiates
+    one of those classes in an internal ``reader`` attribute. As such all reading, validation, etc. is
+    passed off to the ``reader`` object this object owns. While this adds a level of indirection, it
+    allows us to support a cross product of N file types from M ephemeris generators with M + N readers
+    instead of M * N.
+    """
 
     def __init__(self, filename, inputformat, **kwargs):
         """A class for reading the object data from a CSV file.

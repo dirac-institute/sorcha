@@ -1,9 +1,16 @@
-"""Classes for reading object-related data from a variety of sources.
-Each data source needs to have a column ObjID that identifies the object and
-can be used for joining and filtering.
+"""Base class for reading object-related data from a variety of sources
+and returning a pandas data frame.
 
-To create a new reader class, you need to subclass ObjectDataReader
-and implement at least _read_rows_internal and _read_objects_internal.
+Each subclass of ObjectDataReader must implement at least the functions
+_read_rows_internal and _read_objects_internal, both of which return a
+pandas data frame. Each data source needs to have a column ObjID that
+identifies the object and can be used for joining and filtering.
+
+Caching is implemented in the base class. This will lazy load the full
+table into memory from the chosen data source, so it should only be
+used with smaller data sets. Both``read_rows`` and ``read_objects``
+will check for a cached table before reading the files, allowing them
+to perform direct pandas operations if the data is already in memory.
 """
 import abc
 import logging
@@ -16,6 +23,10 @@ class ObjectDataReader(abc.ABC):
     def __init__(self, cache_table=False, **kwargs):
         """Set up the reader.
 
+        Note
+        ----
+        Does not load cached table into memory until the first read.
+
         Parameters
         ----------
         cache_table (bool, optional): Indicates whether to keep the entire table in memory.
@@ -24,7 +35,8 @@ class ObjectDataReader(abc.ABC):
         self._table = None
 
     def read_rows(self, block_start=0, block_size=None, **kwargs):
-        """Reads in a set number of rows from the input.
+        """Reads in a set number of rows from the input, performs
+        post-processing and validation, and returns a data frame.
 
         Parameters:
         -----------
@@ -42,7 +54,6 @@ class ObjectDataReader(abc.ABC):
         res_df (Pandas dataframe): dataframe of the object data.
 
         """
-        # If we have the table cached, just return the rows.
         if self._cache_table:
             # Load the entire table the first time.
             if self._table is None:
@@ -78,7 +89,6 @@ class ObjectDataReader(abc.ABC):
         -----------
         res_df (Pandas dataframe): The dataframe for the object data.
         """
-        # If we have the table cached, just return the rows.
         if self._cache_table:
             # Load the entire table the first time.
             if self._table is None:
