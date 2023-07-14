@@ -11,7 +11,7 @@ from surveySimPP.readers.OIFReader import OIFDataReader
 from surveySimPP.readers.OrbitAuxReader import OrbitAuxReader
 
 
-def PPReadAllInput(cmd_args, configs, filterpointing, startChunk, incrStep, verbose=True, old_method=True):
+def PPReadAllInput(cmd_args, configs, filterpointing, startChunk, incrStep, verbose=True):
     """
     Reads in the simulation data and the orbit and physical parameter files, and then
     joins them with the pointing database to create a single Pandas dataframe of simulation
@@ -73,12 +73,10 @@ def PPReadAllInput(cmd_args, configs, filterpointing, startChunk, incrStep, verb
             verboselog("Reading input ephemerides from: " + cmd_args["oifoutput"])
             emphem_reader = OIFDataReader(cmd_args["oifoutput"], configs["eph_format"])
 
-            # Read everything and filter on rows.
-            if old_method:
-                padafr = emphem_reader.read_rows()
-                padafr = padafr[padafr["ObjID"].isin(objid_list)]
-            else:
-                padafr = emphem_reader.read_objects(objid_list)
+            # Read everything and filter on rows. Depending on the chunksize and filtering
+            # we might want to use emphem_reader.read_objects().
+            padafr = emphem_reader.read_rows()
+            padafr = padafr[padafr["ObjID"].isin(objid_list)]
 
         except MemoryError:
             pplogger.error(
