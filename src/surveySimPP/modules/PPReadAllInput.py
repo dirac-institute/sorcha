@@ -65,7 +65,7 @@ def PPReadAllInput(cmd_args, configs, filterpointing, startChunk, incrStep, verb
         # That does the selection and checks. We are holding off adding this level of indirection until there
         # is a second ephemerides_type.
         ephem_type = configs["ephemerides_type"]
-        if ephem_type.casefold() != "oif":
+        if ephem_type.casefold() != "oif":  # pragma: no cover
             pplogger.error(f"PPReadAllInput: Unsupported value for ephemerides_type {ephem_type}")
             sys.exit(f"PPReadAllInput: Unsupported value for ephemerides_type {ephem_type}")
 
