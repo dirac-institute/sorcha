@@ -3,8 +3,8 @@ from surveySimPP.utilities.dataUtilitiesForTests import get_test_filepath
 
 def test_PPCheckInputObjectIDs():
     from surveySimPP.modules.PPCheckInputObjectIDs import PPCheckInputObjectIDs
-    from surveySimPP.modules.PPReadOif import PPReadOif
     from surveySimPP.readers.CSVReader import CSVDataReader
+    from surveySimPP.readers.OIFReader import read_full_oif_table
     from surveySimPP.readers.OrbitAuxReader import OrbitAuxReader
 
     compval = 1
@@ -15,7 +15,7 @@ def test_PPCheckInputObjectIDs():
     param_reader = CSVDataReader(get_test_filepath("testcolour.txt"), "whitespace")
     padacl = param_reader.read_rows(0, 10)
 
-    padapo = PPReadOif(get_test_filepath("oiftestoutput.txt"), "whitespace")
+    padapo = read_full_oif_table(get_test_filepath("oiftestoutput.txt"), "whitespace")
 
     print(padaor)
     print(padacl)

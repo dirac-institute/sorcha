@@ -2,7 +2,8 @@ import pandas as pd
 import sqlite3
 import logging
 import sys
-from .PPReadOif import PPSkipOifHeader
+
+from surveySimPP.readers.OIFReader import OIFDataReader
 
 
 def PPMakeTemporaryEphemerisDatabase(oif_output, out_fn, inputformat, chunksize=1e6):
@@ -36,71 +37,17 @@ def PPMakeTemporaryEphemerisDatabase(oif_output, out_fn, inputformat, chunksize=
     cmd = "drop table if exists interm"
     cur.execute(cmd)
 
-    if inputformat == "whitespace":
-        PPChunkedTemporaryDatabaseCreation(cnx, oif_output, chunksize, delimiter="whitespace")
-    elif (inputformat == "comma") or (inputformat == "csv"):
-        PPChunkedTemporaryDatabaseCreation(cnx, oif_output, chunksize, delimiter=",")
-    elif (inputformat == "h5") or (inputformat == "hdf5") or (inputformat == "HDF5"):
-        padafr = pd.read_hdf(oif_output).reset_index(drop=True)
-        padafr.to_sql("interm", con=cnx, if_exists="append", index=False)
-    else:
-        pplogger.error(
-            "ERROR: PPMakeTemporaryEphemerisDatabase: unknown format for ephemeris simulation results."
-        )
-        sys.exit("ERROR: PPMakeTemporaryEphemerisDatabase: unknown format for ephemeris simulation results.")
+    reader = OIFDataReader(oif_output, inputformat)
 
-    return out_fn
-
-
-def PPChunkedTemporaryDatabaseCreation(cnx, oif_output, chunkSize, delimiter):
-    """
-    Splits up a .csv into chunks to create the temporary ephemerides database,
-    to avoid memory problems for very large ephemerides files.
-
-    Parameters:
-    -----------
-    cnx (sqlite3 connection object): the connection object of the SQLite database.
-
-    oif_output (string): the location of OIF/other output to be converted to database.
-
-    chunkSize (int): number of rows in which to chunk database creation.
-
-    delimiter (string): character used as delimiter in OIF/other output.
-
-    Returns:
-    -----------
-    None.
-
-    """
-
-    n_rows = -1
-    with open(oif_output) as f:
-        for n_rows, _ in enumerate(f):
-            pass
-
+    # Load in chunks. The reader does automatic chunking for all file formats
+    # and does all validation.
     startChunk = 0
-    endChunk = 0
+    lastStartChunk = -1
+    while lastStartChunk < startChunk:
+        lastStartChunk = startChunk
+        interm = reader.read_rows(startChunk, chunksize)
+        startChunk = int(startChunk + len(interm))
 
-    while endChunk <= n_rows:
-        endChunk = int(startChunk + chunkSize)
-
-        if n_rows - startChunk >= chunkSize:
-            incrStep = chunkSize
-        else:
-            incrStep = n_rows - startChunk
-
-        if delimiter == "whitespace":
-            interm = PPSkipOifHeader(
-                oif_output, "ObjID", delim_whitespace=True, skiprows=range(1, startChunk + 1), nrows=incrStep
-            )
-        elif delimiter == ",":
-            interm = PPSkipOifHeader(
-                oif_output, "ObjID", delimiter=",", skiprows=range(1, startChunk + 1), nrows=incrStep
-            )
-
-        interm.drop(["V", "V(H=0)"], axis=1, inplace=True, errors="ignore")
         interm.to_sql("interm", con=cnx, if_exists="append", index=False)
 
-        startChunk = int(startChunk + chunkSize)
-
-    return
+    return out_fn
