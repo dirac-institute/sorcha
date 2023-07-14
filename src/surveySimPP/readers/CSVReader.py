@@ -80,9 +80,6 @@ class CSVDataReader(ObjectDataReader):
             Use block_size=None to read in all available data.
             [Default = None]
 
-        validate_data (bool, optional): if True then checks the data for
-            NaNs or nulls.
-
         Returns:
         -----------
         res_df (Pandas dataframe): dataframe of the auxilary data.
@@ -112,29 +109,7 @@ class CSVDataReader(ObjectDataReader):
                 nrows=block_size,
             )
 
-        # Strip out the whitespace from the column names.
-        res_df = res_df.rename(columns=lambda x: x.strip())
-
-        # Check that the ObjID column exists and convert it to a string.
-        try:
-            res_df["ObjID"] = res_df["ObjID"].astype(str)
-        except KeyError:
-            err_str = f"ERROR: Unable to find ObjID column headings in {self.filename}."
-            pplogger.error(err_str)
-            sys.exit(err_str)
-
-        # Check for NaNs or nulls.
-        if "validate_data" in kwargs and kwargs["validate_data"]:  # pragma: no cover
-            if res_df.isnull().values.any():
-                pdt = res_df[res_df.isna().any(axis=1)]
-                inds = str(pdt["ObjID"].values)
-                outstr = (
-                    f"ERROR: While reading {self.filename} found uninitialised values ObjID: {str(inds)}."
-                )
-                pplogger.error(outstr)
-                sys.exit(outstr)
-
-        res_df = self.process_and_validate_input_table(res_df)
+        res_df = self.process_and_validate_input_table(res_df, **kwargs)
         return res_df
 
     def _build_id_map(self):
@@ -157,14 +132,7 @@ class CSVDataReader(ObjectDataReader):
                 header=self.header_row,
             )
 
-        # Confirm that the ObjID column exists and convert it to a string.
-        try:
-            self.obj_id_table["ObjID"] = self.obj_id_table["ObjID"].astype(str)
-        except KeyError:  # pragma: no cover
-            pplogger = logging.getLogger(__name__)
-            err_str = f"ERROR: Unable to find ObjID column headings in {self.filename}."
-            pplogger.error(err_str)
-            sys.exit(err_str)
+        self.obj_id_table = self.process_and_validate_input_table(self.obj_id_table)
 
     def read_objects(self, obj_ids, **kwargs):
         """Read in a chunk of data for given object IDs.
@@ -197,6 +165,35 @@ class CSVDataReader(ObjectDataReader):
                 delimiter=",",
                 skiprows=(lambda x: skipped_row[x]),
             )
-        res_df = self.process_and_validate_input_table(res_df)
+        res_df = self.process_and_validate_input_table(res_df, **kwargs)
 
         return res_df
+
+    def process_and_validate_input_table(self, input_table, **kwargs):
+        """Perform any input-specific processing and validation on the input table.
+        Modifies the input dataframe in place.
+
+        Note
+        ----
+        The base implementation includes filtering that is common to most
+        input types. Subclasses should call super.process_and_validate()
+        to ensure that the ancestor’s validation is also applied.
+
+        Parameters:
+        -----------
+        input_table (Pandas dataframe): A loaded table.
+
+        disallow_nan (bool, optional): if True then checks the data for
+            NaNs or nulls.
+
+        Returns:
+        -----------
+        input_table (Pandas dataframe): Returns the input dataframe modified in-place.
+        """
+        # Perform the parent class's validation.
+        input_table = super().process_and_validate_input_table(input_table, **kwargs)
+
+        # Strip out the whitespace from the column names.
+        input_table = input_table.rename(columns=lambda x: x.strip())
+
+        return input_table

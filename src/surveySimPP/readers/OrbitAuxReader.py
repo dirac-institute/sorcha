@@ -24,14 +24,26 @@ class OrbitAuxReader(CSVDataReader):
         """Perform any input-specific processing and validation on the input table.
         Modifies the input dataframe in place.
 
+        Note
+        ----
+        The base implementation includes filtering that is common to most
+        input types. Subclasses should call super.process_and_validate()
+        to ensure that the ancestor’s validation is also applied.
+
         Parameters:
         -----------
         input_table (Pandas dataframe): A loaded table.
+
+        disallow_nan (bool, optional): if True then checks the data for
+            NaNs or nulls.
 
         Returns:
         -----------
         res_df (Pandas dataframe): Returns the input dataframe modified in-place.
         """
+        # Do standard CSV file processing
+        super().process_and_validate_input_table(input_table, **kwargs)
+
         pplogger = logging.getLogger(__name__)
 
         # Check for an H column (which should not be in the orbit file).
