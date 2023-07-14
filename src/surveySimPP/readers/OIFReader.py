@@ -10,7 +10,7 @@ from surveySimPP.readers.ObjectDataReader import ObjectDataReader
 class OIFDataReader(ObjectDataReader):
     """A class to read in ephemeris from a OIF file."""
 
-    def __init__(self, filename, inputformat, *args, **kwargs):
+    def __init__(self, filename, inputformat, **kwargs):
         """A class for reading the object data from a CSV file.
 
         Parameters:
@@ -19,14 +19,14 @@ class OIFDataReader(ObjectDataReader):
 
         inputformat (string): format of input file ("whitespace"/"comma"/"csv"/"h5"/"hdf5").
         """
-        super().__init__(*args, **kwargs)
+        super().__init__(**kwargs)
 
         pplogger = logging.getLogger(__name__)
         self.reader = None
         if (inputformat == "whitespace") or (inputformat == "comma") or (inputformat == "csv"):
-            self.reader = CSVDataReader(filename, sep=inputformat, *args, **kwargs)
+            self.reader = CSVDataReader(filename, sep=inputformat, **kwargs)
         elif (inputformat == "h5") or (inputformat == "hdf5") or (inputformat == "HDF5"):
-            self.reader = HDF5DataReader(filename, *args, **kwargs)
+            self.reader = HDF5DataReader(filename, **kwargs)
         else:
             pplogger.error(
                 f"ERROR: OIFDataReader: unknown format for ephemeris simulation results ({inputformat})."
@@ -35,7 +35,7 @@ class OIFDataReader(ObjectDataReader):
                 f"ERROR: OIFDataReader: unknown format for ephemeris simulation results ({inputformat})."
             )
 
-    def read_rows(self, block_start=0, block_size=None, **kwargs):
+    def _read_rows_internal(self, block_start=0, block_size=None, **kwargs):
         """Reads in a set number of rows from the input.
 
         Parameters:
@@ -55,10 +55,9 @@ class OIFDataReader(ObjectDataReader):
 
         """
         res_df = self.reader.read_rows(block_start, block_size, **kwargs)
-        res_df = self.process_and_validate_input_table(res_df, **kwargs)
         return res_df
 
-    def read_objects(self, obj_ids, **kwargs):
+    def _read_objects_internal(self, obj_ids, **kwargs):
         """Read in a chunk of data corresponding to all rows for
         a given set of object IDs.
 
@@ -71,10 +70,9 @@ class OIFDataReader(ObjectDataReader):
         res_df (Pandas dataframe): The dataframe for the object data.
         """
         res_df = self.reader.read_objects(obj_ids, **kwargs)
-        res_df = self.process_and_validate_input_table(res_df, **kwargs)
         return res_df
 
-    def process_and_validate_input_table(self, input_table, **kwargs):
+    def _process_and_validate_input_table(self, input_table, **kwargs):
         """Perform any input-specific processing and validation on the input table.
         Modifies the input dataframe in place.
 
