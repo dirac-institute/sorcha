@@ -1,5 +1,4 @@
 import numpy as np
-import pandas as pd
 import logging
 import sys
 
@@ -71,7 +70,7 @@ class OIFDataReader(ObjectDataReader):
         -----------
         res_df (Pandas dataframe): The dataframe for the object data.
         """
-        res_df = self.reader.read_objects(object_ids, **kwargs)
+        res_df = self.reader.read_objects(obj_ids, **kwargs)
         res_df = self.process_and_validate_input_table(res_df, **kwargs)
         return res_df
 

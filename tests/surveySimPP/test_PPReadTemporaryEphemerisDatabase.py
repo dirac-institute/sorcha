@@ -1,5 +1,4 @@
 import os
-from pathlib import Path
 import pytest
 
 from surveySimPP.utilities.dataUtilitiesForTests import get_test_filepath

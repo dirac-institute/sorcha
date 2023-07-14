@@ -1,2 +1,5 @@
 from . import ObjectDataReader
 from . import CSVReader
+from . import HDF5Reader
+from . import OIFReader
+from . import OrbitAuxReader

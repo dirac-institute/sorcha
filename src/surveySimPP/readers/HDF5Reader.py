@@ -77,9 +77,9 @@ class HDF5DataReader(ObjectDataReader):
         """
         self._build_id_map()
         row_match = self.obj_id_table["ObjID"].isin(obj_ids)
-        read_rows = self.obj_id_table[row_match].index
+        match_inds = self.obj_id_table[row_match].index
 
-        res_df = pd.read_hdf(self.filename, where="index=read_rows")
+        res_df = pd.read_hdf(self.filename, where="index=match_inds")  # noqa: F841
         res_df = self.process_and_validate_input_table(res_df, **kwargs)
         return res_df
 
