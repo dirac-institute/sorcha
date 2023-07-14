@@ -4,13 +4,13 @@ import pytest
 from numpy.testing import assert_equal
 from pandas.testing import assert_frame_equal
 
-from surveySimPP.readers.HDF5Reader import HDF5Reader
+from surveySimPP.readers.HDF5Reader import HDF5DataReader
 from surveySimPP.utilities.dataUtilitiesForTests import get_test_filepath
 
 
-def test_HDF5Reader_read_rows():
+def test_HDF5DataReader_read_rows():
     """Test that we can read in the OIF data from an HDF5 file."""
-    reader = HDF5Reader(get_test_filepath("oiftestoutput.h5"), "hdf5")
+    reader = HDF5DataReader(get_test_filepath("oiftestoutput.h5"), "hdf5")
     oif_data = reader.read_rows()
     assert len(oif_data) == 9
 
@@ -79,9 +79,9 @@ def test_HDF5Reader_read_rows():
     assert_equal("S000021", oif_data.iloc[0].values[0])
 
 
-def test_HDF5Reader_read_objects():
+def test_HDF5DataReader_read_objects():
     """Test that we can read in the OIF data for specific object IDs only."""
-    reader = HDF5Reader(get_test_filepath("oiftestoutput.h5"), "hdf5")
+    reader = HDF5DataReader(get_test_filepath("oiftestoutput.h5"), "hdf5")
     oif_data = reader.read_objects(["S000015", "S000044"])
     assert len(oif_data) == 5
 

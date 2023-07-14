@@ -5,7 +5,7 @@ import sys
 from surveySimPP.readers.ObjectDataReader import ObjectDataReader
 
 
-class HDF5Reader(ObjectDataReader):
+class HDF5DataReader(ObjectDataReader):
     """A class to read in object data files stored as HDF5 files."""
 
     def __init__(self, filename, *args, **kwargs):
