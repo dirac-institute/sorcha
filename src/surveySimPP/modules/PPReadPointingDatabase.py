@@ -38,7 +38,6 @@ def PPReadPointingDatabase(bsdbname, observing_filters, dbquery):
 
     df["observationId_"] = df["observationId"]
     df = df.rename(columns={"observationId": "FieldID"})
-    df = df.rename(columns={"observationId": "FieldID"})
     df = df.rename(columns={"filter": "optFilter"})  # not to confuse with the pandas filter command
     dfo = df[df.optFilter.isin(observing_filters)]
 
