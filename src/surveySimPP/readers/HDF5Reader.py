@@ -1,6 +1,4 @@
 import pandas as pd
-import logging
-import sys
 
 from surveySimPP.readers.ObjectDataReader import ObjectDataReader
 
@@ -41,7 +39,7 @@ class HDF5DataReader(ObjectDataReader):
 
         Returns:
         -----------
-        res_df (Pandas dataframe): dataframe of the auxilary data.
+        res_df (Pandas dataframe): dataframe of the object data.
         """
         if block_size is None:
             res_df = pd.read_hdf(
@@ -72,7 +70,7 @@ class HDF5DataReader(ObjectDataReader):
 
         Returns:
         -----------
-        res_df (Pandas dataframe): The dataframe for the ephemerides.
+        res_df (Pandas dataframe): The dataframe for the object data.
         """
         self._build_id_map()
         row_match = self.obj_id_table["ObjID"].isin(obj_ids)
@@ -94,25 +92,11 @@ class HDF5DataReader(ObjectDataReader):
         -----------
         input_table (Pandas dataframe): A loaded table.
 
-        disallow_nan (bool, optional): if True then checks the data for
-            NaNs or nulls.
-
         Returns:
         -----------
         input_table (Pandas dataframe): Returns the input dataframe modified in-place.
         """
         # Perform the parent class's validation (checking object ID column).
         input_table = super()._process_and_validate_input_table(input_table, **kwargs)
-
-        # Check for NaNs or nulls.
-        if "disallow_nan" in kwargs and kwargs["disallow_nan"]:  # pragma: no cover
-            if input_table.isnull().values.any():
-                pdt = input_table[input_table.isna().any(axis=1)]
-                inds = str(pdt["ObjID"].values)
-                outstr = f"ERROR: While reading table {self.filename} found uninitialised values ObjID: {str(inds)}."
-
-                pplogger = logging.getLogger(__name__)
-                pplogger.error(outstr)
-                sys.exit(outstr)
 
         return input_table

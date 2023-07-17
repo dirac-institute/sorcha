@@ -34,9 +34,6 @@ class OrbitAuxReader(CSVDataReader):
         -----------
         input_table (Pandas dataframe): A loaded table.
 
-        disallow_nan (bool, optional): if True then checks the data for
-            NaNs or nulls.
-
         Returns:
         -----------
         res_df (Pandas dataframe): Returns the input dataframe modified in-place.
