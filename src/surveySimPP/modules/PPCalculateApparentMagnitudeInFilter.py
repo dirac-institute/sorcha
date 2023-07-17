@@ -5,7 +5,7 @@ from sbpy.photometry import HG, HG1G2, HG12_Pen16, LinearPhaseFunc
 import logging
 
 
-def PPCalculateApparentMagnitudeInFilter(padain, function, mainfilter, colname="TrailedSourceMag"):
+def PPCalculateApparentMagnitudeInFilter(padain, function, colname="TrailedSourceMag"):
     """
     This task calculates the apparent brightness of an object at a given pointing
     according to one of the following photometric phase function models:
@@ -26,8 +26,6 @@ def PPCalculateApparentMagnitudeInFilter(padain, function, mainfilter, colname="
     padain (Pandas dataframe): dataframe of observations.
 
     function (string): desired phase function model. Options are HG, HG12, HG1G2, linear, none.
-
-    mainfilter (string): the main filter in which H is originally given and all colour offsets are calculated against.
 
     colname (string): column name in which to store calculated magnitude.
 
