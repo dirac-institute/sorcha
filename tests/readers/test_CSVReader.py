@@ -8,13 +8,14 @@ from surveySimPP.readers.CSVReader import CSVDataReader
 from surveySimPP.utilities.dataUtilitiesForTests import get_test_filepath
 
 
-def test_CSVDataReader_oif():
+@pytest.mark.parametrize("use_cache", [True, False])
+def test_CSVDataReader_oif(use_cache):
     """Test that we can read in the OIF data from a CSV.
 
     This test does not perform any transformations, filtering, or validation of the data.
     It just loads it directly from a CSV.
     """
-    csv_reader = CSVDataReader(get_test_filepath("oiftestoutput.csv"), "csv")
+    csv_reader = CSVDataReader(get_test_filepath("oiftestoutput.csv"), "csv", cache_table=use_cache)
     assert csv_reader.header_row == 0
 
     # Read in all 9 rows.
@@ -165,9 +166,10 @@ def test_CSVDataReader_oif_header():
     assert len(oif_data2) == 9
 
 
-def test_CSVDataReader_specific_oif():
+@pytest.mark.parametrize("use_cache", [True, False])
+def test_CSVDataReader_specific_oif(use_cache):
     """Test that we can read in the OIF data for specific object IDs only."""
-    csv_reader = CSVDataReader(get_test_filepath("oiftestoutput.csv"), "csv")
+    csv_reader = CSVDataReader(get_test_filepath("oiftestoutput.csv"), "csv", cache_table=use_cache)
     oif_data = csv_reader.read_objects(["S000015", "S000044"])
     assert len(oif_data) == 5
 

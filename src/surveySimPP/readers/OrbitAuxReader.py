@@ -7,7 +7,7 @@ from surveySimPP.readers.CSVReader import CSVDataReader
 class OrbitAuxReader(CSVDataReader):
     """A class to read in the auxiliary orbit data files."""
 
-    def __init__(self, filename, sep="csv", header=-1, *args, **kwargs):
+    def __init__(self, filename, sep="csv", header=-1, **kwargs):
         """A class for reading the object data from a CSV file.
 
         Parameters:
@@ -18,20 +18,32 @@ class OrbitAuxReader(CSVDataReader):
 
         header (int): The row number of the header. If not provided, does an automatic search.
         """
-        super().__init__(filename, sep, header, *args, **kwargs)
+        super().__init__(filename, sep, header, **kwargs)
 
-    def process_and_validate_input_table(self, input_table, **kwargs):
+    def _process_and_validate_input_table(self, input_table, **kwargs):
         """Perform any input-specific processing and validation on the input table.
         Modifies the input dataframe in place.
+
+        Note
+        ----
+        The base implementation includes filtering that is common to most
+        input types. Subclasses should call super.process_and_validate()
+        to ensure that the ancestor’s validation is also applied.
 
         Parameters:
         -----------
         input_table (Pandas dataframe): A loaded table.
 
+        disallow_nan (bool, optional): if True then checks the data for
+            NaNs or nulls.
+
         Returns:
         -----------
         res_df (Pandas dataframe): Returns the input dataframe modified in-place.
         """
+        # Do standard CSV file processing
+        super()._process_and_validate_input_table(input_table, **kwargs)
+
         pplogger = logging.getLogger(__name__)
 
         # Check for an H column (which should not be in the orbit file).

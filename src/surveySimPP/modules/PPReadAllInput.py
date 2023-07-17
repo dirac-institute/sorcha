@@ -3,11 +3,11 @@ import sys
 
 from .PPCheckInputObjectIDs import PPCheckInputObjectIDs
 from .PPReadTemporaryEphemerisDatabase import PPReadTemporaryEphemerisDatabase
-from .PPReadEphemerides import PPReadEphemerides
 from .PPJoinEphemeridesAndParameters import PPJoinEphemeridesAndParameters
 from .PPJoinEphemeridesAndOrbits import PPJoinEphemeridesAndOrbits
 from .PPMatchPointingToObservations import PPMatchPointingToObservations
 from surveySimPP.readers.CSVReader import CSVDataReader
+from surveySimPP.readers.OIFReader import OIFDataReader
 from surveySimPP.readers.OrbitAuxReader import OrbitAuxReader
 
 
@@ -61,12 +61,21 @@ def PPReadAllInput(cmd_args, configs, filterpointing, startChunk, incrStep, verb
         verboselog("Reading from temporary ephemeris database.")
         padafr = PPReadTemporaryEphemerisDatabase(cmd_args["readTemporaryEphemerisDatabase"], objid_list)
     else:
+        # TODO: Once more ephemerides_types are added this should be wrapped in a EphemerisDataReader
+        # That does the selection and checks. We are holding off adding this level of indirection until there
+        # is a second ephemerides_type.
+        ephem_type = configs["ephemerides_type"]
+        if ephem_type.casefold() != "oif":  # pragma: no cover
+            pplogger.error(f"PPReadAllInput: Unsupported value for ephemerides_type {ephem_type}")
+            sys.exit(f"PPReadAllInput: Unsupported value for ephemerides_type {ephem_type}")
+
         try:
             verboselog("Reading input ephemerides from: " + cmd_args["oifoutput"])
-            padafr = PPReadEphemerides(
-                cmd_args["oifoutput"], configs["ephemerides_type"], configs["eph_format"]
-            )
+            emphem_reader = OIFDataReader(cmd_args["oifoutput"], configs["eph_format"])
 
+            # Read everything and filter on rows. Depending on the chunksize and filtering
+            # we might want to use emphem_reader.read_objects().
+            padafr = emphem_reader.read_rows()
             padafr = padafr[padafr["ObjID"].isin(objid_list)]
 
         except MemoryError:

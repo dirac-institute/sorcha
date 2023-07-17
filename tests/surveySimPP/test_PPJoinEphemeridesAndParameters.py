@@ -4,10 +4,10 @@ from numpy.testing import assert_equal
 
 def test_PPJoinEphemeridesAndParameters():
     from surveySimPP.modules.PPJoinEphemeridesAndParameters import PPJoinEphemeridesAndParameters
-    from surveySimPP.modules.PPReadOif import PPReadOif
+    from surveySimPP.readers.OIFReader import read_full_oif_table
     from surveySimPP.readers.CSVReader import CSVDataReader
 
-    oif_file = PPReadOif(get_test_filepath("oiftestoutput.txt"), "whitespace")
+    oif_file = read_full_oif_table(get_test_filepath("oiftestoutput.txt"), "whitespace")
     param_reader = CSVDataReader(get_test_filepath("testcolour.txt"), "whitespace")
     params_file = param_reader.read_rows(0, 5)
 
