@@ -41,6 +41,7 @@ if it is observable with LSST, and specific guides for near earth objects, Jupit
    acknowledgements
    cite
    uninstall 
+   notebooks
 
 .. toctree::
    :maxdepth: 1
