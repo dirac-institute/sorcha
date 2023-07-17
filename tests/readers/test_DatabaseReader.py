@@ -1,6 +1,5 @@
 import os
 import numpy as np
-import pytest
 import tempfile
 
 from numpy.testing import assert_equal

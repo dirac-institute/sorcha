@@ -2,11 +2,11 @@ import logging
 import sys
 
 from .PPCheckInputObjectIDs import PPCheckInputObjectIDs
-from .PPReadTemporaryEphemerisDatabase import PPReadTemporaryEphemerisDatabase
 from .PPJoinEphemeridesAndParameters import PPJoinEphemeridesAndParameters
 from .PPJoinEphemeridesAndOrbits import PPJoinEphemeridesAndOrbits
 from .PPMatchPointingToObservations import PPMatchPointingToObservations
 from surveySimPP.readers.CSVReader import CSVDataReader
+from surveySimPP.readers.DatabaseReader import DatabaseReader
 from surveySimPP.readers.OIFReader import OIFDataReader
 from surveySimPP.readers.OrbitAuxReader import OrbitAuxReader
 
@@ -59,7 +59,8 @@ def PPReadAllInput(cmd_args, configs, filterpointing, startChunk, incrStep, verb
     if cmd_args["makeTemporaryEphemerisDatabase"] or cmd_args["readTemporaryEphemerisDatabase"]:
         # read from temporary database
         verboselog("Reading from temporary ephemeris database.")
-        padafr = PPReadTemporaryEphemerisDatabase(cmd_args["readTemporaryEphemerisDatabase"], objid_list)
+        emphem_reader = DatabaseReader(cmd_args["readTemporaryEphemerisDatabase"])
+        padafr = emphem_reader.read_objects(objid_list)
     else:
         # TODO: Once more ephemerides_types are added this should be wrapped in a EphemerisDataReader
         # That does the selection and checks. We are holding off adding this level of indirection until there
