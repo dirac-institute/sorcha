@@ -82,7 +82,7 @@ class CSVDataReader(ObjectDataReader):
 
         Returns:
         -----------
-        res_df (Pandas dataframe): dataframe of the auxilary data.
+        res_df (Pandas dataframe): dataframe of the object data.
         """
         # Skip the rows before the header and then begin_loc rows after the header.
         skip_rows = []
@@ -139,7 +139,7 @@ class CSVDataReader(ObjectDataReader):
 
         Returns:
         -----------
-        res_df (Pandas dataframe): The dataframe for the ephemerides.
+        res_df (Pandas dataframe): The dataframe for the object data.
         """
         self._build_id_map()
 
@@ -177,9 +177,6 @@ class CSVDataReader(ObjectDataReader):
         -----------
         input_table (Pandas dataframe): A loaded table.
 
-        disallow_nan (bool, optional): if True then checks the data for
-            NaNs or nulls.
-
         Returns:
         -----------
         input_table (Pandas dataframe): Returns the input dataframe modified in-place.
@@ -189,16 +186,5 @@ class CSVDataReader(ObjectDataReader):
 
         # Strip out the whitespace from the column names.
         input_table = input_table.rename(columns=lambda x: x.strip())
-
-        # Check for NaNs or nulls.
-        if "disallow_nan" in kwargs and kwargs["disallow_nan"]:  # pragma: no cover
-            if input_table.isnull().values.any():
-                pdt = input_table[input_table.isna().any(axis=1)]
-                inds = str(pdt["ObjID"].values)
-                outstr = f"ERROR: While reading table {self.filename} found uninitialised values ObjID: {str(inds)}."
-
-                pplogger = logging.getLogger(__name__)
-                pplogger.error(outstr)
-                sys.exit(outstr)
 
         return input_table

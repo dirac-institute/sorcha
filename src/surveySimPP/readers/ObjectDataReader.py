@@ -8,7 +8,7 @@ identifies the object and can be used for joining and filtering.
 
 Caching is implemented in the base class. This will lazy load the full
 table into memory from the chosen data source, so it should only be
-used with smaller data sets. Both``read_rows`` and ``read_objects``
+used with smaller data sets. Both ``read_rows`` and ``read_objects``
 will check for a cached table before reading the files, allowing them
 to perform direct pandas operations if the data is already in memory.
 """
@@ -143,9 +143,23 @@ class ObjectDataReader(abc.ABC):
         -----------
         input_table (Pandas dataframe): A loaded table.
 
+        disallow_nan (bool, optional): if True then checks the data for
+            NaNs or nulls.
+
         Returns:
         -----------
         input_table (Pandas dataframe): Returns the input dataframe modified in-place.
         """
         input_table = self._validate_object_id_column(input_table)
+
+        # Check for NaNs or nulls.
+        if kwargs.get("disallow_nan", False):  # pragma: no cover
+            if input_table.isnull().values.any():
+                pdt = input_table[input_table.isna().any(axis=1)]
+                inds = str(pdt["ObjID"].values)
+                outstr = f"ERROR: While reading table {self.filename} found uninitialised values ObjID: {str(inds)}."
+
+                pplogger = logging.getLogger(__name__)
+                pplogger.error(outstr)
+                sys.exit(outstr)
         return input_table
