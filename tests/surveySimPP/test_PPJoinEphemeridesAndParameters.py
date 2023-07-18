@@ -1,11 +1,11 @@
-from surveySimPP.utilities.dataUtilitiesForTests import get_test_filepath
+from sorcha.utilities.dataUtilitiesForTests import get_test_filepath
 from numpy.testing import assert_equal
 
 
 def test_PPJoinEphemeridesAndParameters():
-    from surveySimPP.modules.PPJoinEphemeridesAndParameters import PPJoinEphemeridesAndParameters
-    from surveySimPP.readers.OIFReader import read_full_oif_table
-    from surveySimPP.readers.CSVReader import CSVDataReader
+    from sorcha.modules.PPJoinEphemeridesAndParameters import PPJoinEphemeridesAndParameters
+    from sorcha.readers.OIFReader import read_full_oif_table
+    from sorcha.readers.CSVReader import CSVDataReader
 
     oif_file = read_full_oif_table(get_test_filepath("oiftestoutput.txt"), "whitespace")
     param_reader = CSVDataReader(get_test_filepath("testcolour.txt"), "whitespace")

@@ -1,6 +1,6 @@
 import pandas as pd
 
-from surveySimPP.readers.ObjectDataReader import ObjectDataReader
+from sorcha.readers.ObjectDataReader import ObjectDataReader
 
 
 class HDF5DataReader(ObjectDataReader):

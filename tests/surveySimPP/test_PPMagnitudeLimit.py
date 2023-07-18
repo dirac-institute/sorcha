@@ -4,7 +4,7 @@ from numpy.testing import assert_equal
 
 
 def test_PPMagnitudeLimit():
-    from surveySimPP.modules.PPMagnitudeLimit import PPMagnitudeLimit
+    from sorcha.modules.PPMagnitudeLimit import PPMagnitudeLimit
 
     test_input = pd.DataFrame({"observedPSFMag": np.arange(15, 25)})
 

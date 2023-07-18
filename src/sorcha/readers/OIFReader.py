@@ -2,9 +2,9 @@ import numpy as np
 import logging
 import sys
 
-from surveySimPP.readers.CSVReader import CSVDataReader
-from surveySimPP.readers.HDF5Reader import HDF5DataReader
-from surveySimPP.readers.ObjectDataReader import ObjectDataReader
+from sorcha.readers.CSVReader import CSVDataReader
+from sorcha.readers.HDF5Reader import HDF5DataReader
+from sorcha.readers.ObjectDataReader import ObjectDataReader
 
 
 class OIFDataReader(ObjectDataReader):

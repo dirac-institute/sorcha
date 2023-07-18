@@ -19,7 +19,7 @@ i=1
 while [ $i -le $n ]
 do
 	config_name=$(head -$i $config_list | tail -1)
-	python post_proc/surveySimPP.py -c PPconfigs/$config_name &
+	python post_proc/sorcha.py -c PPconfigs/$config_name &
 	((i++))
 done
 wait

@@ -2,11 +2,11 @@ import pandas as pd
 import numpy as np
 from numpy.testing import assert_almost_equal
 
-from surveySimPP.utilities.dataUtilitiesForTests import get_test_filepath
+from sorcha.utilities.dataUtilitiesForTests import get_test_filepath
 
 
 def test_randomizePhotometry():
-    from surveySimPP.modules.PPRandomizeMeasurements import randomizePhotometry
+    from sorcha.modules.PPRandomizeMeasurements import randomizePhotometry
 
     rng = np.random.default_rng(2021)
 
@@ -22,7 +22,7 @@ def test_randomizePhotometry():
 
 
 def test_randomizeAstrometry():
-    from surveySimPP.modules.PPRandomizeMeasurements import randomizeAstrometry
+    from sorcha.modules.PPRandomizeMeasurements import randomizeAstrometry
 
     rng = np.random.default_rng(2021)
 
@@ -37,7 +37,7 @@ def test_randomizeAstrometry():
 
 
 def test_radec_icrf_conversion():
-    from surveySimPP.modules.PPRandomizeMeasurements import radec2icrf, icrf2radec
+    from sorcha.modules.PPRandomizeMeasurements import radec2icrf, icrf2radec
 
     observations = pd.read_csv(get_test_filepath("test_input_fullobs.csv"), nrows=1)
 
@@ -54,8 +54,8 @@ def test_radec_icrf_conversion():
 
 
 def test_sampleNormalFOV():
-    from surveySimPP.modules.PPRandomizeMeasurements import sampleNormalFOV
-    from surveySimPP.modules.PPRandomizeMeasurements import radec2icrf
+    from sorcha.modules.PPRandomizeMeasurements import sampleNormalFOV
+    from sorcha.modules.PPRandomizeMeasurements import radec2icrf
 
     observations = pd.read_csv(get_test_filepath("test_input_fullobs.csv"), nrows=1)
 
@@ -80,7 +80,7 @@ def test_sampleNormalFOV():
 
 
 def test_flux_mag_conversion():
-    from surveySimPP.modules.PPRandomizeMeasurements import flux2mag, mag2flux
+    from sorcha.modules.PPRandomizeMeasurements import flux2mag, mag2flux
 
     observations = pd.read_csv(get_test_filepath("test_input_fullobs.csv"), nrows=1)
 

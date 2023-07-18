@@ -2,11 +2,11 @@ import pandas as pd
 import numpy as np
 from numpy.testing import assert_equal
 
-from surveySimPP.utilities.dataUtilitiesForTests import get_test_filepath
+from sorcha.utilities.dataUtilitiesForTests import get_test_filepath
 
 
 def test_PPLinkingFilter():
-    from surveySimPP.modules.PPLinkingFilter import PPLinkingFilter
+    from sorcha.modules.PPLinkingFilter import PPLinkingFilter
 
     test_data = pd.read_csv(get_test_filepath("test_input_fullobs.csv"), nrows=20)
 

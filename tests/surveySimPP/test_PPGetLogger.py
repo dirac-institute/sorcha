@@ -3,7 +3,7 @@ import os
 
 
 def test_PPGetLogger(tmp_path):
-    from surveySimPP.modules.PPGetLogger import PPGetLogger
+    from sorcha.modules.PPGetLogger import PPGetLogger
 
     PPGetLogger(tmp_path)
 

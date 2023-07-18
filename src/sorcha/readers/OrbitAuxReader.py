@@ -1,7 +1,7 @@
 import logging
 import sys
 
-from surveySimPP.readers.CSVReader import CSVDataReader
+from sorcha.readers.CSVReader import CSVDataReader
 
 
 class OrbitAuxReader(CSVDataReader):

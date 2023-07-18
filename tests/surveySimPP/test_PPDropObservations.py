@@ -2,12 +2,12 @@ import pandas as pd
 import numpy as np
 from numpy.testing import assert_equal
 
-from surveySimPP.utilities.dataUtilitiesForTests import get_test_filepath
+from sorcha.utilities.dataUtilitiesForTests import get_test_filepath
 
 
 def test_PPDropObservations():
-    from surveySimPP.modules.PPDetectionProbability import PPDetectionProbability
-    from surveySimPP.modules.PPDropObservations import PPDropObservations
+    from sorcha.modules.PPDetectionProbability import PPDetectionProbability
+    from sorcha.modules.PPDropObservations import PPDropObservations
 
     rng = np.random.default_rng(2021)
 

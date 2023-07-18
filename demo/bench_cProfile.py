@@ -5,7 +5,7 @@ import cProfile
 import pstats
 
 from pstats import SortKey
-from surveySimPP.surveySimPP import runLSSTPostProcessing  # noqa: F401
+from sorcha.sorcha import runLSSTPostProcessing  # noqa: F401
 import argparse
 
 if __name__ == "__main__":  # pragma: no cover

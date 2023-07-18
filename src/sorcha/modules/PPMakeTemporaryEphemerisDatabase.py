@@ -1,6 +1,6 @@
 import sqlite3
 
-from surveySimPP.readers.OIFReader import OIFDataReader
+from sorcha.readers.OIFReader import OIFDataReader
 
 
 def PPMakeTemporaryEphemerisDatabase(oif_output, out_fn, inputformat, chunksize=1e6):

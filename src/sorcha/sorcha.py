@@ -6,24 +6,24 @@ import numpy as np
 import argparse
 import os
 
-from surveySimPP.modules.PPReadPointingDatabase import PPReadPointingDatabase
-from surveySimPP.modules.PPLinkingFilter import PPLinkingFilter
-from surveySimPP.modules.PPTrailingLoss import PPTrailingLoss
-from surveySimPP.modules.PPBrightLimit import PPBrightLimit
-from surveySimPP.modules.PPMakeTemporaryEphemerisDatabase import PPMakeTemporaryEphemerisDatabase
-from surveySimPP.modules.PPCalculateApparentMagnitude import PPCalculateApparentMagnitude
-from surveySimPP.modules.PPApplyFOVFilter import PPApplyFOVFilter
-from surveySimPP.modules.PPSNRLimit import PPSNRLimit
-from surveySimPP.modules import PPAddUncertainties, PPRandomizeMeasurements
-from surveySimPP.modules import PPVignetting
-from surveySimPP.modules.PPFadingFunctionFilter import PPFadingFunctionFilter
-from surveySimPP.modules.PPConfigParser import PPConfigFileParser, PPPrintConfigsToLog
-from surveySimPP.modules.PPGetLogger import PPGetLogger
-from surveySimPP.modules.PPCommandLineParser import PPCommandLineParser
-from surveySimPP.modules.PPReadAllInput import PPReadAllInput
-from surveySimPP.modules.PPMagnitudeLimit import PPMagnitudeLimit
-from surveySimPP.modules.PPOutput import PPWriteOutput
-from surveySimPP.modules.PPGetMainFilterAndColourOffsets import PPGetMainFilterAndColourOffsets
+from sorcha.modules.PPReadPointingDatabase import PPReadPointingDatabase
+from sorcha.modules.PPLinkingFilter import PPLinkingFilter
+from sorcha.modules.PPTrailingLoss import PPTrailingLoss
+from sorcha.modules.PPBrightLimit import PPBrightLimit
+from sorcha.modules.PPMakeTemporaryEphemerisDatabase import PPMakeTemporaryEphemerisDatabase
+from sorcha.modules.PPCalculateApparentMagnitude import PPCalculateApparentMagnitude
+from sorcha.modules.PPApplyFOVFilter import PPApplyFOVFilter
+from sorcha.modules.PPSNRLimit import PPSNRLimit
+from sorcha.modules import PPAddUncertainties, PPRandomizeMeasurements
+from sorcha.modules import PPVignetting
+from sorcha.modules.PPFadingFunctionFilter import PPFadingFunctionFilter
+from sorcha.modules.PPConfigParser import PPConfigFileParser, PPPrintConfigsToLog
+from sorcha.modules.PPGetLogger import PPGetLogger
+from sorcha.modules.PPCommandLineParser import PPCommandLineParser
+from sorcha.modules.PPReadAllInput import PPReadAllInput
+from sorcha.modules.PPMagnitudeLimit import PPMagnitudeLimit
+from sorcha.modules.PPOutput import PPWriteOutput
+from sorcha.modules.PPGetMainFilterAndColourOffsets import PPGetMainFilterAndColourOffsets
 
 
 # Author: Samuel Cornwall, Siegfried Eggl, Grigori Fedorets, Steph Merritt, Meg Schwamb
@@ -238,7 +238,7 @@ def main():
     model Solar System small body population to what the specified wide-field
     survey would observe.
 
-    usage: surveySimPP [-h] -c C [-dw [DW]] [-dr DR] [-dl] [-m M] -p P -o O -e E [-s S] -u U [-t T] [-v] [-f]
+    usage: sorcha [-h] -c C [-dw [DW]] [-dr DR] [-dl] [-m M] -p P -o O -e E [-s S] -u U [-t T] [-v] [-f]
         arguments:
           -h, --help         show this help message and exit
           -c C, --config C   Input configuration file name

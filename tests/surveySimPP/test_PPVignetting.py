@@ -4,7 +4,7 @@ from numpy.testing import assert_almost_equal
 
 
 def test_PPVignetting():
-    import surveySimPP.modules.PPVignetting as PPVignetting
+    import sorcha.modules.PPVignetting as PPVignetting
 
     test_data = {
         "ObjID": ["a", "b", "c", "d", "e"],
@@ -27,7 +27,7 @@ def test_PPVignetting():
 
 
 def test_calcVignettingLosses():
-    from surveySimPP.modules.PPVignetting import calcVignettingLosses
+    from sorcha.modules.PPVignetting import calcVignettingLosses
 
     test_loss = calcVignettingLosses(164.037713, -17.582575, 163.87542091, -18.84327137)
     assert_almost_equal(test_loss, 0.02416062)
@@ -36,7 +36,7 @@ def test_calcVignettingLosses():
 
 
 def test_haversine():
-    from surveySimPP.modules.PPVignetting import haversine
+    from sorcha.modules.PPVignetting import haversine
 
     test_haversine = haversine(164.037713, -17.582575, 163.87542091, -18.84327137)
     test_haversine_zero = haversine(164.037713, -17.582575, 164.037713, -17.582575)
@@ -48,7 +48,7 @@ def test_haversine():
 
 
 def test_vignetFunc():
-    from surveySimPP.modules.PPVignetting import vignetFunc
+    from sorcha.modules.PPVignetting import vignetFunc
 
     test_theta = np.rad2deg(1.2648216148765565)
     test_mag = vignetFunc(test_theta)

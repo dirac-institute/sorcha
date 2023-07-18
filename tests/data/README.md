@@ -1,6 +1,6 @@
 # TEST FILES/DATA README
 
-The data within this folder is used by the unit tests, located in surveySimPP/modules/tests.
+The data within this folder is used by the unit tests, located in .../tests/*/*.
 
 ## Files:
 
@@ -30,7 +30,7 @@ Used by:
 **lsst-total-r.dat**  
 Throughput of LSST per wavelength.  
 Used by:  
-- /surveySimPP/lsstcomet/tests/test_model.py
+- /sorcha/lsstcomet/tests/test_model.py
 
 **makeConfigOIF_*.ini**  
 Example OIF config files.  
@@ -117,7 +117,7 @@ Used by:
 - test_PPCommandLineParser
 
 **test_input_fullobs.csv**  
-Example of full dataframe of observations created by surveySimPP.py.  
+Example of full dataframe of observations created by sorcha.py.  
 Used by: 
 - test_PPApplyFOVFilter.py   
 - test_PPCommandLineParser.py  

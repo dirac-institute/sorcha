@@ -21,22 +21,22 @@ Documentation: https://survey-simulator-post-processing.readthedocs.io/en/latest
 
 
 ## Making pip work
-When making edits to the code, its likely that the only thing you need to worry about is making sure the imports are consistent. There are two places where this is important, the surveySimPP/surveySimPP.py file and the surveySimPP/modules/__init__.py file. If you want to add, remove or change the name of a module, then these files need to be updated to reflect that. 
+When making edits to the code, its likely that the only thing you need to worry about is making sure the imports are consistent. There are two places where this is important, the sorcha/sorcha.py file and the sorcha/modules/__init__.py file. If you want to add, remove or change the name of a module, then these files need to be updated to reflect that. 
 
-Within the surveySimPP/modules/__init__.py file it will look something like this:
+Within the sorcha/modules/__init__.py file it will look something like this:
 ```
 from . import PPAddUncertainties
 ```
-And in the surveySimPP.py file it will look something like this:
+And in the sorcha.py file it will look something like this:
 ```
-from surveySimPP.modules import PPAddUncertainties
+from sorcha.modules import PPAddUncertainties
 ```
 When adding, removing or changing the name of any module, just make sure that you've updated both of these files to reflect the changes.
 
 
 If you want to make some more major changes, e.g. adding another utility to the command line, then there are two things to keep in mind. Firstly, the python file containing the utility has to be formatted in a specific way and secondly, the setup.py file has to be changed.
 
-Examples of the file formatting can be seen in surveySimPP.py, makeConfigOIF and makeConfigPP, so you can try to follow that. In short, you need to define the main containing the parser arguments, e.g. 
+Examples of the file formatting can be seen in sorcha.py, makeConfigOIF and makeConfigPP, so you can try to follow that. In short, you need to define the main containing the parser arguments, e.g. 
 
 ```
 def main():

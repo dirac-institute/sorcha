@@ -1,10 +1,10 @@
-surveySimPP package
+sorcha package
 ===================
 
-surveySimPP main
+sorcha main
 ------------------------------
 
-.. automodule:: surveySimPP.surveySimPP
+.. automodule:: sorcha.sorcha
    :members:
    :undoc-members:
    :show-inheritance:
@@ -15,7 +15,7 @@ Subpackages
 .. toctree::
    :maxdepth: 4
 
-   surveySimPP.lsstcomet
-   surveySimPP.modules
-   surveySimPP.utilities
+   sorcha.lsstcomet
+   sorcha.modules
+   sorcha.utilities
 

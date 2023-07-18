@@ -1,290 +1,242 @@
-surveySimPP.modules package
+sorcha.modules package
 ===========================
 
-surveySimPP.modules.PPAddUncertainties module
+sorcha.modules.PPAddUncertainties module
 ---------------------------------------------
 
-.. automodule:: surveySimPP.modules.PPAddUncertainties
+.. automodule:: sorcha.modules.PPAddUncertainties
    :members:
    :undoc-members:
    :show-inheritance:
 
-surveySimPP.modules.PPApplyColourOffsets module
+sorcha.modules.PPApplyColourOffsets module
 -----------------------------------------------
 
-.. automodule:: surveySimPP.modules.PPApplyColourOffsets
+.. automodule:: sorcha.modules.PPApplyColourOffsets
    :members:
    :undoc-members:
    :show-inheritance:
 
-surveySimPP.modules.PPApplyFOVFilter module
+sorcha.modules.PPApplyFOVFilter module
 -------------------------------------------
 
-.. automodule:: surveySimPP.modules.PPApplyFOVFilter
+.. automodule:: sorcha.modules.PPApplyFOVFilter
    :members:
    :undoc-members:
    :show-inheritance:
 
-surveySimPP.modules.PPBrightLimit module
+sorcha.modules.PPBrightLimit module
 ----------------------------------------
 
-.. automodule:: surveySimPP.modules.PPBrightLimit
+.. automodule:: sorcha.modules.PPBrightLimit
    :members:
    :undoc-members:
    :show-inheritance:
 
-surveySimPP.modules.PPCMDLineParser module
-------------------------------------------
-
-.. automodule:: surveySimPP.modules.PPCMDLineParser
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-surveySimPP.modules.PPCalculateApparentMagnitude module
+sorcha.modules.PPCalculateApparentMagnitude module
 -------------------------------------------------------
 
-.. automodule:: surveySimPP.modules.PPCalculateApparentMagnitude
+.. automodule:: sorcha.modules.PPCalculateApparentMagnitude
    :members:
    :undoc-members:
    :show-inheritance:
 
-surveySimPP.modules.PPCalculateApparentMagnitudeInFilter module
+sorcha.modules.PPCalculateApparentMagnitudeInFilter module
 ---------------------------------------------------------------
 
-.. automodule:: surveySimPP.modules.PPCalculateApparentMagnitudeInFilter
+.. automodule:: sorcha.modules.PPCalculateApparentMagnitudeInFilter
    :members:
    :undoc-members:
    :show-inheritance:
 
-surveySimPP.modules.PPCalculateSimpleCometaryMagnitude module
+sorcha.modules.PPCalculateSimpleCometaryMagnitude module
 -------------------------------------------------------------
 
-.. automodule:: surveySimPP.modules.PPCalculateSimpleCometaryMagnitude
+.. automodule:: sorcha.modules.PPCalculateSimpleCometaryMagnitude
    :members:
    :undoc-members:
    :show-inheritance:
 
-surveySimPP.modules.PPCheckOrbitAndPhysicalParametersMatching module
---------------------------------------------------------------------
-
-.. automodule:: surveySimPP.modules.PPCheckOrbitAndPhysicalParametersMatching
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-surveySimPP.modules.PPConfigParser module
+sorcha.modules.PPConfigParser module
 -----------------------------------------
 
-.. automodule:: surveySimPP.modules.PPConfigParser
+.. automodule:: sorcha.modules.PPConfigParser
    :members:
    :undoc-members:
    :show-inheritance:
 
-surveySimPP.modules.PPDetectionEfficiency module
+sorcha.modules.PPDetectionEfficiency module
 ------------------------------------------------
 
-.. automodule:: surveySimPP.modules.PPDetectionEfficiency
+.. automodule:: sorcha.modules.PPDetectionEfficiency
    :members:
    :undoc-members:
    :show-inheritance:
 
-surveySimPP.modules.PPDetectionProbability module
+sorcha.modules.PPDetectionProbability module
 -------------------------------------------------
 
-.. automodule:: surveySimPP.modules.PPDetectionProbability
+.. automodule:: sorcha.modules.PPDetectionProbability
    :members:
    :undoc-members:
    :show-inheritance:
 
-surveySimPP.modules.PPDropObservations module
+sorcha.modules.PPDropObservations module
 ---------------------------------------------
 
-.. automodule:: surveySimPP.modules.PPDropObservations
+.. automodule:: sorcha.modules.PPDropObservations
    :members:
    :undoc-members:
    :show-inheritance:
 
-surveySimPP.modules.PPFilterFadingFunction module
--------------------------------------------------
-
-.. automodule:: surveySimPP.modules.PPFilterFadingFunction
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-surveySimPP.modules.PPFilterSSPLinking module
----------------------------------------------
-
-.. automodule:: surveySimPP.modules.PPFilterSSPLinking
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-surveySimPP.modules.PPFootprintFilter module
+sorcha.modules.PPFootprintFilter module
 --------------------------------------------
 
-.. automodule:: surveySimPP.modules.PPFootprintFilter
+.. automodule:: sorcha.modules.PPFootprintFilter
    :members:
    :undoc-members:
    :show-inheritance:
 
-surveySimPP.modules.PPGetLogger module
+sorcha.modules.PPGetLogger module
 --------------------------------------
 
-.. automodule:: surveySimPP.modules.PPGetLogger
+.. automodule:: sorcha.modules.PPGetLogger
    :members:
    :undoc-members:
    :show-inheritance:
 
-surveySimPP.modules.PPJoinOrbitalData module
---------------------------------------------
-
-.. automodule:: surveySimPP.modules.PPJoinOrbitalData
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-surveySimPP.modules.PPJoinPhysicalParametersPointing module
+sorcha.modules.PPJoinPhysicalParametersPointing module
 -----------------------------------------------------------
 
-.. automodule:: surveySimPP.modules.PPJoinPhysicalParametersPointing
+.. automodule:: sorcha.modules.PPJoinPhysicalParametersPointing
    :members:
    :undoc-members:
    :show-inheritance:
 
-surveySimPP.modules.PPMagnitudeLimit module
+sorcha.modules.PPMagnitudeLimit module
 -------------------------------------------
 
-.. automodule:: surveySimPP.modules.PPMagnitudeLimit
+.. automodule:: sorcha.modules.PPMagnitudeLimit
    :members:
    :undoc-members:
    :show-inheritance:
 
-surveySimPP.modules.PPMakeIntermediateEphemerisDatabase module
---------------------------------------------------------------
-
-.. automodule:: surveySimPP.modules.PPMakeIntermediateEphemerisDatabase
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-surveySimPP.modules.PPMatchPointing module
+sorcha.modules.PPMatchPointing module
 ------------------------------------------
 
-.. automodule:: surveySimPP.modules.PPMatchPointing
+.. automodule:: sorcha.modules.PPMatchPointing
    :members:
    :undoc-members:
    :show-inheritance:
 
-surveySimPP.modules.PPMatchPointingToObservations module
+sorcha.modules.PPMatchPointingToObservations module
 --------------------------------------------------------
 
-.. automodule:: surveySimPP.modules.PPMatchPointingToObservations
+.. automodule:: sorcha.modules.PPMatchPointingToObservations
    :members:
    :undoc-members:
    :show-inheritance:
 
-surveySimPP.modules.PPMatchPointingsAndColours module
+sorcha.modules.PPMatchPointingsAndColours module
 -----------------------------------------------------
 
-.. automodule:: surveySimPP.modules.PPMatchPointingsAndColours
+.. automodule:: sorcha.modules.PPMatchPointingsAndColours
    :members:
    :undoc-members:
    :show-inheritance:
 
-surveySimPP.modules.PPOutput module
+sorcha.modules.PPOutput module
 -----------------------------------
 
-.. automodule:: surveySimPP.modules.PPOutput
+.. automodule:: sorcha.modules.PPOutput
    :members:
    :undoc-members:
    :show-inheritance:
 
-surveySimPP.modules.PPRandomizeMeasurements module
+sorcha.modules.PPRandomizeMeasurements module
 --------------------------------------------------
 
-.. automodule:: surveySimPP.modules.PPRandomizeMeasurements
+.. automodule:: sorcha.modules.PPRandomizeMeasurements
    :members:
    :undoc-members:
    :show-inheritance:
 
-surveySimPP.modules.PPReadAllInput module
+sorcha.modules.PPReadAllInput module
 -----------------------------------------
 
-.. automodule:: surveySimPP.modules.PPReadAllInput
+.. automodule:: sorcha.modules.PPReadAllInput
    :members:
    :undoc-members:
    :show-inheritance:
 
-surveySimPP.modules.PPReadCometaryInput module
+sorcha.modules.PPReadCometaryInput module
 ----------------------------------------------
 
-.. automodule:: surveySimPP.modules.PPReadCometaryInput
+.. automodule:: sorcha.modules.PPReadCometaryInput
    :members:
    :undoc-members:
    :show-inheritance:
 
-surveySimPP.modules.PPReadEphemerides module
+sorcha.modules.PPReadEphemerides module
 --------------------------------------------
 
-.. automodule:: surveySimPP.modules.PPReadEphemerides
+.. automodule:: sorcha.modules.PPReadEphemerides
    :members:
    :undoc-members:
    :show-inheritance:
 
-surveySimPP.modules.PPReadIntermediateEphemerisDatabase module
+sorcha.modules.PPReadIntermediateEphemerisDatabase module
 --------------------------------------------------------------
 
-.. automodule:: surveySimPP.modules.PPReadIntermediateEphemerisDatabase
+.. automodule:: sorcha.modules.PPReadIntermediateEphemerisDatabase
    :members:
    :undoc-members:
    :show-inheritance:
 
-surveySimPP.modules.PPReadOif module
+sorcha.modules.PPReadOif module
 ------------------------------------
 
-.. automodule:: surveySimPP.modules.PPReadOif
+.. automodule:: sorcha.modules.PPReadOif
    :members:
    :undoc-members:
    :show-inheritance:
 
-surveySimPP.modules.PPReadOrbitFile module
+sorcha.modules.PPReadOrbitFile module
 ------------------------------------------
 
-.. automodule:: surveySimPP.modules.PPReadOrbitFile
+.. automodule:: sorcha.modules.PPReadOrbitFile
    :members:
    :undoc-members:
    :show-inheritance:
 
-surveySimPP.modules.PPReadPhysicalParameters module
+sorcha.modules.PPReadPhysicalParameters module
 ---------------------------------------------------
 
-.. automodule:: surveySimPP.modules.PPReadPhysicalParameters
+.. automodule:: sorcha.modules.PPReadPhysicalParameters
    :members:
    :undoc-members:
    :show-inheritance:
 
-surveySimPP.modules.PPSNRLimit module
+sorcha.modules.PPSNRLimit module
 -------------------------------------
 
-.. automodule:: surveySimPP.modules.PPSNRLimit
+.. automodule:: sorcha.modules.PPSNRLimit
    :members:
    :undoc-members:
    :show-inheritance:
 
-surveySimPP.modules.PPTrailingLoss module
+sorcha.modules.PPTrailingLoss module
 -----------------------------------------
 
-.. automodule:: surveySimPP.modules.PPTrailingLoss
+.. automodule:: sorcha.modules.PPTrailingLoss
    :members:
    :undoc-members:
    :show-inheritance:
 
-surveySimPP.modules.PPVignetting module
+sorcha.modules.PPVignetting module
 ---------------------------------------
 
-.. automodule:: surveySimPP.modules.PPVignetting
+.. automodule:: sorcha.modules.PPVignetting
    :members:
    :undoc-members:
    :show-inheritance:

@@ -2,8 +2,8 @@ import numpy as np
 import pandas as pd
 from numpy.testing import assert_equal, assert_almost_equal
 
-from surveySimPP.utilities.dataUtilitiesForTests import get_test_filepath
-from surveySimPP.modules.PPFootprintFilter import Detector
+from sorcha.utilities.dataUtilitiesForTests import get_test_filepath
+from sorcha.modules.PPFootprintFilter import Detector
 
 
 def dummy_detector():
@@ -24,7 +24,7 @@ def test_ison():
 
 
 def test_areas():
-    from surveySimPP.modules.PPFootprintFilter import radec2focalplane
+    from sorcha.modules.PPFootprintFilter import radec2focalplane
 
     detector = dummy_detector()
     pointsin = np.array([np.linspace(0.0, 0.01, 10), np.linspace(0.0, 0.01, 10)])
@@ -97,7 +97,7 @@ def test_rad2deg_deg2rad():
 
 
 def test_plots():
-    from surveySimPP.modules.PPFootprintFilter import Footprint
+    from sorcha.modules.PPFootprintFilter import Footprint
 
     detector = dummy_detector()
     detector.plot()
@@ -107,7 +107,7 @@ def test_plots():
 
 
 def test_radec2focalplane():
-    from surveySimPP.modules.PPFootprintFilter import radec2focalplane
+    from sorcha.modules.PPFootprintFilter import radec2focalplane
 
     out = radec2focalplane(1.0, 1.0, 0.0, 0.0)
     out_expected = (1.5574077, 2.8824746)
@@ -117,7 +117,7 @@ def test_radec2focalplane():
 
 
 def test_applyFootprint():
-    from surveySimPP.modules.PPFootprintFilter import Footprint
+    from sorcha.modules.PPFootprintFilter import Footprint
 
     observations = pd.read_csv(get_test_filepath("test_input_fullobs.csv"), nrows=10)
 

@@ -3,7 +3,7 @@ import sqlite3
 import logging
 import sys
 
-from surveySimPP.readers.ObjectDataReader import ObjectDataReader
+from sorcha.readers.ObjectDataReader import ObjectDataReader
 
 
 class DatabaseReader(ObjectDataReader):

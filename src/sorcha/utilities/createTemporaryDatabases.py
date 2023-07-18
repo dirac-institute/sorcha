@@ -7,8 +7,8 @@ import glob
 import argparse
 import os
 import sys
-from surveySimPP.modules.PPConfigParser import PPFindDirectoryOrExit
-from surveySimPP.modules.PPMakeTemporaryEphemerisDatabase import PPMakeTemporaryEphemerisDatabase
+from sorcha.modules.PPConfigParser import PPFindDirectoryOrExit
+from sorcha.modules.PPMakeTemporaryEphemerisDatabase import PPMakeTemporaryEphemerisDatabase
 
 
 def make_temporary_databases(args):

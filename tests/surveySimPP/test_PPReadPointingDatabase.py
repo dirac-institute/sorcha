@@ -2,11 +2,11 @@ import numpy as np
 from numpy.testing import assert_equal
 import pytest
 
-from surveySimPP.utilities.dataUtilitiesForTests import get_test_filepath
+from sorcha.utilities.dataUtilitiesForTests import get_test_filepath
 
 
 def test_PPReadPointingDatabase():
-    from surveySimPP.modules.PPReadPointingDatabase import PPReadPointingDatabase
+    from sorcha.modules.PPReadPointingDatabase import PPReadPointingDatabase
 
     sql_query = "SELECT observationId, observationStartMJD, filter, seeingFwhmGeom, seeingFwhmEff, fiveSigmaDepth, fieldRA, fieldDec, rotSkyPos FROM observations order by observationId"
     filter_list = ["u", "g", "r", "i", "z", "y"]

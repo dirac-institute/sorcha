@@ -1,14 +1,14 @@
 import pandas as pd
 from pandas.testing import assert_frame_equal
 
-from surveySimPP.utilities.dataUtilitiesForTests import get_test_filepath
+from sorcha.utilities.dataUtilitiesForTests import get_test_filepath
 
 
 def test_PPMatchPointingToObservations():
-    from surveySimPP.modules.PPMatchPointingToObservations import PPMatchPointingToObservations
-    from surveySimPP.modules.PPJoinEphemeridesAndParameters import PPJoinEphemeridesAndParameters
-    from surveySimPP.modules.PPJoinEphemeridesAndOrbits import PPJoinEphemeridesAndOrbits
-    from surveySimPP.modules.PPReadPointingDatabase import PPReadPointingDatabase
+    from sorcha.modules.PPMatchPointingToObservations import PPMatchPointingToObservations
+    from sorcha.modules.PPJoinEphemeridesAndParameters import PPJoinEphemeridesAndParameters
+    from sorcha.modules.PPJoinEphemeridesAndOrbits import PPJoinEphemeridesAndOrbits
+    from sorcha.modules.PPReadPointingDatabase import PPReadPointingDatabase
 
     # note that the test orbit, parameters and oif files already in /tests/data/
     # are not compatible with the current version of the pointing database.

@@ -1,9 +1,9 @@
-from surveySimPP.utilities.dataUtilitiesForTests import get_test_filepath
+from sorcha.utilities.dataUtilitiesForTests import get_test_filepath
 
 
 def test_PPreadColoursUser():
-    from surveySimPP.readers.OIFReader import read_full_oif_table
-    from surveySimPP.utilities.PPreadColoursUser import PPreadColoursUser
+    from sorcha.readers.OIFReader import read_full_oif_table
+    from sorcha.utilities.PPreadColoursUser import PPreadColoursUser
 
     resval = 0.6
 
