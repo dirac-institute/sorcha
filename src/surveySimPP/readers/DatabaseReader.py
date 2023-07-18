@@ -7,12 +7,10 @@ from surveySimPP.readers.ObjectDataReader import ObjectDataReader
 
 
 class DatabaseReader(ObjectDataReader):
-    """A class to read in object data stored in a (temporary)
-    database.
-    """
+    """A class to read in object data stored in a sqlite database."""
 
     def __init__(self, intermdb, **kwargs):
-        """A class for reading the object data from a database.
+        """A class for reading the object data from a sqlite database.
 
         Parameters:
         -----------
