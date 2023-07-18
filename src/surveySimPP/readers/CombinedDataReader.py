@@ -21,10 +21,17 @@ import sys
 
 
 class CombinedDataReader:
-    def __init__(self, **kwargs):
+    def __init__(self, ephem_primary=False, **kwargs):
+        """
+        Parameters
+        ----------
+        ephem_primary (bool, optional): Use the ephemeris reader as the primary
+            reader. Otherwise uses the first auxiliary data reader.
+        """
         self.ephem_reader = None
         self.aux_data_readers = []
         self.block_start = 0
+        self.ephem_primary = ephem_primary
 
     def add_ephem_reader(self, new_reader):
         """Add a new reader for ephemeris data.
@@ -49,11 +56,10 @@ class CombinedDataReader:
         self.aux_data_readers.append(new_reader)
 
     def reset_block_start(self):
-        """Reset the starting row for reading blocks of data.
-        """
+        """Reset the starting row for reading blocks of data."""
         self.block_start = new_start
 
-    def read_block(self, block_size=None, ephem_primary=False, verbose=False, **kwargs):
+    def read_block(self, block_size=None, verbose=False, **kwargs):
         """Reads in a set number of rows from the input, performs
         post-processing and validation, and returns a data frame.
 
@@ -62,9 +68,6 @@ class CombinedDataReader:
         block_size (int, optional): the number of rows to read in.
             Use block_size=None to read in all available data.
             [Default = None]
-
-        ephem_primary (bool, optional): Use the ephemeris reader as the primary
-            reader. Otherwise uses the first auxiliary data reader.
 
         verbose (bool, optional): use verbose logging.
 
@@ -82,9 +85,9 @@ class CombinedDataReader:
         if len(self.aux_data_readers) == 0:
             pplogger.error("ERROR: No auxiliary readers provided.")
             sys.exit("ERROR: No auxiliary readers provided.")
-                
+
         # Load object IDs from the primary table.
-        if ephem_primary:
+        if self.ephem_primary:
             verboselog(f"Loading object IDs from: {self.ephem_reader.get_reader_info()}")
             ephem_df = self.ephem_reader.read_rows(self.block_start, block_size)
             self.block_start += len(ephem_df)
@@ -110,14 +113,14 @@ class CombinedDataReader:
         for reader in self.aux_data_readers:
             verboselog(f"Reading input file: {reader.get_reader_info()}")
             current_df = reader.read_objects(obj_ids)
-        
+
             # Check that the new dataframe has at least the object IDs matching
             # the ephemeris frame.
             current_ids = set(pd.unique(current_df["ObjID"]).astype(str))
-            if not ephem_ids.issubset(current_ids):
+            if not ephem_ids.issubset(current_ids):  # pragma: no cover
                 pplogger.error("ERROR: At least one missing ObjID in {reader.get_reader_info()}")
                 sys.exit("ERROR: At least one missing ObjID {reader.get_reader_info()}")
 
             ephem_df = ephem_df.join(current_df.set_index("ObjID"), on="ObjID")
-        
+
         return ephem_df

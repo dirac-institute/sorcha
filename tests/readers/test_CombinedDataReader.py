@@ -21,7 +21,7 @@ def test_CombinedDataReader():
     # in the ephemeris file.
     res_df = reader.read_block(block_size=5)
     assert len(res_df["ObjID"].unique().tolist()) == 4
-    assert len(res_df) == 334 
+    assert len(res_df) == 334
 
     # Check that the first line matches.
     expected_data = {
@@ -74,20 +74,24 @@ def test_CombinedDataReader():
 
     # Check that the id in the first row is '39262'
     assert res_df.iloc[0]["ObjID"] == "39262"
+
+    # Any further reads will return None.
+    res_df = reader.read_block(block_size=5)
+    assert res_df is None
 
 
 def test_CombinedDataReader_ephem():
     """Read with ephemeris as the primary key."""
-    reader = CombinedDataReader()
+    reader = CombinedDataReader(ephem_primary=True)
     reader.add_ephem_reader(OIFDataReader(get_test_filepath("PPReadAllInput_oif.txt"), "csv"))
     reader.add_aux_data_reader(OrbitAuxReader(get_test_filepath("PPReadAllInput_orbits.des"), "whitespace"))
     reader.add_aux_data_reader(CSVDataReader(get_test_filepath("PPReadAllInput_params.txt"), "whitespace"))
 
-    # Read the first 5 objects from the orbits file. This corresponds to 4 objects and 668 rows
-    # in the ephemeris file.
-    res_df = reader.read_block(block_size=200, ephem_primary=True)
-    assert len(res_df["ObjID"].unique().tolist()) == 4
-    assert len(res_df) == 334 
+    # Read the first 200 rows from the ephemeris file which corresponds to the first three
+    # object IDs.
+    res_df = reader.read_block(block_size=200)
+    assert len(res_df["ObjID"].unique().tolist()) == 3
+    assert len(res_df) == 200
 
     # Check that the first line matches.
     expected_data = {
@@ -132,11 +136,38 @@ def test_CombinedDataReader_ephem():
     for col in expected_data.keys():
         assert expected_data[col] == res_df.iloc[0][col]
 
-    # Read the next 5 objects from the orbits file. This corresponds to 5 objects and 334 rows
-    # in the ephemeris file.
-    res_df = reader.read_block(block_size=5)
-    assert len(res_df["ObjID"].unique().tolist()) == 5
-    assert len(res_df) == 334
+    # Read the next 10 rows from the ephemeris file.
+    res_df = reader.read_block(block_size=50, ephem_primary=True)
+    assert len(res_df["ObjID"].unique().tolist()) == 1
+    assert len(res_df) == 50
 
-    # Check that the id in the first row is '39262'
-    assert res_df.iloc[0]["ObjID"] == "39262"
+    # Check that the id in the first row is still '12733' and
+    # FieldMJD == 60325.354511.
+    assert res_df.iloc[0]["ObjID"] == "12733"
+    assert res_df.iloc[0]["FieldMJD"] == pytest.approx(60325.354511)
+
+
+def test_CombinedDataReader_fail():
+    # No ephemeris reader
+    reader1 = CombinedDataReader()
+    reader1.add_aux_data_reader(OrbitAuxReader(get_test_filepath("PPReadAllInput_orbits.des"), "whitespace"))
+    reader1.add_aux_data_reader(CSVDataReader(get_test_filepath("PPReadAllInput_params.txt"), "whitespace"))
+    with pytest.raises(SystemExit) as e1:
+        _ = reader1.read_block(10)
+    assert e1.type == SystemExit
+
+    # No aux data readers
+    reader2 = CombinedDataReader()
+    reader2.add_ephem_reader(OIFDataReader(get_test_filepath("PPReadAllInput_oif.txt"), "csv"))
+    with pytest.raises(SystemExit) as e1:
+        _ = reader2.read_block(10)
+    assert e1.type == SystemExit
+
+    # Cannot set the ephemeris reader more than once.
+    reader3 = CombinedDataReader()
+    reader3.add_ephem_reader(OIFDataReader(get_test_filepath("PPReadAllInput_oif.txt"), "csv"))
+    with pytest.raises(SystemExit) as e1:
+        reader3.add_ephem_reader(
+            OIFDataReader(get_test_filepath("oiftestoutput.txt"), inputformat="whitespace")
+        )
+    assert e1.type == SystemExit
