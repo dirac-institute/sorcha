@@ -18,6 +18,7 @@ is used, the algorithm will load data in blocks of object ids and load *all*
 ephemeris for those objects.
 """
 import logging
+import pandas as pd
 import sys
 
 
@@ -63,7 +64,7 @@ class CombinedDataReader:
             sys.exit(f"ERROR: Invalid block start ({new_start}).")
         self.block_start = new_start
 
-    def read_block(self, block_size=None, **kwargs):
+    def read_block(self, block_size=None, verbose=False, **kwargs):
         """Reads in a set number of rows from the input, performs
         post-processing and validation, and returns a data frame.
 
@@ -72,6 +73,8 @@ class CombinedDataReader:
         block_size (int, optional): the number of rows to read in.
             Use block_size=None to read in all available data.
             [Default = None]
+
+        verbose (bool, optional): use verbose logging.
 
         Returns:
         -----------
@@ -86,7 +89,7 @@ class CombinedDataReader:
             sys.exit("ERROR: No primary reader provided.")
 
         # Load data from the primary table.
-        verboselog(f"Reading primary input file: {primary_reader.get_reader_info()}")
+        verboselog(f"Reading primary input file: {self.primary_reader.get_reader_info()}")
         primary_df = self.primary_reader.read_rows(self.block_start, block_size)
         objid_list = primary_df["ObjID"].unique().tolist()
 

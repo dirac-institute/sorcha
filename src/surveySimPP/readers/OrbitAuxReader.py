@@ -68,4 +68,16 @@ class OrbitAuxReader(CSVDataReader):
             ["INDEX", "N_PAR", "MOID", "COMPCODE", "FORMAT"], axis=1, errors="ignore"
         )
 
+        # Check if there is q in the resulting dataframe.
+        if "q" not in input_table.columns:
+            if "a" not in input_table.columns or "e" not in input_table.columns:
+                pplogger.error(
+                    "ERROR: OrbitAuxReader: unable to join ephemeris simulation and orbital parameters: no a or e in input."
+                )
+                sys.exit(
+                    "ERROR: OrbitAuxReader: unable to join ephemeris simulation and orbital parameters: no a or e in input."
+                )
+            else:
+                input_table["q"] = input_table["a"] * (1.0 - input_table["e"])
+
         return input_table
