@@ -11,6 +11,7 @@ def test_OrbitAuxReader():
     txt_reader = OrbitAuxReader(get_test_filepath("testorb.des"), "whitespace")
     orbit_txt = txt_reader.read_rows()
     assert_equal(len(orbit_txt), 5)
+    assert txt_reader.get_reader_info() == "OrbitAuxReader:" + get_test_filepath("testorb.des")
 
     csv_reader = OrbitAuxReader(get_test_filepath("testorb.csv"), "csv")
     orbit_csv = csv_reader.read_rows()
@@ -54,3 +55,19 @@ def test_OrbitAuxReader():
         reader = OrbitAuxReader(get_test_filepath("testorb.csv"), "whitespace")
         _ = reader.read_rows(0, 14)
     assert e2.type == SystemExit
+
+
+def test_OrbitAuxReader_no_q():
+    reader = OrbitAuxReader(get_test_filepath("testorb_no_q.csv"), "csv")
+    orbit_df = reader.read_rows()
+    assert_equal(len(orbit_df), 5)
+    assert reader.get_reader_info() == "OrbitAuxReader:" + get_test_filepath("testorb_no_q.csv")
+
+    # Check that we modify the columns (i -> incl, etc.) and include a q column.
+    expected_columns = np.array(
+        ["ObjID", "a", "e", "incl", "node", "argperi", "t_p", "t_0", "q"], dtype=object
+    )
+    assert_equal(expected_columns, orbit_df.columns.values)
+
+    # Check that the first q value is approximately what we expect.
+    assert pytest.approx(0.952105479028) == orbit_df.iloc[0]["q"]

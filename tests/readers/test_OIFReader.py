@@ -12,6 +12,9 @@ def test_OIFDataReader():
     reader_ws = OIFDataReader(get_test_filepath("oiftestoutput.txt"), inputformat="whitespace")
     oif_file = reader_ws.read_rows()
     assert len(oif_file) == 9
+    assert reader_ws.get_reader_info() == "OIFDataReader|CSVDataReader:" + get_test_filepath(
+        "oiftestoutput.txt"
+    )
 
     expected_first_row = np.array(
         [
@@ -75,11 +78,17 @@ def test_OIFDataReader():
     reader_h5 = OIFDataReader(get_test_filepath("oiftestoutput.h5"), inputformat="hdf5")
     oif_hdf5 = reader_h5.read_rows()
     assert_frame_equal(oif_file, oif_hdf5)
+    assert reader_h5.get_reader_info() == "OIFDataReader|HDF5DataReader:" + get_test_filepath(
+        "oiftestoutput.h5"
+    )
 
     # Check we get the same results with the CSV data
     reader_csv = OIFDataReader(get_test_filepath("oiftestoutput.csv"), inputformat="csv")
     oif_csv = reader_csv.read_rows()
     assert_frame_equal(oif_file, oif_csv)
+    assert reader_csv.get_reader_info() == "OIFDataReader|CSVDataReader:" + get_test_filepath(
+        "oiftestoutput.csv"
+    )
 
     # Check a mismatched file.
     with pytest.raises(SystemExit) as e:

@@ -20,6 +20,16 @@ class OrbitAuxReader(CSVDataReader):
         """
         super().__init__(filename, sep, header, **kwargs)
 
+    def get_reader_info(self):
+        """Return a string identifying the current reader name
+        and input information (for logging and output).
+
+        Returns:
+        --------
+        name (str): The reader information.
+        """
+        return f"OrbitAuxReader:{self.filename}"
+
     def _process_and_validate_input_table(self, input_table, **kwargs):
         """Perform any input-specific processing and validation on the input table.
         Modifies the input dataframe in place.
@@ -57,5 +67,17 @@ class OrbitAuxReader(CSVDataReader):
         input_table = input_table.drop(
             ["INDEX", "N_PAR", "MOID", "COMPCODE", "FORMAT"], axis=1, errors="ignore"
         )
+
+        # Check if there is q in the resulting dataframe.
+        if "q" not in input_table.columns:
+            if "a" not in input_table.columns or "e" not in input_table.columns:
+                pplogger.error(
+                    "ERROR: OrbitAuxReader: unable to join ephemeris simulation and orbital parameters: no a or e in input."
+                )
+                sys.exit(
+                    "ERROR: OrbitAuxReader: unable to join ephemeris simulation and orbital parameters: no a or e in input."
+                )
+            else:
+                input_table["q"] = input_table["a"] * (1.0 - input_table["e"])
 
         return input_table

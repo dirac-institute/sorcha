@@ -34,6 +34,17 @@ class ObjectDataReader(abc.ABC):
         self._cache_table = cache_table
         self._table = None
 
+    @abc.abstractmethod
+    def get_reader_info(self):
+        """Return a string identifying the current reader name
+        and input information (for logging and output).
+
+        Returns:
+        --------
+        name (str): The reader information.
+        """
+        pass  # pragma: no cover
+
     def read_rows(self, block_start=0, block_size=None, **kwargs):
         """Reads in a set number of rows from the input, performs
         post-processing and validation, and returns a data frame.
