@@ -5,10 +5,10 @@ import cProfile
 import pstats
 
 from pstats import SortKey
-from surveySimPP.surveySimPP import runLSSTPostProcessing
+from surveySimPP.surveySimPP import runLSSTPostProcessing  # noqa: F401
 import argparse
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     # Parse the command line arguments.
     parser = argparse.ArgumentParser()
     parser.add_argument("--object_type", default="mba", help="The type of objects to test (mba or tno).")
