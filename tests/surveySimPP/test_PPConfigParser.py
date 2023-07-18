@@ -5,7 +5,7 @@ import configparser
 import pytest
 import glob
 
-from surveySimPP.utilities.dataUtilitiesForTests import get_test_filepath
+from sorcha.utilities.dataUtilitiesForTests import get_test_filepath
 
 
 @pytest.fixture
@@ -28,7 +28,7 @@ def setup_and_teardown_for_PPConfigFileParser(tmp_path):
 
 
 def test_PPConfigFileParser(setup_and_teardown_for_PPConfigFileParser):
-    from surveySimPP.modules.PPConfigParser import PPConfigFileParser
+    from sorcha.modules.PPConfigParser import PPConfigFileParser
 
     configs = PPConfigFileParser(get_test_filepath("test_PPConfig.ini"), "lsst")
 
@@ -74,7 +74,7 @@ def test_PPConfigFileParser(setup_and_teardown_for_PPConfigFileParser):
 
 
 def test_PPGetOrExit():
-    from surveySimPP.modules.PPConfigParser import PPGetOrExit
+    from sorcha.modules.PPConfigParser import PPGetOrExit
 
     config = configparser.ConfigParser()
     config.read(get_test_filepath("test_PPConfig.ini"))
@@ -92,7 +92,7 @@ def test_PPGetOrExit():
 
 
 def test_PPGetFloatOrExit():
-    from surveySimPP.modules.PPConfigParser import PPGetFloatOrExit
+    from sorcha.modules.PPConfigParser import PPGetFloatOrExit
 
     config = configparser.ConfigParser()
     config.read(get_test_filepath("test_PPConfig.ini"))
@@ -114,7 +114,7 @@ def test_PPGetFloatOrExit():
 
 
 def test_PPGetIntOrExit():
-    from surveySimPP.modules.PPConfigParser import PPGetIntOrExit
+    from sorcha.modules.PPConfigParser import PPGetIntOrExit
 
     config = configparser.ConfigParser()
     config.read(get_test_filepath("test_PPConfig.ini"))
@@ -136,7 +136,7 @@ def test_PPGetIntOrExit():
 
 
 def test_PPGetBoolOrExit():
-    from surveySimPP.modules.PPConfigParser import PPGetBoolOrExit
+    from sorcha.modules.PPConfigParser import PPGetBoolOrExit
 
     config = configparser.ConfigParser()
     config.read(get_test_filepath("test_PPConfig.ini"))
@@ -155,7 +155,7 @@ def test_PPGetBoolOrExit():
 
 
 def test_PPGetValueAndFlag():
-    from surveySimPP.modules.PPConfigParser import PPGetValueAndFlag
+    from sorcha.modules.PPConfigParser import PPGetValueAndFlag
 
     config = configparser.ConfigParser()
     config.read(get_test_filepath("test_PPConfig.ini"))
@@ -180,7 +180,7 @@ def test_PPGetValueAndFlag():
 
 
 def test_PPFindFileOrExit():
-    from surveySimPP.modules.PPConfigParser import PPFindFileOrExit
+    from sorcha.modules.PPConfigParser import PPFindFileOrExit
 
     test_file = PPFindFileOrExit(get_test_filepath("test_PPConfig.ini"), "config file")
 
@@ -195,7 +195,7 @@ def test_PPFindFileOrExit():
 
 
 def test_PPFindDirectoryOrExit():
-    from surveySimPP.modules.PPConfigParser import PPFindDirectoryOrExit
+    from sorcha.modules.PPConfigParser import PPFindDirectoryOrExit
 
     test_dir = PPFindDirectoryOrExit("./", "test")
 
@@ -210,7 +210,7 @@ def test_PPFindDirectoryOrExit():
 
 
 def test_PPCheckFiltersForSurvey():
-    from surveySimPP.modules.PPConfigParser import PPCheckFiltersForSurvey
+    from sorcha.modules.PPConfigParser import PPCheckFiltersForSurvey
 
     PPCheckFiltersForSurvey("lsst", ["u", "g", "r", "i", "z", "y"])
 
@@ -221,8 +221,8 @@ def test_PPCheckFiltersForSurvey():
 
 
 def test_PPPrintConfigsToLog(tmp_path):
-    from surveySimPP.modules.PPGetLogger import PPGetLogger
-    from surveySimPP.modules.PPConfigParser import PPPrintConfigsToLog
+    from sorcha.modules.PPGetLogger import PPGetLogger
+    from sorcha.modules.PPConfigParser import PPPrintConfigsToLog
 
     test_path = os.path.dirname(get_test_filepath("test_input_fullobs.csv"))
 

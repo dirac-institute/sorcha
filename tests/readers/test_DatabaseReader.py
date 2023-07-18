@@ -4,9 +4,9 @@ import tempfile
 
 from numpy.testing import assert_equal
 
-from surveySimPP.modules.PPMakeTemporaryEphemerisDatabase import PPMakeTemporaryEphemerisDatabase
-from surveySimPP.readers.DatabaseReader import DatabaseReader
-from surveySimPP.utilities.dataUtilitiesForTests import get_test_filepath
+from sorcha.modules.PPMakeTemporaryEphemerisDatabase import PPMakeTemporaryEphemerisDatabase
+from sorcha.readers.DatabaseReader import DatabaseReader
+from sorcha.utilities.dataUtilitiesForTests import get_test_filepath
 
 
 def test_DatabaseReader_objects():

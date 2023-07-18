@@ -1,4 +1,4 @@
-from surveySimPP.lsstcomet import Comet
+from sorcha.lsstcomet import Comet
 import numpy as np
 
 # Using lsstcomet code by Mike Kelley

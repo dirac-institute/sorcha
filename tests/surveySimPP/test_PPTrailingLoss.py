@@ -3,14 +3,14 @@ import pandas as pd
 
 
 def test_calcTrailingLoss():
-    from surveySimPP.modules.PPTrailingLoss import calcTrailingLoss
+    from sorcha.modules.PPTrailingLoss import calcTrailingLoss
 
     assert 0.45347433560262895 == calcTrailingLoss(1.0, 1.0, 1.0)
     return
 
 
 def test_PPTrailingLoss():
-    from surveySimPP.modules.PPTrailingLoss import PPTrailingLoss
+    from sorcha.modules.PPTrailingLoss import PPTrailingLoss
 
     testoifdf = pd.DataFrame(
         {

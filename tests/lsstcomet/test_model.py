@@ -2,9 +2,9 @@ import numpy as np
 import astropy.units as u
 from sbpy.activity import Afrho
 import synphot
-from surveySimPP.lsstcomet.model import Comet
+from sorcha.lsstcomet.model import Comet
 
-from surveySimPP.utilities.dataUtilitiesForTests import get_test_filepath
+from sorcha.utilities.dataUtilitiesForTests import get_test_filepath
 
 
 class TestComet:

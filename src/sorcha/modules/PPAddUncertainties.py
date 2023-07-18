@@ -19,9 +19,9 @@
 
 import numpy as np
 import logging
-from surveySimPP.modules import PPTrailingLoss
-from surveySimPP.modules import PPRandomizeMeasurements
-from surveySimPP.modules.PPSNRLimit import PPSNRLimit
+from sorcha.modules import PPTrailingLoss
+from sorcha.modules import PPRandomizeMeasurements
+from sorcha.modules.PPSNRLimit import PPSNRLimit
 
 
 def degCos(x):

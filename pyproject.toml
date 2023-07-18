@@ -1,11 +1,11 @@
 [project]
-name = "surveySimPP"
+name = "sorcha"
 license = {file = "LICENSE.txt"}
 readme = "README.md"
 authors = [
     { name = "Meg Schwamb", email = "m.schwamb@qub.ac.uk" }
 ]
-description = "The Survey Simulator Post Processing code for the LSST"
+description = "The survey simulator post processing code for the LSST"
 requires-python = ">=3.8"
 classifiers = [
     "Intended Audience :: Science/Research",
@@ -31,13 +31,13 @@ dependencies = [
 ]
 
 [project.scripts]
-surveySimPP = "surveySimPP.surveySimPP:main"
-makeConfigOIF = "surveySimPP.utilities.makeConfigOIF:main"
-makeConfigPP = "surveySimPP.utilities.makeConfigPP:main"
-makeMultiConfigOIF = "surveySimPP.utilities.makeMultiConfigOIF:main"
-makeSLURMscript = "surveySimPP.utilities.makeSLURMscript:main"
-createResultsSQLDatabase = "surveySimPP.utilities.createResultsSQLDatabase:main"
-createTemporaryDatabases = "surveySimPP.utilities.createTemporaryDatabases:main"
+sorcha = "sorcha.sorcha:main"
+makeConfigOIF = "sorcha.utilities.makeConfigOIF:main"
+makeConfigSorcha = "sorcha.utilities.makeConfigPP:main"
+makeMultiConfigOIF = "sorcha.utilities.makeMultiConfigOIF:main"
+makeSLURMscript = "sorcha.utilities.makeSLURMscript:main"
+createResultsSQLDatabase = "sorcha.utilities.createResultsSQLDatabase:main"
+createTemporaryDatabases = "sorcha.utilities.createTemporaryDatabases:main"
 
 [project.urls]
 "Documentation" = "https://survey-simulator-post-processing.readthedocs.io/en/latest/"
@@ -96,15 +96,15 @@ build-backend = "setuptools.build_meta"
 zip-safe = false
 
 [tool.setuptools.package-data]
-surveySimPP = ["tests/data/*", "tests/data/*/*"]
+sorcha = ["tests/data/*", "tests/data/*/*"]
 
 [tool.setuptools_scm]
-write_to = "src/surveySimPP/_version.py"
+write_to = "src/sorcha/_version.py"
 
 [tool.pytest.ini_options]
 testpaths = [
     "tests",
-    "src/surveySimPP",
+    "src/sorcha",
 ]
 
 [tool.black]

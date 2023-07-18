@@ -4,7 +4,7 @@ import pandas as pd
 def test_calcDetectionProbability():
     # Test caclDetetcionProbabilty function
 
-    from surveySimPP.modules.PPDetectionProbability import calcDetectionProbability
+    from sorcha.modules.PPDetectionProbability import calcDetectionProbability
 
     mag = 21.9
     limmag = 22.0
@@ -17,7 +17,7 @@ def test_calcDetectionProbability():
 
 
 def test_PPDetectionProbabilty():
-    from surveySimPP.modules.PPDetectionProbability import PPDetectionProbability
+    from sorcha.modules.PPDetectionProbability import PPDetectionProbability
 
     test_in = pd.DataFrame(
         {"FieldID": [0, 0], "MagnitudeInFilter": [21.9, 21.9], "fiveSigmaDepth": [22.0, 22.0]}

@@ -2,8 +2,8 @@ import numpy as np
 import pytest
 from numpy.testing import assert_equal
 
-from surveySimPP.readers.HDF5Reader import HDF5DataReader
-from surveySimPP.utilities.dataUtilitiesForTests import get_test_filepath
+from sorcha.readers.HDF5Reader import HDF5DataReader
+from sorcha.utilities.dataUtilitiesForTests import get_test_filepath
 
 
 @pytest.mark.parametrize("use_cache", [True, False])

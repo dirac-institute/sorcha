@@ -25,7 +25,7 @@ from numpy.testing import assert_almost_equal, assert_equal
 
 
 def test_calcAstrometricUncertainty():
-    from surveySimPP.modules.PPAddUncertainties import calcAstrometricUncertainty
+    from sorcha.modules.PPAddUncertainties import calcAstrometricUncertainty
 
     # Test the function calcAstrometricUncertainty
     mag = 20
@@ -40,7 +40,7 @@ def test_calcAstrometricUncertainty():
 
 
 def test_calcPhotometricUncertainty():
-    from surveySimPP.modules.PPAddUncertainties import calcPhotometricUncertainty
+    from sorcha.modules.PPAddUncertainties import calcPhotometricUncertainty
 
     # Test the function calcPhotometricUncertainty
     snr = 7
@@ -54,7 +54,7 @@ def test_calcPhotometricUncertainty():
 
 
 def test_degCos():
-    from surveySimPP.modules.PPAddUncertainties import degCos
+    from sorcha.modules.PPAddUncertainties import degCos
 
     assert_almost_equal(degCos(90), 0)
     assert_almost_equal(degCos(180), -1)
@@ -64,7 +64,7 @@ def test_degCos():
 
 
 def test_degSin():
-    from surveySimPP.modules.PPAddUncertainties import degSin
+    from sorcha.modules.PPAddUncertainties import degSin
 
     assert_almost_equal(degSin(90), 1)
     assert_almost_equal(degSin(180), 0)
@@ -74,7 +74,7 @@ def test_degSin():
 
 
 def test_addUncertainties():
-    from surveySimPP.modules.PPAddUncertainties import addUncertainties
+    from sorcha.modules.PPAddUncertainties import addUncertainties
 
     obj_ids = ["a21", "b22", "c23", "d24"]
     obj_mags = [21.0, 22.0, 23.0, 34.0]
@@ -150,7 +150,7 @@ def test_addUncertainties():
 
 
 def test_uncertainties():
-    from surveySimPP.modules.PPAddUncertainties import uncertainties
+    from sorcha.modules.PPAddUncertainties import uncertainties
 
     observations = pd.DataFrame(
         {
@@ -185,7 +185,7 @@ def test_uncertainties():
 
 
 def test_calcRandomAstrometricErrorPerCoord():
-    from surveySimPP.modules.PPAddUncertainties import calcRandomAstrometricErrorPerCoord
+    from sorcha.modules.PPAddUncertainties import calcRandomAstrometricErrorPerCoord
 
     error_rand = calcRandomAstrometricErrorPerCoord(700.0, 160.6781779, 0.60)
 

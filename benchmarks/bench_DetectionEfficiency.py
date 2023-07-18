@@ -4,7 +4,7 @@ import pandas as pd
 
 from metric_emitter import Emitter
 
-from surveySimPP.modules.PPDetectionEfficiency import PPDetectionEfficiency
+from sorcha.modules.PPDetectionEfficiency import PPDetectionEfficiency
 
 
 def setup_observations():

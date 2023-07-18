@@ -2,8 +2,8 @@ import cProfile
 import pstats
 
 from pstats import SortKey
-from surveySimPP.modules.PPReadPointingDatabase import PPReadPointingDatabase
-from surveySimPP.utilities.dataUtilitiesForTests import get_test_filepath
+from sorcha.modules.PPReadPointingDatabase import PPReadPointingDatabase
+from sorcha.utilities.dataUtilitiesForTests import get_test_filepath
 
 '''
 Run this script from inside the benchmarks directory so that the relative file

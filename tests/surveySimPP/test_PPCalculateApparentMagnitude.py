@@ -4,7 +4,7 @@ from numpy.testing import assert_almost_equal, assert_equal
 
 
 def test_PPCalculateApparentMagnitudeInFilter():
-    from surveySimPP.modules.PPCalculateApparentMagnitudeInFilter import PPCalculateApparentMagnitudeInFilter
+    from sorcha.modules.PPCalculateApparentMagnitudeInFilter import PPCalculateApparentMagnitudeInFilter
 
     test_observations = pd.DataFrame(
         {
@@ -35,7 +35,7 @@ def test_PPCalculateApparentMagnitudeInFilter():
 
 
 def test_PPCalculateSimpleCometaryMagnitude():
-    from surveySimPP.modules.PPCalculateSimpleCometaryMagnitude import PPCalculateSimpleCometaryMagnitude
+    from sorcha.modules.PPCalculateSimpleCometaryMagnitude import PPCalculateSimpleCometaryMagnitude
 
     cometary_obs = pd.DataFrame(
         {
@@ -62,7 +62,7 @@ def test_PPCalculateSimpleCometaryMagnitude():
 
 
 def test_PPApplyColourOffsets():
-    from surveySimPP.modules.PPApplyColourOffsets import PPApplyColourOffsets
+    from sorcha.modules.PPApplyColourOffsets import PPApplyColourOffsets
 
     objects = np.array(["obj1", "obj1", "obj1", "obj1", "obj2", "obj2", "obj2", "obj2"])
 
@@ -119,7 +119,7 @@ def test_PPApplyColourOffsets():
 
 
 def test_PPCalculateApparentMagnitude():
-    from surveySimPP.modules.PPCalculateApparentMagnitude import PPCalculateApparentMagnitude
+    from sorcha.modules.PPCalculateApparentMagnitude import PPCalculateApparentMagnitude
 
     cometary_obs = pd.DataFrame(
         {

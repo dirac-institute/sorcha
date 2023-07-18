@@ -1,8 +1,8 @@
-from surveySimPP.utilities.dataUtilitiesForTests import get_test_filepath
+from sorcha.utilities.dataUtilitiesForTests import get_test_filepath
 
 
 def test_PPGetMainFilterAndColourOffsets():
-    from surveySimPP.modules.PPGetMainFilterAndColourOffsets import PPGetMainFilterAndColourOffsets
+    from sorcha.modules.PPGetMainFilterAndColourOffsets import PPGetMainFilterAndColourOffsets
 
     colour_fn = get_test_filepath("testcolour.txt")
     observing_filters = ["r", "g", "i", "z"]

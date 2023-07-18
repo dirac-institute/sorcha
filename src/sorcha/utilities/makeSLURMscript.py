@@ -17,7 +17,7 @@ import os
 import sys
 import glob
 import argparse
-from surveySimPP.modules.PPConfigParser import PPFindFileOrExit, PPFindDirectoryOrExit
+from sorcha.modules.PPConfigParser import PPFindFileOrExit, PPFindDirectoryOrExit
 
 
 def makeSLURM(args):
@@ -100,10 +100,8 @@ def makeSLURM(args):
             output_path = os.path.join(args.allout, rootname)
             mkdir_command = "mkdir " + output_path
 
-            call_command = (
-                "srun --exclusive -N1 -n1 -c1 surveySimPP -c {} -p {} -o {} -e {} -u {} -t {}".format(
-                    args.ssppcon, params_fn, orbits_fn, oif_fn, output_path, rootname
-                )
+            call_command = "srun --exclusive -N1 -n1 -c1 sorcha -c {} -p {} -o {} -e {} -u {} -t {}".format(
+                args.ssppcon, params_fn, orbits_fn, oif_fn, output_path, rootname
             )
 
             if args.comet:

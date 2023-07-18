@@ -2,7 +2,7 @@ import pandas as pd
 import logging
 import sys
 
-from surveySimPP.readers.ObjectDataReader import ObjectDataReader
+from sorcha.readers.ObjectDataReader import ObjectDataReader
 
 
 class CSVDataReader(ObjectDataReader):

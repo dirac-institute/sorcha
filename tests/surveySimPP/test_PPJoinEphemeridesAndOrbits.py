@@ -1,11 +1,11 @@
-from surveySimPP.utilities.dataUtilitiesForTests import get_test_filepath
+from sorcha.utilities.dataUtilitiesForTests import get_test_filepath
 from numpy.testing import assert_equal
 
 
 def test_PPJoinEphemeridesAndOrbits():
-    from surveySimPP.modules.PPJoinEphemeridesAndOrbits import PPJoinEphemeridesAndOrbits
-    from surveySimPP.readers.OIFReader import read_full_oif_table
-    from surveySimPP.readers.OrbitAuxReader import OrbitAuxReader
+    from sorcha.modules.PPJoinEphemeridesAndOrbits import PPJoinEphemeridesAndOrbits
+    from sorcha.readers.OIFReader import read_full_oif_table
+    from sorcha.readers.OrbitAuxReader import OrbitAuxReader
 
     oif_file = read_full_oif_table(get_test_filepath("oiftestoutput.txt"), "whitespace")
     orbit_reader = OrbitAuxReader(get_test_filepath("testorb.des"), "whitespace")

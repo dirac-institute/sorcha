@@ -3,7 +3,7 @@ import pandas as pd
 import os
 import pytest
 
-from surveySimPP.utilities.dataUtilitiesForTests import get_test_filepath
+from sorcha.utilities.dataUtilitiesForTests import get_test_filepath
 
 
 @pytest.fixture
@@ -17,8 +17,8 @@ def setup_and_teardown_for_PPMakeTemporaryEphemerisDatabase():
 
 
 def test_PPMakeTemporaryEphemerisDatabase(setup_and_teardown_for_PPMakeTemporaryEphemerisDatabase):
-    from surveySimPP.modules.PPMakeTemporaryEphemerisDatabase import PPMakeTemporaryEphemerisDatabase
-    from surveySimPP.readers.OIFReader import read_full_oif_table
+    from sorcha.modules.PPMakeTemporaryEphemerisDatabase import PPMakeTemporaryEphemerisDatabase
+    from sorcha.readers.OIFReader import read_full_oif_table
 
     temp_path = os.path.dirname(get_test_filepath("oiftestoutput.txt"))
     stem_name = "testdb_PPIntermDB.db"

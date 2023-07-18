@@ -5,10 +5,10 @@ from .PPCheckInputObjectIDs import PPCheckInputObjectIDs
 from .PPJoinEphemeridesAndParameters import PPJoinEphemeridesAndParameters
 from .PPJoinEphemeridesAndOrbits import PPJoinEphemeridesAndOrbits
 from .PPMatchPointingToObservations import PPMatchPointingToObservations
-from surveySimPP.readers.CSVReader import CSVDataReader
-from surveySimPP.readers.DatabaseReader import DatabaseReader
-from surveySimPP.readers.OIFReader import OIFDataReader
-from surveySimPP.readers.OrbitAuxReader import OrbitAuxReader
+from sorcha.readers.CSVReader import CSVDataReader
+from sorcha.readers.DatabaseReader import DatabaseReader
+from sorcha.readers.OIFReader import OIFDataReader
+from sorcha.readers.OrbitAuxReader import OrbitAuxReader
 
 
 def PPReadAllInput(cmd_args, configs, filterpointing, startChunk, incrStep, verbose=True):

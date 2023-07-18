@@ -4,7 +4,7 @@ import sqlite3
 import os
 from pandas.testing import assert_frame_equal
 
-from surveySimPP.utilities.dataUtilitiesForTests import get_test_filepath
+from sorcha.utilities.dataUtilitiesForTests import get_test_filepath
 
 
 class args:
@@ -19,7 +19,7 @@ class args:
 
 
 def test_get_column_names():
-    from surveySimPP.utilities.createResultsSQLDatabase import get_column_names
+    from sorcha.utilities.createResultsSQLDatabase import get_column_names
 
     col_names = get_column_names(get_test_filepath("sqlresults.db"))
 
@@ -46,7 +46,7 @@ def test_get_column_names():
 
 
 def test_create_inputs_table(tmp_path):
-    from surveySimPP.utilities.createResultsSQLDatabase import create_inputs_table
+    from sorcha.utilities.createResultsSQLDatabase import create_inputs_table
 
     data_path = os.path.dirname(get_test_filepath("oiftestoutput.txt"))
 
@@ -81,7 +81,7 @@ def test_create_inputs_table(tmp_path):
 
 
 def test_create_results_table(tmp_path):
-    from surveySimPP.utilities.createResultsSQLDatabase import create_results_table
+    from sorcha.utilities.createResultsSQLDatabase import create_results_table
 
     data_path = os.path.dirname(get_test_filepath("oiftestoutput.txt"))
 
@@ -112,7 +112,7 @@ def test_create_results_table(tmp_path):
 
 
 def test_create_results_database(tmp_path):
-    from surveySimPP.utilities.createResultsSQLDatabase import create_results_database
+    from sorcha.utilities.createResultsSQLDatabase import create_results_database
 
     test_args = args(tmp_path)
 

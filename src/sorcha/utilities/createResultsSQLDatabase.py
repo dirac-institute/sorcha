@@ -13,7 +13,7 @@ import glob
 import argparse
 import sys
 import os
-from surveySimPP.modules.PPConfigParser import PPFindDirectoryOrExit
+from sorcha.modules.PPConfigParser import PPFindDirectoryOrExit
 
 
 def create_results_table(cnx_out, filename, output_path, output_stem, table_name="pp_results"):

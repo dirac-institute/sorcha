@@ -5,7 +5,7 @@ import pandas as pd
 from memory_profiler import memory_usage
 from metric_emitter import Emitter
 
-from surveySimPP.modules.PPApplyColourOffsets import PPApplyColourOffsets
+from sorcha.modules.PPApplyColourOffsets import PPApplyColourOffsets
 
 
 def setup_test_obs(num_copies=1):

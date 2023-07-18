@@ -1,37 +1,37 @@
-surveySimPP.lsstcomet package
+sorcha.lsstcomet package
 =============================
 
 LSST Comet Submodules
 ----------------------
 
-surveySimPP.lsstcomet.model module
+sorcha.lsstcomet.model module
 ----------------------------------
 
-.. automodule:: surveySimPP.lsstcomet.model
+.. automodule:: sorcha.lsstcomet.model
    :members:
    :undoc-members:
    :show-inheritance:
 
-surveySimPP.lsstcomet.phase module
+sorcha.lsstcomet.phase module
 ----------------------------------
 
-.. automodule:: surveySimPP.lsstcomet.phase
+.. automodule:: sorcha.lsstcomet.phase
    :members:
    :undoc-members:
    :show-inheritance:
 
-surveySimPP.lsstcomet.setup module
+sorcha.lsstcomet.setup module
 ----------------------------------
 
-.. automodule:: surveySimPP.lsstcomet.setup
+.. automodule:: sorcha.lsstcomet.setup
    :members:
    :undoc-members:
    :show-inheritance:
 
-surveySimPP.lsstcomet.util module
+sorcha.lsstcomet.util module
 ---------------------------------
 
-.. automodule:: surveySimPP.lsstcomet.util
+.. automodule:: sorcha.lsstcomet.util
    :members:
    :undoc-members:
    :show-inheritance:
