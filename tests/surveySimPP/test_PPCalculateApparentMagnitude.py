@@ -21,16 +21,10 @@ def test_PPCalculateApparentMagnitudeInFilter():
         }
     )
 
-    test_observations = PPCalculateApparentMagnitudeInFilter(test_observations.copy(), "HG", "r", "HG_mag")
-    test_observations = PPCalculateApparentMagnitudeInFilter(
-        test_observations.copy(), "HG12", "r", "HG12_mag"
-    )
-    test_observations = PPCalculateApparentMagnitudeInFilter(
-        test_observations.copy(), "HG1G2", "r", "HG1G2_mag"
-    )
-    test_observations = PPCalculateApparentMagnitudeInFilter(
-        test_observations.copy(), "linear", "r", "linear_mag"
-    )
+    test_observations = PPCalculateApparentMagnitudeInFilter(test_observations.copy(), "HG", "HG_mag")
+    test_observations = PPCalculateApparentMagnitudeInFilter(test_observations.copy(), "HG12", "HG12_mag")
+    test_observations = PPCalculateApparentMagnitudeInFilter(test_observations.copy(), "HG1G2", "HG1G2_mag")
+    test_observations = PPCalculateApparentMagnitudeInFilter(test_observations.copy(), "linear", "linear_mag")
 
     assert_almost_equal(test_observations["HG_mag"][0], 13.391578, decimal=5)
     assert_almost_equal(test_observations["HG12_mag"][0], 13.387267, decimal=5)

@@ -83,7 +83,7 @@ def addUncertainties(detDF, configs, rng, verbose=True):
         detDF, configs, filterMagName="TrailedSourceMag"
     )
 
-    if configs["trailing_losses_on"]:
+    if configs.get("trailing_losses_on", False):
         _, detDF["PhotometricSigmaPSF(mag)"], detDF["SNR"] = uncertainties(
             detDF, configs, filterMagName="PSFMag"
         )
@@ -93,7 +93,7 @@ def addUncertainties(detDF, configs, rng, verbose=True):
     # default SNR cut can be disabled in the config file under EXPERT
     # at low SNR, high photometric sigma causes randomisation to sometimes
     # grossly inflate/decrease magnitudes.
-    if configs["default_SNR_cut"]:
+    if configs.get("default_SNR_cut", False):
         verboselog("Removing all observations with SNR < 2.0...")
         detDF = PPSNRLimit(detDF.copy(), 2.0)
 
@@ -102,7 +102,7 @@ def addUncertainties(detDF, configs, rng, verbose=True):
         detDF, rng, magName="TrailedSourceMag", sigName="PhotometricSigmaTrailedSource(mag)"
     )
 
-    if configs["trailing_losses_on"]:
+    if configs.get("trailing_losses_on", False):
         detDF["observedPSFMag"] = PPRandomizeMeasurements.randomizePhotometry(
             detDF, rng, magName="PSFMag", sigName="PhotometricSigmaPSF(mag)"
         )
@@ -144,7 +144,7 @@ def uncertainties(
 
     """
 
-    if configs["trailing_losses_on"]:
+    if configs.get("trailing_losses_on", False):
         dMag = PPTrailingLoss.calcTrailingLoss(
             detDF[dra_name] * degCos(detDF[dec_name]), detDF[ddec_name], detDF[seeingName]
         )

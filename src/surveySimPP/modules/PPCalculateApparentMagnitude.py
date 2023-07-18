@@ -50,6 +50,6 @@ def PPCalculateApparentMagnitude(
             observations.rename(columns={"H_" + mainfilter: "H_filter"}, inplace=True)
 
         verboselog("Calculating apparent magnitude in filter...")
-        observations = PPCalculateApparentMagnitudeInFilter(observations, phasefunction, mainfilter)
+        observations = PPCalculateApparentMagnitudeInFilter(observations, phasefunction)
 
     return observations

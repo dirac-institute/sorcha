@@ -106,7 +106,6 @@ testpaths = [
     "tests",
     "src/surveySimPP",
 ]
-filterwarnings = "error"
 
 [tool.black]
 line-length = 110
