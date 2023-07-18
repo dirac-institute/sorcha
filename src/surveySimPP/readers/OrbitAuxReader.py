@@ -20,6 +20,16 @@ class OrbitAuxReader(CSVDataReader):
         """
         super().__init__(filename, sep, header, **kwargs)
 
+    def get_reader_info(self):
+        """Return a string identifying the current reader name
+        and input information (for logging and output).
+
+        Returns:
+        --------
+        name (str): The reader information.
+        """
+        return f"OrbitAuxReader:{self.filename}"
+
     def _process_and_validate_input_table(self, input_table, **kwargs):
         """Perform any input-specific processing and validation on the input table.
         Modifies the input dataframe in place.

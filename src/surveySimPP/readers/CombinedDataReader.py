@@ -21,8 +21,7 @@ import logging
 import sys
 
 
-class CombinedDataReader():
-
+class CombinedDataReader:
     def __init__(self, **kwargs):
         self.primary_reader = None
         self.object_readers = []
@@ -80,75 +79,28 @@ class CombinedDataReader():
 
         """
         pplogger = logging.getLogger(__name__)
+        verboselog = pplogger.info if verbose else lambda *a, **k: None
+
         if self.primary_reader is None:
             pplogger.error("ERROR: No primary reader provided.")
             sys.exit("ERROR: No primary reader provided.")
 
         # Load data from the primary table.
+        verboselog(f"Reading primary input file: {primary_reader.get_reader_info()}")
         primary_df = self.primary_reader.read_rows(self.block_start, block_size)
         objid_list = primary_df["ObjID"].unique().tolist()
 
-        # Load every other data frame 
-    verboselog("Reading input physical parameters: " + cmd_args["paramsinput"])
-    param_reader = CSVDataReader(cmd_args["paramsinput"], configs["aux_format"])
-    padacl = param_reader.read_rows(startChunk, incrStep)
+        # Load and join in the other data frames.
+        for reader in self.object_readers:
+            verboselog(f"Reading input file: {reader.get_reader_info()}")
+            current_df = reader.read_objects(objid_list)
 
-    if configs["comet_activity"] == "comet":
-        verboselog("Reading cometary parameters: " + cmd_args["cometinput"])
-        comet_reader = CSVDataReader(cmd_args["cometinput"], configs["aux_format"])
-        padaco = comet_reader.read_rows(startChunk, incrStep)
+            # Check that the new dataframe has the correct object IDs.
+            current_objs = pd.unique(current_df["ObjID"]).astype(str)
+            if set(current_objs) != set(objid_list):
+                pplogger.error("ERROR: ObjectIDs do not match primary table.")
+                sys.exit("ERROR: ObjectIDs do not match primary table.")
 
-    objid_list = padacl["ObjID"].unique().tolist()
+            primary_df = primary_df.join(current_df.set_index("ObjID"), on="ObjID")
 
-    if cmd_args["makeTemporaryEphemerisDatabase"] or cmd_args["readTemporaryEphemerisDatabase"]:
-        # read from temporary database
-        verboselog("Reading from temporary ephemeris database.")
-        emphem_reader = DatabaseReader(cmd_args["readTemporaryEphemerisDatabase"])
-        padafr = emphem_reader.read_objects(objid_list)
-    else:
-        # TODO: Once more ephemerides_types are added this should be wrapped in a EphemerisDataReader
-        # That does the selection and checks. We are holding off adding this level of indirection until there
-        # is a second ephemerides_type.
-        ephem_type = configs["ephemerides_type"]
-        if ephem_type.casefold() != "oif":  # pragma: no cover
-            pplogger.error(f"PPReadAllInput: Unsupported value for ephemerides_type {ephem_type}")
-            sys.exit(f"PPReadAllInput: Unsupported value for ephemerides_type {ephem_type}")
-
-        try:
-            verboselog("Reading input ephemerides from: " + cmd_args["oifoutput"])
-            emphem_reader = OIFDataReader(cmd_args["oifoutput"], configs["eph_format"])
-
-            # Read everything and filter on rows. Depending on the chunksize and filtering
-            # we might want to use emphem_reader.read_objects().
-            padafr = emphem_reader.read_rows()
-            padafr = padafr[padafr["ObjID"].isin(objid_list)]
-
-        except MemoryError:
-            pplogger.error(
-                "ERROR: insufficient memory. Try to run with -dw command line flag or reduce sizeSerialChunk."
-            )
-            sys.exit(
-                "ERROR: insufficient memory. Try to run with -dw command line flag or reduce sizeSerialChunk."
-            )
-
-    verboselog(
-        "Checking if object IDs in orbits, physical parameters and pointing simulation input files match..."
-    )
-    PPCheckInputObjectIDs(padaor, padacl, padafr)
-
-    if configs["comet_activity"] == "comet":
-        PPCheckInputObjectIDs(padaor, padaco, padafr)
-
-    verboselog("Joining physical parameters and orbital data with simulation data...")
-    observations = PPJoinEphemeridesAndParameters(padafr, padacl)
-    observations = PPJoinEphemeridesAndOrbits(observations, padaor)
-    if configs["comet_activity"] == "comet":
-        verboselog("Joining cometary data...")
-        observations = PPJoinEphemeridesAndParameters(observations, padaco)
-
-    verboselog(
-        "Joining info from pointing database with simulation data and dropping observations in non-requested filters..."
-    )
-    observations = PPMatchPointingToObservations(observations, filterpointing)
-
-    return observations
+        return primary_df

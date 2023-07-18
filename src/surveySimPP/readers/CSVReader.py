@@ -41,6 +41,16 @@ class CSVDataReader(ObjectDataReader):
         # if we try to read data for specific object IDs.
         self.obj_id_table = None
 
+    def get_reader_info(self):
+        """Return a string identifying the current reader name
+        and input information (for logging and output).
+
+        Returns:
+        --------
+        name (str): The reader information.
+        """
+        return f"CSVDataReader:{self.filename}"
+
     def _find_header_line(self):
         """Find the line number of the CSV header. Used for cases
         where the header is not the first line and we want to skip down.

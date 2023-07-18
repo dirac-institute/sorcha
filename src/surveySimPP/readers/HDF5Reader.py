@@ -20,6 +20,16 @@ class HDF5DataReader(ObjectDataReader):
         # if we try to read data for specific object IDs.
         self.obj_id_table = None
 
+    def get_reader_info(self):
+        """Return a string identifying the current reader name
+        and input information (for logging and output).
+
+        Returns:
+        --------
+        name (str): The reader information.
+        """
+        return f"HDF5DataReader:{self.filename}"
+
     def _read_rows_internal(self, block_start=0, block_size=None, **kwargs):
         """Reads in a set number of rows from the input.
 

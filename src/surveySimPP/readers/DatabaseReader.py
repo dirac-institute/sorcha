@@ -19,6 +19,16 @@ class DatabaseReader(ObjectDataReader):
         super().__init__(**kwargs)
         self.intermdb = intermdb
 
+    def get_reader_info(self):
+        """Return a string identifying the current reader name
+        and input information (for logging and output).
+
+        Returns:
+        --------
+        name (str): The reader information.
+        """
+        return f"DatabaseReader:{self.intermdb}"
+
     def _read_rows_internal(self, block_start=0, block_size=None, **kwargs):
         """Reads in a set number of rows from the input.
 

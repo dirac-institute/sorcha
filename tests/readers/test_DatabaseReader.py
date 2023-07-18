@@ -17,6 +17,7 @@ def test_DatabaseReader_objects():
         eph_reader = DatabaseReader(db_file)
         eph_data = eph_reader.read_objects(["S000015", "S000044"])
         assert len(eph_data) == 5
+        assert eph_reader.get_reader_info() == "DatabaseReader:" + db_file
 
         # Check that we correctly loaded the header information.
         column_headings = np.array(

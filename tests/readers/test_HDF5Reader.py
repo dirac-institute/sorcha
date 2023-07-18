@@ -12,6 +12,7 @@ def test_HDF5DataReader_read_rows(use_cache):
     reader = HDF5DataReader(get_test_filepath("oiftestoutput.h5"), cache_table=use_cache)
     oif_data = reader.read_rows()
     assert len(oif_data) == 9
+    assert reader.get_reader_info() == "HDF5DataReader:" + get_test_filepath("oiftestoutput.h5")
 
     expected_first_row = np.array(
         [

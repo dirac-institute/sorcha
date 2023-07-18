@@ -11,6 +11,7 @@ def test_OrbitAuxReader():
     txt_reader = OrbitAuxReader(get_test_filepath("testorb.des"), "whitespace")
     orbit_txt = txt_reader.read_rows()
     assert_equal(len(orbit_txt), 5)
+    assert txt_reader.get_reader_info() == "OrbitAuxReader:" + get_test_filepath("testorb.des")
 
     csv_reader = OrbitAuxReader(get_test_filepath("testorb.csv"), "csv")
     orbit_csv = csv_reader.read_rows()

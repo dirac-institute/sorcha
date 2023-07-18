@@ -17,6 +17,7 @@ def test_CSVDataReader_oif(use_cache):
     """
     csv_reader = CSVDataReader(get_test_filepath("oiftestoutput.csv"), "csv", cache_table=use_cache)
     assert csv_reader.header_row == 0
+    assert csv_reader.get_reader_info() == "CSVDataReader:" + get_test_filepath("oiftestoutput.csv")
 
     # Read in all 9 rows.
     oif_data = csv_reader.read_rows()
