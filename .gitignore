@@ -32,6 +32,8 @@ _version.py
 __pycache__
 /data/test/testdb_PPIntermDB.db
 /data/out/testrun_e2e.csv
+/data/out/restats
+/data/out/out_*.csv
 
 #demo_files_run
 _cache/
