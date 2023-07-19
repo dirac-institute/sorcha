@@ -112,11 +112,13 @@ class CombinedDataReader:
 
             # Check that the new dataframe has at least the object IDs matching
             # the ephemeris frame.
+            verboselog("Checking Object IDs in auxiliary data")
             current_ids = set(pd.unique(current_df["ObjID"]).astype(str))
             if not ephem_ids.issubset(current_ids):  # pragma: no cover
                 pplogger.error("ERROR: At least one missing ObjID in {reader.get_reader_info()}")
                 sys.exit("ERROR: At least one missing ObjID {reader.get_reader_info()}")
 
+            verboselog("Joining auxiliary data with ephemeris")
             ephem_df = ephem_df.join(current_df.set_index("ObjID"), on="ObjID")
 
         return ephem_df
