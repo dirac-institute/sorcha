@@ -4,11 +4,11 @@ import pytest
 from numpy.testing import assert_equal
 from pandas.testing import assert_frame_equal
 
-from surveySimPP.readers.CombinedDataReader import CombinedDataReader
-from surveySimPP.readers.CSVReader import CSVDataReader
-from surveySimPP.readers.OIFReader import OIFDataReader
-from surveySimPP.readers.OrbitAuxReader import OrbitAuxReader
-from surveySimPP.utilities.dataUtilitiesForTests import get_test_filepath
+from sorcha.readers.CombinedDataReader import CombinedDataReader
+from sorcha.readers.CSVReader import CSVDataReader
+from sorcha.readers.OIFReader import OIFDataReader
+from sorcha.readers.OrbitAuxReader import OrbitAuxReader
+from sorcha.utilities.dataUtilitiesForTests import get_test_filepath
 
 
 def test_CombinedDataReader():
