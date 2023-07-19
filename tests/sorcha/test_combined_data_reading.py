@@ -11,7 +11,6 @@ from sorcha.utilities.dataUtilitiesForTests import get_test_filepath
 
 
 def test_PPReadAllInput():
-
     cmd_args = {
         "paramsinput": get_test_filepath("PPReadAllInput_params.txt"),
         "orbinfile": get_test_filepath("PPReadAllInput_orbits.des"),
@@ -39,7 +38,7 @@ def test_PPReadAllInput():
 
     reader = CombinedDataReader(verbose=True)
     reader.add_ephem_reader(OIFDataReader(cmd_args["oifoutput"], configs["eph_format"]))
-    reader.add_aux_data_reader(CSVDataReader(cmd_args["paramsinput"], configs["aux_format"]))    
+    reader.add_aux_data_reader(CSVDataReader(cmd_args["paramsinput"], configs["aux_format"]))
     reader.add_aux_data_reader(OrbitAuxReader(cmd_args["orbinfile"], configs["aux_format"]))
 
     observations = reader.read_block(block_size=10)
