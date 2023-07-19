@@ -17,6 +17,7 @@ def test_PPLinkingFilter():
     min_tracklets = 3
     tracklet_interval = 15
     minimum_separation = 0.5
+    maximum_time = 0.0625
 
     test_data_out = PPLinkingFilter(
         test_data,
@@ -25,24 +26,9 @@ def test_PPLinkingFilter():
         min_tracklets,
         tracklet_interval,
         minimum_separation,
-        rng,
+        maximum_time,
     )
 
-    expected = [
-        907416,
-        907470,
-        909426,
-        909452,
-        910850,
-        910872,
-        915246,
-        922013,
-        922034,
-        922035,
-        926281,
-        926288,
-    ]
-
-    assert_equal(test_data_out["FieldID"].values, expected)
+    pd.testing.assert_frame_equal(test_data_out, test_data)
 
     return

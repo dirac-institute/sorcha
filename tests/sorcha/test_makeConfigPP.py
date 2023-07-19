@@ -29,6 +29,7 @@ class args:
         self.numtracklets = 3
         self.trackwindow = 15.0
         self.septhreshold = 0.5
+        self.maxtime = 0.0625
         self.outputformat = "csv"
         self.outputsize = "default"
         self.positiondecimals = 7
