@@ -66,6 +66,8 @@ def test_PPConfigFileParser(setup_and_teardown_for_PPConfigFileParser):
         "magnitude_decimals": 3,
         "size_serial_chunk": 10,
         "rng_seed": None,
+        "lightcurve": False,
+        "lc_model": None
     }
 
     assert configs == test_configs
@@ -278,6 +280,8 @@ def test_PPPrintConfigsToLog(tmp_path):
         "rng_seed": None,
         "mainfilter": "r",
         "othercolours": ["g-r", "i-r", "z-r"],
+        "lightcurve": False,
+        "lc_model": None
     }
 
     PPPrintConfigsToLog(configs, cmd_args)

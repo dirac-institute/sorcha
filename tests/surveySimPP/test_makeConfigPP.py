@@ -1,8 +1,8 @@
 import os
 import configparser
 
-from sorcha.utilities.makeConfigPP import makeConfigFile
-from sorcha.utilities.dataUtilitiesForTests import get_test_filepath
+from surveySimPP.utilities.makeConfigPP import makeConfigFile
+from surveySimPP.utilities.dataUtilitiesForTests import get_test_filepath
 
 
 class args:
