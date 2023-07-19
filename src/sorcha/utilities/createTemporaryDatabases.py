@@ -61,7 +61,7 @@ def main():
         arguments:
           -h, --help                    show this help message and exit
           -i INPUTS, --inputs INPUTS    Path location of input ephemeris text files.
-          -s STEM, --stem STEM          Stem filename of input ephemeris text files. Default is "oif_".
+          -s STEM, --stem STEM          Stem filename of input ephemeris text files. Default is `oif_`.
           -c CHUNK, --chunk CHUNK       Chunking size for creation, where chunk=number of rows per chunk. Don't change this unless you know what you're doing.
           -f, --force                   Force deletion/overwrite of existing output file(s). Default False.
 
