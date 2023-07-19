@@ -148,7 +148,7 @@ def main():
     The code assumes that your physical parameters and orbits files are
     in the same folder and have filenames beginning with 'params' and 'orbits'
     respectively. Cometary activity files must begin with 'comets', and
-    temporary ephemeris simulation databases must begin with "temp_" and then the
+    temporary ephemeris simulation databases must begin with `temp_` and then the
     filename of the ephemeris file they were created from.
 
     Note that instead of implementing loops in bash the script lists every command

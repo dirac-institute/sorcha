@@ -194,7 +194,7 @@ def calcAstrometricUncertainty(
     error_rand (float/array of floats): random error.
 
     Description:
-    -----------
+    ------------
     The astrometric error can be applied to parallax or proper motion (for nvisit>1).
     If applying to proper motion, should also divide by the # of years of the survey.
     This is also referenced in the LSST overview paper (arXiv:0805.2366, ls.st/lop)
@@ -251,7 +251,7 @@ def calcRandomAstrometricErrorPerCoord(FWHMeff, SNR, AstromErrCoeff=0.60):
     RandomAstrometricErrorPerCoord (float/array of floats): random astrometric uncertainty per coordinate.
 
     Description:
-    -----------
+    ------------
     The coefficient AstromErrCoeff for Maximum Likelihood
     solution is given by
 
