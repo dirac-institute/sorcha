@@ -55,10 +55,6 @@ class CombinedDataReader:
         """
         self.aux_data_readers.append(new_reader)
 
-    def reset_block_start(self):
-        """Reset the starting row for reading blocks of data."""
-        self.block_start = new_start
-
     def read_block(self, block_size=None, verbose=False, **kwargs):
         """Reads in a set number of rows from the input, performs
         post-processing and validation, and returns a data frame.
