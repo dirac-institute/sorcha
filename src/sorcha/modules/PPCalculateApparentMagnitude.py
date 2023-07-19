@@ -7,8 +7,7 @@ import logging
 def PPCalculateApparentMagnitude(
     observations, phasefunction, mainfilter, othercolours, observing_filters, object_type, verbose=False
 ):
-    """
-    This function applies the correct colour offset to H for the relevant filter, checks to make sure
+    """This function applies the correct colour offset to H for the relevant filter, checks to make sure
     the correct columns are included (with additional functionality for colour-specific phase curves),
     then calculates the apparent magnitude.
 

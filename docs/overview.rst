@@ -12,7 +12,7 @@ Solar System Processing pipeline’s detection efficiency.
 Overview of Use
 ------------------
 
-The user is able to create a synthetic Solar System small body population and run them through the Survey Simulator, which applies the specific observational biases from the LSST. In this way, a synthetic population can be compared to real LSST observations. The Survey Simulator is formed out of two python packages working in tandem. The first part is an ephemerides generator. While the user can use any relevant ephemerides generator, we reccomend using `Objects in Field (OIF) <https://github.com/eggls6/objectsInField>`_ package for this. The second piece of software is `Post Processing (surveySimPP) <https://github.com/dirac-institute/survey_simulator_post_processing>`_, which applies the relevant observational biases to simulate what would be detected by LSST, using what we have called :ref:`filters<Filters>`.
+The user is able to create a synthetic Solar System small body population and run them through the Survey Simulator, which applies the specific observational biases from the LSST. In this way, a synthetic population can be compared to real LSST observations. The Survey Simulator is formed out of two python packages working in tandem. The first part is an ephemerides generator. While the user can use any relevant ephemerides generator, we reccomend using `Objects in Field (OIF) <https://github.com/eggls6/objectsInField>`_ package for this. The second piece of software is `Post Processing (sorcha) <https://github.com/dirac-institute/sorcha>`_, which applies the relevant observational biases to simulate what would be detected by LSST, using what we have called :ref:`filters<Filters>`.
 
 
 .. note::
