@@ -94,9 +94,9 @@ def runLSSTPostProcessing(cmd_args):
 
     # Set up the data readers.
     reader = CombinedDataReader(verbose=True)
-    reader.add_ephem_reader(OIFDataReader(cmd_args["oifoutput"], configs["eph_format"])
-    reader.add_aux_data_reader(OrbitAuxReader(cmd_args["orbinfile"], configs["aux_format"])
-    reader.add_aux_data_reader(CSVDataReader(cmd_args["paramsinput"], configs["aux_format"])
+    reader.add_ephem_reader(OIFDataReader(cmd_args["oifoutput"], configs["eph_format"]))
+    reader.add_aux_data_reader(OrbitAuxReader(cmd_args["orbinfile"], configs["aux_format"]))
+    reader.add_aux_data_reader(CSVDataReader(cmd_args["paramsinput"], configs["aux_format"]))
 
     # In case of a large input file, the data is read in chunks. The
     # "sizeSerialChunk" parameter in PPConfig.ini assigns the chunk.
