@@ -8,7 +8,9 @@ LSST stack based post-processing modules in python for the JPL survey simulator:
 
 Currently tested with the following fork: https://github.com/eggls6/objectsInField
 
-Documentation: https://survey-simulator-post-processing.readthedocs.io/en/latest/
+Other software utilities can be found in this github repository: https://github.com/dirac-institute/sorcha_communiity_utils/
+
+Documentation: https://sorcha.readthedocs.io
 
 ## developer best practices
 * Data sets should be moved to the `data` folder, have a readme.txt or readme.md to explain where the data came from as well as a time stamp in the readme.txt.
