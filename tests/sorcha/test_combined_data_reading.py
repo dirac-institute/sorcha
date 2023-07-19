@@ -146,5 +146,3 @@ def test_PPReadAllInput():
     assert_equal(expected_first_line, observations.iloc[0].values)
 
     assert len(observations) == 10
-
-    return
