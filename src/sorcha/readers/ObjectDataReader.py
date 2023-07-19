@@ -134,7 +134,7 @@ class ObjectDataReader(abc.ABC):
             input_table["ObjID"] = input_table["ObjID"].astype(str)
         except KeyError:
             pplogger = logging.getLogger(__name__)
-            err_str = "ERROR: Unable to find ObjID column headings in table."
+            err_str = f"ERROR: Unable to find ObjID column headings ({self.get_reader_info()})."
             pplogger.error(err_str)
             sys.exit(err_str)
 
