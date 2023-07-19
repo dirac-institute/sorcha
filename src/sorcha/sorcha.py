@@ -20,11 +20,16 @@ from sorcha.modules.PPFadingFunctionFilter import PPFadingFunctionFilter
 from sorcha.modules.PPConfigParser import PPConfigFileParser, PPPrintConfigsToLog
 from sorcha.modules.PPGetLogger import PPGetLogger
 from sorcha.modules.PPCommandLineParser import PPCommandLineParser
-from sorcha.modules.PPReadAllInput import PPReadAllInput
+from sorcha.modules.PPMatchPointingToObservations import PPMatchPointingToObservations
 from sorcha.modules.PPMagnitudeLimit import PPMagnitudeLimit
 from sorcha.modules.PPOutput import PPWriteOutput
 from sorcha.modules.PPGetMainFilterAndColourOffsets import PPGetMainFilterAndColourOffsets
 
+from sorcha.readers.CombinedDataReader import CombinedDataReader
+from sorcha.readers.DatabaseReader import DatabaseReader
+from sorcha.readers.CSVReader import CSVDataReader
+from sorcha.readers.OIFReader import OIFDataReader
+from sorcha.readers.OrbitAuxReader import OrbitAuxReader
 
 # Author: Samuel Cornwall, Siegfried Eggl, Grigori Fedorets, Steph Merritt, Meg Schwamb
 
@@ -89,11 +94,28 @@ def runLSSTPostProcessing(cmd_args):
     verboselog("Random number seed is {}.".format(rng_seed))
     rng = np.random.default_rng(rng_seed)
 
+    # Set up the data readers.
+    reader = CombinedDataReader(verbose=True)
+
+    if cmd_args["makeTemporaryEphemerisDatabase"] or cmd_args["readTemporaryEphemerisDatabase"]:
+        reader.add_ephem_reader(DatabaseReader(cmd_args["readTemporaryEphemerisDatabase"]))
+    else:
+        # TODO: Once more ephemerides_types are added this should be wrapped in a EphemerisDataReader
+        # That does the selection and checks. We are holding off adding this level of indirection until there
+        # is a second ephemerides_type.
+        ephem_type = configs["ephemerides_type"]
+        if ephem_type.casefold() != "oif":  # pragma: no cover
+            pplogger.error(f"PPReadAllInput: Unsupported value for ephemerides_type {ephem_type}")
+            sys.exit(f"PPReadAllInput: Unsupported value for ephemerides_type {ephem_type}")
+        reader.add_ephem_reader(OIFDataReader(cmd_args["oifoutput"], configs["eph_format"]))
+
+    reader.add_aux_data_reader(OrbitAuxReader(cmd_args["orbinfile"], configs["aux_format"]))
+    reader.add_aux_data_reader(CSVDataReader(cmd_args["paramsinput"], configs["aux_format"]))
+    if configs["comet_activity"] == "comet":
+        reader.add_aux_data_reader(CSVDataReader(cmd_args["cometinput"], configs["aux_format"]))
+
     # In case of a large input file, the data is read in chunks. The
     # "sizeSerialChunk" parameter in PPConfig.ini assigns the chunk.
-
-    # Here, add loop which reads only a portion of input file to
-    # avoid memory overflow
     startChunk = 0
     endChunk = 0
 
@@ -105,18 +127,11 @@ def runLSSTPostProcessing(cmd_args):
 
     while endChunk < lenf:
         endChunk = startChunk + configs["size_serial_chunk"]
-        if lenf - startChunk > configs["size_serial_chunk"]:
-            incrStep = configs["size_serial_chunk"]
-        else:
-            incrStep = lenf - startChunk
-
         verboselog("Working on objects {}-{}.".format(startChunk, endChunk))
 
         # Processing begins, all processing is done for chunks
-
-        observations = PPReadAllInput(
-            cmd_args, configs, filterpointing, startChunk, incrStep, verbose=cmd_args["verbose"]
-        )
+        observations = reader.read_block(block_size=configs["size_serial_chunk"])
+        observations = PPMatchPointingToObservations(observations, filterpointing)
 
         # If the ephemeris file doesn't have any observations for the objects in the chunk
         # PPReadAllInput will return an empty dataframe. We thus log a warning.

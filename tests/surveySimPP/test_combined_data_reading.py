@@ -1,13 +1,16 @@
 import numpy as np
 from numpy.testing import assert_equal
 
+from sorcha.modules.PPMatchPointingToObservations import PPMatchPointingToObservations
+from sorcha.modules.PPReadPointingDatabase import PPReadPointingDatabase
+from sorcha.readers.CombinedDataReader import CombinedDataReader
+from sorcha.readers.CSVReader import CSVDataReader
+from sorcha.readers.OIFReader import OIFDataReader
+from sorcha.readers.OrbitAuxReader import OrbitAuxReader
 from sorcha.utilities.dataUtilitiesForTests import get_test_filepath
 
 
 def test_PPReadAllInput():
-    from sorcha.modules.PPReadAllInput import PPReadAllInput
-    from sorcha.modules.PPReadPointingDatabase import PPReadPointingDatabase
-
     cmd_args = {
         "paramsinput": get_test_filepath("PPReadAllInput_params.txt"),
         "orbinfile": get_test_filepath("PPReadAllInput_orbits.des"),
@@ -33,7 +36,13 @@ def test_PPReadAllInput():
         configs["pointing_database"], configs["observing_filters"], configs["pointing_sql_query"]
     )
 
-    observations = PPReadAllInput(cmd_args, configs, filterpointing, 0, 10)
+    reader = CombinedDataReader(verbose=True)
+    reader.add_ephem_reader(OIFDataReader(cmd_args["oifoutput"], configs["eph_format"]))
+    reader.add_aux_data_reader(CSVDataReader(cmd_args["paramsinput"], configs["aux_format"]))
+    reader.add_aux_data_reader(OrbitAuxReader(cmd_args["orbinfile"], configs["aux_format"]))
+
+    observations = reader.read_block(block_size=10)
+    observations = PPMatchPointingToObservations(observations, filterpointing)
 
     expected_first_line = np.array(
         [
@@ -137,5 +146,3 @@ def test_PPReadAllInput():
     assert_equal(expected_first_line, observations.iloc[0].values)
 
     assert len(observations) == 10
-
-    return
