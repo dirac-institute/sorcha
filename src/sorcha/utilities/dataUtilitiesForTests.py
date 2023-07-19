@@ -33,3 +33,25 @@ def get_test_filepath(filename):
 
     # Returned path: `<base_directory>/tests/data/filename`
     return os.path.join(THIS_DIR, "tests/data", filename)
+
+
+def get_demo_filepath(filename):
+    """Return the full path to a test file in the ``.../demo`` directory.
+
+    Parameters
+    ----------
+    filename : `str`
+        The name of the file inside the ``demo`` directory.
+
+    Returns
+    -------
+    filepath : `str`
+        The full path to the file.
+    """
+
+    # This file's path: `<base_directory>/src/sorcha/utilities/test_data_utilities.py`
+    # THIS_DIR = `<base_directory>/`
+    THIS_DIR = Path(__file__).parent.parent.parent.parent
+
+    # Returned path: `<base_directory>/tests/data/filename`
+    return os.path.join(THIS_DIR, "demo", filename)
