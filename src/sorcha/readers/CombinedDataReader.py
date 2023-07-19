@@ -89,6 +89,7 @@ class CombinedDataReader:
             self.block_start += len(ephem_df)
 
             obj_ids = ephem_df["ObjID"].unique().tolist()
+            primary_df = None
         else:
             verboselog(f"Loading object IDs from: {self.aux_data_readers[0].get_reader_info()}")
             primary_df = self.aux_data_readers[0].read_rows(self.block_start, block_size)
@@ -106,9 +107,13 @@ class CombinedDataReader:
             ephem_df = self.ephem_reader.read_objects(obj_ids)
         ephem_ids = set(ephem_df["ObjID"].unique().tolist())
 
-        for reader in self.aux_data_readers:
-            verboselog(f"Reading input file: {reader.get_reader_info()}")
-            current_df = reader.read_objects(obj_ids)
+        for i, reader in enumerate(self.aux_data_readers):
+            # Skip reading the data from the first auxiliary file if we already read it.
+            if i == 0 and primary_df is not None:
+                current_df = primary_df
+            else:
+                verboselog(f"Reading input file: {reader.get_reader_info()}")
+                current_df = reader.read_objects(obj_ids)
 
             # Check that the new dataframe has at least the object IDs matching
             # the ephemeris frame.
