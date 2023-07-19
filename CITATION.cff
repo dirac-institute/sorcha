@@ -1,5 +1,5 @@
 cff-version: 1.2.0
-title: surveySimPP
+title: sorcha
 message: 'If you use this software, please cite it as below.'
 type: software
 authors:
@@ -63,7 +63,7 @@ authors:
 repository-code: >-
   https://github.com/dirac-institute/survey_simulator_post_processing
 abstract: >-
-  surveySimPP is a survey simulator post-processing layer
+  sorcha is a survey simulator post-processing layer
   built for the upcoming Legacy Survey of Space and Time.
   With this code, the user is able to create a synthetic
   Solar System small body population and run them through
@@ -75,7 +75,7 @@ abstract: >-
   ephemerides generator. While the user can use any relevant
   ephemerides generator, we recommend using Objects in Field
   (OIF) package for this. The second piece of software is
-  Post Processing (surveySimPP), which applies the relevant
+  Post Processing (sorcha), which applies the relevant
   observational biases to simulate what would be detected by
   LSST, using what we have called filters.
 license: GPL-3.0

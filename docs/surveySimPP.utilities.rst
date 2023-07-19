@@ -1,34 +1,34 @@
-surveySimPP.utilities package
+sorcha.utilities package
 =============================
 
-surveySimPP.utilities.PPTranslateMagnitude module
+sorcha.utilities.PPTranslateMagnitude module
 -------------------------------------------------
 
-.. automodule:: surveySimPP.utilities.PPTranslateMagnitude
+.. automodule:: sorcha.utilities.PPTranslateMagnitude
    :members:
    :undoc-members:
    :show-inheritance:
 
-surveySimPP.utilities.PPreadColoursUser module
+sorcha.utilities.PPreadColoursUser module
 ----------------------------------------------
 
-.. automodule:: surveySimPP.utilities.PPreadColoursUser
+.. automodule:: sorcha.utilities.PPreadColoursUser
    :members:
    :undoc-members:
    :show-inheritance:
 
-surveySimPP.utilities.makeConfigOIF module
+sorcha.utilities.makeConfigOIF module
 ------------------------------------------
 
-.. automodule:: surveySimPP.utilities.makeConfigOIF
+.. automodule:: sorcha.utilities.makeConfigOIF
    :members:
    :undoc-members:
    :show-inheritance:
 
-surveySimPP.utilities.makeConfigPP module
+sorcha.utilities.makeConfigPP module
 -----------------------------------------
 
-.. automodule:: surveySimPP.utilities.makeConfigPP
+.. automodule:: sorcha.utilities.makeConfigPP
    :members:
    :undoc-members:
    :show-inheritance:

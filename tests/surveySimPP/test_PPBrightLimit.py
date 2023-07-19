@@ -6,7 +6,7 @@ from numpy.testing import assert_equal
 
 
 def test_PPBrightLimit():
-    from surveySimPP.modules.PPBrightLimit import PPBrightLimit
+    from sorcha.modules.PPBrightLimit import PPBrightLimit
 
     observation_ID = np.arange(1, 11)
     observation_filter = ["r", "r", "r", "r", "r", "g", "g", "g", "g", "g"]

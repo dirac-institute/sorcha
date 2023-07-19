@@ -1,7 +1,7 @@
 import os
 import pytest
 
-from surveySimPP.utilities.dataUtilitiesForTests import get_test_filepath
+from sorcha.utilities.dataUtilitiesForTests import get_test_filepath
 
 
 class args:
@@ -22,7 +22,7 @@ class args:
 
 
 def test_PPCommandLineParser():
-    from surveySimPP.modules.PPCommandLineParser import PPCommandLineParser
+    from sorcha.modules.PPCommandLineParser import PPCommandLineParser
 
     tmp_path = os.path.dirname(get_test_filepath("test_input_fullobs.csv"))
 

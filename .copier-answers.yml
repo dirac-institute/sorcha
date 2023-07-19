@@ -8,9 +8,9 @@ custom_install: true
 include_docs: true
 include_notebooks: true
 mypy_type_checking: none
-package_name: survey_sim_pp
+package_name: sorcha
 preferred_linter: black
 project_license: none
-project_name: survey_simulator_post_processing
+project_name: sorcha
 use_gitlfs: disabled
 use_isort: false

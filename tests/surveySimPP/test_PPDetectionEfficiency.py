@@ -4,7 +4,7 @@ from numpy.testing import assert_equal
 
 
 def test_PPDetectionEfficiency():
-    from surveySimPP.modules.PPDetectionEfficiency import PPDetectionEfficiency
+    from sorcha.modules.PPDetectionEfficiency import PPDetectionEfficiency
 
     rng = np.random.default_rng(2021)
 

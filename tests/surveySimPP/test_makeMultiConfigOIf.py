@@ -1,8 +1,8 @@
 import configparser
 import os
 
-from surveySimPP.utilities.makeMultiConfigOIF import makeConfig
-from surveySimPP.utilities.dataUtilitiesForTests import get_test_filepath
+from sorcha.utilities.makeMultiConfigOIF import makeConfig
+from sorcha.utilities.dataUtilitiesForTests import get_test_filepath
 
 
 class args:

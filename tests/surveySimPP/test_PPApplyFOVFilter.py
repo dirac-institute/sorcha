@@ -1,11 +1,11 @@
 import pandas as pd
 import numpy as np
 from numpy.testing import assert_equal, assert_almost_equal
-from surveySimPP.utilities.dataUtilitiesForTests import get_test_filepath
+from sorcha.utilities.dataUtilitiesForTests import get_test_filepath
 
 
 def test_PPSimpleSensorArea():
-    from surveySimPP.modules.PPApplyFOVFilter import PPSimpleSensorArea
+    from sorcha.modules.PPApplyFOVFilter import PPSimpleSensorArea
 
     test_data = pd.read_csv(get_test_filepath("test_input_fullobs.csv"), nrows=15)
 
@@ -21,7 +21,7 @@ def test_PPSimpleSensorArea():
 
 
 def test_PPCircleFootprint():
-    from surveySimPP.modules.PPApplyFOVFilter import PPCircleFootprint
+    from sorcha.modules.PPApplyFOVFilter import PPCircleFootprint
 
     test_data = pd.read_csv(get_test_filepath("test_input_fullobs.csv"), nrows=10)
 
@@ -35,7 +35,7 @@ def test_PPCircleFootprint():
 
 
 def test_PPGetSeparation():
-    from surveySimPP.modules.PPApplyFOVFilter import PPGetSeparation
+    from sorcha.modules.PPApplyFOVFilter import PPGetSeparation
 
     sep1 = PPGetSeparation(164.03, -17.58, 163.87, -18.84)
     sep2 = PPGetSeparation(1, 1, 1, 1)
@@ -47,7 +47,7 @@ def test_PPGetSeparation():
 
 
 def test_PPApplyFOVFilters():
-    from surveySimPP.modules.PPApplyFOVFilter import PPApplyFOVFilter
+    from sorcha.modules.PPApplyFOVFilter import PPApplyFOVFilter
 
     observations = pd.read_csv(get_test_filepath("test_input_fullobs.csv"), nrows=20)
 

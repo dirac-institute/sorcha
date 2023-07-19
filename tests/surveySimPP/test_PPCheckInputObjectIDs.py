@@ -1,11 +1,11 @@
-from surveySimPP.utilities.dataUtilitiesForTests import get_test_filepath
+from sorcha.utilities.dataUtilitiesForTests import get_test_filepath
 
 
 def test_PPCheckInputObjectIDs():
-    from surveySimPP.modules.PPCheckInputObjectIDs import PPCheckInputObjectIDs
-    from surveySimPP.readers.CSVReader import CSVDataReader
-    from surveySimPP.readers.OIFReader import read_full_oif_table
-    from surveySimPP.readers.OrbitAuxReader import OrbitAuxReader
+    from sorcha.modules.PPCheckInputObjectIDs import PPCheckInputObjectIDs
+    from sorcha.readers.CSVReader import CSVDataReader
+    from sorcha.readers.OIFReader import read_full_oif_table
+    from sorcha.readers.OrbitAuxReader import OrbitAuxReader
 
     compval = 1
 

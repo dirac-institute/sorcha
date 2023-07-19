@@ -4,7 +4,7 @@ from numpy.testing import assert_equal
 
 
 def test_PPSNRLimit():
-    from surveySimPP.modules.PPSNRLimit import PPSNRLimit
+    from sorcha.modules.PPSNRLimit import PPSNRLimit
 
     observations = pd.DataFrame({"SNR": np.arange(1.0, 15.0)})
 

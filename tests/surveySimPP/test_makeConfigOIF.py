@@ -3,8 +3,8 @@ import os
 import sys
 import pytest
 
-from surveySimPP.utilities.makeConfigOIF import makeConfig
-from surveySimPP.utilities.dataUtilitiesForTests import get_test_filepath
+from sorcha.utilities.makeConfigOIF import makeConfig
+from sorcha.utilities.dataUtilitiesForTests import get_test_filepath
 
 # On Windows, the test is apparently not creating the files in the expected place.
 # Not sure why, will troubleshoot later.

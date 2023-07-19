@@ -2,7 +2,7 @@ import os
 import sys
 import pytest
 
-from surveySimPP.utilities.dataUtilitiesForTests import get_test_filepath
+from sorcha.utilities.dataUtilitiesForTests import get_test_filepath
 
 # These tests won't work on Windows because Windows uses backslashes for paths.
 # Hence, the asserts will always fail.
@@ -85,7 +85,7 @@ def setup_for_convert_args_to_absolute_paths():
 
 
 def test_makeSLURM(setup_and_teardown_for_makeSLURM):
-    from surveySimPP.utilities.makeSLURMscript import makeSLURM
+    from sorcha.utilities.makeSLURMscript import makeSLURM
 
     temp_path = os.path.dirname(get_test_filepath("oiftestoutput.txt"))
 
@@ -171,7 +171,7 @@ def test_makeSLURM(setup_and_teardown_for_makeSLURM):
 
 
 def test_convert_args_to_absolute_paths(setup_for_convert_args_to_absolute_paths):
-    from surveySimPP.utilities.makeSLURMscript import convert_args_to_absolute_paths
+    from sorcha.utilities.makeSLURMscript import convert_args_to_absolute_paths
 
     temp_path = os.path.dirname(get_test_filepath("oiftestoutput.txt"))
     test_args = args(os.path.join(temp_path, "makeSLURMscript_5.sh"), False, False, False, dw=True, dl=True)

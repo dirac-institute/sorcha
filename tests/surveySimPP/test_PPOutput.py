@@ -5,7 +5,7 @@ import numpy as np
 import pytest
 from numpy.testing import assert_equal
 
-from surveySimPP.utilities.dataUtilitiesForTests import get_test_filepath
+from sorcha.utilities.dataUtilitiesForTests import get_test_filepath
 
 
 @pytest.fixture
@@ -47,7 +47,7 @@ def setup_and_teardown_for_PPWriteOutput():
 
 
 def test_PPOutWriteCSV(setup_and_teardown_for_PPOutWriteCSV):
-    from surveySimPP.modules.PPOutput import PPOutWriteCSV
+    from sorcha.modules.PPOutput import PPOutWriteCSV
 
     observations = pd.read_csv(get_test_filepath("test_input_fullobs.csv"), nrows=1)
     tmp_path = os.path.dirname(get_test_filepath("test_input_fullobs.csv"))
@@ -62,7 +62,7 @@ def test_PPOutWriteCSV(setup_and_teardown_for_PPOutWriteCSV):
 
 
 def test_PPOutWriteSqlite3(setup_and_teardown_for_PPOutWriteSqlite3):
-    from surveySimPP.modules.PPOutput import PPOutWriteSqlite3
+    from sorcha.modules.PPOutput import PPOutWriteSqlite3
 
     observations = pd.read_csv(get_test_filepath("test_input_fullobs.csv"), nrows=1)
     tmp_path = os.path.dirname(get_test_filepath("test_input_fullobs.csv"))
@@ -82,7 +82,7 @@ def test_PPOutWriteSqlite3(setup_and_teardown_for_PPOutWriteSqlite3):
 
 
 def test_PPOutWriteHDF5(setup_and_teardown_for_PPOutWriteHDF5):
-    from surveySimPP.modules.PPOutput import PPOutWriteHDF5
+    from sorcha.modules.PPOutput import PPOutWriteHDF5
 
     observations = pd.read_csv(get_test_filepath("test_input_fullobs.csv"), nrows=1)
     tmp_path = os.path.dirname(get_test_filepath("test_input_fullobs.csv"))
@@ -97,7 +97,7 @@ def test_PPOutWriteHDF5(setup_and_teardown_for_PPOutWriteHDF5):
 
 
 def test_PPWriteOutput(setup_and_teardown_for_PPWriteOutput):
-    from surveySimPP.modules.PPOutput import PPWriteOutput
+    from sorcha.modules.PPOutput import PPWriteOutput
 
     observations = pd.read_csv(get_test_filepath("test_input_fullobs.csv"), nrows=1)
     tmp_path = os.path.dirname(get_test_filepath("test_input_fullobs.csv"))
