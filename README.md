@@ -9,6 +9,8 @@ LSST stack based post-processing modules in python for the JPL survey simulator:
 
 Currently tested with the following fork: https://github.com/eggls6/objectsInField
 
+Other software utilities can be found in this github repository: https://github.com/dirac-institute/sorcha_communiity_utils/
+
 Documentation: https://survey-simulator-post-processing.readthedocs.io/en/latest/
 
 ## developer best practices
