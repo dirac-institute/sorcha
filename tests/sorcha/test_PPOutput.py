@@ -105,7 +105,7 @@ def test_PPWriteOutput(setup_and_teardown_for_PPWriteOutput):
     cmd_args = {"outpath": tmp_path, "outfilestem": "PPOutput_test_out"}
 
     configs = {
-        "output_size": "default",
+        "output_size": "basic",
         "position_decimals": 7,
         "magnitude_decimals": 3,
         "output_format": "csv",

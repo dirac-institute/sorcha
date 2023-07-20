@@ -369,7 +369,7 @@ def test_CSVDataReader_comets():
 
 def test_CSVDataReader_delims():
     """Test that we check the delimiter during reader creation."""
-    for delim in ["whitespace", "comma", "csv"]:
+    for delim in ["whitespace", "csv"]:
         _ = CSVDataReader(get_test_filepath("testcolour.txt"), delim)
 
     with pytest.raises(SystemExit) as e1:
