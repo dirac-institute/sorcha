@@ -6,6 +6,7 @@ import pytest
 from numpy.testing import assert_equal
 
 from sorcha.utilities.dataUtilitiesForTests import get_test_filepath
+from sorcha.utilities.sorchaArguments import sorchaArguments
 
 
 @pytest.fixture
@@ -102,7 +103,9 @@ def test_PPWriteOutput(setup_and_teardown_for_PPWriteOutput):
     observations = pd.read_csv(get_test_filepath("test_input_fullobs.csv"), nrows=1)
     tmp_path = os.path.dirname(get_test_filepath("test_input_fullobs.csv"))
 
-    cmd_args = {"outpath": tmp_path, "outfilestem": "PPOutput_test_out"}
+    args = sorchaArguments()
+    args.outpath = tmp_path
+    args.outfilestem = "PPOutput_test_out"
 
     configs = {
         "output_size": "default",
@@ -111,15 +114,15 @@ def test_PPWriteOutput(setup_and_teardown_for_PPWriteOutput):
         "output_format": "csv",
     }
 
-    PPWriteOutput(cmd_args, configs, observations, 10)
+    PPWriteOutput(args, configs, observations, 10)
     csv_test_in = pd.read_csv(os.path.join(tmp_path, "PPOutput_test_out.csv"))
 
     configs["output_format"] = "separatelycsv"
-    PPWriteOutput(cmd_args, configs, observations, 10)
+    PPWriteOutput(args, configs, observations, 10)
     sep_test_in = pd.read_csv(os.path.join(tmp_path, "S1000000a_PPOutput_test_out.csv"))
 
     configs["output_format"] = "sqlite3"
-    PPWriteOutput(cmd_args, configs, observations, 10)
+    PPWriteOutput(args, configs, observations, 10)
     cnx = sqlite3.connect(os.path.join(tmp_path, "PPOutput_test_out.db"))
     cur = cnx.cursor()
     cur.execute("select * from pp_results")

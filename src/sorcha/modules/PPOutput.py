@@ -140,7 +140,7 @@ def PPWriteOutput(cmd_args, configs, observations_in, endChunk=0, verbose=False)
 
     if configs["output_format"] == "csv":
         outputsuffix = ".csv"
-        out = os.path.join(cmd_args["outpath"], cmd_args["outfilestem"] + outputsuffix)
+        out = os.path.join(cmd_args.outpath, cmd_args.outfilestem + outputsuffix)
         verboselog("Output to CSV file...")
         observations = PPOutWriteCSV(observations, out)
 
@@ -153,19 +153,19 @@ def PPWriteOutput(cmd_args, configs, observations_in, endChunk=0, verbose=False)
         while i < len(objid_list):
             single_object_df = pd.DataFrame(observations[observations["ObjID"] == objid_list[i]])
             out = os.path.join(
-                cmd_args["outpath"], str(objid_list[i]) + "_" + cmd_args["outfilestem"] + outputsuffix
+                cmd_args.outpath, str(objid_list[i]) + "_" + cmd_args.outfilestem + outputsuffix
             )
             observations = PPOutWriteCSV(single_object_df, out)
             i = i + 1
 
     elif configs["output_format"] == "sqlite3":
         outputsuffix = ".db"
-        out = os.path.join(cmd_args["outpath"], cmd_args["outfilestem"] + outputsuffix)
+        out = os.path.join(cmd_args.outpath, cmd_args.outfilestem + outputsuffix)
         verboselog("Output to sqlite3 database...")
         observations = PPOutWriteSqlite3(observations, out)
 
     elif configs["output_format"] == "hdf5" or configs["output_format"] == "h5":
         outputsuffix = ".h5"
-        out = os.path.join(cmd_args["outpath"], cmd_args["outfilestem"] + outputsuffix)
+        out = os.path.join(cmd_args.outpath, cmd_args.outfilestem + outputsuffix)
         verboselog("Output to HDF5 binary file...")
         observations = PPOutWriteHDF5(observations, out, str(endChunk))

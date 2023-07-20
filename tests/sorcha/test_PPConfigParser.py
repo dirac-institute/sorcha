@@ -6,6 +6,7 @@ import pytest
 import glob
 
 from sorcha.utilities.dataUtilitiesForTests import get_test_filepath
+from sorcha.utilities.sorchaArguments import sorchaArguments
 
 
 @pytest.fixture
@@ -242,6 +243,8 @@ def test_PPPrintConfigsToLog(tmp_path):
         "verbose": True,
     }
 
+    args = sorchaArguments(cmd_args)
+
     configs = {
         "eph_format": "csv",
         "aux_format": "whitespace",
@@ -280,7 +283,7 @@ def test_PPPrintConfigsToLog(tmp_path):
         "othercolours": ["g-r", "i-r", "z-r"],
     }
 
-    PPPrintConfigsToLog(configs, cmd_args)
+    PPPrintConfigsToLog(configs, args)
 
     datalog = glob.glob(os.path.join(tmp_path, "*-postprocessing.log"))
 

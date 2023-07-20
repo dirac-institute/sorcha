@@ -660,24 +660,24 @@ def PPPrintConfigsToLog(configs, cmd_args):
 
     pplogger = logging.getLogger(__name__)
 
-    pplogger.info("The config file used is located at " + cmd_args["configfile"])
-    pplogger.info("The physical parameters file used is located at " + cmd_args["paramsinput"])
-    pplogger.info("The orbits file used is located at " + cmd_args["orbinfile"])
-    pplogger.info("The ephemerides file used is located at " + cmd_args["oifoutput"])
-    pplogger.info("The survey selected is: " + cmd_args["surveyname"])
+    pplogger.info("The config file used is located at " + cmd_args.configfile)
+    pplogger.info("The physical parameters file used is located at " + cmd_args.paramsinput)
+    pplogger.info("The orbits file used is located at " + cmd_args.orbinfile)
+    pplogger.info("The ephemerides file used is located at " + cmd_args.oifoutput)
+    pplogger.info("The survey selected is: " + cmd_args.surveyname)
 
-    if cmd_args["makeTemporaryEphemerisDatabase"]:
+    if cmd_args.makeTemporaryEphemerisDatabase:
         pplogger.info(
-            "Creating of temporary ephemeris database at: " + str(cmd_args["makeTemporaryEphemerisDatabase"])
+            "Creating of temporary ephemeris database at: " + str(cmd_args.makeTemporaryEphemerisDatabase)
         )
 
-    if cmd_args["readTemporaryEphemerisDatabase"]:
+    if cmd_args.readTemporaryEphemerisDatabase:
         pplogger.info(
             "Reading from existing temporary ephemeris database at "
-            + str(cmd_args["readTemporaryEphemerisDatabase"])
+            + str(cmd_args.readTemporaryEphemerisDatabase)
         )
 
-    if cmd_args["deleteTemporaryEphemerisDatabase"]:
+    if cmd_args.deleteTemporaryEphemerisDatabase:
         pplogger.info("Temporary ephemeris database will be deleted upon code conclusion.")
 
     if configs["comet_activity"] == "comet":
@@ -783,10 +783,7 @@ def PPPrintConfigsToLog(configs, cmd_args):
         pplogger.info("Solar System Processing linking filter is turned OFF.")
 
     pplogger.info(
-        "Output files will be saved in path: "
-        + cmd_args["outpath"]
-        + " with filestem "
-        + cmd_args["outfilestem"]
+        "Output files will be saved in path: " + cmd_args.outpath + " with filestem " + cmd_args.outfilestem
     )
     pplogger.info("Output files will be saved as format: " + configs["output_format"])
     pplogger.info(
