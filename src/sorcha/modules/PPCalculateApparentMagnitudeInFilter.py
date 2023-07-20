@@ -4,10 +4,10 @@ import astropy.units as u
 from sbpy.photometry import HG, HG1G2, HG12_Pen16, LinearPhaseFunc
 import logging
 
-from sorcha.utilities.baseLightCurve import * #? 
+from sorcha.lightcurves.LightcurveImporter import LC_METHODS 
 
 
-def PPCalculateApparentMagnitudeInFilter(padain, function, colname="TrailedSourceMag", lightcurve = False, lc_choice = 'None'):
+def PPCalculateApparentMagnitudeInFilter(padain, function, colname="TrailedSourceMag", lightcurve = False, lightcurve_choice = 'None'):
     """
     This task calculates the apparent brightness of an object at a given pointing
     according to one of the following photometric phase function models:
@@ -33,7 +33,7 @@ def PPCalculateApparentMagnitudeInFilter(padain, function, colname="TrailedSourc
 
     lightcurve (boolean): whether lightcurves are applied or not 
 
-    lc_choice (string): choice of lightcurve model
+    lightcurve_choice (string): choice of lightcurve model
 
 
     Returns:
@@ -64,7 +64,7 @@ def PPCalculateApparentMagnitudeInFilter(padain, function, colname="TrailedSourc
     alpha = padain["Sun-Ast-Obs(deg)"].values
     H = padain[H_col].values
     if lightcurve:
-        lc_shift = lightcurve_models[lc_choice]()(padain)
+        lc_shift = LC_METHODS[lightcurve_choice]()(padain)
         padain["Delta_m"] = lc_shift
         Heff = H + lc_shift
     else:

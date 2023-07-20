@@ -1,5 +1,4 @@
-# A basic script Jeremy hacked together to run cProfile on a subset of
-# 1000 TNOs.
+# A basic test case for the lightcurve model
 
 import cProfile
 import pstats
@@ -29,7 +28,6 @@ if __name__ == "__main__":  # pragma: no cover
     }
 
     cProfile.run("runLSSTPostProcessing(cmd_args_dict)", "../data/out/restats")
-    # runLSSTPostProcessing(cmd_args_dict)
 
     p = pstats.Stats('../data/out/restats')
     p.strip_dirs().sort_stats(SortKey.CUMULATIVE).print_stats()

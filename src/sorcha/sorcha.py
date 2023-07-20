@@ -151,7 +151,7 @@ def runLSSTPostProcessing(cmd_args):
             configs["observing_filters"],
             configs["comet_activity"],
             lightcurve = configs['lightcurve'],
-            lc_choice = configs['lc_model'],
+            lightcurve_choice = configs['lc_model'],
             verbose=cmd_args["verbose"],
         )
 
