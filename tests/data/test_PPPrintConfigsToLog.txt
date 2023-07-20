@@ -30,6 +30,7 @@ sorcha.modules.PPConfigParser INFO     ...the minimum required number of observa
 sorcha.modules.PPConfigParser INFO     ...the minimum required number of tracklets to form a track is: 3 
 sorcha.modules.PPConfigParser INFO     ...the maximum window of time in days of tracklets to be contained in to form a track is: 15.0 
 sorcha.modules.PPConfigParser INFO     ...the minimum angular separation between observations in arcseconds is: 0.5 
+sorcha.modules.PPConfigParser INFO     ...the maximum temporal separation between subsequent observations in a tracklet in days is: 0.0625 
 sorcha.modules.PPConfigParser INFO     Output files will be saved in path: ./ with filestem testout 
 sorcha.modules.PPConfigParser INFO     Output files will be saved as format: csv 
 sorcha.modules.PPConfigParser INFO     In the output, positions will be rounded to 7 decimal places. 
