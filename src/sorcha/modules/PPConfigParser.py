@@ -574,7 +574,7 @@ def PPConfigFileParser(configfile, survey_name):
     config_dict["output_size"] = PPGetOrExit(
         config, "OUTPUT", "output_size", "ERROR: output size not specified."
     ).lower()
-    if config_dict["output_size"] not in ["default", "all"]:
+    if config_dict["output_size"] not in ["basic", "all"]:
         pplogger.error("ERROR: output_size not recognised.")
         sys.exit("ERROR: output_size not recognised.")
 

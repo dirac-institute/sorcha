@@ -31,7 +31,7 @@ class args:
         self.septhreshold = 0.5
         self.maxtime = 0.0625
         self.outputformat = "csv"
-        self.outputsize = "default"
+        self.outputsize = "basic"
         self.positiondecimals = 7
         self.magnitudedecimals = 3
         self.snrlimit = None

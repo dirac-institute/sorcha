@@ -29,7 +29,7 @@ class CSVDataReader(ObjectDataReader):
         super().__init__(**kwargs)
         self.filename = filename
 
-        if sep not in ["whitespace", "comma", "csv"]:
+        if sep not in ["whitespace", "csv"]:
             pplogger = logging.getLogger(__name__)
             pplogger.error(f"ERROR: Unrecognized delimiter ({sep})")
             sys.exit(f"ERROR: Unrecognized delimiter ({sep})")

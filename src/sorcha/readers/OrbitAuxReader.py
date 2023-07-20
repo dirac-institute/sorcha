@@ -14,7 +14,7 @@ class OrbitAuxReader(CSVDataReader):
         -----------
         filename (string): location/name of the data file.
 
-        sep (string, optional): format of input file ("whitespace"/"comma"/"csv").
+        sep (string, optional): format of input file ("whitespace"/"csv").
 
         header (int): The row number of the header. If not provided, does an automatic search.
         """

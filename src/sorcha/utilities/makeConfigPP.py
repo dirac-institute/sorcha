@@ -324,9 +324,9 @@ def main():
     parser.add_argument(
         "--outputsize",
         "-outs",
-        help='Size of output. Controls which columns are in the output files. Options are "default" only.',
+        help='Size of output. Controls which columns are in the output files. Options are "basic" or "all".',
         type=str,
-        default="default",
+        default="basid",
     )
     parser.add_argument(
         "--positiondecimals",
