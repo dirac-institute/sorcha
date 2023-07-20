@@ -372,7 +372,7 @@ def main():
         "-lc",
         help="Include lightcurve model. Default False.",
         type=bool,
-        default=True,
+        default=False,
     )
     parser.add_argument(
         "--lcmodel",
