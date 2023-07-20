@@ -52,6 +52,8 @@ def makeConfigFile(args):
         "mag_limit": str(args.maglimit),
         "trailing_losses_on": str(args.trailinglosseson),
         "pointing_sql_query": str(args.sqlquery),
+        "lightcurve": str(args.lightcurve),
+        "lc_model": str(args.lcmodel)
     }
 
     bright_dict = {k: v for k, v in bright_raw.items() if v != "None"}
@@ -100,7 +102,7 @@ def main():
                     [--fadingfunction FADINGFUNCTION] [--fadingwidth FADINGWIDTH] [--fadingpeak FADINGPEAK] [--detectionefficiency DETECTIONEFFICIENCY]
                     [--numobservations NUMOBSERVATIONS] [--numtracklets NUMTRACKLETS] [--trackwindow TRACKWINDOW] [--septhreshold SEPTHRESHOLD] [--maxtime MAXTIME]
                     [--outputformat OUTPUTFORMAT] [--outputsize OUTPUTSIZE] [--positiondecimals POSITIONDECIMALS] [--magnitudedecimals MAGNITUDEDECIMALS] [--snrlimit SNRLIMIT]
-                    [--maglimit MAGLIMIT][--sqlquery SQLQUERY] [--trailinglosseson TRAILINGLOSSESON]
+                    [--maglimit MAGLIMIT][--sqlquery SQLQUERY] [--trailinglosseson TRAILINGLOSSESON] [--lightcurve LIGHTCURVE] [--lcmodel LCMODEL]
                     filename
         positional arguments:
             filename              Filepath where you want to store the config file.
@@ -136,6 +138,8 @@ def main():
           --maglimit MAGLIMIT, -mag MAGLIMIT                                        Magnitude threshold: drop observations below this magnitude. Omit for no magnitude cut.
           --sqlquery SQLQUERY, -query SQLQUERY                                      Database query for extracting data for pointing database.
           --trailinglosseson TRAILINGLOSSESON, -tloss TRAILINGLOSSESON              Switch on trailing losses. Relevant for close-approaching NEOs. Default True.
+          --lightcurve LIGHTCURVE, -lc LIGHTCURVE                                   Include lightcurve model. Default False.
+          --lcmodel LCMODEL -lcm LCMODEL                                            Which lightcurve model to use. Default None.
 
     """
 
@@ -371,6 +375,20 @@ def main():
         help="Switch on trailing losses. Relevant for close-approaching NEOs. Default True.",
         type=bool,
         default=True,
+    )
+    parser.add_argument(
+        "--lightcurve",
+        "-lc",
+        help="Include lightcurve model. Default False.",
+        type=bool,
+        default=False,
+    )
+    parser.add_argument(
+        "--lcmodel",
+        "-lcm",
+        help="Which lightcurve model to use. Default None.",
+        type=str,
+        default=None,
     )
 
     args = parser.parse_args()

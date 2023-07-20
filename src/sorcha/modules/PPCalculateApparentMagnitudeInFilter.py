@@ -4,8 +4,10 @@ import astropy.units as u
 from sbpy.photometry import HG, HG1G2, HG12_Pen16, LinearPhaseFunc
 import logging
 
+from sorcha.lightcurves.LightcurveImporter import LC_METHODS 
 
-def PPCalculateApparentMagnitudeInFilter(padain, function, colname="TrailedSourceMag"):
+
+def PPCalculateApparentMagnitudeInFilter(padain, function, colname="TrailedSourceMag", lightcurve = False, lightcurve_choice = 'None'):
     """
     This task calculates the apparent brightness of an object at a given pointing
     according to one of the following photometric phase function models:
@@ -28,6 +30,11 @@ def PPCalculateApparentMagnitudeInFilter(padain, function, colname="TrailedSourc
     function (string): desired phase function model. Options are HG, HG12, HG1G2, linear, none.
 
     colname (string): column name in which to store calculated magnitude.
+
+    lightcurve (boolean): whether lightcurves are applied or not 
+
+    lightcurve_choice (string): choice of lightcurve model
+
 
     Returns:
     ----------
@@ -56,30 +63,37 @@ def PPCalculateApparentMagnitudeInFilter(padain, function, colname="TrailedSourc
 
     alpha = padain["Sun-Ast-Obs(deg)"].values
     H = padain[H_col].values
+    if lightcurve:
+        lc_shift = LC_METHODS[lightcurve_choice]()(padain)
+        padain["Delta_m"] = lc_shift
+        Heff = H + lc_shift
+    else:
+        Heff = H
+
 
     if function == "HG1G2":
         G1 = padain["G1"].values
         G2 = padain["G2"].values
-        HGm = HG1G2(H=H * u.mag, G1=G1, G2=G2)
+        HGm = HG1G2(H=Heff * u.mag, G1=G1, G2=G2)
         phase_function = HGm(alpha * u.deg).value
 
     elif function == "HG":
         G = padain["GS"].values
-        HGm = HG(H=H * u.mag, G=G)
+        HGm = HG(H=Heff * u.mag, G=G)
         phase_function = HGm(alpha * u.deg).value
 
     elif function == "HG12":
         G12 = padain["G12"].values
-        HGm = HG12_Pen16(H=H * u.mag, G12=G12)
+        HGm = HG12_Pen16(H=Heff * u.mag, G12=G12)
         phase_function = HGm(alpha * u.deg).value
 
     elif function == "linear":
         S = padain["S"].values
-        HGm = LinearPhaseFunc(H=H * u.mag, S=S * u.mag / u.deg)
+        HGm = LinearPhaseFunc(H=Heff * u.mag, S=S * u.mag / u.deg)
         phase_function = HGm(alpha * u.deg).value
 
     elif function == "none":
-        phase_function = H.copy()
+        phase_function = Heff.copy()
 
     else:
         pplogger.error(
@@ -93,5 +107,7 @@ def PPCalculateApparentMagnitudeInFilter(padain, function, colname="TrailedSourc
     padain[colname] = 5.0 * np.log10(delta) + 5.0 * np.log10(r) + phase_function
 
     padain = padain.reset_index(drop=True)
+
+
 
     return padain
