@@ -1,7 +1,7 @@
 from sorcha.sorcha import runLSSTPostProcessing
-from sorcha.utilities.dataUtilitiesForTests import get_demo_filepath
+from sorcha.utilities.dataUtilitiesForTests import get_demo_filepath, get_data_out_filepath
 
-DEMO_DIRECTORY = "./demo/"
+from os import path
 
 
 def test_lsst_end2end():
@@ -22,3 +22,6 @@ def test_lsst_end2end():
     }
 
     runLSSTPostProcessing(cmd_args_dict)
+
+    out_path = get_data_out_filepath("out_end2end.csv")
+    assert path.isfile(out_path)
