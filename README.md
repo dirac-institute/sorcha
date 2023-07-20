@@ -1,4 +1,8 @@
-# Sorcha - an open-source community LSST Solar System Simulator
+<h1 align="center">
+<img src="https://raw.githubusercontent.com/dirac-institute/sorcha/main/docs/images/sorcha_logo.png" width="500">
+</h1><br>
+
+# An open-source community LSST Solar System Simulator
 
 [![ci](https://github.com/dirac-institute/sorcha/actions/workflows/smoke-test.yml/badge.svg)](https://github.com/dirac-institute/sorcha/actions/workflows/smoke-test.yml)
 [![pytest](https://github.com/dirac-institute/sorcha/actions/workflows/testing-and-coverage.yml/badge.svg)](https://github.com/dirac-institute/sorcha/actions/workflows/testing-and-coverage.yml)
