@@ -1,6 +1,7 @@
 import logging
 import sys
 import numpy as np
+import fnmatch
 
 
 def PPApplyColourOffsets(observations, function, othercolours, observing_filters, mainfilter):
@@ -130,9 +131,10 @@ def PPApplyColourOffsets(observations, function, othercolours, observing_filters
         )
         sys.exit("ERROR: PPApplyColourOffsets: unknown phase function. Should be HG1G2, HG, HG12 or linear.")
 
-    # drop a few more unneeded columns to reduce size of dataframe :)
-    observations.drop(mainfilter + "-" + mainfilter, axis=1, inplace=True)
-    observations.drop(othercolours, axis=1, inplace=True)
+    # drop columns for colours that remain after read-in from the parameter file and are not used
+    ks = observations.keys().tolist()
+    obsolete_colours = fnmatch.filter(ks, str("?-" + mainfilter))
+    observations.drop(obsolete_colours, axis=1, inplace=True)
 
     # rename H
     observations.rename(columns={H_col: "H_filter"}, inplace=True)
