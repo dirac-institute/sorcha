@@ -82,7 +82,7 @@ def PPLinkingFilter(
         min_obs_angular_separation=minimum_separation,  # minimum angular separation between observations in a tracklet [arcseconds]
     )
 
-    findable, window_summary = metric.run(
+    findable, _ = metric.run(
         difi_dataframe,
         detection_window=tracklet_interval,  # number of nights in a rolling detection window
         min_window_nights=min_tracklets,  # minimum size of a window as the rolling window is moved
