@@ -85,5 +85,7 @@ where makeConfigSorcha is the name of the command line argument, and
 ``sorcha.utilities.makeConfigPP:main`` is the file path.
 
 ## Collaboration
-This effort is a collaboration between the University of Washington's DiRAC
-Institute, Queen's University Belfast, and the University of Illinois at Urbana-Champaign
+This effort is a collaboration between Queen's University Belfast, the University of Washington's DiRAC Institute, 
+the University of Illinois at Urbana-Champaign, the Center for Astrophysics | Harvard & Smithsonian, and LINCC Frameworks (through the LINCC Frameworks Incubator Program).
+
+LINCC Frameworks is supported by Schmidt Futures, a philanthropic initiative founded by Eric and Wendy Schmidt, as part of the Virtual Institute of Astrophysics (VIA).
