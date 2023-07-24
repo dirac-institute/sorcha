@@ -18,17 +18,17 @@ if __name__ == "__main__":  # pragma: no cover
         "paramsinput": f"./{args.object_type}_sample_1000_physical.csv",
         "orbinfile": f"./{args.object_type}_sample_1000_orbit.csv",
         "oifoutput": f"./{args.object_type}_sample_1000_eph.csv",
-        'configfile': "./OIFconfig_benchmark.ini",
-        'outpath': '../data/out',
-        'makeTemporaryEphemerisDatabase': False,
-        'readTemporaryEphemerisDatabase': False,
-        'deleteTemporaryEphemerisDatabase': False,
-        'surveyname': 'LSST',
-        'outfilestem': f"out_{args.object_type}",
-        'verbose': False,
+        "configfile": "./OIFconfig_benchmark.ini",
+        "outpath": "../data/out",
+        "makeTemporaryEphemerisDatabase": False,
+        "readTemporaryEphemerisDatabase": False,
+        "deleteTemporaryEphemerisDatabase": False,
+        "surveyname": "LSST",
+        "outfilestem": f"out_{args.object_type}",
+        "verbose": False,
     }
 
     cProfile.run("runLSSTPostProcessing(cmd_args_dict)", "../data/out/restats")
 
-    p = pstats.Stats('../data/out/restats')
+    p = pstats.Stats("../data/out/restats")
     p.strip_dirs().sort_stats(SortKey.CUMULATIVE).print_stats()
