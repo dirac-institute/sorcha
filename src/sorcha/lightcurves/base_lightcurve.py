@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 import numpy as np 
 
-timeColumn = 'FieldMJD'
+TIME_COLUMN = 'FieldMJD'
 
 class AbstractLightCurve(ABC):
 	'''
@@ -12,7 +12,6 @@ class AbstractLightCurve(ABC):
 		Initialization function. Doesn't do anything
 		'''
 		self.colnames = colnames #column names for the light curve parameters - code should check if these exist in the input files
-		self.timeColumn = timeColumn
 		pass
 
 	def _compute(self, padain):
@@ -22,7 +21,7 @@ class AbstractLightCurve(ABC):
 		Argument:
 		- times: array of times
 		'''
-		return np.zeros_like(padain[self.timeColumn])
+		return np.zeros_like(padain[TIME_COLUMN])
 
 	def __call__(self, x):
 		return self._compute(x)
@@ -46,7 +45,7 @@ class SinusoidalLightCurve(AbstractLightCurve):
 		'''
 		Computes a sinusoidal light curve given the input dataframe 
 		'''
-		modtime = np.mod(padain[self.timeColumn]/padain['Period'] + padain['Time0'], 2 * np.pi)
+		modtime = np.mod(padain[TIME_COLUMN]/padain['Period'] + padain['Time0'], 2 * np.pi)
 		return padain['LCA'] * np.sin(modtime)
 	
 	@staticmethod
@@ -54,7 +53,6 @@ class SinusoidalLightCurve(AbstractLightCurve):
 		return 'Sinusoidal'
 
 
-lightcurve_models = {'None' : AbstractLightCurve, 'Sinusoidal' : SinusoidalLightCurve} # add more ? 
 
 
 
