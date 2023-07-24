@@ -5,7 +5,7 @@ from pstats import SortKey
 from sorcha.modules.PPReadPointingDatabase import PPReadPointingDatabase
 from sorcha.utilities.dataUtilitiesForTests import get_test_filepath
 
-'''
+"""
 Run this script from inside the benchmarks directory so that the relative file
 path for the database is correct.
 
@@ -25,7 +25,7 @@ Converting the input list, `observing_filters`, to a pandas `Series` seems to
 have no affect despite some online rumors that it might help the performance of
 `isin`.
 https://stackoverflow.com/questions/23945493/a-faster-alternative-to-pandas-isin-function
-'''
+"""
 
 filter_list = ["u", "g", "r", "i", "z", "y"]
 
@@ -33,5 +33,5 @@ sql_query = "SELECT observationId, observationStartMJD, filter, seeingFwhmGeom, 
 
 cProfile.run("PPReadPointingDatabase('../demo/baseline_v2.0_1yr.db', filter_list, sql_query)", "restats")
 
-p = pstats.Stats('restats')
+p = pstats.Stats("restats")
 p.strip_dirs().sort_stats(SortKey.CUMULATIVE).print_stats(30)
