@@ -506,11 +506,12 @@ def PPConfigFileParser(configfile, survey_name):
     config_dict["SSP_number_tracklets"], _ = PPGetValueAndFlag(
         config, "LINKINGFILTER", "SSP_number_tracklets", "int"
     )
-    config_dict["SSP_track_window"], _ = PPGetValueAndFlag(
-        config, "LINKINGFILTER", "SSP_track_window", "float"
-    )
+    config_dict["SSP_track_window"], _ = PPGetValueAndFlag(config, "LINKINGFILTER", "SSP_track_window", "int")
     config_dict["SSP_detection_efficiency"], _ = PPGetValueAndFlag(
         config, "LINKINGFILTER", "SSP_detection_efficiency", "float"
+    )
+    config_dict["SSP_maximum_time"], _ = PPGetValueAndFlag(
+        config, "LINKINGFILTER", "SSP_maximum_time", "float"
     )
 
     SSPvariables = [
@@ -519,6 +520,7 @@ def PPConfigFileParser(configfile, survey_name):
         config_dict["SSP_number_tracklets"],
         config_dict["SSP_track_window"],
         config_dict["SSP_detection_efficiency"],
+        config_dict["SSP_maximum_time"],
     ]
 
     # the below if-statement explicitly checks for None so a zero triggers the correct error
@@ -542,6 +544,10 @@ def PPConfigFileParser(configfile, survey_name):
         if config_dict["SSP_separation_threshold"] <= 0.0:
             pplogger.error("ERROR: SSP_separation_threshold is zero or negative.")
             sys.exit("ERROR: SSP_separation_threshold is zero or negative.")
+
+        if config_dict["SSP_maximum_time"] < 0:
+            pplogger.error("ERROR: SSP_maximum_time is negative.")
+            sys.exit("ERROR: SSP_maximum_time is negative.")
 
         config_dict["SSP_linking_on"] = True
 
@@ -568,7 +574,7 @@ def PPConfigFileParser(configfile, survey_name):
     config_dict["output_size"] = PPGetOrExit(
         config, "OUTPUT", "output_size", "ERROR: output size not specified."
     ).lower()
-    if config_dict["output_size"] not in ["default", "all"]:
+    if config_dict["output_size"] not in ["basic", "all"]:
         pplogger.error("ERROR: output_size not recognised.")
         sys.exit("ERROR: output_size not recognised.")
 
@@ -799,6 +805,10 @@ def PPPrintConfigsToLog(configs, cmd_args):
         pplogger.info(
             "...the minimum angular separation between observations in arcseconds is: "
             + str(configs["SSP_separation_threshold"])
+        )
+        pplogger.info(
+            "...the maximum temporal separation between subsequent observations in a tracklet in days is: "
+            + str(configs["SSP_maximum_time"])
         )
     else:
         pplogger.info("Solar System Processing linking filter is turned OFF.")

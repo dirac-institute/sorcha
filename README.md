@@ -1,9 +1,12 @@
-# survey_simulator_post_processing
+<h1 align="center">
+<img src="https://raw.githubusercontent.com/dirac-institute/sorcha/main/docs/images/sorcha_logo.png" width="500">
+</h1><br>
 
-<!-- [![Build Status](https://travis-ci.org/dirac-institute/survey_simulator_post_processing.svg?branch=master)](https://travis-ci.org/dirac-institute/survey_simulator_post_processing) -->
+# An open-source community LSST Solar System Simulator
 
-[![ci](https://github.com/dirac-institute/survey_simulator_post_processing/actions/workflows/ci.yml/badge.svg)](https://github.com/dirac-institute/survey_simulator_post_processing/actions/workflows/ci.yml)
-[![pytest](https://github.com/dirac-institute/survey_simulator_post_processing/actions/workflows/pytest.yml/badge.svg)](https://github.com/dirac-institute/survey_simulator_post_processing/actions/workflows/pytest.yml) [![Documentation Status](https://readthedocs.org/projects/survey-simulator-post-processing/badge/?version=latest)](https://survey-simulator-post-processing.readthedocs.io/en/latest/?badge=latest)
+[![ci](https://github.com/dirac-institute/sorcha/actions/workflows/smoke-test.yml/badge.svg)](https://github.com/dirac-institute/sorcha/actions/workflows/smoke-test.yml)
+[![pytest](https://github.com/dirac-institute/sorcha/actions/workflows/testing-and-coverage.yml/badge.svg)](https://github.com/dirac-institute/sorcha/actions/workflows/testing-and-coverage.yml)
+[![Documentation Status](https://readthedocs.org/projects/sorcha/badge/?version=latest)](https://sorcha.readthedocs.io/en/latest/?badge=latest)
 
 LSST stack based post-processing modules in python for the JPL survey simulator: https://github.com/AsteroidSurveySimulator/objectsInField
 
@@ -23,7 +26,11 @@ Documentation: https://sorcha.readthedocs.io
 
 
 ## Making pip work
-When making edits to the code, its likely that the only thing you need to worry about is making sure the imports are consistent. There are two places where this is important, the sorcha/sorcha.py file and the sorcha/modules/__init__.py file. If you want to add, remove or change the name of a module, then these files need to be updated to reflect that. 
+When making edits to the code, its likely that the only thing you need to worry
+about is making sure the imports are consistent. There are two places where this
+is important, the sorcha/sorcha.py file and the sorcha/modules/__init__.py file.
+If you want to add, remove or change the name of a module, then these files need
+to be updated to reflect that. 
 
 Within the sorcha/modules/__init__.py file it will look something like this:
 ```
@@ -33,12 +40,18 @@ And in the sorcha.py file it will look something like this:
 ```
 from sorcha.modules import PPAddUncertainties
 ```
-When adding, removing or changing the name of any module, just make sure that you've updated both of these files to reflect the changes.
+When adding, removing or changing the name of any module, just make sure that
+you've updated both of these files to reflect the changes.
 
 
-If you want to make some more major changes, e.g. adding another utility to the command line, then there are two things to keep in mind. Firstly, the python file containing the utility has to be formatted in a specific way and secondly, the setup.py file has to be changed.
+If you want to make some more major changes, e.g. adding another utility to the 
+command line, then there are two things to keep in mind. Firstly, the python file
+containing the utility has to be formatted in a specific way and secondly, the
+setup.py file has to be changed.
 
-Examples of the file formatting can be seen in sorcha.py, makeConfigOIF and makeConfigPP, so you can try to follow that. In short, you need to define the main containing the parser arguments, e.g. 
+Examples of the file formatting can be seen in sorcha.py, makeConfigOIF and
+makeConfigPP, so you can try to follow that. In short, you need to define the
+main containing the parser arguments, e.g. 
 
 ```
 def main():
@@ -53,21 +66,26 @@ if __name__=='__main__':
     main()
 ```
 
-setup.py is the file which contains the information for the install. This contains some general information on things like the version (which needs to be changed when the code is updated to a new version) and the author. Generally this file won't have to be changed unless you want to:
+pyproject.toml is the file which contains the information for the install.
+This contains some general information on things contact information for the author.
+Generally this file won't have to be changed unless you want to:
 
-- Update the version number, author info etc. : this can just be manually changed.
+- Update the author info etc. : this can just be manually changed.
 
-- Add a prerequisite package e.g. pandas: this can be added in the install_requires section just by adding the name of the prerequisite package to the list. This means that the package will be installed alongside the survey simulator. Specific versions can be added e.g. 'pandas==1.3.5'
+- Add a prerequisite package e.g. pandas: this can be added in the ``dependencies`` section just by adding the name of the prerequisite package to the list. This means that the package will be installed alongside ``sorcha``. Specific versions can be added e.g. 'pandas==1.3.5'
 
 - Add a new command line argument: In the case of adding new utilities (e.g. the config file generators). This is a bit more complicated and relies on the file being in the format given above. If this is the case then a new function can be added to the entry_points
 
 ```          
- entry_points={
-        'console_scripts': ['makeConfigPP = utilities.makeConfigOIF:main'],
+ [project.scripts]
+        makeConfigSorcha = "sorcha.utilities.makeConfigPP:main"
     },
 ```
-where makeConfigPP is the name of the command line argument, and utilities.makeConfigOIF is the pathway of the file.
+where makeConfigSorcha is the name of the command line argument, and
+``sorcha.utilities.makeConfigPP:main`` is the file path.
 
 ## Collaboration
-This effort is a collaboration between the University of Washington's DIRAC Institute, Queen's University Belfast, and the University of Illinois at Urbana-Champaign
+This effort is a collaboration between Queen's University Belfast, the University of Washington's DiRAC Institute, 
+the University of Illinois at Urbana-Champaign, the Center for Astrophysics | Harvard & Smithsonian, and LINCC Frameworks (through the LINCC Frameworks Incubator Program).
 
+LINCC Frameworks is supported by Schmidt Futures, a philanthropic initiative founded by Eric and Wendy Schmidt, as part of the Virtual Institute of Astrophysics (VIA).

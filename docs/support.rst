@@ -1,7 +1,7 @@
 .. _reporting:
 
 Reporting Issues and Proposing Changes
-=======
+======================================
 
 .. tip::
    Something not working? Have you checked the :ref:`troubleshooting page<Troubleshooting>` to see if your problem is covered there?

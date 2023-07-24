@@ -15,18 +15,21 @@ class CSVDataReader(ObjectDataReader):
     def __init__(self, filename, sep="csv", header=-1, **kwargs):
         """A class for reading the object data from a CSV file.
 
-        Parameters:
+        Parameters
         -----------
-        filename (string): location/name of the data file.
+        filename : str
+            Location/name of the data file.
 
-        sep (string, optional): format of input file ("whitespace"/"comma"/"csv").
+        sep : str, optional
+            Format of input file ("whitespace"/"comma"/"csv").
 
-        header (int, optional): The row number of the header. If not provided, does an automatic search.
+        header : int, optional
+            The row number of the header. If not provided, does an automatic search.
         """
         super().__init__(**kwargs)
         self.filename = filename
 
-        if sep not in ["whitespace", "comma", "csv"]:
+        if sep not in ["whitespace", "csv"]:
             pplogger = logging.getLogger(__name__)
             pplogger.error(f"ERROR: Unrecognized delimiter ({sep})")
             sys.exit(f"ERROR: Unrecognized delimiter ({sep})")
@@ -45,9 +48,10 @@ class CSVDataReader(ObjectDataReader):
         """Return a string identifying the current reader name
         and input information (for logging and output).
 
-        Returns:
+        Returns
         --------
-        name (str): The reader information.
+        name : str
+            The reader information.
         """
         return f"CSVDataReader:{self.filename}"
 
@@ -55,9 +59,10 @@ class CSVDataReader(ObjectDataReader):
         """Find the line number of the CSV header. Used for cases
         where the header is not the first line and we want to skip down.
 
-        Returns:
+        Returns
         --------
-        i (int) : The line index of the header.
+        int
+            The line index of the header.
 
         """
         with open(self.filename) as fh:
@@ -79,20 +84,22 @@ class CSVDataReader(ObjectDataReader):
     def _read_rows_internal(self, block_start=0, block_size=None, **kwargs):
         """Reads in a set number of rows from the input.
 
-        Parameters:
+        Parameters
         -----------
-        block_start (int, optional): The 0-indexed row number from which
+        block_start : int, optional
+            The 0-indexed row number from which
             to start reading the data. For example in a CSV file
             block_start=2 would skip the first two lines after the header
             and return data starting on row=2. [Default=0]
 
-        block_size (int, optional): the number of rows to read in.
+        block_size int, optional, default=None
+            The number of rows to read in.
             Use block_size=None to read in all available data.
-            [Default = None]
 
-        Returns:
+        Returns
         -----------
-        res_df (Pandas dataframe): dataframe of the object data.
+        Pandas dataframe
+            Dataframe of the object data.
         """
         # Skip the rows before the header and then begin_loc rows after the header.
         skip_rows = []
@@ -143,13 +150,15 @@ class CSVDataReader(ObjectDataReader):
     def _read_objects_internal(self, obj_ids, **kwargs):
         """Read in a chunk of data for given object IDs.
 
-        Parameters:
+        Parameters
         -----------
-        obj_ids (list): A list of object IDs to use.
+        obj_ids : list
+            A list of object IDs to use.
 
-        Returns:
+        Returns
         -----------
-        res_df (Pandas dataframe): The dataframe for the object data.
+        Pandas dataframe
+            The dataframe for the object data.
         """
         self._build_id_map()
 
@@ -177,19 +186,21 @@ class CSVDataReader(ObjectDataReader):
         """Perform any input-specific processing and validation on the input table.
         Modifies the input dataframe in place.
 
-        Note
-        ----
+        Notes
+        -----
         The base implementation includes filtering that is common to most
         input types. Subclasses should call super.process_and_validate()
         to ensure that the ancestor’s validation is also applied.
 
-        Parameters:
+        Parameters
         -----------
-        input_table (Pandas dataframe): A loaded table.
+        input_table : Pandas dataframe
+            A loaded table.
 
-        Returns:
+        Returns
         -----------
-        input_table (Pandas dataframe): Returns the input dataframe modified in-place.
+        Pandas dataframe
+            Returns the input dataframe modified in-place.
         """
         # Perform the parent class's validation (checking object ID column).
         input_table = super()._process_and_validate_input_table(input_table, **kwargs)

@@ -31,6 +31,7 @@ def makeConfigFile(args):
         "SSP_number_tracklets": str(args.numtracklets),
         "SSP_track_window": str(args.trackwindow),
         "SSP_separation_threshold": str(args.septhreshold),
+        "SSP_maximum_time": str(args.maxtime),
     }
 
     fov_raw = {
@@ -99,9 +100,9 @@ def main():
                     [--sizeserialchunk SIZESERIALCHUNK] [--cometactivity COMETACTIVITY] [--observingfilters OBSERVINGFILTERS] [--brightlimit BRIGHTLIMIT]
                     [--phasefunction PHASEFUNCTION] [--cameramodel CAMERAMODEL] [--footprintpath FOOTPRINTPATH] [--fillfactor FILLFACTOR] [--circleradius CIRCLERADIUS]
                     [--fadingfunction FADINGFUNCTION] [--fadingwidth FADINGWIDTH] [--fadingpeak FADINGPEAK] [--detectionefficiency DETECTIONEFFICIENCY]
-                    [--numobservations NUMOBSERVATIONS] [--numtracklets NUMTRACKLETS] [--trackwindow TRACKWINDOW] [--septhreshold SEPTHRESHOLD] [--outputformat OUTPUTFORMAT]
-                    [--outputsize OUTPUTSIZE] [--positiondecimals POSITIONDECIMALS] [--magnitudedecimals MAGNITUDEDECIMALS] [--snrlimit SNRLIMIT] [--maglimit MAGLIMIT]
-                    [--sqlquery SQLQUERY] [--trailinglosseson TRAILINGLOSSESON] [--lightcurve LIGHTCURVE] [--lcmodel LCMODEL]
+                    [--numobservations NUMOBSERVATIONS] [--numtracklets NUMTRACKLETS] [--trackwindow TRACKWINDOW] [--septhreshold SEPTHRESHOLD] [--maxtime MAXTIME]
+                    [--outputformat OUTPUTFORMAT] [--outputsize OUTPUTSIZE] [--positiondecimals POSITIONDECIMALS] [--magnitudedecimals MAGNITUDEDECIMALS] [--snrlimit SNRLIMIT]
+                    [--maglimit MAGLIMIT][--sqlquery SQLQUERY] [--trailinglosseson TRAILINGLOSSESON] [--lightcurve LIGHTCURVE] [--lcmodel LCMODEL]
                     filename
         positional arguments:
             filename              Filepath where you want to store the config file.
@@ -128,6 +129,7 @@ def main():
           --numtracklets NUMTRACKLETS, -ntrk NUMTRACKLETS                           How many tracklets are required to classify as a detection? Expects an int or None to omit. Default 3.
           --trackwindow TRACKWINDOW, -trkwin TRACKWINDOW                            In what amount of time does the aforementioned number of tracklets needs to be discovered to constitute a complete detection? In days. Expects a float or None to omit. Default 15.0.
           --septhreshold SEPTHRESHOLD, -minsep SEPTHRESHOLD                         Minimum separation inside the tracklet for SSP distinguish motion between two images, in arcsec. Expects a float or None to omit. Default is 0.5.
+          --maxtime MAXTIME, -maxt MAXTIME                                          Maximum time separation (in days) between subsequent observations in a tracklet. Expects a float or None to omit. Default is 0.0625.
           --outputformat OUTPUTFORMAT, -outf OUTPUTFORMAT                           Output format. Options: csv, sqlite3, hdf5. Default is csv.
           --outputsize OUTPUTSIZE, -outs OUTPUTSIZE                                 Size of output. Controls which columns are in the output files. Options are "default" only.
           --positiondecimals POSITIONDECIMALS, -posd POSITIONDECIMALS               Decimal places RA and Dec should be rounded to in output. Default is 7.
@@ -307,6 +309,13 @@ def main():
         type=float,
         default=0.5,
     )
+    parser.add_argument(
+        "--maxtime",
+        "-maxt",
+        help="Maximum time separation (in days) between subsequent observations in a tracklet. Expects a float or None to omit. Default is 0.0625.",
+        type=float,
+        default=0.0625,
+    )
 
     # OUTPUT
     parser.add_argument(
@@ -319,9 +328,9 @@ def main():
     parser.add_argument(
         "--outputsize",
         "-outs",
-        help='Size of output. Controls which columns are in the output files. Options are "default" only.',
+        help='Size of output. Controls which columns are in the output files. Options are "basic" or "all".',
         type=str,
-        default="default",
+        default="basid",
     )
     parser.add_argument(
         "--positiondecimals",

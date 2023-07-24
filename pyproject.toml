@@ -28,6 +28,7 @@ dependencies = [
     "matplotlib",
     "sbpy",
     "tables",
+    "difi == 1.2rc2",
 ]
 
 [project.scripts]
