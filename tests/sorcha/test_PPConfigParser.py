@@ -63,11 +63,13 @@ def test_PPConfigFileParser(setup_and_teardown_for_PPConfigFileParser):
         "SSP_maximum_time": 0.0625,
         "SSP_linking_on": True,
         "output_format": "csv",
-        "output_size": "default",
+        "output_size": "basic",
         "position_decimals": 7,
         "magnitude_decimals": 3,
         "size_serial_chunk": 10,
         "rng_seed": None,
+        "lightcurve": False,
+        "lc_model": None,
     }
 
     assert configs == test_configs
@@ -276,13 +278,15 @@ def test_PPPrintConfigsToLog(tmp_path):
         "SSP_maximum_time": 0.0625,
         "SSP_linking_on": True,
         "output_format": "csv",
-        "output_size": "default",
+        "output_size": "basic",
         "position_decimals": 7,
         "magnitude_decimals": 3,
         "size_serial_chunk": 10,
         "rng_seed": None,
         "mainfilter": "r",
         "othercolours": ["g-r", "i-r", "z-r"],
+        "lightcurve": False,
+        "lc_model": None,
     }
 
     PPPrintConfigsToLog(configs, args)

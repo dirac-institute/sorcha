@@ -48,6 +48,7 @@ def test_PPGetSeparation():
 
 def test_PPApplyFOVFilters():
     from sorcha.modules.PPApplyFOVFilter import PPApplyFOVFilter
+    from sorcha.modules.PPFootprintFilter import Footprint
 
     observations = pd.read_csv(get_test_filepath("test_input_fullobs.csv"), nrows=20)
 
@@ -68,8 +69,8 @@ def test_PPApplyFOVFilters():
     assert_equal(new_obs["FieldID"].values, expected)
 
     configs = {"camera_model": "footprint", "footprint_path": get_test_filepath("detectors_corners.csv")}
-
-    new_obs = PPApplyFOVFilter(observations, configs, rng)
+    footprint = Footprint(configs["footprint_path"])
+    new_obs = PPApplyFOVFilter(observations, configs, rng, footprint=footprint)
     expected = [
         894816,
         894838,

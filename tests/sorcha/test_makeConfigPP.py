@@ -31,13 +31,15 @@ class args:
         self.septhreshold = 0.5
         self.maxtime = 0.0625
         self.outputformat = "csv"
-        self.outputsize = "default"
+        self.outputsize = "basic"
         self.positiondecimals = 7
         self.magnitudedecimals = 3
         self.snrlimit = None
         self.maglimit = None
         self.sqlquery = "SELECT observationId, observationStartMJD, filter, seeingFwhmGeom, seeingFwhmEff, fiveSigmaDepth, fieldRA, fieldDec, rotSkyPos FROM observations order by observationId"
         self.trailinglosseson = True
+        self.lightcurve = False
+        self.lcmodel = "None"
 
 
 def test_makeConfigPP(tmp_path):

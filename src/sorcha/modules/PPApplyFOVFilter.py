@@ -1,10 +1,9 @@
-from . import PPFootprintFilter
 import logging
 import numpy as np
 from astropy.coordinates import SkyCoord
 
 
-def PPApplyFOVFilter(observations, configs, rng, verbose=False):
+def PPApplyFOVFilter(observations, configs, rng, footprint=None, verbose=False):
     """
     Wrapper function for PPFootprintFilter and PPFilterDetectionEfficiency. Checks to see
     whether a camera footprint filter should be applied or if a simple fraction of the
@@ -18,6 +17,9 @@ def PPApplyFOVFilter(observations, configs, rng, verbose=False):
 
     rng (numpy Generator): numpy random number generator object.
 
+    footprint (Footprint): A Footprint object that represents the boundaries of
+    the detector(s). Default `None`.
+
     verbose (boolean): Verbose mode on or off.
 
     Returns:
@@ -30,8 +32,7 @@ def PPApplyFOVFilter(observations, configs, rng, verbose=False):
 
     if configs["camera_model"] == "footprint":
         verboselog("Applying sensor footprint filter...")
-        footprintf = PPFootprintFilter.Footprint(configs["footprint_path"])
-        onSensor, detectorIDs = footprintf.applyFootprint(observations)
+        onSensor, detectorIDs = footprint.applyFootprint(observations)
 
         observations = observations.iloc[onSensor].copy()
         observations["detectorID"] = detectorIDs

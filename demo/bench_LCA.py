@@ -1,5 +1,4 @@
-# A basic script Jeremy hacked together to run cProfile on a subset of
-# 1000 TNOs.
+# A basic test case for the lightcurve model
 
 import cProfile
 import pstats
@@ -15,7 +14,7 @@ if __name__ == "__main__":  # pragma: no cover
     args = parser.parse_args()
 
     cmd_args_dict = {
-        "paramsinput": f"./{args.object_type}_sample_1000_physical.csv",
+        "paramsinput": f"./{args.object_type}_sample_1000_physical_lca.csv",
         "orbinfile": f"./{args.object_type}_sample_1000_orbit.csv",
         "oifoutput": f"./{args.object_type}_sample_1000_eph.csv",
         "configfile": "./OIFconfig_benchmark.ini",

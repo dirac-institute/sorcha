@@ -333,17 +333,23 @@ class Footprint:
         # the center of the camera should be the origin
         allcornersdf = pd.read_csv(path)
 
+        # build dictionary of detectorName:[list_of_inds]
+        det_to_inds = {}
+        for det in allcornersdf.detector.unique():
+            det_to_inds[det] = allcornersdf.index[allcornersdf.detector == det].tolist()
+
+        # create a list of `Detector` objects using the list_of_inds for each detector
         self.detectors = [
             Detector(
                 np.array(
                     (
-                        allcornersdf.loc[allcornersdf[detectorName] == i, "x"],
-                        allcornersdf.loc[allcornersdf[detectorName] == i, "y"],
+                        allcornersdf.iloc[inds].x,
+                        allcornersdf.iloc[inds].y,
                     )
                 ),
-                i,
+                det,
             )
-            for i in range(len(allcornersdf[detectorName].unique()))
+            for det, inds in det_to_inds.items()
         ]
 
         self.N = len(self.detectors)

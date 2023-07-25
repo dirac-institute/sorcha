@@ -97,7 +97,7 @@ def PPWriteOutput(cmd_args, configs, observations_in, endChunk=0, verbose=False)
     pplogger = logging.getLogger(__name__)
     verboselog = pplogger.info if verbose else lambda *a, **k: None
 
-    if configs["output_size"] == "default":
+    if configs["output_size"] == "basic":
         observations = observations_in.copy()[
             [
                 "ObjID",
@@ -116,7 +116,7 @@ def PPWriteOutput(cmd_args, configs, observations_in, endChunk=0, verbose=False)
                 "fiveSigmaDepthAtSource",
             ]
         ]
-    else:
+    elif configs["output_size"] == "all":
         observations = observations_in.copy()
 
     observations["FieldMJD"] = observations["FieldMJD"].round(decimals=5)
