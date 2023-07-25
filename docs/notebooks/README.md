@@ -20,6 +20,10 @@ demo_footprintFilter
 - **Validates:** PPFootprintFilter
 - **Files:** detector_corners.csv, footprintFilterValidationObservations.csv, oneline_v2.0.db
 
+demo_LinkingFilter
+- **Validates:** PPLinkingFilter
+- **Files:** none
+
 demo_MagnitudeAndSNRCuts
 - **Validates:** PPBrightLimit, PPMagnitudeLimit, PPSNRLimit
 - **Files:** none
