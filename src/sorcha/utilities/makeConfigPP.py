@@ -53,7 +53,7 @@ def makeConfigFile(args):
         "trailing_losses_on": str(args.trailinglosseson),
         "pointing_sql_query": str(args.sqlquery),
         "lightcurve": str(args.lightcurve),
-        "lc_model": str(args.lcmodel)
+        "lc_model": str(args.lcmodel),
     }
 
     bright_dict = {k: v for k, v in bright_raw.items() if v != "None"}
