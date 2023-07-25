@@ -32,6 +32,8 @@ from sorcha.readers.CSVReader import CSVDataReader
 from sorcha.readers.OIFReader import OIFDataReader
 from sorcha.readers.OrbitAuxReader import OrbitAuxReader
 
+from sorcha.utilities.sorchaArguments import sorchaArguments
+
 # Author: Samuel Cornwall, Siegfried Eggl, Grigori Fedorets, Steph Merritt, Meg Schwamb
 
 
@@ -43,7 +45,7 @@ def runLSSTPostProcessing(cmd_args):
 
     Parameters:
     -----------
-    cmd_args (dictionary): dictionary of command-line arguments.
+    cmd_args (dictionary or `sorchaArguments` object): dictionary of command-line arguments.
 
     Returns:
     -----------
@@ -53,30 +55,36 @@ def runLSSTPostProcessing(cmd_args):
 
     # Initialise argument parser and assign command line arguments
 
-    pplogger = PPGetLogger(cmd_args["outpath"])
+    args = cmd_args
+    if type(cmd_args) is dict:
+        args = sorchaArguments(cmd_args)
+
+    args.validate_arguments()
+
+    pplogger = PPGetLogger(args.outpath)
     pplogger.info("Post-processing begun.")
 
     # if verbosity flagged, the verboselog function will log the message specified
     # if not, verboselog does absolutely nothing
-    verboselog = pplogger.info if cmd_args["verbose"] else lambda *a, **k: None
+    verboselog = pplogger.info if args.verbose else lambda *a, **k: None
 
     verboselog("Reading configuration file...")
-    configs = PPConfigFileParser(cmd_args["configfile"], cmd_args["surveyname"])
+    configs = PPConfigFileParser(args.configfile, args.surveyname)
 
     verboselog("Configuration file successfully read.")
 
     configs["mainfilter"], configs["othercolours"] = PPGetMainFilterAndColourOffsets(
-        cmd_args["paramsinput"], configs["observing_filters"], configs["aux_format"]
+        args.paramsinput, configs["observing_filters"], configs["aux_format"]
     )
 
-    PPPrintConfigsToLog(configs, cmd_args)
+    PPPrintConfigsToLog(configs, args)
 
     # End of config parsing
 
-    if cmd_args["makeTemporaryEphemerisDatabase"]:
+    if args.makeTemporaryEphemerisDatabase:
         verboselog("Creating temporary ephemeris database...")
-        cmd_args["readTemporaryEphemerisDatabase"] = PPMakeTemporaryEphemerisDatabase(
-            cmd_args["oifoutput"], cmd_args["makeTemporaryEphemerisDatabase"], configs["eph_format"]
+        args.readTemporaryEphemerisDatabase = PPMakeTemporaryEphemerisDatabase(
+            args.oifoutput, args.makeTemporaryEphemerisDatabase, configs["eph_format"]
         )
 
     verboselog("Reading pointing database...")
@@ -85,21 +93,11 @@ def runLSSTPostProcessing(cmd_args):
         configs["pointing_database"], configs["observing_filters"], configs["pointing_sql_query"]
     )
 
-    verboselog("Instantiating random number generator ... ")
-
-    if configs["rng_seed"]:
-        rng_seed = configs["rng_seed"]
-    else:
-        rng_seed = int(time.time())
-
-    verboselog("Random number seed is {}.".format(rng_seed))
-    rng = np.random.default_rng(rng_seed)
-
     # Set up the data readers.
     reader = CombinedDataReader(verbose=True)
 
-    if cmd_args["makeTemporaryEphemerisDatabase"] or cmd_args["readTemporaryEphemerisDatabase"]:
-        reader.add_ephem_reader(DatabaseReader(cmd_args["readTemporaryEphemerisDatabase"]))
+    if args.makeTemporaryEphemerisDatabase or args.readTemporaryEphemerisDatabase:
+        reader.add_ephem_reader(DatabaseReader(args.readTemporaryEphemerisDatabase))
     else:
         # TODO: Once more ephemerides_types are added this should be wrapped in a EphemerisDataReader
         # That does the selection and checks. We are holding off adding this level of indirection until there
@@ -108,12 +106,12 @@ def runLSSTPostProcessing(cmd_args):
         if ephem_type.casefold() != "oif":  # pragma: no cover
             pplogger.error(f"PPReadAllInput: Unsupported value for ephemerides_type {ephem_type}")
             sys.exit(f"PPReadAllInput: Unsupported value for ephemerides_type {ephem_type}")
-        reader.add_ephem_reader(OIFDataReader(cmd_args["oifoutput"], configs["eph_format"]))
+        reader.add_ephem_reader(OIFDataReader(args.oifoutput, configs["eph_format"]))
 
-    reader.add_aux_data_reader(OrbitAuxReader(cmd_args["orbinfile"], configs["aux_format"]))
-    reader.add_aux_data_reader(CSVDataReader(cmd_args["paramsinput"], configs["aux_format"]))
+    reader.add_aux_data_reader(OrbitAuxReader(args.orbinfile, configs["aux_format"]))
+    reader.add_aux_data_reader(CSVDataReader(args.paramsinput, configs["aux_format"]))
     if configs["comet_activity"] == "comet":
-        reader.add_aux_data_reader(CSVDataReader(cmd_args["cometinput"], configs["aux_format"]))
+        reader.add_aux_data_reader(CSVDataReader(args.cometinput, configs["aux_format"]))
 
     # In case of a large input file, the data is read in chunks. The
     # "sizeSerialChunk" parameter in PPConfig.ini assigns the chunk.
@@ -121,7 +119,7 @@ def runLSSTPostProcessing(cmd_args):
     endChunk = 0
 
     ii = -1
-    with open(cmd_args["orbinfile"]) as f:
+    with open(args.orbinfile) as f:
         for ii, l in enumerate(f):
             pass
     lenf = ii
@@ -158,7 +156,7 @@ def runLSSTPostProcessing(cmd_args):
             configs["comet_activity"],
             lightcurve=configs["lightcurve"],
             lightcurve_choice=configs["lc_model"],
-            verbose=cmd_args["verbose"],
+            verbose=args.verbose,
         )
 
         if configs["trailing_losses_on"]:
@@ -173,7 +171,7 @@ def runLSSTPostProcessing(cmd_args):
 
         verboselog("Applying field-of-view filters...")
         observations = PPApplyFOVFilter(
-            observations, configs, rng, footprint=footprint, verbose=cmd_args["verbose"]
+            observations, configs, args._rng, footprint=footprint, verbose=args.verbose
         )
 
         # Note that the below code creates observedTrailedSourceMag and observedPSFMag
@@ -182,20 +180,20 @@ def runLSSTPostProcessing(cmd_args):
         # Do NOT use TrailedSourceMag or PSFMag, these are cut later.
         verboselog("Calculating astrometric and photometric uncertainties...")
         observations = PPAddUncertainties.addUncertainties(
-            observations, configs, rng, verbose=cmd_args["verbose"]
+            observations, configs, args._rng, verbose=args.verbose
         )
 
         verboselog("Randomising astrometry...")
         observations["AstRATrue(deg)"] = observations["AstRA(deg)"]
         observations["AstDecTrue(deg)"] = observations["AstDec(deg)"]
         observations["AstRA(deg)"], observations["AstDec(deg)"] = PPRandomizeMeasurements.randomizeAstrometry(
-            observations, rng, sigName="AstrometricSigma(deg)", sigUnits="deg"
+            observations, args._rng, sigName="AstrometricSigma(deg)", sigUnits="deg"
         )
 
         if configs["camera_model"] == "footprint":
             verboselog("Re-applying field-of-view filter...")
             observations = PPApplyFOVFilter(
-                observations, configs, rng, footprint=footprint, verbose=cmd_args["verbose"]
+                observations, configs, args._rng, footprint=footprint, verbose=args.verbose
             )
 
         if configs["SNR_limit_on"]:
@@ -216,8 +214,8 @@ def runLSSTPostProcessing(cmd_args):
                 observations,
                 configs["fading_function_peak_efficiency"],
                 configs["fading_function_width"],
-                rng,
-                verbose=cmd_args["verbose"],
+                args._rng,
+                verbose=args.verbose,
             )
 
         if configs["bright_limit_on"]:
@@ -247,14 +245,14 @@ def runLSSTPostProcessing(cmd_args):
             verboselog("Number of rows AFTER applying SSP linking filter: " + str(len(observations.index)))
 
         # write output
-        PPWriteOutput(cmd_args, configs, observations, endChunk, verbose=cmd_args["verbose"])
+        PPWriteOutput(args, configs, observations, endChunk, verbose=args.verbose)
 
         startChunk = startChunk + configs["size_serial_chunk"]
         # end for
 
-    if cmd_args["deleteTemporaryEphemerisDatabase"]:
+    if args.deleteTemporaryEphemerisDatabase:
         verboselog("Deleting the temporary ephemeris database...")
-        os.remove(cmd_args["readTemporaryEphemerisDatabase"])
+        os.remove(args.readTemporaryEphemerisDatabase)
 
     pplogger.info("Post processing completed.")
 
