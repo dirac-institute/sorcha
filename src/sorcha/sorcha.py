@@ -24,6 +24,7 @@ from sorcha.modules.PPMatchPointingToObservations import PPMatchPointingToObserv
 from sorcha.modules.PPMagnitudeLimit import PPMagnitudeLimit
 from sorcha.modules.PPOutput import PPWriteOutput
 from sorcha.modules.PPGetMainFilterAndColourOffsets import PPGetMainFilterAndColourOffsets
+from sorcha.modules.PPFootprintFilter import Footprint
 
 from sorcha.readers.CombinedDataReader import CombinedDataReader
 from sorcha.readers.DatabaseReader import DatabaseReader
@@ -125,6 +126,11 @@ def runLSSTPostProcessing(cmd_args):
             pass
     lenf = ii
 
+    footprint = None
+    if configs["camera_model"] == "footprint":
+        verboselog("Creating sensor footprint object for filtering")
+        footprint = Footprint(configs["footprint_path"])
+
     while endChunk < lenf:
         endChunk = startChunk + configs["size_serial_chunk"]
         verboselog("Working on objects {}-{}.".format(startChunk, endChunk))
@@ -166,7 +172,9 @@ def runLSSTPostProcessing(cmd_args):
         observations["fiveSigmaDepthAtSource"] = PPVignetting.vignettingEffects(observations)
 
         verboselog("Applying field-of-view filters...")
-        observations = PPApplyFOVFilter(observations, configs, rng, verbose=cmd_args["verbose"])
+        observations = PPApplyFOVFilter(
+            observations, configs, rng, footprint=footprint, verbose=cmd_args["verbose"]
+        )
 
         # Note that the below code creates observedTrailedSourceMag and observedPSFMag
         # as columns in the observations dataframe.
@@ -186,7 +194,9 @@ def runLSSTPostProcessing(cmd_args):
 
         if configs["camera_model"] == "footprint":
             verboselog("Re-applying field-of-view filter...")
-            observations = PPApplyFOVFilter(observations, configs, rng, verbose=cmd_args["verbose"])
+            observations = PPApplyFOVFilter(
+                observations, configs, rng, footprint=footprint, verbose=cmd_args["verbose"]
+            )
 
         if configs["SNR_limit_on"]:
             verboselog(
