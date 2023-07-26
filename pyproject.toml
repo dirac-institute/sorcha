@@ -41,8 +41,8 @@ createResultsSQLDatabase = "sorcha.utilities.createResultsSQLDatabase:main"
 createTemporaryDatabases = "sorcha.utilities.createTemporaryDatabases:main"
 
 [project.urls]
-"Documentation" = "https://survey-simulator-post-processing.readthedocs.io/en/latest/"
-"Source" = "https://github.com/dirac-institute/survey_simulator_post_processing"
+"Documentation" = "https://sorcha.readthedocs.io/en/latest/"
+"Source" = "https://github.com/dirac-institute/sorcha"
 
 # On a mac, install optional dependencies with `pip install '.[dev]'` (include the single quotes)
 [project.optional-dependencies]
