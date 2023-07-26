@@ -86,10 +86,10 @@ def PPLinkingFilter(
         difi_dataframe,
         detection_window=tracklet_interval,  # number of nights in a rolling detection window
         min_window_nights=min_tracklets,  # minimum size of a window as the rolling window is moved
-        by_object=True,  # split observations by object instead of by window [set to True if you want ignore_after_discovery=True]
+        by_object=False,  # split observations by object instead of by window [set to True if you want ignore_after_discovery=True]
         discovery_probability=detection_efficiency,  # probability of discovery for any discovery chance
         num_jobs=1,  # number of parallel jobs
-        ignore_after_discovery=True,  # ignore observations of an object after it has been discovered
+        ignore_after_discovery=False,  # ignore observations of an object after it has been discovered
     )
 
     linked_object_observations = observations[observations["ObjID"].isin(findable["object_id"])]
