@@ -6,7 +6,7 @@ Inputs
 
 
 
-There is a set of input files that are required to run the survey simulator post processing codes, which describe the orbital
+There is a set of input files that are required to run the Sorcha codes, which describe the orbital
 and physical parameters for synthetic planetesimals that are being simulated. These files are: an orbit file, a physical paramerer file,
 an optional cometary parameter file, ephemeris file (Objects in Field output) and the LSST pointing database. Each of these files are described within this section and example files
 are shown.
@@ -14,19 +14,19 @@ are shown.
 
 .. image:: images/OIF.png
   :width: 800
-  :alt: An overview of the inputs and outputs of the survey simulator post processing code.
+  :alt: An overview of the inputs and outputs of the Sorcha code.
 
 .. tip::
   Each synthetic planetesimal has its own unique object identifier set by the user and must have entries in the orbits and physical parameters files, as well as the cometary activity file, if used. 
 
 .. warning::
-  OIF and SurveySimPP are not checking whether or not a planetesimal ID has been repeated in another row of the input files. **It is up to the user to ensure their input files include only unique IDs**. 
+  OIF and Sorcha are not checking whether or not a planetesimal ID has been repeated in another row of the input files. **It is up to the user to ensure their input files include only unique IDs**. 
 
 Orbit File
 -----------------
 
 .. note::
-  The orbit file is used by  **Objects in Field** and **surveySimPP**.
+  The orbit file is used by  **Objects in Field** and **Sorcha**.
 
 This is a file which contains the orbital information of a set of synthetic objects. The orbital parameters must be **heliolcentric**, and orbits can be define in **Cometary(COM)  or Keplerian (KEP)** formats. Each simulated planetesimals within the synthetic population must be be given it's own unique object ID (ObjID). The file can be **white space separated**  or **comma value separated (CSV)** format. The first line of the orbit file is a header line starting with !! that specifies what each of the columns are.
 
@@ -34,10 +34,10 @@ This is a file which contains the orbital information of a set of synthetic obje
   *  The orbit file must have a consistent format (i.e. cometary or Keplerian) throughout
   *  The ordering of the columns does not matter as long as the required columns exist and have entries.
   *  The first row in the orbit file must be a header started with '!!' to denote it as the header row
-  *  Objects in Field does take other input formats, but surveySimPP is only designed to handle cometary and keplerian orbits
+  *  Objects in Field does take other input formats, but Sorcha is only designed to handle cometary and keplerian orbits
 
 .. warning::
-  OIF and SurveySimPP assume **heliocentric** orbits are provided as input!
+  OIF and Sorcha assume **heliocentric** orbits are provided as input!
 
 Cometary Orbit Format
 ~~~~~~~~~~~~~~~~~~~~~
@@ -125,12 +125,12 @@ The first row in the orbit file must be a header started with ‘!!’ to denote
   The orbit file can be either white space separated or comma value separated (CSV). For readability we show examples with white space in the online documentation.
 
 .. tip::
-  Objects in Field does have the capability take a V-band absolute magnitude and other parameters to calculate a V-band apparent magnitude. surveySimPP allows for more complicated modifications to the apparent magnitude such as cometary activity (a simple cometary brightening model is included) or the ability to possibly add light curve effects if a module is developed. Therefore, we recommend not including any V-band H value in the orbits input file. Instead, we recommend providing the H  of the synthetic planetesimals in the physical paramters file used by surveySimPP (see the next section). 
+  Objects in Field does have the capability take a V-band absolute magnitude and other parameters to calculate a V-band apparent magnitude. Sorcha allows for more complicated modifications to the apparent magnitude such as cometary activity (a simple cometary brightening model is included) or the ability to possibly add light curve effects if a module is developed. Therefore, we recommend not including any V-band H value in the orbits input file. Instead, we recommend providing the H  of the synthetic planetesimals in the physical paramters file used by Sorcha (see the next section). 
 
 Physical Parameters File
 -------------------------------------------
 .. note::
-  The physical parameters file is used by **surveySimPP**.
+  The physical parameters file is used by **Sorcha**.
 
 The input file for the physical parameters includes information about the objects optical colors, phase curve parameters, and absolute magnitude. The file can be **white space separated**  or **comma value separated (CSV)** format.
 
@@ -156,13 +156,13 @@ An example of the physical parameters file where a HG prescription is specified 
 
 Rubin Observatory will survey the sky in six broadband (optical filters), *u, g, r, i, z, and y* . In the physical parameters file, you will specify the object's absolute magnitude in the main filter (as specificed in the config file. usually this is g or r band) and then provide the synthetic planetesimal's color in other filters relative to the main filter.
 
-We have implemented several phase curve paramterizations that can be specified in the config file and the inputted through the physical parameters. **You can either specify one set of phase curve parameters for all filters or specify values for each filter examined by surveySimPP.** We are using the  `sbpy <https://sbpy.org/>`_  phase function utilities. The supported options are: `HG <https://sbpy.readthedocs.io/en/latest/api/sbpy.photometry.HG.html#sbpy.photometry.HG>`_, `HG1G2 <https://sbpy.readthedocs.io/en/latest/api/sbpy.photometry.HG1G2.html#sbpy.photometry.HG1G2>`_, `HG12 <https://sbpy.readthedocs.io/en/latest/api/sbpy.photometry.HG12.html#sbpy.photometry.HG12>`_, `linear <https://sbpy.readthedocs.io/en/latest/api/sbpy.photometry.LinearPhaseFunc.html#sbpy.photometry.LinearPhaseFunc>`_ (specified by S in the header of the physical parameters file), and none (if no columnss for phase curve are included in the physical parameters file than the synthetic object is considered to have a flat phase curve). 
+We have implemented several phase curve paramterizations that can be specified in the config file and the inputted through the physical parameters. **You can either specify one set of phase curve parameters for all filters or specify values for each filter examined by Sorcha.** We are using the  `sbpy <https://sbpy.org/>`_  phase function utilities. The supported options are: `HG <https://sbpy.readthedocs.io/en/latest/api/sbpy.photometry.HG.html#sbpy.photometry.HG>`_, `HG1G2 <https://sbpy.readthedocs.io/en/latest/api/sbpy.photometry.HG1G2.html#sbpy.photometry.HG1G2>`_, `HG12 <https://sbpy.readthedocs.io/en/latest/api/sbpy.photometry.HG12.html#sbpy.photometry.HG12>`_, `linear <https://sbpy.readthedocs.io/en/latest/api/sbpy.photometry.LinearPhaseFunc.html#sbpy.photometry.LinearPhaseFunc>`_ (specified by S in the header of the physical parameters file), and none (if no columnss for phase curve are included in the physical parameters file than the synthetic object is considered to have a flat phase curve). 
 
 .. note::
-  *  In the config file you can decide which filters you want have surveySimPP run on and specify which filter is the main filter that the absolute magnitude is defined for. You only need to provide colors for those fliters specified in the config file. 
+  *  In the config file you can decide which filters you want have Sorcha run on and specify which filter is the main filter that the absolute magnitude is defined for. You only need to provide colors for those fliters specified in the config file. 
 
 .. warning::
-  * You must use the same phase curve prescription for all simulated objects. If you want to use different phase curve prescriptions for different synthetic populations, you will need to run them in separate input files to surveySimPP
+  * You must use the same phase curve prescription for all simulated objects. If you want to use different phase curve prescriptions for different synthetic populations, you will need to run them in separate input files to Sorcha
 
 .. warning::
   * All rows must have entries for all columns specified in the physical parameters file header. 
@@ -183,7 +183,7 @@ Cometary Activity Parameters File (Optional)
 -----------------------------------------------
 
 .. note::
-  The cometary activity file is used by  **surveySimPP**.
+  The cometary activity file is used by  **Sorcha**.
 
 This is an optional input file which describes how the object apparent magnitude will be augmented from 
 a standard non-active, atmosphereless body as it moves inwards and outwards towards the Sun. The file can be **white space separated**  or **comma value separated (CSV)** format.
@@ -197,7 +197,7 @@ An example of a cometary activity parameter file::
 
 .. warning::
 
-   **When running an instance of surveySimPP, either every synthetic planetesimal experiences cometary activity, or none do.** When running simulations of synthetic planetesimals exhibiting cometary activity, **every** object in that simulation must have an entry in the associated cometary activity file.
+   **When running an instance of Sorcha, either every synthetic planetesimal experiences cometary activity, or none do.** When running simulations of synthetic planetesimals exhibiting cometary activity, **every** object in that simulation must have an entry in the associated cometary activity file.
 
 +-------------+-----------------------------------------------------------------------------------+
 | Keyword     | Description                                                                       |
@@ -222,9 +222,9 @@ LSST Pointing Database
 
 
 .. note::
-  The LSST pointing database is used by  **Objects in Field** and **surveySimPP**.
+  The LSST pointing database is used by  **Objects in Field** and **Sorcha**.
 
-This database contains information about the LSST pointing history and observing conditions.  We use observation mid-point time, right ascension, declination, rotation angle of the camera, 5-sigma limiting magnitude, filter, and seeing information in Objects in Field and surveySimPP to determine if a synthetic Solar System object is observable.  
+This database contains information about the LSST pointing history and observing conditions.  We use observation mid-point time, right ascension, declination, rotation angle of the camera, 5-sigma limiting magnitude, filter, and seeing information in Objects in Field and Sorcha to determine if a synthetic Solar System object is observable.  
 What we call the LSST pointing database (currently simulated since Rubin Observatory hasn’t started operations) is generated through the Rubin Observatory scheduler (since 2021 referred to as `rubin_sim <https://github.com/lsst/rubin_sim>`_ and previously known as OpSim). This software is currently under active development and is being used to run many simulated iterations of LSST scenarios showing what the cadence would look like with differing survey strategies. A description of an early version of this python software can be found in `Delgado et al.(2014) <https://ui.adsabs.harvard.edu/abs/2014SPIE.9150E..15D>`_.The output of rubin_sim is a sqlite database containing the pointing history and associated metadata 
 of the simulated observation history of LSST.
 
@@ -245,7 +245,7 @@ Ephemeris file (Objects in Field Output)
 -----------------------------------------
 
 .. note::
-  The ephemeris file is used by **surveySimPP**.
+  The ephemeris file is used by **Sorcha**.
 
 .. tip::
   We reccomend using **Objects in Field** to generate this file.
@@ -263,10 +263,10 @@ The file can be **white space separated or comma value separated (CSV)** format.
    S1000000a     183625 60507.194642    354133809.129   -2.598  298.635794 -0.188904  11.800365 -0.012248    227530687.962   -431878159.331     17094459.598   14.384    6.836    3.353     61402244.381   -127629446.799    -55326708.672   27.127   11.100    4.742    9.831253  19.281   5.081    
 
 .. note::
-  The ephemeris file is used by  **surveySimPP**. We recommend using **Objects in Fields** to generate it.
+  The ephemeris file is used by  **Sorcha**. We recommend using **Objects in Fields** to generate it.
 
 .. note::
-  With our recommended setup you will have V magnitudes outputted by OIF into the ephemeris file which is generated from a default H assumed by OIF. SurveySimPP ignores these apparent magnitudes and computes its own based on the configuration inputs and additional input files.
+  With our recommended setup you will have V magnitudes outputted by OIF into the ephemeris file which is generated from a default H assumed by OIF. Sorcha ignores these apparent magnitudes and computes its own based on the configuration inputs and additional input files.
 
 +--------------------------+----------------------------------------------------------------------------------+
 | Keyword                  | Description                                                                      |

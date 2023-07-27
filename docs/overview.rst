@@ -20,7 +20,7 @@ The user is able to create a synthetic Solar System small body population and ru
    
    
 
-Both OIF and surveySimPP take a series of inputs. The basic pipeline overview can be seen below. The user generates a population with a set of orbits. This
+Both OIF and Sorcha take a series of inputs. The basic pipeline overview can be seen below. The user generates a population with a set of orbits. This
 orbital parameter file is processed by Objects in Field (or any other ephemerides generator code) with respect to the LSST 
 pointing database, before being passed into the survey simulator. Here the user can alter the configuration
 file to apply relevant :ref:`filters<Filters>`, which account for the observational biases in LSST. An optional cometary 
@@ -33,7 +33,7 @@ parameter file can also be added here.
 
 
 .. warning::
-   We have validated surveySimPP with Objects In Field. If the user chooses to use a different emphemeris engine's calculations as input for surveySimPP, the user has the responsibiilty to check the accuracy of this input.
+   We have validated Sorcha with Objects In Field. If the user chooses to use a different emphemeris engine's calculations as input for Sorcha, the user has the responsibiilty to check the accuracy of this input.
    
  
 
@@ -57,10 +57,10 @@ changes that they have made.**
    
    
 .. warning::
-  For a wide variety of use cases, the user should be able to use surveySimPP straight out of the box. We have designed the software in a modular way to make it easier to adapt and modify surveySimPP if needed. As with any open source package, once the user has made modifications to the codebase published in the  `online repository <https://github.com/dirac-institute/survey_simulator_post_processing>`_, **it is the responsibility of the user to confirm these changes provide an accurate result**. 
+  For a wide variety of use cases, the user should be able to use Sorcha straight out of the box. We have designed the software in a modular way to make it easier to adapt and modify Sorcha if needed. As with any open source package, once the user has made modifications to the codebase published in the  `online repository <https://github.com/dirac-institute/survey_simulator_post_processing>`_, **it is the responsibility of the user to confirm these changes provide an accurate result**. 
    
    
 .. note::
-   Contributions are very welcome. If there is a feature or functionality not yet available in surveySimPP, we encourage you to propose the feature as an issue in the `repository <https://github.com/dirac-institute/survey_simulator_post_processing/issues>`_ or share your code with the new enhancements. Further details can be found on our :ref:`reporting` page.
+   Contributions are very welcome. If there is a feature or functionality not yet available in Sorcha, we encourage you to propose the feature as an issue in the `repository <https://github.com/dirac-institute/survey_simulator_post_processing/issues>`_ or share your code with the new enhancements. Further details can be found on our :ref:`reporting` page.
       
 

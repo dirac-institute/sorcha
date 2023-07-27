@@ -1,5 +1,5 @@
-How SurveySimPP Works
-=====================
+How Sorcha Works
+================
 
 Brightness Limit
 -----------------

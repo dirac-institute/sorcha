@@ -67,7 +67,7 @@ The output from OIF is directly input into surveySimPP. The following table give
 .. note::
    All positions, positions, and velocities are in respect to J2000. 
 
-SurveySimPP Output
+Sorcha Output
 ----------------------
 The format of the survey simulator output looks something like::
 
