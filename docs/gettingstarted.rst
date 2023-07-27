@@ -3,22 +3,22 @@ Getting Started
 
 In this section we provide an overview of how to use the survey simulator. We start by generating a set of 
 files containing information on the synethic planetoids that we wish to study. We take you through the process of generating
-ephemerides for these synthetic bodiess using OIF (Objects in Field), and show you how to use surveySimPP. 
+ephemerides for these synthetic bodiess using OIF (Objects in Field), and show you how to use Sorcha. 
 
 .. tip::
-   In this quick start guide, we demonstrate how to run a single instance of OIF and surveySimPP. Both packages are designed to allow multiple instances to be run in parallel in order to accomodate simulations with very large numbers of synthetic planetesimals by breaking up the job across multiple live proccesses. We recommend first starting with the examples below, before moving on to parallel processing.
+   In this quick start guide, we demonstrate how to run a single instance of OIF and Sorcha. Both packages are designed to allow multiple instances to be run in parallel in order to accomodate simulations with very large numbers of synthetic planetesimals by breaking up the job across multiple live proccesses. We recommend first starting with the examples below, before moving on to parallel processing.
 
 
 .. important::
-  All the input files and configuration files used in this demonstation are available in the demo directory within the surveySimPP github repositor (survey_sim_pp/survey_simulator_post_processing/demo). Below includes instructions on how to generate these, but you can skip those setps and go straight to the run commands if you need to.
+  All the input files and configuration files used in this demonstation are available in the demo directory within the Sorcha github repository (sorcha/sorcha/demo). Below includes instructions on how to generate these, but you can skip those setps and go straight to the run commands if you need to.
 
 .. note::
   All input data files in this example are white-space separated format solely for the ease of reading.   
 
 Move to the Correct Directory
 ---------------------------------
-The command line arguments assume that the user is the downloaded surveySimPP directory::
-   cd survey_sim_pp/survey_simulator_post_processing
+The command line arguments assume that the user is the downloaded Sorcha directory::
+   cd sorcha/sorcha
 
 Creating Object Files
 -------------------------
@@ -160,13 +160,13 @@ Save this information as a file called 'test_oif_output.txt'.
 .. warning::
    Only one instance of OIF can be run per output directory. Make sure to have different output pathways if you are running multiple instances on the same compute node. 
  
-surveySimPP
+Sorcha
 -----------------------------------------
 
 Now that we have the information about the ephemerides, we can begin to run the survey simulator to 
 check if these objects are observable by the LSST.
 
-Generate a surveySimPP Config File 
+Generate a Sorcha Config File 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The key information about the simulation paramteres are held in the post processing configuration file.
@@ -338,12 +338,12 @@ can be added (see inputs). The config file will look something like this::
    magnitude_decimals = 3
    
 
-Running surveySimPP
+Running Sorcha
 ~~~~~~~~~~~~~~~~~~~~~~~
 
 Finally, we have all the information required to run the survey simulator. This can be done by typing::
 
-   surveySimPP -c ./demo/PPConfig_test.ini -p ./demo/sspp_testset_colours.txt -o ./demo/sspp_testset_orbits.des -e ./demo/example_oif_output.txt -u ./data/out/ -t testrun_e2e 
+   sorcha -c ./demo/PPConfig_test.ini -p ./demo/sspp_testset_colours.txt -o ./demo/sspp_testset_orbits.des -e ./demo/example_oif_output.txt -u ./data/out/ -t testrun_e2e 
 
 The first several lines of  output will look something like::
 
@@ -388,7 +388,7 @@ The first several lines of  output will look something like::
    39265,60370.38399,192.6418095,-32.5378881,193.6750982,-32.7017699,2.8e-06,i,18.027,18.016,0.004,0.004,23.121,23.116
    
 .. warning::
-   Only one instance of surveySimPP can be run per output directory. Make sure to have different output pathways if you are running multiple instances on the same compute node. 
+   Only one instance of Sorcha can be run per output directory. Make sure to have different output pathways if you are running multiple instances on the same compute node. 
 
 .. note::
-   surveySimPP outputs a log file and error file. If all has gone well, the error file will be empty. The log file has the configuration parameters outputted to it as a record of the run setup. 
+   Sorcha outputs a log file and error file. If all has gone well, the error file will be empty. The log file has the configuration parameters outputted to it as a record of the run setup. 

@@ -18,7 +18,7 @@ This effort is a collaboration between the University of Washington's DIRAC Inst
   :width: 190
   :alt: Alternative text
 
-SurveySimPP development was supported in part by:
+Sorcha development was supported in part by:
 
 * Science and Technology Facilities Council (STFC) grants ST/P000304/1 and ST/V000691/1
 * Horizon 2020 Marie Skłodowska-Curie Postdoctoral Fellowship

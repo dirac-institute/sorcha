@@ -14,7 +14,7 @@ Please also cite the software that helps power Objects In Field:
 * spicypy https://spiceypy.readthedocs.io/en/main/citation.html
 
 
-Please also cite the software that helps power surveySimPP:
+Please also cite the software that helps power Sorcha:
 
 * astropy https://www.astropy.org/acknowledging.html
 * matplotlib https://matplotlib.org/stable/users/project/citing.html

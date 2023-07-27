@@ -1,10 +1,10 @@
 Configuration Files
 =====================
 
-SurveySimPP and Objects In Field both use configuration files to set the majority of the various parameters required for running these software packages. The configuration file for surveySimPP allows turning on and off various filters for biasing the simulated small body population to what the survey should have found. An overview of the possible options for the config files are described below with recommendations on what you should set these config parameters to depending on your use case.
+Sorcha and Objects In Field both use configuration files to set the majority of the various parameters required for running these software packages. The configuration file for Sorcha allows turning on and off various filters for biasing the simulated small body population to what the survey should have found. An overview of the possible options for the config files are described below with recommendations on what you should set these config parameters to depending on your use case.
 
 .. tip::
-  We have developed  a set of utilities that are installed alongside surveySimPP that can generate a config file for Objects in Field (See :ref:`makeConfigOIF`) and one for surveySimPP (See :ref:`makeConfigPP`). 
+  We have developed  a set of utilities that are installed alongside Sorcha that can generate a config file for Objects in Field (See :ref:`makeConfigOIF`) and one for Sorcha (See :ref:`makeConfigPP`). 
 
 Objects in Field Configuration File
 ------------------------------------
@@ -12,7 +12,7 @@ Objects in Field Configuration File
 .. tip::
    We recommend that **nbody** should be always be set to **True**. You can break up the task across multiple proccesses if you need an increase in speed.
 
-surveySimPP Configuration File
+Sorcha Configuration File
 ------------------------------------
 
  .. _database_query:
@@ -20,7 +20,7 @@ surveySimPP Configuration File
 Setting Up the Correct LSST Pointing Database Query
 ---------------------------------------------------
 
-Object in Field's **Surveydbquery** config file parameter and surveySimPP's **ppsqldbquery** config file parameter contain the sql query for obtaining this information from the pointing database.
+Object in Field's **Surveydbquery** config file parameter and Sorcha's **ppsqldbquery** config file parameter contain the sql query for obtaining this information from the pointing database.
 
 From rubin_sim v2.0 simulations onward use the query::
 

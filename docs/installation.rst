@@ -2,22 +2,22 @@ Installation
 =================
 
 .. note::
-   The surveySimPP and OIF python packages are currently pip installable. We hope to have conda installable versions in the near future.
+   The Sorcha and OIF python packages are currently pip installable. We hope to have conda installable versions in the near future.
 
 Initial Steps
 -----------------------
-**Step 1** Create a directory to contain the OIF and Survey Simulator repos::
+**Step 1** Create a directory to contain the OIF and Sorcha repos::
 
-   mkdir survey_sim_pp
-   cd survey_sim_pp
+   mkdir sorcha
+   cd sorcha
 
 .. tip::
-   We recommend using python version 3.9 with surveySimPP and OIF. This is the version of python we currently use to test our unit tests. Also due to an udate to spiceypy, OIF requires the installation of spiceypy=4.0.1 (use the next step to create the correct conda environement).
+   We recommend using python version 3.9 with Sorcha and OIF. This is the version of python we currently use to test our unit tests. Also due to an udate to spiceypy, OIF requires the installation of spiceypy=4.0.1 (use the next step to create the correct conda environement).
 
 **Step 2** Create a conda environment::
 
-   conda create -n survey_sim_pp -c conda-forge -c mjuric python=3.9 spiceypy=4.0.1 openorb numpy pandas matplotlib spice-utils pip setuptools=66.0.0
-   conda activate survey_sim_pp
+   conda create -n sorcha -c conda-forge -c mjuric python=3.9 spiceypy=4.0.1 openorb numpy pandas matplotlib spice-utils pip setuptools=66.0.0
+   conda activate sorcha
 
    
 OIF
@@ -42,7 +42,7 @@ Installing Objects in Field
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 **Step 1** Make sure you are in the directory you want to contain the Survey Simulator repo in::
 
-   cd survey_sim_pp
+   cd sorcha
    
 **Step 2** Download the OIF repo via::
     
@@ -111,10 +111,10 @@ If everything has installed correctly, test.output will include::
 .. note::
    The first part of the OIF output is a header that describes how the software was configured. The next part is the ephemeris for the synthetic planetesimals that land within the field-of-view (FOV) of a specific survey observation based on the test input simulated LSST observation database. See :ref:`the outputs page<Outputs>` for further explanation.
 
-SurveySimPP
+Sorcha
 -----------------------------
 
-SurveySimPP Requirements
+Sorcha Requirements
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 *  python 3
 *  numpy
@@ -130,27 +130,27 @@ SurveySimPP Requirements
 *  matplotlib
 
 
-Installing the Survey Simulator Post Processing 
+Installing Sorcha 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-**Step 1** Navigate to the directory you want to storen the surveySimPP soure code in::
+**Step 1** Navigate to the directory you want to store the Sorcha soure code in::
 
-   cd survey_sim_pp
+   cd sorcha
    
-**Step 2** Download the Solar System survey simulator soure code via::
+**Step 2** Download the Sorcha soure code via::
 
-   git clone https://github.com/dirac-institute/survey_simulator_post_processing.git
+   git clone https://github.com/dirac-institute/sorcha.git
    
-**Step 3** Install an editable (in-place) development version of surveySimPP. This will allow you to run the code from the source directory.::
+**Step 3** Install an editable (in-place) development version of Sorcha. This will allow you to run the code from the source directory.::
 
-   cd survey_simulator_post_processing
+   cd sorcha
    pip install -e .
 
 
-Testing the surveySimPP Installation
+Testing the Sorcha Installation
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 You can check that the surveySimPP installation was done correctly, by running::
 
-   surveySimPP -c ./demo/PPConfig_test.ini -p ./demo/sspp_testset_colours.txt -o ./demo/sspp_testset_orbits.des -e ./demo/example_oif_output.txt -u ./data/out/ -t testrun_e2e
+   sorcha -c ./demo/PPConfig_test.ini -p ./demo/sspp_testset_colours.txt -o ./demo/sspp_testset_orbits.des -e ./demo/example_oif_output.txt -u ./data/out/ -t testrun_e2e
    
 The output will appear in a csv file (testrun_e2e.csv) in .data/out (this pathway can be changed via the -u command line argument). The first several lines of the csv file should look like::
 
@@ -194,4 +194,4 @@ The output will appear in a csv file (testrun_e2e.csv) in .data/out (this pathwa
    632,60435.95804,136.7133685,10.5177289,137.6504775,10.8316439,1.94e-05,r,23.373,23.434,0.137,0.137,23.608,23.6
    39265,60370.38399,192.6418095,-32.5378881,193.6750982,-32.7017699,2.8e-06,i,18.027,18.016,0.004,0.004,23.121,23.116
 .. note::
-   This test run is using pre-made ephemeris generasted by OIF already stored in the demo directory of the github surveysimPP repository. 
+   This test run is using pre-made ephemeris generasted by OIF already stored in the demo directory of the github Sorcha repository. 
