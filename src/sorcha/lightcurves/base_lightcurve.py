@@ -1,38 +1,57 @@
 from abc import ABC, abstractmethod
 import numpy as np
-
-TIME_COLUMN = "FieldMJD"
+import pandas as pd
 
 
 class AbstractLightCurve(ABC):
-    """
-    Base method for lightcurves, returning no shift independently of the time variable - should never be used!
-    """
+    """Abstract base class for lightcurve models"""
 
-    def __init__(self, colnames=[]):
-        """
-        Initialization function. Doesn't do anything
-        """
-        self.colnames = colnames  # column names for the light curve parameters - code should check if these exist in the input files
-        pass
+    def __init__(self, required_column_names: list[str] = []) -> None:
+        """Abstract base class accepts a list of column names that are required
+        to be present in the Pandas dataframe passed to the ``compute`` method.
 
-    def _compute(self, padain):
+        Parameters
+        ----------
+        required_column_names : list, optional
+            The list of columns in ``observations`` dataframe that are required
+            for the model calculation, by default []
         """
-        Dataframe provided by SurveySimPP with the time information as well as the other light curve parameters
+        self.required_column_names = required_column_names
 
-        Argument:
-        - times: array of times
+    @abstractmethod
+    def compute(self, df: pd.DataFrame) -> np.array:
+        """User implemented calculation based on the input provided by the
+        pandas dataframe ``df``.
+
+        Parameters
+        ----------
+        df : Pandas dataframe
+            The ``observations`` dataframe provided by ``Sorcha``.
         """
-        return np.zeros_like(padain[TIME_COLUMN])
+        raise (NotImplementedError, "Must be implemented by the subclass")
 
-    def __call__(self, x):
-        return self._compute(x)
+    def _validate_column_names(self, df: pd.DataFrame) -> None:
+        """Private method that checks that the provided pandas dataframe contains
+           the required columns defined in ``self.required_column_names``.
+
+        Parameters
+        ----------
+        df : _type_
+            _description_
+        """
+        for colname in self.required_column_names:
+            if colname not in df.columns:
+                raise (ValueError, f"Input dataframe is missing column %{colname}")
 
     @staticmethod
     @abstractmethod
-    def name_id():
+    def name_id() -> str:
         """This method will return the unique name of the LightCurve Model"""
-        raise (NotImplementedError, "Must be implemented as a static method by the child class")
+        raise (NotImplementedError, "Must be implemented as a static method by the subclass")
+
+
+# ! The code below will be moved to the `sorcha_community_utils` repository soon
+TIME_COLUMN = "FieldMJD"
 
 
 class SinusoidalLightCurve(AbstractLightCurve):
@@ -40,16 +59,19 @@ class SinusoidalLightCurve(AbstractLightCurve):
     Note: assuming sinusoidal in magnitude instead of flux. Maybe not call LCA?
     """
 
-    def __init__(self):
-        self.colnames = ["LCA", "Period", "Time0"]
+    def __init__(self, required_column_names: list[str] = [TIME_COLUMN, "LCA", "Period", "Time0"]) -> None:
+        super().__init__(required_column_names)
 
-    def _compute(self, padain):
+    def compute(self, df: pd.DataFrame) -> np.array:
         """
         Computes a sinusoidal light curve given the input dataframe
         """
-        modtime = np.mod(padain[TIME_COLUMN] / padain["Period"] + padain["Time0"], 2 * np.pi)
-        return padain["LCA"] * np.sin(modtime)
+
+        self._validate_column_names(df)
+
+        modtime = np.mod(df[TIME_COLUMN] / df["Period"] + df["Time0"], 2 * np.pi)
+        return df["LCA"] * np.sin(modtime)
 
     @staticmethod
-    def name_id():
-        return "Sinusoidal"
+    def name_id() -> str:
+        return "sinusoidal"

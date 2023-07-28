@@ -1,23 +1,24 @@
-from .base_lightcurve import AbstractLightCurve
+from sorcha.lightcurves.base_lightcurve import AbstractLightCurve
+from typing import Callable
 
 
-def register_lc_subclasses():
-    """This method will identify all of the subclasses of `AbstractLightCurve`
-    and build a dictionary that maps `name : subclass`.
+def register_lc_subclasses() -> dict[str, Callable]:
+    """This method will identify all of the subclasses of ``AbstractLightCurve``
+    and build a dictionary that maps ``name : subclass``.
 
     Returns
     -------
     dict
-        A dictionary of all of subclasses of `AbstractLightCurve`. Where
-        the str returned from `subclass.name_id()` is the key, and the class is
-        the value.
+        A dictionary of all of subclasses of ``AbstractLightCurve``. Where
+        the string returned from ``subclass.name_id()`` is the key, and the
+        subclass is the value.
 
     Raises
     ------
     ValueError
-        If a duplicate key is found, a ValueError will be raised. This would
+        If a duplicate key is found, a ``ValueError`` is raised. This would
         likely occur if a user copy/pasted an existing subclass but failed to
-        update the unique name_id string.
+        update the string returned from ``name_id()``.
     """
     subclass_dict = {}
     for subcls in AbstractLightCurve.__subclasses__():
@@ -32,7 +33,7 @@ def register_lc_subclasses():
     return subclass_dict
 
 
-def update_lc_subclasses():
+def update_lc_subclasses() -> dict[str, Callable]:
     """This function is used to register newly created subclasses of the
     `AbstractLightCurve`.
     """

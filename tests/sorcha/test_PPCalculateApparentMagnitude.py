@@ -1,14 +1,65 @@
 import pandas as pd
 import numpy as np
 from numpy.testing import assert_almost_equal, assert_equal
+from sorcha.modules.PPCalculateApparentMagnitudeInFilter import PPCalculateApparentMagnitudeInFilter
+
+
+def test_PPCalculateApparentMagnitudeInFilter_default():
+    """Baseline test, no phase function"""
+    test_observations = pd.DataFrame(
+        {
+            "FieldMJD": [2459215.5],
+            "H_filter": [7.3],
+            "GS": [0.19],
+            "G1": [0.62],
+            "G2": [0.14],
+            "G12": [0.68],
+            "S": [0.04],
+            "AstRange(km)": [4.899690e08],
+            "Ast-Sun(km)": [6.301740e08],
+            "Sun-Ast-Obs(deg)": [4.5918],
+        }
+    )
+
+    test_observations = PPCalculateApparentMagnitudeInFilter(test_observations.copy(), "none", "output")
+
+    assert_almost_equal(test_observations["output"][0], 12.998891, decimal=5)
+
+    return
+
+
+def test_PPCalculateApparentMagnitudeInFilterWithIdentityLightcurve():
+    """Baseline test, no phase function, but includes the "identity" (for testing only!)
+    light curve model
+    """
+    test_observations = pd.DataFrame(
+        {
+            "FieldMJD": [2459215.5],
+            "H_filter": [7.3],
+            "GS": [0.19],
+            "G1": [0.62],
+            "G2": [0.14],
+            "G12": [0.68],
+            "S": [0.04],
+            "AstRange(km)": [4.899690e08],
+            "Ast-Sun(km)": [6.301740e08],
+            "Sun-Ast-Obs(deg)": [4.5918],
+        }
+    )
+
+    test_observations = PPCalculateApparentMagnitudeInFilter(
+        test_observations.copy(), "none", "output", "identity"
+    )
+
+    assert_almost_equal(test_observations["output"][0], 12.998891, decimal=5)
+
+    return
 
 
 def test_PPCalculateApparentMagnitudeInFilter():
-    from sorcha.modules.PPCalculateApparentMagnitudeInFilter import PPCalculateApparentMagnitudeInFilter
-
     test_observations = pd.DataFrame(
         {
-            "MJD": [2459215.5],
+            "FieldMJD": [2459215.5],
             "H_filter": [7.3],
             "GS": [0.19],
             "G1": [0.62],

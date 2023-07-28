@@ -62,7 +62,7 @@ def PPCalculateApparentMagnitude(
 
         verboselog("Calculating apparent magnitude in filter...")
         observations = PPCalculateApparentMagnitudeInFilter(
-            observations, phasefunction, lightcurve=lightcurve, lightcurve_choice=lightcurve_choice
+            observations, phasefunction, lightcurve_choice=lightcurve_choice
         )
 
     return observations
