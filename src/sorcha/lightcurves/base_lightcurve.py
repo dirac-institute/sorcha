@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from typing import List
 import numpy as np
 import pandas as pd
 
@@ -6,7 +7,7 @@ import pandas as pd
 class AbstractLightCurve(ABC):
     """Abstract base class for lightcurve models"""
 
-    def __init__(self, required_column_names: list[str] = []) -> None:
+    def __init__(self, required_column_names: List[str] = []) -> None:
         """Abstract base class accepts a list of column names that are required
         to be present in the Pandas dataframe passed to the ``compute`` method.
 
@@ -59,7 +60,7 @@ class SinusoidalLightCurve(AbstractLightCurve):
     Note: assuming sinusoidal in magnitude instead of flux. Maybe not call LCA?
     """
 
-    def __init__(self, required_column_names: list[str] = [TIME_COLUMN, "LCA", "Period", "Time0"]) -> None:
+    def __init__(self, required_column_names: List[str] = [TIME_COLUMN, "LCA", "Period", "Time0"]) -> None:
         super().__init__(required_column_names)
 
     def compute(self, df: pd.DataFrame) -> np.array:

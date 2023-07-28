@@ -1,4 +1,5 @@
 from sorcha.lightcurves.base_lightcurve import AbstractLightCurve
+from typing import List
 import numpy as np
 import pandas as pd
 
@@ -19,7 +20,7 @@ class IdentityLightCurve(AbstractLightCurve):
     created for testing purposes.
     """
 
-    def __init__(self, required_column_names: list = [TIME_COLUMN]) -> None:
+    def __init__(self, required_column_names: List[str] = [TIME_COLUMN]) -> None:
         super().__init__(required_column_names)
 
     def compute(self, df: pd.DataFrame) -> np.array:
