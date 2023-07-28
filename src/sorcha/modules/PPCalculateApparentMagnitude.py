@@ -50,6 +50,7 @@ def PPCalculateApparentMagnitude(
     if object_type == "comet":
         verboselog("Calculating cometary magnitude using a simple model and applying colour offset...")
         observations = PPCalculateSimpleCometaryMagnitude(observations, mainfilter, othercolours)
+        observations.rename(columns={"H_" + mainfilter: "H_filter"}, inplace=True)
     else:
         # if user is only interested in one filter, we have no colour offsets to apply: assume H is in that filter
         if len(observing_filters) > 1:
@@ -60,9 +61,9 @@ def PPCalculateApparentMagnitude(
         else:
             observations.rename(columns={"H_" + mainfilter: "H_filter"}, inplace=True)
 
-        verboselog("Calculating apparent magnitude in filter...")
-        observations = PPCalculateApparentMagnitudeInFilter(
-            observations, phasefunction, lightcurve=lightcurve, lightcurve_choice=lightcurve_choice
-        )
+    verboselog("Calculating apparent magnitude in filter...")
+    observations = PPCalculateApparentMagnitudeInFilter(
+        observations, phasefunction, lightcurve=lightcurve, lightcurve_choice=lightcurve_choice
+    )
 
     return observations

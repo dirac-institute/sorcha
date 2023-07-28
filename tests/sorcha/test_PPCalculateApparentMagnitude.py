@@ -130,6 +130,7 @@ def test_PPCalculateApparentMagnitude():
             "Sun-Ast-Obs(deg)": [8.899486],
             "optFilter": ["i"],
             "H_r": [15.9],
+            "GS": [0.19],
             "afrho1": [1552],
             "q": [1.21050916],
             "k": [-3.35],
@@ -175,7 +176,7 @@ def test_PPCalculateApparentMagnitude():
     asteroid_single = PPCalculateApparentMagnitude(asteroid_obs_single, "HG", "r", ["r-r"], ["r"], "none")
 
     assert_almost_equal(comet_out["coma"].values[0], 24.822201, decimal=6)
-    assert_almost_equal(comet_out["TrailedSourceMag"].values[0], 15.779707, decimal=6)
+    assert_almost_equal(comet_out["TrailedSourceMag"].values[0], 23.6478808, decimal=6)
 
     assert_almost_equal(asteroid_out["TrailedSourceMag"].values[0], 13.281578, decimal=6)
     assert_almost_equal(asteroid_out["H_filter"].values[0], 7.19, decimal=6)
