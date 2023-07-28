@@ -1,8 +1,8 @@
 from sorcha.lightcurves.base_lightcurve import AbstractLightCurve
-from typing import Callable
+from typing import Callable, Dict
 
 
-def register_lc_subclasses() -> dict[str, Callable]:
+def register_lc_subclasses() -> Dict[str, Callable]:
     """This method will identify all of the subclasses of ``AbstractLightCurve``
     and build a dictionary that maps ``name : subclass``.
 
@@ -33,7 +33,7 @@ def register_lc_subclasses() -> dict[str, Callable]:
     return subclass_dict
 
 
-def update_lc_subclasses() -> dict[str, Callable]:
+def update_lc_subclasses() -> None:
     """This function is used to register newly created subclasses of the
     `AbstractLightCurve`.
     """
