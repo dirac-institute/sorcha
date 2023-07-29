@@ -52,15 +52,12 @@ class AbstractLightCurve(ABC):
 
 
 # ! The code below will be moved to the `sorcha_community_utils` repository soon
-TIME_COLUMN = "FieldMJD"
-
-
 class SinusoidalLightCurve(AbstractLightCurve):
     """
     Note: assuming sinusoidal in magnitude instead of flux. Maybe not call LCA?
     """
 
-    def __init__(self, required_column_names: List[str] = [TIME_COLUMN, "LCA", "Period", "Time0"]) -> None:
+    def __init__(self, required_column_names: List[str] = ["FieldMJD", "LCA", "Period", "Time0"]) -> None:
         super().__init__(required_column_names)
 
     def compute(self, df: pd.DataFrame) -> np.array:
@@ -70,7 +67,7 @@ class SinusoidalLightCurve(AbstractLightCurve):
 
         self._validate_column_names(df)
 
-        modtime = np.mod(df[TIME_COLUMN] / df["Period"] + df["Time0"], 2 * np.pi)
+        modtime = np.mod(df["FieldMJD"] / df["Period"] + df["Time0"], 2 * np.pi)
         return df["LCA"] * np.sin(modtime)
 
     @staticmethod

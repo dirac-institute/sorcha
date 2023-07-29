@@ -9,8 +9,6 @@ FOR TESTING ONLY
 !!!!!!!!!!!!!!!!
 """
 
-TIME_COLUMN = "FieldMJD"
-
 
 class IdentityLightCurve(AbstractLightCurve):
     """
@@ -20,7 +18,7 @@ class IdentityLightCurve(AbstractLightCurve):
     created for testing purposes.
     """
 
-    def __init__(self, required_column_names: List[str] = [TIME_COLUMN]) -> None:
+    def __init__(self, required_column_names: List[str] = ["FieldMJD"]) -> None:
         super().__init__(required_column_names)
 
     def compute(self, df: pd.DataFrame) -> np.array:
@@ -40,7 +38,7 @@ class IdentityLightCurve(AbstractLightCurve):
 
         self._validate_column_names(df)
 
-        return np.zeros_like(df[TIME_COLUMN])
+        return np.zeros_like(df["FieldMJD"])
 
     @staticmethod
     def name_id() -> str:
