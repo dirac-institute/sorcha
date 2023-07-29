@@ -4,11 +4,11 @@ import astropy.units as u
 from sbpy.photometry import HG, HG1G2, HG12_Pen16, LinearPhaseFunc
 import logging
 
-from sorcha.lightcurves.LightcurveImporter import LC_METHODS
+from sorcha.lightcurves.lightcurve_registration import LC_METHODS
 
 
 def PPCalculateApparentMagnitudeInFilter(
-    padain, function, colname="TrailedSourceMag", lightcurve=False, lightcurve_choice="None"
+    padain, function, colname="TrailedSourceMag", lightcurve_choice="None"
 ):
     """
     This task calculates the apparent brightness of an object at a given pointing
@@ -65,8 +65,10 @@ def PPCalculateApparentMagnitudeInFilter(
 
     alpha = padain["Sun-Ast-Obs(deg)"].values
     H = padain[H_col].values
-    if lightcurve:
-        lc_shift = LC_METHODS[lightcurve_choice]()(padain)
+
+    if LC_METHODS.get(lightcurve_choice, False):
+        lc_model = LC_METHODS[lightcurve_choice]()
+        lc_shift = lc_model.compute(padain)
         padain["Delta_m"] = lc_shift
         Heff = H + lc_shift
     else:
