@@ -36,7 +36,7 @@ def PPApplyColourOffsets(observations, function, othercolours, observing_filters
     # create a zero-offset column for mainfilter-mainfilter
     observations[mainfilter + "-" + mainfilter] = np.zeros(len(observations))
 
-    # first apply the H offset for every observation
+    # first apply the correct colour offset to H for every observation
     try:
         unique_opt_filters = observations["optFilter"].unique()
         for filter in unique_opt_filters:
@@ -48,9 +48,9 @@ def PPApplyColourOffsets(observations, function, othercolours, observing_filters
         pplogger.error("ERROR: PPApplyColourOffsets: H column missing!")
         sys.exit("ERROR: PPApplyColourOffsets: H column missing!")
 
-    # then check the function
-    # for each function, see if the basic columns exist: if so, leave them
-    # if colour-specific terms exist, make columns with the appropriate values
+    # then check the columns for the phase function variables
+    # if colour-specific terms exist, pick the columns with the appropriate colour
+    # if only one value specified, assume same value for all filters
 
     if function == "HG1G2":
         G1list = ["G1" + filt for filt in observing_filters]
@@ -131,7 +131,7 @@ def PPApplyColourOffsets(observations, function, othercolours, observing_filters
         )
         sys.exit("ERROR: PPApplyColourOffsets: unknown phase function. Should be HG1G2, HG, HG12 or linear.")
 
-    # drop columns for colours that remain after read-in from the parameter file and are not used
+    # drop colour offset columns
     ks = observations.keys().tolist()
     obsolete_colours = fnmatch.filter(ks, str("?-" + mainfilter))
     observations.drop(obsolete_colours, axis=1, inplace=True)

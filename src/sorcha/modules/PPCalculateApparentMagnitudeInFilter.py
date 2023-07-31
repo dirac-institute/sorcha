@@ -49,6 +49,7 @@ def PPCalculateApparentMagnitudeInFilter(
     H_col = "H_filter"
 
     # first, get H, r, delta and alpha as ndarrays
+    # r, delta and alpha are converted to au from kilometres
     r = padain["AstRange(km)"].values / 1.495978707e8
 
     try:
@@ -66,6 +67,7 @@ def PPCalculateApparentMagnitudeInFilter(
     alpha = padain["Sun-Ast-Obs(deg)"].values
     H = padain[H_col].values
 
+    # calculating light curve offset
     if LC_METHODS.get(lightcurve_choice, False):
         lc_model = LC_METHODS[lightcurve_choice]()
         lc_shift = lc_model.compute(padain)
@@ -74,6 +76,8 @@ def PPCalculateApparentMagnitudeInFilter(
     else:
         Heff = H
 
+    # calculate reduced magnitude and contribution from phase function
+    # reduced magnitude = H + 2.5log10(f(phi))
     if function == "HG1G2":
         G1 = padain["G1"].values
         G2 = padain["G2"].values
@@ -106,7 +110,7 @@ def PPCalculateApparentMagnitudeInFilter(
             "ERROR: PPCalculateApparentMagnitudeInFilter: unknown phase function. Should be HG1G2, HG, HG12 or linear."
         )
 
-    # in sbpy, phase_function = H(alpha) + Phi(alpha)
+    # apparent magnitude equation: see equation 1 in Schwamb et al. 2023
     padain[colname] = 5.0 * np.log10(delta) + 5.0 * np.log10(r) + phase_function
 
     padain = padain.reset_index(drop=True)
