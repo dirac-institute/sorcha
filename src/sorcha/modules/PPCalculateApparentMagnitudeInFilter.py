@@ -82,25 +82,25 @@ def PPCalculateApparentMagnitudeInFilter(
         G1 = padain["G1"].values
         G2 = padain["G2"].values
         HGm = HG1G2(H=Heff * u.mag, G1=G1, G2=G2)
-        phase_function = HGm(alpha * u.deg).value
+        reduced_mag = HGm(alpha * u.deg).value
 
     elif function == "HG":
         G = padain["GS"].values
         HGm = HG(H=Heff * u.mag, G=G)
-        phase_function = HGm(alpha * u.deg).value
+        reduced_mag = HGm(alpha * u.deg).value
 
     elif function == "HG12":
         G12 = padain["G12"].values
         HGm = HG12_Pen16(H=Heff * u.mag, G12=G12)
-        phase_function = HGm(alpha * u.deg).value
+        reduced_mag = HGm(alpha * u.deg).value
 
     elif function == "linear":
         S = padain["S"].values
         HGm = LinearPhaseFunc(H=Heff * u.mag, S=S * u.mag / u.deg)
-        phase_function = HGm(alpha * u.deg).value
+        reduced_mag = HGm(alpha * u.deg).value
 
     elif function == "none":
-        phase_function = Heff.copy()
+        reduced_mag = Heff.copy()
 
     else:
         pplogger.error(
@@ -111,7 +111,7 @@ def PPCalculateApparentMagnitudeInFilter(
         )
 
     # apparent magnitude equation: see equation 1 in Schwamb et al. 2023
-    padain[colname] = 5.0 * np.log10(delta) + 5.0 * np.log10(r) + phase_function
+    padain[colname] = 5.0 * np.log10(delta) + 5.0 * np.log10(r) + reduced_mag
 
     padain = padain.reset_index(drop=True)
 
