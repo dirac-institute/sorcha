@@ -38,8 +38,7 @@ class args:
         self.maglimit = None
         self.sqlquery = "SELECT observationId, observationStartMJD, filter, seeingFwhmGeom, seeingFwhmEff, fiveSigmaDepth, fieldRA, fieldDec, rotSkyPos FROM observations order by observationId"
         self.trailinglosseson = True
-        self.lightcurve = False
-        self.lcmodel = "None"
+        self.lcmodel = "identity"
 
 
 def test_makeConfigPP(tmp_path):
