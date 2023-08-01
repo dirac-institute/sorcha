@@ -5,7 +5,7 @@ import numpy as np
 # (C)  LSST Solar System Scientific Collaboration 2019
 
 
-def PPCalculateSimpleCometaryMagnitude(padain, mainfilter, othercolours, colname="TrailedSourceMag"):
+def PPCalculateSimpleCometaryMagnitude(padain, mainfilter, othercolours):
     """
     This task calculates the brightness of the comet at a given pointing
     according to a simple model by A'Hearn et al. (1984).
@@ -53,16 +53,16 @@ def PPCalculateSimpleCometaryMagnitude(padain, mainfilter, othercolours, colname
     padain["coma"] = com.mag(g, mainfilter, rap=1, nucleus=False)
 
     # The contribution of the nucleus is taken from the absolute brightness
-    padain[colname] = -2.5 * np.log10(10 ** (-0.4 * padain["coma"]) + 10 ** (-0.4 * padain[H_col]))
+    padain[H_col] = -2.5 * np.log10(10 ** (-0.4 * padain["coma"]) + 10 ** (-0.4 * padain[H_col]))
 
-    # We then calculate the colour offset.
-    padain[mainfilter + "-" + mainfilter] = np.zeros(len(padain))
-    padain[colname] = padain.apply(
-        lambda row: row[colname] + row[row["optFilter"] + "-" + mainfilter], axis=1
-    )
-    padain.drop(mainfilter + "-" + mainfilter, axis=1, inplace=True)
-
-    if othercolours != "":
-        padain.drop(othercolours, axis=1, inplace=True)
+    #     # We then calculate the colour offset.
+    #     padain[mainfilter + "-" + mainfilter] = np.zeros(len(padain))
+    #     padain[colname] = padain.apply(
+    #         lambda row: row[colname] + row[row["optFilter"] + "-" + mainfilter], axis=1
+    #     )
+    #     padain.drop(mainfilter + "-" + mainfilter, axis=1, inplace=True)
+    #
+    #     if othercolours != "":
+    #         padain.drop(othercolours, axis=1, inplace=True)
 
     return padain
