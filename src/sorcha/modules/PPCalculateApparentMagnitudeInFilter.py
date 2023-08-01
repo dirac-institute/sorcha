@@ -49,6 +49,7 @@ def PPCalculateApparentMagnitudeInFilter(
     H_col = "H_filter"
 
     # first, get H, r, delta and alpha as ndarrays
+    # r, delta and alpha are converted to au from kilometres
     r = padain["AstRange(km)"].values / 1.495978707e8
 
     try:
@@ -66,6 +67,7 @@ def PPCalculateApparentMagnitudeInFilter(
     alpha = padain["Sun-Ast-Obs(deg)"].values
     H = padain[H_col].values
 
+    # calculating light curve offset
     if LC_METHODS.get(lightcurve_choice, False):
         lc_model = LC_METHODS[lightcurve_choice]()
         lc_shift = lc_model.compute(padain)
@@ -74,29 +76,31 @@ def PPCalculateApparentMagnitudeInFilter(
     else:
         Heff = H
 
+    # calculate reduced magnitude and contribution from phase function
+    # reduced magnitude = H + 2.5log10(f(phi))
     if function == "HG1G2":
         G1 = padain["G1"].values
         G2 = padain["G2"].values
         HGm = HG1G2(H=Heff * u.mag, G1=G1, G2=G2)
-        phase_function = HGm(alpha * u.deg).value
+        reduced_mag = HGm(alpha * u.deg).value
 
     elif function == "HG":
         G = padain["GS"].values
         HGm = HG(H=Heff * u.mag, G=G)
-        phase_function = HGm(alpha * u.deg).value
+        reduced_mag = HGm(alpha * u.deg).value
 
     elif function == "HG12":
         G12 = padain["G12"].values
         HGm = HG12_Pen16(H=Heff * u.mag, G12=G12)
-        phase_function = HGm(alpha * u.deg).value
+        reduced_mag = HGm(alpha * u.deg).value
 
     elif function == "linear":
         S = padain["S"].values
         HGm = LinearPhaseFunc(H=Heff * u.mag, S=S * u.mag / u.deg)
-        phase_function = HGm(alpha * u.deg).value
+        reduced_mag = HGm(alpha * u.deg).value
 
     elif function == "none":
-        phase_function = Heff.copy()
+        reduced_mag = Heff.copy()
 
     else:
         pplogger.error(
@@ -106,8 +110,8 @@ def PPCalculateApparentMagnitudeInFilter(
             "ERROR: PPCalculateApparentMagnitudeInFilter: unknown phase function. Should be HG1G2, HG, HG12 or linear."
         )
 
-    # in sbpy, phase_function = H(alpha) + Phi(alpha)
-    padain[colname] = 5.0 * np.log10(delta) + 5.0 * np.log10(r) + phase_function
+    # apparent magnitude equation: see equation 1 in Schwamb et al. 2023
+    padain[colname] = 5.0 * np.log10(delta) + 5.0 * np.log10(r) + reduced_mag
 
     padain = padain.reset_index(drop=True)
 

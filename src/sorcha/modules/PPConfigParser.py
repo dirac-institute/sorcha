@@ -702,7 +702,7 @@ def PPPrintConfigsToLog(configs, cmd_args):
         pplogger.info("Temporary ephemeris database will be deleted upon code conclusion.")
 
     if configs["comet_activity"] == "comet":
-        pplogger.info("Cometary activity set to: " + str(configs["cometary activity"]))
+        pplogger.info("Cometary activity set to: " + str(configs["comet_activity"]))
     elif configs["comet_activity"] == "none":
         pplogger.info("No cometary activity selected.")
 
