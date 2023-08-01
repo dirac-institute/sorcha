@@ -645,20 +645,8 @@ def PPConfigFileParser(configfile, survey_name):
     else:
         config_dict["rng_seed"] = None
 
-    try:
-        config_dict["lightcurve"] = config.getboolean("EXPERT", "lightcurve", fallback=False)
-    except ValueError:
-        pplogger.error(
-            "ERROR: could not parse value for lightcurve as a boolean. Check formatting and try again."
-        )
-        sys.exit("ERROR: could not parse value for lightcurve as a boolean. Check formatting and try again.")
-
     config_dict["lc_model"] = config.get("EXPERT", "lc_model", fallback=None)
     config_dict["lc_model"] = None if config_dict["lc_model"] == "None" else config_dict["lc_model"]
-
-    if config_dict["lightcurve"] and not config_dict["lc_model"]:
-        pplogger.error("ERROR: lightcurve set to True but lc_model not supplied or set to None.")
-        sys.exit("ERROR: lightcurve set to True but lc_model not supplied or set to None.")
 
     return config_dict
 
@@ -807,7 +795,7 @@ def PPPrintConfigsToLog(configs, cmd_args):
     else:
         pplogger.info("Solar System Processing linking filter is turned OFF.")
 
-    if configs["lightcurve"] == True:
+    if configs["lc_model"]:
         pplogger.info("A lightcurve model is being applied.")
         pplogger.info("The lightcurve model is: " + configs["lc_model"])
     else:

@@ -8,7 +8,7 @@ from sorcha.lightcurves.lightcurve_registration import LC_METHODS
 
 
 def PPCalculateApparentMagnitudeInFilter(
-    padain, function, colname="TrailedSourceMag", lightcurve_choice="None"
+    padain, function, colname="TrailedSourceMag", lightcurve_choice=None
 ):
     """
     This task calculates the apparent brightness of an object at a given pointing
@@ -33,9 +33,7 @@ def PPCalculateApparentMagnitudeInFilter(
 
     colname (string): column name in which to store calculated magnitude.
 
-    lightcurve (boolean): whether lightcurves are applied or not
-
-    lightcurve_choice (string): choice of lightcurve model
+    lightcurve_choice (string): choice of lightcurve model. Default None
 
 
     Returns:
@@ -68,7 +66,7 @@ def PPCalculateApparentMagnitudeInFilter(
     H = padain[H_col].values
 
     # calculating light curve offset
-    if LC_METHODS.get(lightcurve_choice, False):
+    if lightcurve_choice and LC_METHODS.get(lightcurve_choice, False):
         lc_model = LC_METHODS[lightcurve_choice]()
         lc_shift = lc_model.compute(padain)
         padain["Delta_m"] = lc_shift

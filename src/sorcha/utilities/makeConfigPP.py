@@ -9,7 +9,7 @@ import sys
 
 def makeConfigFile(args):
     """
-    Makes an SSPP config file from the variables defined at the command line.
+    Makes an sorcha config file from the variables defined at the command line.
 
     Parameters:
     -----------
@@ -52,7 +52,6 @@ def makeConfigFile(args):
         "mag_limit": str(args.maglimit),
         "trailing_losses_on": str(args.trailinglosseson),
         "pointing_sql_query": str(args.sqlquery),
-        "lightcurve": str(args.lightcurve),
         "lc_model": str(args.lcmodel),
     }
 
@@ -375,13 +374,6 @@ def main():
         help="Switch on trailing losses. Relevant for close-approaching NEOs. Default True.",
         type=bool,
         default=True,
-    )
-    parser.add_argument(
-        "--lightcurve",
-        "-lc",
-        help="Include lightcurve model. Default False.",
-        type=bool,
-        default=False,
     )
     parser.add_argument(
         "--lcmodel",
