@@ -105,7 +105,7 @@ def test_PPCalculateSimpleCometaryMagnitude():
         {
             "optFilter": ["r", "r"],
             "TrailedSourceMag": [19.676259, 22.748274],
-            "H_original": [15.35, 15.35],
+            "H_r": [15.35, 15.35],
             "afrho1": [1552, 1552],
             "k": [-3.35, -3.35],
             "seeingFwhmGeom": [8.064748, 3.206723],

@@ -6,7 +6,7 @@ import numpy as np
 
 
 def PPCalculateSimpleCometaryMagnitude(
-    padain, observing_filters, rho, delta, alpha, H_col="H_original", colname="TrailedSourceMag"
+    padain, observing_filters, rho, delta, alpha, H_col="H_r", colname="TrailedSourceMag"
 ):
     """
     This task calculates the brightness of the comet at a given pointing
