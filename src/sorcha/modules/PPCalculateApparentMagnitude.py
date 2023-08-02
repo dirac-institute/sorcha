@@ -44,12 +44,6 @@ def PPCalculateApparentMagnitude(
     pplogger = logging.getLogger(__name__)
     verboselog = pplogger.info if verbose else lambda *a, **k: None
 
-    if object_type == "comet":
-        verboselog("Calculating cometary magnitude using a simple model and applying colour offset...")
-
-        # calculate coma/tail contribution to the apparent magnitude
-        observations = PPCalculateSimpleCometaryMagnitude(observations, mainfilter, othercolours)
-
     # apply correct colour offset to get H magnitude in observation filter
     # if user is only interested in one filter, we have no colour offsets to apply: assume H is in that filter
     if len(observing_filters) > 1:
@@ -64,7 +58,12 @@ def PPCalculateApparentMagnitude(
     # calculate main body apparent magnitude in observation filter
     verboselog("Calculating apparent magnitude in filter...")
     observations = PPCalculateApparentMagnitudeInFilter(
-        observations, phasefunction, lightcurve_choice=lightcurve_choice
+        observations,
+        phasefunction,
+        mainfilter,
+        observing_filters,
+        lightcurve_choice=lightcurve_choice,
+        object_type=object_type,
     )
 
     return observations

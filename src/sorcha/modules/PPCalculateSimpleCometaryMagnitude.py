@@ -5,7 +5,9 @@ import numpy as np
 # (C)  LSST Solar System Scientific Collaboration 2019
 
 
-def PPCalculateSimpleCometaryMagnitude(padain, mainfilter, othercolours):
+def PPCalculateSimpleCometaryMagnitude(
+    padain, observing_filters, rho, delta, alpha, H_col="H_original", colname="TrailedSourceMag"
+):
     """
     This task calculates the brightness of the comet at a given pointing
     according to a simple model by A'Hearn et al. (1984).
@@ -29,40 +31,20 @@ def PPCalculateSimpleCometaryMagnitude(padain, mainfilter, othercolours):
 
     """
 
-    H_col = "H_" + mainfilter
+    # this instantiates the Comet object with H_r, afrho1 and k
+    com = Comet(Hr=padain[H_col], afrho1=padain.afrho1, k=padain.k)
 
-    # calculate rho and delta in au
-    delta = padain["AstRange(km)"].values / 1.495978707e8
+    # this is the geometrical data
+    g = {"rh": rho, "delta": delta, "phase": alpha}
 
-    try:
-        rho = padain["Ast-Sun(km)"].values / 1.495978707e8
-    except KeyError:
-        rho = (
-            np.sqrt(
-                padain["Ast-Sun(J2000x)(km)"].values ** 2
-                + padain["Ast-Sun(J2000y)(km)"].values ** 2
-                + padain["Ast-Sun(J2000z)(km)"].values ** 2
-            )
-            / 1.495978707e8
+    # this calculates the coma magnitude in each filter
+    for filt in observing_filters:
+        padain.loc[padain["optFilter"] == filt, "coma_magnitude"] = com.mag(
+            g, filt, rap=padain["seeingFwhmGeom"], nucleus=False
         )
 
-    com = Comet(Hv=padain[H_col], afrho1=padain.afrho1, q=padain.q, k=padain.k)
-
-    g = {"rh": rho, "delta": delta, "phase": padain["Sun-Ast-Obs(deg)"]}
-
-    padain["coma"] = com.mag(g, mainfilter, rap=1, nucleus=False)
-
-    # The contribution of the nucleus is taken from the absolute brightness
-    padain[H_col] = -2.5 * np.log10(10 ** (-0.4 * padain["coma"]) + 10 ** (-0.4 * padain[H_col]))
-
-    #     # We then calculate the colour offset.
-    #     padain[mainfilter + "-" + mainfilter] = np.zeros(len(padain))
-    #     padain[colname] = padain.apply(
-    #         lambda row: row[colname] + row[row["optFilter"] + "-" + mainfilter], axis=1
-    #     )
-    #     padain.drop(mainfilter + "-" + mainfilter, axis=1, inplace=True)
-    #
-    #     if othercolours != "":
-    #         padain.drop(othercolours, axis=1, inplace=True)
+    padain[colname] = -2.5 * np.log10(
+        10 ** (-0.4 * padain["coma_magnitude"]) + 10 ** (-0.4 * padain[colname])
+    )
 
     return padain

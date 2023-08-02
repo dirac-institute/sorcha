@@ -33,6 +33,9 @@ def PPApplyColourOffsets(observations, function, othercolours, observing_filters
 
     H_col = "H_" + mainfilter
 
+    # save original H column: useful for other functions.
+    observations["H_original"] = observations[H_col].copy()
+
     # create a zero-offset column for mainfilter-mainfilter
     observations[mainfilter + "-" + mainfilter] = np.zeros(len(observations))
 
