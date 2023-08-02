@@ -108,7 +108,7 @@ def test_PPCalculateSimpleCometaryMagnitude():
             "H_r": [15.35, 15.35],
             "afrho1": [1552, 1552],
             "k": [-3.35, -3.35],
-            "seeingFwhmGeom": [8.064748, 3.206723],
+            "seeingFwhmEff": [8.064748, 3.206723],
         }
     )
 
@@ -196,7 +196,7 @@ def test_PPCalculateApparentMagnitude():
             "afrho1": [1552],
             "k": [-3.35],
             "i-r": [-0.12],
-            "seeingFwhmGeom": [1],
+            "seeingFwhmEff": [1.0],
         }
     )
 

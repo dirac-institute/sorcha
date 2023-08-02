@@ -40,7 +40,7 @@ def PPCalculateSimpleCometaryMagnitude(
     # this calculates the coma magnitude in each filter
     for filt in observing_filters:
         padain.loc[padain["optFilter"] == filt, "coma_magnitude"] = com.mag(
-            g, filt, rap=padain["seeingFwhmGeom"], nucleus=False
+            g, filt, rap=padain["seeingFwhmEff"], nucleus=False
         )
 
     padain[colname] = -2.5 * np.log10(
