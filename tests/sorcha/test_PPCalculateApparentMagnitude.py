@@ -21,7 +21,9 @@ def test_PPCalculateApparentMagnitudeInFilter_default():
         }
     )
 
-    test_observations = PPCalculateApparentMagnitudeInFilter(test_observations.copy(), "none", "output")
+    test_observations = PPCalculateApparentMagnitudeInFilter(
+        test_observations.copy(), "none", "r", "r", colname="output"
+    )
 
     assert_almost_equal(test_observations["output"][0], 12.998891, decimal=5)
 
@@ -48,7 +50,7 @@ def test_PPCalculateApparentMagnitudeInFilterWithIdentityLightcurve():
     )
 
     test_observations = PPCalculateApparentMagnitudeInFilter(
-        test_observations.copy(), "none", "output", "identity"
+        test_observations.copy(), "none", "r", "r", colname="output", lightcurve_choice="identity"
     )
 
     assert_almost_equal(test_observations["output"][0], 12.998891, decimal=5)
@@ -72,10 +74,18 @@ def test_PPCalculateApparentMagnitudeInFilter():
         }
     )
 
-    test_observations = PPCalculateApparentMagnitudeInFilter(test_observations.copy(), "HG", "HG_mag")
-    test_observations = PPCalculateApparentMagnitudeInFilter(test_observations.copy(), "HG12", "HG12_mag")
-    test_observations = PPCalculateApparentMagnitudeInFilter(test_observations.copy(), "HG1G2", "HG1G2_mag")
-    test_observations = PPCalculateApparentMagnitudeInFilter(test_observations.copy(), "linear", "linear_mag")
+    test_observations = PPCalculateApparentMagnitudeInFilter(
+        test_observations.copy(), "HG", "r", "r", colname="HG_mag"
+    )
+    test_observations = PPCalculateApparentMagnitudeInFilter(
+        test_observations.copy(), "HG12", "r", "r", colname="HG12_mag"
+    )
+    test_observations = PPCalculateApparentMagnitudeInFilter(
+        test_observations.copy(), "HG1G2", "r", "r", colname="HG1G2_mag"
+    )
+    test_observations = PPCalculateApparentMagnitudeInFilter(
+        test_observations.copy(), "linear", "r", "r", "linear_mag"
+    )
 
     assert_almost_equal(test_observations["HG_mag"][0], 13.391578, decimal=5)
     assert_almost_equal(test_observations["HG12_mag"][0], 13.387267, decimal=5)
@@ -88,26 +98,27 @@ def test_PPCalculateApparentMagnitudeInFilter():
 def test_PPCalculateSimpleCometaryMagnitude():
     from sorcha.modules.PPCalculateSimpleCometaryMagnitude import PPCalculateSimpleCometaryMagnitude
 
+    # data is for 67P, taken by Colin Snodgrass, and validated against same
+    # abnormally large seeing is to account for Colin's use of an aperture measured at comet distance
+
     cometary_obs = pd.DataFrame(
         {
-            "AstRange(km)": [7.35908481e08],
-            "Ast-Sun(J2000x)(km)": [-5.61871308e08],
-            "Ast-Sun(J2000y)(km)": [-5.47551402e08],
-            "Ast-Sun(J2000z)(km)": [-2.48566276e08],
-            "Sun-Ast-Obs(deg)": [8.899486],
-            "optFilter": ["i"],
-            "H_r": [15.9],
-            "afrho1": [1552],
-            "q": [1.21050916],
-            "k": [-3.35],
-            "i-r": [-0.12],
+            "optFilter": ["r", "r"],
+            "TrailedSourceMag": [19.676259, 22.748274],
+            "H_r": [15.35, 15.35],
+            "afrho1": [1552, 1552],
+            "k": [-3.35, -3.35],
+            "seeingFwhmEff": [8.064748, 3.206723],
         }
     )
 
-    df_comet = PPCalculateSimpleCometaryMagnitude(cometary_obs, "r", ["i-r"])
+    rho = [1.260000, 4.889116]
+    delta = [1.709000, 4.298050]
+    alpha = [35.100000, 10.339021]
 
-    assert_almost_equal(df_comet["coma"].values[0], 24.82220145)
-    assert_almost_equal(df_comet["H_r"].values[0], 15.89970705)
+    df_comet = PPCalculateSimpleCometaryMagnitude(cometary_obs, ["r"], rho, delta, alpha)
+
+    assert_almost_equal(df_comet["TrailedSourceMag"], [13.516, 22.010], decimal=3)
 
     return
 
@@ -183,9 +194,9 @@ def test_PPCalculateApparentMagnitude():
             "H_r": [15.9],
             "GS": [0.19],
             "afrho1": [1552],
-            "q": [1.21050916],
             "k": [-3.35],
             "i-r": [-0.12],
+            "seeingFwhmEff": [1.0],
         }
     )
 
@@ -226,8 +237,8 @@ def test_PPCalculateApparentMagnitude():
     asteroid_out = PPCalculateApparentMagnitude(asteroid_obs, "HG", "r", ["i-r"], ["r", "i"], "none")
     asteroid_single = PPCalculateApparentMagnitude(asteroid_obs_single, "HG", "r", ["r-r"], ["r"], "none")
 
-    assert_almost_equal(comet_out["coma"].values[0], 24.822201, decimal=6)
-    assert_almost_equal(comet_out["TrailedSourceMag"].values[0], 23.527587, decimal=6)
+    assert_almost_equal(comet_out["H_filter"].values[0], 15.78, decimal=6)
+    assert_almost_equal(comet_out["TrailedSourceMag"].values[0], 23.210883, decimal=6)
 
     assert_almost_equal(asteroid_out["TrailedSourceMag"].values[0], 13.281578, decimal=6)
     assert_almost_equal(asteroid_out["H_filter"].values[0], 7.19, decimal=6)

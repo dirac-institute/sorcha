@@ -5,10 +5,17 @@ from sbpy.photometry import HG, HG1G2, HG12_Pen16, LinearPhaseFunc
 import logging
 
 from sorcha.lightcurves.lightcurve_registration import LC_METHODS
+from .PPCalculateSimpleCometaryMagnitude import PPCalculateSimpleCometaryMagnitude
 
 
 def PPCalculateApparentMagnitudeInFilter(
-    padain, function, colname="TrailedSourceMag", lightcurve_choice=None
+    padain,
+    function,
+    mainfilter,
+    observing_filters,
+    colname="TrailedSourceMag",
+    lightcurve_choice=None,
+    object_type="None",
 ):
     """
     This task calculates the apparent brightness of an object at a given pointing
@@ -46,27 +53,31 @@ def PPCalculateApparentMagnitudeInFilter(
 
     H_col = "H_filter"
 
-    # first, get H, r, delta and alpha as ndarrays
-    # r, delta and alpha are converted to au from kilometres
-    r = padain["AstRange(km)"].values / 1.495978707e8
+    # first, get H, rho, delta and alpha as ndarrays
+    # delta, rho and alpha are converted to au from kilometres
+    delta = (padain["AstRange(km)"].values * u.km).to(u.au).value
 
     try:
-        delta = padain["Ast-Sun(km)"] / 1.495978707e8
+        rho = (padain["Ast-Sun(km)"].values * u.km).to(u.au).value
     except KeyError:
-        delta = (
-            np.sqrt(
-                padain["Ast-Sun(J2000x)(km)"].values ** 2
-                + padain["Ast-Sun(J2000y)(km)"].values ** 2
-                + padain["Ast-Sun(J2000z)(km)"].values ** 2
+        rho = (
+            (
+                np.sqrt(
+                    padain["Ast-Sun(J2000x)(km)"].values ** 2
+                    + padain["Ast-Sun(J2000y)(km)"].values ** 2
+                    + padain["Ast-Sun(J2000z)(km)"].values ** 2
+                )
+                * u.km
             )
-            / 1.495978707e8
+            .to(u.au)
+            .value
         )
 
     alpha = padain["Sun-Ast-Obs(deg)"].values
     H = padain[H_col].values
 
     # calculating light curve offset
-    if lightcurve_choice and LC_METHODS.get(lightcurve_choice, False):
+    if LC_METHODS.get(lightcurve_choice, False):
         lc_model = LC_METHODS[lightcurve_choice]()
         lc_shift = lc_model.compute(padain)
         padain["Delta_m"] = lc_shift
@@ -109,7 +120,13 @@ def PPCalculateApparentMagnitudeInFilter(
         )
 
     # apparent magnitude equation: see equation 1 in Schwamb et al. 2023
-    padain[colname] = 5.0 * np.log10(delta) + 5.0 * np.log10(r) + reduced_mag
+    padain[colname] = 5.0 * np.log10(delta) + 5.0 * np.log10(rho) + reduced_mag
+
+    # if comet activity is turned on in configs, this calculates the apparent
+    # magnitude of the coma and combines it with the "nucleus" apparent magnitude
+    # as calculated above
+    if object_type == "comet":
+        padain = PPCalculateSimpleCometaryMagnitude(padain, observing_filters, rho, delta, alpha)
 
     padain = padain.reset_index(drop=True)
 
