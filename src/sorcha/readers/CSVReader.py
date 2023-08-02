@@ -74,10 +74,10 @@ class CSVDataReader(ObjectDataReader):
 
         pplogger = logging.getLogger(__name__)
         pplogger.error(
-            "ERROR: OIFCSVReader: column headings not found. Ensure column headings exist in OIF output and first column is ObjID."
+            "ERROR: CSVReader: column headings not found. Ensure column headings exist in input files and first column is ObjID."
         )
         sys.exit(
-            "ERROR: OIFCSVReader: column headings not found. Ensure column headings exist in OIF output and first column is ObjID."
+            "ERROR: CSVReader: column headings not found. Ensure column headings exist in input files and first column is ObjID."
         )
         return 0
 
