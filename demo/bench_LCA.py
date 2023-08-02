@@ -5,19 +5,20 @@ import pstats
 
 from pstats import SortKey
 from sorcha.sorcha import runLSSTPostProcessing  # noqa: F401
+from sorcha_community_utils.lightcurve.sinusoidal.sinusoidal_lightcurve import SinusoidalLightCurve
 import argparse
 
 if __name__ == "__main__":  # pragma: no cover
     # Parse the command line arguments.
     parser = argparse.ArgumentParser()
-    parser.add_argument("--object_type", default="mba", help="The type of objects to test (mba or tno).")
+    parser.add_argument("--object_type", default="tno", help="The type of objects to test (mba or tno).")
     args = parser.parse_args()
 
     cmd_args_dict = {
         "paramsinput": f"./{args.object_type}_sample_1000_physical_lca.csv",
         "orbinfile": f"./{args.object_type}_sample_1000_orbit.csv",
         "oifoutput": f"./{args.object_type}_sample_1000_eph.csv",
-        "configfile": "./OIFconfig_benchmark.ini",
+        "configfile": "./OIFconfig_lca.ini",
         "outpath": "../data/out",
         "makeTemporaryEphemerisDatabase": False,
         "readTemporaryEphemerisDatabase": False,
