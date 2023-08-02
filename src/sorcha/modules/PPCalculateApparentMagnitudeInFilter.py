@@ -55,18 +55,22 @@ def PPCalculateApparentMagnitudeInFilter(
 
     # first, get H, rho, delta and alpha as ndarrays
     # delta, rho and alpha are converted to au from kilometres
-    delta = padain["AstRange(km)"].values / 1.495978707e8
+    delta = (padain["AstRange(km)"].values * u.km).to(u.au).value
 
     try:
-        rho = padain["Ast-Sun(km)"] / 1.495978707e8
+        rho = (padain["Ast-Sun(km)"].values * u.km).to(u.au).value
     except KeyError:
         rho = (
-            np.sqrt(
-                padain["Ast-Sun(J2000x)(km)"].values ** 2
-                + padain["Ast-Sun(J2000y)(km)"].values ** 2
-                + padain["Ast-Sun(J2000z)(km)"].values ** 2
+            (
+                np.sqrt(
+                    padain["Ast-Sun(J2000x)(km)"].values ** 2
+                    + padain["Ast-Sun(J2000y)(km)"].values ** 2
+                    + padain["Ast-Sun(J2000z)(km)"].values ** 2
+                )
+                * u.km
             )
-            / 1.495978707e8
+            .to(u.au)
+            .value
         )
 
     alpha = padain["Sun-Ast-Obs(deg)"].values
