@@ -19,6 +19,7 @@
 
 import numpy as np
 import logging
+import astropy.units as u
 from sorcha.modules import PPTrailingLoss
 from sorcha.modules import PPRandomizeMeasurements
 from sorcha.modules.PPSNRLimit import PPSNRLimit
@@ -155,7 +156,7 @@ def uncertainties(
         detDF[filterMagName] + dMag, detDF[limMagName], FWHMeff=detDF[seeingName] * 1000, output_units="mas"
     )
     photometric_sigma = calcPhotometricUncertainty(SNR)
-    astrSigDeg = astrSig / 3600.0 / 1000.0
+    astrSigDeg = (astrSig.values * u.mas).to(u.deg).value
 
     return (astrSigDeg, photometric_sigma, SNR)
 
@@ -207,21 +208,17 @@ def calcAstrometricUncertainty(
 
     """
 
-    # external functions
-    power = np.power
-    sqrt = np.sqrt
-
     # first compute SNR
     rgamma = 0.039
-    xval = power(10, 0.4 * (mag - m5))
-    SNR = 1.0 / sqrt((0.04 - rgamma) * xval + rgamma * xval * xval)
+    xval = np.power(10, 0.4 * (mag - m5))
+    SNR = 1.0 / np.sqrt((0.04 - rgamma) * xval + rgamma * xval * xval)
     # random astrometric error for a single visit
     error_rand = calcRandomAstrometricErrorPerCoord(FWHMeff, SNR, astErrCoeff)
     # random astrometric error for nvisit observations
     if nvisit > 1:
         error_rand = error_rand / sqrt(nvisit)
     # add systematic error floor:
-    astrom_error = sqrt(error_sys * error_sys + error_rand * error_rand)
+    astrom_error = np.sqrt(error_sys * error_sys + error_rand * error_rand)
 
     if output_units == "arcsec":
         astrom_error = astrom_error / 1000
@@ -294,10 +291,7 @@ def calcPhotometricUncertainty(snr):
 
     """
 
-    # external functions
-    log10 = np.log10
-
     # see e.g. www.ucolick.org/~bolte/AY257/s_n.pdf section 3.1
-    magerr = 2.5 * log10(1.0 + 1.0 / snr)
+    magerr = 2.5 * np.log10(1.0 + 1.0 / snr)
 
     return magerr
