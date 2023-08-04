@@ -11,7 +11,6 @@ from .PPCalculateSimpleCometaryMagnitude import PPCalculateSimpleCometaryMagnitu
 def PPCalculateApparentMagnitudeInFilter(
     padain,
     function,
-    mainfilter,
     observing_filters,
     colname="TrailedSourceMag",
     lightcurve_choice=None,
@@ -76,40 +75,31 @@ def PPCalculateApparentMagnitudeInFilter(
     alpha = padain["Sun-Ast-Obs(deg)"].values
     H = padain[H_col].values
 
-    # calculating light curve offset
-    if LC_METHODS.get(lightcurve_choice, False):
-        lc_model = LC_METHODS[lightcurve_choice]()
-        lc_shift = lc_model.compute(padain)
-        padain["Delta_m"] = lc_shift
-        Heff = H + lc_shift
-    else:
-        Heff = H
-
     # calculate reduced magnitude and contribution from phase function
     # reduced magnitude = H + 2.5log10(f(phi))
     if function == "HG1G2":
         G1 = padain["G1"].values
         G2 = padain["G2"].values
-        HGm = HG1G2(H=Heff * u.mag, G1=G1, G2=G2)
+        HGm = HG1G2(H=H * u.mag, G1=G1, G2=G2)
         reduced_mag = HGm(alpha * u.deg).value
 
     elif function == "HG":
         G = padain["GS"].values
-        HGm = HG(H=Heff * u.mag, G=G)
+        HGm = HG(H=H * u.mag, G=G)
         reduced_mag = HGm(alpha * u.deg).value
 
     elif function == "HG12":
         G12 = padain["G12"].values
-        HGm = HG12_Pen16(H=Heff * u.mag, G12=G12)
+        HGm = HG12_Pen16(H=H * u.mag, G12=G12)
         reduced_mag = HGm(alpha * u.deg).value
 
     elif function == "linear":
         S = padain["S"].values
-        HGm = LinearPhaseFunc(H=Heff * u.mag, S=S * u.mag / u.deg)
+        HGm = LinearPhaseFunc(H=H * u.mag, S=S * u.mag / u.deg)
         reduced_mag = HGm(alpha * u.deg).value
 
     elif function == "none":
-        reduced_mag = Heff.copy()
+        reduced_mag = H.copy()
 
     else:
         pplogger.error(
@@ -121,6 +111,14 @@ def PPCalculateApparentMagnitudeInFilter(
 
     # apparent magnitude equation: see equation 1 in Schwamb et al. 2023
     padain[colname] = 5.0 * np.log10(delta) + 5.0 * np.log10(rho) + reduced_mag
+
+    # calculating light curve offset
+    # the light curve is being added in as an offset to the apparent magnitude
+    if lightcurve_choice and LC_METHODS.get(lightcurve_choice, False):
+        lc_model = LC_METHODS[lightcurve_choice]()
+        lc_shift = lc_model.compute(padain)
+        padain["Delta_m"] = lc_shift
+        padain[colname] = padain[colname] + lc_shift
 
     # if comet activity is turned on in configs, this calculates the apparent
     # magnitude of the coma and combines it with the "nucleus" apparent magnitude
