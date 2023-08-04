@@ -1,23 +1,16 @@
 from abc import ABC, abstractmethod
-from typing import List
-import numpy as np
 import pandas as pd
+import numpy as np
 
 
-class AbstractLightCurve(ABC):
-    """Abstract base class for lightcurve models"""
+class AbstractCometaryActivity(ABC):
+    """Abstract base class for cometary activity models"""
 
-    def __init__(self, required_column_names: List[str] = []) -> None:
+    def __init__(self) -> None:
         """Abstract base class accepts a list of column names that are required
         to be present in the Pandas dataframe passed to the ``compute`` method.
-
-        Parameters
-        ----------
-        required_column_names : list, optional
-            The list of columns in ``observations`` dataframe that are required
-            for the model calculation, by default []
         """
-        self.required_column_names = required_column_names
+        self.required_column_names = []
 
     @abstractmethod
     def compute(self, df: pd.DataFrame) -> np.array:

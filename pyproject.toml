@@ -105,7 +105,6 @@ write_to = "src/sorcha/_version.py"
 [tool.pytest.ini_options]
 testpaths = [
     "tests",
-    "src/sorcha",
 ]
 
 [tool.black]
