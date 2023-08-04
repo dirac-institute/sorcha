@@ -77,7 +77,7 @@ def PPCalculateApparentMagnitudeInFilter(
     H = padain[H_col].values
 
     # calculating light curve offset
-    if LC_METHODS.get(lightcurve_choice, False):
+    if lightcurve_choice and LC_METHODS.get(lightcurve_choice, False):
         lc_model = LC_METHODS[lightcurve_choice]()
         lc_shift = lc_model.compute(padain)
         padain["Delta_m"] = lc_shift
