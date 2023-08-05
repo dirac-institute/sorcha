@@ -61,7 +61,7 @@ authors:
     affiliation: Queen's University Belfast
     orcid: 'https://orcid.org/0000-0002-1229-2499'
 repository-code: >-
-  https://github.com/dirac-institute/survey_simulator_post_processing
+  https://github.com/dirac-institute/sorcha
 abstract: >-
   sorcha is a survey simulator post-processing layer
   built for the upcoming Legacy Survey of Space and Time.
