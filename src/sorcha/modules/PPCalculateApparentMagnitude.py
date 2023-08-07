@@ -60,7 +60,6 @@ def PPCalculateApparentMagnitude(
     observations = PPCalculateApparentMagnitudeInFilter(
         observations,
         phasefunction,
-        mainfilter,
         observing_filters,
         lightcurve_choice=lightcurve_choice,
         object_type=object_type,
