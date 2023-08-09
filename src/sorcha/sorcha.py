@@ -32,6 +32,7 @@ from sorcha.readers.CSVReader import CSVDataReader
 from sorcha.readers.OIFReader import OIFDataReader
 from sorcha.readers.OrbitAuxReader import OrbitAuxReader
 
+from sorcha.activity.activity_registration import update_activity_subclasses
 from sorcha.lightcurves.lightcurve_registration import update_lc_subclasses
 
 from sorcha.utilities.sorchaArguments import sorchaArguments
@@ -56,6 +57,7 @@ def runLSSTPostProcessing(cmd_args):
     """
 
     update_lc_subclasses()
+    update_activity_subclasses()
 
     # Initialise argument parser and assign command line arguments
 

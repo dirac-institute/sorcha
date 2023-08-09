@@ -25,11 +25,11 @@ def PPCalculateSimpleCometaryMagnitude(
         The photometric filters the observation is taken in (the filter
         requested that the coma magnitude be calculated for)
     rho : List[float]
-        Heliocentric distance
+        Heliocentric distance [units au]
     delta : List[float]
-        Distance to Earth
+        Distance to Earth [units au]
     alpha : List[float]
-
+        Phase angle [units degrees]
     activity_choice : str, optional
         The activity model to use, by default None
 

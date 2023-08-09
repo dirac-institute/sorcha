@@ -14,7 +14,7 @@ def PPCalculateApparentMagnitudeInFilter(
     observing_filters,
     colname="TrailedSourceMag",
     lightcurve_choice=None,
-    object_type="None",
+    cometary_activity_choice=None,
 ):
     """
     This task calculates the apparent brightness of an object at a given pointing
@@ -123,8 +123,10 @@ def PPCalculateApparentMagnitudeInFilter(
     # if comet activity is turned on in configs, this calculates the apparent
     # magnitude of the coma and combines it with the "nucleus" apparent magnitude
     # as calculated above
-    if object_type == "comet":
-        padain = PPCalculateSimpleCometaryMagnitude(padain, observing_filters, rho, delta, alpha)
+    if cometary_activity_choice:
+        padain = PPCalculateSimpleCometaryMagnitude(
+            padain, observing_filters, rho, delta, alpha, activity_choice=cometary_activity_choice
+        )
 
     padain = padain.reset_index(drop=True)
 

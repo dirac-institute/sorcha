@@ -4,6 +4,22 @@ import sys
 import numpy as np
 import configparser
 
+from sorcha.lightcurves.lightcurve_registration import LC_METHODS
+from sorcha.activity.activity_registration import CA_METHODS
+
+
+def log_error_and_exit(message: str) -> None:
+    """Log a message to the error output file and terminal, then exit.
+
+    Parameters
+    ----------
+    message : str
+        The error message to be logged to the error output file.
+    """
+
+    logging.error(message)
+    sys.exit(message)
+
 
 def PPGetOrExit(config, section, key, message):
     """
@@ -360,12 +376,16 @@ def PPConfigFileParser(configfile, survey_name):
 
     # ACTIVITY
 
-    config_dict["comet_activity"] = PPGetOrExit(
-        config, "ACTIVITY", "comet_activity", "ERROR: no comet activity specified."
-    ).lower()
-    if config_dict["comet_activity"] not in ["comet", "none"]:
-        pplogger.error('ERROR: comet_activity must be "comet" or "none".')
-        sys.exit('ERROR: comet_activity must be "comet" or "none".')
+    config_dict["comet_activity"] = config.get("ACTIVITY", "comet_activity", fallback=None)
+    config_dict["comet_activity"] = (
+        None if config_dict["comet_activity"] == "none" else config_dict["comet_activity"]
+    )
+
+    # If the user defined a specific comet_activity value, but the model has not been registered, exit the program.
+    if config_dict["comet_activity"] and config_dict["comet_activity"] not in CA_METHODS:
+        log_error_and_exit(
+            f"The requested comet activity model, '{config_dict['comet_activity']}', is not registered. Available comet activity models are: {list(CA_METHODS.keys())}"
+        )
 
     # FILTERS
 
@@ -646,7 +666,13 @@ def PPConfigFileParser(configfile, survey_name):
         config_dict["rng_seed"] = None
 
     config_dict["lc_model"] = config.get("EXPERT", "lc_model", fallback=None)
-    config_dict["lc_model"] = None if config_dict["lc_model"] == "None" else config_dict["lc_model"]
+    config_dict["lc_model"] = None if config_dict["lc_model"] == "none" else config_dict["lc_model"]
+
+    # If the user defined a lightcurve model, but the model has not been registered, exit the program.
+    if config_dict["lc_model"] and config_dict["lc_model"] not in LC_METHODS:
+        log_error_and_exit(
+            f"The requested light curve model, '{config_dict['lc_model']}', is not registered. Available lightcurve options are: {list(LC_METHODS.keys())}"
+        )
 
     return config_dict
 
