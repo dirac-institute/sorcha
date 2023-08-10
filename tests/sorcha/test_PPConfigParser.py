@@ -39,7 +39,7 @@ def test_PPConfigFileParser(setup_and_teardown_for_PPConfigFileParser):
         "ephemerides_type": "oif",
         "pointing_database": "./baseline_10klines_2.0.db",
         "pointing_sql_query": "SELECT observationId, observationStartMJD, filter, seeingFwhmGeom, seeingFwhmEff, fiveSigmaDepth, fieldRA, fieldDec, rotSkyPos FROM observations order by observationId",
-        "comet_activity": "none",
+        "comet_activity": None,
         "observing_filters": ["r", "g", "i", "z"],
         "phase_function": "HG",
         "trailing_losses_on": True,

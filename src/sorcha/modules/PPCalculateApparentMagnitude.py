@@ -10,7 +10,7 @@ def PPCalculateApparentMagnitude(
     mainfilter,
     othercolours,
     observing_filters,
-    object_type,
+    cometary_activity_choice=None,
     lightcurve_choice=None,
     verbose=False,
 ):
@@ -30,7 +30,7 @@ def PPCalculateApparentMagnitude(
 
     observing_filters (list of strings): list of observation filters of interest.
 
-    object_type (string): type of object for cometary activity. Either 'comet' or 'none'.
+    cometary_activity_choice (string): type of object for cometary activity. Either 'comet' or 'none'.
 
     lc_choice (string): choice of lightcurve model. Default None
 
@@ -62,7 +62,7 @@ def PPCalculateApparentMagnitude(
         phasefunction,
         observing_filters,
         lightcurve_choice=lightcurve_choice,
-        object_type=object_type,
+        cometary_activity_choice=cometary_activity_choice,
     )
 
     return observations

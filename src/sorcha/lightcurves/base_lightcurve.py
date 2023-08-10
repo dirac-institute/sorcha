@@ -1,7 +1,10 @@
 from abc import ABC, abstractmethod
 from typing import List
+import logging
 import numpy as np
 import pandas as pd
+
+logger = logging.getLogger(__name__)
 
 
 class AbstractLightCurve(ABC):
@@ -42,7 +45,29 @@ class AbstractLightCurve(ABC):
         """
         for colname in self.required_column_names:
             if colname not in df.columns:
-                raise (ValueError, f"Input dataframe is missing column %{colname}")
+                err_msg = f"Input dataframe is missing column %{colname}"
+                self._log_error_message(error_msg=err_msg)
+                raise (ValueError, err_msg)
+
+    def _log_exception(self, exception: Exception) -> None:
+        """Log an error message from an exception to the error log file
+
+        Parameters
+        ----------
+        exception : Exception
+            The exception with a string to appended to the error log
+        """
+        self._log_error_message(str(exception))
+
+    def _log_error_message(self, error_msg: str) -> None:
+        """Log a specific error string to the error log file
+
+        Parameters
+        ----------
+        error_msg : str
+            The string to be appended to the error log
+        """
+        logger.error(error_msg)
 
     @staticmethod
     @abstractmethod
