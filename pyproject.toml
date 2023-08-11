@@ -29,6 +29,10 @@ dependencies = [
     "sbpy",
     "tables",
     "difi == 1.2rc3",
+    "spiceypy",
+    "healpy",
+    "assist",
+    "rebound"
 ]
 
 [project.scripts]
