@@ -87,7 +87,6 @@ def convertS3morbit(line):
     return desig, q, e, incl, longnode, argperi, t_p, H, Epoch_MJD
 
 def mjd_tai_to_epoch(mjd_tai):
-    spice.furnsh()
     jd = mjd_tai + 2400000.5 + 32.184/(24*60*60)
     epoch_str = 'JD %lf TDT' % jd
     epoch = spice.j2000()+spice.str2et(epoch_str)/(24*60*60)
