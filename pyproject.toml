@@ -32,7 +32,8 @@ dependencies = [
     "spiceypy",
     "healpy",
     "assist",
-    "rebound"
+    "rebound",
+    "pooch"
 ]
 
 [project.scripts]
