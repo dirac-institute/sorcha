@@ -22,15 +22,15 @@ def convert_mpc_epoch(epoch):
     if len(epoch) != 5:
         raise ValueError("invalid MPC epoch provided (length).")
 
-    match epoch[0]:
-        case "I":
-            century = 1800
-        case "J":
-            century = 1900
-        case "K":
-            century = 2000
-        case _:
-            raise ValueError("invalid MPC epoch provided (century).")
+    century_char = epoch[0]
+    if century_char == "I":
+        century = 1800
+    elif century_char == "J":
+        century = 1900
+    elif century_char == "K":
+        century = 2000
+    else:
+        raise ValueError("invalid MPC epoch provided (century).")
     year = century + int(epoch[1:3])
 
     month = epoch[3]
@@ -69,8 +69,8 @@ def convertMPCorbit(line, ephem, sun_dict):
     except ValueError:
         G = "-----"
 
-    Epoch = convert_mpc_epoch(line[20:25])
-    epoch = "%d-%02d-%02d TDB" % Epoch
+    epoch_tuple = convert_mpc_epoch(line[20:25])
+    epoch = "%d-%02d-%02d TDB" % epoch_tuple
     epoch = spice.j2000() + spice.str2et(epoch) / (24 * 60 * 60)
 
     desig = desig.strip()
