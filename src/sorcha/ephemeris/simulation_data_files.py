@@ -9,6 +9,7 @@ EARTH_HIGH_PRECISION = "earth_latest_high_prec.bpc"
 JPL_PLANETS = "linux_p1550p2650.440"
 JPL_SMALL_BODIES = "sb441-n16.bsp"
 LEAP_SECONDS = "naif0012.tls"
+META_KERNEL = "meta_kernel.txt"
 OBSERVATORY_CODES = "ObsCodes.json"
 OBSERVATORY_CODES_COMPRESSED = "ObsCodes.json.gz"
 ORIENTATION_CONSTANTS = "pck00010.pck"
@@ -35,16 +36,55 @@ DATA_FILE_LIST = [
     JPL_PLANETS,
     JPL_SMALL_BODIES,
     LEAP_SECONDS,
+    META_KERNEL,
     OBSERVATORY_CODES,
     OBSERVATORY_CODES_COMPRESSED,
     ORIENTATION_CONSTANTS,
 ]
 
-# Used by Pooch to define which files will be tracked and retrievable
+# List of files that need to be downloaded
+DATA_FILES_TO_DOWNLOAD = [
+    DE440S,
+    EARTH_PREDICT,
+    EARTH_HISTORICAL,
+    EARTH_HIGH_PRECISION,
+    JPL_PLANETS,
+    JPL_SMALL_BODIES,
+    LEAP_SECONDS,
+    OBSERVATORY_CODES_COMPRESSED,
+    ORIENTATION_CONSTANTS,
+]
+
+# List of kernels ordered from least to most precise - used to assemble META_KERNEL file
+ORDERED_KERNEL_FILES = [
+    LEAP_SECONDS,
+    EARTH_HISTORICAL,
+    EARTH_PREDICT,
+    ORIENTATION_CONSTANTS,
+    DE440S,
+    EARTH_HIGH_PRECISION,
+]
+
+# Default Pooch registry to define which files will be tracked and retrievable
 REGISTRY = {data_file: None for data_file in DATA_FILE_LIST}
 
 
-def make_retriever(directory_path: str = None) -> pooch.Pooch:
+def make_retriever(directory_path: str = None, registry: dict = REGISTRY) -> pooch.Pooch:
+    """Helper function that will create a Pooch object to track and retrieve files.
+
+    Parameters
+    ----------
+    directory_path : str, optional
+        The base directory to place all downloaded files, by default None
+    registry : dict, optional
+        A dictionary of file names to SHA hashes. Generally we'll not use SHA=None
+        because the files we're tracking change frequently, by default REGISTRY
+
+    Returns
+    -------
+    pooch.Pooch
+        The Pooch object used to track and retrieve files.
+    """
     dir_path = pooch.os_cache("sorcha")
     if directory_path:
         dir_path = directory_path
@@ -53,6 +93,6 @@ def make_retriever(directory_path: str = None) -> pooch.Pooch:
         path=dir_path,
         base_url="",
         urls=URLS,
-        registry=REGISTRY,
+        registry=registry,
         retry_if_failed=1,
     )
