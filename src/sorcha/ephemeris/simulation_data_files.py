@@ -9,7 +9,8 @@ EARTH_HIGH_PRECISION = "earth_latest_high_prec.bpc"
 JPL_PLANETS = "linux_p1550p2650.440"
 JPL_SMALL_BODIES = "sb441-n16.bsp"
 LEAP_SECONDS = "naif0012.tls"
-OBSERVATORY_CODES = "ObsCodes.json.gz"
+OBSERVATORY_CODES = "ObsCodes.json"
+OBSERVATORY_CODES_COMPRESSED = "ObsCodes.json.gz"
 ORIENTATION_CONSTANTS = "pck00010.pck"
 
 # Dictionary of filename: url
@@ -21,7 +22,7 @@ URLS = {
     JPL_PLANETS: "https://ssd.jpl.nasa.gov/ftp/eph/planets/Linux/de440/linux_p1550p2650.440",
     JPL_SMALL_BODIES: "https://ssd.jpl.nasa.gov/ftp/eph/small_bodies/asteroids_de441/sb441-n16.bsp",
     LEAP_SECONDS: "https://naif.jpl.nasa.gov/pub/naif/generic_kernels/lsk/naif0012.tls",
-    OBSERVATORY_CODES: "https://minorplanetcenter.net/Extended_Files/obscodes_extended.json.gz",
+    OBSERVATORY_CODES_COMPRESSED: "https://minorplanetcenter.net/Extended_Files/obscodes_extended.json.gz",
     ORIENTATION_CONSTANTS: "https://naif.jpl.nasa.gov/pub/naif/generic_kernels/pck/pck00010.tpc",
 }
 
@@ -35,6 +36,7 @@ DATA_FILE_LIST = [
     JPL_SMALL_BODIES,
     LEAP_SECONDS,
     OBSERVATORY_CODES,
+    OBSERVATORY_CODES_COMPRESSED,
     ORIENTATION_CONSTANTS,
 ]
 

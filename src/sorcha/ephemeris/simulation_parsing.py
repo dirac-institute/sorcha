@@ -1,8 +1,10 @@
+import json
 import numpy as np
 import spiceypy as spice
 
 from sorcha.ephemeris.simulation_constants import GMSUN
 from sorcha.ephemeris.simulation_geometry import ecliptic_to_equatorial
+from sorcha.ephemeris.simulation_data_files import OBSERVATORY_CODES, make_retriever
 
 
 def convert_mpc_epoch(epoch):
@@ -136,63 +138,35 @@ def mjd_tai_to_epoch(mjd_tai):
 
 
 class Observatory:
-    def __init__(self, oc_file="ObsCodes.txt"):
+    def __init__(self, oc_file=OBSERVATORY_CODES):
         self.observatoryPositionCache = {}  # previously calculated positions to speed up the process
 
-        # Convert ObsCodes.txt lines to geocentric x,y,z positions and
+        retriever = make_retriever()
+        obs_file_path = retriever.fetch(oc_file)
+
+        # Convert ObsCodes.json lines to geocentric x,y,z positions and
         # store them in a dictionary.  The keys are the observatory
         # code strings, and the values are (x,y,z) tuples.
         # Spacecraft and other moving observatories have (None,None,None)
         # as position.
-        ObservatoryXYZ = {}
-        with open(oc_file, "r") as f:
-            next(f)
-            for line in f:
-                code, longitude, rhocos, rhosin, Obsname = self.parseObsCode(line)
-                if longitude and rhocos and rhosin:
-                    rhocos, rhosin, longitude = float(rhocos), float(rhosin), float(longitude)
-                    longitude *= np.pi / 180.0
-                    x = rhocos * np.cos(longitude)
-                    y = rhocos * np.sin(longitude)
-                    z = rhosin
-                    ObservatoryXYZ[code] = (x, y, z)
-                else:
-                    ObservatoryXYZ[code] = (None, None, None)
-        self.ObservatoryXYZ = ObservatoryXYZ
+        self.ObservatoryXYZ = {}
+        with open(obs_file_path) as file_object:
+            obs = json.load(file_object)
 
-    # Parses a line from the MPC's ObsCode.txt file
-    def parseObsCode(self, line):
-        code, longitude, rhocos, rhosin, ObsName = (
-            line[0:3],
-            line[4:13],
-            line[13:21],
-            line[21:30],
-            line[30:].rstrip("\n"),
-        )
-        if longitude.isspace():
-            longitude = None
-        if rhocos.isspace():
-            rhocos = None
-        if rhosin.isspace():
-            rhosin = None
-        return code, longitude, rhocos, rhosin, ObsName
+        for obs_name, obs_location in obs.items():
+            self.ObservatoryXYZ[obs_name] = self.convert_to_geocentric(obs_location)
 
-    # This routine parses the section of the second line that encodes the geocentric satellite position.
-    def parseXYZ(xyz):
-        try:
-            xs = xyz[0]
-            x = float(xyz[1:11])
-            if xs == "-":
-                x = -x
-            ys = xyz[12]
-            y = float(xyz[13:23])
-            if ys == "-":
-                y = -y
-            zs = xyz[24]
-            z = float(xyz[25:])
-            if zs == "-":
-                z = -z
-        except:
-            print("error parseXYZ")
-            print(xyz)
-        return x, y, z
+    def convert_to_geocentric(self, obs_location: dict) -> tuple:
+        returned_tuple = (None, None, None)
+        if (
+            obs_location.get("Longitude", False)
+            and obs_location.get("cos", False)
+            and obs_location.get("sin", False)
+        ):
+            longitude = obs_location["Longitude"] * np.pi / 180.0
+            x = obs_location["cos"] * np.cos(longitude)
+            y = obs_location["cos"] * np.sin(longitude)
+            z = obs_location["sin"]
+            returned_tuple = (x, y, z)
+
+        return returned_tuple
