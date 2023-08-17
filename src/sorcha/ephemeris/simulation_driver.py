@@ -6,6 +6,4 @@ def create_ephemeris():
     create_assist_ephemeris()
     furnish_spiceypy()
 
-    
-
     spice.kclear()

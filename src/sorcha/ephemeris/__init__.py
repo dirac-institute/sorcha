@@ -7,6 +7,13 @@ from .simulation_constants import (
     OBLIQUITY_ECLIPTIC,
     create_ecl_to_eq_rotation_matrix,
 )
+from .simulation_data_files import (
+    DATA_FILE_LIST,
+    JPL_PLANETS,
+    JPL_SMALL_BODIES,
+    DE440S,
+    make_retriever,
+)
 from .simulation_geometry import ecliptic_to_equatorial, integrate_light_time, ra_dec2vec
 from .simulation_parsing import (
     convert_mpc_epoch,
@@ -16,11 +23,6 @@ from .simulation_parsing import (
     Observatory,
 )
 from .simulation_setup import (
-    RETRIEVER,
-    JPL_PLANETS,
-    JPL_SMALL_BODIES,
-    DE440S,
     create_assist_ephemeris,
-    retrieve_file,
     furnish_spiceypy,
 )
