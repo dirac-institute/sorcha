@@ -33,7 +33,8 @@ dependencies = [
     "healpy",
     "assist",
     "rebound",
-    "pooch"
+    "pooch",
+    "tqdm",
 ]
 
 [project.scripts]
@@ -44,6 +45,7 @@ makeMultiConfigOIF = "sorcha.utilities.makeMultiConfigOIF:main"
 makeSLURMscript = "sorcha.utilities.makeSLURMscript:main"
 createResultsSQLDatabase = "sorcha.utilities.createResultsSQLDatabase:main"
 createTemporaryDatabases = "sorcha.utilities.createTemporaryDatabases:main"
+bootstrap_sorcha_data_files = "sorcha.utilities.retrieve_ephemeris_data_files:main"
 
 [project.urls]
 "Documentation" = "https://sorcha.readthedocs.io/en/latest/"

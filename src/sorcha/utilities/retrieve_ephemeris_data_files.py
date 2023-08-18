@@ -45,15 +45,17 @@ def _remove_files(retriever: pooch.Pooch) -> None:
         os.remove(file_path)
 
 
-def _build_meta_kernel_file(meta_kernel_file_path: str) -> None:
+def _build_meta_kernel_file(retriever: pooch.Pooch) -> None:
     """Builds a specific text file that will be fed into `spiceypy` that defines
     the list of spice kernel to load, as well as the order to load them.
 
     Parameters
     ----------
-    meta_kernel_file_path: str
-        The file path for the resulting output text file.
+    retriever : pooch.Pooch
+        Pooch object that maintains the registry of files to download
     """
+    # build meta_kernel file path
+    meta_kernel_file_path = os.path.join(retriever.abspath, META_KERNEL)
 
     # build a meta_kernel.txt file
     with open(meta_kernel_file_path, "w") as meta_file:
@@ -65,7 +67,7 @@ def _build_meta_kernel_file(meta_kernel_file_path: str) -> None:
         meta_file.write("\\begintext\n")
 
 
-if __name__ == "__main__":
+def main():
     # parse the input arguments
     parser = argparse.ArgumentParser(
         description="Fetch the NAIF high precision EOP kernel file store its checksum."
@@ -99,6 +101,8 @@ if __name__ == "__main__":
         executor.map(fetch_partial, DATA_FILES_TO_DOWNLOAD)
 
     # build the meta_kernel.txt file
-    # build meta_kernel file path
-    meta_kernel_file_path = os.path.join(retriever.abspath, META_KERNEL)
-    _build_meta_kernel_file(meta_kernel_file_path)
+    _build_meta_kernel_file(retriever)
+
+
+if __name__ == "__main__":
+    main()
