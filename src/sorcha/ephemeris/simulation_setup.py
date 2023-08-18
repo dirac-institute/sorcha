@@ -6,7 +6,7 @@ import rebound
 from collections import defaultdict
 import assist
 
-from sorcha.ephemeris.simulation_data_files import make_retriever, DE440S, JPL_PLANETS, JPL_SMALL_BODIES
+from sorcha.ephemeris.simulation_data_files import make_retriever, DE440S, JPL_PLANETS, JPL_SMALL_BODIES, META_KERNEL
 
 # TODO: this should be handled by the `simulation_data_files` module
 dir_path = "/Users/maxwest/notebooks/assist_plus_rebound/input_for_mpchecker"
@@ -36,7 +36,7 @@ def furnish_spiceypy():
 
     # ! The following is a place holder
     retriever = make_retriever()
-    kernel_1 = retriever.fetch(DE440S)
+    kernel_1 = retriever.fetch(META_KERNEL)
     spice.furnsh(kernel_1)
 
 
