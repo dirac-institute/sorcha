@@ -17,14 +17,51 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-
+import logging
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+import sys
 
 deg2rad = np.radians
 sin = np.sin
 cos = np.cos
+
+
+def distToSegment(points, x0, y0, x1, y1):
+    """Compute the distance from each point to the line segment defined by
+    the points (x0, y0) and (x1, y1).
+
+    Parameters:
+    -----------
+    points (array): array of shape (2, n) describing the corners of the sensor.
+
+    x0 (float): the x coordinate of the first end of the segment.
+
+    y0 (float): the y coordinate of the first end of the segment.
+
+    x1 (float): the x coordinate of the second end of the segment.
+
+    y1 (float): the y coordinate of the second end of the segment.
+
+    Returns:
+    --------
+    dist (array): array of length n storing the distances.
+    """
+    # Handle the case where the segment is a point: (x0 == x1) and (y0 == y1)
+    len_sq = (x1 - x0) * (x1 - x0) + (y1 - y0) * (y1 - y0)
+    if len_sq == 0.0:
+        return np.sqrt((points[0] - x0) * (points[0] - x0) + (points[1] - y0) * (points[1] - y0))
+
+    # Find the closest point on the line segment.
+    t = ((points[0] - x0) * (x1 - x0) + (points[1] - y0) * (y1 - y0)) / len_sq
+    t[t < 0.0] = 0.0
+    t[t > 1.0] = 1.0
+    proj_x = x0 + (x1 - x0) * t
+    proj_y = y0 + (y1 - y0) * t
+
+    # Compute the distances to the closest points on the line segment.
+    return np.sqrt((points[0] - proj_x) * (points[0] - proj_x) + (points[1] - proj_y) * (points[1] - proj_y))
 
 
 class Detector:
@@ -70,7 +107,7 @@ class Detector:
         self.centerx = np.sum(self.x) / len(self.x)
         self.centery = np.sum(self.y) / len(self.y)
 
-    def ison(self, point, ϵ=10.0 ** (-11), plot=False):
+    def ison(self, point, ϵ=10.0 ** (-11), edge_thresh=None, plot=False):
         """
         Determines whether a point (or array of points) falls on the
         detector.
@@ -81,36 +118,51 @@ class Detector:
 
         ϵ (float): threshold for whether point is on detector.
 
+        edge_thresh (float, optional): The distance (in angular units) from
+            the edge for a point to be counted. Removes points that are too
+            close to the edge.
+
         plot (Boolean): whether to plot the detector and the point.
 
         Returns:
         ----------
         ison (array): indices of points in point array that fall on the sensor.
         """
-
         # points needs to be shape 2,n
         # if single point, needs to be an array of single element arrays
+        if len(point.shape) != 2 or point.shape[0] != 2:
+            pplogger = logging.getLogger(__name__)
+            pplogger.error(f"ERROR: Detector.ison invalid array {point.shape}")
+            sys.exit(f"ERROR: Detector.ison invalid array {point.shape}")
 
         # check whether point is in circle bounding the detector
         r2 = np.max((self.x - self.centerx) ** 2 + (self.y - self.centery) ** 2)
         selectedidx = np.where((point[0] - self.centerx) ** 2 + (point[1] - self.centery) ** 2 <= r2)[0]
 
-        selected = point[:, selectedidx]
-        xselected = point[0][selectedidx]
-        yselected = point[1][selectedidx]
-
         # check whether selected fall on the detector
         # compare true area to the segmented area
+        selectedidx = selectedidx[np.abs(self.segmentedArea(point[:, selectedidx]) - self.trueArea()) <= ϵ]
 
-        detectedidx = np.where(np.abs(self.segmentedArea(selected) - self.trueArea()) <= ϵ)[0]
+        # If there is a threshold to the edge, further filter selectedidx.
+        if edge_thresh is not None and len(selectedidx) > 0:
+            n = len(self.x)
+            for i in range(n):  # test each edge
+                dist_to_edge = distToSegment(
+                    point[:, selectedidx],
+                    self.x[i],
+                    self.y[i],
+                    self.x[(i + 1) % n],
+                    self.y[(i + 1) % n],
+                )
+                selectedidx = selectedidx[dist_to_edge > edge_thresh]
 
         if plot:
-            x = xselected[detectedidx]
-            y = yselected[detectedidx]
+            x = point[0][selectedidx]
+            y = point[1][selectedidx]
 
             plt.scatter(x, y, color="red", s=3.0)
 
-        return selectedidx[detectedidx]
+        return selectedidx
 
     def trueArea(self):
         """
@@ -394,6 +446,7 @@ class Footprint:
         ra_name_field="fieldRA",
         dec_name_field="fieldDec",
         rot_name_field="rotSkyPos",
+        edge_thresh=None,
     ):
         """
         Determine whether detections fall on the sensors defined by the
@@ -407,6 +460,8 @@ class Footprint:
         *_name (string): column names for object RA and Dec and field name.
 
         *_name_field (string): column names for field RA and Dec and rotation.
+
+        edge_thresh (float, optional): An angular threshold for dropping pixels too close to the edge.
 
         Returns:
         ----------
@@ -449,7 +504,7 @@ class Footprint:
         detectorId = []
         for detector in self.detectors:
             if True:
-                stuff = detector.ison(points)
+                stuff = detector.ison(points, edge_thresh=edge_thresh)
                 detected.append(stuff)
                 detectorId.append([i] * len(stuff))
                 i += 1
