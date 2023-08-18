@@ -2,9 +2,11 @@ import json
 import numpy as np
 import spiceypy as spice
 
-from sorcha.ephemeris.simulation_constants import GMSUN
+from sorcha.ephemeris.simulation_constants import GMSUN, RADIUS_EARTH_KM
 from sorcha.ephemeris.simulation_geometry import ecliptic_to_equatorial
 from sorcha.ephemeris.simulation_data_files import OBSERVATORY_CODES, make_retriever
+
+from . import kepcart as kc
 
 
 def convert_mpc_epoch(epoch):
@@ -60,7 +62,7 @@ def convert_mpc_epoch(epoch):
     return year, month, day
 
 
-def convertMPCorbit(line, ephem, sun_dict):
+def convert_mpc_orbit(line, ephem, sun_dict=None):
     desig = line[0:7]
     try:
         H = float(line[8:13])
@@ -79,9 +81,9 @@ def convertMPCorbit(line, ephem, sun_dict):
     meananom = float(line[26:35])
     argperi = float(line[37:46])
     longnode = float(line[48:57])
-    incl = float(line[59:68])
-    e = float(line[70:79])
-    n = float(line[80:91])
+    inclination = float(line[59:68])
+    eccentricity = float(line[70:79])
+    daily_motion = float(line[80:91])
     a = float(line[92:103])
 
     if epoch not in sun_dict:
@@ -89,7 +91,13 @@ def convertMPCorbit(line, ephem, sun_dict):
 
     # Convert to equatorial barycentric cartesian
     state = kc.cartesian(
-        GMSUN, a, e, incl * np.pi / 180, longnode * np.pi / 180, argperi * np.pi / 180, meananom * np.pi / 180
+        GMSUN,
+        a,
+        eccentricity,
+        inclination * np.pi / 180,
+        longnode * np.pi / 180,
+        argperi * np.pi / 180,
+        meananom * np.pi / 180,
     )
     st = np.array((state.x, state.y, state.z, state.xd, state.yd, state.zd))
     pos = ecliptic_to_equatorial(st[0:3])
@@ -170,3 +178,23 @@ class Observatory:
             returned_tuple = (x, y, z)
 
         return returned_tuple
+    
+    def barycentricObservatory(self, et, obsCode, Rearth=RADIUS_EARTH_KM): # This JPL's quoted Earth radius (km)
+        # et is JPL's internal time
+        
+        # Get the barycentric position of Earth
+        pos, _= spice.spkpos('EARTH', et, 'J2000', 'NONE', 'SSB')
+
+        # Get the matrix that rotates from the Earth's equatorial body fixed frame to the J2000 equatorial frame.
+        m=spice.pxform('ITRF93', 'J2000', et)
+        
+        # Get the MPC's unit vector from the geocenter to
+        # the observatory
+        #obsVec = Observatories.ObservatoryXYZ[obsCode]
+        obsVec = self.ObservatoryXYZ[obsCode]
+        obsVec = np.array(obsVec)
+        
+        # Carry out the rotation and scale
+        mVec = np.dot(m, obsVec)*Rearth
+        
+        return pos+mVec

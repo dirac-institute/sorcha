@@ -17,7 +17,7 @@ from .simulation_data_files import (
 from .simulation_geometry import ecliptic_to_equatorial, integrate_light_time, ra_dec2vec
 from .simulation_parsing import (
     convert_mpc_epoch,
-    convertMPCorbit,
+    convert_mpc_orbit,
     convertS3morbit,
     mjd_tai_to_epoch,
     Observatory,
@@ -25,4 +25,8 @@ from .simulation_parsing import (
 from .simulation_setup import (
     create_assist_ephemeris,
     furnish_spiceypy,
+)
+
+from .simulation_driver import (
+    create_ephemeris
 )

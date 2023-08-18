@@ -1,6 +1,7 @@
 import healpy as hp
 import numpy as np
 from sorcha.ephemeris.simulation_constants import SPEED_OF_LIGHT, ECL_TO_EQ_ROTATION_MATRIX
+import spiceypy as spice
 
 
 def ecliptic_to_equatorial(v, rot_mat=ECL_TO_EQ_ROTATION_MATRIX):
@@ -37,3 +38,12 @@ def ra_dec2vec(ra, dec):
     y = np.sin(ra * radeg) * np.cos(dec * radeg)
     z = np.sin(dec * radeg)
     return np.array((x, y, z)).T
+
+def vec2ra_dec(vec):
+    radeg=180./np.pi
+    x = vec[0]
+    y = vec[1]
+    z = vec[2]
+    ra = radeg*np.arctan2(y, x) % 360
+    dec = radeg*np.arcsin(z) 
+    return ra, dec
