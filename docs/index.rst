@@ -31,8 +31,8 @@ used with any survey.
 Welcome to Sorcha's documentation!
 =========================================================================
 
-This documentation site e contains an installation guide, an overview of how Sorcha 
-works, tutorials, and demostration notebooks that show each of the various filters works. 
+This documentation site contains an installation guide, an overview of how Sorcha 
+works, tutorials, and demostration notebooks that show how each of the various filters works. 
 
 .. seealso::
    We have a summary paper (currently in prep) that provides and a broad summary
