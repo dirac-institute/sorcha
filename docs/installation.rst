@@ -1,12 +1,15 @@
+.. _installation:
+
 Installation
 =================
 
 .. note::
-   The Sorcha python packages are currently pip installable. 
+   The Sorcha python package is currently pip installable. 
 
 Sorcha Requirements
 -----------------------------
-Sorcha` has the following requirements that will be automatically installed  using pip or conda when you install the sorcha package:
+
+Sorcha has the following requirements that will be automatically installed  using pip or conda when you install the sorcha package:
 
 * python 3.9 or later
 * numpy
@@ -15,7 +18,7 @@ Sorcha` has the following requirements that will be automatically installed  usi
 * astropy
 * matplotlib
 * sbpy
-* tables
+* pytables
 * difi == 1.2rc3
 * spiceypy
 * healpy
@@ -36,7 +39,7 @@ Initial Steps
 
 **Step 2** Create a conda environment::
 
-   conda create -n sorcha -c conda-forge -c mjuric python=3.10
+   conda create -n sorcha -c conda-forge -c moeyensj numpy pandas scipy astropy matplotlib sbpy pytables difi==1.2rc3 spiceypy healpy rebound pooch tqdm python=3.10
    conda activate sorcha
 
 Installing Sorcha 
@@ -102,5 +105,6 @@ The output will appear in a csv file (testrun_e2e.csv) in .data/out (this pathwa
    632,60432.97609,138.1759203,10.3996733,137.4659096,10.8432426,1.12e-05,i,23.105,23.082,0.104,0.104,23.8,23.797
    632,60435.95804,136.7133685,10.5177289,137.6504775,10.8316439,1.94e-05,r,23.373,23.434,0.137,0.137,23.608,23.6
    39265,60370.38399,192.6418095,-32.5378881,193.6750982,-32.7017699,2.8e-06,i,18.027,18.016,0.004,0.004,23.121,23.116
+
 .. note::
    This test run is using pre-made ephemeris generasted by OIF already stored in the demo directory of the github Sorcha repository. 

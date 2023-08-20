@@ -3,7 +3,6 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-
 .. image:: images/sorcha_logo.png
   :width: 410
   :alt: Sorcha logo
@@ -14,7 +13,7 @@
 What is Sorcha?
 =========================================================================
 
-Sorcha (pronounced 'surk-ha') is a python Solar System survey simulator. Sorcha means light 
+Sorcha (pronounced "surk-ha") is a python Solar System survey simulator. Sorcha means light 
 or brightness in Irish and Scots gaelic, and our software is estimating the brightness of
 simulated Solar System small bodies and determines which ones the survey could detect in
 each of the survey's observations or based on user set critiera. Sorcha has been designed 
@@ -42,8 +41,6 @@ works, tutorials, and demostration notebooks that show how each of the various f
    model population of synthetic Solar System bodies and a given pointing history
    for the survey.
 
-
-
 .. toctree::
    :hidden:
    :maxdepth: 2
@@ -54,7 +51,6 @@ works, tutorials, and demostration notebooks that show how each of the various f
    inputs
    filters
    configfiles
-   exampleconfig
    outputs
    gettingstarted
    whatsspdoesnotdo
@@ -67,3 +63,4 @@ works, tutorials, and demostration notebooks that show how each of the various f
    cite
    uninstall 
    usingoif
+
