@@ -50,6 +50,7 @@ works, tutorials, and demostration notebooks that show each of the various filte
    outputs
    gettingstarted
    whatsspdoesnotdo
+   notebooks
    troubleshooting
    support
    release
@@ -57,4 +58,4 @@ works, tutorials, and demostration notebooks that show each of the various filte
    acknowledgements
    cite
    uninstall 
-   notebooks
+   usingoif

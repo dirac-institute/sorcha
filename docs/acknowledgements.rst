@@ -1,7 +1,7 @@
 Acknowledgements
 ================
 
-This effort is a collaboration between Queen's University Belfast, the University of Washington's DiRAC Institute, the University of Illinois at Urbana-Champaign, the Center for Astrophysics | Harvard & Smithsonian, and LINCC Frameworks (through the LINCC Frameworks Incubator Program).
+This effort is a collaboration between Queen's University Belfast, the University of Washington's DiRAC Institute, the University of Illinois Urbana-Champaign, the Center for Astrophysics | Harvard & Smithsonian, and LINCC Frameworks (through the LINCC Frameworks Incubator Program).
 
 .. image:: images/QUBLogo.png
   :width: 210

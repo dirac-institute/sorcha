@@ -4,7 +4,7 @@ Reporting Issues and Proposing Changes
 ======================================
 
 .. tip::
-   Something not working? Have you checked the :ref:`troubleshooting` to see if your problem is covered there?
+   Something not working? Have you checked the :ref:`troubleshooting` page to see if your problem is covered there?
 
 Contributions are very welcome. If there is a feature or functionality not yet available in Sorcha, we encourage you to propose the feature or share your code with the new enhancements. 
 
