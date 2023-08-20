@@ -3,22 +3,28 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
+
+.. image:: images/sorcha_logo.png
+  :width: 410
+  :alt: Sorcha logo
+  :align: center
+
+
 Welcome to Sorcha's documentation!
 =========================================================================
-Welcome to the Sorcha documentation. Sorcha is a survey simulator Python package
-for studying Solar System object population statistics. It has been designed 
+
+Sorcha is a survey simulator Python package for studying Solar System object population statistics. It has been designed 
 with the `Vera C. Rubin Observatory Legacy Survey of Space and Time (LSST) <https://www.lsst.org>`_ 
-in mind but can be adapted to be used with any survey.
+in mind. We have designed everything to be modular so with some effort it  can be adapted to be used with any survey. 
 
 
-This documentation webpage contains an installation guide and an overview of how the survey simulator 
-works. Tutorials are provided which give examples on how to determine if an object is on a field of view, 
-if it is observable with LSST, and specific guides for near earth objects, Jupiter trojans, cometary objects etc.
+This documentation webpage contains an installation guide, an overview of how Sorcha 
+works, tutorials, and demostration notebooks that show each of the various filters works. 
 
 .. warning::
    This documentation site and the software packages it describes are under
    active development. Validation is still on-going. DO NOT USE this for science
-   purposes just yet.
+   purposes just yet. WE REALLY MEANS THIS. THE CODEBASE IS UNDER HEAVILY DEVLEOPMENT.
  
 .. seealso::
    We have a summary paper (currently in prep) that provides and a broad summary
