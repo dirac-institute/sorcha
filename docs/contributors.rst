@@ -3,5 +3,5 @@ Contributors
 
 The people who contributed to Sorcha include:
 
-Aidan Berres, Sam Cornwall, Siegfried Eggl, Grigori Fedorets, Lynne Jones, Mario Jurić, Michael S. P. Kelley, Conor MacBride, Shannon Matthews, Steph Merritt, Shantanu Naidu, Brian Rogers, Meg Schwamb, Colin Snodgrass, Dave Young
+Pedro Bernardinelli, Aidan Berres, Colin Orion Chandler, Carl Christofferson, Sam Cornwall, Siegfried Eggl, Grigori Fedorets, Matt Holman, Lynne Jones, Mario Jurić, Jeremy Kubica, Jake Kurlander, Michael S. P. Kelley, Conor MacBride, Shannon Matthews, Steph Merritt, Joachim Moeyens, Shantanu Naidu, Drew Oldag, Brian Rogers, Meg Schwamb, Colin Snodgrass, Max West, Dave Young
 

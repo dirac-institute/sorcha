@@ -9,23 +9,31 @@
   :alt: Sorcha logo
   :align: center
 
-
-Welcome to Sorcha's documentation!
 =========================================================================
 
-Sorcha is a survey simulator Python package for studying Solar System object population statistics. It has been designed 
+What is Sorcha?
+=========================================================================
+
+Sorcha (pronounced 'surk-ha') is a python Solar System survey simulator. Sorcha means light 
+or brightness in Irish and Scots gaelic, and our software is estimating the brightness of
+simulated Solar System small bodies and determines which ones the survey could detect in
+each of the survey's observations or based on user set critiera. Sorcha has been designed 
 with the `Vera C. Rubin Observatory Legacy Survey of Space and Time (LSST) <https://www.lsst.org>`_ 
-in mind. We have designed everything to be modular so with some effort it  can be adapted to be used with any survey. 
-
-
-This documentation webpage contains an installation guide, an overview of how Sorcha 
-works, tutorials, and demostration notebooks that show each of the various filters works. 
+in mind. The software has a module design, and  with some effort it can be adapted to be 
+used with any survey.   
 
 .. warning::
    This documentation site and the software packages it describes are under
    active development. Validation is still on-going. DO NOT USE this for science
-   purposes just yet. WE REALLY MEANS THIS. THE CODEBASE IS UNDER HEAVILY DEVLEOPMENT.
+   purposes just yet. WE REALLY MEANS THIS. THE CODEBASE IS UNDER HEAVY DEVLEOPMENT.
  
+
+Welcome to Sorcha's documentation!
+=========================================================================
+
+This documentation site e contains an installation guide, an overview of how Sorcha 
+works, tutorials, and demostration notebooks that show each of the various filters works. 
+
 .. seealso::
    We have a summary paper (currently in prep) that provides and a broad summary
    of the software and with significant detail in the methodology behind in it.
