@@ -3,23 +3,36 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to Sorcha's documentation!
+.. image:: images/sorcha_logo.png
+  :width: 410
+  :alt: Sorcha logo
+  :align: center
+
 =========================================================================
-Welcome to the Sorcha documentation. Sorcha is a survey simulator Python package
-for studying Solar System object population statistics. It has been designed 
+
+What is Sorcha?
+=========================================================================
+
+Sorcha (pronounced "surk-ha") is a python Solar System survey simulator. Sorcha means light 
+or brightness in Irish and Scots gaelic, and our software is estimating the brightness of
+simulated Solar System small bodies and determines which ones the survey could detect in
+each of the survey's observations or based on user set critiera. Sorcha has been designed 
 with the `Vera C. Rubin Observatory Legacy Survey of Space and Time (LSST) <https://www.lsst.org>`_ 
-in mind but can be adapted to be used with any survey.
-
-
-This documentation webpage contains an installation guide and an overview of how the survey simulator 
-works. Tutorials are provided which give examples on how to determine if an object is on a field of view, 
-if it is observable with LSST, and specific guides for near earth objects, Jupiter trojans, cometary objects etc.
+in mind. The software has a module design, and  with some effort it can be adapted to be 
+used with any survey.   
 
 .. warning::
    This documentation site and the software packages it describes are under
    active development. Validation is still on-going. DO NOT USE this for science
-   purposes just yet.
+   purposes just yet. WE REALLY MEANS THIS. THE CODEBASE IS UNDER HEAVY DEVLEOPMENT.
  
+
+Welcome to Sorcha's documentation!
+=========================================================================
+
+This documentation site contains an installation guide, an overview of how Sorcha 
+works, tutorials, and demostration notebooks that show how each of the various filters works. 
+
 .. seealso::
    We have a summary paper (currently in prep) that provides and a broad summary
    of the software and with significant detail in the methodology behind in it.
@@ -27,8 +40,6 @@ if it is observable with LSST, and specific guides for near earth objects, Jupit
    to install and how to run simulations of what LSST would discover given a
    model population of synthetic Solar System bodies and a given pointing history
    for the survey.
-
-
 
 .. toctree::
    :hidden:
@@ -40,10 +51,10 @@ if it is observable with LSST, and specific guides for near earth objects, Jupit
    inputs
    filters
    configfiles
-   exampleconfig
    outputs
    gettingstarted
    whatsspdoesnotdo
+   notebooks
    troubleshooting
    support
    release
@@ -51,4 +62,5 @@ if it is observable with LSST, and specific guides for near earth objects, Jupit
    acknowledgements
    cite
    uninstall 
-   notebooks
+   usingoif
+

@@ -12,7 +12,7 @@ an optional cometary parameter file, ephemeris file (Objects in Field output) an
 are shown.
 
 
-.. image:: images/OIF.png
+.. image:: images/survey_simulator_flow_chart.png
   :width: 800
   :alt: An overview of the inputs and outputs of the Sorcha code.
 
@@ -26,7 +26,7 @@ Orbit File
 -----------------
 
 .. note::
-  The orbit file is used by  **Objects in Field** and **Sorcha**.
+  The orbit file is used by **Sorcha**.
 
 This is a file which contains the orbital information of a set of synthetic objects. The orbital parameters must be **heliolcentric**, and orbits can be define in **Cometary(COM)  or Keplerian (KEP)** formats. Each simulated planetesimals within the synthetic population must be be given it's own unique object ID (ObjID). The file can be **white space separated**  or **comma value separated (CSV)** format. The first line of the orbit file is a header line starting with !! that specifies what each of the columns are.
 
@@ -73,7 +73,7 @@ An example of an orbit file in cometary format, with each object ID represented 
 +-------------+----------------------------------------------------------------------------------+
 
 **Header line**
-The first row in the orbit file must be a header started with ‘!!’ to denote it as the header row::
+The first row in the orbit file must be a header started with "!!" to denote it as the header row::
 
    !!ObjID FORMAT q e i node argperi t_p t_0
 
@@ -159,13 +159,13 @@ Rubin Observatory will survey the sky in six broadband (optical filters), *u, g,
 We have implemented several phase curve paramterizations that can be specified in the config file and the inputted through the physical parameters. **You can either specify one set of phase curve parameters for all filters or specify values for each filter examined by Sorcha.** We are using the  `sbpy <https://sbpy.org/>`_  phase function utilities. The supported options are: `HG <https://sbpy.readthedocs.io/en/latest/api/sbpy.photometry.HG.html#sbpy.photometry.HG>`_, `HG1G2 <https://sbpy.readthedocs.io/en/latest/api/sbpy.photometry.HG1G2.html#sbpy.photometry.HG1G2>`_, `HG12 <https://sbpy.readthedocs.io/en/latest/api/sbpy.photometry.HG12.html#sbpy.photometry.HG12>`_, `linear <https://sbpy.readthedocs.io/en/latest/api/sbpy.photometry.LinearPhaseFunc.html#sbpy.photometry.LinearPhaseFunc>`_ (specified by S in the header of the physical parameters file), and none (if no columnss for phase curve are included in the physical parameters file than the synthetic object is considered to have a flat phase curve). 
 
 .. note::
-  *  In the config file you can decide which filters you want have Sorcha run on and specify which filter is the main filter that the absolute magnitude is defined for. You only need to provide colors for those fliters specified in the config file. 
+  In the config file you can decide which filters you want have Sorcha run on and specify which filter is the main filter that the absolute magnitude is defined for. You only need to provide colors for those fliters specified in the config file. 
 
 .. warning::
-  * You must use the same phase curve prescription for all simulated objects. If you want to use different phase curve prescriptions for different synthetic populations, you will need to run them in separate input files to Sorcha
+  You must use the same phase curve prescription for all simulated objects. If you want to use different phase curve prescriptions for different synthetic populations, you will need to run them in separate input files to Sorcha
 
 .. warning::
-  * All rows must have entries for all columns specified in the physical parameters file header. 
+  All rows must have entries for all columns specified in the physical parameters file header. 
 
 +------------------+----------------------------------------------------------------------------------+
 | Keyword          | Description                                                                      |
@@ -215,7 +215,7 @@ An example of a cometary activity parameter file::
 
 .. attention::
 
-   *These parameters are only used to adjust the apparent brightness of the synthetic planetesimal. We do not account for non-gravitational effects on the ephemeris.
+   These parameters are only used to adjust the apparent brightness of the synthetic planetesimal. We do not account for non-gravitational effects on the ephemeris.
 
 LSST Pointing Database
 ------------------------
@@ -239,7 +239,7 @@ The latest version of rubin_sim cadence simulations can be found at https://lsst
 
 
 .. attention::
-   There may be changes to how this information is read in when the Rubin Observatory science operations begin at approximately the end of 2024.
+   There may be changes to how this information is read in when the Rubin Observatory science operations begin in ~mid-2025.
 
 Ephemeris file (Objects in Field Output)
 -----------------------------------------

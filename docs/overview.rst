@@ -15,11 +15,6 @@ Overview of Use
 The user is able to create a synthetic Solar System small body population and run them through the Survey Simulator, which applies the specific observational biases from the LSST. In this way, a synthetic population can be compared to real LSST observations. The Survey Simulator is formed out of two python packages working in tandem. The first part is an ephemerides generator. While the user can use any relevant ephemerides generator, we reccomend using `Objects in Field (OIF) <https://github.com/eggls6/objectsInField>`_ package for this. The second piece of software is `Post Processing (sorcha) <https://github.com/dirac-institute/sorcha>`_, which applies the relevant observational biases to simulate what would be detected by LSST, using what we have called :ref:`filters<Filters>`.
 
 
-.. note::
-   `Objects in Field (OIF) <https://github.com/eggls6/objectsInField>`_ is powered by the python version of `(openorb) <https://github.com/oorb/oorb>`_, an open-source orbit-computation package, using SPICE kenrnels to calculate the positions of the planets and a set of input planetesimal orbits hosted by the `Navigation and Ancillary Information Facility (NAIF) <https://naif.jpl.nasa.gov/naif/>`_ team of the Jet Propulsion Laboratory (JPL). 
-   
-   
-
 Both OIF and Sorcha take a series of inputs. The basic pipeline overview can be seen below. The user generates a population with a set of orbits. This
 orbital parameter file is processed by Objects in Field (or any other ephemerides generator code) with respect to the LSST 
 pointing database, before being passed into the survey simulator. Here the user can alter the configuration
@@ -27,13 +22,13 @@ file to apply relevant :ref:`filters<Filters>`, which account for the observatio
 parameter file can also be added here.
 
 
-.. image:: images/OIF.png
+.. image:: images/survey_simulator_flow_chart.png
   :width: 800
-  :alt: An overview of the inputs and outputs of the survey simulator post processing code.
+  :alt: An overview of the inputs and outputs for Sorcha
 
 
 .. warning::
-   We have validated Sorcha with Objects In Field. If the user chooses to use a different emphemeris engine's calculations as input for Sorcha, the user has the responsibiilty to check the accuracy of this input.
+   We have validated Sorcha with its internal ephemeris generator. If the user chooses to use a different emphemeris engine's calculations as input for Sorcha, the user has the responsibiilty to check the accuracy of this input.
    
  
 
