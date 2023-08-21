@@ -143,6 +143,11 @@ def test_CombinedDataReader_ephem():
     assert res_df.iloc[0]["ObjID"] == "12733"
     assert res_df.iloc[0]["FieldMJD"] == pytest.approx(60325.354511)
 
+    # We fail if we try to set the ephem reader a second time.
+    with pytest.raises(SystemExit) as err:
+        reader.add_ephem_reader(OIFDataReader(get_test_filepath("PPReadAllInput_oif.txt"), "csv"))
+    assert err.type == SystemExit
+
 
 def test_CombinedDataReader_fail():
     # No ephemeris reader
