@@ -27,8 +27,8 @@ Sorcha has the following requirements that will be automatically installed  usin
 * pooch
 * tqdm
 
-Initial Steps
------------------------
+Setup Your Conda Environment 
+------------------------------
 **Step 1** Create a directory to contain the OIF and Sorcha repos::
 
    mkdir sorcha
@@ -43,7 +43,7 @@ Initial Steps
    conda activate sorcha
 
 Installing Sorcha 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+----------------------------
 **Step 1** Navigate to the directory you want to store the Sorcha soure code in::
 
    cd sorcha
