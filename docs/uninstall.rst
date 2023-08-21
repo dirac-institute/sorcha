@@ -1,16 +1,13 @@
 Uninstalling 
 =================
 
-Uninstalling OIF
-~~~~~~~~~~~~~~~~~~~
-To uninstall::
+If you have installed sorcha through the pip with the package on pypy. Then you can uninstall the package the usual way with pip::
 
-   cd sorcha/objectsInField
-   python setup.py develop -u
+   pip uninstall sorcha
 
 
-Uninstalling surveySimPP
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Uninstalling a development version of Sorcha
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 To uninstall::
 
    cd sorcha/sorcha
