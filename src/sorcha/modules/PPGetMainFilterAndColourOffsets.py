@@ -43,7 +43,7 @@ def PPGetMainFilterAndColourOffsets(filename, observing_filters, filesep):
 
     if mainfilter not in observing_filters:
         logErrorAndExit(
-            "ERROR: PPGetMainFilterAndColourOffsets: H is given in {}, but {} is not listed as a requested observation filter in config file.".format(
+            "ERROR: PPGetMainFilterAndColourOffsets: H is given as {}, but {} is not listed as a requested observation filter in config file.".format(
                 mainfilter, mainfilter
             )
         )
@@ -70,7 +70,7 @@ def PPGetMainFilterAndColourOffsets(filename, observing_filters, filesep):
 
     if colour_offsets and not all(colour in first_line[:-1].split(sep) for colour in colour_offsets):
         logErrorAndExit(
-            "ERROR: PPGetMainFilterAndColourOffsets:c olour offset columns in physical parameters file do not match with observing filters specified in config file."
+            "ERROR: PPGetMainFilterAndColourOffsets: colour offset columns in physical parameters file do not match with observing filters specified in config file."
         )
 
     return mainfilter, colour_offsets
