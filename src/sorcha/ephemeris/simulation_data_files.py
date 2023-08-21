@@ -13,6 +13,7 @@ META_KERNEL = "meta_kernel.txt"
 OBSERVATORY_CODES = "ObsCodes.json"
 OBSERVATORY_CODES_COMPRESSED = "ObsCodes.json.gz"
 ORIENTATION_CONSTANTS = "pck00010.pck"
+MPC_ORBITS = "MPCORB.DAT"
 
 # Dictionary of filename: url
 URLS = {
@@ -25,6 +26,7 @@ URLS = {
     LEAP_SECONDS: "https://naif.jpl.nasa.gov/pub/naif/generic_kernels/lsk/naif0012.tls",
     OBSERVATORY_CODES_COMPRESSED: "https://minorplanetcenter.net/Extended_Files/obscodes_extended.json.gz",
     ORIENTATION_CONSTANTS: "https://naif.jpl.nasa.gov/pub/naif/generic_kernels/pck/pck00010.tpc",
+    MPC_ORBITS: "https://www.minorplanetcenter.net/iau/MPCORB/MPCORB.DAT"
 }
 
 # Convenience list of all the file names
@@ -40,6 +42,7 @@ DATA_FILE_LIST = [
     OBSERVATORY_CODES,
     OBSERVATORY_CODES_COMPRESSED,
     ORIENTATION_CONSTANTS,
+    MPC_ORBITS,
 ]
 
 # List of files that need to be downloaded
@@ -53,6 +56,7 @@ DATA_FILES_TO_DOWNLOAD = [
     LEAP_SECONDS,
     OBSERVATORY_CODES_COMPRESSED,
     ORIENTATION_CONSTANTS,
+    MPC_ORBITS,
 ]
 
 # List of kernels ordered from least to most precise - used to assemble META_KERNEL file

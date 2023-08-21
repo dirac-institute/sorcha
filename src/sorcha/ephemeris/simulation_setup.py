@@ -6,7 +6,7 @@ import rebound
 from collections import defaultdict
 import assist
 
-from sorcha.ephemeris.simulation_data_files import make_retriever, DE440S, JPL_PLANETS, JPL_SMALL_BODIES, META_KERNEL
+from sorcha.ephemeris.simulation_data_files import make_retriever, DE440S, JPL_PLANETS, JPL_SMALL_BODIES, META_KERNEL, MPC_ORBITS
 
 # TODO: this should be handled by the `simulation_data_files` module
 dir_path = "/Users/maxwest/notebooks/assist_plus_rebound/input_for_mpchecker"
@@ -46,8 +46,10 @@ def generate_simulations(ephem):
     count, nsamp = 0, 10000  # pass in
     prob = 0.1  # pass in
 
+    retriever = make_retriever()
+    mpc_orbits = retriever.fetch(MPC_ORBITS)
     sun_dict = dict()  # This could be passed in and reused
-    with open(dir_path + "/MPCORB.DAT") as file:  # pass in file
+    with open(mpc_orbits) as file:  # pass in file
         for line in file:
             if line.startswith("-----------"):
                 break
