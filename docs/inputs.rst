@@ -181,7 +181,7 @@ We have implemented several phase curve paramterizations that can be specified i
 | G, G1&G2, G12, S | Phase Curve Parameter(s) for all filters (either G12, G1 & G2, or β) (optional)  |
 +------------------+----------------------------------------------------------------------------------+
 
-Cometary Activity Parameters File (Optional)
+Complex Physical Parameters File (Optional)
 -----------------------------------------------
 
 .. note::

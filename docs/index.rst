@@ -18,7 +18,7 @@ or brightness in Irish and Scots Gaelic, and our software is estimating the brig
 simulated Solar System small bodies and determines which ones the survey could detect in
 each of the survey's observations or based on user set criteria. Sorcha has been designed 
 with the `Vera C. Rubin Observatory Legacy Survey of Space and Time (LSST) <https://www.lsst.org>`_ 
-in mind. The software has a module design, and  with some effort it can be adapted to be 
+in mind. The software has a modulardesign, and with some effort it can be adapted to be 
 used with any survey.   
 
 .. warning::

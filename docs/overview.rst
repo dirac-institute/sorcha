@@ -1,10 +1,13 @@
 How Sorcha Works
 =================
 
+Overview
+-------------------------------
+
 To do detailed population studies on the orbital properties and physical characteristics of the various Solar System small body reservoirs, one must account for all the survey biases (the complex and often intertwined detection biases – brightness limits,
 pointing, cadence, on-sky motion limits, software detection efficiencies) in one’s discovery survey (`see Lawler et al. 2018 <https://ui.adsabs.harvard.edu/abs/2018FrASS...5...14L/abstract>`_ for a more detailed discussion). Sorhca is an open source python Solar System survey simulator designed for the `Vera C. Rubin Observatory Legacy Survey of Space and Time (LSST) <https://www.lsst.org/>`_. Sorcha takes an input model small body population and outputs (biases the population to) what Rubin Observatory should have detected by utilizing the LSST pointing history, observation metadata, and the Rubin Solar System Processing (SSP) pipeline’s detection efficiency. 
 
-Overview 
+How Sorcha Works
 -------------------------------
 
 Sorcha works by the user inputting a synthetic Solar System small body population, Sorcha.applies the specific observational biases relevant for the specific survey. In this way, a synthetic population can be compared to the real survey's discoveries. Sorcha by default uses its own hephemeris generator to take the orbits and propogate them on sky. Sorcha's ephemeris generator is based on ASSIST+REBOUND. If the user prefers ot use a different the user can use any relevant ephemerides generator, using what we have called :ref:`filters<Filters>`.  it has been written in a way which allows
