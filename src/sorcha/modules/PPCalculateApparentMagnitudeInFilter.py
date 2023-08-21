@@ -1,11 +1,10 @@
-import sys
 import numpy as np
 import astropy.units as u
 from sbpy.photometry import HG, HG1G2, HG12_Pen16, LinearPhaseFunc
-import logging
 
 from sorcha.lightcurves.lightcurve_registration import LC_METHODS
-from .PPCalculateSimpleCometaryMagnitude import PPCalculateSimpleCometaryMagnitude
+from sorcha.modules.PPCalculateSimpleCometaryMagnitude import PPCalculateSimpleCometaryMagnitude
+from sorcha.modules.LoggingUtils import logErrorAndExit
 
 
 def PPCalculateApparentMagnitudeInFilter(
@@ -47,9 +46,6 @@ def PPCalculateApparentMagnitudeInFilter(
     padain (Pandas dataframe): dataframe of observations with calculated magnitude column.
 
     """
-
-    pplogger = logging.getLogger(__name__)
-
     H_col = "H_filter"
 
     # first, get H, rho, delta and alpha as ndarrays
@@ -102,10 +98,7 @@ def PPCalculateApparentMagnitudeInFilter(
         reduced_mag = H.copy()
 
     else:
-        pplogger.error(
-            "ERROR: PPCalculateApparentMagnitudeInFilter: unknown phase function. Should be HG1G2, HG, HG12 or linear."
-        )
-        sys.exit(
+        logErrorAndExit(
             "ERROR: PPCalculateApparentMagnitudeInFilter: unknown phase function. Should be HG1G2, HG, HG12 or linear."
         )
 

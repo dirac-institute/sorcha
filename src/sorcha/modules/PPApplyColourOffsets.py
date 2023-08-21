@@ -1,7 +1,7 @@
-import logging
-import sys
 import numpy as np
 import fnmatch
+
+from sorcha.modules.LoggingUtils import logErrorAndExit
 
 
 def PPApplyColourOffsets(observations, function, othercolours, observing_filters, mainfilter):
@@ -28,9 +28,6 @@ def PPApplyColourOffsets(observations, function, othercolours, observing_filters
     observations (Pandas dataframe): dataframe of observations with H calculated in relevant filter.
 
     """
-
-    pplogger = logging.getLogger(__name__)
-
     H_col = "H_" + mainfilter
 
     # save original H column: useful for other functions.
@@ -48,8 +45,7 @@ def PPApplyColourOffsets(observations, function, othercolours, observing_filters
             observations.loc[mask, H_col] = observations[H_col] + observations[diff_column_name]
 
     except KeyError:
-        pplogger.error("ERROR: PPApplyColourOffsets: H column missing!")
-        sys.exit("ERROR: PPApplyColourOffsets: H column missing!")
+        logErrorAndExit("ERROR: PPApplyColourOffsets: H column missing!")
 
     # then check the columns for the phase function variables
     # if colour-specific terms exist, pick the columns with the appropriate colour
@@ -67,10 +63,7 @@ def PPApplyColourOffsets(observations, function, othercolours, observing_filters
             observations["G2"] = observations.apply(lambda row: row["G2" + row["optFilter"]], axis=1)
             observations.drop(col_list[1:], axis=1, inplace=True)
         else:
-            pplogger.error(
-                "ERROR: PPApplyColourOffsets: HG1G2 function requires the following input data columns: H, G1, G2."
-            )
-            sys.exit(
+            logErrorAndExit(
                 "ERROR: PPApplyColourOffsets: HG1G2 function requires the following input data columns: H, G1, G2."
             )
 
@@ -84,10 +77,7 @@ def PPApplyColourOffsets(observations, function, othercolours, observing_filters
             observations["GS"] = observations.apply(lambda row: row["GS" + row["optFilter"]], axis=1)
             observations.drop(col_list[1:], axis=1, inplace=True)
         else:
-            pplogger.error(
-                "ERROR: PPApplyColourOffsets: HG function requires the following input data columns: H, GS."
-            )
-            sys.exit(
+            logErrorAndExit(
                 "ERROR: PPApplyColourOffsets: HG function requires the following input data columns: H, GS."
             )
 
@@ -101,10 +91,7 @@ def PPApplyColourOffsets(observations, function, othercolours, observing_filters
             observations["G12"] = observations.apply(lambda row: row["G12" + row["optFilter"]], axis=1)
             observations.drop(col_list[1:], axis=1, inplace=True)
         else:
-            pplogger.error(
-                "ERROR: PPApplyColourOffsets: HG12 function requires the following input data columns: H, G12."
-            )
-            sys.exit(
+            logErrorAndExit(
                 "ERROR: PPApplyColourOffsets: HG12 function requires the following input data columns: H, G12."
             )
 
@@ -118,10 +105,7 @@ def PPApplyColourOffsets(observations, function, othercolours, observing_filters
             observations["S"] = observations.apply(lambda row: row["S" + row["optFilter"]], axis=1)
             observations.drop(col_list[1:], axis=1, inplace=True)
         else:
-            pplogger.error(
-                "ERROR: PPApplyColourOffsets: linear function requires the following input data columns: H, S."
-            )
-            sys.exit(
+            logErrorAndExit(
                 "ERROR: PPApplyColourOffsets: linear function requires the following input data columns: H, S."
             )
 

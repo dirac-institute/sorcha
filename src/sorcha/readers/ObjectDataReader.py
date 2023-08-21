@@ -13,8 +13,8 @@ will check for a cached table before reading the files, allowing them
 to perform direct pandas operations if the data is already in memory.
 """
 import abc
-import logging
-import sys
+
+from sorcha.modules.LoggingUtils import logErrorAndExit
 
 
 class ObjectDataReader(abc.ABC):
@@ -133,10 +133,7 @@ class ObjectDataReader(abc.ABC):
         try:
             input_table["ObjID"] = input_table["ObjID"].astype(str)
         except KeyError:
-            pplogger = logging.getLogger(__name__)
-            err_str = f"ERROR: Unable to find ObjID column headings ({self.get_reader_info()})."
-            pplogger.error(err_str)
-            sys.exit(err_str)
+            logErrorAndExit(f"ERROR: Unable to find ObjID column headings ({self.get_reader_info()}).")
 
         return input_table
 
@@ -168,9 +165,7 @@ class ObjectDataReader(abc.ABC):
             if input_table.isnull().values.any():
                 pdt = input_table[input_table.isna().any(axis=1)]
                 inds = str(pdt["ObjID"].values)
-                outstr = f"ERROR: While reading table {self.filename} found uninitialised values ObjID: {str(inds)}."
-
-                pplogger = logging.getLogger(__name__)
-                pplogger.error(outstr)
-                sys.exit(outstr)
+                logErrorAndExit(
+                    f"ERROR: While reading table {self.filename} found uninitialised values ObjID: {str(inds)}."
+                )
         return input_table

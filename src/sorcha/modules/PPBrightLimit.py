@@ -1,5 +1,4 @@
-import logging
-import sys
+from sorcha.modules.LoggingUtils import logErrorAndExit
 
 
 def PPBrightLimit(observations, observing_filters, bright_limit):
@@ -42,8 +41,7 @@ def PPBrightLimit(observations, observing_filters, bright_limit):
         observations_out = observations.drop(flat_index)
 
     else:
-        logging.error("ERROR: PPBrightLimit: expected a float or list of floats for bright_limit.")
-        sys.exit("ERROR: PPBrightLimit: expected a float or list of floats for bright_limit.")
+        logErrorAndExit("ERROR: PPBrightLimit: expected a float or list of floats for bright_limit.")
 
     observations_out.reset_index(drop=True, inplace=True)
 

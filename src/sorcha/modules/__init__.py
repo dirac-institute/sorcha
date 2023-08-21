@@ -1,3 +1,4 @@
+from . import LoggingUtils
 from . import PPAddUncertainties
 from . import PPBrightLimit
 from . import PPCalculateApparentMagnitude
@@ -20,7 +21,6 @@ from . import PPTrailingLoss
 from . import PPVignetting
 from . import PPConfigParser
 from . import PPCommandLineParser
-from . import PPGetLogger
 from . import PPApplyFOVFilter
 from . import PPSNRLimit
 from . import PPFadingFunctionFilter

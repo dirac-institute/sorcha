@@ -1,6 +1,6 @@
-from .PPCalculateApparentMagnitudeInFilter import PPCalculateApparentMagnitudeInFilter
-from .PPCalculateSimpleCometaryMagnitude import PPCalculateSimpleCometaryMagnitude
-from .PPApplyColourOffsets import PPApplyColourOffsets
+from sorcha.modules.PPCalculateApparentMagnitudeInFilter import PPCalculateApparentMagnitudeInFilter
+from sorcha.modules.PPCalculateSimpleCometaryMagnitude import PPCalculateSimpleCometaryMagnitude
+from sorcha.modules.PPApplyColourOffsets import PPApplyColourOffsets
 import logging
 
 

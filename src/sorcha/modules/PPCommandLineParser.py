@@ -1,8 +1,9 @@
 import os
-import sys
-import logging
 import glob
-from .PPConfigParser import PPFindFileOrExit, PPFindDirectoryOrExit
+import logging
+
+from sorcha.modules.PPConfigParser import PPFindFileOrExit, PPFindDirectoryOrExit
+from sorcha.modules.LoggingUtils import logErrorAndExit
 
 
 def PPCommandLineParser(args):
@@ -60,32 +61,20 @@ def PPCommandLineParser(args):
         )
         os.remove(file_exists[0])
     elif file_exists and not args.f:
-        pplogger.error(
-            "ERROR: existing file found at output location {}. Set -f flag to overwrite this file.".format(
-                os.path.join(cmd_args_dict["outpath"], cmd_args_dict["outfilestem"] + ".*")
-            )
-        )
-        sys.exit(
+        logErrorAndExit(
             "ERROR: existing file found at output location {}. Set -f flag to overwrite this file.".format(
                 os.path.join(cmd_args_dict["outpath"], cmd_args_dict["outfilestem"] + ".*")
             )
         )
 
     if args.dr and args.dw:
-        pplogger.error("ERROR: both -dr and -dw flags set at command line. Please use only one.")
-        sys.exit("ERROR: both -dr and -dw flags set at command line. Please use only one.")
+        logErrorAndExit("ERROR: both -dr and -dw flags set at command line. Please use only one.")
 
     if args.dl and not args.dr and not args.dw:
-        pplogger.error("ERROR: -dl flag set without either -dr or -dw.")
-        sys.exit("ERROR: -dl flag set without either -dr or -dw.")
+        logErrorAndExit("ERROR: -dl flag set without either -dr or -dw.")
 
     if args.dr and not os.path.exists(args.dr):
-        pplogger.error(
-            "ERROR: temporary ephemeris database not found at "
-            + args.dr
-            + ". Rerun with command line flag -dw to create one."
-        )
-        sys.exit(
+        logErrorAndExit(
             "ERROR: temporary ephemeris database not found at "
             + args.dr
             + ". Rerun with command line flag -dw to create one."
@@ -99,12 +88,7 @@ def PPCommandLineParser(args):
         )
         os.remove(file_exists[0])
     elif args.dw and os.path.exists(cmd_args_dict["makeTemporaryEphemerisDatabase"]) and not args.f:
-        pplogger.error(
-            "ERROR: existing file found at output location {}. Set -f flag to overwrite this file.".format(
-                cmd_args_dict["makeTemporaryEphemerisDatabase"]
-            )
-        )
-        sys.exit(
+        logErrorAndExit(
             "ERROR: existing file found at output location {}. Set -f flag to overwrite this file.".format(
                 cmd_args_dict["makeTemporaryEphemerisDatabase"]
             )

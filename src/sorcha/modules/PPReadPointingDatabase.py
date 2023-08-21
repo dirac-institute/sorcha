@@ -1,7 +1,7 @@
 import sqlite3
 import pandas as pd
-import logging
-import sys
+
+from sorcha.modules.LoggingUtils import logErrorAndExit
 
 
 def PPReadPointingDatabase(bsdbname, observing_filters, dbquery):
@@ -21,18 +21,12 @@ def PPReadPointingDatabase(bsdbname, observing_filters, dbquery):
     dfo (Pandas dataframe): dataframe of pointing database.
 
     """
-
-    pplogger = logging.getLogger(__name__)
-
     con = sqlite3.connect(bsdbname)
 
     try:
         df = pd.read_sql_query(dbquery, con)
     except Exception:
-        pplogger.error(
-            "ERROR: PPReadPointingDatabase: SQL query on pointing database failed. Check that the query is correct in the config file."
-        )
-        sys.exit(
+        logErrorAndExit(
             "ERROR: PPReadPointingDatabase: SQL query on pointing database failed. Check that the query is correct in the config file."
         )
 

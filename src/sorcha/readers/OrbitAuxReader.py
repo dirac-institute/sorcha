@@ -1,7 +1,5 @@
-import logging
-import sys
-
 from sorcha.readers.CSVReader import CSVDataReader
+from sorcha.modules.LoggingUtils import logErrorAndExit
 
 
 class OrbitAuxReader(CSVDataReader):
@@ -51,14 +49,9 @@ class OrbitAuxReader(CSVDataReader):
         # Do standard CSV file processing
         super()._process_and_validate_input_table(input_table, **kwargs)
 
-        pplogger = logging.getLogger(__name__)
-
         # Check for an H column (which should not be in the orbit file).
         if "H" in input_table.columns:
-            pplogger.error(
-                "ERROR: PPReadOrbitFile: H column present in orbits data file. H must be included in physical parameters file only."
-            )
-            sys.exit(
+            logErrorAndExit(
                 "ERROR: PPReadOrbitFile: H column present in orbits data file. H must be included in physical parameters file only."
             )
 

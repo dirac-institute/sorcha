@@ -1,5 +1,4 @@
-import sys
-import logging
+from sorcha.modules.LoggingUtils import logErrorAndExit
 
 
 def PPJoinEphemeridesAndOrbits(padafr, padaor):
@@ -19,18 +18,12 @@ def PPJoinEphemeridesAndOrbits(padafr, padaor):
     resdf (Pandas dataframe): joined dataframe.
 
     """
-
-    pplogger = logging.getLogger(__name__)
-
     resdf = padafr.join(padaor.set_index("ObjID"), on="ObjID")
 
     # check if there is q in the resulting database
     if "q" not in resdf.columns:
         if "a" not in resdf.columns or "e" not in resdf.columns:
-            pplogger.error(
-                "ERROR: PPJoinEphemeridesAndOrbits: unable to join ephemeris simulation and orbital parameters: no a or e in input."
-            )
-            sys.exit(
+            logErrorAndExit(
                 "ERROR: PPJoinEphemeridesAndOrbits: unable to join ephemeris simulation and orbital parameters: no a or e in input."
             )
         else:

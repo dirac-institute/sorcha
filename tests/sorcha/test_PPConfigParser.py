@@ -224,12 +224,12 @@ def test_PPCheckFiltersForSurvey():
 
 
 def test_PPPrintConfigsToLog(tmp_path):
-    from sorcha.modules.PPGetLogger import PPGetLogger
+    from sorcha.modules.LoggingUtils import GetLogger
     from sorcha.modules.PPConfigParser import PPPrintConfigsToLog
 
     test_path = os.path.dirname(get_test_filepath("test_input_fullobs.csv"))
 
-    PPGetLogger(tmp_path, log_format="%(name)-12s %(levelname)-8s %(message)s ")
+    GetLogger(tmp_path, log_format="%(name)-12s %(levelname)-8s %(message)s ")
 
     cmd_args = {
         "paramsinput": "testcolour.txt",

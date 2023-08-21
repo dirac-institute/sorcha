@@ -1,5 +1,4 @@
-import sys
-import logging
+from sorcha.modules.LoggingUtils import logErrorAndExit
 
 
 def PPDetectionEfficiency(padain, threshold, rng):
@@ -22,14 +21,10 @@ def PPDetectionEfficiency(padain, threshold, rng):
     randomly dropped.
 
     """
-
-    pplogger = logging.getLogger(__name__)
-
     padain.reset_index(drop=True, inplace=True)
 
     if threshold > 1.0 or threshold < 0.0:
-        pplogger.error("ERROR: PPDetectionEfficiency: threshold out of bounds.")
-        sys.exit("ERROR: PPDetectionEfficiency: threshold out of bounds.")
+        logErrorAndExit("ERROR: PPDetectionEfficiency: threshold out of bounds.")
 
     num_obs = len(padain.index)
 

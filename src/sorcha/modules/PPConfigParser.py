@@ -1,24 +1,12 @@
+import configparser
 import logging
 import os
-import sys
 import numpy as np
-import configparser
+import sys
 
 from sorcha.lightcurves.lightcurve_registration import LC_METHODS
 from sorcha.activity.activity_registration import CA_METHODS
-
-
-def log_error_and_exit(message: str) -> None:
-    """Log a message to the error output file and terminal, then exit.
-
-    Parameters
-    ----------
-    message : str
-        The error message to be logged to the error output file.
-    """
-
-    logging.error(message)
-    sys.exit(message)
+from sorcha.modules.LoggingUtils import logErrorAndExit
 
 
 def PPGetOrExit(config, section, key, message):
@@ -45,8 +33,7 @@ def PPGetOrExit(config, section, key, message):
     if config.has_option(section, key):
         return config[section][key]
     else:
-        logging.error(message)
-        sys.exit(message)
+        logErrorAndExit(message)
 
 
 def PPGetFloatOrExit(config, section, key, message):
@@ -75,15 +62,11 @@ def PPGetFloatOrExit(config, section, key, message):
             val = config.getfloat(section, key)
             return val
         except ValueError:
-            logging.error(
-                "ERROR: expected a float for config parameter {}. Check value in config file.".format(key)
-            )
-            sys.exit(
+            logErrorAndExit(
                 "ERROR: expected a float for config parameter {}. Check value in config file.".format(key)
             )
     else:
-        logging.error(message)
-        sys.exit(message)
+        logErrorAndExit(message)
 
 
 def PPGetIntOrExit(config, section, key, message):
@@ -112,15 +95,11 @@ def PPGetIntOrExit(config, section, key, message):
             val = config.getint(section, key)
             return val
         except ValueError:
-            logging.error(
-                "ERROR: expected an int for config parameter {}. Check value in config file.".format(key)
-            )
-            sys.exit(
+            logErrorAndExit(
                 "ERROR: expected an int for config parameter {}. Check value in config file.".format(key)
             )
     else:
-        logging.error(message)
-        sys.exit(message)
+        logErrorAndExit(message)
 
 
 def PPGetBoolOrExit(config, section, key, message):
@@ -149,11 +128,9 @@ def PPGetBoolOrExit(config, section, key, message):
             val = config.getboolean(section, key)
             return val
         except ValueError:
-            logging.error(f"ERROR: {key} could not be converted to a Boolean.")
-            sys.exit(f"ERROR: {key} could not be converted to a Boolean.")
+            logErrorAndExit(f"ERROR: {key} could not be converted to a Boolean.")
     else:
-        logging.error(message)
-        sys.exit(message)
+        logErrorAndExit(message)
 
 
 def PPGetValueAndFlag(config, section, key, type_wanted):
@@ -187,27 +164,20 @@ def PPGetValueAndFlag(config, section, key, type_wanted):
         try:
             value = config.getint(section, key, fallback=None)
         except ValueError:
-            logging.error(
-                "ERROR: expected an int for config parameter {}. Check value in config file.".format(key)
-            )
-            sys.exit(
+            logErrorAndExit(
                 "ERROR: expected an int for config parameter {}. Check value in config file.".format(key)
             )
     elif type_wanted == "float":
         try:
             value = config.getfloat(section, key, fallback=None)
         except ValueError:
-            logging.error(
-                "ERROR: expected a float for config parameter {}. Check value in config file.".format(key)
-            )
-            sys.exit(
+            logErrorAndExit(
                 "ERROR: expected a float for config parameter {}. Check value in config file.".format(key)
             )
     elif type_wanted == "none":
         value = config.get(section, key, fallback=None)
     else:
-        logging.error("ERROR: internal error: type not recognised.")
-        sys.exit("ERROR: internal error: type not recognised.")
+        logErrorAndExit("ERROR: internal error: type not recognised.")
 
     if value is None:
         flag = False
@@ -233,14 +203,10 @@ def PPFindFileOrExit(arg_fn, argname):
     arg_fn (string): the filepath/name of the file to be checked.
 
     """
-
-    pplogger = logging.getLogger(__name__)
-
     if os.path.exists(arg_fn):
         return arg_fn
     else:
-        pplogger.error("ERROR: filename {} supplied for {} argument does not exist.".format(arg_fn, argname))
-        sys.exit("ERROR: filename {} supplied for {} argument does not exist.".format(arg_fn, argname))
+        logErrorAndExit("ERROR: filename {} supplied for {} argument does not exist.".format(arg_fn, argname))
 
 
 def PPFindDirectoryOrExit(arg_fn, argname):
@@ -259,14 +225,10 @@ def PPFindDirectoryOrExit(arg_fn, argname):
     arg_fn (string): the filepath of the directory to be checked.
 
     """
-
-    pplogger = logging.getLogger(__name__)
-
     if os.path.isdir(arg_fn):
         return arg_fn
     else:
-        pplogger.error("ERROR: filepath {} supplied for {} argument does not exist.".format(arg_fn, argname))
-        sys.exit("ERROR: filepath {} supplied for {} argument does not exist.".format(arg_fn, argname))
+        logErrorAndExit("ERROR: filepath {} supplied for {} argument does not exist.".format(arg_fn, argname))
 
 
 def PPCheckFiltersForSurvey(survey_name, observing_filters):
@@ -335,8 +297,6 @@ def PPConfigFileParser(configfile, survey_name):
     config = configparser.ConfigParser()
     config.read(configfile)
 
-    pplogger = logging.getLogger(__name__)
-
     config_dict = {}
 
     # INPUT
@@ -345,22 +305,19 @@ def PPConfigFileParser(configfile, survey_name):
         config, "INPUT", "eph_format", "ERROR: no ephemerides file format is specified."
     ).lower()
     if config_dict["eph_format"] not in ["csv", "whitespace", "hdf5"]:
-        pplogger.error("ERROR: eph_format should be either csv, whitespace, or hdf5.")
-        sys.exit("ERROR: eph_format should be either either csv, whitespace, or hdf5.")
+        logErrorAndExit("ERROR: eph_format should be either csv, whitespace, or hdf5.")
 
     config_dict["aux_format"] = PPGetOrExit(
         config, "INPUT", "aux_format", "ERROR: no auxiliary data format specified."
     ).lower()
     if config_dict["aux_format"] not in ["comma", "whitespace", "csv"]:
-        pplogger.error("ERROR: aux_format should be either comma, csv, or whitespace.")
-        sys.exit("ERROR: aux_format should be either comma, csv, or whitespace.")
+        logErrorAndExit("ERROR: aux_format should be either comma, csv, or whitespace.")
 
     config_dict["ephemerides_type"] = PPGetOrExit(
         config, "INPUT", "ephemerides_type", "ERROR: no ephemerides type provided."
     ).lower()
     if config_dict["ephemerides_type"] not in ["oif"]:
-        pplogger.error("ERROR: ephemerides_type not recognised.")
-        sys.exit("ERROR: ephemerides_type not recognised.")
+        logErrorAndExit("ERROR: ephemerides_type not recognised.")
 
     config_dict["pointing_database"] = PPGetOrExit(
         config, "INPUT", "pointing_database", "ERROR: no pointing database provided."
@@ -371,8 +328,7 @@ def PPConfigFileParser(configfile, survey_name):
         config, "INPUT", "size_serial_chunk", "ERROR: size_serial_chunk not specified."
     )
     if config_dict["size_serial_chunk"] < 1:
-        pplogger.error("ERROR: size_serial_chunk is zero or negative.")
-        sys.exit("ERROR: size_serial_chunk is zero or negative.")
+        logErrorAndExit("ERROR: size_serial_chunk is zero or negative.")
 
     # ACTIVITY
 
@@ -405,17 +361,15 @@ def PPConfigFileParser(configfile, survey_name):
     try:
         bright_list = [float(e.strip()) for e in bright_limits.split(",")]
     except ValueError:
-        pplogger.error("ERROR: could not parse brightness limits. Check formatting and try again.")
-        sys.exit("ERROR: could not parse brightness limits. Check formatting and try again.")
+        logErrorAndExit("ERROR: could not parse brightness limits. Check formatting and try again.")
 
     if len(bright_list) == 1:
         config_dict["bright_limit"] = bright_list[0]
     else:
         if len(bright_list) != len(config_dict["observing_filters"]):
-            pplogger.error(
+            logErrorAndExit(
                 "ERROR: list of saturation limits is not the same length as list of observing filters."
             )
-            sys.exit("ERROR: list of saturation limits is not the same length as list of observing filters.")
         config_dict["bright_limit"] = bright_list
 
     # PHASECURVES
@@ -431,8 +385,7 @@ def PPConfigFileParser(configfile, survey_name):
     )
 
     if config_dict["camera_model"] not in ["circle", "footprint"]:
-        pplogger.error('ERROR: camera_model should be either "circle" or "footprint".')
-        sys.exit('ERROR: camera_model should be either "circle" or "footprint".')
+        logErrorAndExit('ERROR: camera_model should be either "circle" or "footprint".')
 
     elif config_dict["camera_model"] == "footprint":
         config_dict["footprint_path"] = PPGetOrExit(
@@ -441,31 +394,24 @@ def PPConfigFileParser(configfile, survey_name):
         PPFindFileOrExit(config_dict["footprint_path"], "footprint_path")
 
         if config.has_option("FOV", "fill_factor"):
-            pplogger.error('ERROR: fill factor supplied in config file but camera model is not "circle".')
-            sys.exit('ERROR: fill factor supplied in config file but camera model is not "circle".')
+            logErrorAndExit('ERROR: fill factor supplied in config file but camera model is not "circle".')
         elif config.has_option("FOV", "circle_radius"):
-            pplogger.error('ERROR: circle radius supplied in config file but camera model is not "circle".')
-            sys.exit('ERROR: circle radius supplied in config file but camera model is not "circle".')
+            logErrorAndExit('ERROR: circle radius supplied in config file but camera model is not "circle".')
 
     elif (config_dict["camera_model"]) == "circle":
         config_dict["fill_factor"], _ = PPGetValueAndFlag(config, "FOV", "fill_factor", "float")
         config_dict["circle_radius"], _ = PPGetValueAndFlag(config, "FOV", "circle_radius", "float")
 
         if not config_dict["fill_factor"] and not config_dict["circle_radius"]:
-            pplogger.error(
-                'ERROR: either "fill_factor" or "circle_radius" must be specified for circular footprint.'
-            )
-            sys.exit(
+            logErrorAndExit(
                 'ERROR: either "fill_factor" or "circle_radius" must be specified for circular footprint.'
             )
         elif config_dict["fill_factor"]:
             if config_dict["fill_factor"] < 0.0 or config_dict["fill_factor"] > 1.0:
-                pplogger.error("ERROR: fill_factor out of bounds. Must be between 0 and 1.")
-                sys.exit("ERROR: fill_factor out of bounds. Must be between 0 and 1.")
+                logErrorAndExit("ERROR: fill_factor out of bounds. Must be between 0 and 1.")
         elif config_dict["circle_radius"]:
             if config_dict["circle_radius"] < 0.0:
-                pplogger.error("ERROR: circle_radius is negative.")
-                sys.exit("ERROR: circle_radius is negative.")
+                logErrorAndExit("ERROR: circle_radius is negative.")
 
     # FADINGFUNCTION
 
@@ -488,10 +434,7 @@ def PPConfigFileParser(configfile, survey_name):
         )
 
         if config_dict["fading_function_width"] <= 0.0 or config_dict["fading_function_width"] > 0.5:
-            pplogger.error(
-                "ERROR: fading_function_width out of bounds. Must be greater than zero and less than 0.5."
-            )
-            sys.exit(
+            logErrorAndExit(
                 "ERROR: fading_function_width out of bounds. Must be greater than zero and less than 0.5."
             )
 
@@ -499,19 +442,14 @@ def PPConfigFileParser(configfile, survey_name):
             config_dict["fading_function_peak_efficiency"] < 0.0
             or config_dict["fading_function_peak_efficiency"] > 1.0
         ):
-            pplogger.error("ERROR: fading_function_peak_efficiency out of bounds. Must be between 0 and 1.")
-            sys.exit("ERROR: fading_function_peak_efficiency out of bounds. Must be between 0 and 1.")
+            logErrorAndExit("ERROR: fading_function_peak_efficiency out of bounds. Must be between 0 and 1.")
 
     elif config.has_option("FADINGFUNCTION", "fading_function_width"):
-        pplogger.error(
+        logErrorAndExit(
             "ERROR: fading_function_width supplied in config file but fading_function_on is False."
         )
-        sys.exit("ERROR: fading_function_width supplied in config file but fading_function_on is False.")
     elif config.has_option("FADINGFUNCTION", "fading_function_peak_efficiency"):
-        pplogger.error(
-            "ERROR: fading_function_peak_efficiency supplied in config file but fading_function_on is False."
-        )
-        sys.exit(
+        logErrorAndExit(
             "ERROR: fading_function_peak_efficiency supplied in config file but fading_function_on is False."
         )
 
@@ -546,28 +484,22 @@ def PPConfigFileParser(configfile, survey_name):
     # the below if-statement explicitly checks for None so a zero triggers the correct error
     if all(v is not None for v in SSPvariables):
         if config_dict["SSP_number_observations"] < 1:
-            pplogger.error("ERROR: SSP_number_observations is zero or negative.")
-            sys.exit("ERROR: SSP_number_observations is zero or negative.")
+            logErrorAndExit("ERROR: SSP_number_observations is zero or negative.")
 
         if config_dict["SSP_number_tracklets"] < 1:
-            pplogger.error("ERROR: SSP_number_tracklets is zero or less.")
-            sys.exit("ERROR: SSP_number_tracklets is zero or less.")
+            logErrorAndExit("ERROR: SSP_number_tracklets is zero or less.")
 
         if config_dict["SSP_track_window"] <= 0.0:
-            pplogger.error("ERROR: SSP_track_window is negative.")
-            sys.exit("ERROR: SSP_track_window is negative.")
+            logErrorAndExit("ERROR: SSP_track_window is negative.")
 
         if config_dict["SSP_detection_efficiency"] > 1.0 or config_dict["SSP_detection_efficiency"] > 1.0:
-            pplogger.error("ERROR: SSP_detection_efficiency out of bounds (should be between 0 and 1).")
-            sys.exit("ERROR: SSP_detection_efficiency out of bounds (should be between 0 and 1).")
+            logErrorAndExit("ERROR: SSP_detection_efficiency out of bounds (should be between 0 and 1).")
 
         if config_dict["SSP_separation_threshold"] <= 0.0:
-            pplogger.error("ERROR: SSP_separation_threshold is zero or negative.")
-            sys.exit("ERROR: SSP_separation_threshold is zero or negative.")
+            logErrorAndExit("ERROR: SSP_separation_threshold is zero or negative.")
 
         if config_dict["SSP_maximum_time"] < 0:
-            pplogger.error("ERROR: SSP_maximum_time is negative.")
-            sys.exit("ERROR: SSP_maximum_time is negative.")
+            logErrorAndExit("ERROR: SSP_maximum_time is negative.")
 
         config_dict["SSP_linking_on"] = True
 
@@ -575,10 +507,7 @@ def PPConfigFileParser(configfile, survey_name):
         config_dict["SSP_linking_on"] = False
 
     else:
-        pplogger.error(
-            "ERROR: only some SSP linking variables supplied. Supply all five required variables for SSP linking filter, or none to turn filter off."
-        )
-        sys.exit(
+        logErrorAndExit(
             "ERROR: only some SSP linking variables supplied. Supply all five required variables for SSP linking filter, or none to turn filter off."
         )
 
@@ -588,15 +517,13 @@ def PPConfigFileParser(configfile, survey_name):
         config, "OUTPUT", "output_format", "ERROR: output format not specified."
     ).lower()
     if config_dict["output_format"] not in ["csv", "separatelycsv", "sqlite3", "hdf5", "h5"]:
-        pplogger.error("ERROR: output_format should be either csv, separatelycsv, sqlite3 or hdf5.")
-        sys.exit("ERROR: output_format should be either csv, separatelycsv, sqlite3 or hdf5.")
+        logErrorAndExit("ERROR: output_format should be either csv, separatelycsv, sqlite3 or hdf5.")
 
     config_dict["output_size"] = PPGetOrExit(
         config, "OUTPUT", "output_size", "ERROR: output size not specified."
     ).lower()
     if config_dict["output_size"] not in ["basic", "all"]:
-        pplogger.error("ERROR: output_size not recognised.")
-        sys.exit("ERROR: output_size not recognised.")
+        logErrorAndExit("ERROR: output_size not recognised.")
 
     config_dict["position_decimals"] = PPGetIntOrExit(
         config, "OUTPUT", "position_decimals", "ERROR: positional decimal places not specified."
@@ -606,8 +533,7 @@ def PPConfigFileParser(configfile, survey_name):
     )
 
     if config_dict["position_decimals"] < 0 or config_dict["magnitude_decimals"] < 0:
-        pplogger.error("ERROR: decimal places config variables cannot be negative.")
-        sys.exit("ERROR: decimal places config variables cannot be negative.")
+        logErrorAndExit("ERROR: decimal places config variables cannot be negative.")
 
     # EXPERT
 
@@ -619,38 +545,27 @@ def PPConfigFileParser(configfile, survey_name):
     )
 
     if config_dict["SNR_limit_on"] and config_dict["SNR_limit"] < 0:
-        pplogger.error("ERROR: SNR limit is negative.")
-        sys.exit("ERROR: SNR limit is negative.")
+        logErrorAndExit("ERROR: SNR limit is negative.")
 
     if config_dict["mag_limit_on"] and config_dict["mag_limit"] < 0:
-        pplogger.error("ERROR: magnitude limit is negative.")
-        sys.exit("ERROR: magnitude limit is negative.")
+        logErrorAndExit("ERROR: magnitude limit is negative.")
 
     if config_dict["mag_limit_on"] and config_dict["SNR_limit_on"]:
-        pplogger.error(
-            "ERROR: SNR limit and magnitude limit are mutually exclusive. Please delete one or both from config file."
-        )
-        sys.exit(
+        logErrorAndExit(
             "ERROR: SNR limit and magnitude limit are mutually exclusive. Please delete one or both from config file."
         )
 
     try:
         config_dict["trailing_losses_on"] = config.getboolean("EXPERT", "trailing_losses_on", fallback=True)
     except ValueError:
-        pplogger.error(
-            "ERROR: could not parse value for trailing_losses_on as a boolean. Check formatting and try again."
-        )
-        sys.exit(
+        logErrorAndExit(
             "ERROR: could not parse value for trailing_losses_on as a boolean. Check formatting and try again."
         )
 
     try:
         config_dict["default_SNR_cut"] = config.getboolean("EXPERT", "default_SNR_cut", fallback=True)
     except ValueError:
-        pplogger.error(
-            "ERROR: could not parse value for default_SNR_cut as a boolean. Check formatting and try again."
-        )
-        sys.exit(
+        logErrorAndExit(
             "ERROR: could not parse value for default_SNR_cut as a boolean. Check formatting and try again."
         )
 
@@ -670,7 +585,7 @@ def PPConfigFileParser(configfile, survey_name):
 
     # If the user defined a lightcurve model, but the model has not been registered, exit the program.
     if config_dict["lc_model"] and config_dict["lc_model"] not in LC_METHODS:
-        log_error_and_exit(
+        logErrorAndExit(
             f"The requested light curve model, '{config_dict['lc_model']}', is not registered. Available lightcurve options are: {list(LC_METHODS.keys())}"
         )
 

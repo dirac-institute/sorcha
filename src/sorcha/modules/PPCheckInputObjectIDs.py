@@ -1,6 +1,6 @@
 import pandas as pd
-import logging
-import sys
+
+from sorcha.modules.LoggingUtils import logErrorAndExit
 
 
 def PPCheckInputObjectIDs(orbin, colin, poiin):
@@ -22,9 +22,6 @@ def PPCheckInputObjectIDs(orbin, colin, poiin):
     None: will error out if a mismatch is found.
 
     """
-
-    pplogger = logging.getLogger(__name__)
-
     oif_objects = pd.unique(poiin["ObjID"]).astype(str)
     orb_objects = pd.unique(orbin["ObjID"]).astype(str)
     col_objects = pd.unique(colin["ObjID"]).astype(str)
@@ -33,8 +30,8 @@ def PPCheckInputObjectIDs(orbin, colin, poiin):
         if set(oif_objects).issubset(orb_objects):
             return
         else:
-            pplogger.error("ERROR: PPCheckInputObjectIDs: input pointing and orbit files do not match.")
-            sys.exit("ERROR: PPCheckInputObjectIDs: input pointing and orbit files do not match.")
+            logErrorAndExit("ERROR: PPCheckInputObjectIDs: input pointing and orbit files do not match.")
     else:
-        pplogger.error("ERROR: PPCheckInputObjectIDs: input physical parameter and orbit files do not match.")
-        sys.exit("ERROR: PPCheckInputObjectIDs: input physical parameter and orbit files do not match.")
+        logErrorAndExit(
+            "ERROR: PPCheckInputObjectIDs: input physical parameter and orbit files do not match."
+        )

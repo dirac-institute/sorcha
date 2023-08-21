@@ -1,10 +1,9 @@
 import numpy as np
-import logging
-import sys
 
 from sorcha.readers.CSVReader import CSVDataReader
 from sorcha.readers.HDF5Reader import HDF5DataReader
 from sorcha.readers.ObjectDataReader import ObjectDataReader
+from sorcha.modules.LoggingUtils import logErrorAndExit
 
 
 class OIFDataReader(ObjectDataReader):
@@ -28,17 +27,13 @@ class OIFDataReader(ObjectDataReader):
         """
         super().__init__(**kwargs)
 
-        pplogger = logging.getLogger(__name__)
         self.reader = None
         if (inputformat == "whitespace") or (inputformat == "comma") or (inputformat == "csv"):
             self.reader = CSVDataReader(filename, sep=inputformat, **kwargs)
         elif (inputformat == "h5") or (inputformat == "hdf5") or (inputformat == "HDF5"):
             self.reader = HDF5DataReader(filename, **kwargs)
         else:
-            pplogger.error(
-                f"ERROR: OIFDataReader: unknown format for ephemeris simulation results ({inputformat})."
-            )
-            sys.exit(
+            logErrorAndExit(
                 f"ERROR: OIFDataReader: unknown format for ephemeris simulation results ({inputformat})."
             )
 
@@ -140,11 +135,7 @@ class OIFDataReader(ObjectDataReader):
         ]
 
         if not set(input_table.columns.values).issubset(np.array(oif_cols)):
-            pplogger = logging.getLogger(__name__)
-            pplogger.error(
-                "ERROR: OIFDataReader: column headings do not match expected OIF column headings. Check format of file."
-            )
-            sys.exit(
+            logErrorAndExit(
                 "ERROR: OIFDataReader: column headings do not match expected OIF column headings. Check format of file."
             )
 

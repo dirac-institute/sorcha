@@ -18,8 +18,8 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import numpy as np
-import logging
-import sys
+
+from sorcha.modules.LoggingUtils import logErrorAndExit
 
 
 def calcTrailingLoss(
@@ -63,9 +63,6 @@ def calcTrailingLoss(
     dmag (float/array of floats): loss in detection magnitude due to trailing.
 
     """
-
-    pplogger = logging.getLogger(__name__)
-
     vel = np.sqrt(dRaCosDec**2 + dDec**2)
     vel = vel / 24.0  # convert to arcsec / sec
 
@@ -78,8 +75,7 @@ def calcTrailingLoss(
         dmagDetect = 1.25 * np.log10(1.0 + a_det * x**2 / (1.0 + b_det * x))
         dmag = dmagDetect
     else:
-        pplogger.error("PPTrailingLoss.calcTrailingLoss: model unknown.")
-        sys.exit("PPTrailingLoss.calcTrailingLoss: model unknown.")
+        logErrorAndExit("PPTrailingLoss.calcTrailingLoss: model unknown.")
 
     return dmag
 

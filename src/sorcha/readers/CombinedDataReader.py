@@ -17,7 +17,8 @@ rows for the current objects.
 """
 import logging
 import pandas as pd
-import sys
+
+from sorcha.modules.LoggingUtils import logErrorAndExit
 
 
 class CombinedDataReader:
@@ -40,10 +41,8 @@ class CombinedDataReader:
         ----------
         new_reader (ObjectDataReader): The reader for a specific input file.
         """
-        pplogger = logging.getLogger(__name__)
         if self.ephem_reader is not None:
-            pplogger.error("ERROR: Ephemeris reader already set.")
-            sys.exit("ERROR: Ephemeris reader already set.")
+            logErrorAndExit("ERROR: Ephemeris reader already set.")
         self.ephem_reader = new_reader
 
     def add_aux_data_reader(self, new_reader):
@@ -76,11 +75,9 @@ class CombinedDataReader:
         verboselog = pplogger.info if verbose else lambda *a, **k: None
 
         if self.ephem_reader is None:
-            pplogger.error("ERROR: No ephemeris reader provided.")
-            sys.exit("ERROR: No ephemeris reader provided.")
+            logErrorAndExit("ERROR: No ephemeris reader provided.")
         if len(self.aux_data_readers) == 0:
-            pplogger.error("ERROR: No auxiliary readers provided.")
-            sys.exit("ERROR: No auxiliary readers provided.")
+            logErrorAndExit("ERROR: No auxiliary readers provided.")
 
         # Load object IDs from the primary table.
         if self.ephem_primary:
@@ -120,8 +117,7 @@ class CombinedDataReader:
             verboselog("Checking Object IDs in auxiliary data")
             current_ids = set(pd.unique(current_df["ObjID"]).astype(str))
             if not ephem_ids.issubset(current_ids):  # pragma: no cover
-                pplogger.error("ERROR: At least one missing ObjID in {reader.get_reader_info()}")
-                sys.exit("ERROR: At least one missing ObjID {reader.get_reader_info()}")
+                logErrorAndExit("ERROR: At least one missing ObjID in {reader.get_reader_info()}")
 
             verboselog("Joining auxiliary data with ephemeris")
             ephem_df = ephem_df.join(current_df.set_index("ObjID"), on="ObjID")

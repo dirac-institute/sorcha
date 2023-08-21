@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+import pytest
 
 
 def test_calcTrailingLoss():
@@ -67,3 +68,7 @@ def test_PPTrailingLoss():
     )
 
     np.testing.assert_array_almost_equal(0.25893924959480374, PPTrailingLoss(oif_df=testoifdf)[5], decimal=14)
+
+    # Check that we give an error for an unknown model.
+    with pytest.raises(SystemExit) as err:
+        PPTrailingLoss(oif_df=testoifdf, model="FAKE")

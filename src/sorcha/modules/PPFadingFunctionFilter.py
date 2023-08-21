@@ -1,6 +1,6 @@
 import logging
-from .PPDropObservations import PPDropObservations
-from .PPDetectionProbability import PPDetectionProbability
+from sorcha.modules.PPDropObservations import PPDropObservations
+from sorcha.modules.PPDetectionProbability import PPDetectionProbability
 
 
 def PPFadingFunctionFilter(observations, fillfactor, width, rng, verbose=False):

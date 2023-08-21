@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
-import logging
-import sys
+
+from sorcha.modules.LoggingUtils import logErrorAndExit
 
 
 def PPMatchPointingToObservations(padain, pointfildb):
@@ -33,11 +33,8 @@ def PPMatchPointingToObservations(padain, pointfildb):
     chktruemjd = np.isclose(resdf["observationStartMJD"], resdf["FieldMJD"])
 
     if not chktruemjd.all():
-        logging.error(
+        logErrorAndExit(
             "ERROR: PPMatchPointingToObservations: mismatch in pointing database and pointing output times."
-        )
-        sys.exit(
-            "ERROR:: PPMatchPointingToObservations: mismatch in pointing database and pointing output times."
         )
 
     resdf = resdf.drop(columns=["observationStartMJD", "observationId_"])

@@ -6,6 +6,7 @@ import numpy as np
 import argparse
 import os
 
+from sorcha.modules.LoggingUtils import GetLogger
 from sorcha.modules.PPReadPointingDatabase import PPReadPointingDatabase
 from sorcha.modules.PPLinkingFilter import PPLinkingFilter
 from sorcha.modules.PPTrailingLoss import PPTrailingLoss
@@ -18,7 +19,6 @@ from sorcha.modules import PPAddUncertainties, PPRandomizeMeasurements
 from sorcha.modules import PPVignetting
 from sorcha.modules.PPFadingFunctionFilter import PPFadingFunctionFilter
 from sorcha.modules.PPConfigParser import PPConfigFileParser, PPPrintConfigsToLog
-from sorcha.modules.PPGetLogger import PPGetLogger
 from sorcha.modules.PPCommandLineParser import PPCommandLineParser
 from sorcha.modules.PPMatchPointingToObservations import PPMatchPointingToObservations
 from sorcha.modules.PPMagnitudeLimit import PPMagnitudeLimit
@@ -67,7 +67,7 @@ def runLSSTPostProcessing(cmd_args):
 
     args.validate_arguments()
 
-    pplogger = PPGetLogger(args.outpath)
+    pplogger = GetLogger(args.outpath)
     pplogger.info("Post-processing begun.")
 
     # if verbosity flagged, the verboselog function will log the message specified

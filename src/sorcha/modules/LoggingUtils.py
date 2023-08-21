@@ -1,9 +1,22 @@
 import logging
 import os
+import sys
 from datetime import datetime
 
 
-def PPGetLogger(
+def logErrorAndExit(error_string: str):
+    """Log an error string and exit the program.
+
+    Parameters:
+    -----------
+    error_string (str): The error string
+    """
+    pplogger = logging.getLogger(__name__)
+    pplogger.error(error_string)
+    sys.exit(error_string)
+
+
+def GetLogger(
     log_location,
     log_format="%(asctime)s %(name)-12s %(levelname)-8s %(message)s ",
     log_name="",
