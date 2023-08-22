@@ -440,6 +440,10 @@ def PPConfigFileParser(configfile, survey_name):
         )
         PPFindFileOrExit(config_dict["footprint_path"], "footprint_path")
 
+        config_dict["footprint_edge_threshold"], _ = PPGetValueAndFlag(
+            config, "FOV", "footprint_edge_threshold", "float"
+        )
+
         if config.has_option("FOV", "fill_factor"):
             pplogger.error('ERROR: fill factor supplied in config file but camera model is not "circle".')
             sys.exit('ERROR: fill factor supplied in config file but camera model is not "circle".')
@@ -466,6 +470,12 @@ def PPConfigFileParser(configfile, survey_name):
             if config_dict["circle_radius"] < 0.0:
                 pplogger.error("ERROR: circle_radius is negative.")
                 sys.exit("ERROR: circle_radius is negative.")
+
+        if config.has_option("FOV", "edge_threshold"):
+            pplogger.error(
+                'ERROR: edge_threshold supplied in config file but camera model is not "footprint".'
+            )
+            sys.exit('ERROR: edge_threshold supplied in config file but camera model is not "footprint".')
 
     # FADINGFUNCTION
 
