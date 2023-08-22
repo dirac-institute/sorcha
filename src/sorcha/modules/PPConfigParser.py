@@ -475,7 +475,9 @@ def PPConfigFileParser(configfile, survey_name):
             pplogger.error(
                 'ERROR: footprint edge threshold supplied in config file but camera model is not "footprint".'
             )
-            sys.exit('ERROR: footprint edge threshold supplied in config file but camera model is not "footprint".')
+            sys.exit(
+                'ERROR: footprint edge threshold supplied in config file but camera model is not "footprint".'
+            )
 
     # FADINGFUNCTION
 
