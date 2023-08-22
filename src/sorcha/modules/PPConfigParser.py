@@ -471,11 +471,11 @@ def PPConfigFileParser(configfile, survey_name):
                 pplogger.error("ERROR: circle_radius is negative.")
                 sys.exit("ERROR: circle_radius is negative.")
 
-        if config.has_option("FOV", "edge_threshold"):
+        if config.has_option("FOV", "footprint_edge_threshold"):
             pplogger.error(
-                'ERROR: edge_threshold supplied in config file but camera model is not "footprint".'
+                'ERROR: footprint edge threshold supplied in config file but camera model is not "footprint".'
             )
-            sys.exit('ERROR: edge_threshold supplied in config file but camera model is not "footprint".')
+            sys.exit('ERROR: footprint edge threshold supplied in config file but camera model is not "footprint".')
 
     # FADINGFUNCTION
 
