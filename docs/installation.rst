@@ -6,7 +6,7 @@ Installation
 .. note::
    The Sorcha python package is currently pip installable. 
 
-Sorcha Requirements
+Requirements
 -----------------------------
 
 Sorcha has the following requirements that will be automatically installed  using pip or conda when you install the sorcha package:
@@ -27,8 +27,8 @@ Sorcha has the following requirements that will be automatically installed  usin
 * pooch
 * tqdm
 
-Initial Steps
------------------------
+Setup Your Conda Environment 
+------------------------------
 **Step 1** Create a directory to contain the OIF and Sorcha repos::
 
    mkdir sorcha
@@ -42,8 +42,14 @@ Initial Steps
    conda create -n sorcha -c conda-forge -c moeyensj numpy pandas scipy astropy matplotlib sbpy pytables difi==1.2rc3 spiceypy healpy rebound pooch tqdm python=3.10
    conda activate sorcha
 
-Installing Sorcha 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Installing Sorcha
+----------------------
+
+Unless you're editing the source code, you can use the version of Sorcha published on pypy using pip::
+   pip install sorcha --upgrade
+
+Installing Sorcha in Development Mode
+----------------------------------------
 **Step 1** Navigate to the directory you want to store the Sorcha soure code in::
 
    cd sorcha
