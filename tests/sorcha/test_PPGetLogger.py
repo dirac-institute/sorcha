@@ -26,7 +26,6 @@ def test_PPGetLogger():
         # Check that all five lines exist in the INFO file.
         with open(datalog[0], "r") as f_info:
             log_data = f_info.read()
-            print(log_data)
             assert "Test1" in log_data
             assert "Test2" in log_data
             assert "Error1" in log_data
@@ -35,7 +34,6 @@ def test_PPGetLogger():
         # Check that only error and critical lines exist in the ERROR file.
         with open(errlog[0], "r") as f_err:
             log_data = f_err.read()
-            print(log_data)
             assert "Test1" not in log_data
             assert "Test2" not in log_data
             assert "Error1" in log_data
