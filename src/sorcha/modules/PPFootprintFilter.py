@@ -30,7 +30,9 @@ cos = np.cos
 
 def distToSegment(points, x0, y0, x1, y1):
     """Compute the distance from each point to the line segment defined by
-    the points (x0, y0) and (x1, y1).
+    the points (x0, y0) and (x1, y1).  Returns the distance in the same
+    units as the points are specified in (radians, degrees, etc.). Uses planar
+    geometry for the calculations (assuming small angular distances).
 
     Parameters:
     -----------
@@ -118,9 +120,9 @@ class Detector:
 
         ϵ (float): threshold for whether point is on detector.
 
-        edge_thresh (float, optional): The distance (in angular units) from
-            the edge for a point to be counted. Removes points that are too
-            close to the edge.
+        edge_thresh (float, optional): The focal plane distance (in arcseconds) from
+            the detector's edge for a point to be counted. Removes points that are too
+            close to the edge for source detection.
 
         plot (Boolean): whether to plot the detector and the point.
 
@@ -128,10 +130,11 @@ class Detector:
         ----------
         ison (array): indices of points in point array that fall on the sensor.
         """
+        pplogger = logging.getLogger(__name__)
+
         # points needs to be shape 2,n
         # if single point, needs to be an array of single element arrays
         if len(point.shape) != 2 or point.shape[0] != 2:
-            pplogger = logging.getLogger(__name__)
             pplogger.error(f"ERROR: Detector.ison invalid array {point.shape}")
             sys.exit(f"ERROR: Detector.ison invalid array {point.shape}")
 
@@ -145,6 +148,15 @@ class Detector:
 
         # If there is a threshold to the edge, further filter selectedidx.
         if edge_thresh is not None and len(selectedidx) > 0:
+            # Convert edge threshold to the same units as the detector.
+            if self.units == "degrees" or self.units == "deg":
+                edge_thresh = edge_thresh / 3600.0
+            elif self.units == "radians" or self.units == "rad":
+                edge_thresh = np.radians(edge_thresh / 3600.0)
+            else:
+                pplogger.error(f"ERROR: Detector.ison unable to convert edge_thresh to {self.units}")
+                sys.exit(f"ERROR: Detector.ison unable to convert edge_thresh to {self.units}")
+
             n = len(self.x)
             for i in range(n):  # test each edge
                 dist_to_edge = distToSegment(
@@ -461,7 +473,8 @@ class Footprint:
 
         *_name_field (string): column names for field RA and Dec and rotation.
 
-        edge_thresh (float, optional): An angular threshold for dropping pixels too close to the edge.
+        edge_thresh (float, optional): An angular threshold in arcseconds for dropping pixels too
+        close to the edge.
 
         Returns:
         ----------
