@@ -110,4 +110,9 @@ def PPCommandLineParser(args):
             )
         )
 
+    # If verbose logging is on, log all the command line settings to INFO.
+    if args.v:
+        for flag, value in cmd_args_dict.items():
+            pplogger.info(f"Using commandline setting {flag} = {value}")
+
     return cmd_args_dict
