@@ -291,7 +291,7 @@ def test_PPPrintConfigsToLog(tmp_path):
 
     PPPrintConfigsToLog(configs, args)
 
-    datalog = glob.glob(os.path.join(tmp_path, "*-postprocessing.log"))
+    datalog = glob.glob(os.path.join(tmp_path, "*-sorcha.log"))
 
     testfile = open(os.path.join(test_path, "test_PPPrintConfigsToLog.txt"), mode="r")
     newfile = open(datalog[0], mode="r")

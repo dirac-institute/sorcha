@@ -1,16 +1,10 @@
 Uninstalling 
 =================
 
-If you have installed sorcha through the pip with the package on pypy. Then you can uninstall the package the usual way with pip::
+If you have installed Sorcha using pip, then you can uninstall the package with::
 
    pip uninstall sorcha
 
 
-Uninstalling a development version of Sorcha
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-To uninstall::
-
-   cd sorcha/sorcha
-   python setup.py develop -u
 
 

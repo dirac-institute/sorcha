@@ -7,8 +7,8 @@ def PPGetLogger(
     log_location,
     log_format="%(asctime)s %(name)-12s %(levelname)-8s %(message)s ",
     log_name="",
-    log_file_info="postprocessing.log",
-    log_file_error="postprocessing.err",
+    log_file_info="sorcha.log",
+    log_file_error="sorcha.err",
 ):
     """
     Initialises log and error files.
