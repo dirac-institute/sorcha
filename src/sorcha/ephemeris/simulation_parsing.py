@@ -62,6 +62,7 @@ def convert_mpc_epoch(epoch):
     return year, month, day
 
 
+# TODO: Remove unused parts due to input refactor (CombinedDataReader)
 def convert_mpc_orbit(line, ephem, sun_dict=None):
     desig = line[0:7]
     try:
@@ -109,6 +110,7 @@ def convert_mpc_orbit(line, ephem, sun_dict=None):
     return desig, H, G, epoch, pos, vel
 
 
+# TODO: Remove this (CombinedDataReader)
 def convertS3morbit(line):
     (
         desig,

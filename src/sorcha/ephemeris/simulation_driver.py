@@ -33,6 +33,7 @@ def create_ephemeris():
 
     outfile = open(out_path, "w", encoding="utf-8")
 
+    # TODO: Make this run off the provided `sorchaArguments.pointing_database`
     with open(dir_path + "/pointings.csv") as csv_file:
         csv_reader = csv.reader(csv_file, delimiter=",")
         line_count = 0
