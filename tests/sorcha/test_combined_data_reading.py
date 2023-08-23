@@ -33,7 +33,7 @@ def test_PPReadAllInput():
     }
 
     filterpointing = PPReadPointingDatabase(
-        configs["pointing_database"], configs["observing_filters"], configs["pointing_sql_query"]
+        cmd_args["pointing_database"], configs["observing_filters"], configs["pointing_sql_query"]
     )
 
     reader = CombinedDataReader(verbose=True)

@@ -65,7 +65,6 @@ def makeConfigFile(args):
         "ACTIVITY": {"comet_activity": args.cometactivity},
         "INPUT": {
             "ephemerides_type": args.ephemeridestype,
-            "pointing_database": os.path.abspath(args.pointingdatabase),
             "eph_format": args.ephformat,
             "aux_format": args.auxformat,
             "size_serial_chunk": str(args.sizeserialchunk),

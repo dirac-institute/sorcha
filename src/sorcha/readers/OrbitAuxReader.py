@@ -65,7 +65,7 @@ class OrbitAuxReader(CSVDataReader):
                 "ERROR: PPReadOrbitFile: Orbit format must be provided."
             )
 
-        if len(input_table.columns) != 8:
+        if len(input_table.columns) != 9:
             pplogger.error(
                 "ERROR: Please only provide the required columns in your orbits file."
             )

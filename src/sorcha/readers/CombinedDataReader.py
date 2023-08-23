@@ -99,7 +99,7 @@ class CombinedDataReader:
             primary_df = self.aux_data_readers[0].read_rows(self.block_start, block_size)
             self.block_start += len(primary_df)
 
-            if not "ObjID" in ephem_df.columns:
+            if not "ObjID" in primary_df.columns:
                 pplogger.error("ERROR: No ObjID provided.")
                 sys.exit("ERROR: No ObjID provided.")
 

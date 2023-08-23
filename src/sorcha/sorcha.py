@@ -96,7 +96,7 @@ def runLSSTPostProcessing(cmd_args):
     verboselog("Reading pointing database...")
 
     filterpointing = PPReadPointingDatabase(
-        configs["pointing_database"], configs["observing_filters"], configs["pointing_sql_query"]
+        args.pointing_database, configs["observing_filters"], configs["pointing_sql_query"]
     )
 
     # Set up the data readers.
