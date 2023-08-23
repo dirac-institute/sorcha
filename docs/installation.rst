@@ -20,6 +20,7 @@ Sorcha has the following requirements that will be automatically installed  usin
 * sbpy
 * pytables
 * difi == 1.2rc3
+* sqlite3
 * spiceypy
 * healpy
 * assist
@@ -39,7 +40,7 @@ Setup Your Conda Environment
 
 **Step 2** Create a conda environment::
 
-   conda create -n sorcha -c conda-forge -c moeyensj numpy pandas scipy astropy matplotlib sbpy pytables difi==1.2rc3 spiceypy healpy rebound pooch tqdm python=3.10
+   conda create -n sorcha -c conda-forge -c moeyensj numpy pandas scipy astropy matplotlib sbpy pytables difi==1.2rc3 sqlite3 spiceypy healpy rebound pooch tqdm python=3.10
    conda activate sorcha
 
 Installing Sorcha
@@ -73,7 +74,7 @@ You can check that the surveySimPP installation was done correctly, by running::
 The output will appear in a csv file (testrun_e2e.csv) in .data/out (this pathway can be changed via the -u command line argument). The first 51 lines of the csv file should look like this:
 
 .. literalinclude:: ../docs/example_files/testrun_e2e.csv
-    :language: csv
+    :language: text
     :lines: 1-51
 
 .. note::

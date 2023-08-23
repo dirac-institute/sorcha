@@ -20,7 +20,7 @@ full detector footprint.
 The source code is available `here <https://github.com/dirac-institute/sorcha/blob/main/survey_setups/Rubin_full_footprint.ini>`__.
 
 .. literalinclude:: ../survey_setups/Rubin_full_footprint.ini
-   :language: txt
+   :language: text
    :linenos:
 
 Rubin Circular Approximation
@@ -32,7 +32,7 @@ approximation of the Rubin detector.
 The source code is available `here <https://github.com/dirac-institute/sorcha/blob/main/survey_setups/Rubin_circular_approximation.ini>`__.
 
 .. literalinclude:: ../survey_setups/Rubin_circular_approximation.ini
-    :language: txt
+    :language: text
     :linenos:
 
 
