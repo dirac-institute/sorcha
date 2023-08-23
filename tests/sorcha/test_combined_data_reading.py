@@ -82,6 +82,7 @@ def test_PPReadAllInput():
             8.98718,
             0.09654,
             33.01305,
+            "COM",
             "z",
             0.7299771787487132,
             0.8247897551687507,
@@ -131,6 +132,7 @@ def test_PPReadAllInput():
             "incl",
             "e",
             "q",
+            "FORMAT",
             "optFilter",
             "seeingFwhmGeom",
             "seeingFwhmEff",
@@ -142,6 +144,7 @@ def test_PPReadAllInput():
         dtype=object,
     )
 
+    print(observations.columns.values)
     assert_equal(observations.columns.values, expected_columns)
     assert_equal(expected_first_line, observations.iloc[0].values)
 

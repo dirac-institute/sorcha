@@ -57,6 +57,7 @@ class sorchaArguments:
         self.configfile = args["configfile"]
         self.outpath = args["outpath"]
         self.outfilestem = args["outfilestem"]
+        self.pointing_database = args["pointing_database"]
 
         self.verbose = args["verbose"]
 
@@ -81,3 +82,6 @@ class sorchaArguments:
 
         if not path.isfile(self.configfile):
             raise ValueError("`configfile` is not a valid file path.")
+
+        if not path.isfile(self.pointing_database):
+            raise ValueError("`pointing_database` is not a valid file path.")

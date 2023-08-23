@@ -35,6 +35,7 @@ def test_OrbitAuxReader():
             39.949789586436,
             54486.32292808,
             54466.0,
+            "COM",
         ],
         dtype=object,
     )

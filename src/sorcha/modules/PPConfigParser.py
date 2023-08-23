@@ -362,11 +362,6 @@ def PPConfigFileParser(configfile, survey_name):
         pplogger.error("ERROR: ephemerides_type not recognised.")
         sys.exit("ERROR: ephemerides_type not recognised.")
 
-    config_dict["pointing_database"] = PPGetOrExit(
-        config, "INPUT", "pointing_database", "ERROR: no pointing database provided."
-    )
-    PPFindFileOrExit(config_dict["pointing_database"], "pointing_database")
-
     config_dict["size_serial_chunk"] = PPGetIntOrExit(
         config, "INPUT", "size_serial_chunk", "ERROR: size_serial_chunk not specified."
     )

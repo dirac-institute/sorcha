@@ -1,5 +1,6 @@
 import logging
 import sys
+import numpy as np
 
 from sorcha.readers.CSVReader import CSVDataReader
 
@@ -51,21 +52,71 @@ class OrbitAuxReader(CSVDataReader):
         # Do standard CSV file processing
         super()._process_and_validate_input_table(input_table, **kwargs)
 
+        if len(input_table) == 0:
+            return input_table
+
         pplogger = logging.getLogger(__name__)
 
-        # Check for an H column (which should not be in the orbit file).
-        if "H" in input_table.columns:
+        if not "FORMAT" in input_table.columns:
             pplogger.error(
-                "ERROR: PPReadOrbitFile: H column present in orbits data file. H must be included in physical parameters file only."
+                "ERROR: PPReadOrbitFile: Orbit format must be provided."
             )
             sys.exit(
-                "ERROR: PPReadOrbitFile: H column present in orbits data file. H must be included in physical parameters file only."
+                "ERROR: PPReadOrbitFile: Orbit format must be provided."
             )
 
-        # rename i to incl to avoid confusion with the colour i
-        input_table = input_table.rename(columns={"i": "incl"})
-        input_table = input_table.drop(
-            ["INDEX", "N_PAR", "MOID", "COMPCODE", "FORMAT"], axis=1, errors="ignore"
-        )
+        if len(input_table.columns) != 8:
+            pplogger.error(
+                "ERROR: Please only provide the required columns in your orbits file."
+            )
+            sys.exit(
+                "ERROR: Please only provide the required columns in your orbits file."
+            )
+
+
+        orb_format = input_table["FORMAT"].iloc[0]
+        if not np.all(orb_format == input_table["FORMAT"].values):
+            pplogger.error(
+                "ERROR: Orbit file must have a consistent FORMAT (COM, KEP, or CART)."
+            )
+            sys.exit(
+                "ERROR: Orbit file must have a consistent FORMAT (COM, KEP, or CART)."
+            )
+
+        keplerian_elements = ["ObjID", "a", "e", "inc","node", "peri", "ma", "epoch"]
+        cometary_elements = ["ObjID", "q", "e", "inc", "node", "argPeri", "t_p", "epoch"]
+        cartesian_elements = ["ObjID", "x", "y", "z", "xdot", "ydot", "vdot", "epoch"]
+
+        if orb_format == "KEP":
+            if not all(column in input_table.columns for column in keplerian_elements):
+                pplogger.error(
+                    "ERROR: PPReadOrbitFile: Must provide all keplerian orbital elements."
+                )
+                sys.exit(
+                    "ERROR: PPReadOrbitFile: Must provide all keplerian orbital elements."
+                )
+        elif orb_format == "COM":
+            if not all(column in input_table.columns for column in cometary_elements):
+                pplogger.error(
+                    "ERROR: PPReadOrbitFile: Must provide all cometary orbital elements."
+                )
+                sys.exit(
+                    "ERROR: PPReadOrbitFile: Must provide all cometary orbital elements."
+                )
+        elif orb_format == "CART":
+            if not all(column in input_table.columns for column in cartesian_elements):
+                pplogger.error(
+                    "ERROR: PPReadOrbitFile: Must provide all cartesian coordinate values."
+                )
+                sys.exit(
+                    "ERROR: PPReadOrbitFile: Must provide all cartesian coordinate values."
+                )
+        else:
+            pplogger.error(
+                "ERROR: PPReadOrbitFile: Orbit format must be cometary (COM), keplerian (KEP), or cartesian (CART)."
+            )
+            sys.exit(
+                "ERROR: PPReadOrbitFile: Orbit format must be cometary (COM), keplerian (KEP), or cartesian (CART)."
+            )
 
         return input_table

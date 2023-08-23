@@ -116,7 +116,7 @@ def runLSSTPostProcessing(cmd_args):
 
     reader.add_aux_data_reader(OrbitAuxReader(args.orbinfile, configs["aux_format"]))
     reader.add_aux_data_reader(CSVDataReader(args.paramsinput, configs["aux_format"]))
-    if configs["comet_activity"] == "comet":
+    if configs["comet_activity"] is not None:
         reader.add_aux_data_reader(CSVDataReader(args.cometinput, configs["aux_format"]))
 
     # In case of a large input file, the data is read in chunks. The
@@ -293,7 +293,6 @@ def main():
         help="Input configuration file name",
         type=str,
         dest="c",
-        default="./PPConfig.ini",
         required=True,
     )
     parser.add_argument(
@@ -323,11 +322,10 @@ def main():
         help="Physical parameters file name",
         type=str,
         dest="p",
-        default="./data/params",
         required=True,
     )
     parser.add_argument(
-        "-o", "--orbit", help="Orbit file name", type=str, dest="o", default="./data/orbit.des", required=True
+        "-ob", "--orbit", help="Orbit file name", type=str, dest="o", default="./data/orbit.des", required=True
     )
     parser.add_argument(
         "-e",
@@ -335,17 +333,24 @@ def main():
         help="Ephemeris simulation output file name",
         type=str,
         dest="e",
-        default="./data/oiftestoutput",
         required=True,
     )
+    parser.add_argument(
+        "-pd",
+        "--pointing_database",
+        help="Survey pointing information",
+        type=str,
+        dest="e",
+        required=True,
+    )
+
     parser.add_argument("-s", "--survey", help="Survey to simulate", type=str, dest="s", default="LSST")
     parser.add_argument(
-        "-u",
+        "-o",
         "--outfile",
         help="Path to store output and logs.",
         type=str,
         dest="u",
-        default="./data/out/",
         required=True,
     )
     parser.add_argument(

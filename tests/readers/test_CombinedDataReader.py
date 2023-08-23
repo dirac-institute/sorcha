@@ -58,6 +58,7 @@ def test_CombinedDataReader():
         "z-r": -0.12,
         "y-r": -0.12,
         "GS": 0.15,
+        "FORMAT": "COM",
     }
     assert_equal(set(res_df.columns.values), set(expected_data.keys()))
     for col in expected_data.keys():
@@ -128,6 +129,7 @@ def test_CombinedDataReader_ephem():
         "z-r": -0.12,
         "y-r": -0.12,
         "GS": 0.15,
+        "FORMAT": "COM",
     }
     assert_equal(set(res_df.columns.values), set(expected_data.keys()))
     for col in expected_data.keys():
