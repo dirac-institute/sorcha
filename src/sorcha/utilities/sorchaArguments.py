@@ -34,8 +34,8 @@ class sorchaArguments:
     surveyname: str = ""
     """name of the survey (`lsst` is only one implemented currently)"""
 
-    cometinput: str = ""
-    """optional, extra comet input files"""
+    complex_parameters: str = ""
+    """optional, extra complex physical parameter input files"""
 
     _rng = np.random.default_rng(int(time.time()))
     """
@@ -67,8 +67,8 @@ class sorchaArguments:
 
         self.surveyname = args["surveyname"]
 
-        if "cometinput" in args.keys():
-            self.cometinput = args["cometinput"]
+        if "complex_physical_parameters" in args.keys():
+            self.complex_parameters = args["complex_physical_parameters"]
 
     def validate_arguments(self):
         if not path.isfile(self.paramsinput):

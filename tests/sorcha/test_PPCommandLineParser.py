@@ -51,7 +51,7 @@ def test_PPCommandLineParser():
         "configfile": get_test_filepath("test_PPConfig.ini"),
         "outpath": "./",
         "makeTemporaryEphemerisDatabase": False,
-        "cometinput": get_test_filepath("testcomet.txt"),
+        "complex_physical_parameters": get_test_filepath("testcomet.txt"),
         "readTemporaryEphemerisDatabase": get_test_filepath("sqlresults.db"),
         "deleteTemporaryEphemerisDatabase": True,
         "surveyname": "lsst",

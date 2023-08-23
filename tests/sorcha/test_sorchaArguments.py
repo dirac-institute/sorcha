@@ -15,6 +15,7 @@ cmd_args_dict = {
     "surveyname": "LSST",
     "outfilestem": f"out_end2end",
     "verbose": False,
+    "pointing_database": get_demo_filepath("baseline_v2.0_1yr.db"),
 }
 
 

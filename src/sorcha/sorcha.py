@@ -117,7 +117,7 @@ def runLSSTPostProcessing(cmd_args):
     reader.add_aux_data_reader(OrbitAuxReader(args.orbinfile, configs["aux_format"]))
     reader.add_aux_data_reader(CSVDataReader(args.paramsinput, configs["aux_format"]))
     if configs["comet_activity"] is not None:
-        reader.add_aux_data_reader(CSVDataReader(args.cometinput, configs["aux_format"]))
+        reader.add_aux_data_reader(CSVDataReader(args.complex_parameters, configs["aux_format"]))
 
     # In case of a large input file, the data is read in chunks. The
     # "sizeSerialChunk" parameter in PPConfig.ini assigns the chunk.
@@ -315,7 +315,7 @@ def main():
         action="store_true",
         default=False,
     )
-    parser.add_argument("-m", "--comet", help="Comet parameter file name", type=str, dest="m")
+    parser.add_argument("-cp", "--complex_physical_parameters", help="Complex physical parameters file name", type=str, dest="cp")
     parser.add_argument(
         "-p",
         "--params",
@@ -325,7 +325,7 @@ def main():
         required=True,
     )
     parser.add_argument(
-        "-ob", "--orbit", help="Orbit file name", type=str, dest="o", default="./data/orbit.des", required=True
+        "-ob", "--orbit", help="Orbit file name", type=str, dest="ob", default="./data/orbit.des", required=True
     )
     parser.add_argument(
         "-e",
@@ -340,7 +340,7 @@ def main():
         "--pointing_database",
         help="Survey pointing information",
         type=str,
-        dest="e",
+        dest="pd",
         required=True,
     )
 
@@ -350,7 +350,7 @@ def main():
         "--outfile",
         help="Path to store output and logs.",
         type=str,
-        dest="u",
+        dest="o",
         required=True,
     )
     parser.add_argument(

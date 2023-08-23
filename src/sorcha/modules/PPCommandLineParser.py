@@ -31,8 +31,8 @@ def PPCommandLineParser(args):
     cmd_args_dict["configfile"] = PPFindFileOrExit(args.c, "-c, --config")
     cmd_args_dict["outpath"] = PPFindFileOrExit(args.u, "-u, --outfile")
 
-    if args.m:
-        cmd_args_dict["cometinput"] = PPFindFileOrExit(args.m, "-m, --comet")
+    if args.cp:
+        cmd_args_dict["complex_physical_parameters"] = PPFindFileOrExit(args.m, "-cp, --complex_phsyical_parameters")
 
     if args.dw == "default":
         oifpath_split = os.path.split(cmd_args_dict["oifoutput"])
