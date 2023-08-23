@@ -1,3 +1,5 @@
+.. _filters:
+
 Sorcha's Filter Options
 ========================================
 
