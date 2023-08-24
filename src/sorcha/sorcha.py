@@ -17,7 +17,8 @@ from sorcha.modules.PPSNRLimit import PPSNRLimit
 from sorcha.modules import PPAddUncertainties, PPRandomizeMeasurements
 from sorcha.modules import PPVignetting
 from sorcha.modules.PPFadingFunctionFilter import PPFadingFunctionFilter
-from sorcha.modules.PPConfigParser import PPConfigFileParser, PPPrintConfigsToLog
+from sorcha.modules.PPConfigParser import PPConfigFileParser, PPPrintConfigsToLog, PPFindFileOrExit
+
 from sorcha.modules.PPGetLogger import PPGetLogger
 from sorcha.modules.PPCommandLineParser import PPCommandLineParser
 from sorcha.modules.PPMatchPointingToObservations import PPMatchPointingToObservations
@@ -40,7 +41,7 @@ from sorcha.utilities.sorchaArguments import sorchaArguments
 # Author: Samuel Cornwall, Siegfried Eggl, Grigori Fedorets, Steph Merritt, Meg Schwamb
 
 
-def runLSSTPostProcessing(cmd_args):
+def runLSSTPostProcessing(cmd_args, pplogger=None):
     """
     Runs the post processing survey simulator functions that apply a series of
     filters to bias a model Solar System small body population to what the
@@ -48,27 +49,42 @@ def runLSSTPostProcessing(cmd_args):
 
     Parameters:
     -----------
-    cmd_args (dictionary or `sorchaArguments` object): dictionary of command-line arguments.
+    cmd_args (dictionary or `sorchaArguments` object):
+        dictionary of command-line arguments.
+
+    pplogger : logging.Logger, optional
+        The logger to use in this function. If None creates a new one.
 
     Returns:
     -----------
     None.
 
     """
+    # Set up logging if it hasn't happened already.
+    if pplogger is None:
+        if type(cmd_args) is dict:
+            pplogger = PPGetLogger(cmd_args["outpath"])
+        else:
+            pplogger = PPGetLogger(args.outpath)
+    pplogger.info("Post-processing begun.")
 
     update_lc_subclasses()
     update_activity_subclasses()
 
-    # Initialise argument parser and assign command line arguments
-
+    # Initialise argument parser, assign command line arguments, and validate.
     args = cmd_args
     if type(cmd_args) is dict:
-        args = sorchaArguments(cmd_args)
+        try:
+            args = sorchaArguments(cmd_args)
+        except Exception as err:
+            pplogger.error(err)
+            sys.exit(err)
 
-    args.validate_arguments()
-
-    pplogger = PPGetLogger(args.outpath)
-    pplogger.info("Post-processing begun.")
+    try:
+        args.validate_arguments()
+    except Exception as err:
+        pplogger.error(err)
+        sys.exit(err)
 
     # if verbosity flagged, the verboselog function will log the message specified
     # if not, verboselog does absolutely nothing
@@ -367,12 +383,17 @@ def main():
         action="store_true",
         default=False,
     )
-
     args = parser.parse_args()
-    cmd_args = PPCommandLineParser(args)
 
+    # Extract the output file path now in order to set up logging.
+    outpath = PPFindFileOrExit(args.u, "-u, --outfile")
+    pplogger = PPGetLogger(outpath)
+    pplogger.info("Sorcha Start (Main)")
+
+    # Extract and validate the remaining arguments.
+    cmd_args = PPCommandLineParser(args)
     if cmd_args["surveyname"] in ["LSST", "lsst"]:
-        runLSSTPostProcessing(cmd_args)
+        runLSSTPostProcessing(cmd_args, pplogger)
     else:
         sys.exit(
             "ERROR: Survey name not recognised. Current allowed surveys are: {}".format(["LSST", "lsst"])
