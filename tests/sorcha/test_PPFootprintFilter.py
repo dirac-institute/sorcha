@@ -15,6 +15,7 @@ def dummy_detector():
 
 def test_ison():
     detector = dummy_detector()
+    assert detector.units == "radians"
 
     points = np.array([np.linspace(0.0, 0.01, 10), np.linspace(0.0, 0.01, 10)])
     points_ison = detector.ison(points)
@@ -23,6 +24,7 @@ def test_ison():
     assert_equal(points_ison, np.array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]))
 
     # Test with points where we have manually computed the distances.
+    # Point locations are specified in radians.
     points = np.array(
         [
             [-0.01, 0.0],  # out
@@ -45,10 +47,26 @@ def test_ison():
     idx1 = detector.ison(points)
     assert idx1.tolist() == [2, 3, 4, 7, 9, 10, 11, 12]
 
-    idx2 = detector.ison(points, edge_thresh=0.0015)
+    # Check with distance of 0.0015 radians (specified in arcseconds).
+    idx2 = detector.ison(points, edge_thresh=(np.degrees(0.0015)*3600))
     assert idx2.tolist() == [2, 4, 9, 10]
 
-    idx3 = detector.ison(points, edge_thresh=0.000015)
+    # Check with distance of 0.000015 radians (specified in arcseconds).
+    idx3 = detector.ison(points, edge_thresh=(np.degrees(0.000015)*3600))
+    assert idx3.tolist() == [2, 3, 4, 9, 10, 11, 12]
+
+    # Math should hold if the detector is in degrees. Uses the same thresholds.
+    detector.rad2deg()
+    assert detector.units == "degrees"
+    points_deg = np.degrees(points)
+
+    idx1 = detector.ison(points_deg)
+    assert idx1.tolist() == [2, 3, 4, 7, 9, 10, 11, 12]
+
+    idx2 = detector.ison(points_deg, edge_thresh=(np.degrees(0.0015)*3600))
+    assert idx2.tolist() == [2, 4, 9, 10]
+
+    idx3 = detector.ison(points_deg, edge_thresh=(np.degrees(0.000015)*3600))
     assert idx3.tolist() == [2, 3, 4, 9, 10, 11, 12]
 
 
@@ -157,8 +175,11 @@ def test_applyFootprint():
     assert_equal(onSensor, [1, 0, 2, 3, 8, 7, 4, 5, 6, 9])
     assert_equal(detectorIDs, [59.0, 66.0, 87.0, 87.0, 100.0, 106.0, 127.0, 131.0, 144.0, 152.0])
 
-    # Setting an edge threshold to 0.0005 will further filter points 0, 7, 8, and 9.
-    onSensor, detectorIDs = footprintf.applyFootprint(observations, edge_thresh=0.0005)
+    # Setting an edge threshold to 0.0005 radians will further filter points 0, 7, 8, and 9.
+    onSensor, detectorIDs = footprintf.applyFootprint(
+        observations,
+        edge_thresh=(np.degrees(0.0005) * 3600),  # as arcseconds
+    )
 
     assert_equal(onSensor, [1, 2, 3, 4, 5, 6])
     assert_equal(detectorIDs, [59.0, 87.0, 87.0, 127.0, 131.0, 144.0])
