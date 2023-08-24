@@ -718,6 +718,7 @@ def PPPrintConfigsToLog(configs, cmd_args):
     pplogger.info("Format of ephemerides file is: " + configs["eph_format"])
     pplogger.info("Format of auxiliary files is: " + configs["aux_format"])
 
+    pplogger.info("Pointing database path is: " + cmd_args.pointing_database)
     pplogger.info("Pointing database required query is: " + configs["pointing_sql_query"])
 
     pplogger.info(

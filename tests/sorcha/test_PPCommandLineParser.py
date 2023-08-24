@@ -5,13 +5,13 @@ from sorcha.utilities.dataUtilitiesForTests import get_test_filepath
 
 
 class args:
-    def __init__(self, m, dw, dr, dl, t="testout", u="./", f=False):
+    def __init__(self, cp, dw, dr, dl, t="testout", u="./", f=False):
         self.p = get_test_filepath("testcolour.txt")
         self.o = get_test_filepath("testorb.des")
         self.e = get_test_filepath("oiftestoutput.txt")
         self.c = get_test_filepath("test_PPConfig.ini")
         self.u = u
-        self.m = m
+        self.cp = cp
         self.s = "lsst"
         self.t = t
         self.v = True

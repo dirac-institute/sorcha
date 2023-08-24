@@ -21,13 +21,14 @@ def test_OrbitAuxReader():
     assert_frame_equal(orbit_csv, orbit_txt)
 
     # Check that we modify the columns (i -> incl, etc.)
-    expected_columns = np.array(["ObjID", "q", "e", "incl", "node", "argperi", "t_p", "t_0"], dtype=object)
+    expected_columns = np.array(["ObjID", "FORMAT", "q", "e", "inc", "node", "argPeri", "t_p", "epoch"], dtype=object)
     assert_equal(expected_columns, orbit_txt.columns.values)
 
     # Check that we read the correct valude, including dropped columns.
     expected_first_row = np.array(
         [
             "S00000t",
+            "COM",
             0.952105479028,
             0.504888475701,
             4.899098347472,
@@ -35,20 +36,19 @@ def test_OrbitAuxReader():
             39.949789586436,
             54486.32292808,
             54466.0,
-            "COM",
         ],
         dtype=object,
     )
     assert_equal(expected_first_row, orbit_txt.iloc[0].values)
 
-    # Unexpected H column.
+    # No format provided
     with pytest.raises(SystemExit) as e1:
         reader = OrbitAuxReader(get_test_filepath("PPReadOrbitFile_bad.txt"), "whitespace")
         _ = reader.read_rows(0, 14)
     assert e1.type == SystemExit
     assert (
         e1.value.code
-        == "ERROR: PPReadOrbitFile: H column present in orbits data file. H must be included in physical parameters file only."
+        == "ERROR: PPReadOrbitFile: Orbit format must be provided."
     )
 
     # Incorrect format.
