@@ -49,6 +49,7 @@ Installing Sorcha
 Unless you're editing the source code, you can use the version of Sorcha published on pypy using pip::
    pip install sorcha --upgrade
 
+
 Installing Sorcha in Development Mode
 ----------------------------------------
 **Step 1** Navigate to the directory you want to store the Sorcha soure code in::
@@ -67,15 +68,15 @@ Installing Sorcha in Development Mode
 
 Testing the Sorcha Installation
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-You can check that the surveySimPP installation was done correctly, by running::
+You can check that the Sorcha installation was done correctly, by downloading the Sorcha source code as described in the  by running::
 
    sorcha -c ./demo/PPConfig_test.ini -p ./demo/sspp_testset_colours.txt -o ./demo/sspp_testset_orbits.des -e ./demo/example_oif_output.txt -u ./data/out/ -t testrun_e2e
    
-The output will appear in a csv file (testrun_e2e.csv) in .data/out (this pathway can be changed via the -u command line argument). The first 51 lines of the csv file should look like this:
+The output will appear in a csv file (testrun_e2e.csv) in ./data/out (this pathway can be changed via the -u command line argument). The first 51 lines of the csv file should look like this:
 
 .. literalinclude:: ../docs/example_files/testrun_e2e.csv
     :language: text
     :lines: 1-51
 
 .. note::
-   This test run is using pre-made ephemeris generasted by OIF already stored in the demo directory of the github Sorcha repository. 
+   This test run is using pre-made ephemeris generatedF already stored in the demo directory of the Sorcha github repository. 
