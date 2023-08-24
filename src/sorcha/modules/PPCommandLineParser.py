@@ -110,4 +110,8 @@ def PPCommandLineParser(args):
             )
         )
 
+    # Log all the command line settings to INFO.
+    for flag, value in cmd_args_dict.items():
+        pplogger.info(f"Using commandline setting {flag} = {value}")
+
     return cmd_args_dict

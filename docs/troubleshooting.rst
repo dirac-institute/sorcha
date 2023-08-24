@@ -4,6 +4,9 @@
 Troubleshooting
 =================
 
+Have You Checked the Error Log File?
+---------------------------------------------------------------
+If sorcha runs successfully the .err log file created will be empty. If the software exited gracefully with an error it will print error statements to the error log file. If sorcha looks like it completed but you're not getting the expected output, the .err log file is the first place to check. 
 
 Using Relative File Paths
 ---------------------------------------------------------------
