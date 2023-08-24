@@ -21,7 +21,9 @@ def test_OrbitAuxReader():
     assert_frame_equal(orbit_csv, orbit_txt)
 
     # Check that we modify the columns (i -> incl, etc.)
-    expected_columns = np.array(["ObjID", "FORMAT", "q", "e", "inc", "node", "argPeri", "t_p", "epoch"], dtype=object)
+    expected_columns = np.array(
+        ["ObjID", "FORMAT", "q", "e", "inc", "node", "argPeri", "t_p", "epoch"], dtype=object
+    )
     assert_equal(expected_columns, orbit_txt.columns.values)
 
     # Check that we read the correct valude, including dropped columns.
@@ -46,13 +48,17 @@ def test_OrbitAuxReader():
         reader = OrbitAuxReader(get_test_filepath("PPReadOrbitFile_bad.txt"), "whitespace")
         _ = reader.read_rows(0, 14)
     assert e1.type == SystemExit
-    assert (
-        e1.value.code
-        == "ERROR: PPReadOrbitFile: Orbit format must be provided."
-    )
+    assert e1.value.code == "ERROR: PPReadOrbitFile: Orbit format must be provided."
 
-    # Incorrect format.
+    # Incorrect format
     with pytest.raises(SystemExit) as e2:
         reader = OrbitAuxReader(get_test_filepath("testorb.csv"), "whitespace")
         _ = reader.read_rows(0, 14)
     assert e2.type == SystemExit
+
+    # Incosistent orbit formats
+    with pytest.raises(SystemExit) as e3:
+        reader = OrbitAuxReader(get_test_filepath("PPReadOrbitFile_bad_format.csv"), "csv")
+        _ = reader.read_rows(0, 14)
+    assert e3.type == SystemExit
+    assert "consistent FORMAT" in str(e3.value)
