@@ -18,6 +18,7 @@ if __name__ == "__main__":  # pragma: no cover
         "orbinfile": f"./{args.object_type}_sample_1000_orbit.csv",
         "oifoutput": f"./{args.object_type}_sample_1000_eph.csv",
         "configfile": "./OIFconfig_benchmark.ini",
+        "pointing_database": "./baseline_v2.0_1yr.db",
         "outpath": "../data/out",
         "makeTemporaryEphemerisDatabase": False,
         "readTemporaryEphemerisDatabase": False,
