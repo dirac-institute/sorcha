@@ -32,7 +32,9 @@ def PPCommandLineParser(args):
     cmd_args_dict["outpath"] = PPFindFileOrExit(args.u, "-u, --outfile")
 
     if args.cp:
-        cmd_args_dict["complex_physical_parameters"] = PPFindFileOrExit(args.cp, "-cp, --complex_phsyical_parameters")
+        cmd_args_dict["complex_physical_parameters"] = PPFindFileOrExit(
+            args.cp, "-cp, --complex_phsyical_parameters"
+        )
 
     if args.dw == "default":
         oifpath_split = os.path.split(cmd_args_dict["oifoutput"])

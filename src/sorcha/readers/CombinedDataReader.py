@@ -103,7 +103,6 @@ class CombinedDataReader:
                 pplogger.error("ERROR: No ObjID provided.")
                 sys.exit("ERROR: No ObjID provided.")
 
-
             obj_ids = primary_df["ObjID"].unique().tolist()
             ephem_df = None
 

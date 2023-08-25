@@ -315,7 +315,13 @@ def main():
         action="store_true",
         default=False,
     )
-    parser.add_argument("-cp", "--complex_physical_parameters", help="Complex physical parameters file name", type=str, dest="cp")
+    parser.add_argument(
+        "-cp",
+        "--complex_physical_parameters",
+        help="Complex physical parameters file name",
+        type=str,
+        dest="cp",
+    )
     parser.add_argument(
         "-p",
         "--params",
@@ -325,7 +331,13 @@ def main():
         required=True,
     )
     parser.add_argument(
-        "-ob", "--orbit", help="Orbit file name", type=str, dest="ob", default="./data/orbit.des", required=True
+        "-ob",
+        "--orbit",
+        help="Orbit file name",
+        type=str,
+        dest="ob",
+        default="./data/orbit.des",
+        required=True,
     )
     parser.add_argument(
         "-e",
