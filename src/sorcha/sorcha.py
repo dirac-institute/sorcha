@@ -65,7 +65,7 @@ def runLSSTPostProcessing(cmd_args, pplogger=None):
         if type(cmd_args) is dict:
             pplogger = PPGetLogger(cmd_args["outpath"])
         else:
-            pplogger = PPGetLogger(args.outpath)
+            pplogger = PPGetLogger(cmd_args.outpath)
     pplogger.info("Post-processing begun.")
 
     update_lc_subclasses()
