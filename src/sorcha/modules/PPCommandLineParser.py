@@ -33,7 +33,7 @@ def PPCommandLineParser(args):
 
     if args.cp:
         cmd_args_dict["complex_physical_parameters"] = PPFindFileOrExit(
-            args.cp, "-cp, --complex_phsyical_parameters"
+            args.cp, "-cp, --complex_physical_parameters"
         )
 
     if args.dw == "default":
