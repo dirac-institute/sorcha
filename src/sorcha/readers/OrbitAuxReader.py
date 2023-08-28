@@ -57,7 +57,7 @@ class OrbitAuxReader(CSVDataReader):
 
         pplogger = logging.getLogger(__name__)
 
-        if not "FORMAT" in input_table.columns:
+        if "FORMAT" not in input_table.columns:
             pplogger.error("ERROR: PPReadOrbitFile: Orbit format must be provided.")
             sys.exit("ERROR: PPReadOrbitFile: Orbit format must be provided.")
 
@@ -66,7 +66,7 @@ class OrbitAuxReader(CSVDataReader):
             sys.exit("ERROR: Please only provide the required columns in your orbits file.")
 
         orb_format = input_table["FORMAT"].iloc[0]
-        if not np.all(orb_format == input_table["FORMAT"].values):
+        if len(input_table["FORMAT"].unique()) != 1:
             pplogger.error("ERROR: Orbit file must have a consistent FORMAT (COM, KEP, or CART).")
             sys.exit("ERROR: Orbit file must have a consistent FORMAT (COM, KEP, or CART).")
 
