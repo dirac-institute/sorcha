@@ -365,11 +365,6 @@ def PPConfigFileParser(configfile, survey_name):
         pplogger.error("ERROR: ephemerides_type not recognised.")
         sys.exit("ERROR: ephemerides_type not recognised.")
 
-    config_dict["pointing_database"] = PPGetOrExit(
-        config, "INPUT", "pointing_database", "ERROR: no pointing database provided."
-    )
-    PPFindFileOrExit(config_dict["pointing_database"], "pointing_database")
-
     config_dict["size_serial_chunk"] = PPGetIntOrExit(
         config, "INPUT", "size_serial_chunk", "ERROR: size_serial_chunk not specified."
     )
@@ -738,7 +733,7 @@ def PPPrintConfigsToLog(configs, cmd_args):
     pplogger.info("Format of ephemerides file is: " + configs["eph_format"])
     pplogger.info("Format of auxiliary files is: " + configs["aux_format"])
 
-    pplogger.info("Pointing database path is: " + configs["pointing_database"])
+    pplogger.info("Pointing database path is: " + cmd_args.pointing_database)
     pplogger.info("Pointing database required query is: " + configs["pointing_sql_query"])
 
     pplogger.info(

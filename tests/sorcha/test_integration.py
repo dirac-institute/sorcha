@@ -12,6 +12,7 @@ def test_lsst_end2end():
         "orbinfile": get_demo_filepath("sspp_testset_orbits.des"),
         "oifoutput": get_demo_filepath("example_oif_output.txt"),
         "configfile": get_demo_filepath("PPConfig_test.ini"),
+        "pointing_database": get_demo_filepath("baseline_v2.0_1yr.db"),
         "outpath": "./data/out",
         "makeTemporaryEphemerisDatabase": False,
         "readTemporaryEphemerisDatabase": False,

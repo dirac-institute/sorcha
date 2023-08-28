@@ -16,6 +16,7 @@ def test_PPReadAllInput():
         "orbinfile": get_test_filepath("PPReadAllInput_orbits.des"),
         "oifoutput": get_test_filepath("PPReadAllInput_oif.txt"),
         "configfile": get_test_filepath("test_PPConfig.ini"),
+        "pointing_database": get_test_filepath("baseline_10klines_2.0.db"),
         "outpath": "./",
         "makeTemporaryEphemerisDatabase": False,
         "readTemporaryEphemerisDatabase": None,
@@ -27,13 +28,12 @@ def test_PPReadAllInput():
         "aux_format": "whitespace",
         "ephemerides_type": "oif",
         "eph_format": "csv",
-        "pointing_database": get_test_filepath("baseline_10klines_2.0.db"),
         "observing_filters": ["u", "g", "r", "i", "z", "y"],
         "pointing_sql_query": "SELECT observationId, observationStartMJD, filter, seeingFwhmGeom, seeingFwhmEff, fiveSigmaDepth, fieldRA, fieldDec, rotSkyPos FROM observations order by observationId",
     }
 
     filterpointing = PPReadPointingDatabase(
-        configs["pointing_database"], configs["observing_filters"], configs["pointing_sql_query"]
+        cmd_args["pointing_database"], configs["observing_filters"], configs["pointing_sql_query"]
     )
 
     reader = CombinedDataReader(verbose=True)
@@ -82,6 +82,7 @@ def test_PPReadAllInput():
             8.98718,
             0.09654,
             33.01305,
+            "COM",
             "z",
             0.7299771787487132,
             0.8247897551687507,
@@ -124,13 +125,14 @@ def test_PPReadAllInput():
             "z-r",
             "y-r",
             "GS",
-            "t_0",
+            "epoch",
             "t_p",
-            "argperi",
+            "argPeri",
             "node",
-            "incl",
+            "inc",
             "e",
             "q",
+            "FORMAT",
             "optFilter",
             "seeingFwhmGeom",
             "seeingFwhmEff",
