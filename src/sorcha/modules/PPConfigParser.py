@@ -331,11 +331,14 @@ def PPConfigFileParser(configfile, survey_name):
     config_dict (dictionary): dictionary of config file variables.
 
     """
+    pplogger = logging.getLogger(__name__)
+
+    # Save a raw copy of the configuration to the logs as a backup.
+    with open(configfile, "r") as file:
+        pplogger.info(f"Copy of configuration file {configfile}:\n{file.read()}")
 
     config = configparser.ConfigParser()
     config.read(configfile)
-
-    pplogger = logging.getLogger(__name__)
 
     config_dict = {}
 

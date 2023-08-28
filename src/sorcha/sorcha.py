@@ -389,6 +389,7 @@ def main():
     outpath = PPFindFileOrExit(args.u, "-u, --outfile")
     pplogger = PPGetLogger(outpath)
     pplogger.info("Sorcha Start (Main)")
+    pplogger.info(f"Command line: {' '.join(sys.argv)}")
 
     # Extract and validate the remaining arguments.
     cmd_args = PPCommandLineParser(args)
