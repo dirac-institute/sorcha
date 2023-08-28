@@ -57,6 +57,7 @@ def override_seed_and_run(outpath):
         "orbinfile": get_demo_filepath("sspp_testset_orbits.des"),
         "oifoutput": get_demo_filepath("example_oif_output.txt"),
         "configfile": get_demo_filepath("PPConfig_test.ini"),
+        "pointing_database": get_demo_filepath("baseline_v2.0_1yr.db"),
         "outpath": outpath,
         "makeTemporaryEphemerisDatabase": False,
         "readTemporaryEphemerisDatabase": False,

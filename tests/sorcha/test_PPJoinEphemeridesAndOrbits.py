@@ -1,5 +1,5 @@
 from sorcha.utilities.dataUtilitiesForTests import get_test_filepath
-from numpy.testing import assert_equal
+from numpy.testing import assert_array_equal
 
 
 def test_PPJoinEphemeridesAndOrbits():
@@ -14,7 +14,6 @@ def test_PPJoinEphemeridesAndOrbits():
     joined_df = PPJoinEphemeridesAndOrbits(oif_file, orbit_file)
 
     first_row = [
-        "S00000t",
         379,
         59853.205174,
         283890475.515,
@@ -36,6 +35,7 @@ def test_PPJoinEphemeridesAndOrbits():
         27.377,
         11.699,
         2.030016,
+        "COM",
         0.952105479028,
         0.504888475701,
         4.899098347472,
@@ -45,8 +45,8 @@ def test_PPJoinEphemeridesAndOrbits():
         54466.0,
     ]
 
-    assert_equal(joined_df.iloc[0].values[1:], first_row[1:])
-    assert first_row[0] == "S00000t"
-    assert len(joined_df.columns) == 29
+    assert_array_equal(list(joined_df.iloc[0].values[1:]), first_row)
+    assert joined_df.iloc[0].values[0] == "S00000t"
+    assert len(joined_df.columns) == 30
 
     return
