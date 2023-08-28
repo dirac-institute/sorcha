@@ -70,5 +70,5 @@ def override_seed_and_run(outpath):
     # Override the random number generator seed.
     # WARNING: This is only accceptable in a test and should never be used for
     # science results.
-    args._rng = np.random.default_rng(2023)
+    args._rng = np.random.RandomState(2023)
     runLSSTPostProcessing(args)
