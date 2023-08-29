@@ -28,6 +28,9 @@ from .simulation_setup import (
     furnish_spiceypy,
 )
 
-from .simulation_driver import (
-    create_ephemeris
+from .simulation_driver import create_ephemeris
+
+from .orbit_conversion_utilities import (
+    universal_cartesian,
+    universal_keplerian,
 )
