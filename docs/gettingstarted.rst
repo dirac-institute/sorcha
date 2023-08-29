@@ -15,43 +15,38 @@ ephemerides for these synthetic bodiess using OIF (Objects in Field), and show y
 .. note::
   All input data files in this example are white-space separated format solely for the ease of reading.   
 
-Creating Object Files
--------------------------
+Creating the Orbit and Physical Parameter Files For the Synthetic Small Bodies
+----------------------------------------------------------------------------------------
 The first step in the process is to generate a set of files which describe the orbital and physical parameters
-of the objects that we wish to study. Here we will generate a file called 'testorb.des', which contains
+of the objects that we wish to study. Here we will generate a file called 'sspp_testset_orbits.des', which contains
 the orbits of five objects
 
-.. literalinclude:: ../demo/testorb.des
+.. literalinclude:: ../demo/sspp_testset_orbits.des
     :language: text
 
-We will also generate a file called 'sspp_testset_colours.txt' which contains information about the colour and brightness of the objects::
+We will also generate a file called 'sspp_testset_colours.txt' which contains information about the colour and brightness of the objects
 
-   ObjID H u-r g-r i-r z-r y-r GS
-   6 15.88 1.72 0.48 -0.11 -0.12 -0.12 0.15
-   632 14.23 1.72 0.48 -0.11 -0.12 -0.12 0.15
-   6624 14.23 1.72 0.48 -0.11 -0.12 -0.12 0.15
-   12733 15.75 1.72 0.48 -0.11 -0.12 -0.12 0.15
-   28311 7.76 2.55 0.92 -0.38 -0.59 -0.7 0.15
-   39262 10.818 1.72 0.48 -0.11 -0.12 -0.12 0.15
-   39265 11.678 2.13 0.65 -0.19 -0.14 -0.14 0.15
-   307764 25.0 2.13 0.65 -0.19 -0.14 -0.14 0.15
-   356450 7.99 2.55 0.92 -0.38 -0.59 -0.7 0.15
-   387449 18.92 1.72 0.48 -0.11 -0.12 -0.12 0.15
+.. literalinclude:: ../demo/sspp_testset_colours.txt
+    :language: text
 
 
 Setting Up Sorcha's Configuration File 
 ------------------------------------------
 
-The key information about the simulation paramteres are held in the configuration file.
-There is a configuration file generator build into the survey simulator, which can be run using::
-   
-  makeConfigPP ./demo/PPConfig_test.ini --ephformat csv --trailinglosseson True
- 
-which will generate a default config file, named config.ini. There are several optional parameters that
-can be added (see inputs). 
+The key information about the simulation paramteres are held in the configuration file. For further details check out our :ref:`configs` page. 
 
 Running Sorcha
 ----------------------
+
+Let's take a look at the command line arguments for sorcha. On the command line, typing::
+
+   sorcha --help 
+
+will produce
+
+.. literalinclude:: ../demo/sspp_testset_colours.txt
+    :language: text
+
 
 Finally, we have all the information required to run the survey simulator. This can be done by typing::
 
