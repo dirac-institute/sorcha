@@ -284,22 +284,30 @@ def main():
     model Solar System small body population to what the specified wide-field
     survey would observe.
 
-    usage: sorcha [-h] -c C [-dw [DW]] [-dr DR] [-dl] [-m M] -p P -o O -e E [-s S] -u U [-t T] [-v] [-f]
-        arguments:
-          -h, --help         show this help message and exit
-          -c C, --config C   Input configuration file name
-          -dw [DW]           Make temporary ephemeris database. If no filepath/name supplied, default name and ephemeris input location used.
-          -dr DR             Location of existing/previous temporary ephemeris database to read from if wanted.
-          -dl                Delete the temporary ephemeris database after code has completed.
-          -m M, --comet M    Comet parameter file name
-          -p P, --params P   Physical parameters file name
-          -o O, --orbit O    Orbit file name
-          -e E, --ephem E    Ephemeris simulation output file name
-          -s S, --survey S   Survey to simulate
-          -u U, --outfile U  Path to store output and logs.
-          -t T, --stem T     Output file name stem.
-          -v, --verbose      Verbosity. Default currently true; include to turn off verbosity.
-          -f, --force        Force deletion/overwrite of existing output file(s). Default False.
+    usage: sorcha [-h] -c C -e E -o O -ob OB -p P -pd PD [-cp CP] [-dw [DW]] [-dr DR] [-dl] [-f] [-s S] [-t T] [-v]
+
+    options:
+      -h, --help            show this help message and exit
+
+    Required arguments:
+      -c C, --config C      Input configuration file name (default: None)
+      -e E, --ephem E       Ephemeris simulation output file name (default: None)
+      -o O, --outfile O     Path to store output and logs. (default: None)
+      -ob OB, --orbit OB    Orbit file name (default: ./data/orbit.des)
+      -p P, --params P      Physical parameters file name (default: None)
+      -pd PD, --pointing_database PD
+                        Survey pointing information (default: None)
+
+    Optional arguments:
+      -cp CP, --complex_physical_parameters CP
+                            Complex physical parameters file name (default: None)
+      -dw [DW]              Make temporary ephemeris database. If no filepath/name supplied, default name and ephemeris input location used. (default: None)
+      -dr DR                Location of existing/previous temporary ephemeris database to read from if wanted. (default: None)
+      -dl                   Delete the temporary ephemeris database after code has completed. (default: False)
+      -f, --force           Force deletion/overwrite of existing output file(s). Default False. (default: False)
+      -s S, --survey S      Survey to simulate (default: LSST)
+      -t T, --stem T        Output file name stem. (default: SSPPOutput)
+      -v, --verbose         Verbosity. Default currently true; include to turn off verbosity. (default: True)
     """
 
     parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
