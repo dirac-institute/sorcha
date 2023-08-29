@@ -7,10 +7,11 @@ from sorcha.utilities.dataUtilitiesForTests import get_test_filepath
 class args:
     def __init__(self, cp, dw, dr, dl, t="testout", u="./", f=False):
         self.p = get_test_filepath("testcolour.txt")
-        self.o = get_test_filepath("testorb.des")
+        self.ob = get_test_filepath("testorb.des")
         self.e = get_test_filepath("oiftestoutput.txt")
         self.c = get_test_filepath("test_PPConfig.ini")
-        self.u = u
+        self.pd = get_test_filepath("baseline_10klines_2.0.db")
+        self.o = u
         self.cp = cp
         self.s = "lsst"
         self.t = t
@@ -32,6 +33,7 @@ def test_PPCommandLineParser():
         "orbinfile": get_test_filepath("testorb.des"),
         "oifoutput": get_test_filepath("oiftestoutput.txt"),
         "configfile": get_test_filepath("test_PPConfig.ini"),
+        "pointing_database": get_test_filepath("baseline_10klines_2.0.db"),
         "outpath": "./",
         "makeTemporaryEphemerisDatabase": False,
         "readTemporaryEphemerisDatabase": None,
@@ -49,6 +51,7 @@ def test_PPCommandLineParser():
         "orbinfile": get_test_filepath("testorb.des"),
         "oifoutput": get_test_filepath("oiftestoutput.txt"),
         "configfile": get_test_filepath("test_PPConfig.ini"),
+        "pointing_database": get_test_filepath("baseline_10klines_2.0.db"),
         "outpath": "./",
         "makeTemporaryEphemerisDatabase": False,
         "complex_physical_parameters": get_test_filepath("testcomet.txt"),
@@ -65,6 +68,7 @@ def test_PPCommandLineParser():
         "orbinfile": get_test_filepath("testorb.des"),
         "oifoutput": get_test_filepath("oiftestoutput.txt"),
         "configfile": get_test_filepath("test_PPConfig.ini"),
+        "pointing_database": get_test_filepath("baseline_10klines_2.0.db"),
         "outpath": "./",
         "makeTemporaryEphemerisDatabase": os.path.join(tmp_path, "test.db"),
         "readTemporaryEphemerisDatabase": None,
@@ -80,6 +84,7 @@ def test_PPCommandLineParser():
         "orbinfile": get_test_filepath("testorb.des"),
         "oifoutput": get_test_filepath("oiftestoutput.txt"),
         "configfile": get_test_filepath("test_PPConfig.ini"),
+        "pointing_database": get_test_filepath("baseline_10klines_2.0.db"),
         "outpath": "./",
         "makeTemporaryEphemerisDatabase": os.path.join(tmp_path, "temp_oiftestoutput.db"),
         "readTemporaryEphemerisDatabase": None,

@@ -302,8 +302,9 @@ def main():
           -f, --force        Force deletion/overwrite of existing output file(s). Default False.
     """
 
-    parser = argparse.ArgumentParser()
-    parser.add_argument(
+    parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+    required = parser.add_argument_group("Required arguments")
+    required.add_argument(
         "-c",
         "--config",
         help="Input configuration file name",
@@ -311,42 +312,23 @@ def main():
         dest="c",
         required=True,
     )
-    parser.add_argument(
-        "-dw",
-        help="Make temporary ephemeris database. If no filepath/name supplied, default name and ephemeris input location used.",
-        dest="dw",
-        nargs="?",
-        const="default",
+    required.add_argument(
+        "-e",
+        "--ephem",
+        help="Ephemeris simulation output file name",
         type=str,
-    )
-    parser.add_argument(
-        "-dr",
-        help="Location of existing/previous temporary ephemeris database to read from if wanted.",
-        dest="dr",
-        type=str,
-    )
-    parser.add_argument(
-        "-dl",
-        help="Delete the temporary ephemeris database after code has completed.",
-        action="store_true",
-        default=False,
-    )
-    parser.add_argument(
-        "-cp",
-        "--complex_physical_parameters",
-        help="Complex physical parameters file name",
-        type=str,
-        dest="cp",
-    )
-    parser.add_argument(
-        "-p",
-        "--params",
-        help="Physical parameters file name",
-        type=str,
-        dest="p",
+        dest="e",
         required=True,
     )
-    parser.add_argument(
+    required.add_argument(
+        "-o",
+        "--outfile",
+        help="Path to store output and logs.",
+        type=str,
+        dest="o",
+        required=True,
+    )
+    required.add_argument(
         "-ob",
         "--orbit",
         help="Orbit file name",
@@ -355,15 +337,15 @@ def main():
         default="./data/orbit.des",
         required=True,
     )
-    parser.add_argument(
-        "-e",
-        "--ephem",
-        help="Ephemeris simulation output file name",
+    required.add_argument(
+        "-p",
+        "--params",
+        help="Physical parameters file name",
         type=str,
-        dest="e",
+        dest="p",
         required=True,
     )
-    parser.add_argument(
+    required.add_argument(
         "-pd",
         "--pointing_database",
         help="Survey pointing information",
@@ -372,27 +354,35 @@ def main():
         required=True,
     )
 
-    parser.add_argument("-s", "--survey", help="Survey to simulate", type=str, dest="s", default="LSST")
-    parser.add_argument(
-        "-o",
-        "--outfile",
-        help="Path to store output and logs.",
+    optional = parser.add_argument_group("Optional arguments")
+    optional.add_argument(
+        "-cp",
+        "--complex_physical_parameters",
+        help="Complex physical parameters file name",
         type=str,
-        dest="o",
-        required=True,
+        dest="cp",
     )
-    parser.add_argument(
-        "-t", "--stem", help="Output file name stem.", type=str, dest="t", default="SSPPOutput"
+    optional.add_argument(
+        "-dw",
+        help="Make temporary ephemeris database. If no filepath/name supplied, default name and ephemeris input location used.",
+        dest="dw",
+        nargs="?",
+        const="default",
+        type=str,
     )
-    parser.add_argument(
-        "-v",
-        "--verbose",
-        help="Verbosity. Default currently true; include to turn off verbosity.",
-        dest="v",
-        default=True,
-        action="store_false",
+    optional.add_argument(
+        "-dr",
+        help="Location of existing/previous temporary ephemeris database to read from if wanted.",
+        dest="dr",
+        type=str,
     )
-    parser.add_argument(
+    optional.add_argument(
+        "-dl",
+        help="Delete the temporary ephemeris database after code has completed.",
+        action="store_true",
+        default=False,
+    )
+    optional.add_argument(
         "-f",
         "--force",
         help="Force deletion/overwrite of existing output file(s). Default False.",
@@ -400,10 +390,23 @@ def main():
         action="store_true",
         default=False,
     )
+    optional.add_argument("-s", "--survey", help="Survey to simulate", type=str, dest="s", default="LSST")
+    optional.add_argument(
+        "-t", "--stem", help="Output file name stem.", type=str, dest="t", default="SSPPOutput"
+    )
+    optional.add_argument(
+        "-v",
+        "--verbose",
+        help="Verbosity. Default currently true; include to turn off verbosity.",
+        dest="v",
+        default=True,
+        action="store_false",
+    )
+
     args = parser.parse_args()
 
     # Extract the output file path now in order to set up logging.
-    outpath = PPFindFileOrExit(args.u, "-u, --outfile")
+    outpath = PPFindFileOrExit(args.o, "-o, --outfile")
     pplogger = PPGetLogger(outpath)
     pplogger.info("Sorcha Start (Main)")
     pplogger.info(f"Command line: {' '.join(sys.argv)}")

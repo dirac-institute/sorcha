@@ -26,10 +26,11 @@ def PPCommandLineParser(args):
     cmd_args_dict = {}
 
     cmd_args_dict["paramsinput"] = PPFindFileOrExit(args.p, "-p, --params")
-    cmd_args_dict["orbinfile"] = PPFindFileOrExit(args.o, "-o, --orbit")
+    cmd_args_dict["orbinfile"] = PPFindFileOrExit(args.ob, "-ob, --orbit")
     cmd_args_dict["oifoutput"] = PPFindFileOrExit(args.e, "-e, --ephem")
     cmd_args_dict["configfile"] = PPFindFileOrExit(args.c, "-c, --config")
-    cmd_args_dict["outpath"] = PPFindFileOrExit(args.u, "-u, --outfile")
+    cmd_args_dict["outpath"] = PPFindFileOrExit(args.o, "-o, --outfile")
+    cmd_args_dict["pointing_database"] = PPFindFileOrExit(args.pd, "-pd, --pointing_database")
 
     if args.cp:
         cmd_args_dict["complex_physical_parameters"] = PPFindFileOrExit(
