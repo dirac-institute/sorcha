@@ -13,7 +13,7 @@ from sorcha.modules.PPReadPointingDatabase import PPReadPointingDatabase
 # TODO: this should be handled by the `simulation_data_files` module
 dir_path = "/Users/maxwest/notebooks/assist_plus_rebound/input_for_mpchecker"
 
-out_path = get_data_out_filepath("checker.txt")
+out_csv_path = get_data_out_filepath("ephemeris_output.csv")
 
 
 def create_ephemeris(args, configs):
@@ -32,7 +32,7 @@ def create_ephemeris(args, configs):
     pixel_dict = defaultdict(list)
     observatories = Observatory()
 
-    outfile = open(out_path, "w", encoding="utf-8")
+    out_csv_file = open(out_csv_path, "w", encoding="utf-8")
 
     pointings_df = PPReadPointingDatabase(
         args.pointing_database, configs["observing_filters"], configs["pointing_sql_query"]
@@ -95,7 +95,7 @@ def create_ephemeris(args, configs):
                         dec0,
                         ang_from_center,
                     )
-                    outfile.write(outstring)
+                    out_csv_file.write(outstring)
 
-    outfile.close()
+    out_csv_file.close()
     spice.kclear()

@@ -5,11 +5,17 @@ import random
 import rebound
 from collections import defaultdict
 import assist
+import logging
+import sys
 
-from sorcha.ephemeris.simulation_data_files import make_retriever, DE440S, JPL_PLANETS, JPL_SMALL_BODIES, META_KERNEL, MPC_ORBITS
-
-# TODO: this should be handled by the `simulation_data_files` module
-dir_path = "/Users/maxwest/notebooks/assist_plus_rebound/input_for_mpchecker"
+from sorcha.ephemeris.simulation_data_files import (
+    make_retriever,
+    JPL_PLANETS,
+    JPL_SMALL_BODIES,
+    META_KERNEL,
+    MPC_ORBITS,
+    ORDERED_KERNEL_FILES,
+)
 
 
 def create_assist_ephemeris() -> Ephem:
@@ -34,10 +40,24 @@ def furnish_spiceypy():
     # this namespace, and when we access it via `import spiceypy as spice`, that
     # we'll be able to work with it correctly.
 
-    # ! The following is a place holder
+    pplogger = logging.getLogger(__name__)
+
     retriever = make_retriever()
-    kernel_1 = retriever.fetch(META_KERNEL)
-    spice.furnsh(kernel_1)
+
+    for kernel_file in ORDERED_KERNEL_FILES:
+        retriever.fetch(kernel_file)
+
+    try:
+        meta_kernel = retriever.fetch(META_KERNEL)
+    except ValueError:
+        pplogger.error(
+            "ERROR: furnish_spiceypy: Must create meta_kernel.txt by running `bootstrap_sorcha_data_files` on the command line."
+        )
+        sys.exit(
+            "ERROR: furnish_spiceypy: Must create meta_kernel.txt by running `bootstrap_sorcha_data_files` on the command line."
+        )
+
+    spice.furnsh(meta_kernel)
 
 
 def generate_simulations(ephem):
