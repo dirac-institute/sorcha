@@ -88,12 +88,20 @@ class CombinedDataReader:
             ephem_df = self.ephem_reader.read_rows(self.block_start, block_size)
             self.block_start += len(ephem_df)
 
+            if not "ObjID" in ephem_df.columns:
+                pplogger.error("ERROR: No ObjID provided for ephemerides.")
+                sys.exit("ERROR: No ObjID provided for ephemerides.")
+
             obj_ids = ephem_df["ObjID"].unique().tolist()
             primary_df = None
         else:
             verboselog(f"Loading object IDs from: {self.aux_data_readers[0].get_reader_info()}")
             primary_df = self.aux_data_readers[0].read_rows(self.block_start, block_size)
             self.block_start += len(primary_df)
+
+            if not "ObjID" in primary_df.columns:
+                pplogger.error("ERROR: No ObjID provided.")
+                sys.exit("ERROR: No ObjID provided.")
 
             obj_ids = primary_df["ObjID"].unique().tolist()
             ephem_df = None

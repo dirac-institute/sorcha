@@ -9,7 +9,6 @@ class args:
     def __init__(self, filename):
         args.filename = filename
         self.ephemeridestype = "oif"
-        self.pointingdatabase = get_test_filepath("baseline_10klines_2.0.db")
         self.ephformat = "whitespace"
         self.auxformat = "whitespace"
         self.sizeserialchunk = 10
@@ -51,8 +50,6 @@ def test_makeConfigPP(tmp_path):
 
     config_test = configparser.ConfigParser()
     config_test.read(os.path.join(tmp_path, "testconfig.ini"))
-
-    config_test.set("INPUT", "pointing_database", "../tests/data/baseline_10klines_2.0.db")
 
     assert config_expected == config_test
 
