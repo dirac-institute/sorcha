@@ -12,7 +12,7 @@ from sorcha.utilities.dataUtilitiesForTests import get_data_out_filepath
 # TODO: this should be handled by the `simulation_data_files` module
 dir_path = "/Users/maxwest/notebooks/assist_plus_rebound/input_for_mpchecker"
 
-out_path = get_data_out_filepath("checker.txt")
+out_csv_path = get_data_out_filepath("ephemeris_output.csv")
 
 
 def create_ephemeris():
@@ -31,7 +31,7 @@ def create_ephemeris():
     pixel_dict = defaultdict(list)
     observatories = Observatory()
 
-    outfile = open(out_path, "w", encoding="utf-8")
+    out_csv_file = open(out_csv_path, "w", encoding="utf-8")
 
     # TODO: Make this run off the provided `sorchaArguments.pointing_database`
     with open(dir_path + "/pointings.csv") as csv_file:
@@ -94,7 +94,7 @@ def create_ephemeris():
 
                         ang_from_center = 180 / np.pi * np.arccos(np.dot(rho_hat, visit_vec))
                         if ang_from_center < ang_fov:
-                            outstring = "%lf %lf %s %s %f %f %lf\n" % (
+                            outstring = "%lf,%lf,%s,%s,%f,%f,%lf\n" % (
                                 jd_tdb,
                                 mjd_tai,
                                 utc_str,
@@ -103,9 +103,9 @@ def create_ephemeris():
                                 dec0,
                                 ang_from_center,
                             )
-                            outfile.write(outstring)
+                            out_csv_file.write(outstring)
 
                 line_count += 1
 
-    outfile.close()
+    out_csv_file.close()
     spice.kclear()
