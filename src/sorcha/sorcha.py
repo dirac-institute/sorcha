@@ -6,6 +6,8 @@ import numpy as np
 import argparse
 import os
 
+from sorcha.ephemeris.simulation_driver import create_ephemeris
+
 from sorcha.modules.PPReadPointingDatabase import PPReadPointingDatabase
 from sorcha.modules.PPLinkingFilter import PPLinkingFilter
 from sorcha.modules.PPTrailingLoss import PPTrailingLoss
@@ -39,6 +41,11 @@ from sorcha.lightcurves.lightcurve_registration import update_lc_subclasses
 from sorcha.utilities.sorchaArguments import sorchaArguments
 
 # Author: Samuel Cornwall, Siegfried Eggl, Grigori Fedorets, Steph Merritt, Meg Schwamb
+
+
+def runLSSTSimulation(cmd_args, pplogger=None):
+    configs = PPConfigFileParser(cmd_args.configfile, cmd_args.surveyname)
+    create_ephemeris(cmd_args, configs)
 
 
 def runLSSTPostProcessing(cmd_args, pplogger=None):
@@ -422,7 +429,8 @@ def main():
     # Extract and validate the remaining arguments.
     cmd_args = PPCommandLineParser(args)
     if cmd_args["surveyname"] in ["LSST", "lsst"]:
-        runLSSTPostProcessing(cmd_args, pplogger)
+        runLSSTSimulation(cmd_args, pplogger)
+        # runLSSTPostProcessing(cmd_args, pplogger)
     else:
         sys.exit(
             "ERROR: Survey name not recognised. Current allowed surveys are: {}".format(["LSST", "lsst"])
