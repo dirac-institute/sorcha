@@ -47,7 +47,7 @@ Installing Sorcha
 ----------------------
 
 Unless you're editing the source code, you can use the version of Sorcha published on pypy using pip::
-   pip install sorcha --upgrade
+   pip install --upgrade sorcha
 
 
 Installing Sorcha in Development Mode
