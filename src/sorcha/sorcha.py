@@ -371,12 +371,10 @@ def main():
         dest="cp",
     )
     optional.add_argument(
-        "-dw",
-        help="Make temporary ephemeris database. If no filepath/name supplied, default name and ephemeris input location used.",
-        dest="dw",
-        nargs="?",
-        const="default",
-        type=str,
+        "-dl",
+        help="Delete the temporary ephemeris database after code has completed.",
+        action="store_true",
+        default=False,
     )
     optional.add_argument(
         "-dr",
@@ -385,10 +383,12 @@ def main():
         type=str,
     )
     optional.add_argument(
-        "-dl",
-        help="Delete the temporary ephemeris database after code has completed.",
-        action="store_true",
-        default=False,
+        "-dw",
+        help="Make temporary ephemeris database. If no filepath/name supplied, default name and ephemeris input location used.",
+        dest="dw",
+        nargs="?",
+        const="default",
+        type=str,
     )
     optional.add_argument(
         "-f",
