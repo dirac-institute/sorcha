@@ -1,5 +1,7 @@
-How Sorcha Works
-================
+.. _filters:
+
+Sorcha's Filter Options
+========================================
 
 Brightness Limit
 -----------------

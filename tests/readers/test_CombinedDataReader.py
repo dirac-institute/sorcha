@@ -44,11 +44,11 @@ def test_CombinedDataReader():
         "Obs-Sun(J2000vy)(km/s)": 10.565,
         "Obs-Sun(J2000vz)(km/s)": 4.677,
         "Sun-Ast-Obs(deg)": 8.010336,
-        "t_0": 54800.0,
+        "epoch": 54800.0,
         "t_p": 23466.22367,
-        "argperi": 284.5519,
+        "argPeri": 284.5519,
         "node": 217.91073,
-        "incl": 5.37133,
+        "inc": 5.37133,
         "e": 0.4966,
         "q": 6.88417,
         "H_r": 14.23,
@@ -58,6 +58,7 @@ def test_CombinedDataReader():
         "z-r": -0.12,
         "y-r": -0.12,
         "GS": 0.15,
+        "FORMAT": "COM",
     }
     assert_equal(set(res_df.columns.values), set(expected_data.keys()))
     for col in expected_data.keys():
@@ -114,11 +115,11 @@ def test_CombinedDataReader_ephem():
         "Obs-Sun(J2000vy)(km/s)": 10.565,
         "Obs-Sun(J2000vz)(km/s)": 4.677,
         "Sun-Ast-Obs(deg)": 8.010336,
-        "t_0": 54800.0,
+        "epoch": 54800.0,
         "t_p": 23466.22367,
-        "argperi": 284.5519,
+        "argPeri": 284.5519,
         "node": 217.91073,
-        "incl": 5.37133,
+        "inc": 5.37133,
         "e": 0.4966,
         "q": 6.88417,
         "H_r": 14.23,
@@ -128,6 +129,7 @@ def test_CombinedDataReader_ephem():
         "z-r": -0.12,
         "y-r": -0.12,
         "GS": 0.15,
+        "FORMAT": "COM",
     }
     assert_equal(set(res_df.columns.values), set(expected_data.keys()))
     for col in expected_data.keys():
@@ -142,6 +144,11 @@ def test_CombinedDataReader_ephem():
     # FieldMJD == 60325.354511.
     assert res_df.iloc[0]["ObjID"] == "12733"
     assert res_df.iloc[0]["FieldMJD"] == pytest.approx(60325.354511)
+
+    # We fail if we try to set the ephem reader a second time.
+    with pytest.raises(SystemExit) as err:
+        reader.add_ephem_reader(OIFDataReader(get_test_filepath("PPReadAllInput_oif.txt"), "csv"))
+    assert err.type == SystemExit
 
 
 def test_CombinedDataReader_fail():

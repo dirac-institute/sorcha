@@ -32,7 +32,9 @@ def PPApplyFOVFilter(observations, configs, rng, footprint=None, verbose=False):
 
     if configs["camera_model"] == "footprint":
         verboselog("Applying sensor footprint filter...")
-        onSensor, detectorIDs = footprint.applyFootprint(observations)
+        onSensor, detectorIDs = footprint.applyFootprint(
+            observations, edge_thresh=configs["footprint_edge_threshold"]
+        )
 
         observations = observations.iloc[onSensor].copy()
         observations["detectorID"] = detectorIDs

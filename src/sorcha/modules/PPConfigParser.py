@@ -331,11 +331,14 @@ def PPConfigFileParser(configfile, survey_name):
     config_dict (dictionary): dictionary of config file variables.
 
     """
+    pplogger = logging.getLogger(__name__)
+
+    # Save a raw copy of the configuration to the logs as a backup.
+    with open(configfile, "r") as file:
+        pplogger.info(f"Copy of configuration file {configfile}:\n{file.read()}")
 
     config = configparser.ConfigParser()
     config.read(configfile)
-
-    pplogger = logging.getLogger(__name__)
 
     config_dict = {}
 
@@ -361,11 +364,6 @@ def PPConfigFileParser(configfile, survey_name):
     if config_dict["ephemerides_type"] not in ["oif"]:
         pplogger.error("ERROR: ephemerides_type not recognised.")
         sys.exit("ERROR: ephemerides_type not recognised.")
-
-    config_dict["pointing_database"] = PPGetOrExit(
-        config, "INPUT", "pointing_database", "ERROR: no pointing database provided."
-    )
-    PPFindFileOrExit(config_dict["pointing_database"], "pointing_database")
 
     config_dict["size_serial_chunk"] = PPGetIntOrExit(
         config, "INPUT", "size_serial_chunk", "ERROR: size_serial_chunk not specified."
@@ -440,6 +438,10 @@ def PPConfigFileParser(configfile, survey_name):
         )
         PPFindFileOrExit(config_dict["footprint_path"], "footprint_path")
 
+        config_dict["footprint_edge_threshold"], _ = PPGetValueAndFlag(
+            config, "FOV", "footprint_edge_threshold", "float"
+        )
+
         if config.has_option("FOV", "fill_factor"):
             pplogger.error('ERROR: fill factor supplied in config file but camera model is not "circle".')
             sys.exit('ERROR: fill factor supplied in config file but camera model is not "circle".')
@@ -466,6 +468,14 @@ def PPConfigFileParser(configfile, survey_name):
             if config_dict["circle_radius"] < 0.0:
                 pplogger.error("ERROR: circle_radius is negative.")
                 sys.exit("ERROR: circle_radius is negative.")
+
+        if config.has_option("FOV", "footprint_edge_threshold"):
+            pplogger.error(
+                'ERROR: footprint edge threshold supplied in config file but camera model is not "footprint".'
+            )
+            sys.exit(
+                'ERROR: footprint edge threshold supplied in config file but camera model is not "footprint".'
+            )
 
     # FADINGFUNCTION
 
@@ -723,7 +733,7 @@ def PPPrintConfigsToLog(configs, cmd_args):
     pplogger.info("Format of ephemerides file is: " + configs["eph_format"])
     pplogger.info("Format of auxiliary files is: " + configs["aux_format"])
 
-    pplogger.info("Pointing database path is: " + configs["pointing_database"])
+    pplogger.info("Pointing database path is: " + cmd_args.pointing_database)
     pplogger.info("Pointing database required query is: " + configs["pointing_sql_query"])
 
     pplogger.info(

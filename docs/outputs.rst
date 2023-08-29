@@ -1,73 +1,7 @@
 Outputs
 ==================
   
-Objects in Field (OIF) Output
-------------------------------
-The format of the OIF output, that is printed after the header information that is at the top of the file, looks something like::
-   
-   ObjID, FieldID, FieldMJD, AstRange(km), AstRangeRate(km/s), AstRA(deg), AstRARate(deg/day), AstDec(deg), AstDecRate(deg/day), Ast-Sun(J2000x)(km), Ast-Sun(J2000y)(km), Ast-Sun(J2000z)(km), Ast-Sun(J2000vx)(km/s), Ast-Sun(J2000vy)(km/s), Ast-Sun(J2000vz)(km/s), Obs-Sun(J2000x)(km), Obs-Sun(J2000y)(km), Obs-Sun(J2000z)(km), Obs-Sun(J2000vx)(km/s), Obs-Sun(J2000vy)(km/s), Obs-Sun(J2000vz)(km/s), Sun-Ast-Obs(deg), V, V(H=0)
-   S100003Ua,992,59855.012720,232764749.248562,19.381,313.391309,0.093855,-14.189297,-0.001147,302701424.872,-141376977.611,-47258199.518,10.938,16.381,6.838,147675817.300,22607836.793,9798564.669,-5.071,27.085,11.641,22.025168,12.229,3.789
-   S100005xa,40,59854.002209,311895722.264139,18.108,312.493375,0.024745,-10.868628,-0.020284,355032405.197,-205593003.122,-50029660.233,8.437,15.234,7.005,148124584.428,20259701.559,8780700.962,-4.542,27.134,11.674,17.656392,14.416,4.726
-
-
-The output from OIF is directly input into surveySimPP. The following table gives an overview of each of the output columns:
-
-+------------------------+----------------------------------------------------------------------------------+
-| Keyword                | Description                                                                      |
-+========================+==================================================================================+
-| ObjID                  | Object identifier                                                                |
-+------------------------+----------------------------------------------------------------------------------+
-| FieldID                | Pointing Identifer                                                               |
-+------------------------+----------------------------------------------------------------------------------+
-| FieldMJD               | MJD (Mean Julian Date) of the observation                                        | 
-+------------------------+----------------------------------------------------------------------------------+
-| AstRange(km)           | Topocentric distance to the small body (km)                                      |
-+------------------------+----------------------------------------------------------------------------------+
-| AstRangeRate(km/s)     | Radial component of the topocentric velocity vector (km/s)                       |
-+------------------------+----------------------------------------------------------------------------------+
-| AstRA(deg)             | Object Right Ascension (RA) (degrees)                                            |
-+------------------------+----------------------------------------------------------------------------------+
-| AstRARate(deg/day)     | Observed rate of on-sky motion in RA (degree/day)                                |
-+------------------------+----------------------------------------------------------------------------------+
-| AstDec (deg)           | Object Declination (Dec) (degrees)                                               |
-+------------------------+----------------------------------------------------------------------------------+
-| AstDecRate(deg/day)    | Observed rate of on-sky motion in Dec (degree/day)                               |
-+------------------------+----------------------------------------------------------------------------------+
-| Ast-Sun(J2000x)(km)    | Object heliocentric distance (x-component) (km)                                  |
-+------------------------+----------------------------------------------------------------------------------+
-| Ast-Sun(J2000y)(km)    | Object heliocentric distance (y-component) (km)                                  |
-+------------------------+----------------------------------------------------------------------------------+
-| Ast-Sun(J2000z)(km)    | Object heliocentric distance (z-component) (km)                                  |
-+------------------------+----------------------------------------------------------------------------------+
-| Ast-Sun(J2000vx)(km/s) | Object heliocentric velocity (x-component) (km/s)                                |
-+------------------------+----------------------------------------------------------------------------------+
-| Ast-Sun(J2000vy)(km/s) | Object heliocentric velocity (y-component) (km/s)                                |
-+------------------------+----------------------------------------------------------------------------------+
-| Ast-Sun(J2000vz)(km/s) | Object heliocentric velocity (z-component) (km/s)                                |
-+------------------------+----------------------------------------------------------------------------------+
-| Obs-Sun(J2000x)(km)    | Observer heliocentric distance (x-component) (km)                                |
-+------------------------+----------------------------------------------------------------------------------+
-| Obs-Sun(J2000y)(km)    | Observer heliocentric distance (y-component) (km)                                |
-+------------------------+----------------------------------------------------------------------------------+
-| Obs-Sun(J2000z)(km)    | Observer heliocentric distance (z-component) (km)                                |
-+------------------------+----------------------------------------------------------------------------------+
-| Obs-Sun(J2000vx)(km/s) | Observer heliocentric velocity (x-component) (km/s)                              |
-+------------------------+----------------------------------------------------------------------------------+
-| Obs-Sun(J2000vy)(km/s) | Observer heliocentric velocity (y-component) (km/s)                              |
-+------------------------+----------------------------------------------------------------------------------+
-| Obs-Sun(J2000vz)(km/s) | Observer heliocentric velocity (z-component) (km/s)                              |
-+------------------------+----------------------------------------------------------------------------------+
-| Sun-Ast-Obs(deg)       | Phase angle (hase angle between the Sun, object, & observer) (degrees)           |
-+------------------------+----------------------------------------------------------------------------------+
-| V                      | Object's apparent V magnitude, if H is provided                                  |
-+------------------------+----------------------------------------------------------------------------------+
-| V(H=0)                 | Object's apprent V amgnitude if H=0, if H is provided as input                   |
-+------------------------+----------------------------------------------------------------------------------+
-
-.. note::
-   All positions, positions, and velocities are in respect to J2000. 
-
-Sorcha Output
+Basic Output
 ----------------------
 The format of the survey simulator output looks something like::
 
@@ -117,3 +51,6 @@ The format of the survey simulator output looks something like::
 
 .. note::
    All positions, positions, and velocities are in respect to J2000.
+
+Full Output
+----------------------

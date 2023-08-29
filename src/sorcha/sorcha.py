@@ -17,7 +17,8 @@ from sorcha.modules.PPSNRLimit import PPSNRLimit
 from sorcha.modules import PPAddUncertainties, PPRandomizeMeasurements
 from sorcha.modules import PPVignetting
 from sorcha.modules.PPFadingFunctionFilter import PPFadingFunctionFilter
-from sorcha.modules.PPConfigParser import PPConfigFileParser, PPPrintConfigsToLog
+from sorcha.modules.PPConfigParser import PPConfigFileParser, PPPrintConfigsToLog, PPFindFileOrExit
+
 from sorcha.modules.PPGetLogger import PPGetLogger
 from sorcha.modules.PPCommandLineParser import PPCommandLineParser
 from sorcha.modules.PPMatchPointingToObservations import PPMatchPointingToObservations
@@ -40,7 +41,7 @@ from sorcha.utilities.sorchaArguments import sorchaArguments
 # Author: Samuel Cornwall, Siegfried Eggl, Grigori Fedorets, Steph Merritt, Meg Schwamb
 
 
-def runLSSTPostProcessing(cmd_args):
+def runLSSTPostProcessing(cmd_args, pplogger=None):
     """
     Runs the post processing survey simulator functions that apply a series of
     filters to bias a model Solar System small body population to what the
@@ -48,27 +49,42 @@ def runLSSTPostProcessing(cmd_args):
 
     Parameters:
     -----------
-    cmd_args (dictionary or `sorchaArguments` object): dictionary of command-line arguments.
+    cmd_args (dictionary or `sorchaArguments` object):
+        dictionary of command-line arguments.
+
+    pplogger : logging.Logger, optional
+        The logger to use in this function. If None creates a new one.
 
     Returns:
     -----------
     None.
 
     """
+    # Set up logging if it hasn't happened already.
+    if pplogger is None:
+        if type(cmd_args) is dict:
+            pplogger = PPGetLogger(cmd_args["outpath"])
+        else:
+            pplogger = PPGetLogger(cmd_args.outpath)
+    pplogger.info("Post-processing begun.")
 
     update_lc_subclasses()
     update_activity_subclasses()
 
-    # Initialise argument parser and assign command line arguments
-
+    # Initialise argument parser, assign command line arguments, and validate.
     args = cmd_args
     if type(cmd_args) is dict:
-        args = sorchaArguments(cmd_args)
+        try:
+            args = sorchaArguments(cmd_args)
+        except Exception as err:
+            pplogger.error(err)
+            sys.exit(err)
 
-    args.validate_arguments()
-
-    pplogger = PPGetLogger(args.outpath)
-    pplogger.info("Post-processing begun.")
+    try:
+        args.validate_arguments()
+    except Exception as err:
+        pplogger.error(err)
+        sys.exit(err)
 
     # if verbosity flagged, the verboselog function will log the message specified
     # if not, verboselog does absolutely nothing
@@ -96,7 +112,7 @@ def runLSSTPostProcessing(cmd_args):
     verboselog("Reading pointing database...")
 
     filterpointing = PPReadPointingDatabase(
-        configs["pointing_database"], configs["observing_filters"], configs["pointing_sql_query"]
+        args.pointing_database, configs["observing_filters"], configs["pointing_sql_query"]
     )
 
     # Set up the data readers.
@@ -116,8 +132,8 @@ def runLSSTPostProcessing(cmd_args):
 
     reader.add_aux_data_reader(OrbitAuxReader(args.orbinfile, configs["aux_format"]))
     reader.add_aux_data_reader(CSVDataReader(args.paramsinput, configs["aux_format"]))
-    if configs["comet_activity"] == "comet":
-        reader.add_aux_data_reader(CSVDataReader(args.cometinput, configs["aux_format"]))
+    if configs["comet_activity"] is not None:
+        reader.add_aux_data_reader(CSVDataReader(args.complex_parameters, configs["aux_format"]))
 
     # In case of a large input file, the data is read in chunks. The
     # "sizeSerialChunk" parameter in PPConfig.ini assigns the chunk.
@@ -268,35 +284,105 @@ def main():
     model Solar System small body population to what the specified wide-field
     survey would observe.
 
-    usage: sorcha [-h] -c C [-dw [DW]] [-dr DR] [-dl] [-m M] -p P -o O -e E [-s S] -u U [-t T] [-v] [-f]
-        arguments:
-          -h, --help         show this help message and exit
-          -c C, --config C   Input configuration file name
-          -dw [DW]           Make temporary ephemeris database. If no filepath/name supplied, default name and ephemeris input location used.
-          -dr DR             Location of existing/previous temporary ephemeris database to read from if wanted.
-          -dl                Delete the temporary ephemeris database after code has completed.
-          -m M, --comet M    Comet parameter file name
-          -p P, --params P   Physical parameters file name
-          -o O, --orbit O    Orbit file name
-          -e E, --ephem E    Ephemeris simulation output file name
-          -s S, --survey S   Survey to simulate
-          -u U, --outfile U  Path to store output and logs.
-          -t T, --stem T     Output file name stem.
-          -v, --verbose      Verbosity. Default currently true; include to turn off verbosity.
-          -f, --force        Force deletion/overwrite of existing output file(s). Default False.
+    usage: sorcha [-h] -c C -e E -o O -ob OB -p P -pd PD [-cp CP] [-dw [DW]] [-dr DR] [-dl] [-f] [-s S] [-t T] [-v]
+
+    options:
+      -h, --help            show this help message and exit
+
+    Required arguments:
+      -c C, --config C      Input configuration file name (default: None)
+      -e E, --ephem E       Ephemeris simulation output file name (default: None)
+      -o O, --outfile O     Path to store output and logs. (default: None)
+      -ob OB, --orbit OB    Orbit file name (default: ./data/orbit.des)
+      -p P, --params P      Physical parameters file name (default: None)
+      -pd PD, --pointing_database PD
+                        Survey pointing information (default: None)
+
+    Optional arguments:
+      -cp CP, --complex_physical_parameters CP
+                            Complex physical parameters file name (default: None)
+      -dw [DW]              Make temporary ephemeris database. If no filepath/name supplied, default name and ephemeris input location used. (default: None)
+      -dr DR                Location of existing/previous temporary ephemeris database to read from if wanted. (default: None)
+      -dl                   Delete the temporary ephemeris database after code has completed. (default: False)
+      -f, --force           Force deletion/overwrite of existing output file(s). Default False. (default: False)
+      -s S, --survey S      Survey to simulate (default: LSST)
+      -t T, --stem T        Output file name stem. (default: SSPPOutput)
+      -v, --verbose         Verbosity. Default currently true; include to turn off verbosity. (default: True)
     """
 
-    parser = argparse.ArgumentParser()
-    parser.add_argument(
+    parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+    required = parser.add_argument_group("Required arguments")
+    required.add_argument(
         "-c",
         "--config",
         help="Input configuration file name",
         type=str,
         dest="c",
-        default="./PPConfig.ini",
         required=True,
     )
-    parser.add_argument(
+    required.add_argument(
+        "-e",
+        "--ephem",
+        help="Ephemeris simulation output file name",
+        type=str,
+        dest="e",
+        required=True,
+    )
+    required.add_argument(
+        "-o",
+        "--outfile",
+        help="Path to store output and logs.",
+        type=str,
+        dest="o",
+        required=True,
+    )
+    required.add_argument(
+        "-ob",
+        "--orbit",
+        help="Orbit file name",
+        type=str,
+        dest="ob",
+        default="./data/orbit.des",
+        required=True,
+    )
+    required.add_argument(
+        "-p",
+        "--params",
+        help="Physical parameters file name",
+        type=str,
+        dest="p",
+        required=True,
+    )
+    required.add_argument(
+        "-pd",
+        "--pointing_database",
+        help="Survey pointing information",
+        type=str,
+        dest="pd",
+        required=True,
+    )
+
+    optional = parser.add_argument_group("Optional arguments")
+    optional.add_argument(
+        "-cp",
+        "--complex_physical_parameters",
+        help="Complex physical parameters file name",
+        type=str,
+        dest="cp",
+    )
+    optional.add_argument(
+        "-dl",
+        help="Delete the temporary ephemeris database after code has completed.",
+        action="store_true",
+        default=False,
+    )
+    optional.add_argument(
+        "-dr",
+        help="Location of existing/previous temporary ephemeris database to read from if wanted.",
+        dest="dr",
+        type=str,
+    )
+    optional.add_argument(
         "-dw",
         help="Make temporary ephemeris database. If no filepath/name supplied, default name and ephemeris input location used.",
         dest="dw",
@@ -304,62 +390,7 @@ def main():
         const="default",
         type=str,
     )
-    parser.add_argument(
-        "-dr",
-        help="Location of existing/previous temporary ephemeris database to read from if wanted.",
-        dest="dr",
-        type=str,
-    )
-    parser.add_argument(
-        "-dl",
-        help="Delete the temporary ephemeris database after code has completed.",
-        action="store_true",
-        default=False,
-    )
-    parser.add_argument("-m", "--comet", help="Comet parameter file name", type=str, dest="m")
-    parser.add_argument(
-        "-p",
-        "--params",
-        help="Physical parameters file name",
-        type=str,
-        dest="p",
-        default="./data/params",
-        required=True,
-    )
-    parser.add_argument(
-        "-o", "--orbit", help="Orbit file name", type=str, dest="o", default="./data/orbit.des", required=True
-    )
-    parser.add_argument(
-        "-e",
-        "--ephem",
-        help="Ephemeris simulation output file name",
-        type=str,
-        dest="e",
-        default="./data/oiftestoutput",
-        required=True,
-    )
-    parser.add_argument("-s", "--survey", help="Survey to simulate", type=str, dest="s", default="LSST")
-    parser.add_argument(
-        "-u",
-        "--outfile",
-        help="Path to store output and logs.",
-        type=str,
-        dest="u",
-        default="./data/out/",
-        required=True,
-    )
-    parser.add_argument(
-        "-t", "--stem", help="Output file name stem.", type=str, dest="t", default="SSPPOutput"
-    )
-    parser.add_argument(
-        "-v",
-        "--verbose",
-        help="Verbosity. Default currently true; include to turn off verbosity.",
-        dest="v",
-        default=True,
-        action="store_false",
-    )
-    parser.add_argument(
+    optional.add_argument(
         "-f",
         "--force",
         help="Force deletion/overwrite of existing output file(s). Default False.",
@@ -367,12 +398,31 @@ def main():
         action="store_true",
         default=False,
     )
+    optional.add_argument("-s", "--survey", help="Survey to simulate", type=str, dest="s", default="LSST")
+    optional.add_argument(
+        "-t", "--stem", help="Output file name stem.", type=str, dest="t", default="SSPPOutput"
+    )
+    optional.add_argument(
+        "-v",
+        "--verbose",
+        help="Verbosity. Default currently true; include to turn off verbosity.",
+        dest="v",
+        default=True,
+        action="store_false",
+    )
 
     args = parser.parse_args()
-    cmd_args = PPCommandLineParser(args)
 
+    # Extract the output file path now in order to set up logging.
+    outpath = PPFindFileOrExit(args.o, "-o, --outfile")
+    pplogger = PPGetLogger(outpath)
+    pplogger.info("Sorcha Start (Main)")
+    pplogger.info(f"Command line: {' '.join(sys.argv)}")
+
+    # Extract and validate the remaining arguments.
+    cmd_args = PPCommandLineParser(args)
     if cmd_args["surveyname"] in ["LSST", "lsst"]:
-        runLSSTPostProcessing(cmd_args)
+        runLSSTPostProcessing(cmd_args, pplogger)
     else:
         sys.exit(
             "ERROR: Survey name not recognised. Current allowed surveys are: {}".format(["LSST", "lsst"])

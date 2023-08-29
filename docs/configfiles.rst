@@ -1,26 +1,47 @@
-Configuration Files
+Configuration File
 =====================
 
-Sorcha and Objects In Field both use configuration files to set the majority of the various parameters required for running these software packages. The configuration file for Sorcha allows turning on and off various filters for biasing the simulated small body population to what the survey should have found. An overview of the possible options for the config files are described below with recommendations on what you should set these config parameters to depending on your use case.
+Sorcha uses a configuration files to set the majority of the various parameters required for running these software packages. The configuration file for Sorcha allows turning on and off various filters for biasing the simulated small body population to what the survey should have found. An overview of the possible options for the configuration file are described below with recommendations on what you should set these config parameters to depending on your use case.
 
 .. tip::
-  We have developed  a set of utilities that are installed alongside Sorcha that can generate a config file for Objects in Field (See :ref:`makeConfigOIF`) and one for Sorcha (See :ref:`makeConfigPP`). 
+  We have developed  a set of utilities that are installed alongside Sorcha that can generate a config file for Sorcha (See :ref:`makeConfigPP`). 
 
-Objects in Field Configuration File
+Example Configuration Files
 ------------------------------------
 
-.. tip::
-   We recommend that **nbody** should be always be set to **True**. You can break up the task across multiple proccesses if you need an increase in speed.
+The following sections show reasonable configuration files for various settings.
 
-Sorcha Configuration File
-------------------------------------
+Rubin Full Footprint
+~~~~~~~~~~~~~~~~~~~~~~
 
- .. _database_query:
+This configuration file is appropriate for running ``sorcha`` using the Rubin
+full detector footprint.
+
+The source code is available `here <https://github.com/dirac-institute/sorcha/blob/main/survey_setups/Rubin_full_footprint.ini>`__.
+
+.. literalinclude:: ../survey_setups/Rubin_full_footprint.ini
+   :language: text
+   :linenos:
+
+Rubin Circular Approximation
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This configuration file is appropriate for running ``sorcha`` using a circular 
+approximation of the Rubin detector.
+
+The source code is available `here <https://github.com/dirac-institute/sorcha/blob/main/survey_setups/Rubin_circular_approximation.ini>`__.
+
+.. literalinclude:: ../survey_setups/Rubin_circular_approximation.ini
+    :language: text
+    :linenos:
+
+
+.. _database_query:
 
 Setting Up the Correct LSST Pointing Database Query
 ---------------------------------------------------
 
-Object in Field's **Surveydbquery** config file parameter and Sorcha's **ppsqldbquery** config file parameter contain the sql query for obtaining this information from the pointing database.
+Sorcha's **ppsqldbquery** config file parameter contain the sql query for obtaining this information from the pointing database.
 
 From rubin_sim v2.0 simulations onward use the query::
 
@@ -29,68 +50,6 @@ From rubin_sim v2.0 simulations onward use the query::
 For past rubin_sim/OpSim simulations pre-v2.0 use the query::
 
   SELECT observationId, observationStartMJD, filter, seeingFwhmGeom, seeingFwhmEff, fiveSigmaDepth, fieldRA, fieldDec, rotSkyPos FROM SummaryAllProps order by observationId
-
-.. _makeConfigOIF:
-
-Using makeConfigOIF
----------------------
-The first config file generator works alongside OIF. By typing in the command::
-
-   makeConfigOIF --help
-
-It returns the following::
-
-  usage: makeConfigOIF [-h] [-no NO] [-ndays NDAYS] [-day1 DAY1] [-prefix PREFIX] [-camerafov CAMERAFOV] [-inputformat INPUTFORMAT] [-cache CACHE] [-mpcfile MPCFILE][-spkstep SPKSTEP] [-telescope TELESCOPE] o pointing
-
-This gives an overview of the arguments accepted by makeCConfigOIF. The two arguments that are required to generate an OIF config file are the name of a file containing 
-the orbits and the name of the pointing database being used. Each of the other parameters are optional, 
-but we will describe them here:
-
-
-
-+--------------------------+----------------------------------------------------------------------------------------------------+
-| Argument                 | Description                                                                                        |
-+==========================+====================================================================================================+
-| o                        | Orbits file                                                                                        |
-+--------------------------+----------------------------------------------------------------------------------------------------+
-| pointing                 | pointing database                                                                                  |
-+--------------------------+----------------------------------------------------------------------------------------------------+
-| -no NO                   | Number of orbits per config file, -1 runs all the orbits in one config file. Default value = 300   | 
-+--------------------------+----------------------------------------------------------------------------------------------------+
-| -ndays NDAYS             | Number of days in survey to run, -1 runs entire survey. Default value = -1                         | 
-+--------------------------+----------------------------------------------------------------------------------------------------+
-| -day1 DAY1               | First day in survey to run. Default value = 1                                                      | 
-+--------------------------+----------------------------------------------------------------------------------------------------+
-| -prefix PREFIX           | Config file name prefix, Default value is an empty string                                          | 
-+--------------------------+----------------------------------------------------------------------------------------------------+
-| -camerafov CAMERAFOV     | Path and file name of the camera fov. Default value = instrument_polygon.dat                       | 
-+--------------------------+----------------------------------------------------------------------------------------------------+
-| -inputformat INPUTFORMAT | Input format (CSV or whitespace). Default value = whitespace                                       | 
-+--------------------------+----------------------------------------------------------------------------------------------------+
-| -cache CACHE             | Base cache directory name. Default value = _cache                                                  | 
-+--------------------------+----------------------------------------------------------------------------------------------------+
-| -mpcfile MPCFILE         | Name of the file containing the MPC observatory codes. Default value = obslist.dat                 | 
-+--------------------------+----------------------------------------------------------------------------------------------------+
-| -spkstep SPKSTEP         | Integration step in days. Default value = 30                                                       | 
-+--------------------------+----------------------------------------------------------------------------------------------------+
-| -telescope TELESCOPE     | Observatory MPC Code. Default value = I11 (Gemini South to be changed to Rubin Observatory)        |
-+--------------------------+----------------------------------------------------------------------------------------------------+
-
-
-The most basic way to use the OIF config file generator is to run::
-
-  makeConfigOIF ./data/test/testorb.des ./data/test/baseline_10yrs_10klines.db
-
-Where testorb.des is the orbit file and baseline_10yrs_10klines.db is the pointing database. This will generate 
-a basic config file, filled mostly with default values. These values can be tweaked by running something like::
-
-  makeConfigOIF ./data/test/testorb.des ./data/test/baseline_10yrs_10klines.db -ndays 10
-  
-Which will generate a config file with the number of days in the survey set to 10.
-
-
-.. note::
-   makeConfigOIF is designed to help generate multiple configuration files if the user wants to divide the compute task across several nodes/processors.
 
 .. _makeConfigPP:
 

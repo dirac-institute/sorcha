@@ -8,19 +8,14 @@
 [![pytest](https://github.com/dirac-institute/sorcha/actions/workflows/testing-and-coverage.yml/badge.svg)](https://github.com/dirac-institute/sorcha/actions/workflows/testing-and-coverage.yml)
 [![Documentation Status](https://readthedocs.org/projects/sorcha/badge/?version=latest)](https://sorcha.readthedocs.io/en/latest/?badge=latest)
 
-LSST stack based post-processing modules in python for the JPL survey simulator: https://github.com/AsteroidSurveySimulator/objectsInField
-
-Currently tested with the following fork: https://github.com/eggls6/objectsInField
+Documentation: https://sorcha.readthedocs.io
 
 Other software utilities can be found in this github repository: https://github.com/dirac-institute/sorcha_communiity_utils/
 
-Documentation: https://sorcha.readthedocs.io
-
 ## developer best practices
 * Data sets should be moved to the `data` folder, have a readme.txt or readme.md to explain where the data came from as well as a time stamp in the readme.txt.
-* Data sets that are used for unit testing should live in `data/test`.  
+* Data sets that are used for unit testing should live in `tests/data`.  
 * All required input files for the main software or unit tests should have extensions that clearly describe the file format (e.g. .csv, .txt, .db, .fits)
-* Function/methods names should follow Rubin / LSST developer guide conventions: https://developer.lsst.io/
 * If you are working on addressing a specific issue ticket, assign yourself the ticket and set the status to "in progress"
 * When making a pull request that closes an issue, cite the issue ticket in the pull request summary
 

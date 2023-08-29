@@ -37,7 +37,6 @@ def test_PPConfigFileParser(setup_and_teardown_for_PPConfigFileParser):
         "eph_format": "csv",
         "aux_format": "whitespace",
         "ephemerides_type": "oif",
-        "pointing_database": "./baseline_10klines_2.0.db",
         "pointing_sql_query": "SELECT observationId, observationStartMJD, filter, seeingFwhmGeom, seeingFwhmEff, fiveSigmaDepth, fieldRA, fieldDec, rotSkyPos FROM observations order by observationId",
         "comet_activity": None,
         "observing_filters": ["r", "g", "i", "z"],
@@ -45,6 +44,7 @@ def test_PPConfigFileParser(setup_and_teardown_for_PPConfigFileParser):
         "trailing_losses_on": True,
         "camera_model": "footprint",
         "footprint_path": "./detectors_corners.csv",
+        "footprint_edge_threshold": 0.0001,
         "bright_limit": 16.0,
         "bright_limit_on": True,
         "SNR_limit": None,
@@ -236,6 +236,7 @@ def test_PPPrintConfigsToLog(tmp_path):
         "orbinfile": "testorb.des",
         "oifoutput": "oiftestoutput.txt",
         "configfile": "test_PPConfig.ini",
+        "pointing_database": "./baseline_10klines_2.0.db",
         "outpath": "./",
         "makeTemporaryEphemerisDatabase": False,
         "readTemporaryEphemerisDatabase": None,
@@ -251,7 +252,6 @@ def test_PPPrintConfigsToLog(tmp_path):
         "eph_format": "csv",
         "aux_format": "whitespace",
         "ephemerides_type": "oif",
-        "pointing_database": "./baseline_10klines_2.0.db",
         "pointing_sql_query": "SELECT observationId, observationStartMJD, filter, seeingFwhmGeom, seeingFwhmEff, fiveSigmaDepth, fieldRA, fieldDec, rotSkyPos FROM observations order by observationId",
         "comet_activity": "none",
         "observing_filters": ["r", "g", "i", "z"],
@@ -259,6 +259,7 @@ def test_PPPrintConfigsToLog(tmp_path):
         "trailing_losses_on": True,
         "camera_model": "footprint",
         "footprint_path": "./detectors_corners.csv",
+        "footprint_edge_threshold": 0.0001,
         "bright_limit": 16.0,
         "bright_limit_on": True,
         "SNR_limit": None,
@@ -289,7 +290,7 @@ def test_PPPrintConfigsToLog(tmp_path):
 
     PPPrintConfigsToLog(configs, args)
 
-    datalog = glob.glob(os.path.join(tmp_path, "*-postprocessing.log"))
+    datalog = glob.glob(os.path.join(tmp_path, "*-sorcha.log"))
 
     testfile = open(os.path.join(test_path, "test_PPPrintConfigsToLog.txt"), mode="r")
     newfile = open(datalog[0], mode="r")

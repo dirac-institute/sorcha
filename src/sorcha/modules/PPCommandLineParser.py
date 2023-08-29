@@ -26,13 +26,16 @@ def PPCommandLineParser(args):
     cmd_args_dict = {}
 
     cmd_args_dict["paramsinput"] = PPFindFileOrExit(args.p, "-p, --params")
-    cmd_args_dict["orbinfile"] = PPFindFileOrExit(args.o, "-o, --orbit")
+    cmd_args_dict["orbinfile"] = PPFindFileOrExit(args.ob, "-ob, --orbit")
     cmd_args_dict["oifoutput"] = PPFindFileOrExit(args.e, "-e, --ephem")
     cmd_args_dict["configfile"] = PPFindFileOrExit(args.c, "-c, --config")
-    cmd_args_dict["outpath"] = PPFindFileOrExit(args.u, "-u, --outfile")
+    cmd_args_dict["outpath"] = PPFindFileOrExit(args.o, "-o, --outfile")
+    cmd_args_dict["pointing_database"] = PPFindFileOrExit(args.pd, "-pd, --pointing_database")
 
-    if args.m:
-        cmd_args_dict["cometinput"] = PPFindFileOrExit(args.m, "-m, --comet")
+    if args.cp:
+        cmd_args_dict["complex_physical_parameters"] = PPFindFileOrExit(
+            args.cp, "-cp, --complex_physical_parameters"
+        )
 
     if args.dw == "default":
         oifpath_split = os.path.split(cmd_args_dict["oifoutput"])
@@ -109,5 +112,9 @@ def PPCommandLineParser(args):
                 cmd_args_dict["makeTemporaryEphemerisDatabase"]
             )
         )
+
+    # Log all the command line settings to INFO.
+    for flag, value in cmd_args_dict.items():
+        pplogger.info(f"Using commandline setting {flag} = {value}")
 
     return cmd_args_dict

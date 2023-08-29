@@ -19,7 +19,7 @@ from pkg_resources import get_distribution
 
 
 copyright = "2023"
-project = "Solar System Survey Simulator Post Processing"
+project = "Sorcha"
 author = "Sorcha development team"
 release = version("sorcha")
 # for example take major/minor
