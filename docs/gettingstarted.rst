@@ -33,7 +33,7 @@ We will also generate a file called 'sspp_testset_colours.txt' which contains in
 
 Getting the Pointing Database 
 ------------------------------------------
-
+We have a one year simulated pointing database form version 2.0 of the Rubin cadence baseline simulations. 
 
 
 Setting Up Sorcha's Configuration File 
