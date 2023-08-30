@@ -45,7 +45,15 @@ from sorcha.utilities.sorchaArguments import sorchaArguments
 
 def runLSSTSimulation(cmd_args, configs, pplogger=None):
     # configs = PPConfigFileParser(cmd_args.configfile, cmd_args.surveyname)
-    create_ephemeris(cmd_args, configs)
+    # Initialise argument parser, assign command line arguments, and validate.
+    args = cmd_args
+    if type(cmd_args) is dict:
+        try:
+            args = sorchaArguments(cmd_args)
+        except Exception as err:
+            pplogger.error(err)
+            sys.exit(err)
+    create_ephemeris(args, configs)
 
 
 def runLSSTPostProcessing(cmd_args, configs, pplogger=None):

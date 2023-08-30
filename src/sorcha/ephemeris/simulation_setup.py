@@ -64,49 +64,54 @@ def furnish_spiceypy():
 def generate_simulations(ephem, args, configs):
     sim_dict = defaultdict(dict)  # return
 
-    count, nsamp = 0, 10000  # pass in
+    # count, nsamp = 0, 10000  # pass in
 
-    retriever = make_retriever()
-    mpc_orbits = retriever.fetch(MPC_ORBITS)
+    # retriever = make_retriever()
+    # mpc_orbits = retriever.fetch(MPC_ORBITS)
+    orbits_df = OrbitAuxReader(args.orbinfile, configs["aux_format"]).read_rows()
+    orbit_format = orbits_df["FORMAT"].iloc[0]
     sun_dict = dict()  # This could be passed in and reused
-    with open(mpc_orbits) as file:  # pass in file
-        for line in file:
-            if line.startswith("-----------"):
-                break
-        for line in file:
-            try:
-                if count < nsamp:
-                    desig, H, G, epoch, pos, vel = sp.convert_mpc_orbit(line, ephem, sun_dict)
+    for index, row in orbits_df.iterrows():
+        # desig, H, G, epoch, pos, vel = sp.convert_mpc_orbit(line, ephem, sun_dict)
 
-                    # Instantiate a rebound particle
-                    x, y, z = pos
-                    vx, vy, vz = vel
-                    ic = rebound.Particle(x=x, y=y, z=z, vx=vx, vy=vy, vz=vz)
+        if orbit_format != "CART":
+            # TODO: handle orbit conversions. currently testing on cartesian input files.
+            break
+        else:
+            x, y, z = row["x"], row["y"], row["z"]
+            vx, vy, vz = row["xdot"], row["ydot"], row["zdot"]
+        # Instantiate a rebound particle
+        ic = rebound.Particle(x=x, y=y, z=z, vx=vx, vy=vy, vz=vz)
 
-                    # Instantiate a rebound simulation and set inital time and time step
-                    # The time step is just a guess to start with.
-                    sim = rebound.Simulation()
-                    sim.t = epoch - ephem.jd_ref
-                    sim.dt = 10
+        epoch = row["epoch"]
+        # convert from MJD to JD, if not done already.
+        if epoch < 2400000.5:
+            epoch += 2400000.5
 
-                    # Add the particle to the simulation
-                    sim.add(ic)
+        # Instantiate a rebound simulation and set inital time and time step
+        # The time step is just a guess to start with.
+        sim = rebound.Simulation()
+        sim.t = epoch - ephem.jd_ref
+        sim.dt = 10
 
-                    # Attach assist extras to the simulation
-                    ex = assist.Extras(sim, ephem)
+        # Add the particle to the simulation
+        sim.add(ic)
 
-                    # Change the GR model for speed
-                    forces = ex.forces
-                    forces.remove("GR_EIH")
-                    forces.append("GR_SIMPLE")
-                    ex.forces = forces
+        # Attach assist extras to the simulation
+        ex = assist.Extras(sim, ephem)
 
-                    # Save the simulation in the dictionary
-                    sim_dict[desig]["sim"] = sim
-                    sim_dict[desig]["ex"] = ex
-                    count += 1
-            except:
-                print("Error", line)
-            if count >= nsamp:
-                break
+        # Change the GR model for speed
+        forces = ex.forces
+        forces.remove("GR_EIH")
+        forces.append("GR_SIMPLE")
+        ex.forces = forces
+
+        # Save the simulation in the dictionary
+        sim_dict[row["ObjID"]]["sim"] = sim
+        sim_dict[row["ObjID"]]["ex"] = ex
+        # count += 1
+        # except:
+        #     # TODO: better error handling
+        #     # (do we want to fail gracefully here?)
+        #     print("Error", index)
     return sim_dict

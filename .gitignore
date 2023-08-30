@@ -166,3 +166,4 @@ tmp/
 tests/data/config_test*.ini
 
 checker.txt
+ephemeris_output.csv

@@ -31,7 +31,6 @@ def get_hp_neighbors(ra_c, dec_c, search_radius, nside=32, nested=True):
     return res
 
 
-# TODO: Can this be replaced with healpy's `ang2vec`?
 def ra_dec2vec(ra, dec):
     radeg = np.pi / 180.0
     x = np.cos(ra * radeg) * np.cos(dec * radeg)
@@ -39,11 +38,12 @@ def ra_dec2vec(ra, dec):
     z = np.sin(dec * radeg)
     return np.array((x, y, z)).T
 
+
 def vec2ra_dec(vec):
-    radeg=180./np.pi
+    radeg = 180.0 / np.pi
     x = vec[0]
     y = vec[1]
     z = vec[2]
-    ra = radeg*np.arctan2(y, x) % 360
-    dec = radeg*np.arcsin(z) 
+    ra = radeg * np.arctan2(y, x) % 360
+    dec = radeg * np.arcsin(z)
     return ra, dec
