@@ -91,7 +91,7 @@ def convert_mpc_orbit(line, ephem, sun_dict=None):
         sun_dict[epoch] = ephem.get_particle("Sun", epoch - ephem.jd_ref)
 
     # Convert to equatorial barycentric cartesian
-    if False:
+    if True:
         xx, yy, zz, xd, yd, zd = universal_cartesian(
             GMSUN,
             a * (1 - eccentricity),
