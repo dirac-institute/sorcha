@@ -44,8 +44,28 @@ from sorcha.utilities.sorchaArguments import sorchaArguments
 
 
 def runLSSTSimulation(cmd_args, pplogger=None):
-    configs = PPConfigFileParser(cmd_args.configfile, cmd_args.surveyname)
-    create_ephemeris(cmd_args, configs)
+    if pplogger is None:
+        if type(cmd_args) is dict:
+            pplogger = PPGetLogger(cmd_args["outpath"])
+        else:
+            pplogger = PPGetLogger(cmd_args.outpath)
+
+    args = cmd_args
+    if type(cmd_args) is dict:
+        try:
+            args = sorchaArguments(cmd_args)
+        except Exception as err:
+            pplogger.error(err)
+            sys.exit(err)
+
+    try:
+        args.validate_arguments()
+    except Exception as err:
+        pplogger.error(err)
+        sys.exit(err)
+
+    configs = PPConfigFileParser(args.configfile, args.surveyname)
+    create_ephemeris(args, configs)
 
 
 def runLSSTPostProcessing(cmd_args, pplogger=None):
