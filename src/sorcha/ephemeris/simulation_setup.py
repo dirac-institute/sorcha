@@ -65,7 +65,6 @@ def generate_simulations(ephem, args, configs):
     sim_dict = defaultdict(dict)  # return
 
     count, nsamp = 0, 10000  # pass in
-    prob = 0.1  # pass in
 
     retriever = make_retriever()
     mpc_orbits = retriever.fetch(MPC_ORBITS)
@@ -76,8 +75,7 @@ def generate_simulations(ephem, args, configs):
                 break
         for line in file:
             try:
-                draw = random.random()
-                if draw < prob and count < nsamp:
+                if count < nsamp:
                     desig, H, G, epoch, pos, vel = sp.convert_mpc_orbit(line, ephem, sun_dict)
 
                     # Instantiate a rebound particle
