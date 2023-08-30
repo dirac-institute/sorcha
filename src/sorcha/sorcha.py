@@ -43,12 +43,12 @@ from sorcha.utilities.sorchaArguments import sorchaArguments
 # Author: Samuel Cornwall, Siegfried Eggl, Grigori Fedorets, Steph Merritt, Meg Schwamb
 
 
-def runLSSTSimulation(cmd_args, pplogger=None):
-    configs = PPConfigFileParser(cmd_args.configfile, cmd_args.surveyname)
+def runLSSTSimulation(cmd_args, configs, pplogger=None):
+    # configs = PPConfigFileParser(cmd_args.configfile, cmd_args.surveyname)
     create_ephemeris(cmd_args, configs)
 
 
-def runLSSTPostProcessing(cmd_args, pplogger=None):
+def runLSSTPostProcessing(cmd_args, configs, pplogger=None):
     """
     Runs the post processing survey simulator functions that apply a series of
     filters to bias a model Solar System small body population to what the
@@ -98,7 +98,7 @@ def runLSSTPostProcessing(cmd_args, pplogger=None):
     verboselog = pplogger.info if args.verbose else lambda *a, **k: None
 
     verboselog("Reading configuration file...")
-    configs = PPConfigFileParser(args.configfile, args.surveyname)
+    # configs = PPConfigFileParser(args.configfile, args.surveyname)
 
     verboselog("Configuration file successfully read.")
 
@@ -428,9 +428,11 @@ def main():
 
     # Extract and validate the remaining arguments.
     cmd_args = PPCommandLineParser(args)
+    configs = PPConfigFileParser(cmd_args.configfile, cmd_args.surveyname)
     if cmd_args["surveyname"] in ["LSST", "lsst"]:
-        runLSSTSimulation(cmd_args, pplogger)
-        # runLSSTPostProcessing(cmd_args, pplogger)
+        if configs["ar_simulation_enabled"]:
+            runLSSTSimulation(cmd_args, configs, pplogger)
+        runLSSTPostProcessing(cmd_args, pplogger)
     else:
         sys.exit(
             "ERROR: Survey name not recognised. Current allowed surveys are: {}".format(["LSST", "lsst"])

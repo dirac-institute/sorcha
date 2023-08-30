@@ -10,9 +10,6 @@ import numpy as np
 from sorcha.utilities.dataUtilitiesForTests import get_data_out_filepath
 from sorcha.modules.PPReadPointingDatabase import PPReadPointingDatabase
 
-# TODO: this should be handled by the `simulation_data_files` module
-dir_path = "/Users/maxwest/notebooks/assist_plus_rebound/input_for_mpchecker"
-
 out_csv_path = get_data_out_filepath("ephemeris_output.csv")
 
 
@@ -28,7 +25,7 @@ def create_ephemeris(args, configs):
 
     ephem = create_assist_ephemeris()
     furnish_spiceypy()
-    sim_dict = generate_simulations(ephem)
+    sim_dict = generate_simulations(ephem, args, configs)
     pixel_dict = defaultdict(list)
     observatories = Observatory()
 

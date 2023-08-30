@@ -7,6 +7,7 @@ from collections import defaultdict
 import assist
 import logging
 import sys
+from sorcha.readers.OrbitAuxReader import OrbitAuxReader
 
 from sorcha.ephemeris.simulation_data_files import (
     make_retriever,
@@ -60,7 +61,7 @@ def furnish_spiceypy():
     spice.furnsh(meta_kernel)
 
 
-def generate_simulations(ephem):
+def generate_simulations(ephem, args, configs):
     sim_dict = defaultdict(dict)  # return
 
     count, nsamp = 0, 10000  # pass in

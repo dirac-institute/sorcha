@@ -7,6 +7,7 @@ from shutil import copyfile
 from sorcha.sorcha import runLSSTPostProcessing
 from sorcha.utilities.dataUtilitiesForTests import get_demo_filepath, get_data_out_filepath
 from sorcha.utilities.sorchaArguments import sorchaArguments
+from sorcha.modules.PPConfigParser import PPConfigFileParser
 
 
 def compare_result_files(test_output, golden_output):
@@ -72,4 +73,5 @@ def override_seed_and_run(outpath):
     # WARNING: This is only accceptable in a test and should never be used for
     # science results.
     args._rng = np.random.RandomState(2023)
-    runLSSTPostProcessing(args)
+    configs = PPConfigFileParser(args.configfile, args.surveyname)
+    runLSSTPostProcessing(args, configs)
