@@ -100,6 +100,7 @@ def convert_mpc_orbit(line, ephem, sun_dict=None):
             longnode * np.pi / 180,
             argperi * np.pi / 180,
             epoch - meananom * np.sqrt(a**3 / GMSUN),
+            epoch,
         )
         pos = ecliptic_to_equatorial([xx, yy, zz])
         vel = ecliptic_to_equatorial([xd, yd, zd])
