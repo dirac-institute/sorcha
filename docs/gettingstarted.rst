@@ -30,10 +30,21 @@ We will also generate a file called 'sspp_testset_colours.txt' which contains in
     :language: text
 
 
+
+Getting the Pointing Database 
+------------------------------------------
+
+
+
 Setting Up Sorcha's Configuration File 
 ------------------------------------------
 
 The key information about the simulation paramteres are held in the configuration file. For further details check out our :ref:`configs` page. 
+
+We'll be using this demonstration configuration file to get you started. 
+
+.. literalinclude:: ../demo/PPConfig_test.ini
+    :language: text
 
 Running Sorcha
 ----------------------
@@ -44,7 +55,7 @@ Let's take a look at the command line arguments for sorcha. On the command line,
 
 will produce
 
-.. literalinclude:: ../demo/sspp_testset_colours.txt
+.. literalinclude:: ./example_files/help_output.txt 
     :language: text
 
 
