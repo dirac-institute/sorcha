@@ -421,6 +421,11 @@ def main():
 
     # Extract and validate the remaining arguments.
     cmd_args = PPCommandLineParser(args)
+
+    if "SORCHA_SEED" in os.environ:
+        cmd_args["seed"] = int(os.environ["SORCHA_SEED"])
+        pplogger.info(f"Random seed overridden via environmental variable, SORCHA_SEED={cmd_args['seed']}")
+
     if cmd_args["surveyname"] in ["LSST", "lsst"]:
         runLSSTPostProcessing(cmd_args, pplogger)
     else:
