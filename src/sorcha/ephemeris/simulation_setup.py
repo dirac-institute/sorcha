@@ -14,7 +14,6 @@ from sorcha.ephemeris.simulation_data_files import (
     JPL_PLANETS,
     JPL_SMALL_BODIES,
     META_KERNEL,
-    MPC_ORBITS,
     ORDERED_KERNEL_FILES,
 )
 
