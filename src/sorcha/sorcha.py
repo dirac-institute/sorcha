@@ -43,9 +43,13 @@ from sorcha.utilities.sorchaArguments import sorchaArguments
 # Author: Samuel Cornwall, Siegfried Eggl, Grigori Fedorets, Steph Merritt, Meg Schwamb
 
 
-def runLSSTSimulation(cmd_args, configs, pplogger=None):
-    # configs = PPConfigFileParser(cmd_args.configfile, cmd_args.surveyname)
-    # Initialise argument parser, assign command line arguments, and validate.
+def runLSSTSimulation(cmd_args, pplogger=None):
+    if pplogger is None:
+        if type(cmd_args) is dict:
+            pplogger = PPGetLogger(cmd_args["outpath"])
+        else:
+            pplogger = PPGetLogger(cmd_args.outpath)
+
     args = cmd_args
     if type(cmd_args) is dict:
         try:
@@ -53,6 +57,14 @@ def runLSSTSimulation(cmd_args, configs, pplogger=None):
         except Exception as err:
             pplogger.error(err)
             sys.exit(err)
+
+    try:
+        args.validate_arguments()
+    except Exception as err:
+        pplogger.error(err)
+        sys.exit(err)
+
+    configs = PPConfigFileParser(args.configfile, args.surveyname)
     create_ephemeris(args, configs)
 
 
