@@ -22,6 +22,7 @@ from .simulation_parsing import (
     convertS3morbit,
     mjd_tai_to_epoch,
     Observatory,
+    parse_orbit_row,
 )
 from .simulation_setup import (
     create_assist_ephemeris,

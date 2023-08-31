@@ -64,29 +64,20 @@ def furnish_spiceypy():
 def generate_simulations(ephem, args, configs):
     sim_dict = defaultdict(dict)  # return
 
-    # count, nsamp = 0, 10000  # pass in
-
-    # retriever = make_retriever()
-    # mpc_orbits = retriever.fetch(MPC_ORBITS)
     orbits_df = OrbitAuxReader(args.orbinfile, configs["aux_format"]).read_rows()
     orbit_format = orbits_df["FORMAT"].iloc[0]
     sun_dict = dict()  # This could be passed in and reused
     for index, row in orbits_df.iterrows():
         # desig, H, G, epoch, pos, vel = sp.convert_mpc_orbit(line, ephem, sun_dict)
-
-        if orbit_format != "CART":
-            # TODO: handle orbit conversions. currently testing on cartesian input files.
-            break
-        else:
-            x, y, z = row["x"], row["y"], row["z"]
-            vx, vy, vz = row["xdot"], row["ydot"], row["zdot"]
-        # Instantiate a rebound particle
-        ic = rebound.Particle(x=x, y=y, z=z, vx=vx, vy=vy, vz=vz)
-
         epoch = row["epoch"]
         # convert from MJD to JD, if not done already.
         if epoch < 2400000.5:
             epoch += 2400000.5
+
+        x, y, z, vx, vy, vz = sp.parse_orbit_row(row, epoch, ephem, sun_dict)
+
+        # Instantiate a rebound particle
+        ic = rebound.Particle(x=x, y=y, z=z, vx=vx, vy=vy, vz=vz)
 
         # Instantiate a rebound simulation and set inital time and time step
         # The time step is just a guess to start with.

@@ -160,6 +160,51 @@ def mjd_tai_to_epoch(mjd_tai):
     return epoch
 
 
+def parse_orbit_row(row, epoch, ephem, sun_dict):
+    orbit_format = row["FORMAT"]
+
+    if orbit_format != "CART":
+        if orbit_format == "COM":
+            # TODO: I don't think this right, ask Pedro about it lol
+            ecx, ecy, ecz, dx, dy, dz = universal_cartesian(
+                GMSUN,
+                row["q"],
+                row["e"],
+                row["inc"] * np.pi / 180.0,
+                row["node"] * np.pi / 180.0,
+                row["argPeri"] * np.pi / 180.0,
+                row["t_p"],
+            )
+        elif orbit_format == "KEP":
+            ecx, ecy, ecz, dx, dy, dz = universal_cartesian(
+                GMSUN,
+                row["a"] * (1 - row["e"]),
+                row["e"],
+                row["inc"] * np.pi / 180.0,
+                row["node"] * np.pi / 180.0,
+                row["argPeri"] * np.pi / 180.0,
+                epoch - (row["ma"] * np.pi / 180.0) * np.sqrt(row["a"] ** 3 / GMSUN),
+            )
+        else:
+            raise ValueError("Provided orbit format not supported.")
+    else:
+        ecx, ecy, ecz = row["x"], row["y"], row["z"]
+        dx, dy, dz = row["xdot"], row["ydot"], row["zdot"]
+
+    if epoch not in sun_dict:
+        sun_dict[epoch] = ephem.get_particle("Sun", epoch - ephem.jd_ref)
+
+    sun = sun_dict[epoch]
+
+    equatorial_coords = np.array(ecliptic_to_equatorial([ecx, ecy, ecz]))
+    equatorial_velocities = np.array(ecliptic_to_equatorial([dx, dy, dz]))
+
+    equatorial_coords += np.array((sun.x, sun.y, sun.z))
+    equatorial_velocities += np.array((sun.vx, sun.vy, sun.vz))
+
+    return tuple(np.concatenate([equatorial_coords, equatorial_velocities]))
+
+
 class Observatory:
     def __init__(self, oc_file=OBSERVATORY_CODES):
         self.observatoryPositionCache = {}  # previously calculated positions to speed up the process
