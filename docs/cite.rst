@@ -17,7 +17,7 @@ Please also cite the software that helps power Sorcha:
 * sbpy https://joss.theoj.org/papers/10.21105/joss.01426
 * scipy https://scipy.org/citing-scipy/
 * SPICE utilities https://naif.jpl.nasa.gov/naif/credit.html
-* spicypy https://spiceypy.readthedocs.io/en/main/citation.html
+* spiceypy https://spiceypy.readthedocs.io/en/main/citation.html
 * tqdm https://tqdm.github.io/
 
 

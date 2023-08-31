@@ -8,15 +8,15 @@ In this tutorial, we will show you how to setup and run a basic simulation using
 
 
 .. important::
-  All the input files and configuration files used in this demonstation are available in the demo directory(sorcha/demo). We provide the contents of these files and the links below to download each. You can also grab them in one go by: git clone https://github.com/dirac-institute/sorcha.git
+  All the input files and configuration files used in this demonstation are available in the demo directory(sorcha/demo). We provide the contents of these files and the links below to download each. You can also grab them in one go by downloading the Sorcha source code repository (Steps 1-4 **only**  of :ref:`dev_mode`).
 
 .. note::
   All input data files in this example are white-space separated format solely for the ease of reading.   
 
-Creating the Orbit and Physical Parameter Files For the Synthetic Small Bodies
-----------------------------------------------------------------------------------------
+Creating the Orbit and Physical Parameter Files For the Synthetic Solar System Populations
+--------------------------------------------------------------------------------------------
 The first step in the process is to generate a set of files which describe the orbital and physical parameters
-of our synthetic small bodies we wish to input into the simulator. 
+of our synthetic Solar System population that we wish to input into the simulator. 
 
 Making the Orbit File
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -69,18 +69,22 @@ will produce
 
 Now that you know how to provide the input files, let's go run a simulation::
 
-   sorcha -c ./demo/PPConfig_test.ini -p ./demo/sspp_testset_colours.txt -ob ./demo/sspp_testset_orbits.des -e ./demo/example_oif_output.txt -pd ./demo/baseline_v2.0_1yr.db -o ./data/out/ -t testrun_e2e.csv
+   sorcha -c ./demo/PPConfig_test.ini -p ./demo/sspp_testset_colours.txt -ob ./demo/sspp_testset_orbits.des -e ./demo/example_oif_output.txt -pd ./demo/baseline_v2.0_1yr.db -o ./ -t testrun_e2e.csv
 
 .. tip::
-   Sorcha outputs a log file and error file in the output directory. If all has gone well, the error file will be empty. The log file has the configuration parameters outputted to it as a record of the run setup.
+   Sorcha outputs a log file (*.sorcha.log) and error file (*.sorcha.err) in the output directory. If all has gone well, the error file will be empty. The log file has the configuration parameters outputted to it as a record of the run setup.
 
-.. warning::
-   Only one instance of Sorcha can be run per output directory. Make sure to have different output pathways if you are running multiple instances on the same compute node.
-
-The output will appear in a csv file (testrun_e2e.csv) in ./data/out (this pathway can be changed via the -u command line argument). The first 51 lines of the csv file should look something like this:
+The output will appear in a csv file (testrun_e2e.csv) in your current directory. The first 51 lines of the csv file should look something like this:
 
 .. literalinclude:: ../docs/example_files/testrun_e2e.csv
     :language: text
     :lines: 1-51
 
-.. note:: The values will not be exactly the same because of the different random number generator seed applied each time Sorcha runs and we apply the adjust the caclculated value for the measurement precision.  
+.. note:: The values will not be exactly the same because of the different random number generator seed applied each time Sorcha runs. We use the random generator to adjust the calculated values to be within the measurement precision/uncertainty both in position (RA/Dec) and apparent magnitude.  
+
+.. warning::
+   Only one instance of Sorcha should be run per output directory to ensure that distict log and error files are created for each Sorcha run. Make sure to have different output pathways if you are running multiple instances on the same compute node.
+
+
+.. note::
+   This test run is using pre-generated ephemeris already stored in the demo directory of the Sorcha github repository.
