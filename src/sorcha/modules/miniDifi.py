@@ -3,6 +3,7 @@
 import numpy as np
 from numba import njit
 
+
 @njit(cache=True)
 def haversine_np(lon1, lat1, lon2, lat2):
     """
@@ -19,9 +20,10 @@ def haversine_np(lon1, lat1, lon2, lat2):
     dlon = lon2 - lon1
     dlat = lat2 - lat1
 
-    a = np.sin(dlat/2.0)**2 + np.cos(lat1) * np.cos(lat2) * np.sin(dlon/2.0)**2
+    a = np.sin(dlat / 2.0) ** 2 + np.cos(lat1) * np.cos(lat2) * np.sin(dlon / 2.0) ** 2
     c = 2 * np.arcsin(np.sqrt(a))
     return np.degrees(c)
+
 
 # Construct a list of nights that have detectable tracklets
 @njit(cache=True)
@@ -29,9 +31,9 @@ def hasTracklet(mjd, ra, dec, maxdt_minutes, minlen_arcsec):
     """
     Given a set of observations in one night, calculate it has at least one
     detectable tracklet.
-    
+
     Inputs: numpy arrays of mjd (time, days), ra (degrees), dec(degrees).
-    
+
     Output: True or False
     """
     ## a tracklet must be longer than some minimum separation (1arcsec)
@@ -42,7 +44,7 @@ def hasTracklet(mjd, ra, dec, maxdt_minutes, minlen_arcsec):
     if nobs < 2:
         return False
 
-    maxdt = maxdt_minutes / (60*24)
+    maxdt = maxdt_minutes / (60 * 24)
     minlen = minlen_arcsec / 3600
 
     for i in range(nobs):
@@ -55,6 +57,7 @@ def hasTracklet(mjd, ra, dec, maxdt_minutes, minlen_arcsec):
 
     return False
 
+
 @njit(cache=True)
 def trackletsInNights(night, mjd, ra, dec, maxdt_minutes, minlen_arcsec):
     # given a table of observations SORTED BY OBSERVATION TIME (!)
@@ -66,9 +69,9 @@ def trackletsInNights(night, mjd, ra, dec, maxdt_minutes, minlen_arcsec):
     #          denoting if it has or has not a discoverable tracklet.
 
     nights = np.unique(night)
-    hasTrk = np.zeros(len(nights), dtype='bool')
+    hasTrk = np.zeros(len(nights), dtype="bool")
 
-    i = np.searchsorted(night, nights, side='right')
+    i = np.searchsorted(night, nights, side="right")
 
     # for each night, test if it has a tracklet
     b = 0
@@ -77,6 +80,7 @@ def trackletsInNights(night, mjd, ra, dec, maxdt_minutes, minlen_arcsec):
         b = e
 
     return nights, hasTrk
+
 
 @njit(cache=True)
 def discoveryOpportunities(nights, nightHasTracklets, window, nlink, p, rng):
@@ -88,12 +92,12 @@ def discoveryOpportunities(nights, nightHasTracklets, window, nlink, p, rng):
     #    populate it with the tracklets (1 for each night where)
     #    there's a detectable tracklet. Then convolve it with a
     #    <window>-length window (we do this with .cumsum() and
-    #    then subtracting the shifted array -- basic integration) 
+    #    then subtracting the shifted array -- basic integration)
     #    And then find nights where the # of tracklets >= nlink
     #
     n0, n1 = nights.min(), nights.max()
     nlen = n1 - n0 + 1
-    arr = np.zeros(nlen, dtype='i8')
+    arr = np.zeros(nlen, dtype="i8")
     arr[nights - n0] = nightHasTracklets
     arr = arr.cumsum()
     arr[window:] -= arr[:-window].copy()
@@ -118,13 +122,14 @@ def discoveryOpportunities(nights, nightHasTracklets, window, nlink, p, rng):
     arr2 = arr2[disc - n0]
     arr2[1:] -= arr2[:-1].copy()
     disc = disc[arr2.nonzero()]
-    
+
     # finally, at every discovery opportunity we have a probability <p>
     # to discover the object. Figure out when we'll discover it.
     discN = (rng.uniform(size=len(disc)) < p).nonzero()[0]
     discIdx = discN[0] if len(discN) else -1
 
     return discIdx, disc
+
 
 def linkObject(obsv, seed, maxdt_minutes, minlen_arcsec, window, nlink, p, night_start_utc_days):
     discoveryObservationId = 0xFFFF_FFFF_FFFF_FFFF
@@ -136,10 +141,12 @@ def linkObject(obsv, seed, maxdt_minutes, minlen_arcsec, window, nlink, p, night
         obsv = obsv[i]
 
         # compute the night of observation
-        tshift = (obsv["midPointTai"] - night_start_utc_days)
+        tshift = obsv["midPointTai"] - night_start_utc_days
         night = tshift.astype(int)
         phased = tshift - night
-        assert np.all((0.1 < phased) & (phased < 0.9))  # quick check that we didn't screw up the night boundary
+        assert np.all(
+            (0.1 < phased) & (phased < 0.9)
+        )  # quick check that we didn't screw up the night boundary
         mjd, ra, dec, diaSourceId = obsv["midPointTai"], obsv["ra"], obsv["decl"], obsv["diaSourceId"]
 
         # compute a random seed for this object, based on the hash of its (sorted) data
@@ -147,6 +154,7 @@ def linkObject(obsv, seed, maxdt_minutes, minlen_arcsec, window, nlink, p, night
         # scenarios (where different objects are distributed to different threads)
         # note: becasue np.random.seed expects a uint32, we truncate the hash to 4 bytes.
         import hashlib
+
         seed += int.from_bytes(hashlib.sha256(ra.tobytes()).digest()[-4:], "little", signed=False)
         seed %= 0xFFFF_FFFF
         rng = np.random.default_rng(seed)
@@ -158,13 +166,23 @@ def linkObject(obsv, seed, maxdt_minutes, minlen_arcsec, window, nlink, p, night
             discoverySubmissionDate = discNights[discIdx]
 
             # find the first observation on the discovery date
-            i, j = np.searchsorted(night, [discoverySubmissionDate, discoverySubmissionDate+1])
+            i, j = np.searchsorted(night, [discoverySubmissionDate, discoverySubmissionDate + 1])
             k = i + np.argmin(mjd[i:j])
             discoveryObservationId = diaSourceId[k]
 
     return discoveryObservationId, discoverySubmissionDate, discoveryChances
 
-def linkObservations(obsv, seed, objectId="ssObjectId", sourceId="diaSourceId", mjdTime="midPointTai", ra="ra", dec="decl", **config):
+
+def linkObservations(
+    obsv,
+    seed,
+    objectId="ssObjectId",
+    sourceId="diaSourceId",
+    mjdTime="midPointTai",
+    ra="ra",
+    dec="decl",
+    **config,
+):
     # expects a ndarray of observations, with the following columns:
     #
     #  - objectId: a unique ID of the solar system object
@@ -180,7 +198,7 @@ def linkObservations(obsv, seed, objectId="ssObjectId", sourceId="diaSourceId", 
     #
     #  - ssObjectId:              the objectId of this object
     #  - discoveryObservationId:  the sourceId of the observation that triggered a succesful linkage
-    #  - discoverySubmissionDate: the submission date of the 
+    #  - discoverySubmissionDate: the submission date of the
     #  - discoveryChances:        the number of discovery chances for this objects
     #
 
@@ -190,25 +208,31 @@ def linkObservations(obsv, seed, objectId="ssObjectId", sourceId="diaSourceId", 
 
     # group-by
     import time
+
     start = time.perf_counter()
-    # create the "group by" splits for individual objects 
+    # create the "group by" splits for individual objects
     # See https://stackoverflow.com/a/43094244 for inspiration for this code
-    i = np.argsort(obsv[objectId], kind='stable')
+    i = np.argsort(obsv[objectId], kind="stable")
     ssObjects, idx = np.unique(obsv[objectId][i], return_index=True)
     splits = np.split(i, idx[1:])
-##    print(f"{len(ssObjects)=}")
+    ##    print(f"{len(ssObjects)=}")
 
     end = time.perf_counter()
-##    print(f"Group-by time: {end-start:.3f} seconds")
+    ##    print(f"Group-by time: {end-start:.3f} seconds")
 
     # "link"
     # pre-initialize output columns
-    obj = np.zeros(len(splits), dtype=np.dtype([
-        ("ssObjectId", obsv[objectId].dtype),
-        ("discoveryObservationId", "u8"),
-        ("discoverySubmissionDate", "f8"),
-        ("discoveryChances", "i4")
-    ]))
+    obj = np.zeros(
+        len(splits),
+        dtype=np.dtype(
+            [
+                ("ssObjectId", obsv[objectId].dtype),
+                ("discoveryObservationId", "u8"),
+                ("discoverySubmissionDate", "f8"),
+                ("discoveryChances", "i4"),
+            ]
+        ),
+    )
 
     # linking test for each object
     for k, obsv_indices in enumerate(splits):
@@ -219,23 +243,23 @@ def linkObservations(obsv, seed, objectId="ssObjectId", sourceId="diaSourceId", 
 
         obj[k] = (ssObjects[k], *linkObject(thisObsv, seed, **config))
 
-##    print(obj["discoveryObservationId"])
+    ##    print(obj["discoveryObservationId"])
 
     end = time.perf_counter()
-##    print(f"Total linking time: {end-start:.3f} seconds")
+    ##    print(f"Total linking time: {end-start:.3f} seconds")
 
     return obj
+
 
 ###########################################################
 
 default_config = dict(
-    night_start_utc_days = 17.0 / 24.0,  # this corresponds to 5pm UTC, or 2pm Chile time.
-
+    night_start_utc_days=17.0 / 24.0,  # this corresponds to 5pm UTC, or 2pm Chile time.
     maxdt_minutes=90,
-    minlen_arcsec=1.,
+    minlen_arcsec=1.0,
     window=14,
     nlink=3,
-    p=0.95
+    p=0.95,
 )
 
 if __name__ == "__main__":
@@ -245,22 +269,27 @@ if __name__ == "__main__":
         df = pd.read_csv(fn)
 
         # replicate
-        dfs = [ ]
+        dfs = []
         for i in range(ncopies):
             df2 = df.copy()
             if i != 0:
                 df2["_name"] += f"_{i}"
-            dfs += [ df2 ]
+            dfs += [df2]
         df = pd.concat(dfs)
         return df
 
-    ncopies=100
+    ncopies = 100
     df = load_test_dataset(ncopies=ncopies)
 
     # convert to (an efficiently packed) ndarray that linkObservations expects
     print(df[-10:])
     nameLen = df["_name"].str.len().max()
-    obsv = np.asarray(df.to_records(index=False, column_dtypes=dict(_name=f'a{nameLen}', diaSourceId='u8', midPointTai='f8', ra='f8', decl='f8')))
+    obsv = np.asarray(
+        df.to_records(
+            index=False,
+            column_dtypes=dict(_name=f"a{nameLen}", diaSourceId="u8", midPointTai="f8", ra="f8", decl="f8"),
+        )
+    )
     del df
     print(f"{obsv.dtype=}\n{len(obsv)=}")
 
@@ -274,15 +303,20 @@ if __name__ == "__main__":
 
     # filter out the observations of objects that weren't found
     import time
+
     start = time.perf_counter()
-    found = obj["ssObjectId"][ ~np.isnan(obj["discoverySubmissionDate"]) ]
-    obsv_found = obsv[ np.isin(obsv["_name"], found) ]
+    found = obj["ssObjectId"][~np.isnan(obj["discoverySubmissionDate"])]
+    obsv_found = obsv[np.isin(obsv["_name"], found)]
     end = time.perf_counter()
     print(f"Observation filtering time: {end-start:.3f} seconds")
-    print(pd.DataFrame(obsv_found[ np.isin(obsv_found["_name"], objsample["ssObjectId"]) ]).groupby("_name").count())
+    print(
+        pd.DataFrame(obsv_found[np.isin(obsv_found["_name"], objsample["ssObjectId"])])
+        .groupby("_name")
+        .count()
+    )
 
     # basic sanity checks
-    obsv_missed = obsv[ ~np.isin(obsv["_name"], found) ]
+    obsv_missed = obsv[~np.isin(obsv["_name"], found)]
     print(f"{len(obsv_found)=}")
     print(f"{len(obsv_missed)=}")
     assert len(obsv_found) + len(obsv_missed) == len(obsv)

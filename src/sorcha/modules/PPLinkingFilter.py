@@ -96,6 +96,7 @@ def PPLinkingFilter_OLD(
 
     return linked_object_observations
 
+
 def PPLinkingFilter(
     observations,
     detection_efficiency,
@@ -154,20 +155,25 @@ def PPLinkingFilter(
         }
     )
     nameLen = obsv["ssObjectId"].str.len().max()
-    obsv = obsv.to_records(index=False, column_dtypes=dict(ssObjectId=f'a{nameLen}', diaSourceId='u8', midPointTai='f8', ra='f8', decl='f8'))
+    obsv = obsv.to_records(
+        index=False,
+        column_dtypes=dict(ssObjectId=f"a{nameLen}", diaSourceId="u8", midPointTai="f8", ra="f8", decl="f8"),
+    )
 
     # link
-    obj = linkObservations(obsv, seed=0,
+    obj = linkObservations(
+        obsv,
+        seed=0,
         objectId="ssObjectId",
-        maxdt_minutes=maximum_time*24*60,
+        maxdt_minutes=maximum_time * 24 * 60,
         minlen_arcsec=minimum_separation,
         window=tracklet_interval,
         nlink=min_tracklets,
-        p=detection_efficiency
+        p=detection_efficiency,
     )
 
     # unpack the results and filter the observations
-    objs_found = obj["ssObjectId"][ ~np.isnan(obj["discoverySubmissionDate"]) ]
+    objs_found = obj["ssObjectId"][~np.isnan(obj["discoverySubmissionDate"])]
     obsv_found = np.isin(obsv["ssObjectId"], objs_found)
     linked_object_observations = observations.iloc[obsv_found]
 
