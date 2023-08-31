@@ -236,13 +236,13 @@ The latest version of rubin_sim cadence simulations can be found at https://s3df
 Complex Physical Parameters File (Optional)
 ---------------------------------------------------
 
-The complex physical parameters file is only used if you're going to include your own rotational light curve class or cometary activity class to augment the calculated apparent magnitudes. Sorcha is set up that  
+The complex physical parameters file is only needed if you're going to include your own rotational light curve class or cometary activity class to augment the calculated apparent magnitudes. Sorcha is set up such that any values required for this such as light curve amplitude and period per simulated object are included in file, separate from then physical paramters file, that we refer to as the complex physical parameteres file.  What columns are required in the complex physical parameters file  depends on what the classes you are using. . 
 
 .. tip::
   *  The ordering of the columns does not matter as long as the required columns exist and have entries
   *  The first row in the complex  physical parameters file **must** list  the columns names
   *  The **correct capitalization of column names** is required
-  *  The complex parameters file  file can be either **white space separated** or **comma value separated (CSV)**
+  *  The complex phyiscal parameters file can be either **white space separated** or **comma value separated (CSV)**
   *  Each simulated object **must** have a unique string identifier
 
 Ephemeris File (Optional)

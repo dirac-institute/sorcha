@@ -20,7 +20,6 @@ Sorcha has the following requirements that will be automatically installed  usin
 * sbpy
 * pytables
 * difi == 1.2rc3
-* sqlite3
 * spiceypy
 * healpy
 * assist
@@ -40,13 +39,14 @@ Setup Your Conda Environment
 
 **Step 2** Create a conda environment::
 
-   conda create -n sorcha -c conda-forge -c moeyensj numpy pandas scipy astropy matplotlib sbpy pytables difi==1.2rc3 sqlite3 spiceypy healpy rebound pooch tqdm python=3.10
+   conda create -n sorcha -c conda-forge -c moeyensj numpy pandas scipy astropy matplotlib sbpy pytables difi==1.2rc3 spiceypy healpy rebound pooch tqdm python=3.10
    conda activate sorcha
 
 Installing Sorcha
 ----------------------
 
 Unless you're editing the source code, you can use the version of Sorcha published on pypy using pip::
+
    pip install --upgrade sorcha
 
 
@@ -70,7 +70,7 @@ Testing the Sorcha Installation
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 You can check that the Sorcha installation was done correctly, by downloading the Sorcha source code as described in the  by running::
 
-   sorcha -c ./demo/PPConfig_test.ini -p ./demo/sspp_testset_colours.txt -o ./demo/sspp_testset_orbits.des -e ./demo/example_oif_output.txt -u ./data/out/ -t testrun_e2e
+   sorcha -c ./demo/PPConfig_test.ini -p ./demo/sspp_testset_colours.txt -ob ./demo/sspp_testset_orbits.des -e ./demo/example_oif_output.txt -pd ./demo/baseline_v2.0_1yr.db -o ./data/out/ -t testrun_e2e.csv
    
 The output will appear in a csv file (testrun_e2e.csv) in ./data/out (this pathway can be changed via the -u command line argument). The first 51 lines of the csv file should look like this:
 
@@ -79,4 +79,4 @@ The output will appear in a csv file (testrun_e2e.csv) in ./data/out (this pathw
     :lines: 1-51
 
 .. note::
-   This test run is using pre-made ephemeris generatedF already stored in the demo directory of the Sorcha github repository. 
+   This test run is using pre-generated ephemeris already stored in the demo directory of the Sorcha github repository. 
