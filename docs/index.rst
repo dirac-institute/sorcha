@@ -54,7 +54,7 @@ works, tutorials, and demonstration notebooks that show how each of the various 
    outputs
    gettingstarted
    complexparameters
-   whatsspdoesnotdo
+   whatsorchadoesnotdo
    notebooks
    troubleshooting
    support
