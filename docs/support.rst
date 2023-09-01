@@ -21,3 +21,4 @@ You will need to install sorcha from the source code via pip in editable mode as
 
 .. note::
    We recommend that if you are planning to submit a pull request with enhancements to raise a `github issue in the main sorcha repository <https://github.com/dirac-institute/sorcha/issues>`_ first to discuss further before submitting a pull request.
+

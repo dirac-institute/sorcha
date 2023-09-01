@@ -53,6 +53,10 @@ The key information about the simulation paramteres are held in the configuratio
 .. note::
   For this tutorial, we have set up Sorcha to only find detections on g,r,i, or z filter observations, by what we have set the **observing_filters** parameter to. Since we specified the absolute magnitude and colors for our synthetic objects to r-band, the rfilter starts the list of filters for  **observing_filters**.
 
+.. note::
+   This config file sdets the  output to be in CSV format.   
+
+
 Running Sorcha
 ----------------------
 
@@ -69,7 +73,7 @@ will produce
 
 Now that you know how to provide the input files, let's go run a simulation::
 
-   sorcha -c ./demo/PPConfig_test.ini -p ./demo/sspp_testset_colours.txt -ob ./demo/sspp_testset_orbits.des -e ./demo/example_oif_output.txt -pd ./demo/baseline_v2.0_1yr.db -o ./ -t testrun_e2e.csv
+   sorcha -c ./demo/PPConfig_test.ini -p ./demo/sspp_testset_colours.txt -ob ./demo/sspp_testset_orbits.des -e ./demo/example_oif_output.txt -pd ./demo/baseline_v2.0_1yr.db -o ./ -t testrun_e2e
 
 .. tip::
    Sorcha outputs a log file (*.sorcha.log) and error file (*.sorcha.err) in the output directory. If all has gone well, the error file will be empty. The log file has the configuration parameters outputted to it as a record of the run setup.
@@ -82,9 +86,11 @@ The output will appear in a csv file (testrun_e2e.csv) in your current directory
 
 .. note:: The values will not be exactly the same because of the different random number generator seed applied each time Sorcha runs. We use the random generator to adjust the calculated values to be within the measurement precision/uncertainty both in position (RA/Dec) and apparent magnitude.  
 
+.. tip::
+   If you want to run this command a second time you'll need to add a **-f** flag to the command line to force overwriting output files that already were exist in the output directory. Do note that the previous run's log and error log files will not be removed. New log files are generated at each run.  
+
 .. warning::
    Only one instance of Sorcha should be run per output directory to ensure that distict log and error files are created for each Sorcha run. Make sure to have different output pathways if you are running multiple instances on the same compute node.
-
 
 .. note::
    This test run is using pre-generated ephemeris already stored in the demo directory of the Sorcha github repository.

@@ -49,11 +49,12 @@ works, tutorials, and demonstration notebooks that show how each of the various 
    overview
    installation
    inputs
+   ephemerisgen
    filters
+   complexparameters
    configfiles
    outputs
    gettingstarted
-   complexparameters
    whatsorchadoesnotdo
    notebooks
    troubleshooting
