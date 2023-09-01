@@ -11,9 +11,7 @@ If sorcha runs successfully the .err log file created will be empty. If the soft
 Using Relative File Paths
 ---------------------------------------------------------------
 
-We recommend using explicit file paths so ../this_directory will cause errors. It is best to give the full 
-output and input paths for directories and input file/ouput file locations.
-
+If you're using relative paths (e.g. '../this_directory') and those does not seem to be working, try using the full directory/file paths.
 
 Running Multiple Instances With the Same Output Directories
 ---------------------------------------------------------------

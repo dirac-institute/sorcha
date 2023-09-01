@@ -12,8 +12,8 @@ Submitting a Github Issue
 ---------------------------
 The best way to get in touch about a bug, suggest enhancements to Sorcha, or recommend changes to the documentation is raise an issue through the `project's github repository <https://github.com/dirac-institute/sorcha/issues>`_. We have a small team working on the project, so please be patient, while we get back to you.
 
-Contributing to Sorcha
----------------------------
+Contributing Code
+-----------------------------------
 
 We welcome upgrades/bug fixes to the code, This can be done by opening a pull request in the `main Sorcha github repository <https://github.com/dirac-institute/sorcha>`_. If you have new classes that provide enhanced light curve or activity estimations, we welcome pull requests to the `Sorcha Community Utils github repository <https://github.com/dirac-institute/sorcha_community_utils>`_.
 
@@ -21,3 +21,12 @@ You will need to install sorcha from the source code via pip in editable mode as
 
 .. note::
    We recommend that if you are planning to submit a pull request with enhancements to raise a `github issue in the main sorcha repository <https://github.com/dirac-institute/sorcha/issues>`_ first to discuss further before submitting a pull request.
+
+
+Contributing to the  Documentation
+--------------------------------------
+
+We are very happy to receivet feedback on the online documentation through the `project's github repository <https://github.com/dirac-institute/sorcha/issues>`_. Beyond pointing out typos and small changes through issues, we welcome pull requests on the sphinx documentation used here on the readthedocs.
+
+.. note::
+   You will need to install the development version of Sorcha (pip install '.[dev]' from a clone of the Sorcha repository and install the pandoc package (either via conda/pip or `direct download <https://pandoc.org/installing.html>`_ . If you move to the docs directory and run 'make html', the html read the doc files will be ../_readthedocs/html/ )
