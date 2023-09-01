@@ -37,13 +37,7 @@ class sorchaArguments:
     complex_parameters: str = ""
     """optional, extra complex physical parameter input files"""
 
-    _rng = np.random.default_rng(int(time.time()))
-    """
-    DO NOT CHANGE THIS UNLESS YOU ARE A MEMBER OF THE DEVELOPMENT TEAM
-    FOR TESTING PURPOSES ONLY
-    CHANGING THE RNG SEED COULD INVALIDATE ANY SCIENCE RESULTS GAINED FROM SORCHA
-    THIS IS NOT A PLACE OF HONOR
-    """
+    _rng = None
 
     def __init__(self, cmd_args_dict=None):
         if cmd_args_dict is not None:
@@ -69,6 +63,12 @@ class sorchaArguments:
 
         if "complex_physical_parameters" in args.keys():
             self.complex_parameters = args["complex_physical_parameters"]
+
+        # WARNING: Take care if manually setting the seed. Re-using seeds between
+        # simulations may result in hard-to-detect correlations in simulation
+        # outputs.
+        seed = args.get("seed", int(time.time()))
+        self._rng = np.random.default_rng(seed)
 
     def validate_arguments(self):
         if not path.isfile(self.paramsinput):
