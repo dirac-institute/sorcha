@@ -43,7 +43,7 @@ from sorcha.utilities.sorchaArguments import sorchaArguments
 # Author: Samuel Cornwall, Siegfried Eggl, Grigori Fedorets, Steph Merritt, Meg Schwamb
 
 
-def runLSSTSimulation(cmd_args, pplogger=None):
+def runLSSTSimulation(cmd_args, configs, pplogger=None):
     if pplogger is None:
         if type(cmd_args) is dict:
             pplogger = PPGetLogger(cmd_args["outpath"])
@@ -448,7 +448,7 @@ def main():
 
     # Extract and validate the remaining arguments.
     cmd_args = PPCommandLineParser(args)
-    configs = PPConfigFileParser(cmd_args.configfile, cmd_args.surveyname)
+    configs = PPConfigFileParser(cmd_args["configfile"], cmd_args["surveyname"])
     if cmd_args["surveyname"] in ["LSST", "lsst"]:
         if configs["ar_simulation_enabled"]:
             runLSSTSimulation(cmd_args, configs, pplogger)

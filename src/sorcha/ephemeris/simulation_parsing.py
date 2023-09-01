@@ -29,6 +29,7 @@ def parse_orbit_row(row, epoch, ephem, sun_dict):
                 row["node"] * np.pi / 180.0,
                 row["argPeri"] * np.pi / 180.0,
                 row["t_p"],
+                epoch,
             )
         elif orbit_format == "KEP":
             ecx, ecy, ecz, dx, dy, dz = universal_cartesian(
@@ -39,6 +40,7 @@ def parse_orbit_row(row, epoch, ephem, sun_dict):
                 row["node"] * np.pi / 180.0,
                 row["argPeri"] * np.pi / 180.0,
                 epoch - (row["ma"] * np.pi / 180.0) * np.sqrt(row["a"] ** 3 / GMSUN),
+                epoch,
             )
         else:
             raise ValueError("Provided orbit format not supported.")
