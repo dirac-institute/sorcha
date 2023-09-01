@@ -1,4 +1,5 @@
 import json
+import os
 import numpy as np
 import spiceypy as spice
 
@@ -63,8 +64,11 @@ class Observatory:
     def __init__(self, oc_file=OBSERVATORY_CODES):
         self.observatoryPositionCache = {}  # previously calculated positions to speed up the process
 
-        retriever = make_retriever()
-        obs_file_path = retriever.fetch(oc_file)
+        if not os.path.isfile(oc_file):
+            retriever = make_retriever()
+            obs_file_path = retriever.fetch(oc_file)
+        else:
+            obs_file_path = oc_file
 
         # Convert ObsCodes.json lines to geocentric x,y,z positions and
         # store them in a dictionary.  The keys are the observatory

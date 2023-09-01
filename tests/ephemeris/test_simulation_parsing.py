@@ -1,10 +1,11 @@
 import pytest
 import numpy as np
 import sorcha.ephemeris.simulation_parsing as sp
+from sorcha.utilities.dataUtilitiesForTests import get_test_filepath
 
 
 def test_observatory_compared_to_original():
-    observatory = sp.Observatory()
+    observatory = sp.Observatory(oc_file=get_test_filepath("ObsCodes_test.json"))
     obs = observatory.ObservatoryXYZ
 
     # Reference tuples were taken from Matt Holman's original notebook
@@ -16,7 +17,7 @@ def test_observatory_compared_to_original():
 
 
 def test_observatory_for_moving_observatories():
-    observatory = sp.Observatory()
+    observatory = sp.Observatory(oc_file=get_test_filepath("ObsCodes_test.json"))
     obs = observatory.ObservatoryXYZ
 
     assert obs["250"] == (None, None, None)

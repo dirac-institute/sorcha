@@ -1,0 +1,17 @@
+{
+"250": {
+"Name": "Hubble Space Telescope"
+},
+"322": {
+"Longitude": 116.134,
+"cos": 0.84882,
+"sin": -0.52703,
+"Name": "Perth Observatory, Bickley-MCT"
+},
+"Z20": {
+"Longitude": 342.1217,
+"cos": 0.87763,
+"sin": 0.4785,
+"Name": "La Palma-MERCATOR"
+}
+}
