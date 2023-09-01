@@ -67,7 +67,6 @@ def test_PPConfigFileParser(setup_and_teardown_for_PPConfigFileParser):
         "position_decimals": 7,
         "magnitude_decimals": 3,
         "size_serial_chunk": 10,
-        "rng_seed": None,
         "lc_model": None,
     }
 

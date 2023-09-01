@@ -100,6 +100,7 @@ def runLSSTPostProcessing(cmd_args, pplogger=None):
     )
 
     PPPrintConfigsToLog(configs, args)
+    pplogger.info(f"rng seed is : {str(args._rng_seed)}")
 
     # End of config parsing
 
