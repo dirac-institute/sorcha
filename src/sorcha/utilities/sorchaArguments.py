@@ -37,7 +37,8 @@ class sorchaArguments:
     complex_parameters: str = ""
     """optional, extra complex physical parameter input files"""
 
-    _rng = np.random.default_rng(int(time.time()))
+    _rng_seed = int(time.time())
+    _rng = np.random.default_rng(_rng_seed)
     """
     DO NOT CHANGE THIS UNLESS YOU ARE A MEMBER OF THE DEVELOPMENT TEAM
     FOR TESTING PURPOSES ONLY
