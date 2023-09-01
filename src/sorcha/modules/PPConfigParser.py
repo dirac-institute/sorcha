@@ -862,6 +862,17 @@ def PPPrintConfigsToLog(configs, cmd_args):
     else:
         pplogger.info("Solar System Processing linking filter is turned OFF.")
 
+    if configs["ar_simulation_enabled"]:
+        pplogger.info("ASSIST+REBOUND Simulation is turned ON.")
+        pplogger.info("For ASSIST+REBOUND...")
+        pplogger.info("...the field's angular FOV is: " + str(configs["ar_ang_fov"]))
+        pplogger.info("...the buffer around the FOV is: " + str(configs["ar_fov_buffer"]))
+        pplogger.info("...the picket interval is: " + str(configs["ar_picket"]))
+        pplogger.info("...the observatory code is: " + str(configs["ar_obs_code"]))
+        pplogger.info("...the healpix order is: " + str(configs["ar_healpix_order"]))
+    else:
+        pplogger.info("ASSIST+REBOUND Simulation is turned OFF.")
+
     if configs["lc_model"]:
         pplogger.info("A lightcurve model is being applied.")
         pplogger.info("The lightcurve model is: " + configs["lc_model"])
