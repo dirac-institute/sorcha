@@ -361,9 +361,9 @@ def PPConfigFileParser(configfile, survey_name):
     config_dict["ephemerides_type"] = PPGetOrExit(
         config, "INPUT", "ephemerides_type", "ERROR: no ephemerides type provided."
     ).lower()
-    if config_dict["ephemerides_type"] not in ["oif"]:
-        pplogger.error("ERROR: ephemerides_type not recognised.")
-        sys.exit("ERROR: ephemerides_type not recognised.")
+    if config_dict["ephemerides_type"] not in ["ar", "external"]:
+        pplogger.error('ERROR: ephemerides_type not recognised - expecting either "ar" or "external".')
+        sys.exit('ERROR: ephemerides_type not recognised - expecting either "ar" or "external".')
 
     config_dict["size_serial_chunk"] = PPGetIntOrExit(
         config, "INPUT", "size_serial_chunk", "ERROR: size_serial_chunk not specified."

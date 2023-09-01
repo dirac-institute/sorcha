@@ -36,7 +36,7 @@ def test_PPConfigFileParser(setup_and_teardown_for_PPConfigFileParser):
     test_configs = {
         "eph_format": "csv",
         "aux_format": "whitespace",
-        "ephemerides_type": "oif",
+        "ephemerides_type": "ar",
         "pointing_sql_query": "SELECT observationId, observationStartMJD, filter, seeingFwhmGeom, seeingFwhmEff, fiveSigmaDepth, fieldRA, fieldDec, rotSkyPos FROM observations order by observationId",
         "comet_activity": None,
         "observing_filters": ["r", "g", "i", "z"],

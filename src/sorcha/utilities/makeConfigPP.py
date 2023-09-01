@@ -160,9 +160,9 @@ def main():
     parser.add_argument(
         "--ephemeridestype",
         "-eph",
-        help="Type of input ephemerides: default = oif. Options: currently only oif.",
+        help='Type of input ephemerides: default = ar. Options: ["ar", "external"]',
         type=str,
-        default="oif",
+        default="ar",
     )
     parser.add_argument(
         "--pointingdatabase",

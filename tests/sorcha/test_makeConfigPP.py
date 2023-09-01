@@ -8,7 +8,7 @@ from sorcha.utilities.dataUtilitiesForTests import get_test_filepath
 class args:
     def __init__(self, filename):
         args.filename = filename
-        self.ephemeridestype = "oif"
+        self.ephemeridestype = "ar"
         self.ephformat = "whitespace"
         self.auxformat = "whitespace"
         self.sizeserialchunk = 10

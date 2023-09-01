@@ -152,7 +152,7 @@ def runLSSTPostProcessing(cmd_args, configs, pplogger=None):
         # That does the selection and checks. We are holding off adding this level of indirection until there
         # is a second ephemerides_type.
         ephem_type = configs["ephemerides_type"]
-        if ephem_type.casefold() != "oif":  # pragma: no cover
+        if ephem_type.casefold() not in ["ar", "external"]:  # pragma: no cover
             pplogger.error(f"PPReadAllInput: Unsupported value for ephemerides_type {ephem_type}")
             sys.exit(f"PPReadAllInput: Unsupported value for ephemerides_type {ephem_type}")
         reader.add_ephem_reader(OIFDataReader(args.oifoutput, configs["eph_format"]))
@@ -450,7 +450,7 @@ def main():
     cmd_args = PPCommandLineParser(args)
     configs = PPConfigFileParser(cmd_args["configfile"], cmd_args["surveyname"])
     if cmd_args["surveyname"] in ["LSST", "lsst"]:
-        if configs["ar_simulation_enabled"]:
+        if configs["ephemerides_type"] == "ar":
             runLSSTSimulation(cmd_args, configs, pplogger)
         runLSSTPostProcessing(cmd_args, pplogger)
     else:
