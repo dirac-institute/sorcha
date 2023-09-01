@@ -105,7 +105,7 @@ def PPLinkingFilter(
     tracklet_interval,
     minimum_separation,
     maximum_time,
-    rng_seed,
+    rng_seed=0,
     survey_name="lsst",
 ):
     """
