@@ -13,11 +13,12 @@ def integrate_light_time(sim, ex, t, r_obs, lt0=0, iter=3, speed_of_light=SPEED_
     for i in range(iter):
         ex.integrate_or_interpolate(t - lt)
         target = np.array(sim.particles[0].xyz)
+        vtarget = np.array(sim.particles[0].vxyz)
         rho = target - r_obs
         rho_mag = np.linalg.norm(rho)
         lt = rho_mag / speed_of_light
-
-    return rho, rho_mag, lt
+    # Compute a second value to get rates (need v_obs)
+    return rho, rho_mag, lt, target, vtarget
 
 
 def get_hp_neighbors(ra_c, dec_c, search_radius, nside=32, nested=True):

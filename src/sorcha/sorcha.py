@@ -43,6 +43,12 @@ from sorcha.utilities.sorchaArguments import sorchaArguments
 # Author: Samuel Cornwall, Siegfried Eggl, Grigori Fedorets, Steph Merritt, Meg Schwamb
 
 
+def runAll(cmd_args, configs, pplogger=None):
+    if configs["ephemerides_type"] == "ar":
+        runLSSTSimulation(cmd_args, configs, pplogger)
+    runLSSTPostProcessing(cmd_args, pplogger)
+
+
 def runLSSTSimulation(cmd_args, configs, pplogger=None):
     if pplogger is None:
         if type(cmd_args) is dict:
@@ -450,9 +456,7 @@ def main():
     cmd_args = PPCommandLineParser(args)
     configs = PPConfigFileParser(cmd_args["configfile"], cmd_args["surveyname"])
     if cmd_args["surveyname"] in ["LSST", "lsst"]:
-        if configs["ephemerides_type"] == "ar":
-            runLSSTSimulation(cmd_args, configs, pplogger)
-        runLSSTPostProcessing(cmd_args, pplogger)
+        runAll(cmd_args, configs, pplogger)
     else:
         sys.exit(
             "ERROR: Survey name not recognised. Current allowed surveys are: {}".format(["LSST", "lsst"])

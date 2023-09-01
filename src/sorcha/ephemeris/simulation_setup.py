@@ -67,7 +67,7 @@ def generate_simulations(ephem, args, configs):
     orbit_format = orbits_df["FORMAT"].iloc[0]
     sun_dict = dict()  # This could be passed in and reused
     for index, row in orbits_df.iterrows():
-        # desig, H, G, epoch, pos, vel = sp.convert_mpc_orbit(line, ephem, sun_dict)
+        # desig, H, G, epoch, pos, vel = sp.convert_mpc_orbit(row, ephem, sun_dict)
         epoch = row["epoch"]
         # convert from MJD to JD, if not done already.
         if epoch < 2400000.5:
@@ -99,6 +99,9 @@ def generate_simulations(ephem, args, configs):
         # Save the simulation in the dictionary
         sim_dict[row["ObjID"]]["sim"] = sim
         sim_dict[row["ObjID"]]["ex"] = ex
+        # sim_dict[row["ObjID"]]['H'] = H
+        # sim_dict[row["ObjID"]]['G'] = G
+
         # count += 1
         # except:
         #     # TODO: better error handling
