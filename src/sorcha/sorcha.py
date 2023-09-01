@@ -132,7 +132,7 @@ def runLSSTPostProcessing(cmd_args, pplogger=None):
 
     reader.add_aux_data_reader(OrbitAuxReader(args.orbinfile, configs["aux_format"]))
     reader.add_aux_data_reader(CSVDataReader(args.paramsinput, configs["aux_format"]))
-    if configs["comet_activity"] is not None:
+    if configs["comet_activity"] is not None or configs["lc_model"] is not None:
         reader.add_aux_data_reader(CSVDataReader(args.complex_parameters, configs["aux_format"]))
 
     # In case of a large input file, the data is read in chunks. The
