@@ -22,7 +22,7 @@ classifiers = [
 dynamic = ["version"]
 dependencies = [
     "numpy==1.24.3",
-    "pandas",
+    "pandas<2.1",
     "scipy",
     "astropy",
     "matplotlib",
