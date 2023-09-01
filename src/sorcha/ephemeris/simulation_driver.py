@@ -72,7 +72,7 @@ def create_ephemeris(args, configs):
         for pix in pixels:
             desigs.update(pixel_dict[pix])
 
-        for k in desigs:
+        for k in sorted(desigs):
             v = sim_dict[k]
             sim, ex, rho_hat_rough = v["sim"], v["ex"], v["rho_hat"]
             ang = np.arccos(np.dot(rho_hat_rough, visit_vec)) * 180 / np.pi
