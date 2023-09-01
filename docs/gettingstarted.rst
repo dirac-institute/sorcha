@@ -21,7 +21,7 @@ of our synthetic Solar System population that we wish to input into the simulato
 Making the Orbit File
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-First we will start with creating an orbits file, and generate a file called 'sspp_testset_orbits.des', which contains the orbits of five synthetic objects. You can download the file from `here <https://github.com/dirac-institute/sorcha/blob/main/demo/sspp_testset_orbits.des>`__. The contents of the file is below:
+First, we will start with creating an :ref:`orbits`, and generate a file called 'sspp_testset_orbits.des', which contains the orbits of five synthetic objects. You can download the file from `here <https://github.com/dirac-institute/sorcha/blob/main/demo/sspp_testset_orbits.des>`__. The contents of the file is below:
 
 .. literalinclude:: ../demo/sspp_testset_orbits.des
     :language: text
@@ -29,7 +29,7 @@ First we will start with creating an orbits file, and generate a file called 'ss
 Make the Physical Parameters File
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Next, we need to generate a file called 'sspp_testset_colours.txt' which assigns colors, phase curve properties, and asbolute mangitudes to each of the simulated small bodies whose orbits are defined in our input orbit file. You can download the file from `here <https://github.com/dirac-institute/sorcha/blob/main/demo/sspp_testset_colours.txt>`__.  The contents of the file is below:
+Next, we need to produce the :ref:`physical`, which we call 'sspp_testset_colours.txt'. This file assigns colors, phase curve properties, and absolute mangitudes to each of the simulated small bodies whose orbits are defined in our input orbit file. You can download the file from `here <https://github.com/dirac-institute/sorcha/blob/main/demo/sspp_testset_colours.txt>`__.  The contents of the file is below:
 
 .. literalinclude:: ../demo/sspp_testset_colours.txt
     :language: text
@@ -39,7 +39,7 @@ Next, we need to generate a file called 'sspp_testset_colours.txt' which assigns
 
 Getting the Pointing Database 
 ------------------------------------------
-For this tutorial, we're using the first year of the baseline v2.0 LSST cadence simultation. You can download the file from `here <https://github.com/dirac-institute/sorcha/blob/main/demo/baseline_v2.0_1yr.db>`__.
+For this tutorial, we're using the first year of the baseline v2.0 LSST cadence simulation as the :ref:`pointing`. You can download the file from `here <https://github.com/dirac-institute/sorcha/blob/main/demo/baseline_v2.0_1yr.db>`__.
 
 
 Setting Up Sorcha's Configuration File 

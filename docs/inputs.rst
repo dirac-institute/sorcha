@@ -21,6 +21,8 @@ and physical parameters for synthetic planetesimals that are being simulated. Th
 .. warning::
   Sorcha is not checking whether or not a planetesimal ID has been repeated in another row of the input files. **It is up to the user to ensure their input files include only unique IDs**. 
 
+.. _orbits:
+
 Orbit File
 -----------------
 
@@ -153,6 +155,8 @@ An example of an orbit file, in Keplarian format, with the object ID represented
 .. note::
    All positions and velocities are in respect to J2000
 
+.. _physical:
+
 Physical Parameters File
 -------------------------------------------
 
@@ -212,6 +216,8 @@ We have implemented several phase curve paramterizations that can be specified i
 
 .. note::
   In the config file you can decide which filters you want have Sorcha run on and specify which filter is the main filter that the absolute magnitude is defined for. You only need to provide colors for those fliters specified in the config file.
+
+.. _pointing:
 
 Survey Pointing Database
 ------------------------

@@ -33,7 +33,7 @@ Setup Your Conda Environment
 
 **Step 1** Create a conda environment::
 
-   conda create -n sorcha -c conda-forge -c moeyensj numpy numba pandas scipy astropy matplotlib sbpy pytables difi==1.2rc3 spiceypy healpy rebound pooch tqdm python=3.10
+   conda create -n sorcha -c conda-forge -c moeyensj numpy numba pandas<2.1 scipy astropy matplotlib sbpy pytables difi==1.2rc3 spiceypy healpy rebound pooch tqdm python=3.10
    conda activate sorcha
 
 .. tip::
