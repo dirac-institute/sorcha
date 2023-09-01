@@ -35,7 +35,7 @@ This is a file which contains the orbital information of a set of synthetic obje
   *  The **correct capitalization of column names** is required 
   *  The orbit file can be either **white space separated** or **comma value separated (CSV)**
   *  Each simulated particle **must** have a unique string identifier 
-  *  Any additional columns beyond the required ones will be removed after read in by Sorcha
+  *  The orbit file **must only** have 9 columns (object identifier, format column, 6 orbital parameters, and a time epoch) 
 
 .. warning::
   Sorcha assumes **heliocentric** orbits are provided as input!
@@ -164,7 +164,6 @@ The input file for the physical parameters includes information about the object
   *  You  **must use the same phase curve prescription for all simulated objects**. If you want to use different phase curve prescriptions for different synthetic populations, you will need to run them in separate input files to Sorcha
   *  If the  phase curve function is set to NONE in the configuration value then no phase curve parameters values are required in the physical paramters files. 
   *  In the config file you can decide which filters you want have Sorcha run on and specify which filter is the main filter that the absolute magnitude is defined for. You only need to provide colors for those fliters specified in the config file.
-  *  Any additional columns beyond the required ones will be removed after read in by Sorcha
 
 .. note::
   For readability we show examples of white space separated files below.
@@ -224,14 +223,27 @@ What we call the LSST pointing database (currently simulated since Rubin Observa
 .. tip::
    The contents of the observations table in the sqlite LSST pointing database can be found `here <https://rubin-sim.lsst.io/rs_scheduler/output_schema.html>`_
 
-The latest version of rubin_sim cadence simulations can be found at https://s3df.slac.stanford.edu/data/rubin/sim-data/. An example rubin_sim simulation visualized on sky is shown below: 
+The latest version of rubin_sim cadence simulations can be found at https://s3df.slac.stanford.edu/data/rubin/sim-data/. An example rubin_sim simulation visualized on sky is shown in the plot below of the number of on-sky visits over the 10-year simulated baseline v3.2 survey: 
 
-.. raw:: html
-
-    <iframe width="700" height="360" src="https://epyc.astro.washington.edu/~lynnej/opsim_downloads/baseline_v2.0_10yrs.mp4" frameborder="0" allowfullscreen></iframe>
+.. image:: images/Rubin_v3.2_baseline_visits.png
+  :width: 410
+  :alt: Sorcha logo
+  :align: center
 
 .. attention::
    There may be changes to how this information is read in when the Rubin Observatory operations begin in ~mid-2025.
+
+Complex Physical Parameters File (Optional)
+---------------------------------------------------
+
+The complex physical parameters file is only used if you're going to include your own rotational light curve class or cometary activity class to augment the calculated apparent magnitudes. Sorcha is set up that  
+
+.. tip::
+  *  The ordering of the columns does not matter as long as the required columns exist and have entries
+  *  The first row in the complex  physical parameters file **must** list  the columns names
+  *  The **correct capitalization of column names** is required
+  *  The complex parameters file  file can be either **white space separated** or **comma value separated (CSV)**
+  *  Each simulated object **must** have a unique string identifier
 
 Ephemeris File (Optional)
 -----------------------------------------
@@ -246,7 +258,6 @@ Ephemeris File (Optional)
   *  The **correct capitalization of column names** is required
   *  The ephemerist file can be either **white space separated** or **comma value separated (CSV)**
   *  Each simulated object **must** have a unique string identifier
-  *  Any additional columns beyond the required ones will be removed after read in by Sorcha
 
 .. note::
   For readability we show an example of a white space separated file below.
@@ -256,7 +267,7 @@ An example of an (optional) ephemeris file::
    START HEADER
    [configuration would be outputted here]
    END HEADER
-   ObjID FieldID FieldMJD AstRange(km) AstRangeRate(km/s) AstRA(deg) AstRARate(deg/day) AstDec(deg) AstDecRate(deg/day) Ast-Sun(J2000x)(km) Ast-Sun(J2000y)(km) Ast-Sun(J2000z)(km) Ast-Sun(J2000vx)(km/s) Ast-Sun(J2000vy)(km/s) Ast-Sun(J2000vz)(km/s) Obs-Sun(J2000x)(km) Obs-Sun(J2000y)(km) Obs-Sun(J2000z)(km) Obs-Sun(J2000vx)(km/s) Obs-Sun(J2000vy)(km/s) Obs-Sun(J2000vz)(km/s) Sun-Ast-Obs(deg)0
+   ObjID FieldID FieldMJD AstRange(km) AstRangeRate(km/s) AstRA(deg) AstRARate(deg/day) AstDec(deg) AstDecRate(deg/day) Ast-Sun(J2000x)(km) Ast-Sun(J2000y)(km) Ast-Sun(J2000z)(km) Ast-Sun(J2000vx)(km/s) Ast-Sun(J2000vy)(km/s) Ast-Sun(J2000vz)(km/s) Obs-Sun(J2000x)(km) Obs-Sun(J2000y)(km) Obs-Sun(J2000z)(km) Obs-Sun(J2000vx)(km/s) Obs-Sun(J2000vy)(km/s) Obs-Sun(J2000vz)(km/s) Sun-Ast-Obs(deg)
    S1000000a     144993 60425.402338    458272140.052  -21.379  302.104404  0.134147   3.473196  0.155803    120337437.532   -467360529.440     -6863861.395   15.814    3.135    3.395   -122770233.618    -79879875.157    -34626711.017   17.120  -22.269   -9.707   18.169656 
    S1000000a     145013 60425.411933    458254426.575  -21.355  302.105691  0.134050   3.474691  0.155787    120350548.117   -467357930.249     -6861046.878   15.813    3.135    3.395   -122756042.340    -79898326.109    -34634757.414   17.116  -22.244   -9.705   18.169632 
    S1000000a     180614 60503.206627    355295647.270   -4.213  299.360478 -0.185502  11.819392  0.002961    222559162.829   -434204364.757     15938036.863   14.472    6.666    3.359     52050159.823   -131110990.022    -56836222.957   27.873    9.424    4.014   10.189588 
@@ -314,6 +325,3 @@ An example of an (optional) ephemeris file::
 .. note::
    All positions and velocities are in respect to J2000 
 
-
-Complex Parameeters File (Optional)
------------------------------------------

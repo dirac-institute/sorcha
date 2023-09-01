@@ -164,6 +164,7 @@ tmp/
 
 # data files changed by unit tests
 tests/data/config_test*.ini
-
 checker.txt
 ephemeris_output.csv
+data/out/
+
