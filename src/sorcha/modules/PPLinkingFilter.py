@@ -105,6 +105,7 @@ def PPLinkingFilter(
     tracklet_interval,
     minimum_separation,
     maximum_time,
+    rng_seed,
     survey_name="lsst",
 ):
     """
@@ -163,7 +164,7 @@ def PPLinkingFilter(
     # link
     obj = linkObservations(
         obsv,
-        seed=0,
+        seed=rng_seed,
         objectId="ssObjectId",
         maxdt_minutes=maximum_time * 24 * 60,
         minlen_arcsec=minimum_separation,

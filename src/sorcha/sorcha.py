@@ -261,6 +261,7 @@ def runLSSTPostProcessing(cmd_args, pplogger=None):
                 configs["SSP_track_window"],
                 configs["SSP_separation_threshold"],
                 configs["SSP_maximum_time"],
+                args._rng_seed,
             )
 
             observations.reset_index(drop=True, inplace=True)
