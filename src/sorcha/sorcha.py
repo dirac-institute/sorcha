@@ -118,7 +118,7 @@ def runLSSTPostProcessing(cmd_args, configs, pplogger=None):
     verboselog = pplogger.info if args.verbose else lambda *a, **k: None
 
     verboselog("Reading configuration file...")
-    # configs = PPConfigFileParser(args.configfile, args.surveyname)
+    configs = PPConfigFileParser(args.configfile, args.surveyname)
 
     verboselog("Configuration file successfully read.")
 
