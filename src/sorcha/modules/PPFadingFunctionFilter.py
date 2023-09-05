@@ -1,12 +1,11 @@
 import logging
-from .PPDropObservations import PPDropObservations
 from .PPDetectionProbability import PPDetectionProbability
 
+from sorcha.modules.PPModuleRNG import getModuleRNG
 
-def PPFadingFunctionFilter(observations, fillfactor, width, rng, verbose=False):
+
+def PPFadingFunctionFilter(observations, fillfactor, width, base_seed, verbose=False):
     """
-    Wrapper function for PPDetectionProbability and PPDropObservations.
-
     Calculates detection probability based on a fading function, then drops rows where the
     probabilty of detection is less than sample drawn from a uniform distribution.
 
@@ -16,7 +15,7 @@ def PPFadingFunctionFilter(observations, fillfactor, width, rng, verbose=False):
 
     fillFactor (float): fraction of FOV covered by the camera sensor.
 
-    rng (numpy Generator): numpy random number Generator object.
+    base_seed (int): The base seed for the random number generator.
 
     Returns:
     ----------
@@ -26,6 +25,9 @@ def PPFadingFunctionFilter(observations, fillfactor, width, rng, verbose=False):
 
     pplogger = logging.getLogger(__name__)
     verboselog = pplogger.info if verbose else lambda *a, **k: None
+
+    # Set the module specific seed as an offset from the base seed.
+    rng = getModuleRNG(base_seed, __name__)
 
     verboselog("Calculating probabilities of detections...")
     observations["detection_probability"] = PPDetectionProbability(
@@ -37,7 +39,9 @@ def PPFadingFunctionFilter(observations, fillfactor, width, rng, verbose=False):
     )
 
     verboselog("Dropping observations below detection threshold...")
-    observations = PPDropObservations(observations, rng, "detection_probability")
+    uniform_distr = rng.random(len(observations.index))
+    observations = observations[observations["detection_probability"] >= uniform_distr]
+
     observations_drop = observations.drop("detection_probability", axis=1)
     observations_drop.reset_index(drop=True, inplace=True)
 

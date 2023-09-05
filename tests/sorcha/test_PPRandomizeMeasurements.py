@@ -8,15 +8,13 @@ from sorcha.utilities.dataUtilitiesForTests import get_test_filepath
 def test_randomizePhotometry():
     from sorcha.modules.PPRandomizeMeasurements import randomizePhotometry
 
-    rng = np.random.default_rng(2021)
-
     test_data = pd.read_csv(get_test_filepath("test_input_fullobs.csv"))
 
     test_out = randomizePhotometry(
-        test_data[0:1], rng, magName="TrailedSourceMag", sigName="PhotometricSigmaTrailedSource(mag)"
+        test_data[0:1], 2021, magName="TrailedSourceMag", sigName="PhotometricSigmaTrailedSource(mag)"
     )
 
-    np.testing.assert_almost_equal(test_out.values[0], 19.654880, decimal=5)
+    np.testing.assert_almost_equal(test_out.values[0], 19.663194, decimal=5)
 
     return
 
@@ -24,11 +22,9 @@ def test_randomizePhotometry():
 def test_randomizeAstrometry():
     from sorcha.modules.PPRandomizeMeasurements import randomizeAstrometry
 
-    rng = np.random.default_rng(2021)
-
     test_data = pd.read_csv(get_test_filepath("test_input_fullobs.csv"))
 
-    test_out = randomizeAstrometry(test_data[0:1], rng, sigName="AstrometricSigma(deg)", sigUnits="deg")
+    test_out = randomizeAstrometry(test_data[0:1], 2021, sigName="AstrometricSigma(deg)", sigUnits="deg")
 
     np.testing.assert_almost_equal(test_out[0][0], 164.03771597, decimal=5)
     np.testing.assert_almost_equal(test_out[1][0], -17.58257153, decimal=5)
@@ -62,12 +58,10 @@ def test_sampleNormalFOV():
     centre = radec2icrf(observations["AstRA(deg)"], observations["AstDec(deg)"])
     sigmarad = np.deg2rad(observations["AstrometricSigma(deg)"])
 
-    rng = np.random.default_rng(2021)
-
     n = len(observations.index)
     xyz = np.zeros([n, 3])
 
-    xyz = sampleNormalFOV(centre, sigmarad, rng, ndim=3)
+    xyz = sampleNormalFOV(centre, sigmarad, 2021, ndim=3)
     expected_xyz = [
         [-0.57735025, -0.57735027, -0.57735028],
         [0.57735032, 0.57735025, 0.57735024],

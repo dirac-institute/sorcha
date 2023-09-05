@@ -2,8 +2,10 @@ import logging
 import numpy as np
 from astropy.coordinates import SkyCoord
 
+from sorcha.modules.PPModuleRNG import getModuleRNG
 
-def PPApplyFOVFilter(observations, configs, rng, footprint=None, verbose=False):
+
+def PPApplyFOVFilter(observations, configs, base_seed, footprint=None, verbose=False):
     """
     Wrapper function for PPFootprintFilter and PPFilterDetectionEfficiency. Checks to see
     whether a camera footprint filter should be applied or if a simple fraction of the
@@ -15,7 +17,7 @@ def PPApplyFOVFilter(observations, configs, rng, footprint=None, verbose=False):
 
     configs (dictionary): dictionary of variables from config file.
 
-    rng (numpy Generator): numpy random number generator object.
+    base_seed (int): The base seed for a random number generator
 
     footprint (Footprint): A Footprint object that represents the boundaries of
     the detector(s). Default `None`.
@@ -48,7 +50,7 @@ def PPApplyFOVFilter(observations, configs, rng, footprint=None, verbose=False):
             observations = PPCircleFootprint(observations, configs["circle_radius"])
         if configs["fill_factor"]:
             verboselog("Fill factor is set. Removing random observations to mimic chip gaps.")
-            observations = PPSimpleSensorArea(observations, rng, configs["fill_factor"])
+            observations = PPSimpleSensorArea(observations, base_seed, configs["fill_factor"])
 
     return observations
 
@@ -119,7 +121,7 @@ def PPCircleFootprint(observations, circle_radius):
     return new_observations
 
 
-def PPSimpleSensorArea(ephemsdf, rng, fillfactor=0.9):
+def PPSimpleSensorArea(ephemsdf, base_seed, fillfactor=0.9):
     """
     Randomly removes a number of observations proportional to the
     fraction of the field not covered by the detector.
@@ -128,7 +130,7 @@ def PPSimpleSensorArea(ephemsdf, rng, fillfactor=0.9):
     -----------
     ephemsdf (Pandas dataframe): dataframe containing observations.
 
-    rng (numpy Generator): numpy random number generator object.
+    base_seed (int): The base seed for a random number generator
 
     fillfactor (float): fraction of FOV covered by the sensor.
 
@@ -137,6 +139,8 @@ def PPSimpleSensorArea(ephemsdf, rng, fillfactor=0.9):
     ephemsOut (Pandas dataframe): dataframe of observations with fraction removed.
 
     """
+    # Set the module specific seed as an offset from the base seed.
+    rng = getModuleRNG(base_seed, __name__)
 
     n = len(ephemsdf)
 

@@ -6,76 +6,71 @@ from numpy.testing import assert_equal
 def test_PPDetectionEfficiency():
     from sorcha.modules.PPDetectionEfficiency import PPDetectionEfficiency
 
-    rng = np.random.default_rng(2021)
-
     observations = pd.DataFrame({"ObjID": np.arange(0, 100)})
 
     expected_50 = [
-        3,
-        5,
-        6,
+        0,
+        2,
         7,
         8,
-        12,
-        13,
-        15,
+        9,
+        11,
+        14,
+        17,
+        19,
         20,
         21,
         22,
         23,
         24,
         25,
+        26,
+        27,
         28,
         29,
-        30,
         31,
         32,
+        33,
         34,
-        41,
+        37,
+        39,
         42,
         44,
         45,
-        46,
-        47,
         48,
-        49,
         50,
+        51,
         53,
-        54,
-        57,
-        59,
+        55,
+        56,
         61,
         62,
         63,
         66,
-        67,
         68,
-        69,
         70,
+        71,
+        72,
         74,
-        76,
+        75,
         77,
-        78,
         79,
+        81,
         82,
         83,
-        84,
-        86,
-        89,
+        85,
+        87,
         90,
-        93,
-        94,
-        96,
         98,
     ]
 
-    observations_out = PPDetectionEfficiency(observations, 0.50, rng)
+    observations_out = PPDetectionEfficiency(observations, 0.50, 2021)
     assert_equal(observations_out["ObjID"].values, expected_50)
 
-    observations_zero = PPDetectionEfficiency(observations, 0.0, rng)
+    observations_zero = PPDetectionEfficiency(observations, 0.0, 2021)
     assert_equal(len(observations_zero), 0)
 
-    observations_all = PPDetectionEfficiency(observations, 1.0, rng)
+    observations_all = PPDetectionEfficiency(observations, 1.0, 2021)
     assert_equal(len(observations_all), 100)
 
     return

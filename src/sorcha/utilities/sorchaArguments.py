@@ -37,7 +37,8 @@ class sorchaArguments:
     complex_parameters: str = ""
     """optional, extra complex physical parameter input files"""
 
-    _rng = None
+    base_seed = None
+    """The base seed for the random number generation."""
 
     def __init__(self, cmd_args_dict=None):
         if cmd_args_dict is not None:
@@ -67,8 +68,7 @@ class sorchaArguments:
         # WARNING: Take care if manually setting the seed. Re-using seeds between
         # simulations may result in hard-to-detect correlations in simulation
         # outputs.
-        seed = args.get("seed", int(time.time()))
-        self._rng = np.random.default_rng(seed)
+        self.base_seed = args.get("seed", int(time.time()))
 
     def validate_arguments(self):
         if not path.isfile(self.paramsinput):
