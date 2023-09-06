@@ -141,7 +141,7 @@ class OIFDataReader(ObjectDataReader):
 
         optional_cols = ["jd_tdb"]
 
-        if not set(input_table.columns.values).issubset(np.array(oif_cols)):
+        if not set(input_table.columns.values) == set(oif_cols):
             for column in input_table.columns.values:
                 if column not in oif_cols and column not in optional_cols:
                     pplogger = logging.getLogger(__name__)
