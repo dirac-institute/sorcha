@@ -75,4 +75,4 @@ def override_seed_and_run(outpath):
     # science results.
     configs = PPConfigFileParser(args.configfile, args.surveyname)
     args._rngs = PerModuleRNG(2023)
-    runLSSTPostProcessing(args)
+    runLSSTPostProcessing(args, configs)
