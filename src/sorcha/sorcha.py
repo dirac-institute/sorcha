@@ -165,7 +165,7 @@ def runLSSTPostProcessing(cmd_args, configs, pplogger=None):
 
     reader.add_aux_data_reader(OrbitAuxReader(args.orbinfile, configs["aux_format"]))
     reader.add_aux_data_reader(CSVDataReader(args.paramsinput, configs["aux_format"]))
-    if configs["comet_activity"] is not None:
+    if configs["comet_activity"] is not None or configs["lc_model"] is not None:
         reader.add_aux_data_reader(CSVDataReader(args.complex_parameters, configs["aux_format"]))
 
     # In case of a large input file, the data is read in chunks. The
@@ -225,7 +225,7 @@ def runLSSTPostProcessing(cmd_args, configs, pplogger=None):
 
         verboselog("Applying field-of-view filters...")
         observations = PPApplyFOVFilter(
-            observations, configs, args._rng, footprint=footprint, verbose=args.verbose
+            observations, configs, args._rngs, footprint=footprint, verbose=args.verbose
         )
 
         # Note that the below code creates observedTrailedSourceMag and observedPSFMag
@@ -234,20 +234,20 @@ def runLSSTPostProcessing(cmd_args, configs, pplogger=None):
         # Do NOT use TrailedSourceMag or PSFMag, these are cut later.
         verboselog("Calculating astrometric and photometric uncertainties...")
         observations = PPAddUncertainties.addUncertainties(
-            observations, configs, args._rng, verbose=args.verbose
+            observations, configs, args._rngs, verbose=args.verbose
         )
 
         verboselog("Randomising astrometry...")
         observations["AstRATrue(deg)"] = observations["AstRA(deg)"]
         observations["AstDecTrue(deg)"] = observations["AstDec(deg)"]
         observations["AstRA(deg)"], observations["AstDec(deg)"] = PPRandomizeMeasurements.randomizeAstrometry(
-            observations, args._rng, sigName="AstrometricSigma(deg)", sigUnits="deg"
+            observations, args._rngs, sigName="AstrometricSigma(deg)", sigUnits="deg"
         )
 
         if configs["camera_model"] == "footprint":
             verboselog("Re-applying field-of-view filter...")
             observations = PPApplyFOVFilter(
-                observations, configs, args._rng, footprint=footprint, verbose=args.verbose
+                observations, configs, args._rngs, footprint=footprint, verbose=args.verbose
             )
 
         if configs["SNR_limit_on"]:
@@ -268,7 +268,7 @@ def runLSSTPostProcessing(cmd_args, configs, pplogger=None):
                 observations,
                 configs["fading_function_peak_efficiency"],
                 configs["fading_function_width"],
-                args._rng,
+                args._rngs,
                 verbose=args.verbose,
             )
 
@@ -455,6 +455,11 @@ def main():
     # Extract and validate the remaining arguments.
     cmd_args = PPCommandLineParser(args)
     configs = PPConfigFileParser(cmd_args["configfile"], cmd_args["surveyname"])
+
+    if "SORCHA_SEED" in os.environ:
+        cmd_args["seed"] = int(os.environ["SORCHA_SEED"])
+        pplogger.info(f"Random seed overridden via environmental variable, SORCHA_SEED={cmd_args['seed']}")
+
     if cmd_args["surveyname"] in ["LSST", "lsst"]:
         runAll(cmd_args, configs, pplogger)
     else:

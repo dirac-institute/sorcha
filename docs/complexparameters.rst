@@ -1,45 +1,13 @@
-Complex Physical Parameters
-=============================
+Incorporating Rotational Light Curves and Active Objects 
+==========================================================
+Sorcha has the ability user provided functions though python classes that augment/change the apparent brightness calculations for the synthetic Solar System objects. Any values required as input for these calculations, must be provided in the separate :ref:`CPP` file as input. 
 
-Cometary Activity
-------------------------
+We have base example classes that the user can take and modify to whatever your need is. Within the Sorcha :ref:`configs`, the user would then specify when class would use and provide the required complex physical parameters file on the command line.  We also have 2 pre-made example classes that can augment the calculated apparent magnitude of each synthetic object, One for handling cometary activity as a function of heliocentric distance and one that applies rotational light curves to the synthetic objects. In both cases, any derived class must inherit from the correspondig base class and follow its API, to ensure that sorcha knows how to find and use your class.
 
-
-.. note::
-  The cometary activity file is used by  **Sorcha**.
-
-This is an optional input file which describes how the object apparent magnitude will be augmented from
-a standard non-active, atmosphereless body as it moves inwards and outwards towards the Sun. The file can be **white space separated**  or **comma value separated (CSV)** format.
-
-
-An example of a cometary activity parameter file::
-
-   ObjID afrho1 k
-   67P 1552 -3.35
-
-
-.. warning::
-
-   **When running an instance of Sorcha, either every synthetic planetesimal experiences cometary activity, or none do.** When running simulations of synthetic planetesimals exhibiting cometary activity, **every** object in that simulation must have an entry in the associated cometary activity file.
-
-+-------------+-----------------------------------------------------------------------------------+
-| Keyword     | Description                                                                       |
-+=============+===================================================================================+
-| ObjID       | Object identifier for each synthetic planetesimal simulated (string)              |
-+-------------+-----------------------------------------------------------------------------------+
-| afrho1      | Afρ, quantity of                                                                  |
-|             | `A'Hearn et al. (1984) <https://ui.adsabs.harvard.edu/abs/1984AJ.....89..579A>`_. |
-|             | at perihelion (cm). The product of                                                |
-|             | albedo, filling factor of grains within the observer field of view, and the       |
-|             | linear radius of the field of view at the comet                                   |
-+-------------+-----------------------------------------------------------------------------------+
-| k           | Dust falling exponential value (dust falling at rh^k)                             |
-+-------------+-----------------------------------------------------------------------------------+
-
-.. attention::
-
-   These parameters are only used to adjust the apparent brightness of the synthetic planetesimal. We do not account for non-gravitational effects on the ephemeris.
-
+Cometary Activity or Simulating Other Active Objects
+--------------------------------------------------------
 
 Rotational Light Curve Effects
 -----------------------------------
+_this is in progress_
+The base lightcurve class is `AbstractLightCurve <https://github.com/dirac-institute/sorcha/blob/04baa79a7d67e1647b839a2d3880d8bfd9ce4624/src/sorcha/lightcurves/base_lightcurve.py#L10>`_.. Inside the [sorcha-community-utils][https://github.com/dirac-institute/sorcha_community_utils/tree/main), we are providing a simple example implementation where the apparent magnitude of the object (that is, the magnitude after all geometric effects have been taken into account), has a sinusoidal term added to it. To use this function, in the complex physical parameters file, the user must provide a light curve amplitude (`LCA`), corresponding to half the peak-to-peak amplitude for the magnitude changes, a period `Period`, and a reference time `Time0` where the light curve is at 0 - if these are not provided, the software will produce an error message. Despite being simple, that implementation shows all the class methods that need to be implemented for a custom light curve function.

@@ -48,11 +48,11 @@ def test_ison():
     assert idx1.tolist() == [2, 3, 4, 7, 9, 10, 11, 12]
 
     # Check with distance of 0.0015 radians (specified in arcseconds).
-    idx2 = detector.ison(points, edge_thresh=(np.degrees(0.0015)*3600))
+    idx2 = detector.ison(points, edge_thresh=(np.degrees(0.0015) * 3600))
     assert idx2.tolist() == [2, 4, 9, 10]
 
     # Check with distance of 0.000015 radians (specified in arcseconds).
-    idx3 = detector.ison(points, edge_thresh=(np.degrees(0.000015)*3600))
+    idx3 = detector.ison(points, edge_thresh=(np.degrees(0.000015) * 3600))
     assert idx3.tolist() == [2, 3, 4, 9, 10, 11, 12]
 
     # Math should hold if the detector is in degrees. Uses the same thresholds.
@@ -63,10 +63,10 @@ def test_ison():
     idx1 = detector.ison(points_deg)
     assert idx1.tolist() == [2, 3, 4, 7, 9, 10, 11, 12]
 
-    idx2 = detector.ison(points_deg, edge_thresh=(np.degrees(0.0015)*3600))
+    idx2 = detector.ison(points_deg, edge_thresh=(np.degrees(0.0015) * 3600))
     assert idx2.tolist() == [2, 4, 9, 10]
 
-    idx3 = detector.ison(points_deg, edge_thresh=(np.degrees(0.000015)*3600))
+    idx3 = detector.ison(points_deg, edge_thresh=(np.degrees(0.000015) * 3600))
     assert idx3.tolist() == [2, 3, 4, 9, 10, 11, 12]
 
 
