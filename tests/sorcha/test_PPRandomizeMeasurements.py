@@ -12,7 +12,10 @@ def test_randomizePhotometry():
     test_data = pd.read_csv(get_test_filepath("test_input_fullobs.csv"))
 
     test_out = randomizePhotometry(
-        test_data[0:1], PerModuleRNG(2021), magName="TrailedSourceMag", sigName="PhotometricSigmaTrailedSource(mag)"
+        test_data[0:1],
+        PerModuleRNG(2021),
+        magName="TrailedSourceMag",
+        sigName="PhotometricSigmaTrailedSource(mag)",
     )
 
     np.testing.assert_almost_equal(test_out.values[0], 19.663194, decimal=5)
@@ -25,7 +28,9 @@ def test_randomizeAstrometry():
 
     test_data = pd.read_csv(get_test_filepath("test_input_fullobs.csv"))
 
-    test_out = randomizeAstrometry(test_data[0:1], PerModuleRNG(2021), sigName="AstrometricSigma(deg)", sigUnits="deg")
+    test_out = randomizeAstrometry(
+        test_data[0:1], PerModuleRNG(2021), sigName="AstrometricSigma(deg)", sigUnits="deg"
+    )
 
     np.testing.assert_almost_equal(test_out[0][0], 164.03771597, decimal=5)
     np.testing.assert_almost_equal(test_out[1][0], -17.58257153, decimal=5)

@@ -1,7 +1,8 @@
 import hashlib
 import numpy as np
 
-class PerModuleRNG():
+
+class PerModuleRNG:
     """A collection of per-module random number generators."""
 
     def __init__(self, base_seed):

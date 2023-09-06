@@ -25,6 +25,7 @@ from numpy.testing import assert_almost_equal, assert_equal
 
 from sorcha.modules.PPModuleRNG import PerModuleRNG
 
+
 def test_calcAstrometricUncertainty():
     from sorcha.modules.PPAddUncertainties import calcAstrometricUncertainty
 

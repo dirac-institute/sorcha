@@ -4,6 +4,7 @@ from .PPModuleRNG import PerModuleRNG
 from .PPDropObservations import PPDropObservations
 from .PPDetectionProbability import PPDetectionProbability
 
+
 def PPFadingFunctionFilter(observations, fillfactor, width, rngs, verbose=False):
     """
     Wrapper function for PPDetectionProbability and PPDropObservations.

@@ -24,6 +24,7 @@ from sorcha.modules import PPTrailingLoss
 from sorcha.modules import PPRandomizeMeasurements
 from sorcha.modules.PPSNRLimit import PPSNRLimit
 
+
 def degCos(x):
     """
     Calculate cosine of an angle in degrees.

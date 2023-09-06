@@ -4,6 +4,7 @@ from numpy.testing import assert_equal
 
 from sorcha.modules.PPModuleRNG import PerModuleRNG
 
+
 def test_PPDetectionEfficiency():
     from sorcha.modules.PPDetectionEfficiency import PPDetectionEfficiency
 

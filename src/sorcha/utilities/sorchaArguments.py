@@ -5,6 +5,7 @@ from os import path
 
 from sorcha.modules.PPModuleRNG import PerModuleRNG
 
+
 @dataclass
 class sorchaArguments:
     """Data class for holding runtime arguments"""
@@ -71,7 +72,7 @@ class sorchaArguments:
         # outputs.
         seed = args.get("seed", int(time.time()))
         self._rngs = PerModuleRNG(seed)
-        
+
     def validate_arguments(self):
         if not path.isfile(self.paramsinput):
             raise ValueError("`paramsinput` is not a valid file path.")
