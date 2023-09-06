@@ -8,8 +8,7 @@ Inputs
 
 
 There is a set of input files that are required to run the Sorcha codes, which describe the orbital
-and physical parameters for synthetic planetesimals that are being simulated. These files are: an orbit file, a physical paramerer file,the LSST pointing database, and optionally, an ephemeris file with positions of where the simulated particles are located within some distance of the survey field poitings, and a complex parameter file for more advanced handling of rotational light curves and other brigthness enhacements (such as due to cometary activity) . Each of these files are described within this section and example files
-are shown.
+and physical parameters for synthetic planetesimals that are being simulated. These files are: an orbit file, a physical paramerer file,the LSST pointing database, and optionally, an ephemeris file with positions of where the simulated particles are located within some distance of the survey field poitings, and a complex parameter file for more advanced handling of rotational light curves and other brigthness enhacements (such as due to cometary activity) . Each of these files are described within this section and example files are shown.
 
 
 .. image:: images/survey_simulator_flow_chart.png
@@ -21,6 +20,8 @@ are shown.
 
 .. warning::
   Sorcha is not checking whether or not a planetesimal ID has been repeated in another row of the input files. **It is up to the user to ensure their input files include only unique IDs**. 
+
+.. _orbits:
 
 Orbit File
 -----------------
@@ -39,6 +40,10 @@ This is a file which contains the orbital information of a set of synthetic obje
 
 .. warning::
   Sorcha assumes **heliocentric** orbits are provided as input!
+
+
+.. tip::
+  If using Sorcha's internal ephemeris generation mode (which is the default mode), **we recommend calculating/creating your input orbits with epochs close in time to the start of the first survey observation**. This will minimize the n-body integrations required to set up the ephemeris generation.
 
 .. note::
   For readability we show examples of white space separated files below.
@@ -150,6 +155,8 @@ An example of an orbit file, in Keplarian format, with the object ID represented
 .. note::
    All positions and velocities are in respect to J2000
 
+.. _physical:
+
 Physical Parameters File
 -------------------------------------------
 
@@ -210,6 +217,8 @@ We have implemented several phase curve paramterizations that can be specified i
 .. note::
   In the config file you can decide which filters you want have Sorcha run on and specify which filter is the main filter that the absolute magnitude is defined for. You only need to provide colors for those fliters specified in the config file.
 
+.. _pointing:
+
 Survey Pointing Database
 ------------------------
 
@@ -223,7 +232,7 @@ What we call the LSST pointing database (currently simulated since Rubin Observa
 .. tip::
    The contents of the observations table in the sqlite LSST pointing database can be found `here <https://rubin-sim.lsst.io/rs_scheduler/output_schema.html>`_
 
-The latest version of rubin_sim cadence simulations can be found at https://s3df.slac.stanford.edu/data/rubin/sim-data/. An example rubin_sim simulation visualized on sky is shown in the plot below of the number of on-sky visits over the 10-year simulated baseline v3.2 survey: 
+The latest version of rubin_sim cadence simulations can be found at https://s3df.slac.stanford.edu/data/rubin/sim-data/. An example rubin_sim simulation visualized on sky is shown in the plot below of the number of on-sky visits over the 10-year simulated baseline v3.2 survey (image credit: Lynne Jones): 
 
 .. image:: images/Rubin_v3.2_baseline_visits.png
   :width: 410
@@ -233,23 +242,25 @@ The latest version of rubin_sim cadence simulations can be found at https://s3df
 .. attention::
    There may be changes to how this information is read in when the Rubin Observatory operations begin in ~mid-2025.
 
+.. _CPP:
+
 Complex Physical Parameters File (Optional)
 ---------------------------------------------------
 
-The complex physical parameters file is only used if you're going to include your own rotational light curve class or cometary activity class to augment the calculated apparent magnitudes. Sorcha is set up that  
+The complex physical parameters file is only needed if you're going to include your own rotational light curve class or cometary activity class to augment the calculated apparent magnitudes. Sorcha is set up such that any values required for this such as light curve amplitude and period per simulated object are included in file, separate from then physical paramters file, that we refer to as the complex physical parameteres file.  What columns are required in the complex physical parameters file  depends on what the classes you are using.
 
 .. tip::
   *  The ordering of the columns does not matter as long as the required columns exist and have entries
   *  The first row in the complex  physical parameters file **must** list  the columns names
   *  The **correct capitalization of column names** is required
-  *  The complex parameters file  file can be either **white space separated** or **comma value separated (CSV)**
+  *  The complex phyiscal parameters file can be either **white space separated** or **comma value separated (CSV)**
   *  Each simulated object **must** have a unique string identifier
 
 Ephemeris File (Optional)
 -----------------------------------------
 
 .. note::
-  Sorcha has an ephemeris generator that we recommend using by default. If you prefer to provide your own empeheris generation method, you can input a file that lists the ephemeris for each simulated object wihtin a reasonable search radius of a given survey field pointing and observation times as specified in the survey pointing database.  
+  Sorcha has an :ref:`ephemeris_gen` that we recommend using by default, but as an alternative Sorcha can read in an external file contains calculated ephemeris values for each simulated object wihtin a reasonable search radius of a given survey field pointing and observation times as specified in the survey pointing database. This could be the output from a previous Sorcha run or  provided from your own separate ephemeris generation method, 
 
 
 .. tip::

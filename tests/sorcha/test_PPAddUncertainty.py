@@ -23,6 +23,8 @@ import numpy as np
 import pandas as pd
 from numpy.testing import assert_almost_equal, assert_equal
 
+from sorcha.modules.PPModuleRNG import PerModuleRNG
+
 
 def test_calcAstrometricUncertainty():
     from sorcha.modules.PPAddUncertainties import calcAstrometricUncertainty
@@ -102,7 +104,7 @@ def test_addUncertainties():
 
     configs = {"trailing_losses_on": True, "default_SNR_cut": False}
 
-    rng = np.random.default_rng(2021)
+    rng = PerModuleRNG(2021)
 
     obs_uncert = addUncertainties(test_data, configs, rng)
 
@@ -124,12 +126,10 @@ def test_addUncertainties():
     )
     assert_almost_equal(
         obs_uncert["observedTrailedSourceMag"],
-        [20.99751859, 21.94181218, 22.84387068, 43.94166172],
-        decimal=6,
+        [21.0419, 22.0064, 23.1822, 37.3978],
+        decimal=4,
     )
-    assert_almost_equal(
-        obs_uncert["observedPSFMag"], [21.19955081, 22.15417614, 23.19096964, 9.45473387], decimal=6
-    )
+    assert_almost_equal(obs_uncert["observedPSFMag"], [21.239301, 22.050202, 23.006519, 37.514547], decimal=6)
 
     configs_notrail = {"trailing_losses_on": False, "default_SNR_cut": False}
 

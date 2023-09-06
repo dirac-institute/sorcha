@@ -94,15 +94,24 @@ def test_PPLinkingFilter():
     assert len(unlinked_observations_4) == 0
 
     # check detection efficiency
-    detection_efficiency = 0.95
+    detection_efficiency = 0.75
 
-    # I'm only creating 100 objects so the unit tests don't take a prohibitively long time
-    objs = [["pretend_object_" + str(a)] * 6 for a in range(0, 100)]
+    # I'm only creating 1000 objects so the unit tests don't take a prohibitively long time
+    nobjects = 5000
+    objs = [["pretend_object_" + str(a)] * 6 for a in range(0, nobjects)]
     obj_id_long = [item for sublist in objs for item in sublist]
-    field_id_long = list(np.arange(1, 7)) * 100
-    times_long = [60000.03, 60000.06, 60005.03, 60005.06, 60008.03, 60008.06] * 100
-    ra_long = [142, 142.1, 143, 143.1, 144, 144.1] * 100
-    dec_long = [8, 8.1, 9, 9.1, 10, 10.1] * 100
+    field_id_long = list(np.arange(1, 7)) * nobjects
+    times_long = [60000.03, 60000.06, 60005.03, 60005.06, 60008.03, 60008.06] * nobjects
+    ra_long = np.asarray([142, 142.1, 143, 143.1, 144, 144.1] * nobjects)
+    dec_long = np.asarray([8, 8.1, 9, 9.1, 10, 10.1] * nobjects)
+
+    # mix in smallr random errors. This is needed as the mock linker
+    # uses the randomness in the R.A. coordinate to deterministically
+    # decide which observations to drop and which to keep to meet
+    # the detection_efficiency target.
+    np.random.seed(42)
+    ra_long += np.random.uniform(size=len(ra_long)) / 3600.0 / 10.0
+    dec_long += np.random.uniform(size=len(dec_long)) / 3600.0 / 10.0
 
     observations_long = pd.DataFrame(
         {
@@ -124,8 +133,13 @@ def test_PPLinkingFilter():
         max_time_separation,
     )
 
-    fraction_linked = len(long_linked_observations["ObjID"].unique()) / 100
+    fraction_linked = len(long_linked_observations["ObjID"].unique()) / nobjects
 
-    assert 0.92 < fraction_linked < 0.98
+    # check that the number of discoveries is in a 3-sigma confidence interval
+    sigma = np.sqrt(nobjects) / nobjects
+    resid_sigma = (fraction_linked - detection_efficiency) / sigma
+    print(f"{sigma=} {fraction_linked=} {detection_efficiency=} {resid_sigma=}")
+
+    assert -3 < resid_sigma < 3
 
     return

@@ -1,4 +1,7 @@
-def PPDropObservations(observations, rng, probability="detection probability"):
+from sorcha.modules.PPModuleRNG import PerModuleRNG
+
+
+def PPDropObservations(observations, module_rngs, probability="detection probability"):
     """
     Drops rows where the probabilty of detection is less than sample drawn
     from a uniform distribution. Used by PPFadingFunctionFilter.
@@ -7,7 +10,7 @@ def PPDropObservations(observations, rng, probability="detection probability"):
     -----------
     observations (Pandas dataframe): dataframe of observations with a column containing the probability of detection.
 
-    rng (numpy Generator): numpy random number Generator object.
+    module_rngs (PerModuleRNG): A collection of random number generators (per module).
 
     probability (string): name of column containing detection probability.
 
@@ -16,6 +19,8 @@ def PPDropObservations(observations, rng, probability="detection probability"):
     out (Pandas dataframe): new dataframe without observations that could not be observed.
 
     """
+    # Set the module specific seed as an offset from the base seed.
+    rng = module_rngs.getModuleRNG(__name__)
 
     num_obs = len(observations.index)
 
