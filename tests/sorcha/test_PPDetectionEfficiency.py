@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 from numpy.testing import assert_equal
 
+from sorcha.modules.PPModuleRNG import PerModuleRNG
 
 def test_PPDetectionEfficiency():
     from sorcha.modules.PPDetectionEfficiency import PPDetectionEfficiency
@@ -64,13 +65,13 @@ def test_PPDetectionEfficiency():
         98,
     ]
 
-    observations_out = PPDetectionEfficiency(observations, 0.50, 2021)
+    observations_out = PPDetectionEfficiency(observations, 0.50, PerModuleRNG(2021))
     assert_equal(observations_out["ObjID"].values, expected_50)
 
-    observations_zero = PPDetectionEfficiency(observations, 0.0, 2021)
+    observations_zero = PPDetectionEfficiency(observations, 0.0, PerModuleRNG(2021))
     assert_equal(len(observations_zero), 0)
 
-    observations_all = PPDetectionEfficiency(observations, 1.0, 2021)
+    observations_all = PPDetectionEfficiency(observations, 1.0, PerModuleRNG(2021))
     assert_equal(len(observations_all), 100)
 
     return

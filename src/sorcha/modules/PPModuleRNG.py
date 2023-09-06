@@ -1,26 +1,37 @@
 import hashlib
 import numpy as np
 
+class PerModuleRNG():
+    """A collection of per-module random number generators."""
 
-def getModuleRNG(base_seed, module_name):
-    """
-    Return a random number generator that is based on a base seed
-    and the current module name.
+    def __init__(self, base_seed):
+        """Parameters:
+        --------------
 
-    Parameters:
-    -----------
-    base_seed (int): The base seed for a random number generator
+        base_seed (int): The base seed for a random number generator
+        """
+        self._base_seed = base_seed
+        self._rngs = {}
 
-    module_name (str): The name of the module (used as part of the seed)
+    def getModuleRNG(self, module_name):
+        """
+        Return a random number generator that is based on a base seed
+        and the current module name.
 
-    Returns:
-    ----------
-    rng (numpy Generator): The random number generator.
+        Parameters:
+        -----------
+        base_seed (int): The base seed for a random number generator
 
-    """
+        Returns:
+        ----------
+        rng (numpy Generator): The random number generator.
+        """
+        if module_name in self._rngs:
+            return self._rngs[module_name]
 
-    seed_offset = int(hashlib.md5(module_name.encode("utf-8")).hexdigest(), 16)
-    module_seed = (base_seed + seed_offset) % (2**31)
-    rng = np.random.default_rng(module_seed)
+        seed_offset = int(hashlib.md5(module_name.encode("utf-8")).hexdigest(), 16)
+        module_seed = (self._base_seed + seed_offset) % (2**31)
+        new_rng = np.random.default_rng(module_seed)
+        self._rngs[module_name] = new_rng
 
-    return rng
+        return new_rng

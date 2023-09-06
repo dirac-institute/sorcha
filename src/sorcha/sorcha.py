@@ -192,7 +192,7 @@ def runLSSTPostProcessing(cmd_args, pplogger=None):
 
         verboselog("Applying field-of-view filters...")
         observations = PPApplyFOVFilter(
-            observations, configs, args.base_seed, footprint=footprint, verbose=args.verbose
+            observations, configs, args._rngs, footprint=footprint, verbose=args.verbose
         )
 
         # Note that the below code creates observedTrailedSourceMag and observedPSFMag
@@ -201,20 +201,20 @@ def runLSSTPostProcessing(cmd_args, pplogger=None):
         # Do NOT use TrailedSourceMag or PSFMag, these are cut later.
         verboselog("Calculating astrometric and photometric uncertainties...")
         observations = PPAddUncertainties.addUncertainties(
-            observations, configs, args.base_seed, verbose=args.verbose
+            observations, configs, args._rngs, verbose=args.verbose
         )
 
         verboselog("Randomising astrometry...")
         observations["AstRATrue(deg)"] = observations["AstRA(deg)"]
         observations["AstDecTrue(deg)"] = observations["AstDec(deg)"]
         observations["AstRA(deg)"], observations["AstDec(deg)"] = PPRandomizeMeasurements.randomizeAstrometry(
-            observations, args.base_seed, sigName="AstrometricSigma(deg)", sigUnits="deg"
+            observations, args._rngs, sigName="AstrometricSigma(deg)", sigUnits="deg"
         )
 
         if configs["camera_model"] == "footprint":
             verboselog("Re-applying field-of-view filter...")
             observations = PPApplyFOVFilter(
-                observations, configs, args.base_seed, footprint=footprint, verbose=args.verbose
+                observations, configs, args._rngs, footprint=footprint, verbose=args.verbose
             )
 
         if configs["SNR_limit_on"]:
@@ -235,7 +235,7 @@ def runLSSTPostProcessing(cmd_args, pplogger=None):
                 observations,
                 configs["fading_function_peak_efficiency"],
                 configs["fading_function_width"],
-                args.base_seed,
+                args._rngs,
                 verbose=args.verbose,
             )
 

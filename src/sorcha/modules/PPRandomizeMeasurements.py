@@ -19,12 +19,12 @@
 
 
 import numpy as np
-from sorcha.modules.PPModuleRNG import getModuleRNG
+from sorcha.modules.PPModuleRNG import PerModuleRNG
 
 
 def randomizeAstrometry(
     df,
-    base_seed,
+    rngs,
     raName="AstRA(deg)",
     decName="AstDec(deg)",
     raRndName="AstRARnd(deg)",
@@ -41,7 +41,7 @@ def randomizeAstrometry(
     -----------
     df (Pandas dataframe): dataframe containing astrometry and sigma.
 
-    base_seed (int): The base seed for the random number generator.
+    rngs (PerModuleRNG): A collection of random number generators (per module).
 
     *Name (string): column names for right ascension, declination,
     randomized right ascension, randomized declination, and standard deviation.
@@ -84,7 +84,7 @@ def randomizeAstrometry(
     n = len(df.index)
     xyz = zeros([n, 3])
 
-    xyz = sampleNormalFOV(center, sigmarad, base_seed, ndim=3)
+    xyz = sampleNormalFOV(center, sigmarad, rngs, ndim=3)
 
     if radecUnits == "deg":
         [ra, dec] = icrf2radec(xyz[:, 0], xyz[:, 1], xyz[:, 2], deg=True)
@@ -95,7 +95,7 @@ def randomizeAstrometry(
     return ra, dec
 
 
-def sampleNormalFOV(center, sigma, base_seed, ndim=3):
+def sampleNormalFOV(center, sigma, rngs, ndim=3):
     """
     Sample n points randomly (normal distribution) on a region on the unit (hyper-)sphere.
 
@@ -105,7 +105,7 @@ def sampleNormalFOV(center, sigma, base_seed, ndim=3):
 
     sigma (n-dimensional array): 1 sigma distance on unit sphere [radians]x
 
-    base_seed (int): The base seed for a random number generator
+    rngs (PerModuleRNG): A collection of random number generators (per module).
 
     ndim (int): dimension of hyper-sphere.
 
@@ -114,7 +114,7 @@ def sampleNormalFOV(center, sigma, base_seed, ndim=3):
     vec ... numpy array [npoints, ndim]
 
     """
-    rng = getModuleRNG(base_seed, __name__)
+    rng = rngs.getModuleRNG(__name__)
 
     array = np.array
     normaln = rng.multivariate_normal
@@ -144,7 +144,7 @@ def sampleNormalFOV(center, sigma, base_seed, ndim=3):
 
 
 def randomizePhotometry(
-    df, base_seed, magName="Filtermag", magRndName="FiltermagRnd", sigName="FiltermagSig"
+    df, rngs, magName="Filtermag", magRndName="FiltermagRnd", sigName="FiltermagSig"
 ):
     """
     Randomize photometry with normal distribution around magName value.
@@ -153,7 +153,7 @@ def randomizePhotometry(
     -----------
     df (Pandas dataframe): dataframe containing astrometry and sigma.
 
-    base_seed (int): The base seed for a random number generator
+    rngs (PerModuleRNG): A collection of random number generators (per module).
 
     magName (string): column name of photometric data [mag]
 
@@ -172,7 +172,7 @@ def randomizePhotometry(
 
     """
 
-    rng = getModuleRNG(base_seed, __name__)
+    rng = rngs.getModuleRNG(__name__)
 
     normal = rng.normal
 

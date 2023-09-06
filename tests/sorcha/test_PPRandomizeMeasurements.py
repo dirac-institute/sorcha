@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 from numpy.testing import assert_almost_equal
 
+from sorcha.modules.PPModuleRNG import PerModuleRNG
 from sorcha.utilities.dataUtilitiesForTests import get_test_filepath
 
 
@@ -11,7 +12,7 @@ def test_randomizePhotometry():
     test_data = pd.read_csv(get_test_filepath("test_input_fullobs.csv"))
 
     test_out = randomizePhotometry(
-        test_data[0:1], 2021, magName="TrailedSourceMag", sigName="PhotometricSigmaTrailedSource(mag)"
+        test_data[0:1], PerModuleRNG(2021), magName="TrailedSourceMag", sigName="PhotometricSigmaTrailedSource(mag)"
     )
 
     np.testing.assert_almost_equal(test_out.values[0], 19.663194, decimal=5)
@@ -24,7 +25,7 @@ def test_randomizeAstrometry():
 
     test_data = pd.read_csv(get_test_filepath("test_input_fullobs.csv"))
 
-    test_out = randomizeAstrometry(test_data[0:1], 2021, sigName="AstrometricSigma(deg)", sigUnits="deg")
+    test_out = randomizeAstrometry(test_data[0:1], PerModuleRNG(2021), sigName="AstrometricSigma(deg)", sigUnits="deg")
 
     np.testing.assert_almost_equal(test_out[0][0], 164.03771597, decimal=5)
     np.testing.assert_almost_equal(test_out[1][0], -17.58257153, decimal=5)
@@ -61,7 +62,7 @@ def test_sampleNormalFOV():
     n = len(observations.index)
     xyz = np.zeros([n, 3])
 
-    xyz = sampleNormalFOV(centre, sigmarad, 2021, ndim=3)
+    xyz = sampleNormalFOV(centre, sigmarad, PerModuleRNG(2021), ndim=3)
     expected_xyz = [
         [-0.57735025, -0.57735027, -0.57735028],
         [0.57735032, 0.57735025, 0.57735024],

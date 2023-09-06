@@ -3,6 +3,7 @@ from dataclasses import dataclass
 import time
 from os import path
 
+from sorcha.modules.PPModuleRNG import PerModuleRNG
 
 @dataclass
 class sorchaArguments:
@@ -37,8 +38,8 @@ class sorchaArguments:
     complex_parameters: str = ""
     """optional, extra complex physical parameter input files"""
 
-    base_seed = None
-    """The base seed for the random number generation."""
+    _rngs = None
+    """A collection of per-module random number generators"""
 
     def __init__(self, cmd_args_dict=None):
         if cmd_args_dict is not None:
@@ -68,8 +69,9 @@ class sorchaArguments:
         # WARNING: Take care if manually setting the seed. Re-using seeds between
         # simulations may result in hard-to-detect correlations in simulation
         # outputs.
-        self.base_seed = args.get("seed", int(time.time()))
-
+        seed = args.get("seed", int(time.time()))
+        self._rngs = PerModuleRNG(seed)
+        
     def validate_arguments(self):
         if not path.isfile(self.paramsinput):
             raise ValueError("`paramsinput` is not a valid file path.")

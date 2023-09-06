@@ -23,6 +23,7 @@ import numpy as np
 import pandas as pd
 from numpy.testing import assert_almost_equal, assert_equal
 
+from sorcha.modules.PPModuleRNG import PerModuleRNG
 
 def test_calcAstrometricUncertainty():
     from sorcha.modules.PPAddUncertainties import calcAstrometricUncertainty
@@ -102,7 +103,7 @@ def test_addUncertainties():
 
     configs = {"trailing_losses_on": True, "default_SNR_cut": False}
 
-    obs_uncert = addUncertainties(test_data, configs, 2021)
+    obs_uncert = addUncertainties(test_data, configs, PerModuleRNG(2021))
 
     assert_almost_equal(
         obs_uncert["AstrometricSigma(deg)"],
@@ -125,11 +126,11 @@ def test_addUncertainties():
         [21.0419, 22.0064, 23.1822, 37.3978],
         decimal=4,
     )
-    assert_almost_equal(obs_uncert["observedPSFMag"], [21.249583, 22.207629, 23.414967, 37.671363], decimal=6)
+    assert_almost_equal(obs_uncert["observedPSFMag"], [21.239301, 22.050202, 23.006519, 37.514547], decimal=6)
 
     configs_notrail = {"trailing_losses_on": False, "default_SNR_cut": False}
 
-    obs_notrail = addUncertainties(test_data, configs_notrail, 2021)
+    obs_notrail = addUncertainties(test_data, configs_notrail, PerModuleRNG(2021))
 
     assert_equal(
         obs_notrail["PhotometricSigmaPSF(mag)"].values,
@@ -138,7 +139,7 @@ def test_addUncertainties():
 
     configs_SNRcut = {"trailing_losses_on": False, "default_SNR_cut": True}
 
-    obs_SNRcut = addUncertainties(test_data, configs_SNRcut, 2021)
+    obs_SNRcut = addUncertainties(test_data, configs_SNRcut, PerModuleRNG(2021))
 
     assert_equal(obs_SNRcut["ObjID"].values, ["a21", "b22", "c23"])
 
