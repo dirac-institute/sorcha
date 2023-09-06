@@ -429,6 +429,9 @@ def main():
     if cmd_args["surveyname"] in ["LSST", "lsst"]:
         runLSSTPostProcessing(cmd_args, pplogger)
     else:
+        pplogger.error(
+            "ERROR: Survey name not recognised. Current allowed surveys are: {}".format(["LSST", "lsst"])
+        )
         sys.exit(
             "ERROR: Survey name not recognised. Current allowed surveys are: {}".format(["LSST", "lsst"])
         )
