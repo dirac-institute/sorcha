@@ -21,7 +21,7 @@ class PerModuleRNG:
 
         Parameters:
         -----------
-        base_seed (int): The base seed for a random number generator
+        module_name (str): The name of the module
 
         Returns:
         ----------
