@@ -361,9 +361,9 @@ def PPConfigFileParser(configfile, survey_name):
     config_dict["ephemerides_type"] = PPGetOrExit(
         config, "INPUT", "ephemerides_type", "ERROR: no ephemerides type provided."
     ).lower()
-    if config_dict["ephemerides_type"] not in ["oif"]:
-        pplogger.error("ERROR: ephemerides_type not recognised.")
-        sys.exit("ERROR: ephemerides_type not recognised.")
+    if config_dict["ephemerides_type"] not in ["ar", "external"]:
+        pplogger.error('ERROR: ephemerides_type not recognised - expecting either "ar" or "external".')
+        sys.exit('ERROR: ephemerides_type not recognised - expecting either "ar" or "external".')
 
     config_dict["size_serial_chunk"] = PPGetIntOrExit(
         config, "INPUT", "size_serial_chunk", "ERROR: size_serial_chunk not specified."
@@ -591,6 +591,37 @@ def PPConfigFileParser(configfile, survey_name):
         sys.exit(
             "ERROR: only some SSP linking variables supplied. Supply all five required variables for SSP linking filter, or none to turn filter off."
         )
+
+    # SIMULATION
+
+    config_dict["ar_simulation_enabled"] = PPGetBoolOrExit(
+        config, "SIMULATION", "ar_simulation_enabled", "ERROR: ar_simulation_enabled flag not present."
+    )
+
+    if config_dict["ar_simulation_enabled"]:
+        config_dict["ar_ang_fov"] = PPGetFloatOrExit(
+            config, "SIMULATION", "ar_ang_fov", "ERROR: ar_ang_fov not specified."
+        )
+
+        config_dict["ar_fov_buffer"] = PPGetFloatOrExit(
+            config, "SIMULATION", "ar_fov_buffer", "ERROR: ar_fov_buffer not specified."
+        )
+
+        config_dict["ar_picket"] = PPGetIntOrExit(
+            config, "SIMULATION", "ar_picket", "ERROR: ar_picket not specified."
+        )
+
+        config_dict["ar_obs_code"] = PPGetOrExit(
+            config, "SIMULATION", "ar_obs_code", "ERROR: ar_picket not specified."
+        )
+
+        config_dict["ar_healpix_order"] = PPGetIntOrExit(
+            config, "SIMULATION", "ar_healpix_order", "ERROR: ar_healpix_order not specified."
+        )
+
+    # TODO: add a seperate branch of logic for when ar_simulation_enabled is false,
+    # to enforce that the user provides us a valid ephemerides file (either from an
+    # a+r run or somewhere else). We'll wait for when we have all the outputs right.
 
     # OUTPUT
 
@@ -830,6 +861,17 @@ def PPPrintConfigsToLog(configs, cmd_args):
         )
     else:
         pplogger.info("Solar System Processing linking filter is turned OFF.")
+
+    if configs["ar_simulation_enabled"]:
+        pplogger.info("ASSIST+REBOUND Simulation is turned ON.")
+        pplogger.info("For ASSIST+REBOUND...")
+        pplogger.info("...the field's angular FOV is: " + str(configs["ar_ang_fov"]))
+        pplogger.info("...the buffer around the FOV is: " + str(configs["ar_fov_buffer"]))
+        pplogger.info("...the picket interval is: " + str(configs["ar_picket"]))
+        pplogger.info("...the observatory code is: " + str(configs["ar_obs_code"]))
+        pplogger.info("...the healpix order is: " + str(configs["ar_healpix_order"]))
+    else:
+        pplogger.info("ASSIST+REBOUND Simulation is turned OFF.")
 
     if configs["lc_model"]:
         pplogger.info("A lightcurve model is being applied.")

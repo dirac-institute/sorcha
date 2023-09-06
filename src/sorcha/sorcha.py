@@ -6,6 +6,8 @@ import numpy as np
 import argparse
 import os
 
+from sorcha.ephemeris.simulation_driver import create_ephemeris
+
 from sorcha.modules.PPReadPointingDatabase import PPReadPointingDatabase
 from sorcha.modules.PPLinkingFilter import PPLinkingFilter
 from sorcha.modules.PPTrailingLoss import PPTrailingLoss
@@ -41,7 +43,38 @@ from sorcha.utilities.sorchaArguments import sorchaArguments
 # Author: Samuel Cornwall, Siegfried Eggl, Grigori Fedorets, Steph Merritt, Meg Schwamb
 
 
-def runLSSTPostProcessing(cmd_args, pplogger=None):
+def runAll(cmd_args, configs, pplogger=None):
+    if configs["ephemerides_type"] == "ar":
+        runLSSTSimulation(cmd_args, configs, pplogger)
+    runLSSTPostProcessing(cmd_args, pplogger)
+
+
+def runLSSTSimulation(cmd_args, configs, pplogger=None):
+    if pplogger is None:
+        if type(cmd_args) is dict:
+            pplogger = PPGetLogger(cmd_args["outpath"])
+        else:
+            pplogger = PPGetLogger(cmd_args.outpath)
+
+    args = cmd_args
+    if type(cmd_args) is dict:
+        try:
+            args = sorchaArguments(cmd_args)
+        except Exception as err:
+            pplogger.error(err)
+            sys.exit(err)
+
+    try:
+        args.validate_arguments()
+    except Exception as err:
+        pplogger.error(err)
+        sys.exit(err)
+
+    configs = PPConfigFileParser(args.configfile, args.surveyname)
+    create_ephemeris(args, configs)
+
+
+def runLSSTPostProcessing(cmd_args, configs, pplogger=None):
     """
     Runs the post processing survey simulator functions that apply a series of
     filters to bias a model Solar System small body population to what the
@@ -125,7 +158,7 @@ def runLSSTPostProcessing(cmd_args, pplogger=None):
         # That does the selection and checks. We are holding off adding this level of indirection until there
         # is a second ephemerides_type.
         ephem_type = configs["ephemerides_type"]
-        if ephem_type.casefold() != "oif":  # pragma: no cover
+        if ephem_type.casefold() not in ["ar", "external"]:  # pragma: no cover
             pplogger.error(f"PPReadAllInput: Unsupported value for ephemerides_type {ephem_type}")
             sys.exit(f"PPReadAllInput: Unsupported value for ephemerides_type {ephem_type}")
         reader.add_ephem_reader(OIFDataReader(args.oifoutput, configs["eph_format"]))
@@ -421,13 +454,14 @@ def main():
 
     # Extract and validate the remaining arguments.
     cmd_args = PPCommandLineParser(args)
+    configs = PPConfigFileParser(cmd_args["configfile"], cmd_args["surveyname"])
 
     if "SORCHA_SEED" in os.environ:
         cmd_args["seed"] = int(os.environ["SORCHA_SEED"])
         pplogger.info(f"Random seed overridden via environmental variable, SORCHA_SEED={cmd_args['seed']}")
 
     if cmd_args["surveyname"] in ["LSST", "lsst"]:
-        runLSSTPostProcessing(cmd_args, pplogger)
+        runAll(cmd_args, configs, pplogger)
     else:
         pplogger.error(
             "ERROR: Survey name not recognised. Current allowed surveys are: {}".format(["LSST", "lsst"])

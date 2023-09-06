@@ -139,14 +139,18 @@ class OIFDataReader(ObjectDataReader):
             "Sun-Ast-Obs(deg)",
         ]
 
-        if not set(input_table.columns.values).issubset(np.array(oif_cols)):
-            pplogger = logging.getLogger(__name__)
-            pplogger.error(
-                "ERROR: OIFDataReader: column headings do not match expected OIF column headings. Check format of file."
-            )
-            sys.exit(
-                "ERROR: OIFDataReader: column headings do not match expected OIF column headings. Check format of file."
-            )
+        optional_cols = ["jd_tdb"]
+
+        if not set(input_table.columns.values) == set(oif_cols):
+            for column in input_table.columns.values:
+                if column not in oif_cols and column not in optional_cols:
+                    pplogger = logging.getLogger(__name__)
+                    pplogger.error(
+                        "ERROR: OIFDataReader: column headings do not match expected OIF column headings. Check format of file."
+                    )
+                    sys.exit(
+                        "ERROR: OIFDataReader: column headings do not match expected OIF column headings. Check format of file."
+                    )
 
         # Return only the columns of interest.
         return input_table[oif_cols]

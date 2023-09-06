@@ -33,7 +33,7 @@ __pycache__
 /data/test/testdb_PPIntermDB.db
 /data/out/testrun_e2e.csv
 /data/out/restats
-/data/out/out_*.csv
+/data/out/*.csv
 
 #demo_files_run
 _cache/
@@ -164,4 +164,7 @@ tmp/
 
 # data files changed by unit tests
 tests/data/config_test*.ini
+checker.txt
+ephemeris_output.csv
 data/out/
+

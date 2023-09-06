@@ -34,6 +34,15 @@ def makeConfigFile(args):
         "SSP_maximum_time": str(args.maxtime),
     }
 
+    simulation_raw = {
+        "ar_simulation_enabled": str(args.ar_simulation_enabled),
+        "ar_ang_fov": str(args.ar_ang_fov),
+        "ar_fov_buffer": str(args.ar_fov_buffer),
+        "ar_picket": str(args.ar_picket),
+        "ar_obs_code": str(args.ar_obs_code),
+        "ar_healpix_order": str(args.ar_healpix_order),
+    }
+
     fov_raw = {
         "camera_model": str(args.cameramodel),
         "footprint_path": str(args.footprintpath),
@@ -58,6 +67,7 @@ def makeConfigFile(args):
     bright_dict = {k: v for k, v in bright_raw.items() if v != "None"}
     fov_dict = {k: v for k, v in fov_raw.items() if v != "None"}
     linking_dict = {k: v for k, v in linking_raw.items() if v != "None"}
+    simulation_dict = {k: v for k, v in simulation_raw.items() if v != "None"}
     fading_dict = {k: v for k, v in fading_raw.items() if v != "None"}
     expert_dict = {k: v for k, v in expert_raw.items() if v != "None"}
 
@@ -75,6 +85,7 @@ def makeConfigFile(args):
         "FOV": fov_dict,
         "FADINGFUNCTION": fading_dict,
         "LINKINGFILTER": linking_dict,
+        "SIMULATION": simulation_dict,
         "OUTPUT": {
             "output_format": args.outputformat,
             "output_size": args.outputsize,
@@ -149,9 +160,9 @@ def main():
     parser.add_argument(
         "--ephemeridestype",
         "-eph",
-        help="Type of input ephemerides: default = oif. Options: currently only oif.",
+        help='Type of input ephemerides: default = ar. Options: ["ar", "external"]',
         type=str,
-        default="oif",
+        default="ar",
     )
     parser.add_argument(
         "--pointingdatabase",
@@ -313,6 +324,36 @@ def main():
         help="Maximum time separation (in days) between subsequent observations in a tracklet. Expects a float or None to omit. Default is 0.0625.",
         type=float,
         default=0.0625,
+    )
+
+    # SIMULATION
+    parser.add_argument(
+        "--ar_simulation_enabled",
+        "-arfov",
+        help="whether or not to run ASSIST+REBOUND simulations.",
+        type=bool,
+        default=True,
+    )
+    parser.add_argument(
+        "--ar_ang_fov",
+        "-arfov",
+        help="the radius of the fov for simulation purposes",
+        type=float,
+        default=1.8,
+    )
+    parser.add_argument(
+        "--ar_fov_buffer", "-fovbuf", help="the buffer to the fov radius", type=float, default=0.2
+    )
+    parser.add_argument(
+        "--ar_picket",
+        "-picket",
+        help="the picket of time for iterating simulations (days).",
+        type=int,
+        default=1,
+    )
+    parser.add_argument("--ar_obs_code", "-obs", help="the MPC observatory code", type=str, default="X05")
+    parser.add_argument(
+        "--ar_healpix_order", "-hpord", help="the healpix order for simulation purposes.", type=int, default=6
     )
 
     # OUTPUT
