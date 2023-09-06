@@ -143,7 +143,9 @@ def sampleNormalFOV(center, sigma, module_rngs, ndim=3):
     return vec
 
 
-def randomizePhotometry(df, module_rngs, magName="Filtermag", magRndName="FiltermagRnd", sigName="FiltermagSig"):
+def randomizePhotometry(
+    df, module_rngs, magName="Filtermag", magRndName="FiltermagRnd", sigName="FiltermagSig"
+):
     """
     Randomize photometry with normal distribution around magName value.
 

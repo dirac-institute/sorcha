@@ -63,6 +63,8 @@ def test_PPApplyFOVFilters():
 
     observations = pd.read_csv(get_test_filepath("test_input_fullobs.csv"), nrows=20)
 
+    rng = PerModuleRNG(2021)
+
     configs = {
         "camera_model": "circle",
         "circle_radius": 1.1,
@@ -70,7 +72,7 @@ def test_PPApplyFOVFilters():
         "footprint_edge_threshold": None,
     }
 
-    new_obs = PPApplyFOVFilter(observations, configs, PerModuleRNG(2021))
+    new_obs = PPApplyFOVFilter(observations, configs, rng)
     expected = [897478, 897521, 901987, 902035, 907363, 907416, 907470, 910850, 910872]
 
     assert_equal(new_obs["FieldID"].values, expected)
@@ -82,8 +84,8 @@ def test_PPApplyFOVFilters():
         "footprint_edge_threshold": None,
     }
 
-    new_obs = PPApplyFOVFilter(observations, configs, PerModuleRNG(2022))
-    expected = [894816, 897478, 901987, 902035, 907363, 907416, 910850, 922013, 922034, 922035]
+    new_obs = PPApplyFOVFilter(observations, configs, rng)
+    expected = [894816, 894838, 897478, 897521, 901987, 907416, 907470, 910850, 922034, 922035, 926281]
 
     assert_equal(new_obs["FieldID"].values, expected)
 
@@ -93,7 +95,7 @@ def test_PPApplyFOVFilters():
         "footprint_edge_threshold": 0.0,
     }
     footprint = Footprint(configs["footprint_path"])
-    new_obs = PPApplyFOVFilter(observations, configs, PerModuleRNG(2023), footprint=footprint)
+    new_obs = PPApplyFOVFilter(observations, configs, rng, footprint=footprint)
     expected = [
         894816,
         894838,

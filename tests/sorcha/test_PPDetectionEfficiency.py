@@ -8,6 +8,8 @@ from sorcha.modules.PPModuleRNG import PerModuleRNG
 def test_PPDetectionEfficiency():
     from sorcha.modules.PPDetectionEfficiency import PPDetectionEfficiency
 
+    rng = PerModuleRNG(2021)
+
     observations = pd.DataFrame({"ObjID": np.arange(0, 100)})
 
     expected_50 = [
@@ -66,13 +68,13 @@ def test_PPDetectionEfficiency():
         98,
     ]
 
-    observations_out = PPDetectionEfficiency(observations, 0.50, PerModuleRNG(2021))
+    observations_out = PPDetectionEfficiency(observations, 0.50, rng)
     assert_equal(observations_out["ObjID"].values, expected_50)
 
-    observations_zero = PPDetectionEfficiency(observations, 0.0, PerModuleRNG(2021))
+    observations_zero = PPDetectionEfficiency(observations, 0.0, rng)
     assert_equal(len(observations_zero), 0)
 
-    observations_all = PPDetectionEfficiency(observations, 1.0, PerModuleRNG(2021))
+    observations_all = PPDetectionEfficiency(observations, 1.0, rng)
     assert_equal(len(observations_all), 100)
 
     return

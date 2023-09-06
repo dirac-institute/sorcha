@@ -104,7 +104,9 @@ def test_addUncertainties():
 
     configs = {"trailing_losses_on": True, "default_SNR_cut": False}
 
-    obs_uncert = addUncertainties(test_data, configs, PerModuleRNG(2021))
+    rng = PerModuleRNG(2021)
+
+    obs_uncert = addUncertainties(test_data, configs, rng)
 
     assert_almost_equal(
         obs_uncert["AstrometricSigma(deg)"],
@@ -131,7 +133,7 @@ def test_addUncertainties():
 
     configs_notrail = {"trailing_losses_on": False, "default_SNR_cut": False}
 
-    obs_notrail = addUncertainties(test_data, configs_notrail, PerModuleRNG(2021))
+    obs_notrail = addUncertainties(test_data, configs_notrail, rng)
 
     assert_equal(
         obs_notrail["PhotometricSigmaPSF(mag)"].values,
@@ -140,7 +142,7 @@ def test_addUncertainties():
 
     configs_SNRcut = {"trailing_losses_on": False, "default_SNR_cut": True}
 
-    obs_SNRcut = addUncertainties(test_data, configs_SNRcut, PerModuleRNG(2021))
+    obs_SNRcut = addUncertainties(test_data, configs_SNRcut, rng)
 
     assert_equal(obs_SNRcut["ObjID"].values, ["a21", "b22", "c23"])
 
