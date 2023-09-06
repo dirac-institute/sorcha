@@ -30,8 +30,18 @@ def create_ephemeris(args, configs):
     observatories = Observatory()
 
     out_csv_file = open(args.oifoutput, "w", encoding="utf-8")
+
+    # this header is broken up to match the string built at the end of this method
     out_csv_file.write(
-        "ObjID,FieldID,FieldMJD,AstRange(km),AstRangeRate(km/s),AstRA(deg),AstRARate(deg/day),AstDec(deg),AstDecRate(deg/day),Ast-Sun(J2000x)(km),Ast-Sun(J2000y)(km),Ast-Sun(J2000z)(km),Ast-Sun(J2000vx)(km/s),Ast-Sun(J2000vy)(km/s),Ast-Sun(J2000vz)(km/s),Obs-Sun(J2000x)(km),Obs-Sun(J2000y)(km),Obs-Sun(J2000z)(km),Obs-Sun(J2000vx)(km/s),Obs-Sun(J2000vy)(km/s),Obs-Sun(J2000vz)(km/s),Sun-Ast-Obs(deg),V,V(H=0)\n"
+        "ObjID,FieldID,\
+        FieldMJD,jd_tdb,\
+        AstRange(km),AstRangeRate(km/s),\
+        AstRA(deg),AstRARate(deg/day),AstDec(deg),AstDecRate(deg/day),\
+        Ast-Sun(J2000x)(km),Ast-Sun(J2000y)(km),Ast-Sun(J2000z)(km),\
+        Ast-Sun(J2000vx)(km/s),Ast-Sun(J2000vy)(km/s),Ast-Sun(J2000vz)(km/s),\
+        Obs-Sun(J2000x)(km),Obs-Sun(J2000y)(km),Obs-Sun(J2000z)(km),\
+        Obs-Sun(J2000vx)(km/s),Obs-Sun(J2000vy)(km/s),Obs-Sun(J2000vz)(km/s),\
+        Sun-Ast-Obs(deg)\n"
     )
 
     pointings_df = PPReadPointingDatabase(
