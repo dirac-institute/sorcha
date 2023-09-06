@@ -4,7 +4,7 @@ import logging
 from sorcha.modules.PPModuleRNG import PerModuleRNG
 
 
-def PPDetectionEfficiency(padain, threshold, rngs):
+def PPDetectionEfficiency(padain, threshold, module_rngs):
     """
     Applies a random cut to the observations dataframe based on an efficiency
     threshold: if the threshold is 0.95, for example, 5% of observations will be
@@ -16,7 +16,7 @@ def PPDetectionEfficiency(padain, threshold, rngs):
 
     threshold (float): Fraction between 0 and 1 of detections retained in the dataframe.
 
-    rngs (PerModuleRNG): A collection of random number generators (per module).
+    module_rngs (PerModuleRNG): A collection of random number generators (per module).
 
     Returns:
     ----------
@@ -28,7 +28,7 @@ def PPDetectionEfficiency(padain, threshold, rngs):
     pplogger = logging.getLogger(__name__)
 
     # Set the module specific seed as an offset from the base seed.
-    rng = rngs.getModuleRNG(__name__)
+    rng = module_rngs.getModuleRNG(__name__)
 
     padain.reset_index(drop=True, inplace=True)
 

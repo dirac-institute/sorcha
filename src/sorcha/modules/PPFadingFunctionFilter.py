@@ -4,8 +4,7 @@ from .PPModuleRNG import PerModuleRNG
 from .PPDropObservations import PPDropObservations
 from .PPDetectionProbability import PPDetectionProbability
 
-
-def PPFadingFunctionFilter(observations, fillfactor, width, rngs, verbose=False):
+def PPFadingFunctionFilter(observations, fillfactor, width, module_rngs, verbose=False):
     """
     Wrapper function for PPDetectionProbability and PPDropObservations.
 
@@ -18,7 +17,7 @@ def PPFadingFunctionFilter(observations, fillfactor, width, rngs, verbose=False)
 
     fillFactor (float): fraction of FOV covered by the camera sensor.
 
-    rngs (PerModuleRNG): A collection of random number generators (per module).
+    module_rngs (PerModuleRNG): A collection of random number generators (per module).
 
     Returns:
     ----------
@@ -39,7 +38,7 @@ def PPFadingFunctionFilter(observations, fillfactor, width, rngs, verbose=False)
     )
 
     verboselog("Dropping observations below detection threshold...")
-    observations = PPDropObservations(observations, rngs, "detection_probability")
+    observations = PPDropObservations(observations, module_rngs, "detection_probability")
     observations_drop = observations.drop("detection_probability", axis=1)
     observations_drop.reset_index(drop=True, inplace=True)
 
