@@ -97,7 +97,7 @@ def test_PPLinkingFilter():
     detection_efficiency = 0.75
 
     # I'm only creating 1000 objects so the unit tests don't take a prohibitively long time
-    nobjects=5000
+    nobjects = 5000
     objs = [["pretend_object_" + str(a)] * 6 for a in range(0, nobjects)]
     obj_id_long = [item for sublist in objs for item in sublist]
     field_id_long = list(np.arange(1, 7)) * nobjects
@@ -110,8 +110,8 @@ def test_PPLinkingFilter():
     # decide which observations to drop and which to keep to meet
     # the detection_efficiency target.
     np.random.seed(42)
-    ra_long  += np.random.uniform(size=len(ra_long))  / 3600. / 10.
-    dec_long += np.random.uniform(size=len(dec_long)) / 3600. / 10.
+    ra_long += np.random.uniform(size=len(ra_long)) / 3600.0 / 10.0
+    dec_long += np.random.uniform(size=len(dec_long)) / 3600.0 / 10.0
 
     observations_long = pd.DataFrame(
         {
@@ -136,8 +136,8 @@ def test_PPLinkingFilter():
     fraction_linked = len(long_linked_observations["ObjID"].unique()) / nobjects
 
     # check that the number of discoveries is in a 3-sigma confidence interval
-    sigma = np.sqrt(nobjects)/nobjects
-    resid_sigma = (fraction_linked - detection_efficiency)/sigma
+    sigma = np.sqrt(nobjects) / nobjects
+    resid_sigma = (fraction_linked - detection_efficiency) / sigma
     print(f"{sigma=} {fraction_linked=} {detection_efficiency=} {resid_sigma=}")
 
     assert -3 < resid_sigma < 3

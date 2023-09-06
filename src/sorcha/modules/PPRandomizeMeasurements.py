@@ -17,12 +17,14 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+
 import numpy as np
+from sorcha.modules.PPModuleRNG import PerModuleRNG
 
 
 def randomizeAstrometry(
     df,
-    rng,
+    module_rngs,
     raName="AstRA(deg)",
     decName="AstDec(deg)",
     raRndName="AstRARnd(deg)",
@@ -39,7 +41,7 @@ def randomizeAstrometry(
     -----------
     df (Pandas dataframe): dataframe containing astrometry and sigma.
 
-    rng (numpy Generator): numpy random number Generator object.
+    module_rngs (PerModuleRNG): A collection of random number generators (per module).
 
     *Name (string): column names for right ascension, declination,
     randomized right ascension, randomized declination, and standard deviation.
@@ -82,7 +84,7 @@ def randomizeAstrometry(
     n = len(df.index)
     xyz = zeros([n, 3])
 
-    xyz = sampleNormalFOV(center, sigmarad, rng, ndim=3)
+    xyz = sampleNormalFOV(center, sigmarad, module_rngs, ndim=3)
 
     if radecUnits == "deg":
         [ra, dec] = icrf2radec(xyz[:, 0], xyz[:, 1], xyz[:, 2], deg=True)
@@ -93,7 +95,7 @@ def randomizeAstrometry(
     return ra, dec
 
 
-def sampleNormalFOV(center, sigma, rng, ndim=3):
+def sampleNormalFOV(center, sigma, module_rngs, ndim=3):
     """
     Sample n points randomly (normal distribution) on a region on the unit (hyper-)sphere.
 
@@ -103,7 +105,7 @@ def sampleNormalFOV(center, sigma, rng, ndim=3):
 
     sigma (n-dimensional array): 1 sigma distance on unit sphere [radians]x
 
-    rng (numpy Generator): numpy random number Generator object.
+    module_rngs (PerModuleRNG): A collection of random number generators (per module).
 
     ndim (int): dimension of hyper-sphere.
 
@@ -112,6 +114,7 @@ def sampleNormalFOV(center, sigma, rng, ndim=3):
     vec ... numpy array [npoints, ndim]
 
     """
+    rng = module_rngs.getModuleRNG(__name__)
 
     array = np.array
     normaln = rng.multivariate_normal
@@ -140,13 +143,17 @@ def sampleNormalFOV(center, sigma, rng, ndim=3):
     return vec
 
 
-def randomizePhotometry(df, rng, magName="Filtermag", magRndName="FiltermagRnd", sigName="FiltermagSig"):
+def randomizePhotometry(
+    df, module_rngs, magName="Filtermag", magRndName="FiltermagRnd", sigName="FiltermagSig"
+):
     """
     Randomize photometry with normal distribution around magName value.
 
     Parameters:
     -----------
     df (Pandas dataframe): dataframe containing astrometry and sigma.
+
+    module_rngs (PerModuleRNG): A collection of random number generators (per module).
 
     magName (string): column name of photometric data [mag]
 
@@ -164,6 +171,8 @@ def randomizePhotometry(df, rng, magName="Filtermag", magRndName="FiltermagRnd",
     Should be fixed at some point.
 
     """
+
+    rng = module_rngs.getModuleRNG(__name__)
 
     normal = rng.normal
 

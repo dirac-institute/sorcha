@@ -57,7 +57,7 @@ def degSin(x):
     return np.sin(x * np.pi / 180.0)
 
 
-def addUncertainties(detDF, configs, rng, verbose=True):
+def addUncertainties(detDF, configs, module_rngs, verbose=True):
     """
     Generates astrometric and photometric uncertainties, and SNR. Uses uncertainties
     to randomize the photometry. Accounts for trailing losses.
@@ -68,7 +68,7 @@ def addUncertainties(detDF, configs, rng, verbose=True):
 
     configs (dictionary): dictionary of configurations from config file.
 
-    rng (numpy Generator): numpy random number Generator object.
+    module_rngs (PerModuleRNG): A collection of random number generators (per module).
 
     Returns:
     -----------
@@ -100,12 +100,12 @@ def addUncertainties(detDF, configs, rng, verbose=True):
 
     verboselog("Randomising photometry...")
     detDF["observedTrailedSourceMag"] = PPRandomizeMeasurements.randomizePhotometry(
-        detDF, rng, magName="TrailedSourceMag", sigName="PhotometricSigmaTrailedSource(mag)"
+        detDF, module_rngs, magName="TrailedSourceMag", sigName="PhotometricSigmaTrailedSource(mag)"
     )
 
     if configs.get("trailing_losses_on", False):
         detDF["observedPSFMag"] = PPRandomizeMeasurements.randomizePhotometry(
-            detDF, rng, magName="PSFMag", sigName="PhotometricSigmaPSF(mag)"
+            detDF, module_rngs, magName="PSFMag", sigName="PhotometricSigmaPSF(mag)"
         )
     else:
         detDF["observedPSFMag"] = detDF["observedTrailedSourceMag"]

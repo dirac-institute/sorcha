@@ -1,6 +1,8 @@
 import pandas as pd
 import numpy as np
 from numpy.testing import assert_equal, assert_almost_equal
+
+from sorcha.modules.PPModuleRNG import PerModuleRNG
 from sorcha.utilities.dataUtilitiesForTests import get_test_filepath
 
 
@@ -9,15 +11,24 @@ def test_PPSimpleSensorArea():
 
     test_data = pd.read_csv(get_test_filepath("test_input_fullobs.csv"), nrows=15)
 
-    rng = np.random.default_rng(2021)
+    test_out = PPSimpleSensorArea(test_data, PerModuleRNG(2022), fillfactor=0.9)
 
-    test_out = PPSimpleSensorArea(test_data, rng, fillfactor=0.9)
-
-    expected = [894816, 897478, 897521, 901987, 902035, 907363, 907416, 907470, 909426, 910872, 915246]
+    expected = [
+        894816,
+        894838,
+        897478,
+        901987,
+        902035,
+        907363,
+        907416,
+        907470,
+        909426,
+        909452,
+        910850,
+        910872,
+    ]
 
     assert_equal(expected, test_out["FieldID"].values)
-
-    return
 
 
 def test_PPCircleFootprint():
@@ -52,7 +63,7 @@ def test_PPApplyFOVFilters():
 
     observations = pd.read_csv(get_test_filepath("test_input_fullobs.csv"), nrows=20)
 
-    rng = np.random.default_rng(2021)
+    rng = PerModuleRNG(2021)
 
     configs = {
         "camera_model": "circle",
@@ -74,7 +85,7 @@ def test_PPApplyFOVFilters():
     }
 
     new_obs = PPApplyFOVFilter(observations, configs, rng)
-    expected = [897521, 902035, 907363, 907416, 907470, 910872, 915246, 922013]
+    expected = [894816, 894838, 897478, 897521, 901987, 907416, 907470, 910850, 922034, 922035, 926281]
 
     assert_equal(new_obs["FieldID"].values, expected)
 
