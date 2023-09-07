@@ -36,9 +36,6 @@ def create_assist_ephemeris() -> Ephem:
 def furnish_spiceypy():
     # The goal here would be to download the spice kernel files (if needed)
     # Then call spice.furnish(<filename>) on each of those files.
-    # The hope is that automagically that will make properly furnished in
-    # this namespace, and when we access it via `import spiceypy as spice`, that
-    # we'll be able to work with it correctly.
 
     pplogger = logging.getLogger(__name__)
 
@@ -46,6 +43,11 @@ def furnish_spiceypy():
 
     for kernel_file in ORDERED_KERNEL_FILES:
         retriever.fetch(kernel_file)
+
+    # TODO: The previous line will fetch all the remote kernel files if they are
+    # not present on the local machine, however, it does not create the META_KERNEL
+    # file needed in the next line. We should abstract the creation of the META_KERNEL
+    # to a separate utility function that can be called here as needed.
 
     try:
         meta_kernel = retriever.fetch(META_KERNEL)
@@ -66,8 +68,7 @@ def generate_simulations(ephem, args, configs):
     orbits_df = OrbitAuxReader(args.orbinfile, configs["aux_format"]).read_rows()
     orbit_format = orbits_df["FORMAT"].iloc[0]
     sun_dict = dict()  # This could be passed in and reused
-    for index, row in orbits_df.iterrows():
-        # desig, H, G, epoch, pos, vel = sp.convert_mpc_orbit(row, ephem, sun_dict)
+    for _, row in orbits_df.iterrows():
         epoch = row["epoch"]
         # convert from MJD to JD, if not done already.
         if epoch < 2400000.5:
@@ -78,7 +79,7 @@ def generate_simulations(ephem, args, configs):
         # Instantiate a rebound particle
         ic = rebound.Particle(x=x, y=y, z=z, vx=vx, vy=vy, vz=vz)
 
-        # Instantiate a rebound simulation and set inital time and time step
+        # Instantiate a rebound simulation and set initial time and time step
         # The time step is just a guess to start with.
         sim = rebound.Simulation()
         sim.t = epoch - ephem.jd_ref
@@ -99,12 +100,5 @@ def generate_simulations(ephem, args, configs):
         # Save the simulation in the dictionary
         sim_dict[row["ObjID"]]["sim"] = sim
         sim_dict[row["ObjID"]]["ex"] = ex
-        # sim_dict[row["ObjID"]]['H'] = H
-        # sim_dict[row["ObjID"]]['G'] = G
 
-        # count += 1
-        # except:
-        #     # TODO: better error handling
-        #     # (do we want to fail gracefully here?)
-        #     print("Error", index)
     return sim_dict
