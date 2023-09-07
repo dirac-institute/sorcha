@@ -79,24 +79,6 @@ def create_ephemeris(args, configs):
             )
             first = 0
 
-            # right now this assumes a direction
-            # This section should be a separate function
-            # print('picket', jd_tdb, t_picket)
-            # n = round((jd_tdb - t_picket) / picket_interval)
-            # t_picket += n * picket_interval
-            # first = 0
-            # et = (t_picket - spice.j2000()) * 24 * 60 * 60
-            # r_obs = observatories.barycentricObservatory(et, obsCode) / AU_KM
-            # pixel_dict.clear()
-            # for k, v in sim_dict.items():
-            #     sim, ex = v["sim"], v["ex"]
-            #     ex.integrate_or_interpolate(t_picket - ephem.jd_ref)
-            #     rho = np.array(sim.particles[0].xyz) - r_obs
-            #     rho_hat = rho / np.linalg.norm(rho)
-            #     sim_dict[k]["rho_hat"] = rho_hat
-            #     this_pix = hp.vec2pix(nside, rho_hat[0], rho_hat[1], rho_hat[2], nest=True)
-            #     pixel_dict[this_pix].append(k)
-
         # This should be a separate function
         desigs = set()
         for pix in pixels:
