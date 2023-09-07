@@ -26,11 +26,16 @@ def create_assist_ephemeris() -> Ephem:
     Ephem
         The ASSIST ephemeris object
     """
+    pplogger = logging.getLogger(__name__)
+
     retriever = make_retriever()
     planets_file_path = retriever.fetch(JPL_PLANETS)
     small_bodies_file_path = retriever.fetch(JPL_SMALL_BODIES)
     ephem = Ephem(planets_path=planets_file_path, asteroids_path=small_bodies_file_path)
     gm_sun = ephem.get_particle("Sun", 0).m
+
+    pplogger.info(f"Calculated GM_SUN value from ASSIST ephemeris: {gm_sun}")
+
     return ephem, gm_sun
 
 
