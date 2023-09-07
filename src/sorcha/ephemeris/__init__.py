@@ -1,7 +1,6 @@
 from .simulation_constants import (
     AU_KM,
     AU_M,
-    GMSUN,
     RADIUS_EARTH_KM,
     SPEED_OF_LIGHT,
     OBLIQUITY_ECLIPTIC,

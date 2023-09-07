@@ -23,9 +23,9 @@ def create_ephemeris(args, configs):
 
     t_picket = 2460000.5
 
-    ephem = create_assist_ephemeris()
+    ephem, gm_sun = create_assist_ephemeris()
     furnish_spiceypy()
-    sim_dict = generate_simulations(ephem, args, configs)
+    sim_dict = generate_simulations(ephem, gm_sun, args, configs)
     pixel_dict = defaultdict(list)
     observatories = Observatory()
 

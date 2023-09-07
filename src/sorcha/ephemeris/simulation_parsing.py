@@ -3,7 +3,7 @@ import os
 import numpy as np
 import spiceypy as spice
 
-from sorcha.ephemeris.simulation_constants import GMSUN, RADIUS_EARTH_KM
+from sorcha.ephemeris.simulation_constants import RADIUS_EARTH_KM
 from sorcha.ephemeris.simulation_geometry import ecliptic_to_equatorial
 from sorcha.ephemeris.simulation_data_files import OBSERVATORY_CODES, make_retriever
 from sorcha.ephemeris.orbit_conversion_utilities import universal_cartesian
@@ -16,13 +16,13 @@ def mjd_tai_to_epoch(mjd_tai):
     return epoch
 
 
-def parse_orbit_row(row, epoch, ephem, sun_dict):
+def parse_orbit_row(row, epoch, ephem, sun_dict, gm_sun):
     orbit_format = row["FORMAT"]
 
     if orbit_format != "CART":
         if orbit_format == "COM":
             ecx, ecy, ecz, dx, dy, dz = universal_cartesian(
-                GMSUN,
+                gm_sun,
                 row["q"],
                 row["e"],
                 row["inc"] * np.pi / 180.0,
@@ -33,13 +33,13 @@ def parse_orbit_row(row, epoch, ephem, sun_dict):
             )
         elif orbit_format == "KEP":
             ecx, ecy, ecz, dx, dy, dz = universal_cartesian(
-                GMSUN,
+                gm_sun,
                 row["a"] * (1 - row["e"]),
                 row["e"],
                 row["inc"] * np.pi / 180.0,
                 row["node"] * np.pi / 180.0,
                 row["argPeri"] * np.pi / 180.0,
-                epoch - (row["ma"] * np.pi / 180.0) * np.sqrt(row["a"] ** 3 / GMSUN),
+                epoch - (row["ma"] * np.pi / 180.0) * np.sqrt(row["a"] ** 3 / gm_sun),
                 epoch,
             )
         else:

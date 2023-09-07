@@ -26,11 +26,17 @@ def create_assist_ephemeris() -> Ephem:
     Ephem
         The ASSIST ephemeris object
     """
+    pplogger = logging.getLogger(__name__)
+
     retriever = make_retriever()
     planets_file_path = retriever.fetch(JPL_PLANETS)
     small_bodies_file_path = retriever.fetch(JPL_SMALL_BODIES)
+    ephem = Ephem(planets_path=planets_file_path, asteroids_path=small_bodies_file_path)
+    gm_sun = ephem.get_particle("Sun", 0).m
 
-    return Ephem(planets_path=planets_file_path, asteroids_path=small_bodies_file_path)
+    pplogger.info(f"Calculated GM_SUN value from ASSIST ephemeris: {gm_sun}")
+
+    return ephem, gm_sun
 
 
 def furnish_spiceypy():
@@ -62,7 +68,7 @@ def furnish_spiceypy():
     spice.furnsh(meta_kernel)
 
 
-def generate_simulations(ephem, args, configs):
+def generate_simulations(ephem, gm_sun, args, configs):
     sim_dict = defaultdict(dict)  # return
 
     orbits_df = OrbitAuxReader(args.orbinfile, configs["aux_format"]).read_rows()
@@ -74,7 +80,7 @@ def generate_simulations(ephem, args, configs):
         if epoch < 2400000.5:
             epoch += 2400000.5
 
-        x, y, z, vx, vy, vz = sp.parse_orbit_row(row, epoch, ephem, sun_dict)
+        x, y, z, vx, vy, vz = sp.parse_orbit_row(row, epoch, ephem, sun_dict, gm_sun)
 
         # Instantiate a rebound particle
         ic = rebound.Particle(x=x, y=y, z=z, vx=vx, vy=vy, vz=vz)
