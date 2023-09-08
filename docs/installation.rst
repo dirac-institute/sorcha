@@ -28,16 +28,25 @@ Sorcha has the following requirements that will be automatically installed  usin
 * pooch
 * tqdm
 
+.. tip::
+   We also recomend installing h5py in your conda/mamba environnment to ensure that the proper HD5 libraries are installed. 
+
+.. note::
+   Currently assist is only pip installable. 
+
 Setup Your Conda Environment 
 ------------------------------
 
 **Step 1** Create a conda environment::
 
-   conda create -n sorcha -c conda-forge -c moeyensj numpy numba pandas<2.1 scipy astropy matplotlib sbpy pytables difi==1.2rc3 spiceypy healpy rebound pooch tqdm python=3.10
-   conda activate sorcha
+   conda create -n sorcha -c conda-forge -c moeyensj numpy numba pandas=2.1 scipy astropy matplotlib sbpy pytables difi==1.2rc3 spiceypy healpy rebound pooch tqdm h5py python=3.10
 
 .. tip::
-   We recommend using python version 3.9 or higher with Sorcha. The conda command uses python 3.10. 
+   We recommend using python version 3.9 or higher with Sorcha. The conda command uses python 3.10.
+
+**Step 2** Activate your conda environment::
+
+   conda activate sorcha
 
 Installing Sorcha
 ----------------------
