@@ -43,23 +43,22 @@ from sorcha.utilities.sorchaArguments import sorchaArguments
 # Author: Samuel Cornwall, Siegfried Eggl, Grigori Fedorets, Steph Merritt, Meg Schwamb
 
 
-def runAll(cmd_args, configs, pplogger=None):
+def runAll(args, configs, pplogger=None):
     if configs["ephemerides_type"] == "ar":
-        runLSSTSimulation(cmd_args, configs, pplogger)
-    runLSSTPostProcessing(cmd_args, pplogger)
+        runLSSTSimulation(args, configs, pplogger)
+    runLSSTPostProcessing(args, pplogger)
 
 
-def runLSSTSimulation(cmd_args, configs, pplogger=None):
+def runLSSTSimulation(args, configs, pplogger=None):
     if pplogger is None:
-        if type(cmd_args) is dict:
-            pplogger = PPGetLogger(cmd_args["outpath"])
+        if type(args) is dict:
+            pplogger = PPGetLogger(args["outpath"])
         else:
-            pplogger = PPGetLogger(cmd_args.outpath)
+            pplogger = PPGetLogger(args.outpath)
 
-    args = cmd_args
-    if type(cmd_args) is dict:
+    if type(args) is dict:
         try:
-            args = sorchaArguments(cmd_args)
+            args = sorchaArguments(args, pplogger)
         except Exception as err:
             pplogger.error(err)
             sys.exit(err)
@@ -74,7 +73,7 @@ def runLSSTSimulation(cmd_args, configs, pplogger=None):
     create_ephemeris(args, configs)
 
 
-def runLSSTPostProcessing(cmd_args, configs, pplogger=None):
+def runLSSTPostProcessing(args, configs, pplogger=None):
     """
     Runs the post processing survey simulator functions that apply a series of
     filters to bias a model Solar System small body population to what the
@@ -95,20 +94,19 @@ def runLSSTPostProcessing(cmd_args, configs, pplogger=None):
     """
     # Set up logging if it hasn't happened already.
     if pplogger is None:
-        if type(cmd_args) is dict:
-            pplogger = PPGetLogger(cmd_args["outpath"])
+        if type(args) is dict:
+            pplogger = PPGetLogger(args["outpath"])
         else:
-            pplogger = PPGetLogger(cmd_args.outpath)
+            pplogger = PPGetLogger(args.outpath)
     pplogger.info("Post-processing begun.")
 
     update_lc_subclasses()
     update_activity_subclasses()
 
     # Initialise argument parser, assign command line arguments, and validate.
-    args = cmd_args
-    if type(cmd_args) is dict:
+    if type(args) is dict:
         try:
-            args = sorchaArguments(cmd_args)
+            args = sorchaArguments(args, pplogger)
         except Exception as err:
             pplogger.error(err)
             sys.exit(err)
@@ -461,7 +459,17 @@ def main():
         pplogger.info(f"Random seed overridden via environmental variable, SORCHA_SEED={cmd_args['seed']}")
 
     if cmd_args["surveyname"] in ["LSST", "lsst"]:
-        runAll(cmd_args, configs, pplogger)
+        try:
+            args = sorchaArguments(cmd_args, pplogger)
+        except Exception as err:
+            pplogger.error(err)
+            sys.exit(err)
+        try:
+            args.validate_arguments()
+        except Exception as err:
+            pplogger.error(err)
+            sys.exit(err)
+        runAll(args, configs, pplogger)
     else:
         pplogger.error(
             "ERROR: Survey name not recognised. Current allowed surveys are: {}".format(["LSST", "lsst"])

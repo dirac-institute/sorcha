@@ -699,13 +699,6 @@ def PPConfigFileParser(configfile, survey_name):
         config, "EXPERT", "pointing_sql_query", "ERROR: no pointing database SQLite3 query provided."
     )
 
-    if config.has_option("EXPERT", "rng_seed"):
-        config_dict["rng_seed"] = PPGetIntOrExit(
-            config, "EXPERT", "rng_seed", "ERROR: this error should not trigger."
-        )
-    else:
-        config_dict["rng_seed"] = None
-
     config_dict["lc_model"] = config.get("EXPERT", "lc_model", fallback=None)
     config_dict["lc_model"] = None if config_dict["lc_model"] == "none" else config_dict["lc_model"]
 

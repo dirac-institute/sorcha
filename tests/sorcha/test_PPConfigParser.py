@@ -73,7 +73,6 @@ def test_PPConfigFileParser(setup_and_teardown_for_PPConfigFileParser):
         "position_decimals": 7,
         "magnitude_decimals": 3,
         "size_serial_chunk": 10,
-        "rng_seed": None,
         "lc_model": None,
     }
 
@@ -250,6 +249,7 @@ def test_PPPrintConfigsToLog(tmp_path):
         "surveyname": "lsst",
         "outfilestem": "testout",
         "verbose": True,
+        "seed": 24601,
     }
 
     args = sorchaArguments(cmd_args)
@@ -294,7 +294,6 @@ def test_PPPrintConfigsToLog(tmp_path):
         "position_decimals": 7,
         "magnitude_decimals": 3,
         "size_serial_chunk": 10,
-        "rng_seed": None,
         "mainfilter": "r",
         "othercolours": ["g-r", "i-r", "z-r"],
         "lc_model": None,
