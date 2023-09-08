@@ -43,37 +43,6 @@ from sorcha.utilities.sorchaArguments import sorchaArguments
 # Author: Samuel Cornwall, Siegfried Eggl, Grigori Fedorets, Steph Merritt, Meg Schwamb
 
 
-def runAll(cmd_args, configs, pplogger=None):
-    if configs["ephemerides_type"] == "ar":
-        runLSSTSimulation(cmd_args, configs, pplogger)
-    runLSSTPostProcessing(cmd_args, pplogger)
-
-
-def runLSSTSimulation(cmd_args, configs, pplogger=None):
-    if pplogger is None:
-        if type(cmd_args) is dict:
-            pplogger = PPGetLogger(cmd_args["outpath"])
-        else:
-            pplogger = PPGetLogger(cmd_args.outpath)
-
-    args = cmd_args
-    if type(cmd_args) is dict:
-        try:
-            args = sorchaArguments(cmd_args)
-        except Exception as err:
-            pplogger.error(err)
-            sys.exit(err)
-
-    try:
-        args.validate_arguments()
-    except Exception as err:
-        pplogger.error(err)
-        sys.exit(err)
-
-    configs = PPConfigFileParser(args.configfile, args.surveyname)
-    create_ephemeris(args, configs)
-
-
 def runLSSTPostProcessing(cmd_args, configs, pplogger=None):
     """
     Runs the post processing survey simulator functions that apply a series of
@@ -149,7 +118,11 @@ def runLSSTPostProcessing(cmd_args, configs, pplogger=None):
     )
 
     # Set up the data readers.
-    reader = CombinedDataReader(verbose=True)
+    ephem_type = configs["ephemerides_type"]
+    ephem_primary = False
+    if ephem_type.casefold() == "external":
+        ephem_primary = True
+    reader = CombinedDataReader(ephem_primary=ephem_primary, verbose=True)
 
     if args.makeTemporaryEphemerisDatabase or args.readTemporaryEphemerisDatabase:
         reader.add_ephem_reader(DatabaseReader(args.readTemporaryEphemerisDatabase))
@@ -157,11 +130,11 @@ def runLSSTPostProcessing(cmd_args, configs, pplogger=None):
         # TODO: Once more ephemerides_types are added this should be wrapped in a EphemerisDataReader
         # That does the selection and checks. We are holding off adding this level of indirection until there
         # is a second ephemerides_type.
-        ephem_type = configs["ephemerides_type"]
         if ephem_type.casefold() not in ["ar", "external"]:  # pragma: no cover
             pplogger.error(f"PPReadAllInput: Unsupported value for ephemerides_type {ephem_type}")
             sys.exit(f"PPReadAllInput: Unsupported value for ephemerides_type {ephem_type}")
-        reader.add_ephem_reader(OIFDataReader(args.oifoutput, configs["eph_format"]))
+        if ephem_type.casefold() == "external":
+            reader.add_ephem_reader(OIFDataReader(args.oifoutput, configs["eph_format"]))
 
     reader.add_aux_data_reader(OrbitAuxReader(args.orbinfile, configs["aux_format"]))
     reader.add_aux_data_reader(CSVDataReader(args.paramsinput, configs["aux_format"]))
@@ -189,7 +162,12 @@ def runLSSTPostProcessing(cmd_args, configs, pplogger=None):
         verboselog("Working on objects {}-{}.".format(startChunk, endChunk))
 
         # Processing begins, all processing is done for chunks
-        observations = reader.read_block(block_size=configs["size_serial_chunk"])
+        if configs["ephemerides_type"].casefold() == "external":
+            observations = reader.read_block(block_size=configs["size_serial_chunk"])
+        else:
+            orbits_df = reader.read_aux_block(block_size=configs["size_serial_chunk"])
+            observations = create_ephemeris(orbits_df, args, configs)
+
         observations = PPMatchPointingToObservations(observations, filterpointing)
 
         # If the ephemeris file doesn't have any observations for the objects in the chunk
@@ -461,7 +439,7 @@ def main():
         pplogger.info(f"Random seed overridden via environmental variable, SORCHA_SEED={cmd_args['seed']}")
 
     if cmd_args["surveyname"] in ["LSST", "lsst"]:
-        runAll(cmd_args, configs, pplogger)
+        runLSSTPostProcessing(cmd_args, configs, pplogger)
     else:
         pplogger.error(
             "ERROR: Survey name not recognised. Current allowed surveys are: {}".format(["LSST", "lsst"])

@@ -1,13 +1,11 @@
 import spiceypy as spice
 from assist import Ephem
 from . import simulation_parsing as sp
-import random
 import rebound
 from collections import defaultdict
 import assist
 import logging
 import sys
-from sorcha.readers.OrbitAuxReader import OrbitAuxReader
 
 from sorcha.ephemeris.simulation_data_files import (
     make_retriever,
@@ -68,11 +66,9 @@ def furnish_spiceypy():
     spice.furnsh(meta_kernel)
 
 
-def generate_simulations(ephem, gm_sun, args, configs):
+def generate_simulations(ephem, gm_sun, orbits_df):
     sim_dict = defaultdict(dict)  # return
 
-    orbits_df = OrbitAuxReader(args.orbinfile, configs["aux_format"]).read_rows()
-    orbit_format = orbits_df["FORMAT"].iloc[0]
     sun_dict = dict()  # This could be passed in and reused
     for _, row in orbits_df.iterrows():
         epoch = row["epoch"]
