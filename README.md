@@ -7,6 +7,7 @@
 [![ci](https://github.com/dirac-institute/sorcha/actions/workflows/smoke-test.yml/badge.svg)](https://github.com/dirac-institute/sorcha/actions/workflows/smoke-test.yml)
 [![pytest](https://github.com/dirac-institute/sorcha/actions/workflows/testing-and-coverage.yml/badge.svg)](https://github.com/dirac-institute/sorcha/actions/workflows/testing-and-coverage.yml)
 [![Documentation Status](https://readthedocs.org/projects/sorcha/badge/?version=latest)](https://sorcha.readthedocs.io/en/latest/?badge=latest)
+[![astropy](http://img.shields.io/badge/powered%20by-AstroPy-orange.svg?style=flat)](http://www.astropy.org/) 
 
 Documentation: https://sorcha.readthedocs.io
 
