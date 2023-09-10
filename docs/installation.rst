@@ -31,6 +31,9 @@ Sorcha has the following requirements that will be automatically installed  usin
 .. tip::
    We also recomend installing h5py in your conda/mamba environnment to ensure that the proper HD5 libraries are installed. 
 
+.. tip::
+   Currently we have pandas pinned at 2.1 because of a bug in reading in whitespace files. 
+
 .. note::
    Currently assist is only pip installable. 
 
@@ -80,13 +83,22 @@ Installing Sorcha in Development Mode
 
    pip install -e .
 
+**Step 6** Install the necessary SPICE auxiliary files for ephemeris generation::
 
+    bootstrap_sorcha_data_files
+
+.. note::
+   These files are stored in your system's cache by default. You can specify where the files are downloaded with the --cache <dirctory>. If the files already downloaded and want a fresh download, you need to use the -f flag. 
+
+.. warning:: These files can change/be updateed with the revised positions of the planets every once in a while. So if you're running simulations for population statistics, we recommend downloading these files to a directory and having all Sorcha runs these files for consistency. 
+ 
 Testing Your Sorcha Installation
 ----------------------------------
 
 You can check that the Sorcha installation was done correctly, by downloading the Sorcha source code repository (Steps 1-4 **only**  of :ref:`dev_mode`) and then running::
 
-   sorcha -c ./demo/PPConfig_test.ini -p ./demo/sspp_testset_colours.txt -ob ./demo/sspp_testset_orbits.des -e ./demo/example_oif_output.txt -pd ./demo/baseline_v2.0_1yr.db -o ./ -t testrun_e2e
+   touch ephemeris_output.csv
+   sorcha -c ./demo/PPConfig_test.ini -p ./demo/sspp_testset_colours.txt -ob ./demo/sspp_testset_orbits.des -e ./ephemeris_output.csv -pd ./demo/baseline_v2.0_1yr.db -o ./ -t testrun_e2e
    
 The output will appear in a csv file (testrun_e2e.csv) in your current directory. The first 51 lines of the csv file should look like this:
 
