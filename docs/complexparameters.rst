@@ -7,6 +7,10 @@ We have base example classes that the user can take and modify to whatever your 
 Cometary Activity or Simulating Other Active Objects
 --------------------------------------------------------
 
+.. literalinclude:: ../src/sorcha/activity/base_activity.py
+   :language: python
+
+
 Rotational Light Curve Effects
 -----------------------------------
 

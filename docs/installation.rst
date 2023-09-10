@@ -83,7 +83,7 @@ Installing Sorcha in Development Mode
 
    pip install -e .
 
-**Step 6** Install the necessary SPICE auxiliary files for ephemeris generation::
+**Step 6** Install the necessary SPICE auxiliary files for ephemeris generation (774 MB total in size)::
 
     bootstrap_sorcha_data_files
 
