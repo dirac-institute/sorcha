@@ -90,7 +90,7 @@ Installing Sorcha in Development Mode
 .. note::
    These files are stored in your system's cache by default. You can specify where the files are downloaded with the --cache <dirctory>. If the files already downloaded and want a fresh download, you need to use the -f flag. 
 
-.. warning:: These files can change/be updateed with the revised positions of the planets every once in a while. So if you're running simulations for population statistics, we recommend downloading these files to a directory and having all Sorcha runs these files for consistency. 
+.. warning:: These files can change/be updated with the revised positions of the planets every once in a while. So if you're running simulations for population statistics, we recommend downloading these files to a directory and having all Sorcha runs these files for consistency. 
  
 Testing Your Sorcha Installation
 ----------------------------------
