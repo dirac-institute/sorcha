@@ -4,6 +4,7 @@ import time
 from os import path
 
 from sorcha.modules.PPModuleRNG import PerModuleRNG
+from sorcha.modules.PPGetLogger import PPGetLogger
 
 
 @dataclass
@@ -42,7 +43,11 @@ class sorchaArguments:
     _rngs = None
     """A collection of per-module random number generators"""
 
-    def __init__(self, cmd_args_dict=None):
+    pplogger = None
+
+    def __init__(self, cmd_args_dict=None, pplogger=None):
+        if pplogger is not None:
+            self.pplogger = pplogger
         if cmd_args_dict is not None:
             self.read_from_dict(cmd_args_dict)
 
@@ -67,11 +72,14 @@ class sorchaArguments:
         if "complex_physical_parameters" in args.keys():
             self.complex_parameters = args["complex_physical_parameters"]
 
+        if self.pplogger is None:
+            self.pplogger = PPGetLogger(self.outpath)
+
         # WARNING: Take care if manually setting the seed. Re-using seeds between
         # simulations may result in hard-to-detect correlations in simulation
         # outputs.
         seed = args.get("seed", int(time.time()))
-        self._rngs = PerModuleRNG(seed)
+        self._rngs = PerModuleRNG(seed, self.pplogger)
 
     def validate_arguments(self):
         if not path.isfile(self.paramsinput):

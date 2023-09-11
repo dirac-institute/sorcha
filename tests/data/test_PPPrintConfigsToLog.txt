@@ -1,3 +1,4 @@
+root         INFO     the base rng seed is 24601 
 sorcha.modules.PPConfigParser INFO     The config file used is located at test_PPConfig.ini 
 sorcha.modules.PPConfigParser INFO     The physical parameters file used is located at testcolour.txt 
 sorcha.modules.PPConfigParser INFO     The orbits file used is located at testorb.des 
