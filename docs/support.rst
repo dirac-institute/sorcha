@@ -26,7 +26,19 @@ You will need to install sorcha from the source code via pip in editable mode as
 Contributing to the  Documentation
 --------------------------------------
 
-We are very happy to receivet feedback on the online documentation through the `project's github repository <https://github.com/dirac-institute/sorcha/issues>`_. Beyond pointing out typos and small changes through issues, we welcome pull requests on the sphinx documentation used here on the readthedocs.
+We are very happy to receivet feedback on the online documentation through the `project's github repository <https://github.com/dirac-institute/sorcha/issues>`_. Beyond pointing out typos and small changes through issues, we welcome pull requests on the 'sphinx <https://www.sphinx-doc.org/en/master/#user-guides>`_ documentation used here on the readthedocs.
 
-.. note::
-   You will need to install the development version of Sorcha (pip install '.[dev]' from a clone of the Sorcha repository and install the pandoc package (either via conda/pip or `direct download <https://pandoc.org/installing.html>`_ . If you move to the docs directory and run 'make html', the html read the doc files will be ../_readthedocs/html/ )
+You will need to install the development version of Sorcha from a clone of the Sorcha repository::
+
+   git clone https://github.com/dirac-institute/sorcha.git
+
+
+   pip install '.[dev]' 
+
+You will also  install the pandoc package (either via conda/pip or `direct download <https://pandoc.org/installing.html>`_ . 
+
+If you move to the docs directory (cd sorcha/docs/), edit the *.rst files, and run::
+
+   make html
+
+You will find the generated index.html file in  ../_readthedocs/html/ 
