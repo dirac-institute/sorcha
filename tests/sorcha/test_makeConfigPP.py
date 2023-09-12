@@ -29,7 +29,6 @@ class args:
         self.trackwindow = 15.0
         self.septhreshold = 0.5
         self.maxtime = 0.0625
-        self.ar_simulation_enabled = True
         self.ar_ang_fov = 1.8
         self.ar_fov_buffer = 0.2
         self.ar_picket = 1
