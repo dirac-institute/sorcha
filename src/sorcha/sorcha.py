@@ -357,7 +357,7 @@ def main():
         help="Ephemeris simulation output file name",
         type=str,
         dest="e",
-        required=True,
+        required=False,
     )
     required.add_argument(
         "-o",
@@ -453,6 +453,10 @@ def main():
     # Extract and validate the remaining arguments.
     cmd_args = PPCommandLineParser(args)
     configs = PPConfigFileParser(cmd_args["configfile"], cmd_args["surveyname"])
+
+    if configs["ephemerides_type"] == "external" and args.oifoutput == "":
+        pplogger.error("ERROR: A+R simulation not enabled and no ephemerides file provided")
+        sys.exit("ERROR: A+R simulation not enabled and no ephemerides file provided")
 
     if "SORCHA_SEED" in os.environ:
         cmd_args["seed"] = int(os.environ["SORCHA_SEED"])

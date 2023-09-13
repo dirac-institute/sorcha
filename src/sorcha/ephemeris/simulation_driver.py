@@ -29,7 +29,8 @@ def create_ephemeris(args, configs):
     pixel_dict = defaultdict(list)
     observatories = Observatory()
 
-    out_csv_file = open(args.oifoutput, "w", encoding="utf-8")
+    out_csv_path = path.join(args.outpath, "simulated_ephemerides.csv")
+    out_csv_file = open(out_csv_path, "w", encoding="utf-8")
 
     # this header is broken up to match the string built at the end of this method
     out_csv_file.write(

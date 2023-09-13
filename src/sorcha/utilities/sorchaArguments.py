@@ -55,7 +55,6 @@ class sorchaArguments:
         """set the parameters from a cmd_args dict."""
         self.paramsinput = args["paramsinput"]
         self.orbinfile = args["orbinfile"]
-        self.oifoutput = args["oifoutput"]
         self.configfile = args["configfile"]
         self.outpath = args["outpath"]
         self.outfilestem = args["outfilestem"]
@@ -71,6 +70,9 @@ class sorchaArguments:
 
         if "complex_physical_parameters" in args.keys():
             self.complex_parameters = args["complex_physical_parameters"]
+
+        if "oifoutput" in args.keys():
+            self.oifoutput = args["oifoutput"]
 
         if self.pplogger is None:
             self.pplogger = PPGetLogger(self.outpath)
@@ -88,7 +90,7 @@ class sorchaArguments:
         if not path.isfile(self.orbinfile):
             raise ValueError("`orbinfile` is not a valid file path.")
 
-        if not path.isfile(self.oifoutput):
+        if self.oifoutput != "" and not path.isfile(self.oifoutput):
             raise ValueError("`oifoutput` is not a valid file path.")
 
         if not path.isfile(self.configfile):
