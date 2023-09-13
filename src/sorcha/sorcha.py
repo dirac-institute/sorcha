@@ -64,20 +64,19 @@ def runLSSTPostProcessing(cmd_args, configs, pplogger=None):
     """
     # Set up logging if it hasn't happened already.
     if pplogger is None:
-        if type(cmd_args) is dict:
-            pplogger = PPGetLogger(cmd_args["outpath"])
+        if type(args) is dict:
+            pplogger = PPGetLogger(args["outpath"])
         else:
-            pplogger = PPGetLogger(cmd_args.outpath)
+            pplogger = PPGetLogger(args.outpath)
     pplogger.info("Post-processing begun.")
 
     update_lc_subclasses()
     update_activity_subclasses()
 
     # Initialise argument parser, assign command line arguments, and validate.
-    args = cmd_args
-    if type(cmd_args) is dict:
+    if type(args) is dict:
         try:
-            args = sorchaArguments(cmd_args)
+            args = sorchaArguments(args, pplogger)
         except Exception as err:
             pplogger.error(err)
             sys.exit(err)

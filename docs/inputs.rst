@@ -42,6 +42,10 @@ This is a file which contains the orbital information of a set of synthetic obje
   Sorcha assumes **heliocentric** orbits are provided as input!
 
 
+.. warning::
+  The orbit epoch is expected to be given in **TDB (Barycentric Dynamical Time)**
+
+
 .. tip::
   If using Sorcha's internal ephemeris generation mode (which is the default mode), **we recommend calculating/creating your input orbits with epochs close in time to the start of the first survey observation**. This will minimize the n-body integrations required to set up the ephemeris generation.
 
@@ -231,6 +235,9 @@ What we call the LSST pointing database (currently simulated since Rubin Observa
 
 .. tip::
    The contents of the observations table in the sqlite LSST pointing database can be found `here <https://rubin-sim.lsst.io/rs_scheduler/output_schema.html>`_
+
+.. warning::
+  The pointing databases times are expected to be TAI (Temps Atomique International; French for International Atomic Time),
 
 The latest version of rubin_sim cadence simulations can be found at https://s3df.slac.stanford.edu/data/rubin/sim-data/. An example rubin_sim simulation visualized on sky is shown in the plot below of the number of on-sky visits over the 10-year simulated baseline v3.2 survey (image credit: Lynne Jones): 
 

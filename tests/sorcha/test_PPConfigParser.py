@@ -62,7 +62,6 @@ def test_PPConfigFileParser(setup_and_teardown_for_PPConfigFileParser):
         "SSP_detection_efficiency": 0.95,
         "SSP_maximum_time": 0.0625,
         "SSP_linking_on": True,
-        "ar_simulation_enabled": True,
         "ar_ang_fov": 1.8,
         "ar_fov_buffer": 0.2,
         "ar_picket": 1,
@@ -73,7 +72,6 @@ def test_PPConfigFileParser(setup_and_teardown_for_PPConfigFileParser):
         "position_decimals": 7,
         "magnitude_decimals": 3,
         "size_serial_chunk": 10,
-        "rng_seed": None,
         "lc_model": None,
     }
 
@@ -250,6 +248,7 @@ def test_PPPrintConfigsToLog(tmp_path):
         "surveyname": "lsst",
         "outfilestem": "testout",
         "verbose": True,
+        "seed": 24601,
     }
 
     args = sorchaArguments(cmd_args)
@@ -257,7 +256,7 @@ def test_PPPrintConfigsToLog(tmp_path):
     configs = {
         "eph_format": "csv",
         "aux_format": "whitespace",
-        "ephemerides_type": "oif",
+        "ephemerides_type": "ar",
         "pointing_sql_query": "SELECT observationId, observationStartMJD, filter, seeingFwhmGeom, seeingFwhmEff, fiveSigmaDepth, fieldRA, fieldDec, rotSkyPos FROM observations order by observationId",
         "comet_activity": "none",
         "observing_filters": ["r", "g", "i", "z"],
@@ -283,7 +282,6 @@ def test_PPPrintConfigsToLog(tmp_path):
         "SSP_detection_efficiency": 0.95,
         "SSP_maximum_time": 0.0625,
         "SSP_linking_on": True,
-        "ar_simulation_enabled": True,
         "ar_ang_fov": 1.8,
         "ar_fov_buffer": 0.2,
         "ar_picket": 1,
@@ -294,7 +292,6 @@ def test_PPPrintConfigsToLog(tmp_path):
         "position_decimals": 7,
         "magnitude_decimals": 3,
         "size_serial_chunk": 10,
-        "rng_seed": None,
         "mainfilter": "r",
         "othercolours": ["g-r", "i-r", "z-r"],
         "lc_model": None,

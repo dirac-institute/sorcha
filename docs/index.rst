@@ -64,6 +64,5 @@ works, tutorials, and demonstration notebooks that show how each of the various 
    acknowledgements
    cite
    uninstall 
-   usingoif
 
 

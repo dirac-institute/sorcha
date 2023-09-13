@@ -6,8 +6,9 @@ Notebooks
 
     Apparent Magnitude Validation <notebooks/demo_ApparentMagnitudeValidation>
     Circle Footprint Filter <notebooks/demo_CircleFootprint>
-    Detection Efficiency Validation <notebooks/demo_DetectionEfficiencyValidation>
     LSST Camera Footprint Filter <notebooks/demo_footprintFilter>
+    Coordinate Transformation Example <notebooks/demo_CoordinateTransformations.ipynb>
+    Detection Efficiency Validation <notebooks/demo_DetectionEfficiencyValidation>
     SSP Linking Filter <notebooks/demo_LinkingFilter>
     Magnitude and SNR Cuts <notebooks/demo_MagnitudeAndSNRCuts>
     Trailing Losses Validation <notebooks/demo_TrailingLossesValidation>

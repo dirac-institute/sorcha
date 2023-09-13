@@ -73,7 +73,8 @@ will produce
 
 Now that you know how to provide the input files, let's go run a simulation::
 
-   sorcha -c ./demo/PPConfig_test.ini -p ./demo/sspp_testset_colours.txt -ob ./demo/sspp_testset_orbits.des -e ./demo/example_oif_output.txt -pd ./demo/baseline_v2.0_1yr.db -o ./ -t testrun_e2e
+   touch ephemeris_output.csv
+   sorcha -c ./demo/PPConfig_test.ini -p ./demo/sspp_testset_colours.txt -ob ./demo/sspp_testset_orbits.des -e ./ephemeris_output.csv -pd ./demo/baseline_v2.0_1yr.db -o ./ -t testrun_e2e
 
 .. tip::
    Sorcha outputs a log file (*.sorcha.log) and error file (*.sorcha.err) in the output directory. If all has gone well, the error file will be empty. The log file has the configuration parameters outputted to it as a record of the run setup.
