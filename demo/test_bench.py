@@ -26,7 +26,7 @@ if __name__ == "__main__":  # pragma: no cover
     cmd_args_dict = {
         "paramsinput": "./demo/mba_sample_1000_physical.csv",
         "orbinfile": "./demo/mba_sample_1000_orbit.csv",
-        "oifoutput": "./data/out/ephemeris_output.csv",
+        "output_ephemeris_file": "./data/out/ephemeris_output.csv",
         "configfile": "./demo/test_bench_config.ini",
         "pointing_database": "./demo/baseline_v2.0_1yr.db",
         "outpath": "./data/out",

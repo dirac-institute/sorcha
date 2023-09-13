@@ -724,7 +724,10 @@ def PPPrintConfigsToLog(configs, cmd_args):
     pplogger.info("The config file used is located at " + cmd_args.configfile)
     pplogger.info("The physical parameters file used is located at " + cmd_args.paramsinput)
     pplogger.info("The orbits file used is located at " + cmd_args.orbinfile)
-    pplogger.info("The ephemerides file used is located at " + cmd_args.oifoutput)
+    if cmd_args.oifoutput:
+        pplogger.info("The ephemerides file used is located at " + cmd_args.oifoutput)
+    if cmd_args.output_ephemeris_file:
+        pplogger.info("The output ephemerides file is located " + cmd_args.output_ephemeris_file)
     pplogger.info("The survey selected is: " + cmd_args.surveyname)
 
     if cmd_args.makeTemporaryEphemerisDatabase:

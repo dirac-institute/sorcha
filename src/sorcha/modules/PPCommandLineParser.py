@@ -5,6 +5,37 @@ import glob
 from .PPConfigParser import PPFindFileOrExit, PPFindDirectoryOrExit
 
 
+def warn_or_remove_file(filepath, force_remove, pplogger):
+    """Given a path to a file(s), first determine if the file exists. If it does not
+    exist, pass through.
+
+    If the file does exist check if the user has set `--force` on the command line.
+    If the user set --force, log that the existing file will be removed.
+    Otherwise, warn the user that the file exists and exit the program.
+
+    Parameters
+    ----------
+    filepath : str
+        The full file path to a given file. i.e. /home/data/output.csv
+    force_remove : bool
+        Whether to remove the file if it exists.
+    pplogger : Logger
+        Used to log the output.
+    """
+    file_exists = glob.glob(filepath)
+
+    if file_exists and force_remove:
+        pplogger.info(f"Existing file found at {filepath}. -f flag set: deleting existing file.")
+        os.remove(file_exists[0])
+    elif file_exists and not force_remove:
+        pplogger.error(
+            f"ERROR: existing file found at output location {filepath}. Set -f flag to overwrite this file."
+        )
+        sys.exit(
+            f"ERROR: existing file found at output location {filepath}. Set -f flag to overwrite this file."
+        )
+
+
 def PPCommandLineParser(args):
     """
     Parses the command line arguments, error-handles them, then stores them in a single dict.
@@ -27,7 +58,6 @@ def PPCommandLineParser(args):
 
     cmd_args_dict["paramsinput"] = PPFindFileOrExit(args.p, "-p, --params")
     cmd_args_dict["orbinfile"] = PPFindFileOrExit(args.ob, "-ob, --orbit")
-    cmd_args_dict["oifoutput"] = PPFindFileOrExit(args.e, "-e, --ephem")
     cmd_args_dict["configfile"] = PPFindFileOrExit(args.c, "-c, --config")
     cmd_args_dict["outpath"] = PPFindFileOrExit(args.o, "-o, --outfile")
     cmd_args_dict["pointing_database"] = PPFindFileOrExit(args.pd, "-pd, --pointing_database")
@@ -35,6 +65,15 @@ def PPCommandLineParser(args):
     if args.cp:
         cmd_args_dict["complex_physical_parameters"] = PPFindFileOrExit(
             args.cp, "-cp, --complex_physical_parameters"
+        )
+
+    if args.er:
+        cmd_args_dict["oifoutput"] = args.er
+
+    if args.ew:
+        cmd_args_dict["output_ephemeris_file"] = args.ew
+        warn_or_remove_file(
+            os.path.join(cmd_args_dict["outpath"], cmd_args_dict["outfilestem"]), args.f, pplogger
         )
 
     if args.dw == "default":
@@ -53,26 +92,9 @@ def PPCommandLineParser(args):
     cmd_args_dict["outfilestem"] = args.t
     cmd_args_dict["verbose"] = args.v
 
-    file_exists = glob.glob(os.path.join(cmd_args_dict["outpath"], cmd_args_dict["outfilestem"] + ".*"))
-
-    if file_exists and args.f:
-        pplogger.info(
-            "Existing file found at {}. -f flag set: deleting existing file.".format(
-                os.path.join(cmd_args_dict["outpath"], cmd_args_dict["outfilestem"] + ".*")
-            )
-        )
-        os.remove(file_exists[0])
-    elif file_exists and not args.f:
-        pplogger.error(
-            "ERROR: existing file found at output location {}. Set -f flag to overwrite this file.".format(
-                os.path.join(cmd_args_dict["outpath"], cmd_args_dict["outfilestem"] + ".*")
-            )
-        )
-        sys.exit(
-            "ERROR: existing file found at output location {}. Set -f flag to overwrite this file.".format(
-                os.path.join(cmd_args_dict["outpath"], cmd_args_dict["outfilestem"] + ".*")
-            )
-        )
+    warn_or_remove_file(
+        os.path.join(cmd_args_dict["outpath"], cmd_args_dict["outfilestem"] + ".*"), args.f, pplogger
+    )
 
     if args.dr and args.dw:
         pplogger.error("ERROR: both -dr and -dw flags set at command line. Please use only one.")

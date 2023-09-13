@@ -294,14 +294,13 @@ def main():
     model Solar System small body population to what the specified wide-field
     survey would observe.
 
-    usage: sorcha [-h] -c C -e E -o O -ob OB -p P -pd PD [-cp CP] [-dw [DW]] [-dr DR] [-dl] [-f] [-s S] [-t T] [-v]
+    usage: sorcha [-h] -c C -o O -ob OB -p P -pd PD [-er E] [-ew E] [-cp CP] [-dw [DW]] [-dr DR] [-dl] [-f] [-s S] [-t T] [-v]
 
     options:
       -h, --help            show this help message and exit
 
     Required arguments:
       -c C, --config C      Input configuration file name (default: None)
-      -e E, --ephem E       Ephemeris simulation output file name (default: None)
       -o O, --outfile O     Path to store output and logs. (default: None)
       -ob OB, --orbit OB    Orbit file name (default: ./data/orbit.des)
       -p P, --params P      Physical parameters file name (default: None)
@@ -309,6 +308,9 @@ def main():
                         Survey pointing information (default: None)
 
     Optional arguments:
+      -er E, --ephem_read E Existing ephemeris simulation output file name (default: None)
+      -ew E, --ephem_write E
+                            Output file name for newly generated ephemeris simulation (default: None)
       -cp CP, --complex_physical_parameters CP
                             Complex physical parameters file name (default: None)
       -dw [DW]              Make temporary ephemeris database. If no filepath/name supplied, default name and ephemeris input location used. (default: None)
@@ -328,14 +330,6 @@ def main():
         help="Input configuration file name",
         type=str,
         dest="c",
-        required=True,
-    )
-    required.add_argument(
-        "-e",
-        "--ephem",
-        help="Ephemeris simulation output file name",
-        type=str,
-        dest="e",
         required=True,
     )
     required.add_argument(
@@ -373,6 +367,32 @@ def main():
     )
 
     optional = parser.add_argument_group("Optional arguments")
+    optional.add_argument(
+        "-er",
+        "--ephem_read",
+        help="Previously generated ephemeris simulation file name, required if ephemerides_type in config file is 'external'.",
+        type=str,
+        dest="e",
+        required=False,
+        default=None,
+    )
+    optional.add_argument(
+        "-ew",
+        "--ephem_write",
+        help="Output file name for newly generated ephemeris simulation, required if ephemerides_type in config file is not 'external'.",
+        type=str,
+        dest="ew",
+        required=False,
+        default=None,
+    )
+    optional.add_argument(
+        "-ar",
+        "--ar_data_path",
+        help="Directory path where Assist+Rebound data files where stored when running bootstrap_sorcha_data_files from the command line.",
+        type=str,
+        dest="ar",
+        required=False,
+    )
     optional.add_argument(
         "-cp",
         "--complex_physical_parameters",
@@ -432,6 +452,10 @@ def main():
     # Extract and validate the remaining arguments.
     cmd_args = PPCommandLineParser(args)
     configs = PPConfigFileParser(cmd_args["configfile"], cmd_args["surveyname"])
+
+    if configs["ephemerides_type"] == "external" and cmd_args["oifoutput"] == "":
+        pplogger.error("ERROR: A+R simulation not enabled and no ephemerides file provided")
+        sys.exit("ERROR: A+R simulation not enabled and no ephemerides file provided")
 
     if "SORCHA_SEED" in os.environ:
         cmd_args["seed"] = int(os.environ["SORCHA_SEED"])

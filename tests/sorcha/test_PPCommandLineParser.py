@@ -8,7 +8,8 @@ class args:
     def __init__(self, cp, dw, dr, dl, t="testout", o="./", f=False):
         self.p = get_test_filepath("testcolour.txt")
         self.ob = get_test_filepath("testorb.des")
-        self.e = get_test_filepath("oiftestoutput.txt")
+        self.er = get_test_filepath("oiftestoutput.txt")
+        self.ew = None
         self.c = get_test_filepath("test_PPConfig.ini")
         self.pd = get_test_filepath("baseline_10klines_2.0.db")
         self.o = o

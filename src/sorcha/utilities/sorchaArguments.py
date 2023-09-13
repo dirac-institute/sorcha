@@ -55,11 +55,12 @@ class sorchaArguments:
         """set the parameters from a cmd_args dict."""
         self.paramsinput = args["paramsinput"]
         self.orbinfile = args["orbinfile"]
-        self.oifoutput = args["oifoutput"]
+        self.oifoutput = args.get("oifoutput")
         self.configfile = args["configfile"]
         self.outpath = args["outpath"]
         self.outfilestem = args["outfilestem"]
         self.pointing_database = args["pointing_database"]
+        self.output_ephemeris_file = args.get("output_ephemeris_file")
 
         self.verbose = args["verbose"]
 
@@ -88,7 +89,7 @@ class sorchaArguments:
         if not path.isfile(self.orbinfile):
             raise ValueError("`orbinfile` is not a valid file path.")
 
-        if not path.isfile(self.oifoutput):
+        if self.oifoutput and not path.isfile(self.oifoutput):
             raise ValueError("`oifoutput` is not a valid file path.")
 
         if not path.isfile(self.configfile):
