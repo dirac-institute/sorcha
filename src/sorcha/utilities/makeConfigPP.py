@@ -35,7 +35,6 @@ def makeConfigFile(args):
     }
 
     simulation_raw = {
-        "ar_simulation_enabled": str(args.ar_simulation_enabled),
         "ar_ang_fov": str(args.ar_ang_fov),
         "ar_fov_buffer": str(args.ar_fov_buffer),
         "ar_picket": str(args.ar_picket),
@@ -327,13 +326,6 @@ def main():
     )
 
     # SIMULATION
-    parser.add_argument(
-        "--ar_simulation_enabled",
-        "-arfov",
-        help="whether or not to run ASSIST+REBOUND simulations.",
-        type=bool,
-        default=True,
-    )
     parser.add_argument(
         "--ar_ang_fov",
         "-arfov",
