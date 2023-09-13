@@ -44,6 +44,7 @@ def test_PPCommandLineParser():
         "outfilestem": "testout",
         "verbose": True,
         "ar_data_path": None,
+        "output_ephemeris_file": None,
     }
 
     cmd_dict_2 = PPCommandLineParser(
@@ -64,6 +65,7 @@ def test_PPCommandLineParser():
         "outfilestem": "testout",
         "verbose": True,
         "ar_data_path": None,
+        "output_ephemeris_file": None,
     }
 
     cmd_dict_3 = PPCommandLineParser(args(False, os.path.join(tmp_path, "test.db"), None, True))
@@ -81,6 +83,7 @@ def test_PPCommandLineParser():
         "outfilestem": "testout",
         "verbose": True,
         "ar_data_path": None,
+        "output_ephemeris_file": None,
     }
 
     cmd_dict_4 = PPCommandLineParser(args(False, "default", None, True))
@@ -98,6 +101,7 @@ def test_PPCommandLineParser():
         "outfilestem": "testout",
         "verbose": True,
         "ar_data_path": None,
+        "output_ephemeris_file": None,
     }
 
     with open(os.path.join(tmp_path, "dummy_file.txt"), "w") as _:

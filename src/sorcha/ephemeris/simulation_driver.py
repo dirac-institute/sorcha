@@ -30,10 +30,10 @@ def create_ephemeris(orbits_df, args, configs):
     t_picket = 2460000.5
 
     ephem, gm_sun = create_assist_ephemeris(args)
-    furnish_spiceypy()
+    furnish_spiceypy(args)
     sim_dict = generate_simulations(ephem, gm_sun, orbits_df)
     pixel_dict = defaultdict(list)
-    observatories = Observatory()
+    observatories = Observatory(args)
 
     output = StringIO()
     in_memory_csv = writer(output)

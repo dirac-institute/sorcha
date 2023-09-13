@@ -316,7 +316,7 @@ def main():
       -dw [DW]              Make temporary ephemeris database. If no filepath/name supplied, default name and ephemeris input location used. (default: None)
       -dr DR                Location of existing/previous temporary ephemeris database to read from if wanted. (default: None)
       -dl                   Delete the temporary ephemeris database after code has completed. (default: False)
-      -f, --force           Force deletion/overwrite of existing output file(s). Default False. (default: False)
+      -f, --force           Force deletion/overwrite of existing output file(s). (default: False)
       -s S, --survey S      Survey to simulate (default: LSST)
       -t T, --stem T        Output file name stem. (default: SSPPOutput)
       -v, --verbose         Verbosity. Default currently true; include to turn off verbosity. (default: True)
@@ -453,9 +453,13 @@ def main():
     cmd_args = PPCommandLineParser(args)
     configs = PPConfigFileParser(cmd_args["configfile"], cmd_args["surveyname"])
 
-    if configs["ephemerides_type"] == "external" and cmd_args["oifoutput"] == "":
+    if configs["ephemerides_type"] == "external" and cmd_args["oifoutput"] is None:
         pplogger.error("ERROR: A+R simulation not enabled and no ephemerides file provided")
         sys.exit("ERROR: A+R simulation not enabled and no ephemerides file provided")
+
+    if configs["ephemerides_type"] == "ar" and cmd_args["output_ephemeris_file"] is None:
+        pplogger.error("ERROR: A+R simulation is enabled and no output file name for ephemerides provided")
+        sys.exit("ERROR: A+R simulation is enabled and no output file name for ephemerides provided")
 
     if "SORCHA_SEED" in os.environ:
         cmd_args["seed"] = int(os.environ["SORCHA_SEED"])

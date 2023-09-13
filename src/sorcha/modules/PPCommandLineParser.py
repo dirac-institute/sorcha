@@ -67,14 +67,15 @@ def PPCommandLineParser(args):
             args.cp, "-cp, --complex_physical_parameters"
         )
 
-    if args.er:
-        cmd_args_dict["oifoutput"] = args.er
+    # if the user didn't provide oifoutput on the CLI, this will default to None
+    cmd_args_dict["oifoutput"] = args.er
 
-    if args.ew:
-        cmd_args_dict["output_ephemeris_file"] = args.ew
-        warn_or_remove_file(
-            os.path.join(cmd_args_dict["outpath"], cmd_args_dict["outfilestem"]), args.f, pplogger
-        )
+    # if the user didn't provide output_ephemeris_file on the CLI, this will default to None
+    cmd_args_dict["output_ephemeris_file"] = args.ew
+
+    # if a value was provided, warn the user about overwriting if the file exists
+    if cmd_args_dict["output_ephemeris_file"]:
+        warn_or_remove_file(cmd_args_dict["output_ephemeris_file"], args.f, pplogger)
 
     if args.dw == "default":
         oifpath_split = os.path.split(cmd_args_dict["oifoutput"])

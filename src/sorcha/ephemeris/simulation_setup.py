@@ -37,13 +37,13 @@ def create_assist_ephemeris(args) -> Ephem:
     return ephem, gm_sun
 
 
-def furnish_spiceypy():
+def furnish_spiceypy(args):
     # The goal here would be to download the spice kernel files (if needed)
     # Then call spice.furnish(<filename>) on each of those files.
 
     pplogger = logging.getLogger(__name__)
 
-    retriever = make_retriever()
+    retriever = make_retriever(args.ar_data_file_path)
 
     for kernel_file in ORDERED_KERNEL_FILES:
         retriever.fetch(kernel_file)
