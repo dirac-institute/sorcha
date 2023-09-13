@@ -116,24 +116,8 @@ def PPCommandLineParser(args):
             + ". Rerun with command line flag -dw to create one."
         )
 
-    if args.dw and os.path.exists(cmd_args_dict["makeTemporaryEphemerisDatabase"]) and args.f:
-        pplogger.info(
-            "Existing file found at {}. -f flag set: deleting existing file.".format(
-                cmd_args_dict["makeTemporaryEphemerisDatabase"]
-            )
-        )
-        os.remove(file_exists[0])
-    elif args.dw and os.path.exists(cmd_args_dict["makeTemporaryEphemerisDatabase"]) and not args.f:
-        pplogger.error(
-            "ERROR: existing file found at output location {}. Set -f flag to overwrite this file.".format(
-                cmd_args_dict["makeTemporaryEphemerisDatabase"]
-            )
-        )
-        sys.exit(
-            "ERROR: existing file found at output location {}. Set -f flag to overwrite this file.".format(
-                cmd_args_dict["makeTemporaryEphemerisDatabase"]
-            )
-        )
+    if args.dw:
+        warn_or_remove_file(cmd_args_dict["makeTemporaryEphemerisDatabase"], args.f, pplogger)
 
     # Log all the command line settings to INFO.
     for flag, value in cmd_args_dict.items():
