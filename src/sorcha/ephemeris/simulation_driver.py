@@ -25,12 +25,11 @@ def create_ephemeris(orbits_df, args, configs):
     nside = 2 ** configs["ar_healpix_order"]
     first = 1  # Try to get away from this
 
-    # TODO: Update this to the correct arg value, when an `ephemeris_output` CLI is defined.
     ephemeris_csv_filename = args.output_ephemeris_file
 
     t_picket = 2460000.5
 
-    ephem, gm_sun = create_assist_ephemeris()
+    ephem, gm_sun = create_assist_ephemeris(args)
     furnish_spiceypy()
     sim_dict = generate_simulations(ephem, gm_sun, orbits_df)
     pixel_dict = defaultdict(list)

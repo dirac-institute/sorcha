@@ -16,7 +16,7 @@ from sorcha.ephemeris.simulation_data_files import (
 )
 
 
-def create_assist_ephemeris() -> Ephem:
+def create_assist_ephemeris(args) -> Ephem:
     """Build the ASSIST ephemeris object
 
     Returns
@@ -26,7 +26,7 @@ def create_assist_ephemeris() -> Ephem:
     """
     pplogger = logging.getLogger(__name__)
 
-    retriever = make_retriever()
+    retriever = make_retriever(args.ar_data_file_path)
     planets_file_path = retriever.fetch(JPL_PLANETS)
     small_bodies_file_path = retriever.fetch(JPL_SMALL_BODIES)
     ephem = Ephem(planets_path=planets_file_path, asteroids_path=small_bodies_file_path)

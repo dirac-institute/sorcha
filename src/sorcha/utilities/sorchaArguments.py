@@ -61,7 +61,7 @@ class sorchaArguments:
         self.outfilestem = args["outfilestem"]
         self.pointing_database = args["pointing_database"]
         self.output_ephemeris_file = args.get("output_ephemeris_file")
-
+        self.ar_data_file_path = args.get("ar_data_path")
         self.verbose = args["verbose"]
 
         self.makeTemporaryEphemerisDatabase = args["makeTemporaryEphemerisDatabase"]
@@ -97,3 +97,6 @@ class sorchaArguments:
 
         if not path.isfile(self.pointing_database):
             raise ValueError("`pointing_database` is not a valid file path.")
+
+        if self.ar_data_file_path and not path.isdir(self.ar_data_file_path):
+            raise ValueError("`ar_data_path` is not a valid directory.")
