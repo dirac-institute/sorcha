@@ -43,7 +43,7 @@ from sorcha.utilities.sorchaArguments import sorchaArguments
 # Author: Samuel Cornwall, Siegfried Eggl, Grigori Fedorets, Steph Merritt, Meg Schwamb
 
 
-def runLSSTPostProcessing(cmd_args, configs, pplogger=None):
+def runLSSTPostProcessing(args, configs, pplogger=None):
     """
     Runs the post processing survey simulator functions that apply a series of
     filters to bias a model Solar System small body population to what the
@@ -51,7 +51,7 @@ def runLSSTPostProcessing(cmd_args, configs, pplogger=None):
 
     Parameters:
     -----------
-    cmd_args (dictionary or `sorchaArguments` object):
+    args (dictionary or `sorchaArguments` object):
         dictionary of command-line arguments.
 
     pplogger : logging.Logger, optional
@@ -438,7 +438,17 @@ def main():
         pplogger.info(f"Random seed overridden via environmental variable, SORCHA_SEED={cmd_args['seed']}")
 
     if cmd_args["surveyname"] in ["LSST", "lsst"]:
-        runLSSTPostProcessing(cmd_args, configs, pplogger)
+        try:
+            args = sorchaArguments(cmd_args, pplogger)
+        except Exception as err:
+            pplogger.error(err)
+            sys.exit(err)
+        try:
+            args.validate_arguments()
+        except Exception as err:
+            pplogger.error(err)
+            sys.exit(err)
+        runLSSTPostProcessing(args, configs, pplogger)
     else:
         pplogger.error(
             "ERROR: Survey name not recognised. Current allowed surveys are: {}".format(["LSST", "lsst"])
