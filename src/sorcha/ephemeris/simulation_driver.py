@@ -201,8 +201,11 @@ def create_ephemeris(orbits_df, args, configs):
             write_header = False
         ephemeris_df.to_csv(ephemeris_csv_filename, mode="a", index=False, header=write_header)
 
-    # Join the ephemeris and input orbits dataframe
-    observations = ephemeris_df.join(orbits_df.set_index("ObjID"), on="ObjID")
+    # join the ephemeris and input orbits dataframe, take special care to make
+    # sure the 'ObjID' column types match.
+    observations = ephemeris_df.astype({"ObjID": orbits_df.dtypes["ObjID"]}).join(
+        orbits_df.set_index("ObjID"), on="ObjID"
+    )
 
     spice.kclear()
 
