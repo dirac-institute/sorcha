@@ -7,6 +7,7 @@ import argparse
 import os
 
 from sorcha.ephemeris.simulation_driver import create_ephemeris
+from sorcha.ephemeris.simulation_setup import precompute_pointing_information
 
 from sorcha.modules.PPReadPointingDatabase import PPReadPointingDatabase
 from sorcha.modules.PPLinkingFilter import PPLinkingFilter
@@ -165,6 +166,10 @@ def runLSSTSimulation(args, configs, pplogger=None):
             observations = reader.read_block(block_size=configs["size_serial_chunk"])
         else:
             orbits_df = reader.read_aux_block(block_size=configs["size_serial_chunk"])
+            # determine if the pointing dataframe has been primed for creating ephemeris
+            if "visit_vector" not in filterpointing:
+                filterpointing = precompute_pointing_information(filterpointing, args, configs)
+
             observations = create_ephemeris(orbits_df, filterpointing, args, configs)
 
         observations = PPMatchPointingToObservations(observations, filterpointing)

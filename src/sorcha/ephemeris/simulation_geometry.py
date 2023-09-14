@@ -1,6 +1,10 @@
 import healpy as hp
 import numpy as np
-from sorcha.ephemeris.simulation_constants import SPEED_OF_LIGHT, ECL_TO_EQ_ROTATION_MATRIX
+from sorcha.ephemeris.simulation_constants import (
+    RADIUS_EARTH_KM,
+    SPEED_OF_LIGHT,
+    ECL_TO_EQ_ROTATION_MATRIX,
+)
 import spiceypy as spice
 
 
@@ -48,3 +52,26 @@ def vec2ra_dec(vec):
     ra = radeg * np.arctan2(y, x) % 360
     dec = radeg * np.arcsin(z)
     return ra, dec
+
+
+def barycentricObservatoryRates(
+    et, obsCode, observatories, Rearth=RADIUS_EARTH_KM, delta_et=10
+):  # This JPL's quoted Earth radius (km)
+    # et is JPL's internal time
+    # Get the barycentric position of Earth
+    posvel, _ = spice.spkezr("EARTH", et, "J2000", "NONE", "SSB")
+    pos = posvel[0:3]
+    vel = posvel[3:6]
+    # Get the matrix that rotates from the Earth's equatorial body fixed frame to the J2000 equatorial frame.
+    m = spice.pxform("ITRF93", "J2000", et)
+    mp = spice.pxform("ITRF93", "J2000", et + delta_et)
+    mm = spice.pxform("ITRF93", "J2000", et - delta_et)
+    # Get the MPC's unit vector from the geocenter to
+    # the observatory
+    obsVec = observatories.ObservatoryXYZ[obsCode]
+    obsVec = np.array(obsVec)
+    # Carry out the rotation and scale
+    mVec = np.dot(m, obsVec) * Rearth
+    mVecp = np.dot(mp, obsVec) * Rearth
+    mVecm = np.dot(mm, obsVec) * Rearth
+    return pos + mVec, vel + (mVecp - mVecm) / (2 * delta_et)
