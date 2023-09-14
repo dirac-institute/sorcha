@@ -95,7 +95,7 @@ def PPCommandLineParser(args):
 
     cmd_args_dict["ar_data_path"] = args.ar  # default value for args.ar is `None`.
     if cmd_args_dict["ar_data_path"]:
-        PPFindDirectoryOrExit(cmd_args_dict["ar_data_path"])
+        PPFindDirectoryOrExit(cmd_args_dict["ar_data_path"], "-ar, --ar_data_path")
 
     warn_or_remove_file(
         os.path.join(cmd_args_dict["outpath"], cmd_args_dict["outfilestem"] + ".*"), args.f, pplogger
