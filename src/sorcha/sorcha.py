@@ -371,7 +371,7 @@ def main():
         "--ephem_read",
         help="Previously generated ephemeris simulation file name, required if ephemerides_type in config file is 'external'.",
         type=str,
-        dest="e",
+        dest="er",
         required=False,
         default=None,
     )
