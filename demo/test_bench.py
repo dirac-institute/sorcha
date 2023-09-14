@@ -1,4 +1,4 @@
-from sorcha.sorcha import runLSSTPostProcessing  # noqa: F401
+from sorcha.sorcha import runLSSTSimulation  # noqa: F401
 from sorcha.modules.PPConfigParser import PPConfigFileParser
 import argparse
 
@@ -25,4 +25,4 @@ if __name__ == "__main__":  # pragma: no cover
 
     configs = PPConfigFileParser("./demo/test_bench_config.ini", "LSST")
 
-    runLSSTPostProcessing(cmd_args_dict, configs)
+    runLSSTSimulation(cmd_args_dict, configs)

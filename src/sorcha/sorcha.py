@@ -43,7 +43,7 @@ from sorcha.utilities.sorchaArguments import sorchaArguments
 # Author: Samuel Cornwall, Siegfried Eggl, Grigori Fedorets, Steph Merritt, Meg Schwamb
 
 
-def runLSSTPostProcessing(args, configs, pplogger=None):
+def runLSSTSimulation(args, configs, pplogger=None):
     """
     Runs the post processing survey simulator functions that apply a series of
     filters to bias a model Solar System small body population to what the
@@ -476,7 +476,7 @@ def main():
         except Exception as err:
             pplogger.error(err)
             sys.exit(err)
-        runLSSTPostProcessing(args, configs, pplogger)
+        runLSSTSimulation(args, configs, pplogger)
     else:
         pplogger.error(
             "ERROR: Survey name not recognised. Current allowed surveys are: {}".format(["LSST", "lsst"])
