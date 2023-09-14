@@ -17,7 +17,7 @@ from sorcha.modules.PPReadPointingDatabase import PPReadPointingDatabase
 out_csv_path = get_data_out_filepath("ephemeris_output.csv")
 
 
-def create_ephemeris(orbits_df, args, configs):
+def create_ephemeris(orbits_df, pointings_df, args, configs):
     ang_fov = configs["ar_ang_fov"]
     buffer = configs["ar_fov_buffer"]
     picket_interval = configs["ar_picket"]
@@ -67,9 +67,6 @@ def create_ephemeris(orbits_df, args, configs):
     column_types = defaultdict(ObjID=str, FieldID=str).setdefault(float)
     in_memory_csv.writerow(column_names)
 
-    pointings_df = PPReadPointingDatabase(
-        args.pointing_database, configs["observing_filters"], configs["pointing_sql_query"]
-    )
     for _, pointing in pointings_df.iterrows():
         mjd_tai = float(pointing["observationStartMJD"])
         ra, dec = float(pointing["fieldRA"]), float(pointing["fieldDec"])

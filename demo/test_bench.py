@@ -1,6 +1,13 @@
+import cProfile
+import pstats
+
+from pstats import SortKey
 from sorcha.sorcha import runLSSTSimulation  # noqa: F401
 from sorcha.modules.PPConfigParser import PPConfigFileParser
 import argparse
+
+# Run this from the command line using:
+# python .../demo/test_bench.py
 
 if __name__ == "__main__":  # pragma: no cover
     # Parse the command line arguments.
@@ -25,4 +32,11 @@ if __name__ == "__main__":  # pragma: no cover
 
     configs = PPConfigFileParser("./demo/test_bench_config.ini", "LSST")
 
-    runLSSTSimulation(cmd_args_dict, configs)
+    debug = False
+    if debug:
+        runLSSTSimulation(cmd_args_dict, configs)
+    else: # benchmark
+        cProfile.run("runLSSTSimulation(cmd_args_dict, configs)", "./data/out/restats")
+
+        p = pstats.Stats("./data/out/restats")
+        p.strip_dirs().sort_stats(SortKey.CUMULATIVE).print_stats(100)
