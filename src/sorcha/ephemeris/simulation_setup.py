@@ -1,13 +1,11 @@
 import spiceypy as spice
 from assist import Ephem
 from . import simulation_parsing as sp
-import random
 import rebound
 from collections import defaultdict
 import assist
 import logging
 import sys
-from sorcha.readers.OrbitAuxReader import OrbitAuxReader
 
 from sorcha.ephemeris.simulation_data_files import (
     make_retriever,
@@ -18,7 +16,7 @@ from sorcha.ephemeris.simulation_data_files import (
 )
 
 
-def create_assist_ephemeris() -> Ephem:
+def create_assist_ephemeris(args) -> Ephem:
     """Build the ASSIST ephemeris object
 
     Returns
@@ -28,7 +26,7 @@ def create_assist_ephemeris() -> Ephem:
     """
     pplogger = logging.getLogger(__name__)
 
-    retriever = make_retriever()
+    retriever = make_retriever(args.ar_data_file_path)
     planets_file_path = retriever.fetch(JPL_PLANETS)
     small_bodies_file_path = retriever.fetch(JPL_SMALL_BODIES)
     ephem = Ephem(planets_path=planets_file_path, asteroids_path=small_bodies_file_path)
@@ -39,13 +37,13 @@ def create_assist_ephemeris() -> Ephem:
     return ephem, gm_sun
 
 
-def furnish_spiceypy():
+def furnish_spiceypy(args):
     # The goal here would be to download the spice kernel files (if needed)
     # Then call spice.furnish(<filename>) on each of those files.
 
     pplogger = logging.getLogger(__name__)
 
-    retriever = make_retriever()
+    retriever = make_retriever(args.ar_data_file_path)
 
     for kernel_file in ORDERED_KERNEL_FILES:
         retriever.fetch(kernel_file)
@@ -68,11 +66,9 @@ def furnish_spiceypy():
     spice.furnsh(meta_kernel)
 
 
-def generate_simulations(ephem, gm_sun, args, configs):
+def generate_simulations(ephem, gm_sun, orbits_df):
     sim_dict = defaultdict(dict)  # return
 
-    orbits_df = OrbitAuxReader(args.orbinfile, configs["aux_format"]).read_rows()
-    orbit_format = orbits_df["FORMAT"].iloc[0]
     sun_dict = dict()  # This could be passed in and reused
     for _, row in orbits_df.iterrows():
         epoch = row["epoch"]

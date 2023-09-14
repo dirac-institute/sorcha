@@ -43,37 +43,7 @@ from sorcha.utilities.sorchaArguments import sorchaArguments
 # Author: Samuel Cornwall, Siegfried Eggl, Grigori Fedorets, Steph Merritt, Meg Schwamb
 
 
-def runAll(args, configs, pplogger=None):
-    if configs["ephemerides_type"] == "ar":
-        runLSSTSimulation(args, configs, pplogger)
-    runLSSTPostProcessing(args, pplogger)
-
-
 def runLSSTSimulation(args, configs, pplogger=None):
-    if pplogger is None:
-        if type(args) is dict:
-            pplogger = PPGetLogger(args["outpath"])
-        else:
-            pplogger = PPGetLogger(args.outpath)
-
-    if type(args) is dict:
-        try:
-            args = sorchaArguments(args, pplogger)
-        except Exception as err:
-            pplogger.error(err)
-            sys.exit(err)
-
-    try:
-        args.validate_arguments()
-    except Exception as err:
-        pplogger.error(err)
-        sys.exit(err)
-
-    configs = PPConfigFileParser(args.configfile, args.surveyname)
-    create_ephemeris(args, configs)
-
-
-def runLSSTPostProcessing(args, configs, pplogger=None):
     """
     Runs the post processing survey simulator functions that apply a series of
     filters to bias a model Solar System small body population to what the
@@ -81,7 +51,7 @@ def runLSSTPostProcessing(args, configs, pplogger=None):
 
     Parameters:
     -----------
-    cmd_args (dictionary or `sorchaArguments` object):
+    args (dictionary or `sorchaArguments` object):
         dictionary of command-line arguments.
 
     pplogger : logging.Logger, optional
@@ -147,7 +117,11 @@ def runLSSTPostProcessing(args, configs, pplogger=None):
     )
 
     # Set up the data readers.
-    reader = CombinedDataReader(verbose=True)
+    ephem_type = configs["ephemerides_type"]
+    ephem_primary = False
+    if ephem_type.casefold() == "external":
+        ephem_primary = True
+    reader = CombinedDataReader(ephem_primary=ephem_primary, verbose=True)
 
     if args.makeTemporaryEphemerisDatabase or args.readTemporaryEphemerisDatabase:
         reader.add_ephem_reader(DatabaseReader(args.readTemporaryEphemerisDatabase))
@@ -155,11 +129,11 @@ def runLSSTPostProcessing(args, configs, pplogger=None):
         # TODO: Once more ephemerides_types are added this should be wrapped in a EphemerisDataReader
         # That does the selection and checks. We are holding off adding this level of indirection until there
         # is a second ephemerides_type.
-        ephem_type = configs["ephemerides_type"]
         if ephem_type.casefold() not in ["ar", "external"]:  # pragma: no cover
             pplogger.error(f"PPReadAllInput: Unsupported value for ephemerides_type {ephem_type}")
             sys.exit(f"PPReadAllInput: Unsupported value for ephemerides_type {ephem_type}")
-        reader.add_ephem_reader(OIFDataReader(args.oifoutput, configs["eph_format"]))
+        if ephem_type.casefold() == "external":
+            reader.add_ephem_reader(OIFDataReader(args.oifoutput, configs["eph_format"]))
 
     reader.add_aux_data_reader(OrbitAuxReader(args.orbinfile, configs["aux_format"]))
     reader.add_aux_data_reader(CSVDataReader(args.paramsinput, configs["aux_format"]))
@@ -187,7 +161,12 @@ def runLSSTPostProcessing(args, configs, pplogger=None):
         verboselog("Working on objects {}-{}.".format(startChunk, endChunk))
 
         # Processing begins, all processing is done for chunks
-        observations = reader.read_block(block_size=configs["size_serial_chunk"])
+        if configs["ephemerides_type"].casefold() == "external":
+            observations = reader.read_block(block_size=configs["size_serial_chunk"])
+        else:
+            orbits_df = reader.read_aux_block(block_size=configs["size_serial_chunk"])
+            observations = create_ephemeris(orbits_df, args, configs)
+
         observations = PPMatchPointingToObservations(observations, filterpointing)
 
         # If the ephemeris file doesn't have any observations for the objects in the chunk
@@ -315,14 +294,13 @@ def main():
     model Solar System small body population to what the specified wide-field
     survey would observe.
 
-    usage: sorcha [-h] -c C -e E -o O -ob OB -p P -pd PD [-cp CP] [-dw [DW]] [-dr DR] [-dl] [-f] [-s S] [-t T] [-v]
+    usage: sorcha [-h] -c C -o O -ob OB -p P -pd PD [-er E] [-ew E] [-cp CP] [-dw [DW]] [-dr DR] [-dl] [-f] [-s S] [-t T] [-v]
 
     options:
       -h, --help            show this help message and exit
 
     Required arguments:
       -c C, --config C      Input configuration file name (default: None)
-      -e E, --ephem E       Ephemeris simulation output file name (default: None)
       -o O, --outfile O     Path to store output and logs. (default: None)
       -ob OB, --orbit OB    Orbit file name (default: ./data/orbit.des)
       -p P, --params P      Physical parameters file name (default: None)
@@ -330,12 +308,15 @@ def main():
                         Survey pointing information (default: None)
 
     Optional arguments:
+      -er E, --ephem_read E Existing ephemeris simulation output file name (default: None)
+      -ew E, --ephem_write E
+                            Output file name for newly generated ephemeris simulation (default: None)
       -cp CP, --complex_physical_parameters CP
                             Complex physical parameters file name (default: None)
       -dw [DW]              Make temporary ephemeris database. If no filepath/name supplied, default name and ephemeris input location used. (default: None)
       -dr DR                Location of existing/previous temporary ephemeris database to read from if wanted. (default: None)
       -dl                   Delete the temporary ephemeris database after code has completed. (default: False)
-      -f, --force           Force deletion/overwrite of existing output file(s). Default False. (default: False)
+      -f, --force           Force deletion/overwrite of existing output file(s). (default: False)
       -s S, --survey S      Survey to simulate (default: LSST)
       -t T, --stem T        Output file name stem. (default: SSPPOutput)
       -v, --verbose         Verbosity. Default currently true; include to turn off verbosity. (default: True)
@@ -349,14 +330,6 @@ def main():
         help="Input configuration file name",
         type=str,
         dest="c",
-        required=True,
-    )
-    required.add_argument(
-        "-e",
-        "--ephem",
-        help="Ephemeris simulation output file name",
-        type=str,
-        dest="e",
         required=True,
     )
     required.add_argument(
@@ -394,6 +367,32 @@ def main():
     )
 
     optional = parser.add_argument_group("Optional arguments")
+    optional.add_argument(
+        "-er",
+        "--ephem_read",
+        help="Previously generated ephemeris simulation file name, required if ephemerides_type in config file is 'external'.",
+        type=str,
+        dest="e",
+        required=False,
+        default=None,
+    )
+    optional.add_argument(
+        "-ew",
+        "--ephem_write",
+        help="Output file name for newly generated ephemeris simulation, required if ephemerides_type in config file is not 'external'.",
+        type=str,
+        dest="ew",
+        required=False,
+        default=None,
+    )
+    optional.add_argument(
+        "-ar",
+        "--ar_data_path",
+        help="Directory path where Assist+Rebound data files where stored when running bootstrap_sorcha_data_files from the command line.",
+        type=str,
+        dest="ar",
+        required=False,
+    )
     optional.add_argument(
         "-cp",
         "--complex_physical_parameters",
@@ -454,6 +453,14 @@ def main():
     cmd_args = PPCommandLineParser(args)
     configs = PPConfigFileParser(cmd_args["configfile"], cmd_args["surveyname"])
 
+    if configs["ephemerides_type"] == "external" and cmd_args["oifoutput"] is None:
+        pplogger.error("ERROR: A+R simulation not enabled and no ephemerides file provided")
+        sys.exit("ERROR: A+R simulation not enabled and no ephemerides file provided")
+
+    if configs["ephemerides_type"] == "ar" and cmd_args["output_ephemeris_file"] is None:
+        pplogger.error("ERROR: A+R simulation is enabled and no output file name for ephemerides provided")
+        sys.exit("ERROR: A+R simulation is enabled and no output file name for ephemerides provided")
+
     if "SORCHA_SEED" in os.environ:
         cmd_args["seed"] = int(os.environ["SORCHA_SEED"])
         pplogger.info(f"Random seed overridden via environmental variable, SORCHA_SEED={cmd_args['seed']}")
@@ -469,7 +476,7 @@ def main():
         except Exception as err:
             pplogger.error(err)
             sys.exit(err)
-        runAll(args, configs, pplogger)
+        runLSSTSimulation(args, configs, pplogger)
     else:
         pplogger.error(
             "ERROR: Survey name not recognised. Current allowed surveys are: {}".format(["LSST", "lsst"])

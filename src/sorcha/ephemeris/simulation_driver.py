@@ -1,19 +1,23 @@
+from collections import defaultdict
+from csv import writer
+from io import StringIO
+from os import path
+
+import numpy as np
+import pandas as pd
 import spiceypy as spice
+
 from sorcha.ephemeris.simulation_setup import *
 from sorcha.ephemeris.simulation_constants import *
-from collections import defaultdict
-from os import path
-import csv
 from sorcha.ephemeris.simulation_geometry import *
 from sorcha.ephemeris.simulation_parsing import *
-import numpy as np
 from sorcha.utilities.dataUtilitiesForTests import get_data_out_filepath
 from sorcha.modules.PPReadPointingDatabase import PPReadPointingDatabase
 
 out_csv_path = get_data_out_filepath("ephemeris_output.csv")
 
 
-def create_ephemeris(args, configs):
+def create_ephemeris(orbits_df, args, configs):
     ang_fov = configs["ar_ang_fov"]
     buffer = configs["ar_fov_buffer"]
     picket_interval = configs["ar_picket"]
@@ -21,28 +25,47 @@ def create_ephemeris(args, configs):
     nside = 2 ** configs["ar_healpix_order"]
     first = 1  # Try to get away from this
 
+    ephemeris_csv_filename = args.output_ephemeris_file
+
     t_picket = 2460000.5
 
-    ephem, gm_sun = create_assist_ephemeris()
-    furnish_spiceypy()
-    sim_dict = generate_simulations(ephem, gm_sun, args, configs)
+    ephem, gm_sun = create_assist_ephemeris(args)
+    furnish_spiceypy(args)
+    sim_dict = generate_simulations(ephem, gm_sun, orbits_df)
     pixel_dict = defaultdict(list)
-    observatories = Observatory()
+    observatories = Observatory(args)
 
-    out_csv_file = open(args.oifoutput, "w", encoding="utf-8")
+    output = StringIO()
+    in_memory_csv = writer(output)
 
     # this header is broken up to match the string built at the end of this method
-    out_csv_file.write(
-        "ObjID,FieldID,\
-        FieldMJD,jd_tdb,\
-        AstRange(km),AstRangeRate(km/s),\
-        AstRA(deg),AstRARate(deg/day),AstDec(deg),AstDecRate(deg/day),\
-        Ast-Sun(J2000x)(km),Ast-Sun(J2000y)(km),Ast-Sun(J2000z)(km),\
-        Ast-Sun(J2000vx)(km/s),Ast-Sun(J2000vy)(km/s),Ast-Sun(J2000vz)(km/s),\
-        Obs-Sun(J2000x)(km),Obs-Sun(J2000y)(km),Obs-Sun(J2000z)(km),\
-        Obs-Sun(J2000vx)(km/s),Obs-Sun(J2000vy)(km/s),Obs-Sun(J2000vz)(km/s),\
-        Sun-Ast-Obs(deg)\n"
+    column_names = (
+        "ObjID",
+        "FieldID",
+        "FieldMJD",
+        "jd_tdb",
+        "AstRange(km)",
+        "AstRangeRate(km/s)",
+        "AstRA(deg)",
+        "AstRARate(deg/day)",
+        "AstDec(deg)",
+        "AstDecRate(deg/day)",
+        "Ast-Sun(J2000x)(km)",
+        "Ast-Sun(J2000y)(km)",
+        "Ast-Sun(J2000z)(km)",
+        "Ast-Sun(J2000vx)(km/s)",
+        "Ast-Sun(J2000vy)(km/s)",
+        "Ast-Sun(J2000vz)(km/s)",
+        "Obs-Sun(J2000x)(km)",
+        "Obs-Sun(J2000y)(km)",
+        "Obs-Sun(J2000z)(km)",
+        "Obs-Sun(J2000vx)(km/s)",
+        "Obs-Sun(J2000vy)(km/s)",
+        "Obs-Sun(J2000vz)(km/s)",
+        "Sun-Ast-Obs(deg)",
     )
+    column_types = defaultdict(ObjID=str, FieldID=str).setdefault(float)
+    in_memory_csv.writerow(column_names)
 
     pointings_df = PPReadPointingDatabase(
         args.pointing_database, configs["observing_filters"], configs["pointing_sql_query"]
@@ -137,10 +160,56 @@ def create_ephemeris(args, configs):
                     )
                     outstring += "%lf\n" % (phase_angle * 180 / np.pi)
 
-                    out_csv_file.write(outstring)
+                    out_tuple = (
+                        obj_id,
+                        pointing["FieldID"],
+                        mjd_tai,
+                        jd_tdb,
+                        rho_mag * AU_KM,
+                        drho_magdt * AU_KM / (24 * 60 * 60),
+                        ra0,
+                        dradt * 180 / np.pi,
+                        dec0,
+                        ddecdt * 180 / np.pi,
+                        r_ast_sun[0] * AU_KM,
+                        r_ast_sun[1] * AU_KM,
+                        r_ast_sun[2] * AU_KM,
+                        v_ast_sun[0] * AU_KM / (24 * 60 * 60),
+                        v_ast_sun[1] * AU_KM / (24 * 60 * 60),
+                        v_ast_sun[2] * AU_KM / (24 * 60 * 60),
+                        obs_sun[0] * AU_KM,
+                        obs_sun[1] * AU_KM,
+                        obs_sun[2] * AU_KM,
+                        dobs_sundt[0] * AU_KM / (24 * 60 * 60),
+                        dobs_sundt[1] * AU_KM / (24 * 60 * 60),
+                        dobs_sundt[2] * AU_KM / (24 * 60 * 60),
+                        phase_angle * 180 / np.pi,
+                    )
 
-    out_csv_file.close()
+                    in_memory_csv.writerow(out_tuple)
+
+    # reset to the beginning of the in-memory CSV
+    output.seek(0)
+    ephemeris_df = pd.read_csv(output, dtype=column_types)
+
+    # if the user has defined an output file name for the ephemeris results, write out to that file
+    if ephemeris_csv_filename:
+        write_header = True
+        # due to chunking, if the file already exists and it has contents, then we won't include the header information
+        if os.path.exists(ephemeris_csv_filename) and os.stat(ephemeris_csv_filename).st_size != 0:
+            write_header = False
+        ephemeris_df.to_csv(ephemeris_csv_filename, mode="a", index=False, header=write_header)
+
+    # join the ephemeris and input orbits dataframe, take special care to make
+    # sure the 'ObjID' column types match.
+    observations = ephemeris_df.astype({"ObjID": orbits_df.dtypes["ObjID"]}).join(
+        orbits_df.set_index("ObjID"), on="ObjID"
+    )
+
     spice.kclear()
+
+    # Return the dataframe needed for Sorcha to continue
+    return observations
 
 
 def get_residual_vectors(v1):

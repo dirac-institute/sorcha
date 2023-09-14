@@ -5,7 +5,7 @@ import cProfile
 import pstats
 
 from pstats import SortKey
-from sorcha.sorcha import runLSSTPostProcessing  # noqa: F401
+from sorcha.sorcha import runLSSTSimulation  # noqa: F401
 from sorcha.modules.PPConfigParser import PPConfigFileParser
 import argparse
 
@@ -32,7 +32,7 @@ if __name__ == "__main__":  # pragma: no cover
 
     configs = PPConfigFileParser("./OIFconfig_benchmark.ini", "LSST")
 
-    cProfile.run("runLSSTPostProcessing(cmd_args_dict, configs)", "../data/out/restats")
+    cProfile.run("runLSSTSimulation(cmd_args_dict, configs)", "../data/out/restats")
 
     p = pstats.Stats("../data/out/restats")
     p.strip_dirs().sort_stats(SortKey.CUMULATIVE).print_stats()

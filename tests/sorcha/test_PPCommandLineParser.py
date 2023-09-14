@@ -8,7 +8,8 @@ class args:
     def __init__(self, cp, dw, dr, dl, t="testout", o="./", f=False):
         self.p = get_test_filepath("testcolour.txt")
         self.ob = get_test_filepath("testorb.des")
-        self.e = get_test_filepath("oiftestoutput.txt")
+        self.er = get_test_filepath("oiftestoutput.txt")
+        self.ew = None
         self.c = get_test_filepath("test_PPConfig.ini")
         self.pd = get_test_filepath("baseline_10klines_2.0.db")
         self.o = o
@@ -20,6 +21,7 @@ class args:
         self.dr = dr
         self.dl = dl
         self.f = f
+        self.ar = None
 
 
 def test_PPCommandLineParser():
@@ -41,6 +43,8 @@ def test_PPCommandLineParser():
         "surveyname": "lsst",
         "outfilestem": "testout",
         "verbose": True,
+        "ar_data_path": None,
+        "output_ephemeris_file": None,
     }
 
     cmd_dict_2 = PPCommandLineParser(
@@ -60,6 +64,8 @@ def test_PPCommandLineParser():
         "surveyname": "lsst",
         "outfilestem": "testout",
         "verbose": True,
+        "ar_data_path": None,
+        "output_ephemeris_file": None,
     }
 
     cmd_dict_3 = PPCommandLineParser(args(False, os.path.join(tmp_path, "test.db"), None, True))
@@ -76,6 +82,8 @@ def test_PPCommandLineParser():
         "surveyname": "lsst",
         "outfilestem": "testout",
         "verbose": True,
+        "ar_data_path": None,
+        "output_ephemeris_file": None,
     }
 
     cmd_dict_4 = PPCommandLineParser(args(False, "default", None, True))
@@ -92,6 +100,8 @@ def test_PPCommandLineParser():
         "surveyname": "lsst",
         "outfilestem": "testout",
         "verbose": True,
+        "ar_data_path": None,
+        "output_ephemeris_file": None,
     }
 
     with open(os.path.join(tmp_path, "dummy_file.txt"), "w") as _:

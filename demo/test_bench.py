@@ -1,4 +1,4 @@
-from sorcha.sorcha import runAll  # noqa: F401
+from sorcha.sorcha import runLSSTSimulation  # noqa: F401
 from sorcha.modules.PPConfigParser import PPConfigFileParser
 import argparse
 
@@ -9,10 +9,9 @@ if __name__ == "__main__":  # pragma: no cover
     args = parser.parse_args()
 
     cmd_args_dict = {
-        "paramsinput": "./data_files/mpcorb_physical.csv",
-        "orbinfile": "./data_files/mpcorb_orbits.csv",
-        "orbinfile": "./data_files/mpcorb_orbits_small.csv",
-        "oifoutput": "./data/out/ephemeris_output.csv",
+        "paramsinput": "./demo/mba_sample_1000_physical.csv",
+        "orbinfile": "./demo/mba_sample_1000_orbit.csv",
+        "output_ephemeris_file": "./data/out/ephemeris_output.csv",
         "configfile": "./demo/test_bench_config.ini",
         "pointing_database": "./demo/baseline_v2.0_1yr.db",
         "outpath": "./data/out",
@@ -26,4 +25,4 @@ if __name__ == "__main__":  # pragma: no cover
 
     configs = PPConfigFileParser("./demo/test_bench_config.ini", "LSST")
 
-    runAll(cmd_args_dict, configs)
+    runLSSTSimulation(cmd_args_dict, configs)

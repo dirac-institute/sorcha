@@ -5,7 +5,7 @@ import tempfile
 from shutil import copyfile
 
 from sorcha.modules.PPModuleRNG import PerModuleRNG
-from sorcha.sorcha import runLSSTPostProcessing
+from sorcha.sorcha import runLSSTSimulation
 from sorcha.utilities.dataUtilitiesForTests import get_demo_filepath, get_data_out_filepath
 from sorcha.utilities.sorchaArguments import sorchaArguments
 from sorcha.modules.PPConfigParser import PPConfigFileParser
@@ -75,4 +75,4 @@ def override_seed_and_run(outpath):
     # science results.
     configs = PPConfigFileParser(args.configfile, args.surveyname)
     args._rngs = PerModuleRNG(2023)
-    runLSSTPostProcessing(args, configs)
+    runLSSTSimulation(args, configs)
