@@ -165,7 +165,7 @@ def runLSSTSimulation(args, configs, pplogger=None):
             observations = reader.read_block(block_size=configs["size_serial_chunk"])
         else:
             orbits_df = reader.read_aux_block(block_size=configs["size_serial_chunk"])
-            observations = create_ephemeris(orbits_df, args, configs)
+            observations = create_ephemeris(orbits_df, filterpointing, args, configs)
 
         observations = PPMatchPointingToObservations(observations, filterpointing)
 
