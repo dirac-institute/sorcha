@@ -302,10 +302,10 @@ def main():
     Required arguments:
       -c C, --config C      Input configuration file name (default: None)
       -o O, --outfile O     Path to store output and logs. (default: None)
-      -ob OB, --orbit OB    Orbit file name (default: ./data/orbit.des)
+      -ob OB, --orbit OB    Orbit file name (default: None)
       -p P, --params P      Physical parameters file name (default: None)
       -pd PD, --pointing_database PD
-                        Survey pointing information (default: None)
+                            Survey pointing information (default: None)
 
     Optional arguments:
       -er E, --ephem_read E Existing ephemeris simulation output file name (default: None)
@@ -346,7 +346,6 @@ def main():
         help="Orbit file name",
         type=str,
         dest="ob",
-        default="./data/orbit.des",
         required=True,
     )
     required.add_argument(
