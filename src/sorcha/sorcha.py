@@ -40,8 +40,13 @@ from sorcha.activity.activity_registration import update_activity_subclasses
 from sorcha.lightcurves.lightcurve_registration import update_lc_subclasses
 
 from sorcha.utilities.sorchaArguments import sorchaArguments
+from sorcha.utilities.citation_text import cite_sorcha
 
 # Author: Samuel Cornwall, Siegfried Eggl, Grigori Fedorets, Steph Merritt, Meg Schwamb
+
+
+def cite():
+    cite_sorcha()
 
 
 def runLSSTSimulation(args, configs, pplogger=None):
