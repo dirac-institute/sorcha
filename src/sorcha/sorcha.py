@@ -7,6 +7,7 @@ import argparse
 import os
 
 from sorcha.ephemeris.simulation_driver import create_ephemeris
+from sorcha.ephemeris.simulation_setup import precompute_pointing_information
 
 from sorcha.modules.PPReadPointingDatabase import PPReadPointingDatabase
 from sorcha.modules.PPLinkingFilter import PPLinkingFilter
@@ -115,6 +116,11 @@ def runLSSTSimulation(args, configs, pplogger=None):
     filterpointing = PPReadPointingDatabase(
         args.pointing_database, configs["observing_filters"], configs["pointing_sql_query"]
     )
+
+    # if we are going to compute the ephemerides, then we should pre-compute all
+    # of the needed values derived from the pointing information.
+    if configs["ephemerides_type"].casefold() != "external":
+        filterpointing = precompute_pointing_information(filterpointing, args, configs)
 
     # Set up the data readers.
     ephem_type = configs["ephemerides_type"]
