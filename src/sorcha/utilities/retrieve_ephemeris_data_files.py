@@ -7,9 +7,8 @@ from functools import partial
 from sorcha.ephemeris.simulation_data_files import (
     make_retriever,
     DATA_FILES_TO_DOWNLOAD,
-    META_KERNEL,
-    ORDERED_KERNEL_FILES,
 )
+from sorcha.utilities.generate_meta_kernel import build_meta_kernel_file
 
 
 def _decompress(fname, action, pup):
@@ -43,28 +42,6 @@ def _remove_files(retriever: pooch.Pooch) -> None:
         file_path = retriever.fetch(file_name)
         print(f"Deleting file: {file_path}")
         os.remove(file_path)
-
-
-def _build_meta_kernel_file(retriever: pooch.Pooch) -> None:
-    """Builds a specific text file that will be fed into `spiceypy` that defines
-    the list of spice kernel to load, as well as the order to load them.
-
-    Parameters
-    ----------
-    retriever : pooch.Pooch
-        Pooch object that maintains the registry of files to download
-    """
-    # build meta_kernel file path
-    meta_kernel_file_path = os.path.join(retriever.abspath, META_KERNEL)
-
-    # build a meta_kernel.txt file
-    with open(meta_kernel_file_path, "w") as meta_file:
-        meta_file.write("\\begindata\n\n")
-        meta_file.write("KERNELS_TO_LOAD=(\n")
-        for file_name in ORDERED_KERNEL_FILES:
-            meta_file.write(f"    '{retriever.fetch(file_name)}',\n")
-        meta_file.write(")\n\n")
-        meta_file.write("\\begintext\n")
 
 
 def main():
@@ -101,7 +78,7 @@ def main():
         executor.map(fetch_partial, DATA_FILES_TO_DOWNLOAD)
 
     # build the meta_kernel.txt file
-    _build_meta_kernel_file(retriever)
+    build_meta_kernel_file(retriever)
 
 
 if __name__ == "__main__":
