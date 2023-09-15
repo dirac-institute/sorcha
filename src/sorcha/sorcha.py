@@ -117,6 +117,11 @@ def runLSSTSimulation(args, configs, pplogger=None):
         args.pointing_database, configs["observing_filters"], configs["pointing_sql_query"]
     )
 
+    # if we are going to compute the ephemerides, then we should pre-compute all
+    # of the needed values derived from the pointing information.
+    if configs["ephemerides_type"].casefold() != "external":
+        filterpointing = precompute_pointing_information(filterpointing, args, configs)
+
     # Set up the data readers.
     ephem_type = configs["ephemerides_type"]
     ephem_primary = False
@@ -166,10 +171,6 @@ def runLSSTSimulation(args, configs, pplogger=None):
             observations = reader.read_block(block_size=configs["size_serial_chunk"])
         else:
             orbits_df = reader.read_aux_block(block_size=configs["size_serial_chunk"])
-            # determine if the pointing dataframe has been primed for creating ephemeris
-            if "visit_vector" not in filterpointing:
-                filterpointing = precompute_pointing_information(filterpointing, args, configs)
-
             observations = create_ephemeris(orbits_df, filterpointing, args, configs)
 
         observations = PPMatchPointingToObservations(observations, filterpointing)
