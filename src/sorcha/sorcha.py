@@ -456,10 +456,6 @@ def main():
         pplogger.error("ERROR: A+R simulation not enabled and no ephemerides file provided")
         sys.exit("ERROR: A+R simulation not enabled and no ephemerides file provided")
 
-    if configs["ephemerides_type"] == "ar" and cmd_args["output_ephemeris_file"] is None:
-        pplogger.error("ERROR: A+R simulation is enabled and no output file name for ephemerides provided")
-        sys.exit("ERROR: A+R simulation is enabled and no output file name for ephemerides provided")
-
     if "SORCHA_SEED" in os.environ:
         cmd_args["seed"] = int(os.environ["SORCHA_SEED"])
         pplogger.info(f"Random seed overridden via environmental variable, SORCHA_SEED={cmd_args['seed']}")
