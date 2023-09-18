@@ -46,6 +46,9 @@ from sorcha.utilities.citation_text import cite_sorcha
 
 
 def cite():
+    """Providing the bibtex, AAS Journals software latex command, and acknowledgement
+    statements for Sorcha and the associated packages that power it.
+    """
     cite_sorcha()
 
 
