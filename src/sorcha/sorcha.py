@@ -40,8 +40,16 @@ from sorcha.activity.activity_registration import update_activity_subclasses
 from sorcha.lightcurves.lightcurve_registration import update_lc_subclasses
 
 from sorcha.utilities.sorchaArguments import sorchaArguments
+from sorcha.utilities.citation_text import cite_sorcha
 
 # Author: Samuel Cornwall, Siegfried Eggl, Grigori Fedorets, Steph Merritt, Meg Schwamb
+
+
+def cite():
+    """Providing the bibtex, AAS Journals software latex command, and acknowledgement
+    statements for Sorcha and the associated packages that power it.
+    """
+    cite_sorcha()
 
 
 def runLSSTSimulation(args, configs, pplogger=None):
