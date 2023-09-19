@@ -85,10 +85,13 @@ Installing Sorcha in Development Mode
 
 **Step 6** Install the necessary SPICE auxiliary files for ephemeris generation (774 MB total in size)::
 
-    bootstrap_sorcha_data_files
+    bootstrap_sorcha_data_files --cache <directory>
+
+.. tip::
+   For the getting started tutorial we recommend installing these auxiliary files in ./ar_files
 
 .. note::
-   These files are stored in your system's cache by default. You can specify where the files are downloaded with the --cache <dirctory>. If the files already downloaded and want a fresh download, you need to use the -f flag. 
+   These files are stored in your system's cache by default if the --cache flag is not provided. If the files already downloaded and want a fresh download, you need to use the -f flag. 
 
 .. warning:: These files can change/be updated with the revised positions of the planets every once in a while. So if you're running simulations for population statistics, we recommend downloading these files to a directory and having all Sorcha runs these files for consistency. 
  
@@ -97,8 +100,7 @@ Testing Your Sorcha Installation
 
 You can check that the Sorcha installation was done correctly, by downloading the Sorcha source code repository (Steps 1-4 **only**  of :ref:`dev_mode`) and then running::
 
-   touch ephemeris_output.csv
-   sorcha -c ./demo/PPConfig_test.ini -p ./demo/sspp_testset_colours.txt -ob ./demo/sspp_testset_orbits.des -e ./ephemeris_output.csv -pd ./demo/baseline_v2.0_1yr.db -o ./ -t testrun_e2e
+   sorcha -c ./demo/sorcha_config_demo.ini -p ./demo/sspp_testset_colours.txt -ob ./demo/sspp_testset_orbits.des -pd ./demo/baseline_v2.0_1yr.db -o ./ -t testrun_e2e -ar ./ar_files 
    
 The output will appear in a csv file (testrun_e2e.csv) in your current directory. The first 51 lines of the csv file should look like this:
 
