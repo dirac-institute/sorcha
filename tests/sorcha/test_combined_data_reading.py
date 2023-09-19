@@ -26,7 +26,7 @@ def test_PPReadAllInput():
     configs = {
         "comet_activity": "none",
         "aux_format": "whitespace",
-        "ephemerides_type": "oif",
+        "ephemerides_type": "external",
         "eph_format": "csv",
         "observing_filters": ["u", "g", "r", "i", "z", "y"],
         "pointing_sql_query": "SELECT observationId, observationStartMJD, filter, seeingFwhmGeom, seeingFwhmEff, fiveSigmaDepth, fieldRA, fieldDec, rotSkyPos FROM observations order by observationId",

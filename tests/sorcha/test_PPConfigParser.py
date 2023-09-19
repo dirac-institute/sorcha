@@ -233,7 +233,7 @@ def test_PPPrintConfigsToLog(tmp_path):
 
     test_path = os.path.dirname(get_test_filepath("test_input_fullobs.csv"))
 
-    PPGetLogger(tmp_path, log_format="%(name)-12s %(levelname)-8s %(message)s ")
+    pplogger = PPGetLogger(tmp_path, log_format="%(name)-12s %(levelname)-8s %(message)s ")
 
     cmd_args = {
         "paramsinput": "testcolour.txt",
@@ -251,7 +251,7 @@ def test_PPPrintConfigsToLog(tmp_path):
         "seed": 24601,
     }
 
-    args = sorchaArguments(cmd_args)
+    args = sorchaArguments(cmd_args, pplogger=pplogger)
 
     configs = {
         "eph_format": "csv",

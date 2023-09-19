@@ -63,11 +63,11 @@ def parse_orbit_row(row, epoch, ephem, sun_dict, gm_sun):
 
 
 class Observatory:
-    def __init__(self, oc_file=OBSERVATORY_CODES):
+    def __init__(self, args, oc_file=OBSERVATORY_CODES):
         self.observatoryPositionCache = {}  # previously calculated positions to speed up the process
 
         if not os.path.isfile(oc_file):
-            retriever = make_retriever()
+            retriever = make_retriever(args.ar_data_file_path)
             obs_file_path = retriever.fetch(oc_file)
         else:
             obs_file_path = oc_file
