@@ -51,7 +51,7 @@ The key information about the simulation paramteres are held in the configuratio
     :language: text
 
 .. note::
-  For this tutorial, we have set up Sorcha to only find detections on g,r,i, or z filter observations, by what we have set the **observing_filters** parameter to. Since we specified the absolute magnitude and colors for our synthetic objects to r-band, the r filter starts the list of filters for  **observing_filters**.
+  For this tutorial, we have set up Sorcha to only find detections on g,r,i,z,u, or y filter observations, by what we have set the **observing_filters** parameter to. Since we specified the absolute magnitude and colors for our synthetic objects to r-band, the r filter starts the list of filters for  **observing_filters**.
 
 .. note::
    This config file sdets the  output to be in CSV format.   
