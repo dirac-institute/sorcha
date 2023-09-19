@@ -45,13 +45,13 @@ For this tutorial, we're using the first year of the baseline v2.0 LSST cadence 
 Setting Up Sorcha's Configuration File 
 ------------------------------------------
 
-The key information about the simulation paramteres are held in the configuration file. For further details check out our :ref:`configs` page. We'll be using the configuration file we have set up to get you started. You can download the file from `here <https://github.com/dirac-institute/sorcha/blob/main/demo/PPConfig_test.ini>`__. The contents of the file is below: 
+The key information about the simulation paramteres are held in the configuration file. For further details check out our :ref:`configs` page. We'll be using the configuration file we have set up to get you started. You can download the file from `here <https://github.com/dirac-institute/sorcha/blob/main/demo/sorcha_config_demo.ini>`__. The contents of the file is below: 
 
-.. literalinclude:: ../demo/PPConfig_test.ini
+.. literalinclude:: ../demo/sorcha_config_demo.ini
     :language: text
 
 .. note::
-  For this tutorial, we have set up Sorcha to only find detections on g,r,i, or z filter observations, by what we have set the **observing_filters** parameter to. Since we specified the absolute magnitude and colors for our synthetic objects to r-band, the rfilter starts the list of filters for  **observing_filters**.
+  For this tutorial, we have set up Sorcha to only find detections on g,r,i,z,u, or y filter observations, by what we have set the **observing_filters** parameter to. Since we specified the absolute magnitude and colors for our synthetic objects to r-band, the r filter starts the list of filters for  **observing_filters**.
 
 .. note::
    This config file sdets the  output to be in CSV format.   
@@ -60,7 +60,7 @@ The key information about the simulation paramteres are held in the configuratio
 Running Sorcha
 ----------------------
 
-We now have all the required input files. If you downloaded the Sorcha repository, start by moving into the sorcha directory or make a demo directory called **demo** and move/copy all the input files into there. 
+We now have all the required input files. If you downloaded the Sorcha repository, start by moving into the sorcha directory or make a demo directory called **demo** and move/copy all the input files into there. For this example run, we assume that you have downloaded the required ephemeris generator's auxiliary files to ./ar_files. Check the :ref:`installation` instuctions for further details. 
 
 Next, let's take a look at the command line arguments for sorcha. On the command line, typing::
 
@@ -73,8 +73,7 @@ will produce
 
 Now that you know how to provide the input files, let's go run a simulation::
 
-   touch ephemeris_output.csv
-   sorcha -c ./demo/PPConfig_test.ini -p ./demo/sspp_testset_colours.txt -ob ./demo/sspp_testset_orbits.des -e ./ephemeris_output.csv -pd ./demo/baseline_v2.0_1yr.db -o ./ -t testrun_e2e
+   sorcha -c ./demo/sorcha_config_demo.ini  -p ./demo/sspp_testset_colours.txt -ob ./demo/sspp_testset_orbits.des -pd ./demo/baseline_v2.0_1yr.db -o ./ -t testrun_e2e -ar ./ar_files 
 
 .. tip::
    Sorcha outputs a log file (*.sorcha.log) and error file (*.sorcha.err) in the output directory. If all has gone well, the error file will be empty. The log file has the configuration parameters outputted to it as a record of the run setup.

@@ -45,7 +45,10 @@ then make sure that for each file (orbit, ephemerides and phs) contains informat
 for each object you wish to simulate.
 
 
-
+ERROR: Unable to find ObjID column headings (OrbitAuxReader:....)
+--------------------------------------------------------------------
+You can get this error if the configuration file is listing a different format for the input files than what Sorcha is ingesting. 
+Check that the **aux_format** variable in the configuration file is set to the appropriate format for your input files.
 
 
 
