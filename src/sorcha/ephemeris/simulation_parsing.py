@@ -4,7 +4,7 @@ import numpy as np
 import spiceypy as spice
 from pooch import Decompress
 
-from sorcha.ephemeris.simulation_constants import GMSUN, GMTOTAL, RADIUS_EARTH_KM
+from sorcha.ephemeris.simulation_constants import GMSUN, RADIUS_EARTH_KM
 from sorcha.ephemeris.simulation_geometry import ecliptic_to_equatorial
 from sorcha.ephemeris.simulation_data_files import (
     OBSERVATORY_CODES,
@@ -27,7 +27,7 @@ def parse_orbit_row(row, epochMJD_TDB, ephem, sun_dict, gm_sun, gm_total):
     if orbit_format != "CART":
         if orbit_format == "COM":
             ecx, ecy, ecz, dx, dy, dz = universal_cartesian(
-                GMSUN,
+                gm_sun,
                 row["q"],
                 row["e"],
                 row["inc"] * np.pi / 180.0,
@@ -38,7 +38,7 @@ def parse_orbit_row(row, epochMJD_TDB, ephem, sun_dict, gm_sun, gm_total):
             )
         elif orbit_format == "BCOM":
             ecx, ecy, ecz, dx, dy, dz = universal_cartesian(
-                GMTOTAL,
+                gm_total,
                 row["q"],
                 row["e"],
                 row["inc"] * np.pi / 180.0,
@@ -60,7 +60,7 @@ def parse_orbit_row(row, epochMJD_TDB, ephem, sun_dict, gm_sun, gm_total):
             )
         elif orbit_format == "KEP":
             ecx, ecy, ecz, dx, dy, dz = universal_cartesian(
-                GMSUN,
+                gm_sun,
                 row["a"] * (1 - row["e"]),
                 row["e"],
                 row["inc"] * np.pi / 180.0,
@@ -71,7 +71,7 @@ def parse_orbit_row(row, epochMJD_TDB, ephem, sun_dict, gm_sun, gm_total):
             )
         elif orbit_format == "BKEP":
             ecx, ecy, ecz, dx, dy, dz = universal_cartesian(
-                GMTOTAL,
+                gm_total,
                 row["a"] * (1 - row["e"]),
                 row["e"],
                 row["inc"] * np.pi / 180.0,
