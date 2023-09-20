@@ -117,7 +117,7 @@ class OIFDataReader(ObjectDataReader):
         oif_cols = [
             "ObjID",
             "FieldID",
-            "FieldMJD",
+            "FieldMJD_TAI",
             "AstRange(km)",
             "AstRangeRate(km/s)",
             "AstRA(deg)",

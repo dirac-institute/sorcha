@@ -19,7 +19,7 @@ def test_PPMatchPointingToObservations():
         {
             "ObjID": ["356450", "356450"],
             "FieldID": [9212, 9262],
-            "FieldMJD": [60229.28437, 60229.308262],
+            "FieldMJD_TAI": [60229.28437, 60229.308262],
             "AstRange(km)": [5710968952.677331, 5710979387.71679],
             "AstRangeRate(km/s)": [5.027, 5.082],
             "AstRA(deg)": [11.240711, 11.240231],
@@ -81,7 +81,7 @@ def test_PPMatchPointingToObservations():
         {
             "ObjID": ["356450", "356450"],
             "FieldID": [9212, 9262],
-            "FieldMJD": [60229.28437, 60229.308262],
+            "FieldMJD_TAI": [60229.28437, 60229.308262],
             "AstRange(km)": [5710968952.677331, 5710979387.71679],
             "AstRangeRate(km/s)": [5.027, 5.082],
             "AstRA(deg)": [11.240711, 11.240231],

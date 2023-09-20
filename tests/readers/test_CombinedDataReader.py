@@ -24,7 +24,7 @@ def test_CombinedDataReader():
     expected_data = {
         "ObjID": "632",
         "FieldID": 38059,
-        "FieldMJD": 60277.351867,
+        "FieldMJD_TAI": 60277.351867,
         "AstRange(km)": 983057302.988296,
         "AstRangeRate(km/s)": -27.914,
         "AstRA(deg)": 143.141481,
@@ -95,7 +95,7 @@ def test_CombinedDataReader_ephem():
     expected_data = {
         "ObjID": "632",
         "FieldID": 38059,
-        "FieldMJD": 60277.351867,
+        "FieldMJD_TAI": 60277.351867,
         "AstRange(km)": 983057302.988296,
         "AstRangeRate(km/s)": -27.914,
         "AstRA(deg)": 143.141481,
@@ -141,9 +141,9 @@ def test_CombinedDataReader_ephem():
     assert len(res_df) == 50
 
     # Check that the id in the first row is still '12733' and
-    # FieldMJD == 60325.354511.
+    # FieldMJD_TAI == 60325.354511.
     assert res_df.iloc[0]["ObjID"] == "12733"
-    assert res_df.iloc[0]["FieldMJD"] == pytest.approx(60325.354511)
+    assert res_df.iloc[0]["FieldMJD_TAI"] == pytest.approx(60325.354511)
 
     # We fail if we try to set the ephem reader a second time.
     with pytest.raises(SystemExit) as err:

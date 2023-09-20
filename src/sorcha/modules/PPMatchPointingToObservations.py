@@ -30,7 +30,7 @@ def PPMatchPointingToObservations(padain, pointfildb):
 
     resdf = resdf.dropna(subset=["optFilter"]).reset_index(drop=True)
 
-    chktruemjd = np.isclose(resdf["observationStartMJD_TAI"], resdf["FieldMJD"])
+    chktruemjd = np.isclose(resdf["observationStartMJD_TAI"], resdf["FieldMJD_TAI"])
 
     if not chktruemjd.all():
         logging.error(

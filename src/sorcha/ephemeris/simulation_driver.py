@@ -44,7 +44,7 @@ def create_ephemeris(orbits_df, pointings_df, args, configs):
     column_names = (
         "ObjID",
         "FieldID",
-        "FieldMJD",
+        "FieldMJD_TAI",
         "JD_TDB",
         "AstRange(km)",
         "AstRangeRate(km/s)",
