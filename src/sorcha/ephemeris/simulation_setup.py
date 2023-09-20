@@ -43,6 +43,7 @@ def create_assist_ephemeris(args) -> tuple:
     small_bodies_file_path = retriever.fetch(JPL_SMALL_BODIES)
     ephem = Ephem(planets_path=planets_file_path, asteroids_path=small_bodies_file_path)
     gm_sun = ephem.get_particle("Sun", 0).m
+    gm_total = sum(sorted([ephem.get_particle(i, 0).m for i in range(27)]))
 
     pplogger.info(f"Calculated GM_SUN value from ASSIST ephemeris: {gm_sun}")
 
