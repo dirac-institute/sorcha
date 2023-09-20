@@ -16,7 +16,6 @@ from sorcha.ephemeris.simulation_constants import *
 from sorcha.ephemeris.simulation_geometry import *
 from sorcha.ephemeris.simulation_parsing import *
 from sorcha.utilities.dataUtilitiesForTests import get_data_out_filepath
-from sorcha.modules.PPReadPointingDatabase import PPReadPointingDatabase
 
 out_csv_path = get_data_out_filepath("ephemeris_output.csv")
 
@@ -42,12 +41,11 @@ def create_ephemeris(orbits_df, pointings_df, args, configs):
     output = StringIO()
     in_memory_csv = writer(output)
 
-    # this header is broken up to match the string built at the end of this method
     column_names = (
         "ObjID",
         "FieldID",
         "FieldMJD",
-        "jd_tdb",
+        "JD_TDB",
         "AstRange(km)",
         "AstRangeRate(km/s)",
         "AstRA(deg)",
@@ -73,16 +71,15 @@ def create_ephemeris(orbits_df, pointings_df, args, configs):
 
     for _, pointing in pointings_df.iterrows():
         mjd_tai = float(pointing["observationStartMJD"])
-        ra, dec = float(pointing["fieldRA"]), float(pointing["fieldDec"])
 
         # If the observation time is too far from the
         # time of the last set of ballpark sky position,
         # compute a new set
         while (
-            abs(pointing["jd_tdb"] - t_picket) > 0.5 * picket_interval or first == 1
+            abs(pointing["JD_TDB"] - t_picket) > 0.5 * picket_interval or first == 1
         ):  # right now this assumes time ordering
             t_picket, pixel_dict, _ = update_pixel_dict(
-                pointing["jd_tdb"], t_picket, picket_interval, sim_dict, ephem, obsCode, observatories, nside
+                pointing["JD_TDB"], t_picket, picket_interval, sim_dict, ephem, obsCode, observatories, nside
             )
             first = 0
 
@@ -97,7 +94,7 @@ def create_ephemeris(orbits_df, pointings_df, args, configs):
             ang = np.arccos(np.dot(rho_hat_rough, pointing["visit_vector"])) * 180 / np.pi
             if ang < ang_fov + buffer:
                 rho, rho_mag, lt, r_ast, v_ast = integrate_light_time(
-                    sim, ex, pointing["jd_tdb"] - ephem.jd_ref, pointing["r_obs"], lt0=0.01
+                    sim, ex, pointing["JD_TDB"] - ephem.jd_ref, pointing["r_obs"], lt0=0.01
                 )
                 rho_hat = rho / rho_mag
 
@@ -126,7 +123,7 @@ def create_ephemeris(orbits_df, pointings_df, args, configs):
                         obj_id,
                         pointing["FieldID"],
                         mjd_tai,
-                        pointing["jd_tdb"],
+                        pointing["JD_TDB"],
                         rho_mag * AU_KM,
                         drho_magdt * AU_KM / (24 * 60 * 60),
                         ra0,
@@ -182,10 +179,10 @@ def get_residual_vectors(v1):
     return A, D
 
 
-# arguments: jd_tdb, t_picket, picket_interval, sim_dict, obsCode
+# arguments: JD_TDB, t_picket, picket_interval, sim_dict, obsCode
 # returns t_picket, pixel_dict, r_obs
-def update_pixel_dict(jd_tdb, t_picket, picket_interval, sim_dict, ephem, obsCode, observatories, nside):
-    n = round((jd_tdb - t_picket) / picket_interval)
+def update_pixel_dict(JD_TDB, t_picket, picket_interval, sim_dict, ephem, obsCode, observatories, nside):
+    n = round((JD_TDB - t_picket) / picket_interval)
     t_picket += n * picket_interval
     et = (t_picket - spice.j2000()) * 24 * 60 * 60
     r_obs = observatories.barycentricObservatory(et, obsCode) / AU_KM
