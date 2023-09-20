@@ -16,13 +16,13 @@ def mjd_tai_to_epoch(mjd_tai):
     return epoch
 
 
-def parse_orbit_row(row, epoch, ephem, sun_dict):
+def parse_orbit_row(row, epoch, ephem, sun_dict, gm_sun, gm_total):
     orbit_format = row["FORMAT"]
 
     if orbit_format != "CART":
         if orbit_format == "COM":
             ecx, ecy, ecz, dx, dy, dz = universal_cartesian(
-                GMSUN,
+                gm_sun,
                 row["q"],
                 row["e"],
                 row["inc"] * np.pi / 180.0,
@@ -33,7 +33,7 @@ def parse_orbit_row(row, epoch, ephem, sun_dict):
             )
         elif orbit_format == "BCOM":
             ecx, ecy, ecz, dx, dy, dz = universal_cartesian(
-                GMTOTAL,
+                gm_total,
                 row["q"],
                 row["e"],
                 row["inc"] * np.pi / 180.0,
@@ -44,7 +44,7 @@ def parse_orbit_row(row, epoch, ephem, sun_dict):
             )
         elif orbit_format == "KEP":
             ecx, ecy, ecz, dx, dy, dz = universal_cartesian(
-                GMSUN,
+                gm_sun,
                 row["a"] * (1 - row["e"]),
                 row["e"],
                 row["inc"] * np.pi / 180.0,
@@ -55,7 +55,7 @@ def parse_orbit_row(row, epoch, ephem, sun_dict):
             )
         elif orbit_format == "BKEP":
             ecx, ecy, ecz, dx, dy, dz = universal_cartesian(
-                GMTOTAL,
+                gm_total,
                 row["a"] * (1 - row["e"]),
                 row["e"],
                 row["inc"] * np.pi / 180.0,

@@ -47,7 +47,7 @@ def create_assist_ephemeris(args) -> tuple:
 
     pplogger.info(f"Calculated GM_SUN value from ASSIST ephemeris: {gm_sun}")
 
-    return ephem, gm_sun
+    return ephem, gm_sun, gm_total
 
 
 def furnish_spiceypy(args):
@@ -79,7 +79,7 @@ def furnish_spiceypy(args):
     spice.furnsh(meta_kernel)
 
 
-def generate_simulations(ephem, gm_sun, orbits_df):
+def generate_simulations(ephem, gm_sun, gm_total, orbits_df):
     sim_dict = defaultdict(dict)  # return
 
     sun_dict = dict()  # This could be passed in and reused
@@ -89,7 +89,7 @@ def generate_simulations(ephem, gm_sun, orbits_df):
         if epoch < 2400000.5:
             epoch += 2400000.5
 
-        x, y, z, vx, vy, vz = sp.parse_orbit_row(row, epoch, ephem, sun_dict, gm_sun)
+        x, y, z, vx, vy, vz = sp.parse_orbit_row(row, epoch, ephem, sun_dict, gm_sun, gm_total)
 
         # Instantiate a rebound particle
         ic = rebound.Particle(x=x, y=y, z=z, vx=vx, vy=vy, vz=vz)
@@ -137,7 +137,7 @@ def precompute_pointing_information(pointings_df, args, configs):
     pointings_df : pd.dataframe
         The original dataframe with several additional columns of precomputed values.
     """
-    ephem, _ = create_assist_ephemeris(args)
+    ephem, _, _ = create_assist_ephemeris(args)
 
     furnish_spiceypy(args)
     obsCode = configs["ar_obs_code"]
