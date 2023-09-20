@@ -78,7 +78,7 @@ def parse_orbit_row(row, epoch, ephem, sun_dict):
     equatorial_coords = np.array(ecliptic_to_equatorial([ecx, ecy, ecz]))
     equatorial_velocities = np.array(ecliptic_to_equatorial([dx, dy, dz]))
 
-    if orbit_format == "KEP" or orbit_format == "COM":
+    if orbit_format == "KEP" or orbit_format == "COM" or orbit_format == "CART":
         equatorial_coords += np.array((sun.x, sun.y, sun.z))
         equatorial_velocities += np.array((sun.vx, sun.vy, sun.vz))
 
