@@ -83,7 +83,7 @@ def generate_simulations(ephem, gm_sun, orbits_df):
 
     sun_dict = dict()  # This could be passed in and reused
     for _, row in orbits_df.iterrows():
-        epoch = row["epoch"]
+        epoch = row["epochMJD_TDB"]
         # convert from MJD to JD, if not done already.
         if epoch < 2400000.5:
             epoch += 2400000.5

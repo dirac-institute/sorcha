@@ -289,7 +289,7 @@ def test_CSVDataReader_orbits():
             "node",
             "argPeri",
             "t_p",
-            "epoch",
+            "epochMJD_TDB",
         ],
         dtype=object,
     )
