@@ -70,7 +70,7 @@ def create_ephemeris(orbits_df, pointings_df, args, configs):
     in_memory_csv.writerow(column_names)
 
     for _, pointing in pointings_df.iterrows():
-        mjd_tai = float(pointing["observationStartMJD"])
+        mjd_tai = float(pointing["observationStartMJD_TAI"])
 
         # If the observation time is too far from the
         # time of the last set of ballpark sky position,

@@ -148,7 +148,7 @@ def precompute_pointing_information(pointings_df, args, configs):
 
     # use pandas `apply` (even though it's slow) instead of looping over the df in a for loop
     pointings_df["JD_TDB"] = pointings_df.apply(
-        lambda row: mjd_tai_to_epoch(row["observationStartMJD"]), axis=1
+        lambda row: mjd_tai_to_epoch(row["observationStartMJD_TAI"]), axis=1
     )
     et = (pointings_df["JD_TDB"] - spice.j2000()) * 24 * 60 * 60
 

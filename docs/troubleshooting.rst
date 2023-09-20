@@ -24,9 +24,9 @@ as appropriate. We have developed tools and example slurm scripts to help you ru
 Pointing Database 
 ---------------------
 
-If you are having issues with reading the LSST pointing database such asgetting an error like::
+If you are having issues with reading the LSST pointing database such as getting an error like::
   
-   pandas.io.sql.DatabaseError: Execution failed on sql 'SELECT observationStartMJD, observationId FROM observations ORDER BY observationStartMJD': no such table: observations
+   pandas.io.sql.DatabaseError: Execution failed on sql 'SELECT observationStartMJD as observationStartMJD_TAI, observationId FROM observations ORDER BY observationStartMJD_TAI': no such table: observations
 
 Then it is likely that you are using the older or newer version of the (simulated) LSST pointing database. See  :ref:`database_query`
 

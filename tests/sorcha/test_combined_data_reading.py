@@ -29,7 +29,7 @@ def test_PPReadAllInput():
         "ephemerides_type": "external",
         "eph_format": "csv",
         "observing_filters": ["u", "g", "r", "i", "z", "y"],
-        "pointing_sql_query": "SELECT observationId, observationStartMJD, filter, seeingFwhmGeom, seeingFwhmEff, fiveSigmaDepth, fieldRA, fieldDec, rotSkyPos FROM observations order by observationId",
+        "pointing_sql_query": "SELECT observationId, observationStartMJD as observationStartMJD_TAI, filter, seeingFwhmGeom, seeingFwhmEff, fiveSigmaDepth, fieldRA, fieldDec, rotSkyPos FROM observations order by observationId",
     }
 
     filterpointing = PPReadPointingDatabase(
