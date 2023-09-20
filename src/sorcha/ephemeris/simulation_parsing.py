@@ -3,7 +3,7 @@ import os
 import numpy as np
 import spiceypy as spice
 
-from sorcha.ephemeris.simulation_constants import RADIUS_EARTH_KM
+from sorcha.ephemeris.simulation_constants import GMSUN, RADIUS_EARTH_KM
 from sorcha.ephemeris.simulation_geometry import ecliptic_to_equatorial
 from sorcha.ephemeris.simulation_data_files import OBSERVATORY_CODES, make_retriever
 from sorcha.ephemeris.orbit_conversion_utilities import universal_cartesian
@@ -16,13 +16,24 @@ def mjd_tai_to_epoch(mjd_tai):
     return epoch
 
 
-def parse_orbit_row(row, epoch, ephem, sun_dict, gm_sun):
+def parse_orbit_row(row, epoch, ephem, sun_dict):
     orbit_format = row["FORMAT"]
 
     if orbit_format != "CART":
         if orbit_format == "COM":
             ecx, ecy, ecz, dx, dy, dz = universal_cartesian(
-                gm_sun,
+                GMSUN,
+                row["q"],
+                row["e"],
+                row["inc"] * np.pi / 180.0,
+                row["node"] * np.pi / 180.0,
+                row["argPeri"] * np.pi / 180.0,
+                row["t_p"],
+                epoch,
+            )
+        elif orbit_format == "BCOM":
+            ecx, ecy, ecz, dx, dy, dz = universal_cartesian(
+                GMTOTAL,
                 row["q"],
                 row["e"],
                 row["inc"] * np.pi / 180.0,
@@ -33,13 +44,24 @@ def parse_orbit_row(row, epoch, ephem, sun_dict, gm_sun):
             )
         elif orbit_format == "KEP":
             ecx, ecy, ecz, dx, dy, dz = universal_cartesian(
-                gm_sun,
+                GMSUN,
                 row["a"] * (1 - row["e"]),
                 row["e"],
                 row["inc"] * np.pi / 180.0,
                 row["node"] * np.pi / 180.0,
                 row["argPeri"] * np.pi / 180.0,
-                epoch - (row["ma"] * np.pi / 180.0) * np.sqrt(row["a"] ** 3 / gm_sun),
+                epoch - (row["ma"] * np.pi / 180.0) * np.sqrt(row["a"] ** 3 / GMSUN),
+                epoch,
+            )
+        elif orbit_format == "BKEP":
+            ecx, ecy, ecz, dx, dy, dz = universal_cartesian(
+                GMTOTAL,
+                row["a"] * (1 - row["e"]),
+                row["e"],
+                row["inc"] * np.pi / 180.0,
+                row["node"] * np.pi / 180.0,
+                row["argPeri"] * np.pi / 180.0,
+                epoch - (row["ma"] * np.pi / 180.0) * np.sqrt(row["a"] ** 3 / GMSUN),
                 epoch,
             )
         else:
@@ -56,18 +78,19 @@ def parse_orbit_row(row, epoch, ephem, sun_dict, gm_sun):
     equatorial_coords = np.array(ecliptic_to_equatorial([ecx, ecy, ecz]))
     equatorial_velocities = np.array(ecliptic_to_equatorial([dx, dy, dz]))
 
-    equatorial_coords += np.array((sun.x, sun.y, sun.z))
-    equatorial_velocities += np.array((sun.vx, sun.vy, sun.vz))
+    if orbit_format == "KEP" or orbit_format == "COM":
+        equatorial_coords += np.array((sun.x, sun.y, sun.z))
+        equatorial_velocities += np.array((sun.vx, sun.vy, sun.vz))
 
     return tuple(np.concatenate([equatorial_coords, equatorial_velocities]))
 
 
 class Observatory:
-    def __init__(self, args, oc_file=OBSERVATORY_CODES):
+    def __init__(self, oc_file=OBSERVATORY_CODES):
         self.observatoryPositionCache = {}  # previously calculated positions to speed up the process
 
         if not os.path.isfile(oc_file):
-            retriever = make_retriever(args.ar_data_file_path)
+            retriever = make_retriever()
             obs_file_path = retriever.fetch(oc_file)
         else:
             obs_file_path = oc_file
