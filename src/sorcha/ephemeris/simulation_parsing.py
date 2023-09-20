@@ -4,7 +4,7 @@ import numpy as np
 import spiceypy as spice
 from pooch import Decompress
 
-from sorcha.ephemeris.simulation_constants import RADIUS_EARTH_KM
+from sorcha.ephemeris.simulation_constants import GMSUN, GMTOTAL, RADIUS_EARTH_KM
 from sorcha.ephemeris.simulation_geometry import ecliptic_to_equatorial
 from sorcha.ephemeris.simulation_data_files import (
     OBSERVATORY_CODES,
@@ -27,7 +27,18 @@ def parse_orbit_row(row, epochMJD_TDB, ephem, sun_dict, gm_sun, gm_total):
     if orbit_format != "CART":
         if orbit_format == "COM":
             ecx, ecy, ecz, dx, dy, dz = universal_cartesian(
-                gm_sun,
+                GMSUN,
+                row["q"],
+                row["e"],
+                row["inc"] * np.pi / 180.0,
+                row["node"] * np.pi / 180.0,
+                row["argPeri"] * np.pi / 180.0,
+                row["t_p"],
+                epochMJD_TDB,
+            )
+        elif orbit_format == "BCOM":
+            ecx, ecy, ecz, dx, dy, dz = universal_cartesian(
+                GMTOTAL,
                 row["q"],
                 row["e"],
                 row["inc"] * np.pi / 180.0,
@@ -49,13 +60,24 @@ def parse_orbit_row(row, epochMJD_TDB, ephem, sun_dict, gm_sun, gm_total):
             )
         elif orbit_format == "KEP":
             ecx, ecy, ecz, dx, dy, dz = universal_cartesian(
-                gm_sun,
+                GMSUN,
                 row["a"] * (1 - row["e"]),
                 row["e"],
                 row["inc"] * np.pi / 180.0,
                 row["node"] * np.pi / 180.0,
                 row["argPeri"] * np.pi / 180.0,
-                epochMJD_TDB - (row["ma"] * np.pi / 180.0) * np.sqrt(row["a"] ** 3 / gm_sun),
+                epochMJD_TDB - (row["ma"] * np.pi / 180.0) * np.sqrt(row["a"] ** 3 / GMSUN),
+                epochMJD_TDB,
+            )
+        elif orbit_format == "BKEP":
+            ecx, ecy, ecz, dx, dy, dz = universal_cartesian(
+                GMTOTAL,
+                row["a"] * (1 - row["e"]),
+                row["e"],
+                row["inc"] * np.pi / 180.0,
+                row["node"] * np.pi / 180.0,
+                row["argPeri"] * np.pi / 180.0,
+                epochMJD_TDB - (row["ma"] * np.pi / 180.0) * np.sqrt(row["a"] ** 3 / GMSUN),
                 epochMJD_TDB,
             )
         elif orbit_format == "BKEP":
@@ -91,7 +113,7 @@ def parse_orbit_row(row, epochMJD_TDB, ephem, sun_dict, gm_sun, gm_total):
 
 
 class Observatory:
-    def __init__(self, args, oc_file=OBSERVATORY_CODES):
+    def __init__(self, oc_file=OBSERVATORY_CODES):
         self.observatoryPositionCache = {}  # previously calculated positions to speed up the process
 
         if oc_file == OBSERVATORY_CODES:
