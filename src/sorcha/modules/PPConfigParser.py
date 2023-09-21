@@ -433,10 +433,11 @@ def PPConfigFileParser(configfile, survey_name):
         sys.exit('ERROR: camera_model should be either "circle" or "footprint".')
 
     elif config_dict["camera_model"] == "footprint":
-        config_dict["footprint_path"] = PPGetOrExit(
-            config, "FOV", "footprint_path", "ERROR: no camera footprint provided."
+        config_dict["footprint_path"], external_file = PPGetValueAndFlag(
+            config, "FOV", "footprint_path", "none"
         )
-        PPFindFileOrExit(config_dict["footprint_path"], "footprint_path")
+        if external_file:
+            PPFindFileOrExit(config_dict["footprint_path"], "footprint_path")
 
         config_dict["footprint_edge_threshold"], _ = PPGetValueAndFlag(
             config, "FOV", "footprint_edge_threshold", "float"
@@ -778,7 +779,10 @@ def PPPrintConfigsToLog(configs, cmd_args):
 
     if configs["camera_model"] == "footprint":
         pplogger.info("Footprint is modelled after the actual camera footprint.")
-        pplogger.info("Loading camera footprint from " + configs["footprint_path"])
+        if configs["footprint_path"]:
+            pplogger.info("Loading camera footprint from " + configs["footprint_path"])
+        else:
+            pplogger.info("Loading default LSST footprint detectors_corners.csv")
     else:
         pplogger.info("Footprint is circular.")
         if configs["fill_factor"]:

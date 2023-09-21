@@ -22,6 +22,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import sys
+import pkg_resources
 
 deg2rad = np.radians
 sin = np.sin
@@ -376,7 +377,7 @@ class Detector:
 
 
 class Footprint:
-    def __init__(self, path, detectorName="detector"):
+    def __init__(self, path=None, detectorName="detector"):
         """
         Initiates a Footprint object.
 
@@ -395,7 +396,13 @@ class Footprint:
 
         # file should be a .csv (and should be actually comma seperated)
         # the center of the camera should be the origin
-        allcornersdf = pd.read_csv(path)
+        # if the user doesn't provide their own version of the footprint,
+        # we'll use the default LSST version that comes included.
+        if path:
+            allcornersdf = pd.read_csv(path)
+        else:
+            stream = pkg_resources.resource_stream(__name__, "data/detectors_corners.csv")
+            allcornersdf = pd.read_csv(stream)
 
         # build dictionary of detectorName:[list_of_inds]
         det_to_inds = {}
