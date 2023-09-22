@@ -401,7 +401,7 @@ class Footprint:
         if path:
             allcornersdf = pd.read_csv(path)
         else:
-            stream = pkg_resources.resource_stream(__name__, "data/detectors_corners.csv")
+            stream = pkg_resources.resource_stream(__name__, "data/LSST_detector_corners_100123.csv")
             allcornersdf = pd.read_csv(stream)
 
         # build dictionary of detectorName:[list_of_inds]
