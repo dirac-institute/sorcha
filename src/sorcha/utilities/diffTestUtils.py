@@ -59,7 +59,7 @@ BASELINE_ARGS = {
 WITH_EPHEMERIS_ARGS = {
     "paramsinput": get_demo_filepath("params_small_random_mpcorb.csv"),
     "orbinfile": get_demo_filepath("orbits_small_random_mpcorb.csv"),
-    "configfile": get_demo_filepath("sorcha_config_demo.ini"),
+    "configfile": get_demo_filepath("config_for_ephemeris_unit_test.ini"),
     "pointing_database": get_demo_filepath("baseline_v2.0_1yr.db"),
     "output_ephemeris_file": "sorcha_ephemeris.csv",
     "makeTemporaryEphemerisDatabase": False,
