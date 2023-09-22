@@ -4,7 +4,8 @@ import numpy as np
 import spiceypy as spice
 from pooch import Decompress
 
-from sorcha.ephemeris.simulation_constants import GMSUN, RADIUS_EARTH_KM
+#from sorcha.ephemeris.simulation_constants import GMSUN, RADIUS_EARTH_KM
+from sorcha.ephemeris.simulation_constants import RADIUS_EARTH_KM
 from sorcha.ephemeris.simulation_geometry import ecliptic_to_equatorial
 from sorcha.ephemeris.simulation_data_files import (
     OBSERVATORY_CODES,
