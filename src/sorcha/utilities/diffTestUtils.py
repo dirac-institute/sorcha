@@ -82,9 +82,9 @@ def override_seed_and_run(outpath, arg_set="baseline"):
     outpath (str): The path for the output files.
     """
 
-    if arg_set is "baseline":
+    if arg_set == "baseline":
         cmd_args_dict = BASELINE_ARGS
-    elif arg_set is "with_ephemeris":
+    elif arg_set == "with_ephemeris":
         cmd_args_dict = WITH_EPHEMERIS_ARGS
     else:
         raise ValueError(f"Unknown arg set name, {arg_set}. Must be one of: 'baseline', 'with_ephemeris'.")
