@@ -2,10 +2,15 @@ import json
 import os
 import numpy as np
 import spiceypy as spice
+from pooch import Decompress
 
 from sorcha.ephemeris.simulation_constants import RADIUS_EARTH_KM
 from sorcha.ephemeris.simulation_geometry import ecliptic_to_equatorial
-from sorcha.ephemeris.simulation_data_files import OBSERVATORY_CODES, make_retriever
+from sorcha.ephemeris.simulation_data_files import (
+    OBSERVATORY_CODES,
+    OBSERVATORY_CODES_COMPRESSED,
+    make_retriever,
+)
 from sorcha.ephemeris.orbit_conversion_utilities import universal_cartesian
 
 
@@ -66,9 +71,19 @@ class Observatory:
     def __init__(self, args, oc_file=OBSERVATORY_CODES):
         self.observatoryPositionCache = {}  # previously calculated positions to speed up the process
 
-        if not os.path.isfile(oc_file):
+        if oc_file == OBSERVATORY_CODES:
             retriever = make_retriever(args.ar_data_file_path)
-            obs_file_path = retriever.fetch(oc_file)
+
+            # is the file available locally, if so, return the full path
+            if os.path.isfile(os.path.join(retriever.abspath, OBSERVATORY_CODES)):
+                obs_file_path = retriever.fetch(OBSERVATORY_CODES)
+
+            # if the file is not local, download, and decompress it, then return the path.
+            else:
+                obs_file_path = retriever.fetch(
+                    OBSERVATORY_CODES_COMPRESSED, processor=Decompress(name=OBSERVATORY_CODES)
+                )
+
         else:
             obs_file_path = oc_file
 

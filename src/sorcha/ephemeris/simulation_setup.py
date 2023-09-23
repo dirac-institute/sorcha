@@ -7,6 +7,7 @@ from collections import defaultdict
 import assist
 import logging
 import sys
+import os
 
 from sorcha.ephemeris.simulation_constants import *
 from sorcha.ephemeris.simulation_data_files import (
@@ -26,6 +27,8 @@ from sorcha.ephemeris.simulation_parsing import (
     Observatory,
     mjd_tai_to_epoch,
 )
+
+from sorcha.utilities.generate_meta_kernel import build_meta_kernel_file
 
 
 def create_assist_ephemeris(args) -> tuple:
@@ -60,11 +63,11 @@ def furnish_spiceypy(args):
     for kernel_file in ORDERED_KERNEL_FILES:
         retriever.fetch(kernel_file)
 
-    # TODO: The previous line will fetch all the remote kernel files if they are
-    # not present on the local machine, however, it does not create the META_KERNEL
-    # file needed in the next line. We should abstract the creation of the META_KERNEL
-    # to a separate utility function that can be called here as needed.
+    # check if the META_KERNEL file exists. If it doesn't exist, create it.
+    if not os.path.exists(os.path.join(retriever.abspath, META_KERNEL)):
+        build_meta_kernel_file(retriever)
 
+    # try to get the META_KERNEL file. If it's not there, error out.
     try:
         meta_kernel = retriever.fetch(META_KERNEL)
     except ValueError:
