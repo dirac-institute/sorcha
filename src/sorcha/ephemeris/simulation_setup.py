@@ -46,6 +46,7 @@ def create_assist_ephemeris(args) -> tuple:
     gm_total = sum(sorted([ephem.get_particle(i, 0).m for i in range(27)]))
 
     pplogger.info(f"Calculated GM_SUN value from ASSIST ephemeris: {gm_sun}")
+    pplogger.info(f"Calculated GM_TOTAL value from ASSIST ephemeris: {gm_total}")
 
     return ephem, gm_sun, gm_total
 

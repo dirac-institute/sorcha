@@ -3,7 +3,6 @@ import os
 import numpy as np
 import spiceypy as spice
 
-#from sorcha.ephemeris.simulation_constants import GMSUN, RADIUS_EARTH_KM
 from sorcha.ephemeris.simulation_constants import RADIUS_EARTH_KM
 from sorcha.ephemeris.simulation_geometry import ecliptic_to_equatorial
 from sorcha.ephemeris.simulation_data_files import OBSERVATORY_CODES, make_retriever
@@ -79,7 +78,7 @@ def parse_orbit_row(row, epoch, ephem, sun_dict, gm_sun, gm_total):
     equatorial_coords = np.array(ecliptic_to_equatorial([ecx, ecy, ecz]))
     equatorial_velocities = np.array(ecliptic_to_equatorial([dx, dy, dz]))
 
-    if orbit_format == "KEP" or orbit_format == "COM" or orbit_format == "CART":
+    if orbit_format in ["KEP", "COM", "CART"]:
         equatorial_coords += np.array((sun.x, sun.y, sun.z))
         equatorial_velocities += np.array((sun.vx, sun.vy, sun.vz))
 
@@ -87,11 +86,11 @@ def parse_orbit_row(row, epoch, ephem, sun_dict, gm_sun, gm_total):
 
 
 class Observatory:
-    def __init__(self, oc_file=OBSERVATORY_CODES):
+    def __init__(self, args, oc_file=OBSERVATORY_CODES):
         self.observatoryPositionCache = {}  # previously calculated positions to speed up the process
 
         if not os.path.isfile(oc_file):
-            retriever = make_retriever()
+            retriever = make_retriever(args.ar_data_file_path)
             obs_file_path = retriever.fetch(oc_file)
         else:
             obs_file_path = oc_file
