@@ -8,7 +8,7 @@ sorcha.modules.PPConfigParser INFO     No cometary activity selected.
 sorcha.modules.PPConfigParser INFO     Format of ephemerides file is: csv 
 sorcha.modules.PPConfigParser INFO     Format of auxiliary files is: whitespace 
 sorcha.modules.PPConfigParser INFO     Pointing database path is: ./baseline_10klines_2.0.db 
-sorcha.modules.PPConfigParser INFO     Pointing database required query is: SELECT observationId, observationStartMJD, filter, seeingFwhmGeom, seeingFwhmEff, fiveSigmaDepth, fieldRA, fieldDec, rotSkyPos FROM observations order by observationId 
+sorcha.modules.PPConfigParser INFO     Pointing database required query is: SELECT observationId, observationStartMJD as observationStartMJD_TAI, filter, seeingFwhmGeom, seeingFwhmEff, fiveSigmaDepth, fieldRA, fieldDec, rotSkyPos FROM observations order by observationId 
 sorcha.modules.PPConfigParser INFO     The number of objects processed in a single chunk is: 10 
 sorcha.modules.PPConfigParser INFO     The main filter in which H is defined is r 
 sorcha.modules.PPConfigParser INFO     The filters included in the post-processing results are r g i z 

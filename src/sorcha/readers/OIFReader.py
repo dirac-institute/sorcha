@@ -117,7 +117,7 @@ class OIFDataReader(ObjectDataReader):
         oif_cols = [
             "ObjID",
             "FieldID",
-            "FieldMJD",
+            "FieldMJD_TAI",
             "AstRange(km)",
             "AstRangeRate(km/s)",
             "AstRA(deg)",
@@ -139,7 +139,7 @@ class OIFDataReader(ObjectDataReader):
             "Sun-Ast-Obs(deg)",
         ]
 
-        optional_cols = ["jd_tdb"]
+        optional_cols = ["JD_TDB"]
 
         if not set(input_table.columns.values) == set(oif_cols):
             for column in input_table.columns.values:

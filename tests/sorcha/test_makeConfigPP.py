@@ -40,7 +40,7 @@ class args:
         self.magnitudedecimals = 3
         self.snrlimit = None
         self.maglimit = None
-        self.sqlquery = "SELECT observationId, observationStartMJD, filter, seeingFwhmGeom, seeingFwhmEff, fiveSigmaDepth, fieldRA, fieldDec, rotSkyPos FROM observations order by observationId"
+        self.sqlquery = "SELECT observationId, observationStartMJD as observationStartMJD_TAI, filter, seeingFwhmGeom, seeingFwhmEff, fiveSigmaDepth, fieldRA, fieldDec, rotSkyPos FROM observations order by observationId"
         self.trailinglosseson = True
         self.lcmodel = "identity"
 

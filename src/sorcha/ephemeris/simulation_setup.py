@@ -86,7 +86,7 @@ def generate_simulations(ephem, gm_sun, orbits_df):
 
     sun_dict = dict()  # This could be passed in and reused
     for _, row in orbits_df.iterrows():
-        epoch = row["epoch"]
+        epoch = row["epochMJD_TDB"]
         # convert from MJD to JD, if not done already.
         if epoch < 2400000.5:
             epoch += 2400000.5
@@ -150,10 +150,10 @@ def precompute_pointing_information(pointings_df, args, configs):
     pointings_df["visit_vector"] = vectors.tolist()
 
     # use pandas `apply` (even though it's slow) instead of looping over the df in a for loop
-    pointings_df["jd_tdb"] = pointings_df.apply(
-        lambda row: mjd_tai_to_epoch(row["observationStartMJD"]), axis=1
+    pointings_df["JD_TDB"] = pointings_df.apply(
+        lambda row: mjd_tai_to_epoch(row["observationStartMJD_TAI"]), axis=1
     )
-    et = (pointings_df["jd_tdb"] - spice.j2000()) * 24 * 60 * 60
+    et = (pointings_df["JD_TDB"] - spice.j2000()) * 24 * 60 * 60
 
     # create a partial function since most params don't change, and it makes the lambda easier to read
     partial_get_hp_neighbors = partial(
@@ -185,7 +185,7 @@ def precompute_pointing_information(pointings_df, args, configs):
     # create empty arrays for sun position and velocity to be filled in
     r_sun = np.empty((len(pointings_df), 3))
     v_sun = np.empty((len(pointings_df), 3))
-    time_offsets = pointings_df["jd_tdb"] - ephem.jd_ref
+    time_offsets = pointings_df["JD_TDB"] - ephem.jd_ref
     for idx, time_offset_i in enumerate(time_offsets):
         sun = ephem.get_particle("Sun", time_offset_i)
         r_sun[idx] = np.array((sun.x, sun.y, sun.z))

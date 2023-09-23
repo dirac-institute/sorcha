@@ -70,9 +70,9 @@ class OrbitAuxReader(CSVDataReader):
             pplogger.error("ERROR: Orbit file must have a consistent FORMAT (COM, KEP, or CART).")
             sys.exit("ERROR: Orbit file must have a consistent FORMAT (COM, KEP, or CART).")
 
-        keplerian_elements = ["ObjID", "a", "e", "inc", "node", "argPeri", "ma", "epoch"]
-        cometary_elements = ["ObjID", "q", "e", "inc", "node", "argPeri", "t_p", "epoch"]
-        cartesian_elements = ["ObjID", "x", "y", "z", "xdot", "ydot", "zdot", "epoch"]
+        keplerian_elements = ["ObjID", "a", "e", "inc", "node", "argPeri", "ma", "epochMJD_TDB"]
+        cometary_elements = ["ObjID", "q", "e", "inc", "node", "argPeri", "t_p", "epochMJD_TDB"]
+        cartesian_elements = ["ObjID", "x", "y", "z", "xdot", "ydot", "zdot", "epochMJD_TDB"]
 
         if orb_format == "KEP":
             if not all(column in input_table.columns for column in keplerian_elements):
