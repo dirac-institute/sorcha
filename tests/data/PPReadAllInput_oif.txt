@@ -16,7 +16,7 @@ field1 = 1
 nfields = 216011
 mpcobscode file = obslist.dat
 telescope = I11
-surveydbquery = SELECT observationId,observationStartMJD,fieldRA,fieldDEC,rotSkyPos FROM observations order by observationStartMJD
+surveydbquery = SELECT observationId,observationStartMJD as observationStartMJD_TAI,fieldRA,fieldDEC,rotSkyPos FROM observations order by observationStartMJD_TAI
 [CAMERA]
 threshold = 5
 camera = instrument_circle.dat
@@ -28,7 +28,7 @@ Field 1 : 60218.001805555556
 Field n : 60582.99947369435
 Days : 365.0
 END HEADER
-ObjID,FieldID,FieldMJD,AstRange(km),AstRangeRate(km/s),AstRA(deg),AstRARate(deg/day),AstDec(deg),AstDecRate(deg/day),Ast-Sun(J2000x)(km),Ast-Sun(J2000y)(km),Ast-Sun(J2000z)(km),Ast-Sun(J2000vx)(km/s),Ast-Sun(J2000vy)(km/s),Ast-Sun(J2000vz)(km/s),Obs-Sun(J2000x)(km),Obs-Sun(J2000y)(km),Obs-Sun(J2000z)(km),Obs-Sun(J2000vx)(km/s),Obs-Sun(J2000vy)(km/s),Obs-Sun(J2000vz)(km/s),Sun-Ast-Obs(deg),V,V(H=0)
+ObjID,FieldID,FieldMJD_TAI,AstRange(km),AstRangeRate(km/s),AstRA(deg),AstRARate(deg/day),AstDec(deg),AstDecRate(deg/day),Ast-Sun(J2000x)(km),Ast-Sun(J2000y)(km),Ast-Sun(J2000z)(km),Ast-Sun(J2000vx)(km/s),Ast-Sun(J2000vy)(km/s),Ast-Sun(J2000vz)(km/s),Obs-Sun(J2000x)(km),Obs-Sun(J2000y)(km),Obs-Sun(J2000z)(km),Obs-Sun(J2000vx)(km/s),Obs-Sun(J2000vy)(km/s),Obs-Sun(J2000vz)(km/s),Sun-Ast-Obs(deg),V,V(H=0)
 632,38059,60277.351867,983057302.988296,-27.914,143.141481,0.024483,8.677660,-0.022025,-718755527.053,707115399.940,202146766.832,-9.461,-9.435,-3.858,58803455.841,124187416.914,53827633.096,-28.129,10.565,4.677,8.010336,28.838,8.838
 632,46306,60289.319749,955259166.375772,-25.916,143.290960,-0.003491,8.469810,-0.012344,-728491905.519,697311952.040,198144183.848,-9.369,-9.524,-3.883,28969257.489,132531884.873,57445740.529,-30.037,5.053,2.290,7.422641,28.748,8.748
 632,46328,60289.330920,955234165.662179,-25.887,143.290920,-0.003562,8.469672,-0.012355,-728500949.842,697302758.025,198140435.373,-9.369,-9.524,-3.883,28940272.325,132536748.654,57447949.381,-30.022,5.025,2.287,7.421909,28.748,8.748

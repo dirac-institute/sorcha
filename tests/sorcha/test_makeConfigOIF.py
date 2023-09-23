@@ -24,7 +24,7 @@ class args:
         self.cache = "_cache"
         self.mpcfile = "obslist.dat"
         self.inputformat = "whitespace"
-        self.query = "SELECT observationId,observationStartMJD,fieldRA,fieldDEC,rotSkyPos FROM observations order by observationStartMJD"
+        self.query = "SELECT observationId,observationStartMJD as observationStartMJD_TAI,fieldRA,fieldDEC,rotSkyPos FROM observations order by observationStartMJD_TAI"
         self.spkstep = 30
         self.telescope = "I11"
 

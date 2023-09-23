@@ -19,7 +19,7 @@ def test_PPMatchPointingToObservations():
         {
             "ObjID": ["356450", "356450"],
             "FieldID": [9212, 9262],
-            "FieldMJD": [60229.28437, 60229.308262],
+            "FieldMJD_TAI": [60229.28437, 60229.308262],
             "AstRange(km)": [5710968952.677331, 5710979387.71679],
             "AstRangeRate(km/s)": [5.027, 5.082],
             "AstRA(deg)": [11.240711, 11.240231],
@@ -71,7 +71,7 @@ def test_PPMatchPointingToObservations():
     joined_df = PPJoinEphemeridesAndParameters(test_oif, test_params)
     joined_df_2 = PPJoinEphemeridesAndOrbits(joined_df, test_orb)
 
-    dbq = "SELECT observationId, observationStartMJD, filter, seeingFwhmGeom, seeingFwhmEff, fiveSigmaDepth, fieldRA, fieldDec, rotSkyPos FROM observations order by observationId"
+    dbq = "SELECT observationId, observationStartMJD as observationStartMJD_TAI, filter, seeingFwhmGeom, seeingFwhmEff, fiveSigmaDepth, fieldRA, fieldDec, rotSkyPos FROM observations order by observationId"
 
     pointing_db = PPReadPointingDatabase(get_test_filepath("baseline_10klines_2.0.db"), ["g", "r", "i"], dbq)
 
@@ -81,7 +81,7 @@ def test_PPMatchPointingToObservations():
         {
             "ObjID": ["356450", "356450"],
             "FieldID": [9212, 9262],
-            "FieldMJD": [60229.28437, 60229.308262],
+            "FieldMJD_TAI": [60229.28437, 60229.308262],
             "AstRange(km)": [5710968952.677331, 5710979387.71679],
             "AstRangeRate(km/s)": [5.027, 5.082],
             "AstRA(deg)": [11.240711, 11.240231],

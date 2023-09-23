@@ -2,10 +2,15 @@ import json
 import os
 import numpy as np
 import spiceypy as spice
+from pooch import Decompress
 
 from sorcha.ephemeris.simulation_constants import RADIUS_EARTH_KM
 from sorcha.ephemeris.simulation_geometry import ecliptic_to_equatorial
-from sorcha.ephemeris.simulation_data_files import OBSERVATORY_CODES, make_retriever
+from sorcha.ephemeris.simulation_data_files import (
+    OBSERVATORY_CODES,
+    OBSERVATORY_CODES_COMPRESSED,
+    make_retriever,
+)
 from sorcha.ephemeris.orbit_conversion_utilities import universal_cartesian
 
 
@@ -16,7 +21,8 @@ def mjd_tai_to_epoch(mjd_tai):
     return epoch
 
 
-def parse_orbit_row(row, epoch, ephem, sun_dict, gm_sun, gm_total):
+
+def parse_orbit_row(row, epochMJD_TDB, ephem, sun_dict, gm_sun):
     orbit_format = row["FORMAT"]
 
     if orbit_format != "CART":
@@ -29,7 +35,7 @@ def parse_orbit_row(row, epoch, ephem, sun_dict, gm_sun, gm_total):
                 row["node"] * np.pi / 180.0,
                 row["argPeri"] * np.pi / 180.0,
                 row["t_p"],
-                epoch,
+                epochMJD_TDB,
             )
         elif orbit_format == "BCOM":
             ecx, ecy, ecz, dx, dy, dz = universal_cartesian(
@@ -50,8 +56,8 @@ def parse_orbit_row(row, epoch, ephem, sun_dict, gm_sun, gm_total):
                 row["inc"] * np.pi / 180.0,
                 row["node"] * np.pi / 180.0,
                 row["argPeri"] * np.pi / 180.0,
-                epoch - (row["ma"] * np.pi / 180.0) * np.sqrt(row["a"] ** 3 / gm_sun),
-                epoch,
+                epochMJD_TDB - (row["ma"] * np.pi / 180.0) * np.sqrt(row["a"] ** 3 / gm_sun),
+                epochMJD_TDB,
             )
         elif orbit_format == "BKEP":
             ecx, ecy, ecz, dx, dy, dz = universal_cartesian(
@@ -70,10 +76,10 @@ def parse_orbit_row(row, epoch, ephem, sun_dict, gm_sun, gm_total):
         ecx, ecy, ecz = row["x"], row["y"], row["z"]
         dx, dy, dz = row["xdot"], row["ydot"], row["zdot"]
 
-    if epoch not in sun_dict:
-        sun_dict[epoch] = ephem.get_particle("Sun", epoch - ephem.jd_ref)
+    if epochMJD_TDB not in sun_dict:
+        sun_dict[epochMJD_TDB] = ephem.get_particle("Sun", epochMJD_TDB - ephem.jd_ref)
 
-    sun = sun_dict[epoch]
+    sun = sun_dict[epochMJD_TDB]
 
     equatorial_coords = np.array(ecliptic_to_equatorial([ecx, ecy, ecz]))
     equatorial_velocities = np.array(ecliptic_to_equatorial([dx, dy, dz]))
@@ -89,9 +95,19 @@ class Observatory:
     def __init__(self, args, oc_file=OBSERVATORY_CODES):
         self.observatoryPositionCache = {}  # previously calculated positions to speed up the process
 
-        if not os.path.isfile(oc_file):
+        if oc_file == OBSERVATORY_CODES:
             retriever = make_retriever(args.ar_data_file_path)
-            obs_file_path = retriever.fetch(oc_file)
+
+            # is the file available locally, if so, return the full path
+            if os.path.isfile(os.path.join(retriever.abspath, OBSERVATORY_CODES)):
+                obs_file_path = retriever.fetch(OBSERVATORY_CODES)
+
+            # if the file is not local, download, and decompress it, then return the path.
+            else:
+                obs_file_path = retriever.fetch(
+                    OBSERVATORY_CODES_COMPRESSED, processor=Decompress(name=OBSERVATORY_CODES)
+                )
+
         else:
             obs_file_path = oc_file
 

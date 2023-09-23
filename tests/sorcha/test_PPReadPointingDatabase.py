@@ -8,7 +8,7 @@ from sorcha.utilities.dataUtilitiesForTests import get_test_filepath
 def test_PPReadPointingDatabase():
     from sorcha.modules.PPReadPointingDatabase import PPReadPointingDatabase
 
-    sql_query = "SELECT observationId, observationStartMJD, filter, seeingFwhmGeom, seeingFwhmEff, fiveSigmaDepth, fieldRA, fieldDec, rotSkyPos FROM observations order by observationId"
+    sql_query = "SELECT observationId, observationStartMJD as observationStartMJD_TAI, filter, seeingFwhmGeom, seeingFwhmEff, fiveSigmaDepth, fieldRA, fieldDec, rotSkyPos FROM observations order by observationId"
     filter_list = ["u", "g", "r", "i", "z", "y"]
 
     pointing_db = PPReadPointingDatabase(
@@ -34,7 +34,7 @@ def test_PPReadPointingDatabase():
     expected_columns = np.array(
         [
             "FieldID",
-            "observationStartMJD",
+            "observationStartMJD_TAI",
             "optFilter",
             "seeingFwhmGeom",
             "seeingFwhmEff",
@@ -52,7 +52,7 @@ def test_PPReadPointingDatabase():
 
     assert len(pointing_db) == 10000
 
-    bad_query = "SELECT observationId, observationStartMJD, filter, seeingFwhmGeom, seeingFwhmEff, fiveSigmaDepth, fieldRA, fieldDec, rotSkyPos FROM SummaryAllProps order by observationId"
+    bad_query = "SELECT observationId, observationStartMJD as observationStartMJD_TAI, filter, seeingFwhmGeom, seeingFwhmEff, fiveSigmaDepth, fieldRA, fieldDec, rotSkyPos FROM SummaryAllProps order by observationId"
 
     with pytest.raises(SystemExit) as e:
         pointing_db = PPReadPointingDatabase(

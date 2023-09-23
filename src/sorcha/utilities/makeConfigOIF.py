@@ -30,7 +30,7 @@ def makeConfig(args):
     # maxFields = len(database.index)
 
     # get what dates to check in database
-    survey_days = database["observationStartMJD"].astype(int).unique()
+    survey_days = database["observationStartMJD_TAI"].astype(int).unique()
 
     day1 = survey_days[args.day1 - 1]
 
@@ -43,8 +43,8 @@ def makeConfig(args):
         ndays = args.ndays
 
     # get range of fields for those days
-    field1 = database.loc[(database["observationStartMJD"] - day1) < 1.0]["observationId"].iloc[0]
-    fieldf = database.loc[(database["observationStartMJD"] - dayf) < 2.0]["observationId"].iloc[
+    field1 = database.loc[(database["observationStartMJD_TAI"] - day1) < 1.0]["observationId"].iloc[0]
+    fieldf = database.loc[(database["observationStartMJD_TAI"] - dayf) < 2.0]["observationId"].iloc[
         -1
     ]  # this will likely overshoot a little bit
 
@@ -230,7 +230,7 @@ def main():
         "-query",
         help="SQL query for pointing database.",
         type=str,
-        default="SELECT observationId,observationStartMJD,fieldRA,fieldDEC,rotSkyPos FROM observations order by observationStartMJD",
+        default="SELECT observationId,observationStartMJD as observationStartMJD_TAI,fieldRA,fieldDEC,rotSkyPos FROM observations order by observationStartMJD_TAI",
     )
 
     args = parser.parse_args()

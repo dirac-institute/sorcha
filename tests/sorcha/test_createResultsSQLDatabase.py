@@ -25,7 +25,7 @@ def test_get_column_names():
 
     expected_colnames = [
         "ObjID",
-        "FieldMJD",
+        "FieldMJD_TAI",
         "fieldRA",
         "fieldDec",
         "AstRA(deg)",

@@ -398,7 +398,7 @@ def main():
         "-query",
         help="Database query for extracting data for pointing database.",
         type=str,
-        default="SELECT observationId, observationStartMJD, filter, seeingFwhmGeom, seeingFwhmEff, fiveSigmaDepth, fieldRA, fieldDec, rotSkyPos FROM observations order by observationId",
+        default="SELECT observationId, observationStartMJD as observationStartMJD_TAI, filter, seeingFwhmGeom, seeingFwhmEff, fiveSigmaDepth, fieldRA, fieldDec, rotSkyPos FROM observations order by observationId",
     )
     parser.add_argument(
         "--trailinglosseson",

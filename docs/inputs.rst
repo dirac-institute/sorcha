@@ -56,7 +56,7 @@ Cometary Orbit Format
 ~~~~~~~~~~~~~~~~~~~~~~~
 An example of an orbit file in Cometary format::
 
-   objID FORMAT q e inc node argPeri t_p epoch
+   objID FORMAT q e inc node argPeri t_p epochMJD_TDB
    S1000000a COM 3.01822 0.05208 22.56035 211.00286 335.42134 51575.94061 54800.00000
    S1000001a COM 2.10974 0.07518 4.91571 209.40298 322.66447 54205.77161 54800.00000
    S1000002a COM 2.80523 0.07777 1.24945 112.52284 139.86858 54468.71747 54800.00000
@@ -82,14 +82,14 @@ An example of an orbit file in Cometary format::
 +-------------+----------------------------------------------------------------------------------+
 | t_p         | Time of periapsis (degrees)                                                      |
 +-------------+----------------------------------------------------------------------------------+
-| epoch       | Epoch (MJD)                                                                      |
+| epochMJD_TDB| Epoch (MJD)                                                                      |
 +-------------+----------------------------------------------------------------------------------+
 
 Keplerian Orbit Format
 ~~~~~~~~~~~~~~~~~~~~~~~~
 An example of an orbit file in Keplarian format::
 
-   objID FORMAT a e inc node argPeri ma epoch 
+   objID FORMAT a e inc node argPeri ma epochMJD_TDB 
    t1 KEP 47.9877 0.0585 11.3584 148.4661 140.4756 308.3244 53157.00 
    t2 KEP 47.7468 0.0552 7.1829 171.9226 55.3728 158.9403 53157.00
    t3 KEP 47.9300 0.3805 3.4292 72.9463 7.0754 84.7860 53157.00 
@@ -116,14 +116,14 @@ An example of an orbit file in Keplarian format::
 +-------------+----------------------------------------------------------------------------------+
 | ma          | Mean Anomaly (degrees)                                                           |           
 +-------------+----------------------------------------------------------------------------------+
-| epoch       | Epoch (MJD)                                                                      |
+| epochMJD_TDB| Epoch (MJD)                                                                      |
 +-------------+----------------------------------------------------------------------------------+
 
 Cartesian Orbit Format
 ~~~~~~~~~~~~~~~~~~~~~~~
 An example of an orbit file, in Keplarian format, with the object ID represented by a unique set of numbers::
 
-   ObjID,FORMAT,x,y,z,xdot,ydot,zdot,epoch
+   ObjID,FORMAT,x,y,z,xdot,ydot,zdot,epochMJD_TDB
    STC001TFa,CART,36.701800449281706,-8.770729364470023,-0.6261488665458296,0.0007155581026554,0.0026593939322716,7.344098975957749e-06,54466.0,36.54594860110992,0.04317
    STC001TGa,CART,-21.58733368378989,43.39783041151296,1.56699314137673,-0.0022005866864537,-0.0008717014384454,-4.735561770155727e-05,54466.0,44.842379308393234,0.11655
    STC001THa,CART,-37.814635799443394,-15.408895634838116,-5.805017616166551,0.0013198883808779,-0.0023982304849102,0.0001541826365505,54466.0,43.31324469003626,0.13135
@@ -153,7 +153,7 @@ An example of an orbit file, in Keplarian format, with the object ID represented
 +-------------+----------------------------------------------------------------------------------+
 | zdot        | Mean Anomaly (degrees)                                                           |
 +-------------+----------------------------------------------------------------------------------+
-| epoch       | Epoch (MJD)                                                                      |
+| epochMJD_TDB| Epoch (MJD)                                                                      |
 +-------------+----------------------------------------------------------------------------------+
 
 .. note::
@@ -285,7 +285,7 @@ An example of an (optional) ephemeris file::
    START HEADER
    [configuration would be outputted here]
    END HEADER
-   ObjID FieldID FieldMJD AstRange(km) AstRangeRate(km/s) AstRA(deg) AstRARate(deg/day) AstDec(deg) AstDecRate(deg/day) Ast-Sun(J2000x)(km) Ast-Sun(J2000y)(km) Ast-Sun(J2000z)(km) Ast-Sun(J2000vx)(km/s) Ast-Sun(J2000vy)(km/s) Ast-Sun(J2000vz)(km/s) Obs-Sun(J2000x)(km) Obs-Sun(J2000y)(km) Obs-Sun(J2000z)(km) Obs-Sun(J2000vx)(km/s) Obs-Sun(J2000vy)(km/s) Obs-Sun(J2000vz)(km/s) Sun-Ast-Obs(deg)
+   ObjID FieldID FieldMJD_TAI AstRange(km) AstRangeRate(km/s) AstRA(deg) AstRARate(deg/day) AstDec(deg) AstDecRate(deg/day) Ast-Sun(J2000x)(km) Ast-Sun(J2000y)(km) Ast-Sun(J2000z)(km) Ast-Sun(J2000vx)(km/s) Ast-Sun(J2000vy)(km/s) Ast-Sun(J2000vz)(km/s) Obs-Sun(J2000x)(km) Obs-Sun(J2000y)(km) Obs-Sun(J2000z)(km) Obs-Sun(J2000vx)(km/s) Obs-Sun(J2000vy)(km/s) Obs-Sun(J2000vz)(km/s) Sun-Ast-Obs(deg)
    S1000000a     144993 60425.402338    458272140.052  -21.379  302.104404  0.134147   3.473196  0.155803    120337437.532   -467360529.440     -6863861.395   15.814    3.135    3.395   -122770233.618    -79879875.157    -34626711.017   17.120  -22.269   -9.707   18.169656 
    S1000000a     145013 60425.411933    458254426.575  -21.355  302.105691  0.134050   3.474691  0.155787    120350548.117   -467357930.249     -6861046.878   15.813    3.135    3.395   -122756042.340    -79898326.109    -34634757.414   17.116  -22.244   -9.705   18.169632 
    S1000000a     180614 60503.206627    355295647.270   -4.213  299.360478 -0.185502  11.819392  0.002961    222559162.829   -434204364.757     15938036.863   14.472    6.666    3.359     52050159.823   -131110990.022    -56836222.957   27.873    9.424    4.014   10.189588 
@@ -299,7 +299,7 @@ An example of an (optional) ephemeris file::
 +--------------------------+----------------------------------------------------------------------------------+
 | FieldID                  | Observation pointing field identificator                                         |
 +--------------------------+----------------------------------------------------------------------------------+
-| FieldMJD                 | Observation Mean Julian Date                                                     |
+| FieldMJD_TAI             | Observation Mean Julian Date                                                     |
 +--------------------------+----------------------------------------------------------------------------------+
 | AstRange(km)             | Topocentric distance to the synthetic planetesimal                               |
 +--------------------------+----------------------------------------------------------------------------------+

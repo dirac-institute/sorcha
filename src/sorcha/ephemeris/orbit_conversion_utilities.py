@@ -110,10 +110,10 @@ def halley_safe(x1, x2, mu, alpha, r0, r0dot, t, xacc=1e-14, maxit=100):
 
 
 @numba.njit(fastmath=True)
-def universal_cartesian(mu, q, e, incl, longnode, argperi, tp, epoch):
+def universal_cartesian(mu, q, e, incl, longnode, argperi, tp, epochMJD_TDB):
     # General constant
     p = q * (1 + e)
-    t = epoch - tp  # tp - epoch
+    t = epochMJD_TDB - tp  # tp - epochMJD_TDB
     # Establish constants for Kepler's equation,
     # starting at pericenter:
     r0 = q
@@ -205,7 +205,7 @@ def principal_value(theta):
 
 
 @numba.njit(fastmath=True)
-def universal_keplerian(mu, x, y, z, vx, vy, vz, epoch):
+def universal_keplerian(mu, x, y, z, vx, vy, vz, epochMJD_TDB):
     pos = np.array([x, y, z])
     vel = np.array([vx, vy, vz])
     h_vec = np.cross(pos, vel)
@@ -267,19 +267,19 @@ def universal_keplerian(mu, x, y, z, vx, vy, vz, epoch):
         meananom = principal_value(meananom)
         a = mu / alpha
         mm = np.sqrt(mu / (a * a * a))
-        tp = epoch - meananom / mm
+        tp = epochMJD_TDB - meananom / mm
     elif e == 1:
         # parabolic
         tf = np.tan(0.5 * trueanom)
         B = 0.5 * (tf * tf * tf + 3 * tf)
         mm = np.sqrt(mu / (p * p * p))
-        tp = epoch - B / (3 * mm)
+        tp = epochMJD_TDB - B / (3 * mm)
     else:
         # hyperbolic
         heccanom = 2.0 * np.arctanh(np.sqrt((e - 1.0) / (e + 1.0)) * np.tan(trueanom / 2.0))
         N = e * np.sinh(heccanom) - heccanom
         a = mu / alpha
         mm = np.sqrt(-mu / (a * a * a))
-        tp = epoch - N / mm
+        tp = epochMJD_TDB - N / mm
 
     return q, e, incl, longnode, argperi, tp
