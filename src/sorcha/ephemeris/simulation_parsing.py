@@ -4,7 +4,6 @@ import numpy as np
 import spiceypy as spice
 from pooch import Decompress
 
-#from sorcha.ephemeris.simulation_constants import GMSUN, RADIUS_EARTH_KM
 from sorcha.ephemeris.simulation_constants import RADIUS_EARTH_KM
 from sorcha.ephemeris.simulation_geometry import ecliptic_to_equatorial
 from sorcha.ephemeris.simulation_data_files import (
@@ -114,7 +113,7 @@ def parse_orbit_row(row, epochMJD_TDB, ephem, sun_dict, gm_sun, gm_total):
 
 
 class Observatory:
-    def __init__(self, oc_file=OBSERVATORY_CODES):
+    def __init__(self, args, oc_file=OBSERVATORY_CODES):
         self.observatoryPositionCache = {}  # previously calculated positions to speed up the process
 
         if oc_file == OBSERVATORY_CODES:
