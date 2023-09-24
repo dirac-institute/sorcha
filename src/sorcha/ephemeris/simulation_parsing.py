@@ -21,8 +21,7 @@ def mjd_tai_to_epoch(mjd_tai):
     return epoch
 
 
-
-def parse_orbit_row(row, epochMJD_TDB, ephem, sun_dict, gm_sun):
+def parse_orbit_row(row, epochMJD_TDB, ephem, sun_dict, gm_sun, gm_total):
     orbit_format = row["FORMAT"]
 
     if orbit_format != "CART":
@@ -46,7 +45,7 @@ def parse_orbit_row(row, epochMJD_TDB, ephem, sun_dict, gm_sun):
                 row["node"] * np.pi / 180.0,
                 row["argPeri"] * np.pi / 180.0,
                 row["t_p"],
-                epoch,
+                epochMJD_TDB,
             )
         elif orbit_format == "KEP":
             ecx, ecy, ecz, dx, dy, dz = universal_cartesian(
@@ -67,8 +66,8 @@ def parse_orbit_row(row, epochMJD_TDB, ephem, sun_dict, gm_sun):
                 row["inc"] * np.pi / 180.0,
                 row["node"] * np.pi / 180.0,
                 row["argPeri"] * np.pi / 180.0,
-                epoch - (row["ma"] * np.pi / 180.0) * np.sqrt(row["a"] ** 3 / gm_total),
-                epoch,
+                epochMJD_TDB - (row["ma"] * np.pi / 180.0) * np.sqrt(row["a"] ** 3 / gm_total),
+                epochMJD_TDB,
             )
         else:
             raise ValueError("Provided orbit format not supported.")
