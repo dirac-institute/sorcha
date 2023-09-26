@@ -75,7 +75,7 @@ def create_ephemeris(orbits_df, pointings_df, args, configs):
     # regular (tunable) intervals.
     # Setting t_picket to -np.inf ensures that the function is called on the
     # first run.
-    t_picket = -np.inf 
+    t_picket = -np.inf
 
     for _, pointing in pointings_df.iterrows():
         mjd_tai = float(pointing["observationStartMJD_TAI"])
