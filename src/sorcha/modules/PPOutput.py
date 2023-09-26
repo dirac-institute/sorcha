@@ -101,7 +101,7 @@ def PPWriteOutput(cmd_args, configs, observations_in, endChunk=0, verbose=False)
         observations = observations_in.copy()[
             [
                 "ObjID",
-                "FieldMJD",
+                "FieldMJD_TAI",
                 "fieldRA",
                 "fieldDec",
                 "AstRA(deg)",
@@ -119,7 +119,7 @@ def PPWriteOutput(cmd_args, configs, observations_in, endChunk=0, verbose=False)
     elif configs["output_size"] == "all":
         observations = observations_in.copy()
 
-    observations["FieldMJD"] = observations["FieldMJD"].round(decimals=5)
+    observations["FieldMJD_TAI"] = observations["FieldMJD_TAI"].round(decimals=5)
 
     for position_col in ["fieldRA", "fieldDec", "AstRA(deg)", "AstDec(deg)", "AstrometricSigma(deg)"]:
         observations[position_col] = observations[position_col].round(decimals=configs["position_decimals"])

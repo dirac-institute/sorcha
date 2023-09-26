@@ -29,7 +29,7 @@ https://stackoverflow.com/questions/23945493/a-faster-alternative-to-pandas-isin
 
 filter_list = ["u", "g", "r", "i", "z", "y"]
 
-sql_query = "SELECT observationId, observationStartMJD, filter, seeingFwhmGeom, seeingFwhmEff, fiveSigmaDepth, fieldRA, fieldDec, rotSkyPos FROM observations order by observationId"
+sql_query = "SELECT observationId, observationStartMJD as observationStartMJD_TAI, filter, seeingFwhmGeom, seeingFwhmEff, fiveSigmaDepth, fieldRA, fieldDec, rotSkyPos FROM observations order by observationId"
 
 cProfile.run("PPReadPointingDatabase('../demo/baseline_v2.0_1yr.db', filter_list, sql_query)", "restats")
 

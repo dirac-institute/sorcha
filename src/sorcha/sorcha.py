@@ -42,8 +42,6 @@ from sorcha.lightcurves.lightcurve_registration import update_lc_subclasses
 from sorcha.utilities.sorchaArguments import sorchaArguments
 from sorcha.utilities.citation_text import cite_sorcha
 
-# Author: Samuel Cornwall, Siegfried Eggl, Grigori Fedorets, Steph Merritt, Meg Schwamb
-
 
 def cite():
     """Providing the bibtex, AAS Journals software latex command, and acknowledgement
@@ -128,6 +126,7 @@ def runLSSTSimulation(args, configs, pplogger=None):
     # if we are going to compute the ephemerides, then we should pre-compute all
     # of the needed values derived from the pointing information.
     if configs["ephemerides_type"].casefold() != "external":
+        verboselog("Pre-computing pointing information for ephemeris generation")
         filterpointing = precompute_pointing_information(filterpointing, args, configs)
 
     # Set up the data readers.
@@ -176,10 +175,17 @@ def runLSSTSimulation(args, configs, pplogger=None):
 
         # Processing begins, all processing is done for chunks
         if configs["ephemerides_type"].casefold() == "external":
+            verboselog("Reading in chunk of orbits and associated ephemeris from an external file")
             observations = reader.read_block(block_size=configs["size_serial_chunk"])
         else:
+            verboselog("Ingest chunk of orbits")
             orbits_df = reader.read_aux_block(block_size=configs["size_serial_chunk"])
+            verboselog("Starting ephemeris generation")
             observations = create_ephemeris(orbits_df, filterpointing, args, configs)
+            verboselog("Ephemeris generation completed")
+
+        verboselog("Start post processing for this chunk")
+        verboselog("Matching pointing database information to observations on rough camera footprint")
 
         observations = PPMatchPointingToObservations(observations, filterpointing)
 
@@ -289,6 +295,10 @@ def runLSSTSimulation(args, configs, pplogger=None):
             observations.reset_index(drop=True, inplace=True)
             verboselog("Number of rows AFTER applying SSP linking filter: " + str(len(observations.index)))
 
+        pplogger.info("Post processing completed for this chunk")
+
+        pplogger.info("Output results for this chunk")
+
         # write output
         PPWriteOutput(args, configs, observations, endChunk, verbose=args.verbose)
 
@@ -299,7 +309,7 @@ def runLSSTSimulation(args, configs, pplogger=None):
         verboselog("Deleting the temporary ephemeris database...")
         os.remove(args.readTemporaryEphemerisDatabase)
 
-    pplogger.info("Post processing completed.")
+    pplogger.info("Sorcha process is completed.")
 
 
 def main():

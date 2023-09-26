@@ -1,4 +1,4 @@
-ObjID,FieldMJD,fieldRA,fieldDec,AstRA(deg),AstDec(deg),AstrometricSigma(deg),optFilter,observedPSFMag,observedTrailedSourceMag,PhotometricSigmaPSF(mag),PhotometricSigmaTrailedSource(mag),fiveSigmaDepth,fiveSigmaDepthAtSource
+ObjID,FieldMJD_TAI,fieldRA,fieldDec,AstRA(deg),AstDec(deg),AstrometricSigma(deg),optFilter,observedPSFMag,observedTrailedSourceMag,PhotometricSigmaPSF(mag),PhotometricSigmaTrailedSource(mag),fiveSigmaDepth,fiveSigmaDepthAtSource
 632,60289.31975,142.7072408,8.25046,143.2909577,8.4698065,1.18e-05,r,22.971,22.941,0.085,0.085,23.986,23.986
 632,60293.34228,144.6014516,8.8158938,143.2660294,8.4266629,2.11e-05,i,22.729,23.16,0.135,0.135,23.34,23.307
 632,60295.34863,141.989729,8.6301382,143.2396246,8.4103274,1.51e-05,i,22.864,22.992,0.119,0.119,23.459,23.436

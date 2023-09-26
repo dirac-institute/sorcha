@@ -24,7 +24,7 @@ def test_DatabaseReader_objects():
             [
                 "ObjID",
                 "FieldID",
-                "FieldMJD",
+                "FieldMJD_TAI",
                 "AstRange(km)",
                 "AstRangeRate(km/s)",
                 "AstRA(deg)",

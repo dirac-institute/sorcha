@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
-from difi.metrics import NightlyLinkagesMetric
+
+# from difi.metrics import NightlyLinkagesMetric
 
 
 def PPLinkingFilter_OLD(
@@ -56,10 +57,11 @@ def PPLinkingFilter_OLD(
     if survey_name in ["lsst", "LSST"]:
         UTC_night_boundary = 17.0 / 24.0  # this corresponds to 5pm UTC, or 2pm Chile time.
 
-    # calculate night number from FieldMJD
-    first_day = np.min(observations["FieldMJD"].values)
+    # calculate night number from FieldMJD_TAI
+    first_day = np.min(observations["FieldMJD_TAI"].values)
     observations["night"] = (
-        np.floor(observations["FieldMJD"].values - np.floor(first_day) + UTC_night_boundary).astype(int) + 1
+        np.floor(observations["FieldMJD_TAI"].values - np.floor(first_day) + UTC_night_boundary).astype(int)
+        + 1
     )
 
     # create a small dataframe for difi to work on with only the relevant columns
@@ -68,7 +70,7 @@ def PPLinkingFilter_OLD(
         {
             "object_id": observations["ObjID"].astype(object),
             "obs_id": observations["FieldID"],
-            "time": observations["FieldMJD"],
+            "time": observations["FieldMJD_TAI"],
             "night": observations["night"],
             "ra": observations["AstRA(deg)"],
             "dec": observations["AstDec(deg)"],
@@ -149,7 +151,7 @@ def PPLinkingFilter(
         {
             "ssObjectId": observations["ObjID"],
             "diaSourceId": observations["FieldID"],
-            "midPointTai": observations["FieldMJD"],
+            "midPointTai": observations["FieldMJD_TAI"],
             "ra": observations["AstRA(deg)"],
             "decl": observations["AstDec(deg)"],
         }
