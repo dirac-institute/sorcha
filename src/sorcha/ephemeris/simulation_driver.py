@@ -30,7 +30,9 @@ def create_ephemeris(orbits_df, pointings_df, args, configs):
 
     if args.output_ephemeris_file and args.outpath:
         ephemeris_csv_filename = os.path.join(args.outpath, args.output_ephemeris_file)
-
+    else:
+        ephemeris_csv_filename = ''
+        
     t_picket = 2460000.5
 
     ephem, gm_sun = create_assist_ephemeris(args)
