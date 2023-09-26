@@ -42,7 +42,7 @@ Setup Your Conda Environment
 
 **Step 1** Create a conda environment::
 
-   conda create -n sorcha -c conda-forge -c moeyensj numpy numba pandas=2.1 scipy astropy matplotlib sbpy pytables difi==1.2rc3 spiceypy healpy rebound pooch tqdm h5py python=3.10
+   conda create -n sorcha -c conda-forge -c moeyensj numpy numba pandas=2.1 scipy astropy matplotlib sbpy pytables difi==1.2rc3 spiceypy healpy rebound=3.26.3 pooch tqdm h5py python=3.10
 
 .. tip::
    We recommend using python version 3.9 or higher with Sorcha. The conda command uses python 3.10.
