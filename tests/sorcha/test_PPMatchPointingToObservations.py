@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 from pandas.testing import assert_frame_equal
 
 from sorcha.utilities.dataUtilitiesForTests import get_test_filepath
@@ -74,6 +75,12 @@ def test_PPMatchPointingToObservations():
     dbq = "SELECT observationId, observationStartMJD as observationStartMJD_TAI, filter, seeingFwhmGeom, seeingFwhmEff, fiveSigmaDepth, fieldRA, fieldDec, rotSkyPos FROM observations order by observationId"
 
     pointing_db = PPReadPointingDatabase(get_test_filepath("baseline_10klines_2.0.db"), ["g", "r", "i"], dbq)
+
+    # simulate adding extra columns to the pointing db for the precomputed values
+    # needed for ephemeris generation. This ensures that the extra columns are not
+    # included in the merge in PPMatchPointingToObservations.
+    r_sun = np.empty((len(pointing_db), 3))
+    pointing_db["r_sun"] = r_sun.tolist()
 
     final_join = PPMatchPointingToObservations(joined_df_2, pointing_db)
 
