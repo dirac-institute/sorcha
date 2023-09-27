@@ -23,8 +23,18 @@ def PPMatchPointingToObservations(padain, pointfildb):
 
     """
 
-    resdf = pd.merge(padain, pointfildb, left_on="FieldID", right_on="FieldID", how="left")
+    # resdf = pd.merge(padain, pointfildb, left_on="FieldID", right_on="FieldID", how="left")
 
+    # certain columns were added to the pointing db dataframe to help with ephemeris generation.
+    # they don't need to be included in the result df, so exclude them from the merge.
+    pointing_columns_to_skip = ["visit_vector", "JD_TDB", "pixels", "r_obs", "v_obs", "r_sun", "v_sun"]
+    resdf = pd.merge(
+        padain,
+        pointfildb.loc[:, ~pointfildb.columns.isin(pointing_columns_to_skip)],
+        left_on="FieldID",
+        right_on="FieldID",
+        how="left",
+    )
     colour_values = resdf.optFilter.unique()
     colour_values = pd.Series(colour_values).dropna()
 
