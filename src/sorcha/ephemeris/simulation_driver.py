@@ -35,9 +35,9 @@ def create_ephemeris(orbits_df, pointings_df, args, configs):
 
     t_picket = 2460000.5
 
-    ephem, gm_sun = create_assist_ephemeris(args)
+    ephem, gm_sun, gm_total = create_assist_ephemeris(args)
     furnish_spiceypy(args)
-    sim_dict = generate_simulations(ephem, gm_sun, orbits_df)
+    sim_dict = generate_simulations(ephem, gm_sun, gm_total, orbits_df)
     pixel_dict = defaultdict(list)
     observatories = Observatory(args)
 
