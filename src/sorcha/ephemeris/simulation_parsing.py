@@ -80,17 +80,6 @@ def parse_orbit_row(row, epochMJD_TDB, ephem, sun_dict, gm_sun, gm_total):
                 epochMJD_TDB - (row["ma"] * np.pi / 180.0) * np.sqrt(row["a"] ** 3 / gm_total),
                 epochMJD_TDB,
             )
-        elif orbit_format == "BKEP":
-            ecx, ecy, ecz, dx, dy, dz = universal_cartesian(
-                gm_total,
-                row["a"] * (1 - row["e"]),
-                row["e"],
-                row["inc"] * np.pi / 180.0,
-                row["node"] * np.pi / 180.0,
-                row["argPeri"] * np.pi / 180.0,
-                epochMJD_TDB - (row["ma"] * np.pi / 180.0) * np.sqrt(row["a"] ** 3 / gm_total),
-                epochMJD_TDB,
-            )
         else:
             raise ValueError("Provided orbit format not supported.")
     else:

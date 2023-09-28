@@ -70,14 +70,13 @@ def create_ephemeris(orbits_df, pointings_df, args, configs):
     column_types = defaultdict(ObjID=str, FieldID=str).setdefault(float)
     in_memory_csv.writerow(column_names)
 
-    #t_picket = 2460000.5
     # t_picket is the last time at which the sky positions of all the objects
     # were calculated and placed into a healpix dictionary, i.e. the
     # update_pixel_dict() function is called.  That calculation is redone at
     # regular (tunable) intervals.
     # Setting t_picket to -np.inf ensures that the function is called on the
     # first run.
-    t_picket = -np.inf
+    t_picket = 0
 
     for _, pointing in pointings_df.iterrows():
         mjd_tai = float(pointing["observationStartMJD_TAI"])
