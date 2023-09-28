@@ -21,7 +21,7 @@ out_csv_path = get_data_out_filepath("ephemeris_output.csv")
 
 
 def create_ephemeris(orbits_df, pointings_df, args, configs):
-    """ Generate a set of observations given a collection of orbits
+    """Generate a set of observations given a collection of orbits
     and set of pointings.
 
     This works by calculating and regularly updating the sky-plane
@@ -30,7 +30,7 @@ def create_ephemeris(orbits_df, pointings_df, args, configs):
     A dictionary with pixel indices as keys and lists of ObjIDs for
     those objects in each HEALPix tile as values.  One of these
     calculations is called a 'picket', as one element of a long picket
-    fence.  At present, 
+    fence.  At present,
 
     Given a specific pointing, the set of HEALPix tiles that are overlapped
     by the pointing (and a buffer region) is computed.  These the precise
@@ -44,7 +44,7 @@ def create_ephemeris(orbits_df, pointings_df, args, configs):
         The dataframe containing the collection of orbits.
     pointings_df : pd.DataFrame
         The dataframe containing the collection of telescope/camera pointings.
-    args : 
+    args :
         Various arguments necessary for the calculation
     configs : dict
         Various configuration parameters necessary for the calculation
@@ -66,13 +66,13 @@ def create_ephemeris(orbits_df, pointings_df, args, configs):
         nside : int
             The nside value used for the HEALPIx calculations.  Must be a
             power of 2 (1, 2, 4, ...)  nside=64 is current default.
-    
+
     Returns
     -------
     pd.DataFrame
         The dataframe of observations needed for Sorcha to continue
     """
-        
+
     ang_fov = configs["ar_ang_fov"]
     buffer = configs["ar_fov_buffer"]
     picket_interval = configs["ar_picket"]
@@ -120,14 +120,14 @@ def create_ephemeris(orbits_df, pointings_df, args, configs):
     column_types = defaultdict(ObjID=str, FieldID=str).setdefault(float)
     in_memory_csv.writerow(column_names)
 
-    #t_picket = 2460000.5
+    # t_picket = 2460000.5
     # t_picket is the last time at which the sky positions of all the objects
     # were calculated and placed into a healpix dictionary, i.e. the
     # update_pixel_dict() function is called.  That calculation is redone at
     # regular (tunable) intervals.
     # Setting t_picket to -np.inf ensures that the function is called on the
     # first run.
-    t_picket = -np.inf 
+    t_picket = 0.0
 
     for _, pointing in pointings_df.iterrows():
         mjd_tai = float(pointing["observationStartMJD_TAI"])
