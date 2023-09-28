@@ -31,8 +31,6 @@ def create_ephemeris(orbits_df, pointings_df, args, configs):
     if args.output_ephemeris_file and args.outpath:
         ephemeris_csv_filename = os.path.join(args.outpath, args.output_ephemeris_file)
 
-    t_picket = 2460000.5
-
     ephem, gm_sun, gm_total = create_assist_ephemeris(args)
     furnish_spiceypy(args)
     sim_dict = generate_simulations(ephem, gm_sun, gm_total, orbits_df)
@@ -69,6 +67,15 @@ def create_ephemeris(orbits_df, pointings_df, args, configs):
     )
     column_types = defaultdict(ObjID=str, FieldID=str).setdefault(float)
     in_memory_csv.writerow(column_names)
+
+    #t_picket = 2460000.5
+    # t_picket is the last time at which the sky positions of all the objects
+    # were calculated and placed into a healpix dictionary, i.e. the
+    # update_pixel_dict() function is called.  That calculation is redone at
+    # regular (tunable) intervals.
+    # Setting t_picket to -np.inf ensures that the function is called on the
+    # first run.
+    t_picket = -np.inf 
 
     for _, pointing in pointings_df.iterrows():
         mjd_tai = float(pointing["observationStartMJD_TAI"])
