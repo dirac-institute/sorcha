@@ -14,7 +14,7 @@ def test_calculate_rates_and_geometry():
     ephem_geom_params.r_ast = np.asarray([2.22134111, -1.4666382, -0.88530195])
     ephem_geom_params.v_ast = np.asarray([0.00608846, 0.00585226, 0.00487886])
 
-    pointing = pd.DataFrame(
+    pointing_df = pd.DataFrame(
         {
             "FieldID": 848,
             "observationStartMJD_TAI": 60218.984626,
@@ -26,17 +26,19 @@ def test_calculate_rates_and_geometry():
             "fieldDec": -23.54289743479277,
             "rotSkyPos": 112.25651472435484,
             "observationId_": 848,
-            "visit_vector": [0.555998946329719, -0.7289145382156643, -0.399435561333849],
+            "visit_vector": [[0.555998946329719, -0.7289145382156643, -0.399435561333849]],
             "JD_TDB": 2460219.484998981,
             "pixels": None,
-            "r_obs": [0.9825025212987633, 0.12894773431445178, 0.056115072741286603],
-            "v_obs": [-0.002514846222194574, 0.015645226468919866, 0.006740310710189443],
-            "r_sun": [-0.008375571318557293, -0.0021278397223137443, -0.0006896179222345509],
-            "v_sun": [4.014508061373484e-06, -7.199434717117629e-06, -3.1502131721138966e-06],
+            "r_obs": [[0.9825025212987633, 0.12894773431445178, 0.056115072741286603]],
+            "v_obs": [[-0.002514846222194574, 0.015645226468919866, 0.006740310710189443]],
+            "r_sun": [[-0.008375571318557293, -0.0021278397223137443, -0.0006896179222345509]],
+            "v_sun": [[4.014508061373484e-06, -7.199434717117629e-06, -3.1502131721138966e-06]],
         }
     )
 
-    output_tuple = calculate_rates_and_geometry(pointing, ephem_geom_params)
+    single_pointing = pointing_df.iloc[0]
+
+    output_tuple = calculate_rates_and_geometry(single_pointing, ephem_geom_params)
 
     expected_tuple = (
         "S100cuR2a",
@@ -64,5 +66,4 @@ def test_calculate_rates_and_geometry():
         18.73383934462223,
     )
 
-    # assert np.allclose(output_tuple[1:], expected_tuple[1:])
-    assert True
+    assert np.allclose(output_tuple[1:], expected_tuple[1:])
