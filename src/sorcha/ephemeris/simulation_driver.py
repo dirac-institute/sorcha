@@ -1,7 +1,7 @@
+from dataclasses import dataclass
 from collections import defaultdict
 from csv import writer
 from io import StringIO
-from os import path
 
 import numpy as np
 import pandas as pd
@@ -18,6 +18,17 @@ from sorcha.ephemeris.simulation_parsing import *
 from sorcha.utilities.dataUtilitiesForTests import get_data_out_filepath
 
 out_csv_path = get_data_out_filepath("ephemeris_output.csv")
+
+
+@dataclass
+class EphemerisGeometryParameters:
+    obj_id: str = None
+    mjd_tai: float = None
+    rho: float = None
+    rho_hat: float = None
+    rho_mag: float = None
+    r_ast: float = None
+    v_ast: float = None
 
 
 def create_ephemeris(orbits_df, pointings_df, args, configs):
@@ -86,68 +97,38 @@ def create_ephemeris(orbits_df, pointings_df, args, configs):
             )
             first = 0
 
-        # This should be a separate function
+        # This loop builds a python set containing ids for objects in the pixels
+        # around the current pointing. The function `update_pixel_dict` does
+        # the majority of the computation to build out `pixel_dict`.
         desigs = set()
         for pix in pointing["pixels"]:
             desigs.update(pixel_dict[pix])
 
         for obj_id in sorted(desigs):
+            ephem_geom_params = EphemerisGeometryParameters()
+            ephem_geom_params.obj_id = obj_id
+            ephem_geom_params.mjd_tai = mjd_tai
+
             v = sim_dict[obj_id]
             sim, ex, rho_hat_rough = v["sim"], v["ex"], v["rho_hat"]
             ang = np.arccos(np.dot(rho_hat_rough, pointing["visit_vector"])) * 180 / np.pi
             if ang < ang_fov + buffer:
-                rho, rho_mag, lt, r_ast, v_ast = integrate_light_time(
+                (
+                    ephem_geom_params.rho,
+                    ephem_geom_params.rho_mag,
+                    _,
+                    ephem_geom_params.r_ast,
+                    ephem_geom_params.v_ast,
+                ) = integrate_light_time(
                     sim, ex, pointing["JD_TDB"] - ephem.jd_ref, pointing["r_obs"], lt0=0.01
                 )
-                rho_hat = rho / rho_mag
+                ephem_geom_params.rho_hat = ephem_geom_params.rho / ephem_geom_params.rho_mag
 
-                ang_from_center = 180 / np.pi * np.arccos(np.dot(rho_hat, pointing["visit_vector"]))
+                ang_from_center = (
+                    180 / np.pi * np.arccos(np.dot(ephem_geom_params.rho_hat, pointing["visit_vector"]))
+                )
                 if ang_from_center < ang_fov:
-                    # Only do rates and geometry if the object is within the FOV
-                    ra0, dec0 = vec2ra_dec(rho_hat)
-                    drhodt = v_ast - pointing["v_obs"]
-                    drho_magdt = (1 / rho_mag) * np.dot(rho, drhodt)
-                    ddeltatdt = drho_magdt / (SPEED_OF_LIGHT)
-                    drhodt = v_ast * (1 - ddeltatdt) - pointing["v_obs"]
-                    A, D = get_residual_vectors(rho_hat)
-                    drho_hatdt = drhodt / rho_mag - drho_magdt * rho_hat / rho_mag
-                    dradt = np.dot(A, drho_hatdt)
-                    ddecdt = np.dot(D, drho_hatdt)
-                    r_ast_sun = r_ast - pointing["r_sun"]
-                    v_ast_sun = v_ast - pointing["v_sun"]
-                    r_ast_obs = r_ast - pointing["r_obs"]
-                    phase_angle = np.arccos(
-                        np.dot(r_ast_sun, r_ast_obs) / (np.linalg.norm(r_ast_sun) * np.linalg.norm(r_ast_obs))
-                    )
-                    obs_sun = np.asarray(pointing["r_obs"]) - np.asarray(pointing["r_sun"])
-                    dobs_sundt = np.asarray(pointing["v_obs"]) - np.asarray(pointing["v_sun"])
-
-                    out_tuple = (
-                        obj_id,
-                        pointing["FieldID"],
-                        mjd_tai,
-                        pointing["JD_TDB"],
-                        rho_mag * AU_KM,
-                        drho_magdt * AU_KM / (24 * 60 * 60),
-                        ra0,
-                        dradt * 180 / np.pi,
-                        dec0,
-                        ddecdt * 180 / np.pi,
-                        r_ast_sun[0] * AU_KM,
-                        r_ast_sun[1] * AU_KM,
-                        r_ast_sun[2] * AU_KM,
-                        v_ast_sun[0] * AU_KM / (24 * 60 * 60),
-                        v_ast_sun[1] * AU_KM / (24 * 60 * 60),
-                        v_ast_sun[2] * AU_KM / (24 * 60 * 60),
-                        obs_sun[0] * AU_KM,
-                        obs_sun[1] * AU_KM,
-                        obs_sun[2] * AU_KM,
-                        dobs_sundt[0] * AU_KM / (24 * 60 * 60),
-                        dobs_sundt[1] * AU_KM / (24 * 60 * 60),
-                        dobs_sundt[2] * AU_KM / (24 * 60 * 60),
-                        phase_angle * 180 / np.pi,
-                    )
-
+                    out_tuple = calculate_rates_and_geometry(pointing, ephem_geom_params)
                     in_memory_csv.writerow(out_tuple)
 
     # reset to the beginning of the in-memory CSV
@@ -199,3 +180,66 @@ def update_pixel_dict(JD_TDB, t_picket, picket_interval, sim_dict, ephem, obsCod
         this_pix = hp.vec2pix(nside, rho_hat[0], rho_hat[1], rho_hat[2], nest=True)
         pixel_dict[this_pix].append(k)
     return t_picket, pixel_dict, r_obs
+
+
+def calculate_rates_and_geometry(pointing: pd.DataFrame, ephem_geom_params: EphemerisGeometryParameters):
+    """Calculate rates and geometry for objects within the field of view
+
+    Parameters
+    ----------
+    pointing : pd.DataFrame
+        The dataframe containing the pointing database.
+    ephem_geom_params : EphemerisGeometryParameters
+        Various parameters necessary to calculate the ephemeris
+
+    Returns
+    -------
+    tuple
+        Tuple containing the ephemeris parameters needed for Sorcha post processing.
+    """
+    ra0, dec0 = vec2ra_dec(ephem_geom_params.rho_hat)
+    drhodt = ephem_geom_params.v_ast - pointing["v_obs"]
+    drho_magdt = (1 / ephem_geom_params.rho_mag) * np.dot(ephem_geom_params.rho, drhodt)
+    ddeltatdt = drho_magdt / (SPEED_OF_LIGHT)
+    drhodt = ephem_geom_params.v_ast * (1 - ddeltatdt) - pointing["v_obs"]
+    A, D = get_residual_vectors(ephem_geom_params.rho_hat)
+    drho_hatdt = (
+        drhodt / ephem_geom_params.rho_mag
+        - drho_magdt * ephem_geom_params.rho_hat / ephem_geom_params.rho_mag
+    )
+    dradt = np.dot(A, drho_hatdt)
+    ddecdt = np.dot(D, drho_hatdt)
+    r_ast_sun = ephem_geom_params.r_ast - pointing["r_sun"]
+    v_ast_sun = ephem_geom_params.v_ast - pointing["v_sun"]
+    r_ast_obs = ephem_geom_params.r_ast - pointing["r_obs"]
+    phase_angle = np.arccos(
+        np.dot(r_ast_sun, r_ast_obs) / (np.linalg.norm(r_ast_sun) * np.linalg.norm(r_ast_obs))
+    )
+    obs_sun = np.asarray(pointing["r_obs"]) - np.asarray(pointing["r_sun"])
+    dobs_sundt = np.asarray(pointing["v_obs"]) - np.asarray(pointing["v_sun"])
+
+    return (
+        ephem_geom_params.obj_id,
+        pointing["FieldID"],
+        ephem_geom_params.mjd_tai,
+        pointing["JD_TDB"],
+        ephem_geom_params.rho_mag * AU_KM,
+        drho_magdt * AU_KM / (24 * 60 * 60),
+        ra0,
+        dradt * 180 / np.pi,
+        dec0,
+        ddecdt * 180 / np.pi,
+        r_ast_sun[0] * AU_KM,
+        r_ast_sun[1] * AU_KM,
+        r_ast_sun[2] * AU_KM,
+        v_ast_sun[0] * AU_KM / (24 * 60 * 60),
+        v_ast_sun[1] * AU_KM / (24 * 60 * 60),
+        v_ast_sun[2] * AU_KM / (24 * 60 * 60),
+        obs_sun[0] * AU_KM,
+        obs_sun[1] * AU_KM,
+        obs_sun[2] * AU_KM,
+        dobs_sundt[0] * AU_KM / (24 * 60 * 60),
+        dobs_sundt[1] * AU_KM / (24 * 60 * 60),
+        dobs_sundt[2] * AU_KM / (24 * 60 * 60),
+        phase_angle * 180 / np.pi,
+    )
