@@ -97,7 +97,9 @@ def create_ephemeris(orbits_df, pointings_df, args, configs):
             )
             first = 0
 
-        # This should be a separate function
+        # This loop builds a python set containing ids for objects in the pixels
+        # around the current pointing. The function `update_pixel_dict` does
+        # the majority of the computation to build out `pixel_dict`.
         desigs = set()
         for pix in pointing["pixels"]:
             desigs.update(pixel_dict[pix])
