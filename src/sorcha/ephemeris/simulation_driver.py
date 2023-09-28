@@ -80,6 +80,7 @@ def create_ephemeris(orbits_df, pointings_df, args, configs):
     nside = 2 ** configs["ar_healpix_order"]
     first = 1  # Try to get away from this
 
+    ephemeris_csv_filename = None
     if args.output_ephemeris_file and args.outpath:
         ephemeris_csv_filename = os.path.join(args.outpath, args.output_ephemeris_file)
 
