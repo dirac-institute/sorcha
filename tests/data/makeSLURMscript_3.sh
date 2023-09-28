@@ -3,10 +3,8 @@
 #SBATCH --ntasks=2
 
 
-rm -r ../data/_cache
-wait
-mkdir ../data/test1
-srun --exclusive -N1 -n1 -c1 sorcha -c ../data/test_PPConfig.ini -p ../data/params_test1.txt -o ../data/orbits_test1.txt -e ../data/oif_test1.txt -u ../data/test1 -t test1 & 
-mkdir ../data/test2
-srun --exclusive -N1 -n1 -c1 sorcha -c ../data/test_PPConfig.ini -p ../data/params_test2.txt -o ../data/orbits_test2.txt -e ../data/oif_test2.txt -u ../data/test2 -t test2 & 
+mkdir ../data/orbits_test1
+srun --exclusive -N1 -n1 -c1 sorcha -c ../data/test_PPConfig.ini -ob ../data/orbits_test1.txt -p ../data/params_test1.txt -pd ../data/baseline_10klines_2.0.db -o ../data/orbits_test1 -t SorchaOutput_orbits_test1 -ew ../data/orbits_test1/ephem_orbits_test1.txt -ar ../data & 
+mkdir ../data/orbits_test2
+srun --exclusive -N1 -n1 -c1 sorcha -c ../data/test_PPConfig.ini -ob ../data/orbits_test2.txt -p ../data/params_test2.txt -pd ../data/baseline_10klines_2.0.db -o ../data/orbits_test2 -t SorchaOutput_orbits_test2 -ew ../data/orbits_test2/ephem_orbits_test2.txt -ar ../data & 
 wait
