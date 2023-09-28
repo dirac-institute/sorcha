@@ -26,7 +26,7 @@ def test_OrbitAuxReader():
     )
     assert_equal(expected_columns, orbit_txt.columns.values)
 
-    # Check that we read the correct valude, including dropped columns.
+    # Check that we read the correct value, including dropped columns.
     expected_first_row = np.array(
         [
             "S00000t",
@@ -56,7 +56,7 @@ def test_OrbitAuxReader():
         _ = reader.read_rows(0, 14)
     assert e2.type == SystemExit
 
-    # Incosistent orbit formats
+    # Inconsistent orbit formats
     with pytest.raises(SystemExit) as e3:
         reader = OrbitAuxReader(get_test_filepath("PPReadOrbitFile_bad_format.csv"), "csv")
         _ = reader.read_rows(0, 14)
