@@ -32,6 +32,58 @@ class EphemerisGeometryParameters:
 
 
 def create_ephemeris(orbits_df, pointings_df, args, configs):
+    """Generate a set of observations given a collection of orbits
+    and set of pointings.
+
+    This works by calculating and regularly updating the sky-plane
+    locations (unit vectors) of all the objects in the collection
+    of orbits.  The HEALPix index for each of the locations is calculated.
+    A dictionary with pixel indices as keys and lists of ObjIDs for
+    those objects in each HEALPix tile as values.  One of these
+    calculations is called a 'picket', as one element of a long picket
+    fence.  At present,
+
+    Given a specific pointing, the set of HEALPix tiles that are overlapped
+    by the pointing (and a buffer region) is computed.  These the precise
+    locations of just those objects within that set of HEALPix tiles are
+    computed.  Details for those that actually do land within the field
+    of view are passed along.
+
+    Parameters
+    ----------
+    orbits_df : pd.DataFrame
+        The dataframe containing the collection of orbits.
+    pointings_df : pd.DataFrame
+        The dataframe containing the collection of telescope/camera pointings.
+    args :
+        Various arguments necessary for the calculation
+    configs : dict
+        Various configuration parameters necessary for the calculation
+        ang_fov : float
+            The angular size (deg) of the field of view
+        buffer : float
+            The angular size (deg) of the buffer around the field of view.
+            A buffer is required to allow for some motion between the time
+            of the observation and the time of the picket (t_picket)
+        picket_interval : float
+            The interval (days) between picket calculations.  This is 1 day
+            by default.  Current there is only one such interval, used for
+            all objects.  It is currently possible for extremely fast-moving
+            objects to be missed.  This will be remedied in future releases.
+        obsCode : string
+            The MPC code for the observatory.  (This is current a configuration
+            parameter, but these should be included in the visit information,
+            to allow for multiple observatories.
+        nside : int
+            The nside value used for the HEALPIx calculations.  Must be a
+            power of 2 (1, 2, 4, ...)  nside=64 is current default.
+
+    Returns
+    -------
+    pd.DataFrame
+        The dataframe of observations needed for Sorcha to continue
+    """
+
     ang_fov = configs["ar_ang_fov"]
     buffer = configs["ar_fov_buffer"]
     picket_interval = configs["ar_picket"]
@@ -40,11 +92,8 @@ def create_ephemeris(orbits_df, pointings_df, args, configs):
     first = 1  # Try to get away from this
 
     ephemeris_csv_filename = None
-
     if args.output_ephemeris_file and args.outpath:
         ephemeris_csv_filename = os.path.join(args.outpath, args.output_ephemeris_file)
-
-    t_picket = 2460000.5
 
     ephem, gm_sun = create_assist_ephemeris(args)
     furnish_spiceypy(args)
@@ -82,6 +131,15 @@ def create_ephemeris(orbits_df, pointings_df, args, configs):
     )
     column_types = defaultdict(ObjID=str, FieldID=str).setdefault(float)
     in_memory_csv.writerow(column_names)
+
+    # t_picket is the last time at which the sky positions of all the objects
+    # were calculated and placed into a healpix dictionary, i.e. the
+    # update_pixel_dict() function is called.  That calculation is redone at
+    # regular (tunable) intervals.
+    # Setting t_picket to 0 ensures that the function is called on the
+    # first run.
+
+    t_picket = 0.0
 
     for _, pointing in pointings_df.iterrows():
         mjd_tai = float(pointing["observationStartMJD_TAI"])
