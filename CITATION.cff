@@ -60,14 +60,6 @@ authors:
     family-names: Young
     affiliation: Queen's University Belfast
     orcid: 'https://orcid.org/0000-0002-1229-2499'
-  - given-names: Jeremy
-    family-names: Kubica
-    affiliation: Carnegie Mellon University
-    orcid: ''
-  - given-names: Matthew
-    family-names: Holman
-    affiliation: Harvard University
-    orcid: ''
   - given-names: Pedro
     family-names: Bernardinelli
     affiliation: University of Washington
@@ -75,6 +67,14 @@ authors:
   - given-names: Colin
     family-names: Chandler
     affiliation: University of Washington
+    orcid: ''
+  - given-names: Matthew
+    family-names: Holman
+    affiliation: Harvard University
+    orcid: ''
+  - given-names: Jeremy
+    family-names: Kubica
+    affiliation: Carnegie Mellon University
     orcid: ''
   - given-names: Jake
     family-names: Kurlander
