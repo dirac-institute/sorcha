@@ -67,10 +67,10 @@ authors:
   - given-names: Colin
     family-names: Chandler
     affiliation: University of Washington
-    orcid: ''
+    orcid: 'https://orcid.org/0000-0001-7335-1715'
   - given-names: Matthew
     family-names: Holman
-    affiliation: Center for Astrophysics | Harvard & Smithsonian
+    affiliation: Center for Astrophysics - Harvard & Smithsonian
     orcid: 'https://orcid.org/0000-0002-1139-4880'
   - given-names: Jeremy
     family-names: Kubica
