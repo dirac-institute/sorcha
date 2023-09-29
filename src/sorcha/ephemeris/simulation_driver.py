@@ -83,6 +83,7 @@ def create_ephemeris(orbits_df, pointings_df, args, configs):
     pd.DataFrame
         The dataframe of observations needed for Sorcha to continue
     """
+    verboselog = args.pplogger.info if args.verbose else lambda *a, **k: None
 
     ang_fov = configs["ar_ang_fov"]
     buffer = configs["ar_fov_buffer"]
@@ -95,8 +96,11 @@ def create_ephemeris(orbits_df, pointings_df, args, configs):
     if args.output_ephemeris_file and args.outpath:
         ephemeris_csv_filename = os.path.join(args.outpath, args.output_ephemeris_file)
 
+    verboselog("Building ASSIST ephemeris object.")
     ephem, gm_sun = create_assist_ephemeris(args)
+    verboselog("Furnishing SPICE kernels.")
     furnish_spiceypy(args)
+    verboselog("Generating simulations.")
     sim_dict = generate_simulations(ephem, gm_sun, orbits_df)
     pixel_dict = defaultdict(list)
     observatories = Observatory(args)
@@ -140,6 +144,8 @@ def create_ephemeris(orbits_df, pointings_df, args, configs):
     # first run.
 
     t_picket = 0.0
+
+    verboselog("Generating ephemeris...")
 
     for _, pointing in pointings_df.iterrows():
         mjd_tai = float(pointing["observationStartMJD_TAI"])
@@ -189,12 +195,14 @@ def create_ephemeris(orbits_df, pointings_df, args, configs):
                     out_tuple = calculate_rates_and_geometry(pointing, ephem_geom_params)
                     in_memory_csv.writerow(out_tuple)
 
+    verboselog("Ephemeris generated.")
     # reset to the beginning of the in-memory CSV
     output.seek(0)
     ephemeris_df = pd.read_csv(output, dtype=column_types)
 
     # if the user has defined an output file name for the ephemeris results, write out to that file
     if ephemeris_csv_filename:
+        verboselog("Writing out ephemeris results to file.")
         write_header = True
         # due to chunking, if the file already exists and it has contents, then we won't include the header information
         if os.path.exists(ephemeris_csv_filename) and os.stat(ephemeris_csv_filename).st_size != 0:
@@ -203,6 +211,7 @@ def create_ephemeris(orbits_df, pointings_df, args, configs):
 
     # join the ephemeris and input orbits dataframe, take special care to make
     # sure the 'ObjID' column types match.
+    verboselog("Joining ephemeris to orbits dataframe.")
     ephemeris_df["ObjID"] = ephemeris_df["ObjID"].astype("string")
     orbits_df["ObjID"] = orbits_df["ObjID"].astype("string")
     observations = ephemeris_df.join(orbits_df.set_index("ObjID"), on="ObjID")
