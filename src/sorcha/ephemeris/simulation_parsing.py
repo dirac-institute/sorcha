@@ -24,7 +24,8 @@ def mjd_tai_to_epoch(mjd_tai):
 def parse_orbit_row(row, epochMJD_TDB, ephem, sun_dict, gm_sun, gm_total):
     orbit_format = row["FORMAT"]
 
-    if orbit_format != "CART":
+    #if orbit_format != "CART":
+    if orbit_format not in ['CART', 'BCART']:
         if orbit_format == "COM":
             ecx, ecy, ecz, dx, dy, dz = universal_cartesian(
                 gm_sun,
