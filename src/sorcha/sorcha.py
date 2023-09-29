@@ -480,6 +480,14 @@ def main():
         pplogger.error("ERROR: A+R simulation not enabled and no ephemerides file provided")
         sys.exit("ERROR: A+R simulation not enabled and no ephemerides file provided")
 
+    if configs["lc_model"] and cmd_args["complex_physical_parameters"] is None:
+        pplogger.error("ERROR: No complex physical parameter file provided for light curve model")
+        sys.exit("ERROR: No complex physical parameter file provided for light curve model")
+
+    if configs["comet_activity"] and cmd_args["complex_physical_parameters"] is None:
+        pplogger.error("ERROR: No complex physical parameter file provided for comet activity model")
+        sys.exit("ERROR: No complex physical parameter file provided for comet activity model")
+
     if "SORCHA_SEED" in os.environ:
         cmd_args["seed"] = int(os.environ["SORCHA_SEED"])
         pplogger.info(f"Random seed overridden via environmental variable, SORCHA_SEED={cmd_args['seed']}")
