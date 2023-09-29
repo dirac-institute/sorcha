@@ -144,20 +144,6 @@ def PPWriteOutput(cmd_args, configs, observations_in, endChunk=0, verbose=False)
         verboselog("Output to CSV file...")
         observations = PPOutWriteCSV(observations, out)
 
-    elif configs["output_format"] == "separatelycsv":
-        outputsuffix = ".csv"
-        objid_list = observations["ObjID"].unique().tolist()
-        verboselog("Output to " + str(len(objid_list)) + " separate output CSV files...")
-
-        i = 0
-        while i < len(objid_list):
-            single_object_df = pd.DataFrame(observations[observations["ObjID"] == objid_list[i]])
-            out = os.path.join(
-                cmd_args.outpath, str(objid_list[i]) + "_" + cmd_args.outfilestem + outputsuffix
-            )
-            observations = PPOutWriteCSV(single_object_df, out)
-            i = i + 1
-
     elif configs["output_format"] == "sqlite3":
         outputsuffix = ".db"
         out = os.path.join(cmd_args.outpath, cmd_args.outfilestem + outputsuffix)

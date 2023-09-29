@@ -187,8 +187,6 @@ def runLSSTSimulation(args, configs, pplogger=None):
         verboselog("Start post processing for this chunk")
         verboselog("Matching pointing database information to observations on rough camera footprint")
 
-        observations = PPMatchPointingToObservations(observations, filterpointing)
-
         # If the ephemeris file doesn't have any observations for the objects in the chunk
         # PPReadAllInput will return an empty dataframe. We thus log a warning.
         if len(observations) == 0:
@@ -197,6 +195,8 @@ def runLSSTSimulation(args, configs, pplogger=None):
             )
             startChunk = startChunk + configs["size_serial_chunk"]
             continue
+
+        observations = PPMatchPointingToObservations(observations, filterpointing)
 
         verboselog("Calculating apparent magnitudes...")
         observations = PPCalculateApparentMagnitude(
@@ -479,6 +479,14 @@ def main():
     if configs["ephemerides_type"] == "external" and cmd_args["oifoutput"] is None:
         pplogger.error("ERROR: A+R simulation not enabled and no ephemerides file provided")
         sys.exit("ERROR: A+R simulation not enabled and no ephemerides file provided")
+
+    if configs["lc_model"] and cmd_args["complex_physical_parameters"] is None:
+        pplogger.error("ERROR: No complex physical parameter file provided for light curve model")
+        sys.exit("ERROR: No complex physical parameter file provided for light curve model")
+
+    if configs["comet_activity"] and cmd_args["complex_physical_parameters"] is None:
+        pplogger.error("ERROR: No complex physical parameter file provided for comet activity model")
+        sys.exit("ERROR: No complex physical parameter file provided for comet activity model")
 
     if "SORCHA_SEED" in os.environ:
         cmd_args["seed"] = int(os.environ["SORCHA_SEED"])

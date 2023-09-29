@@ -43,7 +43,6 @@ def setup_and_teardown_for_PPWriteOutput():
     tmp_path = os.path.dirname(get_test_filepath("test_input_fullobs.csv"))
 
     os.remove(os.path.join(tmp_path, "PPOutput_test_out.csv"))
-    os.remove(os.path.join(tmp_path, "S1000000a_PPOutput_test_out.csv"))
     os.remove(os.path.join(tmp_path, "PPOutput_test_out.db"))
 
 
@@ -117,10 +116,6 @@ def test_PPWriteOutput(setup_and_teardown_for_PPWriteOutput):
     PPWriteOutput(args, configs, observations, 10)
     csv_test_in = pd.read_csv(os.path.join(tmp_path, "PPOutput_test_out.csv"))
 
-    configs["output_format"] = "separatelycsv"
-    PPWriteOutput(args, configs, observations, 10)
-    sep_test_in = pd.read_csv(os.path.join(tmp_path, "S1000000a_PPOutput_test_out.csv"))
-
     configs["output_format"] = "sqlite3"
     PPWriteOutput(args, configs, observations, 10)
     cnx = sqlite3.connect(os.path.join(tmp_path, "PPOutput_test_out.db"))
@@ -150,7 +145,6 @@ def test_PPWriteOutput(setup_and_teardown_for_PPWriteOutput):
     )
 
     assert_equal(csv_test_in.loc[0, :].values, expected)
-    assert_equal(sep_test_in.loc[0, :].values, expected)
     assert_equal(sql_test_in.loc[0, :].values, expected)
 
     return
