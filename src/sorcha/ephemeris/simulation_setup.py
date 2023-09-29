@@ -83,7 +83,7 @@ def furnish_spiceypy(args):
     spice.furnsh(meta_kernel)
 
 
-def generate_simulations(ephem, gm_sun, gm_total, orbits_df):
+def generate_simulations(ephem, gm_sun, gm_total, orbits_df, args):
     sim_dict = defaultdict(dict)  # return
 
     sun_dict = dict()  # This could be passed in and reused
@@ -93,7 +93,11 @@ def generate_simulations(ephem, gm_sun, gm_total, orbits_df):
         if epoch < 2400000.5:
             epoch += 2400000.5
 
-        x, y, z, vx, vy, vz = sp.parse_orbit_row(row, epoch, ephem, sun_dict, gm_sun, gm_total)
+        try:
+            x, y, z, vx, vy, vz = sp.parse_orbit_row(row, epoch, ephem, sun_dict, gm_sun, gm_total)
+        except ValueError as val_err:
+            args.pplogger.error(val_err)
+            sys.exit(val_err)
 
         # Instantiate a rebound particle
         ic = rebound.Particle(x=x, y=y, z=z, vx=vx, vy=vy, vz=vz)
