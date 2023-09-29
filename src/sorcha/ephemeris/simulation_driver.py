@@ -100,7 +100,7 @@ def create_ephemeris(orbits_df, pointings_df, args, configs):
     ephem, gm_sun = create_assist_ephemeris(args)
     verboselog("Furnishing SPICE kernels.")
     furnish_spiceypy(args)
-    verboselog("Generating simulations.")
+    verboselog("Generating ASSIST+REBOUND simulations.")
     sim_dict = generate_simulations(ephem, gm_sun, orbits_df)
     pixel_dict = defaultdict(list)
     observatories = Observatory(args)
