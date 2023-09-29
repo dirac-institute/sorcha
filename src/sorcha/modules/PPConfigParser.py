@@ -625,9 +625,9 @@ def PPConfigFileParser(configfile, survey_name):
     config_dict["output_format"] = PPGetOrExit(
         config, "OUTPUT", "output_format", "ERROR: output format not specified."
     ).lower()
-    if config_dict["output_format"] not in ["csv", "separatelycsv", "sqlite3", "hdf5", "h5"]:
-        pplogger.error("ERROR: output_format should be either csv, separatelycsv, sqlite3 or hdf5.")
-        sys.exit("ERROR: output_format should be either csv, separatelycsv, sqlite3 or hdf5.")
+    if config_dict["output_format"] not in ["csv", "sqlite3", "hdf5", "h5"]:
+        pplogger.error("ERROR: output_format should be either csv, sqlite3 or hdf5.")
+        sys.exit("ERROR: output_format should be either csv, sqlite3 or hdf5.")
 
     config_dict["output_size"] = PPGetOrExit(
         config, "OUTPUT", "output_size", "ERROR: output size not specified."
