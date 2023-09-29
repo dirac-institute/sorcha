@@ -187,8 +187,6 @@ def runLSSTSimulation(args, configs, pplogger=None):
         verboselog("Start post processing for this chunk")
         verboselog("Matching pointing database information to observations on rough camera footprint")
 
-        observations = PPMatchPointingToObservations(observations, filterpointing)
-
         # If the ephemeris file doesn't have any observations for the objects in the chunk
         # PPReadAllInput will return an empty dataframe. We thus log a warning.
         if len(observations) == 0:
@@ -197,6 +195,8 @@ def runLSSTSimulation(args, configs, pplogger=None):
             )
             startChunk = startChunk + configs["size_serial_chunk"]
             continue
+
+        observations = PPMatchPointingToObservations(observations, filterpointing)
 
         verboselog("Calculating apparent magnitudes...")
         observations = PPCalculateApparentMagnitude(
