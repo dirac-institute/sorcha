@@ -74,24 +74,26 @@ class OrbitAuxReader(CSVDataReader):
         cometary_elements = ["ObjID", "q", "e", "inc", "node", "argPeri", "t_p", "epochMJD_TDB"]
         cartesian_elements = ["ObjID", "x", "y", "z", "xdot", "ydot", "zdot", "epochMJD_TDB"]
 
-        if orb_format == "KEP":
+        if orb_format in ["KEP", "BKEP"]:
             if not all(column in input_table.columns for column in keplerian_elements):
                 pplogger.error("ERROR: PPReadOrbitFile: Must provide all keplerian orbital elements.")
                 sys.exit("ERROR: PPReadOrbitFile: Must provide all keplerian orbital elements.")
-        elif orb_format == "COM":
+        elif orb_format in ["COM", "BCOM"]:
             if not all(column in input_table.columns for column in cometary_elements):
                 pplogger.error("ERROR: PPReadOrbitFile: Must provide all cometary orbital elements.")
                 sys.exit("ERROR: PPReadOrbitFile: Must provide all cometary orbital elements.")
-        elif orb_format == "CART":
+        elif orb_format in ["CART", "BCART"]:
             if not all(column in input_table.columns for column in cartesian_elements):
                 pplogger.error("ERROR: PPReadOrbitFile: Must provide all cartesian coordinate values.")
                 sys.exit("ERROR: PPReadOrbitFile: Must provide all cartesian coordinate values.")
         else:
             pplogger.error(
-                "ERROR: PPReadOrbitFile: Orbit format must be cometary (COM), keplerian (KEP), or cartesian (CART)."
+                "ERROR: PPReadOrbitFile: Orbit format must be one of cometary (COM), keplerian (KEP), cartesian (CART),"
+                "barycentric cometary (BCOM), barycentric keplerian (BKEP), or barycentric cartesian (BCART)."
             )
             sys.exit(
-                "ERROR: PPReadOrbitFile: Orbit format must be cometary (COM), keplerian (KEP), or cartesian (CART)."
+                "ERROR: PPReadOrbitFile: Orbit format must be one of cometary (COM), keplerian (KEP), cartesian (CART),"
+                "barycentric cometary (BCOM), barycentric keplerian (BKEP), or barycentric cartesian (BCART)."
             )
 
         return input_table
