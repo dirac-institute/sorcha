@@ -87,7 +87,7 @@ authors:
   - given-names: Max
     family-names: West
     affiliation: University of Washington
-    orcid: ''
+    orcid: 'https://orcid.org/0009-0003-3171-3118'
 repository-code: >-
   https://github.com/dirac-institute/sorcha
 abstract: >-
