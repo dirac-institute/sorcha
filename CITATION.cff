@@ -60,6 +60,34 @@ authors:
     family-names: Young
     affiliation: Queen's University Belfast
     orcid: 'https://orcid.org/0000-0002-1229-2499'
+  - given-names: Jeremy
+    family-names: Kubica
+    affiliation: Carnegie Mellon University
+    orcid: ''
+  - given-names: Matthew
+    family-names: Holman
+    affiliation: Harvard University
+    orcid: ''
+  - given-names: Pedro
+    family-names: Bernardinelli
+    affiliation: University of Washington
+    orcid: 'https://orcid.org/0000-0003-0743-9422'
+  - given-names: Colin
+    family-names: Chandler
+    affiliation: University of Washington
+    orcid: ''
+  - given-names: Jake
+    family-names: Kurlander
+    affiliation: University of Washington
+    orcid: ''
+  - given-names: Drew
+    family-names: Oldag
+    affiliation: University of Washington
+    orcid: 'https://orcid.org/0000-0001-6984-8411'
+  - given-names: Max
+    family-names: West
+    affiliation: University of Washington
+    orcid: ''
 repository-code: >-
   https://github.com/dirac-institute/sorcha
 abstract: >-
