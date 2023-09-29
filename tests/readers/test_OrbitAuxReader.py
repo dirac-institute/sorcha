@@ -62,3 +62,61 @@ def test_OrbitAuxReader():
         _ = reader.read_rows(0, 14)
     assert e3.type == SystemExit
     assert "consistent FORMAT" in str(e3.value)
+
+
+def test_orbit_reader_com():
+    csv_reader = OrbitAuxReader(get_test_filepath("orbit_test_files/orbit_com.csv"), "csv")
+    orbit_csv = csv_reader.read_rows()
+    assert_equal(len(orbit_csv), 5)
+
+    # Check that we modify the columns (i -> incl, etc.)
+    expected_columns = np.array(
+        ["ObjID", "FORMAT", "q", "e", "inc", "node", "argPeri", "t_p", "epochMJD_TDB"], dtype=object
+    )
+    assert_equal(expected_columns, orbit_csv.columns.values)
+
+    # Check that we read the correct value, including dropped columns.
+    expected_first_row = np.array(
+        [
+            "S00000t",
+            "COM",
+            0.952105479028,
+            0.504888475701,
+            4.899098347472,
+            148.881068605772,
+            39.949789586436,
+            54486.32292808,
+            54466.0,
+        ],
+        dtype=object,
+    )
+    assert_equal(expected_first_row, orbit_csv.iloc[0].values)
+
+
+def test_orbit_reader_bcom():
+    csv_reader = OrbitAuxReader(get_test_filepath("orbit_test_files/orbit_bcom.csv"), "csv")
+    orbit_csv = csv_reader.read_rows()
+    assert_equal(len(orbit_csv), 5)
+
+    # Check that we modify the columns (i -> incl, etc.)
+    expected_columns = np.array(
+        ["ObjID", "FORMAT", "q", "e", "inc", "node", "argPeri", "t_p", "epochMJD_TDB"], dtype=object
+    )
+    assert_equal(expected_columns, orbit_csv.columns.values)
+
+    # Check that we read the correct value, including dropped columns.
+    expected_first_row = np.array(
+        [
+            "S00000t",
+            "BCOM",
+            0.952105479028,
+            0.504888475701,
+            4.899098347472,
+            148.881068605772,
+            39.949789586436,
+            54486.32292808,
+            54466.0,
+        ],
+        dtype=object,
+    )
+    assert_equal(expected_first_row, orbit_csv.iloc[0].values)
