@@ -70,8 +70,8 @@ authors:
     orcid: ''
   - given-names: Matthew
     family-names: Holman
-    affiliation: Harvard University
-    orcid: ''
+    affiliation: Center for Astrophysics | Harvard & Smithsonian
+    orcid: 'https://orcid.org/0000-0002-1139-4880'
   - given-names: Jeremy
     family-names: Kubica
     affiliation: Carnegie Mellon University
