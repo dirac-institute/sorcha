@@ -21,13 +21,24 @@ def mjd_tai_to_epoch(mjd_tai):
     return epoch
 
 
-def parse_orbit_row(row, epochMJD_TDB, ephem, sun_dict, gm_sun):
+def parse_orbit_row(row, epochMJD_TDB, ephem, sun_dict, gm_sun, gm_total):
     orbit_format = row["FORMAT"]
 
-    if orbit_format != "CART":
+    if orbit_format not in ["CART", "BCART"]:
         if orbit_format == "COM":
             ecx, ecy, ecz, dx, dy, dz = universal_cartesian(
                 gm_sun,
+                row["q"],
+                row["e"],
+                row["inc"] * np.pi / 180.0,
+                row["node"] * np.pi / 180.0,
+                row["argPeri"] * np.pi / 180.0,
+                row["t_p"],
+                epochMJD_TDB,
+            )
+        elif orbit_format == "BCOM":
+            ecx, ecy, ecz, dx, dy, dz = universal_cartesian(
+                gm_total,
                 row["q"],
                 row["e"],
                 row["inc"] * np.pi / 180.0,
@@ -47,6 +58,17 @@ def parse_orbit_row(row, epochMJD_TDB, ephem, sun_dict, gm_sun):
                 epochMJD_TDB - (row["ma"] * np.pi / 180.0) * np.sqrt(row["a"] ** 3 / gm_sun),
                 epochMJD_TDB,
             )
+        elif orbit_format == "BKEP":
+            ecx, ecy, ecz, dx, dy, dz = universal_cartesian(
+                gm_total,
+                row["a"] * (1 - row["e"]),
+                row["e"],
+                row["inc"] * np.pi / 180.0,
+                row["node"] * np.pi / 180.0,
+                row["argPeri"] * np.pi / 180.0,
+                epochMJD_TDB - (row["ma"] * np.pi / 180.0) * np.sqrt(row["a"] ** 3 / gm_total),
+                epochMJD_TDB,
+            )
         else:
             raise ValueError("Provided orbit format not supported.")
     else:
@@ -61,8 +83,9 @@ def parse_orbit_row(row, epochMJD_TDB, ephem, sun_dict, gm_sun):
     equatorial_coords = np.array(ecliptic_to_equatorial([ecx, ecy, ecz]))
     equatorial_velocities = np.array(ecliptic_to_equatorial([dx, dy, dz]))
 
-    equatorial_coords += np.array((sun.x, sun.y, sun.z))
-    equatorial_velocities += np.array((sun.vx, sun.vy, sun.vz))
+    if orbit_format in ["KEP", "COM", "CART"]:
+        equatorial_coords += np.array((sun.x, sun.y, sun.z))
+        equatorial_velocities += np.array((sun.vx, sun.vy, sun.vz))
 
     return tuple(np.concatenate([equatorial_coords, equatorial_velocities]))
 

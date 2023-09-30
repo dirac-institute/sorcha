@@ -97,11 +97,11 @@ def create_ephemeris(orbits_df, pointings_df, args, configs):
         ephemeris_csv_filename = os.path.join(args.outpath, args.output_ephemeris_file)
 
     verboselog("Building ASSIST ephemeris object.")
-    ephem, gm_sun = create_assist_ephemeris(args)
+    ephem, gm_sun, gm_total = create_assist_ephemeris(args)
     verboselog("Furnishing SPICE kernels.")
     furnish_spiceypy(args)
     verboselog("Generating ASSIST+REBOUND simulations.")
-    sim_dict = generate_simulations(ephem, gm_sun, orbits_df)
+    sim_dict = generate_simulations(ephem, gm_sun, gm_total, orbits_df, args)
     pixel_dict = defaultdict(list)
     observatories = Observatory(args)
 
