@@ -21,15 +21,12 @@ classifiers = [
 ]
 dynamic = ["version"]
 dependencies = [
-#    "numpy==1.24.3",
     "numpy",
     "pandas>=2.0",
-    "scipy",
     "astropy",
     "matplotlib",
     "sbpy",
     "tables",
-#    "difi == 1.2rc3",
     "spiceypy",
     "healpy",
     "assist",
