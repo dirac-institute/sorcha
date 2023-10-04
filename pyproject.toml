@@ -21,15 +21,12 @@ classifiers = [
 ]
 dynamic = ["version"]
 dependencies = [
-#    "numpy==1.24.3",
     "numpy",
     "pandas>=2.0",
-    "scipy",
     "astropy",
     "matplotlib",
     "sbpy",
     "tables",
-#    "difi == 1.2rc3",
     "spiceypy",
     "healpy",
     "assist",
@@ -41,12 +38,9 @@ dependencies = [
 
 [project.scripts]
 sorcha = "sorcha.sorcha:main"
-makeConfigOIF = "sorcha.utilities.makeConfigOIF:main"
 makeConfigSorcha = "sorcha.utilities.makeConfigPP:main"
-makeMultiConfigOIF = "sorcha.utilities.makeMultiConfigOIF:main"
 makeSLURMscript = "sorcha.utilities.makeSLURMscript:main"
 createResultsSQLDatabase = "sorcha.utilities.createResultsSQLDatabase:main"
-createTemporaryDatabases = "sorcha.utilities.createTemporaryDatabases:main"
 bootstrap_sorcha_data_files = "sorcha.utilities.retrieve_ephemeris_data_files:main"
 
 [project.urls]
@@ -98,7 +92,7 @@ benchmark = [
 [build-system]
 requires = [
     "setuptools>=62", # Used to build and package the Python project
-    "setuptools_scm>=6.2", # Gets release version from git. Makes it available programmatically
+    "setuptools_scm>=7.0", # Gets release version from git. Makes it available programmatically
 ]
 build-backend = "setuptools.build_meta"
 
