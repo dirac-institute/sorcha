@@ -21,11 +21,16 @@ def mjd_tai_to_epoch(mjd_tai):
     return epoch
 
 
-def parse_orbit_row(row, epochMJD_TDB, ephem, sun_dict, gm_sun, gm_total):
+def parse_orbit_row(row, epochJD_TDB, ephem, sun_dict, gm_sun, gm_total):
     orbit_format = row["FORMAT"]
 
     if orbit_format not in ["CART", "BCART"]:
         if orbit_format == "COM":
+            # JD to MJD conversion if necessary
+            t_p = row["t_p"]
+            if t_p < 2400000.5:
+                t_p += 2400000.5
+
             ecx, ecy, ecz, dx, dy, dz = universal_cartesian(
                 gm_sun,
                 row["q"],
@@ -33,10 +38,14 @@ def parse_orbit_row(row, epochMJD_TDB, ephem, sun_dict, gm_sun, gm_total):
                 row["inc"] * np.pi / 180.0,
                 row["node"] * np.pi / 180.0,
                 row["argPeri"] * np.pi / 180.0,
-                row["t_p"],
-                epochMJD_TDB,
+                t_p,
+                epochJD_TDB,
             )
         elif orbit_format == "BCOM":
+            # JD to MJD conversion if necessary
+            t_p = row["t_p"]
+            if t_p < 2400000.5:
+                t_p += 2400000.5
             ecx, ecy, ecz, dx, dy, dz = universal_cartesian(
                 gm_total,
                 row["q"],
@@ -44,8 +53,8 @@ def parse_orbit_row(row, epochMJD_TDB, ephem, sun_dict, gm_sun, gm_total):
                 row["inc"] * np.pi / 180.0,
                 row["node"] * np.pi / 180.0,
                 row["argPeri"] * np.pi / 180.0,
-                row["t_p"],
-                epochMJD_TDB,
+                t_p,
+                epochJD_TDB,
             )
         elif orbit_format == "KEP":
             ecx, ecy, ecz, dx, dy, dz = universal_cartesian(
@@ -55,8 +64,8 @@ def parse_orbit_row(row, epochMJD_TDB, ephem, sun_dict, gm_sun, gm_total):
                 row["inc"] * np.pi / 180.0,
                 row["node"] * np.pi / 180.0,
                 row["argPeri"] * np.pi / 180.0,
-                epochMJD_TDB - (row["ma"] * np.pi / 180.0) * np.sqrt(row["a"] ** 3 / gm_sun),
-                epochMJD_TDB,
+                epochJD_TDB - (row["ma"] * np.pi / 180.0) * np.sqrt(row["a"] ** 3 / gm_sun),
+                epochJD_TDB,
             )
         elif orbit_format == "BKEP":
             ecx, ecy, ecz, dx, dy, dz = universal_cartesian(
@@ -66,8 +75,8 @@ def parse_orbit_row(row, epochMJD_TDB, ephem, sun_dict, gm_sun, gm_total):
                 row["inc"] * np.pi / 180.0,
                 row["node"] * np.pi / 180.0,
                 row["argPeri"] * np.pi / 180.0,
-                epochMJD_TDB - (row["ma"] * np.pi / 180.0) * np.sqrt(row["a"] ** 3 / gm_total),
-                epochMJD_TDB,
+                epochJD_TDB - (row["ma"] * np.pi / 180.0) * np.sqrt(row["a"] ** 3 / gm_total),
+                epochJD_TDB,
             )
         else:
             raise ValueError("Provided orbit format not supported.")
@@ -75,10 +84,10 @@ def parse_orbit_row(row, epochMJD_TDB, ephem, sun_dict, gm_sun, gm_total):
         ecx, ecy, ecz = row["x"], row["y"], row["z"]
         dx, dy, dz = row["xdot"], row["ydot"], row["zdot"]
 
-    if epochMJD_TDB not in sun_dict:
-        sun_dict[epochMJD_TDB] = ephem.get_particle("Sun", epochMJD_TDB - ephem.jd_ref)
+    if epochJD_TDB not in sun_dict:
+        sun_dict[epochJD_TDB] = ephem.get_particle("Sun", epochJD_TDB - ephem.jd_ref)
 
-    sun = sun_dict[epochMJD_TDB]
+    sun = sun_dict[epochJD_TDB]
 
     equatorial_coords = np.array(ecliptic_to_equatorial([ecx, ecy, ecz]))
     equatorial_velocities = np.array(ecliptic_to_equatorial([dx, dy, dz]))
