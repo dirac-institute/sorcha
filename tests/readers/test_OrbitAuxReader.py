@@ -22,7 +22,7 @@ def test_OrbitAuxReader():
 
     # Check that we modify the columns (i -> incl, etc.)
     expected_columns = np.array(
-        ["ObjID", "FORMAT", "q", "e", "inc", "node", "argPeri", "t_p", "epochMJD_TDB"], dtype=object
+        ["ObjID", "FORMAT", "q", "e", "inc", "node", "argPeri", "t_p_MJD_TDB", "epochMJD_TDB"], dtype=object
     )
     assert_equal(expected_columns, orbit_txt.columns.values)
 
@@ -73,7 +73,7 @@ def test_orbit_reader_com():
 
     # Check that we modify the columns (i -> incl, etc.)
     expected_columns = np.array(
-        ["ObjID", "FORMAT", "q", "e", "inc", "node", "argPeri", "t_p", "epochMJD_TDB"], dtype=object
+        ["ObjID", "FORMAT", "q", "e", "inc", "node", "argPeri", "t_p_MJD_TDB", "epochMJD_TDB"], dtype=object
     )
     assert_equal(expected_columns, orbit_csv.columns.values)
 
@@ -114,7 +114,7 @@ def test_orbit_reader_bcom():
 
     # Check that we modify the columns (i -> incl, etc.)
     expected_columns = np.array(
-        ["ObjID", "FORMAT", "q", "e", "inc", "node", "argPeri", "t_p", "epochMJD_TDB"], dtype=object
+        ["ObjID", "FORMAT", "q", "e", "inc", "node", "argPeri", "t_p_MJD_TDB", "epochMJD_TDB"], dtype=object
     )
     assert_equal(expected_columns, orbit_csv.columns.values)
 

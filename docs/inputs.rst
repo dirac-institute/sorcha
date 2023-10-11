@@ -56,7 +56,7 @@ Cometary Orbit Format
 ~~~~~~~~~~~~~~~~~~~~~~~
 An example of an orbit file in Cometary format::
 
-   objID FORMAT q e inc node argPeri t_p epochMJD_TDB
+   objID FORMAT q e inc node argPeri t_p_MJD_TDB epochMJD_TDB
    S1000000a COM 3.01822 0.05208 22.56035 211.00286 335.42134 51575.94061 54800.00000
    S1000001a COM 2.10974 0.07518 4.91571 209.40298 322.66447 54205.77161 54800.00000
    S1000002a COM 2.80523 0.07777 1.24945 112.52284 139.86858 54468.71747 54800.00000
@@ -80,7 +80,7 @@ An example of an orbit file in Cometary format::
 +-------------+----------------------------------------------------------------------------------+
 | argPeri     | Argument of perihelion (degrees)                                                 |
 +-------------+----------------------------------------------------------------------------------+
-| t_p         | Time of periapsis (degrees)                                                      |
+| t_p_MJD_TDB         | Time of periapsis (years, MJD)                                                      |
 +-------------+----------------------------------------------------------------------------------+
 | epochMJD_TDB| Epoch (MJD)                                                                      |
 +-------------+----------------------------------------------------------------------------------+

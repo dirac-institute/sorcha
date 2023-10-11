@@ -126,7 +126,7 @@ def test_PPReadAllInput():
             "y-r",
             "GS",
             "epochMJD_TDB",
-            "t_p",
+            "t_p_MJD_TDB",
             "argPeri",
             "node",
             "inc",

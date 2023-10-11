@@ -71,7 +71,7 @@ class OrbitAuxReader(CSVDataReader):
             sys.exit("ERROR: Orbit file must have a consistent FORMAT (COM, KEP, or CART).")
 
         keplerian_elements = ["ObjID", "a", "e", "inc", "node", "argPeri", "ma", "epochMJD_TDB"]
-        cometary_elements = ["ObjID", "q", "e", "inc", "node", "argPeri", "t_p", "epochMJD_TDB"]
+        cometary_elements = ["ObjID", "q", "e", "inc", "node", "argPeri", "t_p_MJD_TDB", "epochMJD_TDB"]
         cartesian_elements = ["ObjID", "x", "y", "z", "xdot", "ydot", "zdot", "epochMJD_TDB"]
 
         if orb_format in ["KEP", "BKEP"]:
@@ -82,6 +82,10 @@ class OrbitAuxReader(CSVDataReader):
             if not all(column in input_table.columns for column in cometary_elements):
                 pplogger.error("ERROR: PPReadOrbitFile: Must provide all cometary orbital elements.")
                 sys.exit("ERROR: PPReadOrbitFile: Must provide all cometary orbital elements.")
+            if np.any(input_table["t_p_MJD_TDB"] > 2400000.5):
+                pplogger.warning(
+                    "WARNING: At least one t_p_MJD_TDB is above 2400000.5 - make sure your t_p are MJD and not in JD"
+                )
         elif orb_format in ["CART", "BCART"]:
             if not all(column in input_table.columns for column in cartesian_elements):
                 pplogger.error("ERROR: PPReadOrbitFile: Must provide all cartesian coordinate values.")
