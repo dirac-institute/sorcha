@@ -26,11 +26,8 @@ def parse_orbit_row(row, epochJD_TDB, ephem, sun_dict, gm_sun, gm_total):
 
     if orbit_format not in ["CART", "BCART"]:
         if orbit_format == "COM":
-            # JD to MJD conversion if necessary
-            t_p = row["t_p"]
-            if t_p < 2400000.5:
-                t_p += 2400000.5
-
+            # JD to MJD conversion
+            t_p_JD_TDB = row["t_p_MJD_TDB"] + 2400000.5
             ecx, ecy, ecz, dx, dy, dz = universal_cartesian(
                 gm_sun,
                 row["q"],
@@ -38,14 +35,12 @@ def parse_orbit_row(row, epochJD_TDB, ephem, sun_dict, gm_sun, gm_total):
                 row["inc"] * np.pi / 180.0,
                 row["node"] * np.pi / 180.0,
                 row["argPeri"] * np.pi / 180.0,
-                t_p,
+                t_p_JD_TDB,
                 epochJD_TDB,
             )
         elif orbit_format == "BCOM":
-            # JD to MJD conversion if necessary
-            t_p = row["t_p"]
-            if t_p < 2400000.5:
-                t_p += 2400000.5
+            # JD to MJD conversion 
+            t_p_JD_TDB = row["t_p_MJD_TDB"] + 2400000.5
             ecx, ecy, ecz, dx, dy, dz = universal_cartesian(
                 gm_total,
                 row["q"],
@@ -53,7 +48,7 @@ def parse_orbit_row(row, epochJD_TDB, ephem, sun_dict, gm_sun, gm_total):
                 row["inc"] * np.pi / 180.0,
                 row["node"] * np.pi / 180.0,
                 row["argPeri"] * np.pi / 180.0,
-                t_p,
+                t_p_JD_TDB,
                 epochJD_TDB,
             )
         elif orbit_format == "KEP":
