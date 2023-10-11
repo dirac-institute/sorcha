@@ -116,7 +116,7 @@ def test_CombinedDataReader_ephem():
         "Obs-Sun(J2000vz)(km/s)": 4.677,
         "Sun-Ast-Obs(deg)": 8.010336,
         "epochMJD_TDB": 54800.0,
-        "t_p": 23466.22367,
+        "t_p_MJD_TDB": 23466.22367,
         "argPeri": 284.5519,
         "node": 217.91073,
         "inc": 5.37133,
