@@ -39,7 +39,7 @@ def parse_orbit_row(row, epochJD_TDB, ephem, sun_dict, gm_sun, gm_total):
                 epochJD_TDB,
             )
         elif orbit_format == "BCOM":
-            # JD to MJD conversion 
+            # JD to MJD conversion
             t_p_JD_TDB = row["t_p_MJD_TDB"] + 2400000.5
             ecx, ecy, ecz, dx, dy, dz = universal_cartesian(
                 gm_total,
