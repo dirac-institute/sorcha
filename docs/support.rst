@@ -26,7 +26,7 @@ You will need to install sorcha from the source code via pip in editable mode as
 Contributing to the  Documentation
 --------------------------------------
 
-We are very happy to receivet feedback on the online documentation through the `project's github repository <https://github.com/dirac-institute/sorcha/issues>`_. Beyond pointing out typos and small changes through issues, we welcome pull requests on the 'sphinx <https://www.sphinx-doc.org/en/master/#user-guides>`_ documentation used here on the readthedocs.
+We are very happy to receivet feedback on the online documentation through the `project's github repository <https://github.com/dirac-institute/sorcha/issues>`_. Beyond pointing out typos and small changes through issues, we welcome pull requests on the `sphinx <https://www.sphinx-doc.org/en/master/#user-guides>`_ documentation used here on the readthedocs.
 
 You will need to install the development version of Sorcha from a clone of the Sorcha repository::
 

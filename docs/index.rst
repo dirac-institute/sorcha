@@ -55,6 +55,7 @@ works, tutorials, and demonstration notebooks that show how each of the various 
    configfiles
    outputs
    gettingstarted
+   hpc
    whatsorchadoesnotdo
    notebooks
    troubleshooting

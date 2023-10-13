@@ -20,7 +20,6 @@ Sorcha has the following requirements that will be automatically installed  usin
 * matplotlib
 * sbpy
 * pytables
-* difi == 1.2rc3
 * spiceypy
 * healpy
 * assist
@@ -31,38 +30,57 @@ Sorcha has the following requirements that will be automatically installed  usin
 .. tip::
    We also recomend installing h5py in your conda/mamba environnment to ensure that the proper HD5 libraries are installed. 
 
-.. tip::
-   Currently we have pandas pinned at 2.1 because of a bug in reading in whitespace files. 
 
-.. note::
-   Currently assist is only pip installable. 
 
 Setup Your Conda Environment 
 ------------------------------
 
-**Step 1** Create a conda environment::
+**Step 1** Create a conda or mamba environment.
 
-   conda create -n sorcha -c conda-forge -c moeyensj numpy numba pandas=2.1 scipy astropy matplotlib sbpy pytables difi==1.2rc3 spiceypy healpy rebound pooch tqdm h5py python=3.10
+If using conda::
+
+   conda create -n sorcha -c conda-forge assist numpy numba pandas sscipy astropy matplotlib sbpy pytables spiceypy healpy rebound pooch tqdm h5py python=3.10 
+
+If using mamba::
+
+   mamba create -n sorcha -c conda-forge assist numpy numba pandas scipy astropy matplotlib sbpy pytables spiceypy healpy rebound pooch tqdm h5py python=3.10
 
 .. tip::
    We recommend using python version 3.9 or higher with Sorcha. The conda command uses python 3.10.
 
-**Step 2** Activate your conda environment::
+**Step 2** Activate your conda/mamba environment::
+
+On conda::
 
    conda activate sorcha
+
+On mamba::
+
+   mamba activate sorcha
 
 Installing Sorcha
 ----------------------
 
-Unless you're editing the source code, you can use the version of Sorcha published on pypy using pip::
+Unless you're editing the source code, you can use the version of Sorcha published on conda-forge. 
+
+If using conda::
+
+   conda install -c conda-forge sorcha
+
+If using mamba::
+
+   mamba install -c conda-forge sorcha
+
+You can install sorcha via from pypi using pip, but installation via  conda/mamba is recommended. 
+
+If using pip::
 
    pip install --upgrade sorcha
 
-
 .. _dev_mode:
 
-Installing Sorcha in Development Mode
-----------------------------------------
+Installing Sorcha in Development Mode or For Updating Documention
+---------------------------------------------------------------------
 **Step 1** Create a directory to contain the Sorcha repos::
 
    mkdir sorcha
@@ -79,19 +97,30 @@ Installing Sorcha in Development Mode
 
    cd sorcha
    
-**Step 5** Install an editable (in-place) development version of Sorcha. This will allow you to run the code from the source directory.::
+**Step 5** Install an editable (in-place) development version of Sorcha. This will allow you to run the code from the source directory.
+
+If you just want the source code installed so edits in the source code are auomtatically installed::
 
    pip install -e .
 
-**Step 6** Install the necessary SPICE auxiliary files for ephemeris generation (774 MB total in size)::
+If you are going to be editing documentation or significantly modifying unit tests, it is best to install the full development version::
 
-    bootstrap_sorcha_data_files --cache <directory>
+   pip install '.[dev]'
 
-.. tip::
-   For the getting started tutorial we recommend installing these auxiliary files in ./ar_files
+Downloading Required Supplemental 
+-------------------------------------
+
+To run the internal ephemeris generator, you will need to download the auxiliary files required by  assist and rebound for performing the N-body integrations. 
+  
+To install the necessary SPICE auxiliary files for ephemeris generation (774 MB total in size)::
+
+    bootstrap_sorcha_data_files
+
+.. info::
+   This script will download and store the auxillary files in your computer's local cache directory. 
 
 .. note::
-   These files are stored in your system's cache by default if the --cache flag is not provided. If the files already downloaded and want a fresh download, you need to use the -f flag. 
+   These files are stored in your system's cache by default if the optional --cache flag is not provided. If the files already downloaded and want a fresh download, you need to use the -f flag. 
 
 .. warning:: These files can change/be updated with the revised positions of the planets every once in a while. So if you're running simulations for population statistics, we recommend downloading these files to a directory and having all Sorcha runs these files for consistency. 
  
@@ -100,7 +129,7 @@ Testing Your Sorcha Installation
 
 You can check that the Sorcha installation was done correctly, by downloading the Sorcha source code repository (Steps 1-4 **only**  of :ref:`dev_mode`) and then running::
 
-   sorcha -c ./demo/sorcha_config_demo.ini -p ./demo/sspp_testset_colours.txt -ob ./demo/sspp_testset_orbits.des -pd ./demo/baseline_v2.0_1yr.db -o ./ -t testrun_e2e -ar ./ar_files 
+   sorcha -c ./demo/sorcha_config_demo.ini -p ./demo/sspp_testset_colours.txt -ob ./demo/sspp_testset_orbits.des -pd ./demo/baseline_v2.0_1yr.db -o ./ -t testrun_e2e
    
 The output will appear in a csv file (testrun_e2e.csv) in your current directory. The first 51 lines of the csv file should look like this:
 
