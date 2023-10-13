@@ -27,13 +27,6 @@ class sorchaArguments:
     verbose: bool = False
     """logger verbosity"""
 
-    makeTemporaryEphemerisDatabase: bool = False
-    """whether or not to make ephemeris database"""
-    readTemporaryEphemerisDatabase = False
-    """path to ephemeris database or `False`"""
-    deleteTemporaryEphemerisDatabase: bool = False
-    """whether or not to delete ephemeris database"""
-
     surveyname: str = ""
     """name of the survey (`lsst` is only one implemented currently)"""
 
@@ -63,10 +56,6 @@ class sorchaArguments:
         self.output_ephemeris_file = args.get("output_ephemeris_file")
         self.ar_data_file_path = args.get("ar_data_path")
         self.verbose = args["verbose"]
-
-        self.makeTemporaryEphemerisDatabase = args["makeTemporaryEphemerisDatabase"]
-        self.readTemporaryEphemerisDatabase = args["readTemporaryEphemerisDatabase"]
-        self.deleteTemporaryEphemerisDatabase = args["deleteTemporaryEphemerisDatabase"]
 
         self.surveyname = args["surveyname"]
 
