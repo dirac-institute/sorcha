@@ -13,7 +13,7 @@
 
 Documentation: https://sorcha.readthedocs.io
 
-Other software utilities can be found in this github repository: [https://github.com/dirac-institute/sorcha-add-ons](https://github.com/dirac-institute/sorcha-addons)
+Other software utilities can be found in this github repository: [https://github.com/dirac-institute/sorcha-addons](https://github.com/dirac-institute/sorcha-addons)
 ## developer best practices
 * Data sets should be moved to the `data` folder, have a readme.txt or readme.md to explain where the data came from as well as a time stamp in the readme.txt.
 * Data sets that are used for unit testing should live in `tests/data`.  
