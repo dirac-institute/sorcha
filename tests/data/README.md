@@ -71,10 +71,8 @@ Used by:
 Example OIF output, whitespace-separated.  
 Used by:  
 - test_createResultsSQLDatabase.py  
-- test_createTemporaryDatabases.py  
 - test_makeConfigOIF.py  
 - test_PPJoinEphemeridesAndOrbits.py  
-- test_PPMakeTemporaryEphemerisDatabase.py  
 - test_PPReadEphemerides.py  
 - test_PPReadOif.py
 

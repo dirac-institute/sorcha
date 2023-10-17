@@ -735,20 +735,6 @@ def PPPrintConfigsToLog(configs, cmd_args):
         pplogger.info("The output ephemerides file is located " + cmd_args.output_ephemeris_file)
     pplogger.info("The survey selected is: " + cmd_args.surveyname)
 
-    if cmd_args.makeTemporaryEphemerisDatabase:
-        pplogger.info(
-            "Creating of temporary ephemeris database at: " + str(cmd_args.makeTemporaryEphemerisDatabase)
-        )
-
-    if cmd_args.readTemporaryEphemerisDatabase:
-        pplogger.info(
-            "Reading from existing temporary ephemeris database at "
-            + str(cmd_args.readTemporaryEphemerisDatabase)
-        )
-
-    if cmd_args.deleteTemporaryEphemerisDatabase:
-        pplogger.info("Temporary ephemeris database will be deleted upon code conclusion.")
-
     if configs["comet_activity"] == "comet":
         pplogger.info("Cometary activity set to: " + str(configs["comet_activity"]))
     elif configs["comet_activity"] == "none":

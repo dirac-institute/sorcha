@@ -13,7 +13,6 @@ from sorcha.modules.PPReadPointingDatabase import PPReadPointingDatabase
 from sorcha.modules.PPLinkingFilter import PPLinkingFilter
 from sorcha.modules.PPTrailingLoss import PPTrailingLoss
 from sorcha.modules.PPBrightLimit import PPBrightLimit
-from sorcha.modules.PPMakeTemporaryEphemerisDatabase import PPMakeTemporaryEphemerisDatabase
 from sorcha.modules.PPCalculateApparentMagnitude import PPCalculateApparentMagnitude
 from sorcha.modules.PPApplyFOVFilter import PPApplyFOVFilter
 from sorcha.modules.PPSNRLimit import PPSNRLimit
@@ -111,12 +110,6 @@ def runLSSTSimulation(args, configs, pplogger=None):
 
     # End of config parsing
 
-    if args.makeTemporaryEphemerisDatabase:
-        verboselog("Creating temporary ephemeris database...")
-        args.readTemporaryEphemerisDatabase = PPMakeTemporaryEphemerisDatabase(
-            args.oifoutput, args.makeTemporaryEphemerisDatabase, configs["eph_format"]
-        )
-
     verboselog("Reading pointing database...")
 
     filterpointing = PPReadPointingDatabase(
@@ -136,17 +129,14 @@ def runLSSTSimulation(args, configs, pplogger=None):
         ephem_primary = True
     reader = CombinedDataReader(ephem_primary=ephem_primary, verbose=True)
 
-    if args.makeTemporaryEphemerisDatabase or args.readTemporaryEphemerisDatabase:
-        reader.add_ephem_reader(DatabaseReader(args.readTemporaryEphemerisDatabase))
-    else:
-        # TODO: Once more ephemerides_types are added this should be wrapped in a EphemerisDataReader
-        # That does the selection and checks. We are holding off adding this level of indirection until there
-        # is a second ephemerides_type.
-        if ephem_type.casefold() not in ["ar", "external"]:  # pragma: no cover
-            pplogger.error(f"PPReadAllInput: Unsupported value for ephemerides_type {ephem_type}")
-            sys.exit(f"PPReadAllInput: Unsupported value for ephemerides_type {ephem_type}")
-        if ephem_type.casefold() == "external":
-            reader.add_ephem_reader(OIFDataReader(args.oifoutput, configs["eph_format"]))
+    # TODO: Once more ephemerides_types are added this should be wrapped in a EphemerisDataReader
+    # That does the selection and checks. We are holding off adding this level of indirection until there
+    # is a second ephemerides_type.
+    if ephem_type.casefold() not in ["ar", "external"]:  # pragma: no cover
+        pplogger.error(f"PPReadAllInput: Unsupported value for ephemerides_type {ephem_type}")
+        sys.exit(f"PPReadAllInput: Unsupported value for ephemerides_type {ephem_type}")
+    if ephem_type.casefold() == "external":
+        reader.add_ephem_reader(OIFDataReader(args.oifoutput, configs["eph_format"]))
 
     reader.add_aux_data_reader(OrbitAuxReader(args.orbinfile, configs["aux_format"]))
     reader.add_aux_data_reader(CSVDataReader(args.paramsinput, configs["aux_format"]))
@@ -305,10 +295,6 @@ def runLSSTSimulation(args, configs, pplogger=None):
         startChunk = startChunk + configs["size_serial_chunk"]
         # end for
 
-    if args.deleteTemporaryEphemerisDatabase:
-        verboselog("Deleting the temporary ephemeris database...")
-        os.remove(args.readTemporaryEphemerisDatabase)
-
     pplogger.info("Sorcha process is completed.")
 
 
@@ -422,26 +408,6 @@ def main():
         help="Complex physical parameters file name",
         type=str,
         dest="cp",
-    )
-    optional.add_argument(
-        "-dl",
-        help="Delete the temporary ephemeris database after code has completed.",
-        action="store_true",
-        default=False,
-    )
-    optional.add_argument(
-        "-dr",
-        help="Location of existing/previous temporary ephemeris database to read from if wanted.",
-        dest="dr",
-        type=str,
-    )
-    optional.add_argument(
-        "-dw",
-        help="Make temporary ephemeris database. If no filepath/name supplied, default name and ephemeris input location used.",
-        dest="dw",
-        nargs="?",
-        const="default",
-        type=str,
     )
     optional.add_argument(
         "-f",

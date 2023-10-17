@@ -11,7 +11,6 @@ from . import PPLinkingFilter
 from . import PPFootprintFilter
 from . import PPJoinEphemeridesAndParameters
 from . import PPJoinEphemeridesAndOrbits
-from . import PPMakeTemporaryEphemerisDatabase
 from . import PPReadPointingDatabase
 from . import PPMatchPointingToObservations
 from . import PPOutput
