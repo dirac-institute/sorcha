@@ -4,7 +4,7 @@ Installation
 =================
 
 .. note::
-   The Sorcha python package is currently pip installable. 
+   Sorcha is both conda/mamba and pip installable. We recommend installing via conda/mamba. 
 
 Requirements
 -----------------------------
