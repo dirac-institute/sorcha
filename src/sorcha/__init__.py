@@ -8,7 +8,7 @@ from .sorcha import cite
 # desired, the user should install SCU manually in their virtual environment
 # prior to executing Sorcha.
 try:
-    from sorcha_community_utils import *
+    from sorcha_addons import *
 except ModuleNotFoundError:
     pass
 

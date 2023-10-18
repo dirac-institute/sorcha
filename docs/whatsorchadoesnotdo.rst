@@ -20,4 +20,4 @@ Here is a short summary of the key effects not accounted for in Sorcha:
    magnitude of the simulated objects  due to cometary activity, rotational light curves, cometary 
    outbursts, etc. We have some basic functionality already built for simple sinusoidal rotational 
    light curves and cometary activity. Further details can be found  in the
-   `Sorcha community tools <https://sorcha-community-utils.readthedocs.io/en/latest/?badge=latest>`_.  
+   `sorcha addons <https://sorcha-addons.readthedocs.io/en/latest/?badge=latest>`_.  
