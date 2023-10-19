@@ -48,7 +48,7 @@ If using mamba::
 .. tip::
    We recommend using python version 3.9 or higher with Sorcha. The conda command uses python 3.10.
 
-**Step 2** Activate your conda/mamba environment::
+**Step 2** Activate your conda/mamba environment
 
 On conda::
 
@@ -116,7 +116,7 @@ To install the necessary SPICE auxiliary files for ephemeris generation (774 MB 
 
     bootstrap_sorcha_data_files
 
-.. info::
+.. note::
    This script will download and store the auxillary files in your computer's local cache directory. 
 
 .. note::
