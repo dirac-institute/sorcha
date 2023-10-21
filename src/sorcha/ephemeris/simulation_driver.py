@@ -31,6 +31,9 @@ class EphemerisGeometryParameters:
     v_ast: float = None
 
 
+def get_vec(row, vecname):
+    return np.asarray([ row[f"{vecname}_x"], row[f"{vecname}_y"], row[f"{vecname}_z"] ])
+
 def create_ephemeris(orbits_df, pointings_df, args, configs):
     """Generate a set of observations given a collection of orbits
     and set of pointings.
@@ -165,7 +168,8 @@ def create_ephemeris(orbits_df, pointings_df, args, configs):
         # around the current pointing. The function `update_pixel_dict` does
         # the majority of the computation to build out `pixel_dict`.
         desigs = set()
-        for pix in pointing["pixels"]:
+        pixId = pointings_df.attrs["pixels"]
+        for pix in pixId[pointing["pixels_begin"]:pointing["pixels_end"]]:
             desigs.update(pixel_dict[pix])
 
         for obj_id in sorted(desigs):
@@ -175,7 +179,9 @@ def create_ephemeris(orbits_df, pointings_df, args, configs):
 
             v = sim_dict[obj_id]
             sim, ex, rho_hat_rough = v["sim"], v["ex"], v["rho_hat"]
-            ang = np.arccos(np.dot(rho_hat_rough, pointing["visit_vector"])) * 180 / np.pi
+            visit_vector = get_vec(pointing, "visit_vector")
+            r_obs = get_vec(pointing, "r_obs")
+            ang = np.arccos(np.dot(rho_hat_rough, visit_vector)) * 180 / np.pi
             if ang < ang_fov + buffer:
                 (
                     ephem_geom_params.rho,
@@ -184,12 +190,12 @@ def create_ephemeris(orbits_df, pointings_df, args, configs):
                     ephem_geom_params.r_ast,
                     ephem_geom_params.v_ast,
                 ) = integrate_light_time(
-                    sim, ex, pointing["JD_TDB"] - ephem.jd_ref, pointing["r_obs"], lt0=0.01
+                    sim, ex, pointing["JD_TDB"] - ephem.jd_ref, r_obs, lt0=0.01
                 )
                 ephem_geom_params.rho_hat = ephem_geom_params.rho / ephem_geom_params.rho_mag
 
                 ang_from_center = (
-                    180 / np.pi * np.arccos(np.dot(ephem_geom_params.rho_hat, pointing["visit_vector"]))
+                    180 / np.pi * np.arccos(np.dot(ephem_geom_params.rho_hat, visit_vector))
                 )
                 if ang_from_center < ang_fov:
                     out_tuple = calculate_rates_and_geometry(pointing, ephem_geom_params)
@@ -264,11 +270,16 @@ def calculate_rates_and_geometry(pointing: pd.DataFrame, ephem_geom_params: Ephe
     tuple
         Tuple containing the ephemeris parameters needed for Sorcha post processing.
     """
+    r_sun = get_vec(pointing, "r_sun")
+    r_obs = get_vec(pointing, "r_obs")
+    v_sun = get_vec(pointing, "v_sun")
+    v_obs = get_vec(pointing, "v_obs")
+
     ra0, dec0 = vec2ra_dec(ephem_geom_params.rho_hat)
-    drhodt = ephem_geom_params.v_ast - pointing["v_obs"]
+    drhodt = ephem_geom_params.v_ast - v_obs
     drho_magdt = (1 / ephem_geom_params.rho_mag) * np.dot(ephem_geom_params.rho, drhodt)
     ddeltatdt = drho_magdt / (SPEED_OF_LIGHT)
-    drhodt = ephem_geom_params.v_ast * (1 - ddeltatdt) - pointing["v_obs"]
+    drhodt = ephem_geom_params.v_ast * (1 - ddeltatdt) - v_obs
     A, D = get_residual_vectors(ephem_geom_params.rho_hat)
     drho_hatdt = (
         drhodt / ephem_geom_params.rho_mag
@@ -276,14 +287,14 @@ def calculate_rates_and_geometry(pointing: pd.DataFrame, ephem_geom_params: Ephe
     )
     dradt = np.dot(A, drho_hatdt)
     ddecdt = np.dot(D, drho_hatdt)
-    r_ast_sun = ephem_geom_params.r_ast - pointing["r_sun"]
-    v_ast_sun = ephem_geom_params.v_ast - pointing["v_sun"]
-    r_ast_obs = ephem_geom_params.r_ast - pointing["r_obs"]
+    r_ast_sun = ephem_geom_params.r_ast - r_sun
+    v_ast_sun = ephem_geom_params.v_ast - v_sun
+    r_ast_obs = ephem_geom_params.r_ast - r_obs
     phase_angle = np.arccos(
         np.dot(r_ast_sun, r_ast_obs) / (np.linalg.norm(r_ast_sun) * np.linalg.norm(r_ast_obs))
     )
-    obs_sun = np.asarray(pointing["r_obs"]) - np.asarray(pointing["r_sun"])
-    dobs_sundt = np.asarray(pointing["v_obs"]) - np.asarray(pointing["v_sun"])
+    obs_sun = r_obs - r_sun
+    dobs_sundt = v_obs - v_sun
 
     return (
         ephem_geom_params.obj_id,

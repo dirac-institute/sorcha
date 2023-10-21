@@ -80,7 +80,9 @@ def test_PPMatchPointingToObservations():
     # needed for ephemeris generation. This ensures that the extra columns are not
     # included in the merge in PPMatchPointingToObservations.
     r_sun = np.empty((len(pointing_db), 3))
-    pointing_db["r_sun"] = r_sun.tolist()
+    pointing_db["r_sun_x"] = r_sun[:, 0]
+    pointing_db["r_sun_y"] = r_sun[:, 1]
+    pointing_db["r_sun_z"] = r_sun[:, 2]
 
     final_join = PPMatchPointingToObservations(joined_df_2, pointing_db)
 
@@ -131,7 +133,8 @@ def test_PPMatchPointingToObservations():
             "rotSkyPos": [298.5944886818567, 302.40143247632597],
         }
     )
+    expected_df["optFilter"] = expected_df["optFilter"].astype("category")
 
-    assert_frame_equal(expected_df, final_join)
+    assert_frame_equal(expected_df, final_join, check_categorical=False)
 
     return

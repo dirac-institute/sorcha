@@ -48,6 +48,11 @@ def cite():
     """
     cite_sorcha()
 
+def mem(df):
+    usage = df.memory_usage(deep=True).sum()
+    for k, v in df.attrs.items():
+        usage += v.nbytes
+    return usage
 
 def runLSSTSimulation(args, configs, pplogger=None):
     """
@@ -115,12 +120,17 @@ def runLSSTSimulation(args, configs, pplogger=None):
     filterpointing = PPReadPointingDatabase(
         args.pointing_database, configs["observing_filters"], configs["pointing_sql_query"]
     )
+##    print("POSTREAD:", len(filterpointing), type(filterpointing), mem(filterpointing))
+##    print(filterpointing.dtypes)
 
     # if we are going to compute the ephemerides, then we should pre-compute all
     # of the needed values derived from the pointing information.
     if configs["ephemerides_type"].casefold() != "external":
         verboselog("Pre-computing pointing information for ephemeris generation")
         filterpointing = precompute_pointing_information(filterpointing, args, configs)
+##        print("POSTPOINTING:", len(filterpointing), type(filterpointing), mem(filterpointing))
+##        print(filterpointing.dtypes)
+##        print("POSTPOINTING:", len(filterpointing), type(filterpointing), filterpointing.memory_usage(deep=True))
 
     # Set up the data readers.
     ephem_type = configs["ephemerides_type"]
@@ -142,6 +152,10 @@ def runLSSTSimulation(args, configs, pplogger=None):
     reader.add_aux_data_reader(CSVDataReader(args.paramsinput, configs["aux_format"]))
     if configs["comet_activity"] is not None or configs["lc_model"] is not None:
         reader.add_aux_data_reader(CSVDataReader(args.complex_parameters, configs["aux_format"]))
+
+#    import time
+#    time.sleep(100)
+#    exit()
 
     # In case of a large input file, the data is read in chunks. The
     # "sizeSerialChunk" parameter in PPConfig.ini assigns the chunk.
