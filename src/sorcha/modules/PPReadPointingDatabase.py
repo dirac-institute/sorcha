@@ -4,7 +4,7 @@ import logging
 import sys
 
 
-def PPReadPointingDatabase(bsdbname, observing_filters, dbquery):
+def PPReadPointingDatabase(bsdbname, observing_filters, dbquery, surveyname):
     """
     Reads in the pointing database as a Pandas dataframe.
 
@@ -39,6 +39,24 @@ def PPReadPointingDatabase(bsdbname, observing_filters, dbquery):
     df["observationId_"] = df["observationId"]
     df = df.rename(columns={"observationId": "FieldID"})
     df = df.rename(columns={"filter": "optFilter"})  # not to confuse with the pandas filter command
-    dfo = df[df.optFilter.isin(observing_filters)]
+    dfo = df[df.optFilter.isin(observing_filters)].copy()
+
+    # at the moment the RubinSim pointing databases don't record the observation
+    # midpoint, so we calculate it. the actual pointings might.
+
+    # once we have the actual pointings this check could be changed to, eg,
+    # lsst_sim for the RubinSim pointings, and 'lsst' would produce different
+    # behaviour.
+    if surveyname in ["lsst", "LSST"]:
+        dfo["observationMidpointMJD_TAI"] = dfo["observationStartMJD_TAI"] + (
+            (dfo["visitTime"] / 2.0) / 86400.0
+        )
+    elif surveyname == "test":
+        # tests were written before this statement was implemented.
+        # this ensures old tests still work without lots of rewriting.
+        pass
+    else:
+        pplogger.error("ERROR: PPReadPointingDatabase: survey name not recognised.")
+        sys.exit("ERROR: PPReadPointingDatabase: survey name not recognised.")
 
     return dfo

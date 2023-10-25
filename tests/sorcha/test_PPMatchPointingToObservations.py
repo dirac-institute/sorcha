@@ -74,7 +74,11 @@ def test_PPMatchPointingToObservations():
 
     dbq = "SELECT observationId, observationStartMJD as observationStartMJD_TAI, filter, seeingFwhmGeom, seeingFwhmEff, fiveSigmaDepth, fieldRA, fieldDec, rotSkyPos FROM observations order by observationId"
 
-    pointing_db = PPReadPointingDatabase(get_test_filepath("baseline_10klines_2.0.db"), ["g", "r", "i"], dbq)
+    # note that surveyname here is "test". this is because this test pointing dataframe doesn't have the visitTime column
+    # and thus cannot calculate 'observationMidpointMJD_TAI'. we don't need it here, so that's okay.
+    pointing_db = PPReadPointingDatabase(
+        get_test_filepath("baseline_10klines_2.0.db"), ["g", "r", "i"], dbq, "test"
+    )
 
     # simulate adding extra columns to the pointing db for the precomputed values
     # needed for ephemeris generation. This ensures that the extra columns are not

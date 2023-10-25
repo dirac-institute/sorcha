@@ -148,7 +148,7 @@ def create_ephemeris(orbits_df, pointings_df, args, configs):
     verboselog("Generating ephemeris...")
 
     for _, pointing in pointings_df.iterrows():
-        mjd_tai = float(pointing["observationStartMJD_TAI"])
+        mjd_tai = float(pointing["observationMidpointMJD_TAI"])
 
         # If the observation time is too far from the
         # time of the last set of ballpark sky position,

@@ -113,7 +113,7 @@ def runLSSTSimulation(args, configs, pplogger=None):
     verboselog("Reading pointing database...")
 
     filterpointing = PPReadPointingDatabase(
-        args.pointing_database, configs["observing_filters"], configs["pointing_sql_query"]
+        args.pointing_database, configs["observing_filters"], configs["pointing_sql_query"], args.surveyname
     )
 
     # if we are going to compute the ephemerides, then we should pre-compute all

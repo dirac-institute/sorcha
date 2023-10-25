@@ -1,8 +1,8 @@
 import numpy as np
-from numpy.testing import assert_equal
+from numpy.testing import assert_equal, assert_almost_equal
 import pytest
 
-from sorcha.utilities.dataUtilitiesForTests import get_test_filepath
+from sorcha.utilities.dataUtilitiesForTests import get_test_filepath, get_demo_filepath
 
 
 def test_PPReadPointingDatabase():
@@ -12,7 +12,7 @@ def test_PPReadPointingDatabase():
     filter_list = ["u", "g", "r", "i", "z", "y"]
 
     pointing_db = PPReadPointingDatabase(
-        get_test_filepath("baseline_10klines_2.0.db"), filter_list, sql_query
+        get_test_filepath("baseline_10klines_2.0.db"), filter_list, sql_query, "test"
     )
 
     expected_first_line = np.array(
@@ -56,7 +56,7 @@ def test_PPReadPointingDatabase():
 
     with pytest.raises(SystemExit) as e:
         pointing_db = PPReadPointingDatabase(
-            get_test_filepath("baseline_10klines_2.0.db"), filter_list, bad_query
+            get_test_filepath("baseline_10klines_2.0.db"), filter_list, bad_query, "test"
         )
 
     assert e.type == SystemExit
@@ -64,5 +64,15 @@ def test_PPReadPointingDatabase():
         e.value.code
         == "ERROR: PPReadPointingDatabase: SQL query on pointing database failed. Check that the query is correct in the config file."
     )
+
+    # the below tests that the observation midpoint is being calculated correctly.
+    new_sql_query = "SELECT observationId, observationStartMJD as observationStartMJD_TAI, visitTime, filter, seeingFwhmGeom, seeingFwhmEff, fiveSigmaDepth, fieldRA, fieldDec, rotSkyPos FROM observations order by observationId"
+
+    new_pointing_db = PPReadPointingDatabase(
+        get_demo_filepath("baseline_v2.0_1yr.db"), filter_list, new_sql_query, "lsst"
+    )
+
+    test_value = 60218.001806 + (34.0 / 2.0 / 86400.0)
+    assert_almost_equal(new_pointing_db["observationMidpointMJD_TAI"].iloc[0], test_value, decimal=6)
 
     return
