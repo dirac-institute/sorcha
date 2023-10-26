@@ -69,4 +69,12 @@ def test_PPReadPointingDatabase():
         == "ERROR: PPReadPointingDatabase: SQL query on pointing database failed. Check that the query is correct in the config file."
     )
 
+    with pytest.raises(SystemExit) as e:
+        pointing_db = PPReadPointingDatabase(
+            get_test_filepath("baseline_10klines_2.0.db"), filter_list, sql_query, "totally_fake_survey"
+        )
+
+    assert e.type == SystemExit
+    assert e.value.code == "ERROR: PPReadPointingDatabase: survey name not recognised."
+
     return
