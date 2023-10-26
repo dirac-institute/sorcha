@@ -51,10 +51,6 @@ def PPReadPointingDatabase(bsdbname, observing_filters, dbquery, surveyname):
         dfo["observationMidpointMJD_TAI"] = dfo["observationStartMJD_TAI"] + (
             (dfo["visitTime"] / 2.0) / 86400.0
         )
-    elif surveyname == "test":
-        # tests were written before this statement was implemented.
-        # this ensures old tests still work without lots of rewriting.
-        pass
     else:
         pplogger.error("ERROR: PPReadPointingDatabase: survey name not recognised.")
         sys.exit("ERROR: PPReadPointingDatabase: survey name not recognised.")
