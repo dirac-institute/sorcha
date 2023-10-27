@@ -39,7 +39,7 @@ Setup Your Conda Environment
 
 If using conda::
 
-   conda create -n sorcha -c conda-forge assist numpy numba pandas sscipy astropy matplotlib sbpy pytables spiceypy healpy rebound pooch tqdm h5py python=3.10 
+   conda create -n sorcha -c conda-forge assist numpy numba pandas scipy astropy matplotlib sbpy pytables spiceypy healpy rebound pooch tqdm h5py python=3.10 
 
 If using mamba::
 
@@ -107,8 +107,10 @@ If you are going to be editing documentation or significantly modifying unit tes
 
    pip install '.[dev]'
 
-Downloading Required Supplemental 
--------------------------------------
+.. _installation_aux:
+
+Downloading Required Supplemental Files
+----------------------------------------
 
 To run the internal ephemeris generator, you will need to download the auxiliary files required by  assist and rebound for performing the N-body integrations. 
   

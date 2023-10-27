@@ -3,10 +3,11 @@
 Ephemeris Generator
 ==========================================================
 
-Sorcha's ephemeris generator is powered by `ASSIST  <https://github.com/matthewholman/assist>`_, a software package for ephemeris-quality integrations of test particles, and the `REBOUND <https://rebound.readthedocs.io/en/latest/>`_ N-body integrator. If the user prefers to use a different generator or provide the ephemeris output from a previous Sorcha run,  they have the ability to point Sorcha to an external file to ingest instead.
+Sorcha's ephemeris generator is powered by `ASSIST  <https://assist.readthedocs.io/en/latest/>`_, a software package for ephemeris-quality integrations of test particles, and the `REBOUND <https://rebound.readthedocs.io/en/latest/>`_ N-body integrator. If the user prefers to use a different generator or provide the ephemeris output from a previous Sorcha run,  they have the ability to point Sorcha to an external file to ingest instead.
 
 .. tip::
   We recommend using Sorcha's ephemeris generator for all your survey simulations. 
+
 
 How It Works
 --------------------------------------------------------
@@ -21,12 +22,15 @@ For each survey visit, the generator calculates the location of the observatory 
 .. tip::
   If using Sorcha's internal ephemeris generation mode (which is the default mode), **we recommend calculating/creating your input orbits with epochs close in time to the start of the first survey observation**. This will minimize the REBOUND n-body integrations required to set up the ephemeris generation.
 
+.. tip::
+  For further details, we recommend you read the `ASSIST <https://ui.adsabs.harvard.edu/abs/2023PSJ.....4...69H/abstract>`_ and `REBOUND <https://ui.adsabs.harvard.edu/abs/2012A%26A...537A.128R/abstract>`_ papers. 
+
 .. _MAP:
 Massive Asteroid Perturbers
 --------------------------------------------------------
 Here's the list of asteroid pertubers that are included in the ASSIST+REBOUND integrations.
 
-- *(107) Camilla = A868 WA = 1886 WA**
+- **(107) Camilla = A868 WA = 1886 WA**
 - **(1) Ceres = A801 AA** 
 - **(65) Cybele = A861 EB** 
 - **(511) Davida = A903 KB**
@@ -48,3 +52,27 @@ Here's the list of asteroid pertubers that are included in the ASSIST+REBOUND in
 
 Tuning the Ephemeris Generator
 -----------------------------------
+
+There are several tunable options for the ephemeris generation which are described below that are set by the Sorcha :ref:`configs`.
+
+- **Minor Planet Center (MPC)  observatory code for the provided telescope**
+- **Field of view of our search field (in degrees)**
+- **Buffer zone around the field of view we want to include (in degrees)**
+- **picket (in days)** 
+- **order of healpix used by healpy**
+
+
+Auxillary Files 
+-----------------
+
+A number of auxillary files are required for ephemeris generation:
+
+- **naif0012.tls** is the leap second file. This changes whenever there is a new leap second. The last was in 2017.
+- **earth_720101_070426.bpc** is the historical Earth orientation specification. This should not change, unless there is a new model.
+- **earth_200101_990628_predict.bpc** is a prediction of the Earth's future orientation. Likewise, this should not change.
+- **pck00010.tpc** contains orientation information and physical constants for other bodies. This should only change rarely.
+- **de440s.bsp** gets used for getting the Earth's position for ephemerides.
+- **earth_latest_high_prec.bpc** is a regularly updated specification of the Earth's orientation, refined as new observations are incorporated.
+
+.. tip::
+  See our :ref:`installation_aux` instructions to find out how to download and install these auxillary files. 
