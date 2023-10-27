@@ -64,8 +64,9 @@ def test_ephemeris_end2end(single_synthetic_pointing, tmp_path):
     configs["seed"] = 24601
 
     filterpointing = PPReadPointingDatabase(
-        args.pointing_database, configs["observing_filters"], configs["pointing_sql_query"]
+        args.pointing_database, configs["observing_filters"], configs["pointing_sql_query"], "lsst"
     )
+
     filterpointing = precompute_pointing_information(filterpointing, args, configs)
 
     observations = create_ephemeris(
