@@ -8,6 +8,8 @@ Sorcha uses a configuration files to set the majority of the various parameters 
 .. tip::
   We have developed  a set of utilities that are installed alongside Sorcha that can generate a config file for Sorcha (See :ref:`makeConfigPP`). 
 
+.. _example_configs:
+
 Example Configuration Files
 ------------------------------------
 
