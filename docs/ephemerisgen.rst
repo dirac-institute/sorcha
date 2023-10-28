@@ -26,6 +26,7 @@ For each survey visit, the generator calculates the location of the observatory 
   For further details, we recommend you read the `ASSIST <https://ui.adsabs.harvard.edu/abs/2023PSJ.....4...69H/abstract>`__ and `REBOUND <https://ui.adsabs.harvard.edu/abs/2012A%26A...537A.128R/abstract>`__ papers. 
 
 .. _MAP:
+
 Massive Asteroid Perturbers
 --------------------------------------------------------
 Here's the list of asteroid pertubers that are included in the ASSIST+REBOUND integrations.
@@ -48,7 +49,7 @@ Here's the list of asteroid pertubers that are included in the ASSIST+REBOUND in
 - **(4) Vesta = A807 FA** 
 
 .. warning::
-  If you simulate the orbits of these select asteroids you will get *POOR results* with the internal Sorcha epehmeris generator because of how the n-body integration is setup. We recommend getting the positions of these asteroids from some other source and inputting them as an external ephemeris file. 
+  If you simulate the orbits of these select asteroids you will get **POOR results** with the internal Sorcha epehmeris generator because of how the n-body integration is setup. We recommend getting the positions of these asteroids from some other source and inputting them as an external ephemeris file. 
 
 Tuning the Ephemeris Generator
 -----------------------------------
@@ -78,5 +79,5 @@ A number of auxillary file available from the `Minor Planet Center <https://www.
 - **obscodes_extended.json** - observatory position information and Minor Planet Center (MPC) observatory codes.
 
 .. tip::
-  See our :ref:`installation_aux` instructions to find out how to download and install these auxillary files automaticlal using our download utility. 
+  See our :ref:`installation_aux` instructions to find out how to download and install these auxillary files automatically using our download utility. 
 

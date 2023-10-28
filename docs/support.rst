@@ -37,7 +37,7 @@ You will need to install the development version of Sorcha from a clone of the S
 
 You will also  install the pandoc package (either via conda/pip or `direct download <https://pandoc.org/installing.html>`_ . 
 
-If you move to the docs directory (cd sorcha/docs/), edit the *.rst files, and run::
+If you move to the docs directory (cd sorcha/docs/), edit the .rst files, and run::
 
    make html
 
