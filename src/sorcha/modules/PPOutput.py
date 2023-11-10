@@ -3,6 +3,10 @@ import os
 import sqlite3
 import logging
 
+# this is for suppressing a warning in PyTables when writing to HDF5
+import warnings
+from tables import NaturalNameWarning
+
 
 def PPOutWriteCSV(padain, outf):
     """
@@ -42,6 +46,14 @@ def PPOutWriteHDF5(pp_results, outf, keyin):
     None.
 
     """
+
+    # pytables doesn't like the Pandas extension dtype StringDtype
+    # converting the ObjID to 'str' type fixes this
+    pp_results = pp_results.astype({"ObjID": str})
+
+    # this suppresses a warning when ObjIDs begin with a number
+    # as long as the user isn't going to use PyTables to access the data this doesn't matter
+    warnings.filterwarnings("ignore", category=NaturalNameWarning)
 
     of = pp_results.to_hdf(outf, mode="a", format="table", append=True, key=keyin)
 

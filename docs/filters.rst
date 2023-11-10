@@ -48,8 +48,7 @@ To include this filter, the following options should be set in the configuration
 
 .. image:: images/fading_function.png
   :width: 400
-  :alt: Graph showing the fading function. Detection probability is plotted against magnitude - limiting magnitude,
-  showing three smoothed step-functions centred on 0.0 on the x axis for three different widths.
+  :alt: Graph showing the fading function. Detection probability is plotted against magnitude - limiting magnitude, showing three smoothed step-functions centred on 0.0 on the x axis for three different widths.
   :align: center
 
 
@@ -87,8 +86,7 @@ gaps between the chips. The LSST detector shape is included in the repo and desc
 
 .. image:: images/Footprint.png
   :width: 600
-  :alt: Plot of the LSST camera footprint where x and y are x and y distance from the pupil in degrees. The footprint also shows
-  two overplotted circle radii of 1.75deg (corresponding to a 75% fill factor) and 2.06deg.
+  :alt: Plot of the LSST camera footprint where x and y are x and y distance from the pupil in degrees. The footprint also shows two overplotted circle radii of 1.75deg (corresponding to a 75% fill factor) and 2.06deg.
 
 However, the full camera footprint is most relevant for slow-moving objects, where an 
 object may move only a small amount per night and could thus in a subsequent observation fall into a chip gap. This is less concerning for 

@@ -779,7 +779,7 @@ def PPPrintConfigsToLog(configs, cmd_args):
             pplogger.info(
                 "The code will approximate chip gaps using filling factor: " + str(configs["fill_factor"])
             )
-        elif configs["circleRadius"]:
+        elif configs["circle_radius"]:
             pplogger.info(
                 "A circular footprint will be applied with radius: " + str(configs["circle_radius"])
             )

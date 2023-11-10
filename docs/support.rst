@@ -31,7 +31,7 @@ We are very happy to receivet feedback on the online documentation through the `
 You will need to install the development version of Sorcha from a clone of the Sorcha repository. See the our  :ref:`dev_mode` instructions for further details. 
 
 
-Once you are properly set up with a clone of the repository, you can move to the docs directory (cd sorcha/docs/), edit the *.rst files, and run::
+If you move to the docs directory (cd sorcha/docs/), edit the .rst files, and run::
 
    make html
 
