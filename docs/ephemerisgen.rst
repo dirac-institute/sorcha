@@ -26,6 +26,7 @@ For each survey visit, the generator calculates the location of the observatory 
   For further details, we recommend you read the `ASSIST <https://ui.adsabs.harvard.edu/abs/2023PSJ.....4...69H/abstract>`__ and `REBOUND <https://ui.adsabs.harvard.edu/abs/2012A%26A...537A.128R/abstract>`__ papers. 
 
 .. _MAP:
+
 Massive Asteroid Perturbers
 --------------------------------------------------------
 Here's the list of asteroid pertubers that are included in the ASSIST+REBOUND integrations.
