@@ -79,8 +79,12 @@ If using pip::
 
 .. _dev_mode:
 
-Installing Sorcha in Development Mode or For Updating Documention
+Installing Sorcha in Development Mode
 ---------------------------------------------------------------------
+
+.. tip::
+   This is in the installation method for adding/edit Sorcha's codebase or for working on/updating Sorcha's documentation. 
+
 **Step 1** Create a directory to contain the Sorcha repos::
 
    mkdir sorcha
@@ -105,7 +109,10 @@ If you just want the source code installed so edits in the source code are auomt
 
 If you are going to be editing documentation or significantly modifying unit tests, it is best to install the full development version::
 
-   pip install '.[dev]'
+   pip install -e '.[dev]'
+
+**Step 6 (Optional unless working on documentation):** You will also install the pandoc package (either via conda/pip or `direct download <https://pandoc.org/installing.html>`_ .
+
 
 .. _installation_aux:
 

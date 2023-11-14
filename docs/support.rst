@@ -28,14 +28,8 @@ Contributing to the  Documentation
 
 We are very happy to receivet feedback on the online documentation through the `project's github repository <https://github.com/dirac-institute/sorcha/issues>`_. Beyond pointing out typos and small changes through issues, we welcome pull requests on the `sphinx <https://www.sphinx-doc.org/en/master/#user-guides>`_ documentation used here on the readthedocs.
 
-You will need to install the development version of Sorcha from a clone of the Sorcha repository::
+You will need to install the development version of Sorcha from a clone of the Sorcha repository. See the our  :ref:`dev_mode` instructions for further details. 
 
-   git clone https://github.com/dirac-institute/sorcha.git
-
-
-   pip install '.[dev]' 
-
-You will also  install the pandoc package (either via conda/pip or `direct download <https://pandoc.org/installing.html>`_ . 
 
 If you move to the docs directory (cd sorcha/docs/), edit the .rst files, and run::
 
