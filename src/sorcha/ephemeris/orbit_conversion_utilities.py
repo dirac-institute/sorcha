@@ -115,11 +115,11 @@ def universal_cartesian(mu, q, e, incl, longnode, argperi, tp, epochMJD_TDB):
     p = q * (1 + e)
     t = epochMJD_TDB - tp  # tp - epochMJD_TDB
 
-    if e<1:
-        a = q/(1-e)
-        per = 2*np.pi/np.sqrt(mu/(a*a*a))
-        t = t % per 
-                    
+    if e < 1:
+        a = q / (1 - e)
+        per = 2 * np.pi / np.sqrt(mu / (a * a * a))
+        t = t % per
+
     # Establish constants for Kepler's equation,
     # starting at pericenter:
     r0 = q
