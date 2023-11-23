@@ -28,7 +28,7 @@ Sorcha has the following requirements that will be automatically installed  usin
 * tqdm
 
 .. tip::
-   We also recomend installing h5py in your conda/mamba environnment to ensure that the proper HD5 libraries are installed. 
+   We also recommend installing h5py in your conda/mamba environment to ensure that the proper HD5 libraries are installed. 
 
 
 
@@ -89,11 +89,11 @@ Installing Sorcha in Development Mode
 
    mkdir sorcha
 
-**Step 2** Navigate to the directory you want to store the Sorcha soure code in::
+**Step 2** Navigate to the directory you want to store the Sorcha source code in::
 
    cd sorcha
    
-**Step 3** Download the Sorcha soure code via::
+**Step 3** Download the Sorcha source code via::
 
    git clone https://github.com/dirac-institute/sorcha.git
 
@@ -103,7 +103,7 @@ Installing Sorcha in Development Mode
    
 **Step 5** Install an editable (in-place) development version of Sorcha. This will allow you to run the code from the source directory.
 
-If you just want the source code installed so edits in the source code are auomtatically installed::
+If you just want the source code installed so edits in the source code are automatically installed::
 
    pip install -e .
 
@@ -126,7 +126,7 @@ To install the necessary SPICE auxiliary files for ephemeris generation (774 MB 
     bootstrap_sorcha_data_files
 
 .. note::
-   This script will download and store the auxillary files in your computer's local cache directory. 
+   This script will download and store the auxiliary files in your computer's local cache directory. 
 
 .. note::
    These files are stored in your system's cache by default if the optional --cache flag is not provided. If the files already downloaded and want a fresh download, you need to use the -f flag. 
@@ -147,4 +147,4 @@ The output will appear in a csv file (testrun_e2e.csv) in your current directory
     :lines: 1-51
 
 .. note::
-   This test run is using pre-generated ephemeris already stored in the demo directory of the Sorcha github repository. 
+   This test run is using pre-generated ephemeris already stored in the demo directory of the Sorcha GitHub repository. 

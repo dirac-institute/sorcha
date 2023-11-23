@@ -22,15 +22,15 @@ Sorcha by default uses its own ephemeris generator to propagate the orbits and t
 
 
 .. warning::
-   We have validated Sorcha with its internal ephemeris generator. If the user chooses to use a different emphemeris engine's calculations as input for Sorcha, the user has the responsibiilty to check the accuracy of this input.
+   We have validated Sorcha with its internal ephemeris generator. If the user chooses to use a different ephemeris engine's calculations as input for Sorcha, the user has the responsibility to check the accuracy of this input.
    
 
 Design Philosophy 
 ----------------------
-Sorcha  has been designed in a modular way. Each filter is writen as its own function, This makes it easy to add new filters in the future if required by users. We note for dealing with rotational light curve and activity effects, we have setup Sorcha such that the user can provide their own custom classes/functions and import them into Sorcha to use. Sorcha has been designed with LSST in mind, but many of the filters already developed will be applicable to other Solar System surveys. If you are interested in incorporating your survey into Sorcha do reach out.  
+Sorcha  has been designed in a modular way. Each filter is written as its own function, This makes it easy to add new filters in the future if required by users. We note for dealing with rotational light curve and activity effects, we have setup Sorcha such that the user can provide their own custom classes/functions and import them into Sorcha to use. Sorcha has been designed with LSST in mind, but many of the filters already developed will be applicable to other Solar System surveys. If you are interested in incorporating your survey into Sorcha do reach out.  
 
 .. warning::
-  For a wide variety of use cases, the user should be able to use Sorcha straight out of the box. We have designed the software such that it should be straightfoward to add in additional filters or rotational light curve/activity classes. As with any open source package, **once the user has made modifications to the code, it is the responsibility of the user to confirm these changes provide an accurate result**. 
+  For a wide variety of use cases, the user should be able to use Sorcha straight out of the box. We have designed the software such that it should be straightforward to add in additional filters or rotational light curve/activity classes. As with any open source package, **once the user has made modifications to the code, it is the responsibility of the user to confirm these changes provide an accurate result**. 
    
    
 .. note::

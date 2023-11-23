@@ -29,7 +29,7 @@ Please also cite the software and ancillary data files that helps power Sorcha:
 * rebound https://rebound.readthedocs.io/en/latest/
 * sbpy https://joss.theoj.org/papers/10.21105/joss.01426
 * scipy https://scipy.org/citing-scipy/
-* SPICE kernels and anscillary data files https://naif.jpl.nasa.gov/naif/credit.html
+* SPICE kernels and ancillary data files https://naif.jpl.nasa.gov/naif/credit.html
 * spiceypy https://spiceypy.readthedocs.io/en/main/citation.html
 * tqdm https://tqdm.github.io/
 
