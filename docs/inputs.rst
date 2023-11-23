@@ -331,7 +331,7 @@ An example of an (optional) ephemeris file::
 +--------------------------+----------------------------------------------------------------------------------+
 | Obs-Sun(J2000z)(km)      |  Cartesian Z-component of the observer's heliocentric distance (km)              |
 +--------------------------+----------------------------------------------------------------------------------+
-|Obs-Sun(J2000vx)(km/s)    |  Cartesian X-component of the observer's heliocentric velocity (km/s)             |
+|Obs-Sun(J2000vx)(km/s)    |  Cartesian X-component of the observer's heliocentric velocity (km/s)            |
 +--------------------------+----------------------------------------------------------------------------------+
 |Obs-Sun(J2000vy)(km/s)    |  Cartesian Y-component of the observer's heliocentric velocity (km/s)            |
 +--------------------------+----------------------------------------------------------------------------------+
