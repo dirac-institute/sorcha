@@ -313,7 +313,7 @@ An example of an (optional) ephemeris file::
 +--------------------------+----------------------------------------------------------------------------------+
 | AstDecRate(deg/day)      | Synthetic plantesimal's declination rate of motion (deg/day)                     |
 +--------------------------+----------------------------------------------------------------------------------+
-| Ast-Sun(J2000x)(km)      |  Cartesian X-component of the synthetic planetesimal's heliocentric distamce (km)|
+| Ast-Sun(J2000x)(km)      |  Cartesian X-component of the synthetic planetesimal's heliocentric distance (km)|
 +--------------------------+----------------------------------------------------------------------------------+
 | Ast-Sun(J2000y)(km)      |  Cartesian Y-component of the synthetic planetesimal's heliocentric distance (km)|
 +--------------------------+----------------------------------------------------------------------------------+
@@ -325,7 +325,7 @@ An example of an (optional) ephemeris file::
 +--------------------------+----------------------------------------------------------------------------------+
 | Ast-Sun(J2000vz)(km/s)   |Cartesian Z-component of the synthetic planetesimal's heliocentric velocity (km/s)|
 +--------------------------+----------------------------------------------------------------------------------+
-| Obs-Sun(J2000x)(km)      |  Cartesian X-component of observer's heliocentric distamce (km)                  |
+| Obs-Sun(J2000x)(km)      |  Cartesian X-component of observer's heliocentric distance (km)                  |
 +--------------------------+----------------------------------------------------------------------------------+
 | Obs-Sun(J2000y)(km)      |  Cartesian Y-component of the observer's heliocentric distance (km)              |             
 +--------------------------+----------------------------------------------------------------------------------+
