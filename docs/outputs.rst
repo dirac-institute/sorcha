@@ -36,7 +36,7 @@ The format of the survey simulator output looks something like::
 +------------------------------------+----------------------------------------------------------------------------------+
 | optFilter                          | Filter Observation Taken in                                                      |
 +------------------------------------+----------------------------------------------------------------------------------+
-| observedPSFMag                     | Apparent magnitude in optFilter measured by the data management piplines         |
+| observedPSFMag                     | Apparent magnitude in optFilter measured by the data management pipelines        |
 +------------------------------------+----------------------------------------------------------------------------------+
 | observedTrailedSourceMag           | Apparent magnitude in optFilter adding up all of the counts in the trail         |
 +------------------------------------+----------------------------------------------------------------------------------+
