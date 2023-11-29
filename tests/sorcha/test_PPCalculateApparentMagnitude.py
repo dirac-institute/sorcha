@@ -8,7 +8,7 @@ def test_PPCalculateApparentMagnitudeInFilter_default():
     """Baseline test, no phase function"""
     test_observations = pd.DataFrame(
         {
-            "FieldMJD": [2459215.5],
+            "FieldMJD_TAI": [2459215.5],
             "H_filter": [7.3],
             "GS": [0.19],
             "G1": [0.62],
@@ -34,7 +34,7 @@ def test_PPCalculateApparentMagnitudeInFilterWithIdentityLightcurve():
     """
     test_observations = pd.DataFrame(
         {
-            "FieldMJD": [2459215.5],
+            "FieldMJD_TAI": [2459215.5],
             "H_filter": [7.3],
             "GS": [0.19],
             "G1": [0.62],
@@ -57,7 +57,7 @@ def test_PPCalculateApparentMagnitudeInFilterWithIdentityLightcurve():
 def test_PPCalculateApparentMagnitudeInFilter():
     test_observations = pd.DataFrame(
         {
-            "FieldMJD": [2459215.5],
+            "FieldMJD_TAI": [2459215.5],
             "H_filter": [7.3],
             "GS": [0.19],
             "G1": [0.62],

@@ -77,18 +77,6 @@ def PPCommandLineParser(args):
     if cmd_args_dict["output_ephemeris_file"]:
         warn_or_remove_file(cmd_args_dict["output_ephemeris_file"], args.f, pplogger)
 
-    if args.dw == "default":
-        oifpath_split = os.path.split(cmd_args_dict["oifoutput"])
-        stem_name = oifpath_split[1].split(".")[0] + ".db"
-        cmd_args_dict["makeTemporaryEphemerisDatabase"] = os.path.join(oifpath_split[0], "temp_" + stem_name)
-    elif args.dw:
-        _ = PPFindDirectoryOrExit(os.path.dirname(args.dw), "-dw")
-        cmd_args_dict["makeTemporaryEphemerisDatabase"] = args.dw
-    else:
-        cmd_args_dict["makeTemporaryEphemerisDatabase"] = False
-
-    cmd_args_dict["readTemporaryEphemerisDatabase"] = args.dr
-    cmd_args_dict["deleteTemporaryEphemerisDatabase"] = bool(args.dl)
     cmd_args_dict["surveyname"] = args.s
     cmd_args_dict["outfilestem"] = args.t
     cmd_args_dict["verbose"] = args.v
@@ -100,29 +88,6 @@ def PPCommandLineParser(args):
     warn_or_remove_file(
         os.path.join(cmd_args_dict["outpath"], cmd_args_dict["outfilestem"] + ".*"), args.f, pplogger
     )
-
-    if args.dr and args.dw:
-        pplogger.error("ERROR: both -dr and -dw flags set at command line. Please use only one.")
-        sys.exit("ERROR: both -dr and -dw flags set at command line. Please use only one.")
-
-    if args.dl and not args.dr and not args.dw:
-        pplogger.error("ERROR: -dl flag set without either -dr or -dw.")
-        sys.exit("ERROR: -dl flag set without either -dr or -dw.")
-
-    if args.dr and not os.path.exists(args.dr):
-        pplogger.error(
-            "ERROR: temporary ephemeris database not found at "
-            + args.dr
-            + ". Rerun with command line flag -dw to create one."
-        )
-        sys.exit(
-            "ERROR: temporary ephemeris database not found at "
-            + args.dr
-            + ". Rerun with command line flag -dw to create one."
-        )
-
-    if args.dw:
-        warn_or_remove_file(cmd_args_dict["makeTemporaryEphemerisDatabase"], args.f, pplogger)
 
     # Log all the command line settings to INFO.
     for flag, value in cmd_args_dict.items():

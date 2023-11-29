@@ -13,7 +13,6 @@ from sorcha.modules.PPReadPointingDatabase import PPReadPointingDatabase
 from sorcha.modules.PPLinkingFilter import PPLinkingFilter
 from sorcha.modules.PPTrailingLoss import PPTrailingLoss
 from sorcha.modules.PPBrightLimit import PPBrightLimit
-from sorcha.modules.PPMakeTemporaryEphemerisDatabase import PPMakeTemporaryEphemerisDatabase
 from sorcha.modules.PPCalculateApparentMagnitude import PPCalculateApparentMagnitude
 from sorcha.modules.PPApplyFOVFilter import PPApplyFOVFilter
 from sorcha.modules.PPSNRLimit import PPSNRLimit
@@ -41,8 +40,6 @@ from sorcha.lightcurves.lightcurve_registration import update_lc_subclasses
 
 from sorcha.utilities.sorchaArguments import sorchaArguments
 from sorcha.utilities.citation_text import cite_sorcha
-
-# Author: Samuel Cornwall, Siegfried Eggl, Grigori Fedorets, Steph Merritt, Meg Schwamb
 
 
 def cite():
@@ -113,21 +110,16 @@ def runLSSTSimulation(args, configs, pplogger=None):
 
     # End of config parsing
 
-    if args.makeTemporaryEphemerisDatabase:
-        verboselog("Creating temporary ephemeris database...")
-        args.readTemporaryEphemerisDatabase = PPMakeTemporaryEphemerisDatabase(
-            args.oifoutput, args.makeTemporaryEphemerisDatabase, configs["eph_format"]
-        )
-
     verboselog("Reading pointing database...")
 
     filterpointing = PPReadPointingDatabase(
-        args.pointing_database, configs["observing_filters"], configs["pointing_sql_query"]
+        args.pointing_database, configs["observing_filters"], configs["pointing_sql_query"], args.surveyname
     )
 
     # if we are going to compute the ephemerides, then we should pre-compute all
     # of the needed values derived from the pointing information.
     if configs["ephemerides_type"].casefold() != "external":
+        verboselog("Pre-computing pointing information for ephemeris generation")
         filterpointing = precompute_pointing_information(filterpointing, args, configs)
 
     # Set up the data readers.
@@ -137,17 +129,14 @@ def runLSSTSimulation(args, configs, pplogger=None):
         ephem_primary = True
     reader = CombinedDataReader(ephem_primary=ephem_primary, verbose=True)
 
-    if args.makeTemporaryEphemerisDatabase or args.readTemporaryEphemerisDatabase:
-        reader.add_ephem_reader(DatabaseReader(args.readTemporaryEphemerisDatabase))
-    else:
-        # TODO: Once more ephemerides_types are added this should be wrapped in a EphemerisDataReader
-        # That does the selection and checks. We are holding off adding this level of indirection until there
-        # is a second ephemerides_type.
-        if ephem_type.casefold() not in ["ar", "external"]:  # pragma: no cover
-            pplogger.error(f"PPReadAllInput: Unsupported value for ephemerides_type {ephem_type}")
-            sys.exit(f"PPReadAllInput: Unsupported value for ephemerides_type {ephem_type}")
-        if ephem_type.casefold() == "external":
-            reader.add_ephem_reader(OIFDataReader(args.oifoutput, configs["eph_format"]))
+    # TODO: Once more ephemerides_types are added this should be wrapped in a EphemerisDataReader
+    # That does the selection and checks. We are holding off adding this level of indirection until there
+    # is a second ephemerides_type.
+    if ephem_type.casefold() not in ["ar", "external"]:  # pragma: no cover
+        pplogger.error(f"PPReadAllInput: Unsupported value for ephemerides_type {ephem_type}")
+        sys.exit(f"PPReadAllInput: Unsupported value for ephemerides_type {ephem_type}")
+    if ephem_type.casefold() == "external":
+        reader.add_ephem_reader(OIFDataReader(args.oifoutput, configs["eph_format"]))
 
     reader.add_aux_data_reader(OrbitAuxReader(args.orbinfile, configs["aux_format"]))
     reader.add_aux_data_reader(CSVDataReader(args.paramsinput, configs["aux_format"]))
@@ -176,12 +165,17 @@ def runLSSTSimulation(args, configs, pplogger=None):
 
         # Processing begins, all processing is done for chunks
         if configs["ephemerides_type"].casefold() == "external":
+            verboselog("Reading in chunk of orbits and associated ephemeris from an external file")
             observations = reader.read_block(block_size=configs["size_serial_chunk"])
         else:
+            verboselog("Ingest chunk of orbits")
             orbits_df = reader.read_aux_block(block_size=configs["size_serial_chunk"])
+            verboselog("Starting ephemeris generation")
             observations = create_ephemeris(orbits_df, filterpointing, args, configs)
+            verboselog("Ephemeris generation completed")
 
-        observations = PPMatchPointingToObservations(observations, filterpointing)
+        verboselog("Start post processing for this chunk")
+        verboselog("Matching pointing database information to observations on rough camera footprint")
 
         # If the ephemeris file doesn't have any observations for the objects in the chunk
         # PPReadAllInput will return an empty dataframe. We thus log a warning.
@@ -191,6 +185,8 @@ def runLSSTSimulation(args, configs, pplogger=None):
             )
             startChunk = startChunk + configs["size_serial_chunk"]
             continue
+
+        observations = PPMatchPointingToObservations(observations, filterpointing)
 
         verboselog("Calculating apparent magnitudes...")
         observations = PPCalculateApparentMagnitude(
@@ -289,17 +285,17 @@ def runLSSTSimulation(args, configs, pplogger=None):
             observations.reset_index(drop=True, inplace=True)
             verboselog("Number of rows AFTER applying SSP linking filter: " + str(len(observations.index)))
 
+        pplogger.info("Post processing completed for this chunk")
+
+        pplogger.info("Output results for this chunk")
+
         # write output
         PPWriteOutput(args, configs, observations, endChunk, verbose=args.verbose)
 
         startChunk = startChunk + configs["size_serial_chunk"]
         # end for
 
-    if args.deleteTemporaryEphemerisDatabase:
-        verboselog("Deleting the temporary ephemeris database...")
-        os.remove(args.readTemporaryEphemerisDatabase)
-
-    pplogger.info("Post processing completed.")
+    pplogger.info("Sorcha process is completed.")
 
 
 def main():
@@ -414,26 +410,6 @@ def main():
         dest="cp",
     )
     optional.add_argument(
-        "-dl",
-        help="Delete the temporary ephemeris database after code has completed.",
-        action="store_true",
-        default=False,
-    )
-    optional.add_argument(
-        "-dr",
-        help="Location of existing/previous temporary ephemeris database to read from if wanted.",
-        dest="dr",
-        type=str,
-    )
-    optional.add_argument(
-        "-dw",
-        help="Make temporary ephemeris database. If no filepath/name supplied, default name and ephemeris input location used.",
-        dest="dw",
-        nargs="?",
-        const="default",
-        type=str,
-    )
-    optional.add_argument(
         "-f",
         "--force",
         help="Force deletion/overwrite of existing output file(s). Default False.",
@@ -469,6 +445,14 @@ def main():
     if configs["ephemerides_type"] == "external" and cmd_args["oifoutput"] is None:
         pplogger.error("ERROR: A+R simulation not enabled and no ephemerides file provided")
         sys.exit("ERROR: A+R simulation not enabled and no ephemerides file provided")
+
+    if configs["lc_model"] and cmd_args["complex_physical_parameters"] is None:
+        pplogger.error("ERROR: No complex physical parameter file provided for light curve model")
+        sys.exit("ERROR: No complex physical parameter file provided for light curve model")
+
+    if configs["comet_activity"] and cmd_args["complex_physical_parameters"] is None:
+        pplogger.error("ERROR: No complex physical parameter file provided for comet activity model")
+        sys.exit("ERROR: No complex physical parameter file provided for comet activity model")
 
     if "SORCHA_SEED" in os.environ:
         cmd_args["seed"] = int(os.environ["SORCHA_SEED"])

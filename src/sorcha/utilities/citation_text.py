@@ -8,6 +8,8 @@ def cite_sorcha():
     print("\nSorcha: \n")
     print("Merritt et al. (in prep)")
 
+    print("\n")
+
     print("Please also cite the packages that are utilized by Sorcha:")
 
     print("\nAstropy:\n")
@@ -400,7 +402,37 @@ def cite_sorcha():
     print(" adsnote = {Provided by the SAO/NASA Astrophysics Data System}")
     print("}")
 
-    print("\nAssist:\n")
+    print("\nASSIST:\n")
+
+    print("@ARTICLE{2023PSJ.....4...69H,")
+    print(
+        "author = {{Holman}, Matthew J. and {Akmal}, Arya and {Farnocchia},"
+        " Davide and {Rein}, Hanno and {Payne}, Matthew J. and {Weryk}, Robert"
+        " and {Tamayo}, Daniel and {Hernandez}, David M.},"
+    )
+    print('title = "{ASSIST: An Ephemeris-quality Test-particle Integrator}",')
+    print("journal = {\psj},")
+    print(
+        "keywords = {Ephemerides, N-body simulations, Asteroid dynamics, "
+        "Comet dynamics, 464, 1083, 2210, 2213, Astrophysics - Earth and Planetary Astrophysics,"
+        "Astrophysics - Instrumentation and Methods for Astrophysics},"
+    )
+    print("year = 2023,")
+    print("month = apr,")
+    print("volume = {4},")
+    print("number = {4},")
+    print("eid = {69},")
+    print("pages = {69},")
+    print("doi = {10.3847/PSJ/acc9a9},")
+    print("archivePrefix = {arXiv},")
+    print("eprint = {2303.16246},")
+    print("primaryClass = {astro-ph.EP},")
+    print("adsurl = {https://ui.adsabs.harvard.edu/abs/2023PSJ.....4...69H},")
+    print("adsnote = {Provided by the SAO/NASA Astrophysics Data System}")
+    print("}")
+
+    print("\n")
+
     print("@software{hanno_rein_2023_7778017,")
     print("author       = {Hanno Rein and matthewholman and Arya Akmal},")
     print("title        = {matthewholman/assist: v1.1.1},")
@@ -412,7 +444,7 @@ def cite_sorcha():
     print("url          = {https://doi.org/10.5281/zenodo.7778017}")
     print("}")
 
-    print("\nRebound:\n")
+    print("\nREBOUND:\n")
     sim = rebound.Simulation()
     sim.cite()
 
@@ -490,7 +522,13 @@ def cite_sorcha():
     print("}")
 
     print(
-        "Add an acknowledgment statement:  The SPICE Resource files used in this work ere described in \citep{1996P&SS...44...65A, 2018P&SS..150....9A}"
+        "\nAdd an acknowledgment statement:  The SPICE Resource files used in this work ere described in \citep{1996P&SS...44...65A, 2018P&SS..150....9A}"
+    )
+
+    print("\nMinor Planet Center Resources:\n")
+
+    print(
+        "Add an acknowledgment statement: This research has made use of data and/or services provided by the International Astronomical Union's Minor Planet Center. "
     )
 
     print("\nHealpy:\n")
@@ -627,23 +665,31 @@ def cite_sorcha():
 
     print("\n")
     print(
-        "If you are submitting a paper to AAS Journals journals, here's "
-        "the software citation latex command you will need once including "
-        "all the above bibtex references above.\n"
+        "If you are submitting a paper to AAS Journals, here is"
+        " the software citation latex command you will need once you have included "
+        "all of the above  bibtex references above.\n"
     )
 
     print(
-        "\\software{Sorcha, Astropy \citep{2013A&A...558A..33A,2018AJ....156..123A,2022ApJ...935..167A}, "
-        "Numpy \citep{harris2020array}, pandas \citep{mckinney-proc-scipy-2010, reback2020pandas}, "
-        "SciPy \citep{2020SciPy-NMeth}, Numba \citep{2015llvm.confE...1L},  "
-        "sbpy \citep{2019JOSS....4.1426M}, Matplotlib \citep{Hunter:2007}, "
-        "PyTables \citep{pytables}, Assist \citep{hanno_rein_2023_7778017},"
-        "Rebound \citep{rebound,reboundias15}, Pooch \citep{uieda2020}, "
-        "Spiceypy \citep{2020JOSS....5.2050A},  Healpy \citep{Zonca2019,2005ApJ...622..759G}, "
-        "tqdm \citep{casper_da_costa_luis_2023_8233425}, rubin$\_$sim "
-        "\citep{2018Icar..303..181J,peter_yoachim_2022_7087823}, "
+        "\\software{"
+        "Sorcha,"
+        "ASSIST \citep{2023PSJ.....4...69H,hanno_rein_2023_7778017},"
+        "Astropy \citep{2013A&A...558A..33A,2018AJ....156..123A,2022ApJ...935..167A}, "
+        "Healpy \citep{Zonca2019,2005ApJ...622..759G}, "
+        "Matplotlib \citep{Hunter:2007}, "
+        "Numba \citep{2015llvm.confE...1L}, "
+        "Numpy \citep{harris2020array}, "
+        "pandas \citep{mckinney-proc-scipy-2010, reback2020pandas}, "
+        "Pooch \citep{uieda2020}, "
+        "PyTables \citep{pytables}, "
+        "REBOUND \citep{rebound,reboundias15}, "
+        "rubin$\_$sim \citep{2018Icar..303..181J,peter_yoachim_2022_7087823}, "
+        "sbpy \citep{2019JOSS....4.1426M}, "
+        "SciPy \citep{2020SciPy-NMeth}, "
+        "Spiceypy \citep{2020JOSS....5.2050A}, "
         "sqlite (\\url{https://www.sqlite.org/index.html}), "
         "sqlite3 (\\url{https://docs.python.org/3/library/sqlite3.html}), "
+        "tqdm \citep{casper_da_costa_luis_2023_8233425}, "
         "Black (\\url{https://black.readthedocs.io/en/stable/faq.html}), "
         "Jupyter Notebooks \citep{soton403913}}"
     )

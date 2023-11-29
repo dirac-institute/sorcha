@@ -5,7 +5,7 @@ Basic Output
 ----------------------
 The format of the survey simulator output looks something like::
 
-   ObjID,FieldMJD,fieldRA,fieldDec,AstRA(deg),AstDec(deg),AstrometricSigma(deg),optFilter,observedPSFMag,observedTrailedSourceMag,PhotometricSigmaPSF(mag),PhotometricSigmaTrailedSource(mag),fiveSigmaDepth,fiveSigmaDepthAtSource
+   ObjID,FieldMJD_TAI,fieldRA,fieldDec,AstRA(deg),AstDec(deg),AstrometricSigma(deg),optFilter,observedPSFMag,observedTrailedSourceMag,PhotometricSigmaPSF(mag),PhotometricSigmaTrailedSource(mag),fiveSigmaDepth,fiveSigmaDepthAtSource
    S1000000a,61769.320619,163.87542090842982,-18.84327137012991,164.03771300000017,-17.58257500000004,2.9880927198448093e-06,r,19.667095021023798,19.655534004675797,0.006775654132479691,0.006755926588113991,23.86356436464961,23.839403736057715
    S1000000a,61769.332335,163.87542090842982,-18.84327137012991,164.03840499999956,-17.583782000000177,3.0580983448792015e-06,i,19.654439857054346,19.651499866857677,0.008648382870172588,0.00861644095296432,23.50948086026021,23.485408367730255
    S1000000a,61773.283672,163.33185289781585,-17.478349047859123,164.25272700000096,-17.970833000000166,2.8628267283501646e-06,g,19.605094385361397,19.59913996244041,0.004573058990569846,0.004562676340629368,24.412081324532746,24.40274105573913
@@ -22,7 +22,7 @@ The format of the survey simulator output looks something like::
 +====================================+==================================================================================+
 | ObjID                              | Object identifier                                                                |
 +------------------------------------+----------------------------------------------------------------------------------+
-| FieldMJD                           | MJD (Mean Julian Date) of the observation                                        |
+| FieldMJD_TAI                       | MJD (Mean Julian Date) of the observation                                        |
 +------------------------------------+----------------------------------------------------------------------------------+
 | fieldRA                            | Right ascension (RA) of the center of the observation pointing (degrees)         | 
 +------------------------------------+----------------------------------------------------------------------------------+
@@ -36,7 +36,7 @@ The format of the survey simulator output looks something like::
 +------------------------------------+----------------------------------------------------------------------------------+
 | optFilter                          | Filter Observation Taken in                                                      |
 +------------------------------------+----------------------------------------------------------------------------------+
-| observedPSFMag                     | Apparent magnitude in optFilter measured by the data management piplines         |
+| observedPSFMag                     | Apparent magnitude in optFilter measured by the data management pipelines        |
 +------------------------------------+----------------------------------------------------------------------------------+
 | observedTrailedSourceMag           | Apparent magnitude in optFilter adding up all of the counts in the trail         |
 +------------------------------------+----------------------------------------------------------------------------------+

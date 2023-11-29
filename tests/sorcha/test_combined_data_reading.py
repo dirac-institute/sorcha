@@ -29,11 +29,11 @@ def test_PPReadAllInput():
         "ephemerides_type": "external",
         "eph_format": "csv",
         "observing_filters": ["u", "g", "r", "i", "z", "y"],
-        "pointing_sql_query": "SELECT observationId, observationStartMJD, filter, seeingFwhmGeom, seeingFwhmEff, fiveSigmaDepth, fieldRA, fieldDec, rotSkyPos FROM observations order by observationId",
+        "pointing_sql_query": "SELECT observationId, observationStartMJD as observationStartMJD_TAI, visitTime, filter, seeingFwhmGeom, seeingFwhmEff, fiveSigmaDepth, fieldRA, fieldDec, rotSkyPos FROM observations order by observationId",
     }
 
     filterpointing = PPReadPointingDatabase(
-        cmd_args["pointing_database"], configs["observing_filters"], configs["pointing_sql_query"]
+        cmd_args["pointing_database"], configs["observing_filters"], configs["pointing_sql_query"], "lsst"
     )
 
     reader = CombinedDataReader(verbose=True)
@@ -83,6 +83,7 @@ def test_PPReadAllInput():
             0.09654,
             33.01305,
             "COM",
+            34.0,
             "z",
             0.7299771787487132,
             0.8247897551687507,
@@ -90,6 +91,7 @@ def test_PPReadAllInput():
             11.104605793427162,
             -1.2000819393055593,
             273.9055664032884,
+            60225.290312576966,
         ],
         dtype=object,
     )
@@ -98,7 +100,7 @@ def test_PPReadAllInput():
         [
             "ObjID",
             "FieldID",
-            "FieldMJD",
+            "FieldMJD_TAI",
             "AstRange(km)",
             "AstRangeRate(km/s)",
             "AstRA(deg)",
@@ -125,14 +127,15 @@ def test_PPReadAllInput():
             "z-r",
             "y-r",
             "GS",
-            "epoch",
-            "t_p",
+            "epochMJD_TDB",
+            "t_p_MJD_TDB",
             "argPeri",
             "node",
             "inc",
             "e",
             "q",
             "FORMAT",
+            "visitTime",
             "optFilter",
             "seeingFwhmGeom",
             "seeingFwhmEff",
@@ -140,6 +143,7 @@ def test_PPReadAllInput():
             "fieldRA",
             "fieldDec",
             "rotSkyPos",
+            "observationMidpointMJD_TAI",
         ],
         dtype=object,
     )

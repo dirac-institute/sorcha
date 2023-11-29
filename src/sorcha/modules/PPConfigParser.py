@@ -433,10 +433,15 @@ def PPConfigFileParser(configfile, survey_name):
         sys.exit('ERROR: camera_model should be either "circle" or "footprint".')
 
     elif config_dict["camera_model"] == "footprint":
-        config_dict["footprint_path"] = PPGetOrExit(
-            config, "FOV", "footprint_path", "ERROR: no camera footprint provided."
+        config_dict["footprint_path"], external_file = PPGetValueAndFlag(
+            config, "FOV", "footprint_path", "none"
         )
-        PPFindFileOrExit(config_dict["footprint_path"], "footprint_path")
+        if external_file:
+            PPFindFileOrExit(config_dict["footprint_path"], "footprint_path")
+        elif survey_name.lower() != "lsst":
+            log_error_and_exit(
+                "a default detector footprint is currently only provided for LSST; please provide your own footprint file."
+            )
 
         config_dict["footprint_edge_threshold"], _ = PPGetValueAndFlag(
             config, "FOV", "footprint_edge_threshold", "float"
@@ -620,9 +625,9 @@ def PPConfigFileParser(configfile, survey_name):
     config_dict["output_format"] = PPGetOrExit(
         config, "OUTPUT", "output_format", "ERROR: output format not specified."
     ).lower()
-    if config_dict["output_format"] not in ["csv", "separatelycsv", "sqlite3", "hdf5", "h5"]:
-        pplogger.error("ERROR: output_format should be either csv, separatelycsv, sqlite3 or hdf5.")
-        sys.exit("ERROR: output_format should be either csv, separatelycsv, sqlite3 or hdf5.")
+    if config_dict["output_format"] not in ["csv", "sqlite3", "hdf5", "h5"]:
+        pplogger.error("ERROR: output_format should be either csv, sqlite3 or hdf5.")
+        sys.exit("ERROR: output_format should be either csv, sqlite3 or hdf5.")
 
     config_dict["output_size"] = PPGetOrExit(
         config, "OUTPUT", "output_size", "ERROR: output size not specified."
@@ -730,20 +735,6 @@ def PPPrintConfigsToLog(configs, cmd_args):
         pplogger.info("The output ephemerides file is located " + cmd_args.output_ephemeris_file)
     pplogger.info("The survey selected is: " + cmd_args.surveyname)
 
-    if cmd_args.makeTemporaryEphemerisDatabase:
-        pplogger.info(
-            "Creating of temporary ephemeris database at: " + str(cmd_args.makeTemporaryEphemerisDatabase)
-        )
-
-    if cmd_args.readTemporaryEphemerisDatabase:
-        pplogger.info(
-            "Reading from existing temporary ephemeris database at "
-            + str(cmd_args.readTemporaryEphemerisDatabase)
-        )
-
-    if cmd_args.deleteTemporaryEphemerisDatabase:
-        pplogger.info("Temporary ephemeris database will be deleted upon code conclusion.")
-
     if configs["comet_activity"] == "comet":
         pplogger.info("Cometary activity set to: " + str(configs["comet_activity"]))
     elif configs["comet_activity"] == "none":
@@ -778,14 +769,17 @@ def PPPrintConfigsToLog(configs, cmd_args):
 
     if configs["camera_model"] == "footprint":
         pplogger.info("Footprint is modelled after the actual camera footprint.")
-        pplogger.info("Loading camera footprint from " + configs["footprint_path"])
+        if configs["footprint_path"]:
+            pplogger.info("Loading camera footprint from " + configs["footprint_path"])
+        else:
+            pplogger.info("Loading default LSST footprint LSST_detector_corners_100123.csv")
     else:
         pplogger.info("Footprint is circular.")
         if configs["fill_factor"]:
             pplogger.info(
                 "The code will approximate chip gaps using filling factor: " + str(configs["fill_factor"])
             )
-        elif configs["circleRadius"]:
+        elif configs["circle_radius"]:
             pplogger.info(
                 "A circular footprint will be applied with radius: " + str(configs["circle_radius"])
             )

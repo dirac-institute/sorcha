@@ -24,16 +24,22 @@ as appropriate. We have developed tools and example slurm scripts to help you ru
 Pointing Database 
 ---------------------
 
-If you are having issues with reading the LSST pointing database such asgetting an error like::
+If you are having issues with reading the LSST pointing database such as getting an error like::
   
-   pandas.io.sql.DatabaseError: Execution failed on sql 'SELECT observationStartMJD, observationId FROM observations ORDER BY observationStartMJD': no such table: observations
+   pandas.io.sql.DatabaseError: Execution failed on sql 'SELECT observationStartMJD as observationStartMJD_TAI, observationId FROM observations ORDER BY observationStartMJD_TAI': no such table: observations
 
 Then it is likely that you are using the older or newer version of the (simulated) LSST pointing database. See  :ref:`database_query`
+
+If you see an error like::
+
+   ERROR: PPReadPointingDatabase: SQL query on pointing database failed. Check that the query is correct in the config file.
+
+it might be your computer setup. SQLite uses a temporary store to hold temporary files, and if it configured on your machine with a small quota you might get an error. You can fix this by setting the SQLITE_TEMPDIR environment variable to a folder in your working directory. Then if this variable is defined, SQLite will automatically default to using this pathway for its temporary store. 
 
 Mismatch in Inputs 
 ---------------------
 There are several files associated with the synthetic small bodies  which are passed into Sorcha. These are
-the orbit file, the physical parameter file and an optional complexy parameters file and optional ephemeris 
+the orbit file, the physical parameter file and an optional complex parameters file and optional ephemeris 
 file (if not using the ephemeris generator within sorcha. Each provide specific information about the 
 synthetic population that is being analysed. Within these files, it is necessary to specify an entry for every 
 object. The Sorcha code will run a check to ensure that all entries have an associated orbit and 

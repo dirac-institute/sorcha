@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 from pandas.testing import assert_frame_equal
 
 from sorcha.utilities.dataUtilitiesForTests import get_test_filepath
@@ -19,7 +20,7 @@ def test_PPMatchPointingToObservations():
         {
             "ObjID": ["356450", "356450"],
             "FieldID": [9212, 9262],
-            "FieldMJD": [60229.28437, 60229.308262],
+            "FieldMJD_TAI": [60229.28437, 60229.308262],
             "AstRange(km)": [5710968952.677331, 5710979387.71679],
             "AstRangeRate(km/s)": [5.027, 5.082],
             "AstRA(deg)": [11.240711, 11.240231],
@@ -46,7 +47,7 @@ def test_PPMatchPointingToObservations():
         {
             "ObjID": ["356450"],
             "t_0": [54466.0],
-            "t_p": [90480.35745],
+            "t_p_MJD_TDB": [90480.35745],
             "argperi": [7.89],
             "node": [144.25849],
             "incl": [8.98718],
@@ -71,9 +72,19 @@ def test_PPMatchPointingToObservations():
     joined_df = PPJoinEphemeridesAndParameters(test_oif, test_params)
     joined_df_2 = PPJoinEphemeridesAndOrbits(joined_df, test_orb)
 
-    dbq = "SELECT observationId, observationStartMJD, filter, seeingFwhmGeom, seeingFwhmEff, fiveSigmaDepth, fieldRA, fieldDec, rotSkyPos FROM observations order by observationId"
+    dbq = "SELECT observationId, observationStartMJD as observationStartMJD_TAI, visitTime, filter, seeingFwhmGeom, seeingFwhmEff, fiveSigmaDepth, fieldRA, fieldDec, rotSkyPos FROM observations order by observationId"
 
-    pointing_db = PPReadPointingDatabase(get_test_filepath("baseline_10klines_2.0.db"), ["g", "r", "i"], dbq)
+    # note that surveyname here is "test". this is because this test pointing dataframe doesn't have the visitTime column
+    # and thus cannot calculate 'observationMidpointMJD_TAI'. we don't need it here, so that's okay.
+    pointing_db = PPReadPointingDatabase(
+        get_test_filepath("baseline_10klines_2.0.db"), ["g", "r", "i"], dbq, "lsst"
+    )
+
+    # simulate adding extra columns to the pointing db for the precomputed values
+    # needed for ephemeris generation. This ensures that the extra columns are not
+    # included in the merge in PPMatchPointingToObservations.
+    r_sun = np.empty((len(pointing_db), 3))
+    pointing_db["r_sun"] = r_sun.tolist()
 
     final_join = PPMatchPointingToObservations(joined_df_2, pointing_db)
 
@@ -81,7 +92,7 @@ def test_PPMatchPointingToObservations():
         {
             "ObjID": ["356450", "356450"],
             "FieldID": [9212, 9262],
-            "FieldMJD": [60229.28437, 60229.308262],
+            "FieldMJD_TAI": [60229.28437, 60229.308262],
             "AstRange(km)": [5710968952.677331, 5710979387.71679],
             "AstRangeRate(km/s)": [5.027, 5.082],
             "AstRA(deg)": [11.240711, 11.240231],
@@ -109,12 +120,13 @@ def test_PPMatchPointingToObservations():
             "y-r": [-0.7, -0.7],
             "GS": [0.15, 0.15],
             "t_0": [54466.0, 54466.0],
-            "t_p": [90480.35745, 90480.35745],
+            "t_p_MJD_TDB": [90480.35745, 90480.35745],
             "argperi": [7.89, 7.89],
             "node": [144.25849, 144.25849],
             "incl": [8.98718, 8.98718],
             "e": [0.09654, 0.09654],
             "q": [33.01305, 33.01305],
+            "visitTime": [34.0, 34.0],
             "optFilter": ["r", "i"],
             "seeingFwhmGeom": [0.9072793403337696, 0.9738200113477326],
             "seeingFwhmEff": [1.0404858154912038, 1.1214355369193827],
@@ -122,6 +134,7 @@ def test_PPMatchPointingToObservations():
             "fieldRA": [10.286608210708128, 10.286608210708128],
             "fieldDec": [-2.177840811640851, -2.177840811640851],
             "rotSkyPos": [298.5944886818567, 302.40143247632597],
+            "observationMidpointMJD_TAI": [60229.284567, 60229.308459],
         }
     )
 

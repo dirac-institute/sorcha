@@ -5,6 +5,9 @@ import sys
 
 from sorcha.readers.ObjectDataReader import ObjectDataReader
 
+# NOTE: this was written for a now-defunct functionality, but has been left
+# in the code as a database reader class may be useful later.
+
 
 class DatabaseReader(ObjectDataReader):
     """A class to read in object data stored in a sqlite database."""

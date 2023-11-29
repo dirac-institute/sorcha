@@ -3,6 +3,10 @@ import os
 import sqlite3
 import logging
 
+# this is for suppressing a warning in PyTables when writing to HDF5
+import warnings
+from tables import NaturalNameWarning
+
 
 def PPOutWriteCSV(padain, outf):
     """
@@ -42,6 +46,14 @@ def PPOutWriteHDF5(pp_results, outf, keyin):
     None.
 
     """
+
+    # pytables doesn't like the Pandas extension dtype StringDtype
+    # converting the ObjID to 'str' type fixes this
+    pp_results = pp_results.astype({"ObjID": str})
+
+    # this suppresses a warning when ObjIDs begin with a number
+    # as long as the user isn't going to use PyTables to access the data this doesn't matter
+    warnings.filterwarnings("ignore", category=NaturalNameWarning)
 
     of = pp_results.to_hdf(outf, mode="a", format="table", append=True, key=keyin)
 
@@ -101,7 +113,7 @@ def PPWriteOutput(cmd_args, configs, observations_in, endChunk=0, verbose=False)
         observations = observations_in.copy()[
             [
                 "ObjID",
-                "FieldMJD",
+                "FieldMJD_TAI",
                 "fieldRA",
                 "fieldDec",
                 "AstRA(deg)",
@@ -119,7 +131,7 @@ def PPWriteOutput(cmd_args, configs, observations_in, endChunk=0, verbose=False)
     elif configs["output_size"] == "all":
         observations = observations_in.copy()
 
-    observations["FieldMJD"] = observations["FieldMJD"].round(decimals=5)
+    observations["FieldMJD_TAI"] = observations["FieldMJD_TAI"].round(decimals=5)
 
     for position_col in ["fieldRA", "fieldDec", "AstRA(deg)", "AstDec(deg)", "AstrometricSigma(deg)"]:
         observations[position_col] = observations[position_col].round(decimals=configs["position_decimals"])
@@ -143,20 +155,6 @@ def PPWriteOutput(cmd_args, configs, observations_in, endChunk=0, verbose=False)
         out = os.path.join(cmd_args.outpath, cmd_args.outfilestem + outputsuffix)
         verboselog("Output to CSV file...")
         observations = PPOutWriteCSV(observations, out)
-
-    elif configs["output_format"] == "separatelycsv":
-        outputsuffix = ".csv"
-        objid_list = observations["ObjID"].unique().tolist()
-        verboselog("Output to " + str(len(objid_list)) + " separate output CSV files...")
-
-        i = 0
-        while i < len(objid_list):
-            single_object_df = pd.DataFrame(observations[observations["ObjID"] == objid_list[i]])
-            out = os.path.join(
-                cmd_args.outpath, str(objid_list[i]) + "_" + cmd_args.outfilestem + outputsuffix
-            )
-            observations = PPOutWriteCSV(single_object_df, out)
-            i = i + 1
 
     elif configs["output_format"] == "sqlite3":
         outputsuffix = ".db"

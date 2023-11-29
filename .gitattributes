@@ -19,3 +19,4 @@
 #
 # png image files
 # *.png	filter=lfs diff=lfs merge=lfs -text
+.git_archival.txt  export-subst

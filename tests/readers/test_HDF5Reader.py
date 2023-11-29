@@ -47,7 +47,7 @@ def test_HDF5DataReader_read_rows(use_cache):
         [
             "ObjID",
             "FieldID",
-            "FieldMJD",
+            "FieldMJD_TAI",
             "AstRange(km)",
             "AstRangeRate(km/s)",
             "AstRA(deg)",
@@ -91,7 +91,7 @@ def test_HDF5DataReader_read_objects(use_cache):
         [
             "ObjID",
             "FieldID",
-            "FieldMJD",
+            "FieldMJD_TAI",
             "AstRange(km)",
             "AstRangeRate(km/s)",
             "AstRA(deg)",

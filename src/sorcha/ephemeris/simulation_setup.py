@@ -7,6 +7,7 @@ from collections import defaultdict
 import assist
 import logging
 import sys
+import os
 
 from sorcha.ephemeris.simulation_constants import *
 from sorcha.ephemeris.simulation_data_files import (
@@ -27,6 +28,8 @@ from sorcha.ephemeris.simulation_parsing import (
     mjd_tai_to_epoch,
 )
 
+from sorcha.utilities.generate_meta_kernel import build_meta_kernel_file
+
 
 def create_assist_ephemeris(args) -> tuple:
     """Build the ASSIST ephemeris object
@@ -43,10 +46,12 @@ def create_assist_ephemeris(args) -> tuple:
     small_bodies_file_path = retriever.fetch(JPL_SMALL_BODIES)
     ephem = Ephem(planets_path=planets_file_path, asteroids_path=small_bodies_file_path)
     gm_sun = ephem.get_particle("Sun", 0).m
+    gm_total = sum(sorted([ephem.get_particle(i, 0).m for i in range(27)]))
 
     pplogger.info(f"Calculated GM_SUN value from ASSIST ephemeris: {gm_sun}")
+    pplogger.info(f"Calculated GM_TOTAL value from ASSIST ephemeris: {gm_total}")
 
-    return ephem, gm_sun
+    return ephem, gm_sun, gm_total
 
 
 def furnish_spiceypy(args):
@@ -60,11 +65,11 @@ def furnish_spiceypy(args):
     for kernel_file in ORDERED_KERNEL_FILES:
         retriever.fetch(kernel_file)
 
-    # TODO: The previous line will fetch all the remote kernel files if they are
-    # not present on the local machine, however, it does not create the META_KERNEL
-    # file needed in the next line. We should abstract the creation of the META_KERNEL
-    # to a separate utility function that can be called here as needed.
+    # check if the META_KERNEL file exists. If it doesn't exist, create it.
+    if not os.path.exists(os.path.join(retriever.abspath, META_KERNEL)):
+        build_meta_kernel_file(retriever)
 
+    # try to get the META_KERNEL file. If it's not there, error out.
     try:
         meta_kernel = retriever.fetch(META_KERNEL)
     except ValueError:
@@ -78,17 +83,21 @@ def furnish_spiceypy(args):
     spice.furnsh(meta_kernel)
 
 
-def generate_simulations(ephem, gm_sun, orbits_df):
+def generate_simulations(ephem, gm_sun, gm_total, orbits_df, args):
     sim_dict = defaultdict(dict)  # return
 
     sun_dict = dict()  # This could be passed in and reused
     for _, row in orbits_df.iterrows():
-        epoch = row["epoch"]
+        epoch = row["epochMJD_TDB"]
         # convert from MJD to JD, if not done already.
         if epoch < 2400000.5:
             epoch += 2400000.5
 
-        x, y, z, vx, vy, vz = sp.parse_orbit_row(row, epoch, ephem, sun_dict, gm_sun)
+        try:
+            x, y, z, vx, vy, vz = sp.parse_orbit_row(row, epoch, ephem, sun_dict, gm_sun, gm_total)
+        except ValueError as val_err:
+            args.pplogger.error(val_err)
+            sys.exit(val_err)
 
         # Instantiate a rebound particle
         ic = rebound.Particle(x=x, y=y, z=z, vx=vx, vy=vy, vz=vz)
@@ -136,7 +145,7 @@ def precompute_pointing_information(pointings_df, args, configs):
     pointings_df : pd.dataframe
         The original dataframe with several additional columns of precomputed values.
     """
-    ephem, _ = create_assist_ephemeris(args)
+    ephem, _, _ = create_assist_ephemeris(args)
 
     furnish_spiceypy(args)
     obsCode = configs["ar_obs_code"]
@@ -147,10 +156,10 @@ def precompute_pointing_information(pointings_df, args, configs):
     pointings_df["visit_vector"] = vectors.tolist()
 
     # use pandas `apply` (even though it's slow) instead of looping over the df in a for loop
-    pointings_df["jd_tdb"] = pointings_df.apply(
-        lambda row: mjd_tai_to_epoch(row["observationStartMJD"]), axis=1
+    pointings_df["JD_TDB"] = pointings_df.apply(
+        lambda row: mjd_tai_to_epoch(row["observationMidpointMJD_TAI"]), axis=1
     )
-    et = (pointings_df["jd_tdb"] - spice.j2000()) * 24 * 60 * 60
+    et = (pointings_df["JD_TDB"] - spice.j2000()) * 24 * 60 * 60
 
     # create a partial function since most params don't change, and it makes the lambda easier to read
     partial_get_hp_neighbors = partial(
@@ -182,7 +191,7 @@ def precompute_pointing_information(pointings_df, args, configs):
     # create empty arrays for sun position and velocity to be filled in
     r_sun = np.empty((len(pointings_df), 3))
     v_sun = np.empty((len(pointings_df), 3))
-    time_offsets = pointings_df["jd_tdb"] - ephem.jd_ref
+    time_offsets = pointings_df["JD_TDB"] - ephem.jd_ref
     for idx, time_offset_i in enumerate(time_offsets):
         sun = ephem.get_particle("Sun", time_offset_i)
         r_sun[idx] = np.array((sun.x, sun.y, sun.z))
