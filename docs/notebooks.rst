@@ -14,3 +14,4 @@ Notebooks
     Trailing Losses Validation <notebooks/demo_TrailingLossesValidation>
     Uncertainties and Randomization <notebooks/demo_UncertaintiesAndRandomization>
     Vignetting Demo <notebooks/demo_vignetting>
+    Lightcurve demo <notebooks/demo_Lightcurve>

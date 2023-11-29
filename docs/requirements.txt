@@ -16,3 +16,4 @@ nbsphinx
 ipython
 jupytext
 jupyter
+sorcha-addons
