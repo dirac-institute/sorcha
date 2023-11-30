@@ -94,5 +94,5 @@ def make_retriever(directory_path: str = None, registry: dict = REGISTRY) -> poo
         base_url="",
         urls=URLS,
         registry=registry,
-        retry_if_failed=2,
+        retry_if_failed=1,
     )
