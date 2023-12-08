@@ -1,27 +1,29 @@
-import logging
 import os
 import sys
 import numpy as np
 import configparser
+import logging
 
 from sorcha.lightcurves.lightcurve_registration import LC_METHODS
 from sorcha.activity.activity_registration import CA_METHODS
 
 
-def log_error_and_exit(message: str) -> None:
+def log_error_and_exit(pplogger, message: str) -> None:
     """Log a message to the error output file and terminal, then exit.
 
     Parameters
     ----------
+    pplogger (object): sorchaArguments object containing logger.
+
     message : str
         The error message to be logged to the error output file.
     """
 
-    logging.error(message)
+    pplogger.error(message)
     sys.exit(message)
 
 
-def PPGetOrExit(config, section, key, message):
+def PPGetOrExit(config, section, key, message, pplogger):
     """
     Checks to see if the config file parser has a key. If it does not, this
     function errors out and the code stops.
@@ -36,6 +38,8 @@ def PPGetOrExit(config, section, key, message):
 
     message (string): the message to log and display if the key is not found.
 
+    pplogger (object): sorchaArguments object containing logger.
+
     Returns:
     ----------
     None.
@@ -45,11 +49,11 @@ def PPGetOrExit(config, section, key, message):
     if config.has_option(section, key):
         return config[section][key]
     else:
-        logging.error(message)
+        pplogger.error(message)
         sys.exit(message)
 
 
-def PPGetFloatOrExit(config, section, key, message):
+def PPGetFloatOrExit(config, section, key, message, pplogger):
     """
     Checks to see if a key in the config parser is present and can be read as a
     float. If it cannot, this function errors out and the code stops.
@@ -64,6 +68,8 @@ def PPGetFloatOrExit(config, section, key, message):
 
     message (string): the message to log and display if the key is not found.
 
+    pplogger (object): sorchaArguments object containing logger.
+
     Returns:
     ----------
     None.
@@ -75,18 +81,18 @@ def PPGetFloatOrExit(config, section, key, message):
             val = config.getfloat(section, key)
             return val
         except ValueError:
-            logging.error(
+            pplogger.error(
                 "ERROR: expected a float for config parameter {}. Check value in config file.".format(key)
             )
             sys.exit(
                 "ERROR: expected a float for config parameter {}. Check value in config file.".format(key)
             )
     else:
-        logging.error(message)
+        pplogger.error(message)
         sys.exit(message)
 
 
-def PPGetIntOrExit(config, section, key, message):
+def PPGetIntOrExit(config, section, key, message, pplogger):
     """
     Checks to see if a key in the config parser is present and can be read as an
     int. If it cannot, this function errors out and the code stops.
@@ -101,6 +107,8 @@ def PPGetIntOrExit(config, section, key, message):
 
     message (string): the message to log and display if the key is not found.
 
+    pplogger (object): sorchaArguments object containing logger.
+
     Returns:
     ----------
     None.
@@ -112,18 +120,18 @@ def PPGetIntOrExit(config, section, key, message):
             val = config.getint(section, key)
             return val
         except ValueError:
-            logging.error(
+            pplogger.error(
                 "ERROR: expected an int for config parameter {}. Check value in config file.".format(key)
             )
             sys.exit(
                 "ERROR: expected an int for config parameter {}. Check value in config file.".format(key)
             )
     else:
-        logging.error(message)
+        pplogger.error(message)
         sys.exit(message)
 
 
-def PPGetBoolOrExit(config, section, key, message):
+def PPGetBoolOrExit(config, section, key, message, pplogger):
     """
     Checks to see if a key in the config parser is present and can be read as a
     Boolean. If it cannot, this function errors out and the code stops.
@@ -138,6 +146,8 @@ def PPGetBoolOrExit(config, section, key, message):
 
     message (string): the message to log and display if the key is not found.
 
+    pplogger (object): sorchaArguments object containing logger.
+
     Returns:
     ----------
     None.
@@ -149,14 +159,14 @@ def PPGetBoolOrExit(config, section, key, message):
             val = config.getboolean(section, key)
             return val
         except ValueError:
-            logging.error(f"ERROR: {key} could not be converted to a Boolean.")
+            pplogger.error(f"ERROR: {key} could not be converted to a Boolean.")
             sys.exit(f"ERROR: {key} could not be converted to a Boolean.")
     else:
-        logging.error(message)
+        pplogger.error(message)
         sys.exit(message)
 
 
-def PPGetValueAndFlag(config, section, key, type_wanted):
+def PPGetValueAndFlag(config, section, key, type_wanted, pplogger):
     """
     Obtains a value from the config flag, forcing it to be the specified
     type and error-handling if it can't be forced. If the value is not present
@@ -173,6 +183,8 @@ def PPGetValueAndFlag(config, section, key, type_wanted):
     type_wanted (string): the type the value should be forced to. Accepts int,
     float, none (for no type-forcing).
 
+    pplogger (object): sorchaArguments object containing logger.
+
     Returns:
     ----------
     value (any type): the value of the key, with type dependent on type_wanted.
@@ -187,7 +199,7 @@ def PPGetValueAndFlag(config, section, key, type_wanted):
         try:
             value = config.getint(section, key, fallback=None)
         except ValueError:
-            logging.error(
+            pplogger.error(
                 "ERROR: expected an int for config parameter {}. Check value in config file.".format(key)
             )
             sys.exit(
@@ -197,7 +209,7 @@ def PPGetValueAndFlag(config, section, key, type_wanted):
         try:
             value = config.getfloat(section, key, fallback=None)
         except ValueError:
-            logging.error(
+            pplogger.error(
                 "ERROR: expected a float for config parameter {}. Check value in config file.".format(key)
             )
             sys.exit(
@@ -206,7 +218,7 @@ def PPGetValueAndFlag(config, section, key, type_wanted):
     elif type_wanted == "none":
         value = config.get(section, key, fallback=None)
     else:
-        logging.error("ERROR: internal error: type not recognised.")
+        pplogger.error("ERROR: internal error: type not recognised.")
         sys.exit("ERROR: internal error: type not recognised.")
 
     if value is None:
@@ -228,6 +240,8 @@ def PPFindFileOrExit(arg_fn, argname):
     argname (string): the name of the argument being checked. Used for error
     message.
 
+    pplogger (object): sorchaArguments object containing logger.
+
     Returns:
     ----------
     arg_fn (string): the filepath/name of the file to be checked.
@@ -243,7 +257,7 @@ def PPFindFileOrExit(arg_fn, argname):
         sys.exit("ERROR: filename {} supplied for {} argument does not exist.".format(arg_fn, argname))
 
 
-def PPFindDirectoryOrExit(arg_fn, argname):
+def PPFindDirectoryOrExit(arg_fn, argname, pplogger):
     """Checks to see if a directory given by a filepath exists. If it doesn't,
     this fails gracefully and exits to the command line.
 
@@ -254,13 +268,13 @@ def PPFindDirectoryOrExit(arg_fn, argname):
     argname (string): the name of the argument being checked. Used for error
     message.
 
+    pplogger (object): sorchaArguments object containing logger.
+
     Returns:
     ----------
     arg_fn (string): the filepath of the directory to be checked.
 
     """
-
-    pplogger = logging.getLogger(__name__)
 
     if os.path.isdir(arg_fn):
         return arg_fn
@@ -269,7 +283,7 @@ def PPFindDirectoryOrExit(arg_fn, argname):
         sys.exit("ERROR: filepath {} supplied for {} argument does not exist.".format(arg_fn, argname))
 
 
-def PPCheckFiltersForSurvey(survey_name, observing_filters):
+def PPCheckFiltersForSurvey(survey_name, observing_filters, pplogger):
     """
     When given a list of filters, this function checks to make sure they exist in the
     user-selected survey. Currently only has options for LSST, but can be expanded upon
@@ -282,13 +296,13 @@ def PPCheckFiltersForSurvey(survey_name, observing_filters):
 
     observing_filters (list of strings): observation filters of interest.
 
+    pplogger (object): sorchaArguments object containing logger.
+
     Returns:
     ----------
     None.
 
     """
-
-    pplogger = logging.getLogger(__name__)
 
     if survey_name in ["LSST", "lsst"]:
         lsst_filters = ["u", "g", "r", "i", "z", "y"]
@@ -310,7 +324,7 @@ def PPCheckFiltersForSurvey(survey_name, observing_filters):
             )
 
 
-def PPConfigFileParser(configfile, survey_name):
+def PPConfigFileParser(configfile, survey_name, pplogger):
     """
     Parses the config file, error-handles, then assigns the values into a single
     dictionary, which is passed out.
@@ -326,12 +340,13 @@ def PPConfigFileParser(configfile, survey_name):
 
     survey_name (string): survey name. Currently only "LSST", "lsst" accepted.
 
+    pplogger (object): sorchaArguments object containing logger.
+
     Returns:
     ----------
     config_dict (dictionary): dictionary of config file variables.
 
     """
-    pplogger = logging.getLogger(__name__)
 
     # Save a raw copy of the configuration to the logs as a backup.
     with open(configfile, "r") as file:
@@ -345,28 +360,28 @@ def PPConfigFileParser(configfile, survey_name):
     # INPUT
 
     config_dict["eph_format"] = PPGetOrExit(
-        config, "INPUT", "eph_format", "ERROR: no ephemerides file format is specified."
+        config, "INPUT", "eph_format", "ERROR: no ephemerides file format is specified.", pplogger
     ).lower()
     if config_dict["eph_format"] not in ["csv", "whitespace", "hdf5"]:
         pplogger.error("ERROR: eph_format should be either csv, whitespace, or hdf5.")
         sys.exit("ERROR: eph_format should be either either csv, whitespace, or hdf5.")
 
     config_dict["aux_format"] = PPGetOrExit(
-        config, "INPUT", "aux_format", "ERROR: no auxiliary data format specified."
+        config, "INPUT", "aux_format", "ERROR: no auxiliary data format specified.", pplogger
     ).lower()
     if config_dict["aux_format"] not in ["comma", "whitespace", "csv"]:
         pplogger.error("ERROR: aux_format should be either comma, csv, or whitespace.")
         sys.exit("ERROR: aux_format should be either comma, csv, or whitespace.")
 
     config_dict["ephemerides_type"] = PPGetOrExit(
-        config, "INPUT", "ephemerides_type", "ERROR: no ephemerides type provided."
+        config, "INPUT", "ephemerides_type", "ERROR: no ephemerides type provided.", pplogger
     ).lower()
     if config_dict["ephemerides_type"] not in ["ar", "external"]:
         pplogger.error('ERROR: ephemerides_type not recognised - expecting either "ar" or "external".')
         sys.exit('ERROR: ephemerides_type not recognised - expecting either "ar" or "external".')
 
     config_dict["size_serial_chunk"] = PPGetIntOrExit(
-        config, "INPUT", "size_serial_chunk", "ERROR: size_serial_chunk not specified."
+        config, "INPUT", "size_serial_chunk", "ERROR: size_serial_chunk not specified.", pplogger
     )
     if config_dict["size_serial_chunk"] < 1:
         pplogger.error("ERROR: size_serial_chunk is zero or negative.")
@@ -382,22 +397,22 @@ def PPConfigFileParser(configfile, survey_name):
     # If the user defined a specific comet_activity value, but the model has not been registered, exit the program.
     if config_dict["comet_activity"] and config_dict["comet_activity"] not in CA_METHODS:
         log_error_and_exit(
-            f"The requested comet activity model, '{config_dict['comet_activity']}', is not registered. Available comet activity models are: {list(CA_METHODS.keys())}"
+            pplogger, f"The requested comet activity model, '{config_dict['comet_activity']}', is not registered. Available comet activity models are: {list(CA_METHODS.keys())}"
         )
 
     # FILTERS
 
     obsfilters = PPGetOrExit(
-        config, "FILTERS", "observing_filters", "ERROR: observing_filters config file variable not provided."
+        config, "FILTERS", "observing_filters", "ERROR: observing_filters config file variable not provided.", pplogger
     )
     config_dict["observing_filters"] = [e.strip() for e in obsfilters.split(",")]
 
-    PPCheckFiltersForSurvey(survey_name, config_dict["observing_filters"])
+    PPCheckFiltersForSurvey(survey_name, config_dict["observing_filters"], pplogger)
 
     # SATURATION
 
     bright_limits, config_dict["bright_limit_on"] = PPGetValueAndFlag(
-        config, "SATURATION", "bright_limit", "none"
+        config, "SATURATION", "bright_limit", "none", pplogger
     )
 
     try:
@@ -419,13 +434,13 @@ def PPConfigFileParser(configfile, survey_name):
     # PHASECURVES
 
     config_dict["phase_function"] = PPGetOrExit(
-        config, "PHASECURVES", "phase_function", "ERROR: phase function not defined."
+        config, "PHASECURVES", "phase_function", "ERROR: phase function not defined.", pplogger
     )
 
     # FOV
 
     config_dict["camera_model"] = PPGetOrExit(
-        config, "FOV", "camera_model", "ERROR: camera model not defined."
+        config, "FOV", "camera_model", "ERROR: camera model not defined.", pplogger
     )
 
     if config_dict["camera_model"] not in ["circle", "footprint"]:
@@ -434,17 +449,17 @@ def PPConfigFileParser(configfile, survey_name):
 
     elif config_dict["camera_model"] == "footprint":
         config_dict["footprint_path"], external_file = PPGetValueAndFlag(
-            config, "FOV", "footprint_path", "none"
+            config, "FOV", "footprint_path", "none", pplogger
         )
         if external_file:
             PPFindFileOrExit(config_dict["footprint_path"], "footprint_path")
         elif survey_name.lower() != "lsst":
             log_error_and_exit(
-                "a default detector footprint is currently only provided for LSST; please provide your own footprint file."
+                pplogger, "a default detector footprint is currently only provided for LSST; please provide your own footprint file."
             )
 
         config_dict["footprint_edge_threshold"], _ = PPGetValueAndFlag(
-            config, "FOV", "footprint_edge_threshold", "float"
+            config, "FOV", "footprint_edge_threshold", "float", pplogger
         )
 
         if config.has_option("FOV", "fill_factor"):
@@ -455,8 +470,8 @@ def PPConfigFileParser(configfile, survey_name):
             sys.exit('ERROR: circle radius supplied in config file but camera model is not "circle".')
 
     elif (config_dict["camera_model"]) == "circle":
-        config_dict["fill_factor"], _ = PPGetValueAndFlag(config, "FOV", "fill_factor", "float")
-        config_dict["circle_radius"], _ = PPGetValueAndFlag(config, "FOV", "circle_radius", "float")
+        config_dict["fill_factor"], _ = PPGetValueAndFlag(config, "FOV", "fill_factor", "float", pplogger)
+        config_dict["circle_radius"], _ = PPGetValueAndFlag(config, "FOV", "circle_radius", "float", pplogger)
 
         if not config_dict["fill_factor"] and not config_dict["circle_radius"]:
             pplogger.error(
@@ -485,7 +500,7 @@ def PPConfigFileParser(configfile, survey_name):
     # FADINGFUNCTION
 
     config_dict["fading_function_on"] = PPGetBoolOrExit(
-        config, "FADINGFUNCTION", "fading_function_on", "ERROR: fading_function_on flag not present."
+        config, "FADINGFUNCTION", "fading_function_on", "ERROR: fading_function_on flag not present.", pplogger
     )
 
     if config_dict["fading_function_on"]:
@@ -494,12 +509,14 @@ def PPConfigFileParser(configfile, survey_name):
             "FADINGFUNCTION",
             "fading_function_width",
             "ERROR: fading function is on but no fading_function_width supplied.",
+            pplogger
         )
         config_dict["fading_function_peak_efficiency"] = PPGetFloatOrExit(
             config,
             "FADINGFUNCTION",
             "fading_function_peak_efficiency",
             "ERROR: fading function is on but no fading_function_peak_efficiency supplied.",
+            pplogger
         )
 
         if config_dict["fading_function_width"] <= 0.0 or config_dict["fading_function_width"] > 0.5:
@@ -533,20 +550,20 @@ def PPConfigFileParser(configfile, survey_name):
     # LINKINGFILTER
 
     config_dict["SSP_separation_threshold"], _ = PPGetValueAndFlag(
-        config, "LINKINGFILTER", "SSP_separation_threshold", "float"
+        config, "LINKINGFILTER", "SSP_separation_threshold", "float", pplogger
     )
     config_dict["SSP_number_observations"], _ = PPGetValueAndFlag(
-        config, "LINKINGFILTER", "SSP_number_observations", "int"
+        config, "LINKINGFILTER", "SSP_number_observations", "int", pplogger
     )
     config_dict["SSP_number_tracklets"], _ = PPGetValueAndFlag(
-        config, "LINKINGFILTER", "SSP_number_tracklets", "int"
+        config, "LINKINGFILTER", "SSP_number_tracklets", "int", pplogger
     )
-    config_dict["SSP_track_window"], _ = PPGetValueAndFlag(config, "LINKINGFILTER", "SSP_track_window", "int")
+    config_dict["SSP_track_window"], _ = PPGetValueAndFlag(config, "LINKINGFILTER", "SSP_track_window", "int", pplogger)
     config_dict["SSP_detection_efficiency"], _ = PPGetValueAndFlag(
-        config, "LINKINGFILTER", "SSP_detection_efficiency", "float"
+        config, "LINKINGFILTER", "SSP_detection_efficiency", "float", pplogger
     )
     config_dict["SSP_maximum_time"], _ = PPGetValueAndFlag(
-        config, "LINKINGFILTER", "SSP_maximum_time", "float"
+        config, "LINKINGFILTER", "SSP_maximum_time", "float", pplogger
     )
 
     SSPvariables = [
@@ -601,46 +618,46 @@ def PPConfigFileParser(configfile, survey_name):
 
     if config_dict["ephemerides_type"] == "ar":
         config_dict["ar_ang_fov"] = PPGetFloatOrExit(
-            config, "SIMULATION", "ar_ang_fov", "ERROR: ar_ang_fov not specified."
+            config, "SIMULATION", "ar_ang_fov", "ERROR: ar_ang_fov not specified.", pplogger
         )
 
         config_dict["ar_fov_buffer"] = PPGetFloatOrExit(
-            config, "SIMULATION", "ar_fov_buffer", "ERROR: ar_fov_buffer not specified."
+            config, "SIMULATION", "ar_fov_buffer", "ERROR: ar_fov_buffer not specified.", pplogger
         )
 
         config_dict["ar_picket"] = PPGetIntOrExit(
-            config, "SIMULATION", "ar_picket", "ERROR: ar_picket not specified."
+            config, "SIMULATION", "ar_picket", "ERROR: ar_picket not specified.", pplogger
         )
 
         config_dict["ar_obs_code"] = PPGetOrExit(
-            config, "SIMULATION", "ar_obs_code", "ERROR: ar_picket not specified."
+            config, "SIMULATION", "ar_obs_code", "ERROR: ar_picket not specified.", pplogger
         )
 
         config_dict["ar_healpix_order"] = PPGetIntOrExit(
-            config, "SIMULATION", "ar_healpix_order", "ERROR: ar_healpix_order not specified."
+            config, "SIMULATION", "ar_healpix_order", "ERROR: ar_healpix_order not specified.", pplogger
         )
 
     # OUTPUT
 
     config_dict["output_format"] = PPGetOrExit(
-        config, "OUTPUT", "output_format", "ERROR: output format not specified."
+        config, "OUTPUT", "output_format", "ERROR: output format not specified.", pplogger
     ).lower()
     if config_dict["output_format"] not in ["csv", "sqlite3", "hdf5", "h5"]:
         pplogger.error("ERROR: output_format should be either csv, sqlite3 or hdf5.")
         sys.exit("ERROR: output_format should be either csv, sqlite3 or hdf5.")
 
     config_dict["output_size"] = PPGetOrExit(
-        config, "OUTPUT", "output_size", "ERROR: output size not specified."
+        config, "OUTPUT", "output_size", "ERROR: output size not specified.", pplogger
     ).lower()
     if config_dict["output_size"] not in ["basic", "all"]:
         pplogger.error("ERROR: output_size not recognised.")
         sys.exit("ERROR: output_size not recognised.")
 
     config_dict["position_decimals"] = PPGetIntOrExit(
-        config, "OUTPUT", "position_decimals", "ERROR: positional decimal places not specified."
+        config, "OUTPUT", "position_decimals", "ERROR: positional decimal places not specified.", pplogger
     )
     config_dict["magnitude_decimals"] = PPGetIntOrExit(
-        config, "OUTPUT", "magnitude_decimals", "ERROR: magnitude decimal places not specified."
+        config, "OUTPUT", "magnitude_decimals", "ERROR: magnitude decimal places not specified.", pplogger
     )
 
     if config_dict["position_decimals"] < 0 or config_dict["magnitude_decimals"] < 0:
@@ -650,10 +667,10 @@ def PPConfigFileParser(configfile, survey_name):
     # EXPERT
 
     config_dict["SNR_limit"], config_dict["SNR_limit_on"] = PPGetValueAndFlag(
-        config, "EXPERT", "SNR_limit", "float"
+        config, "EXPERT", "SNR_limit", "float", pplogger
     )
     config_dict["mag_limit"], config_dict["mag_limit_on"] = PPGetValueAndFlag(
-        config, "EXPERT", "mag_limit", "float"
+        config, "EXPERT", "mag_limit", "float", pplogger
     )
 
     if config_dict["SNR_limit_on"] and config_dict["SNR_limit"] < 0:
@@ -693,7 +710,7 @@ def PPConfigFileParser(configfile, survey_name):
         )
 
     config_dict["pointing_sql_query"] = PPGetOrExit(
-        config, "EXPERT", "pointing_sql_query", "ERROR: no pointing database SQLite3 query provided."
+        config, "EXPERT", "pointing_sql_query", "ERROR: no pointing database SQLite3 query provided.", pplogger
     )
 
     config_dict["lc_model"] = config.get("EXPERT", "lc_model", fallback=None)
@@ -702,13 +719,13 @@ def PPConfigFileParser(configfile, survey_name):
     # If the user defined a lightcurve model, but the model has not been registered, exit the program.
     if config_dict["lc_model"] and config_dict["lc_model"] not in LC_METHODS:
         log_error_and_exit(
-            f"The requested light curve model, '{config_dict['lc_model']}', is not registered. Available lightcurve options are: {list(LC_METHODS.keys())}"
+            pplogger, f"The requested light curve model, '{config_dict['lc_model']}', is not registered. Available lightcurve options are: {list(LC_METHODS.keys())}"
         )
 
     return config_dict
 
 
-def PPPrintConfigsToLog(configs, cmd_args):
+def PPPrintConfigsToLog(configs, cmd_args, pplogger):
     """
     Prints all the values from the config file and command line to the log.
 
@@ -718,13 +735,13 @@ def PPPrintConfigsToLog(configs, cmd_args):
 
     cmd_args (dictionary): dictionary of command line arguments.
 
+    pplogger (object): sorchaArguments object containing logger.
+
     Returns:
     ----------
     None.
 
     """
-
-    pplogger = logging.getLogger(__name__)
 
     pplogger.info("The config file used is located at " + cmd_args.configfile)
     pplogger.info("The physical parameters file used is located at " + cmd_args.paramsinput)

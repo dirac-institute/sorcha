@@ -1,11 +1,9 @@
-import logging
-
 from .PPModuleRNG import PerModuleRNG
 from .PPDropObservations import PPDropObservations
 from .PPDetectionProbability import PPDetectionProbability
 
 
-def PPFadingFunctionFilter(observations, fillfactor, width, module_rngs, verbose=False):
+def PPFadingFunctionFilter(observations, fillfactor, width, module_rngs, pplogger, verbose=False):
     """
     Wrapper function for PPDetectionProbability and PPDropObservations.
 
@@ -20,13 +18,14 @@ def PPFadingFunctionFilter(observations, fillfactor, width, module_rngs, verbose
 
     module_rngs (PerModuleRNG): A collection of random number generators (per module).
 
+    pplogger (object): sorchaArguments object containing logger.
+
     Returns:
     ----------
     observations_drop (Pandas dataframe): new dataframe without observations that could not be observed.
 
     """
 
-    pplogger = logging.getLogger(__name__)
     verboselog = pplogger.info if verbose else lambda *a, **k: None
 
     verboselog("Calculating probabilities of detections...")

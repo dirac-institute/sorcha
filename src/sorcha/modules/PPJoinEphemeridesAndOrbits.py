@@ -1,6 +1,4 @@
 import sys
-import logging
-
 
 def PPJoinEphemeridesAndOrbits(padafr, padaor):
     """
@@ -19,8 +17,6 @@ def PPJoinEphemeridesAndOrbits(padafr, padaor):
     resdf (Pandas dataframe): joined dataframe.
 
     """
-
-    pplogger = logging.getLogger(__name__)
 
     resdf = padafr.join(padaor.set_index("ObjID"), on="ObjID")
 

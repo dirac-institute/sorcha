@@ -1,10 +1,9 @@
-import logging
 import sys
 import numpy as np
 import fnmatch
 
 
-def PPApplyColourOffsets(observations, function, othercolours, observing_filters, mainfilter):
+def PPApplyColourOffsets(observations, function, othercolours, observing_filters, mainfilter, pplogger):
     """
     Adds the correct colour offset to H based on the filter of each observation,
     then checks to make sure the appropriate columns exist for each phase function model.
@@ -23,13 +22,13 @@ def PPApplyColourOffsets(observations, function, othercolours, observing_filters
 
     mainfilter (string): the main filter in which H is given and all colour offsets are calculated against.
 
+    pplogger (object): sorchaArguments object containing logger.
+
     Returns:
     -----------
     observations (Pandas dataframe): dataframe of observations with H calculated in relevant filter.
 
     """
-
-    pplogger = logging.getLogger(__name__)
 
     H_col = "H_" + mainfilter
 

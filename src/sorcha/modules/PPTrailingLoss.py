@@ -18,11 +18,11 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import numpy as np
-import logging
 import sys
 
 
 def calcTrailingLoss(
+    pplogger,
     dRaCosDec,
     dDec,
     seeing,
@@ -38,6 +38,8 @@ def calcTrailingLoss(
 
     Parameters:
     -----------
+    pplogger (object): sorchaArguments object containing logger.
+
     dRa (float/array of floats): on sky velocity component in RA*Cos(Dec), deg/day.
 
     dDec (float/array of floats): on sky velocity component in Dec, deg/day.
@@ -64,8 +66,6 @@ def calcTrailingLoss(
 
     """
 
-    pplogger = logging.getLogger(__name__)
-
     vel = np.sqrt(dRaCosDec**2 + dDec**2)
     vel = vel / 24.0  # convert to arcsec / sec
 
@@ -85,6 +85,7 @@ def calcTrailingLoss(
 
 
 def PPTrailingLoss(
+    pplogger,
     oif_df,
     model="circularPSF",
     dra_name="AstRARate(deg/day)",
@@ -97,8 +98,10 @@ def PPTrailingLoss(
 
     Parameters:
     -----------
-    oif_df (Pandas dataframe): dataframe of observations for which to calculate trailing losses.
+    pplogger (object): sorchaArguments object containing logger.
 
+    oif_df (Pandas dataframe): dataframe of observations for which to calculate trailing losses.
+    
     model (string): Either 'circularPSF' or 'trailedSource': see docstring for calcTrailingLoss for details.
 
     *_name (string): Column names for object RA rate, Dec rate and Dec respectively.
@@ -112,6 +115,7 @@ def PPTrailingLoss(
     """
 
     dmag = calcTrailingLoss(
+        pplogger,
         oif_df[dra_name] * np.cos(oif_df[dec_name] * np.pi / 180),
         oif_df[ddec_name],
         oif_df[seeing_name_survey],

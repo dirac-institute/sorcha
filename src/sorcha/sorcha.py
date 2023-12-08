@@ -74,7 +74,7 @@ def runLSSTSimulation(args, configs, pplogger=None):
             pplogger = PPGetLogger(args["outpath"])
         else:
             pplogger = PPGetLogger(args.outpath)
-    pplogger.info("Post-processing begun.")
+    args.pplogger.info("Post-processing begun.")
 
     update_lc_subclasses()
     update_activity_subclasses()
@@ -90,30 +90,30 @@ def runLSSTSimulation(args, configs, pplogger=None):
     try:
         args.validate_arguments()
     except Exception as err:
-        pplogger.error(err)
+        args.pplogger.error(err)
         sys.exit(err)
 
     # if verbosity flagged, the verboselog function will log the message specified
     # if not, verboselog does absolutely nothing
-    verboselog = pplogger.info if args.verbose else lambda *a, **k: None
+    verboselog = args.pplogger.info if args.verbose else lambda *a, **k: None
 
     verboselog("Reading configuration file...")
-    configs = PPConfigFileParser(args.configfile, args.surveyname)
+    configs = PPConfigFileParser(args.configfile, args.surveyname, args.pplogger)
 
     verboselog("Configuration file successfully read.")
 
     configs["mainfilter"], configs["othercolours"] = PPGetMainFilterAndColourOffsets(
-        args.paramsinput, configs["observing_filters"], configs["aux_format"]
+        args.paramsinput, configs["observing_filters"], configs["aux_format"], args.pplogger
     )
 
-    PPPrintConfigsToLog(configs, args)
+    PPPrintConfigsToLog(configs, args, args.pplogger)
 
     # End of config parsing
 
     verboselog("Reading pointing database...")
 
     filterpointing = PPReadPointingDatabase(
-        args.pointing_database, configs["observing_filters"], configs["pointing_sql_query"], args.surveyname
+        args.pointing_database, configs["observing_filters"], configs["pointing_sql_query"], args.surveyname, args.pplogger
     )
 
     # if we are going to compute the ephemerides, then we should pre-compute all
@@ -127,21 +127,21 @@ def runLSSTSimulation(args, configs, pplogger=None):
     ephem_primary = False
     if ephem_type.casefold() == "external":
         ephem_primary = True
-    reader = CombinedDataReader(ephem_primary=ephem_primary, verbose=True)
+    reader = CombinedDataReader(args.pplogger, ephem_primary=ephem_primary, verbose=True) 
 
     # TODO: Once more ephemerides_types are added this should be wrapped in a EphemerisDataReader
     # That does the selection and checks. We are holding off adding this level of indirection until there
     # is a second ephemerides_type.
     if ephem_type.casefold() not in ["ar", "external"]:  # pragma: no cover
-        pplogger.error(f"PPReadAllInput: Unsupported value for ephemerides_type {ephem_type}")
+        args.pplogger.error(f"PPReadAllInput: Unsupported value for ephemerides_type {ephem_type}")
         sys.exit(f"PPReadAllInput: Unsupported value for ephemerides_type {ephem_type}")
     if ephem_type.casefold() == "external":
-        reader.add_ephem_reader(OIFDataReader(args.oifoutput, configs["eph_format"]))
+        reader.add_ephem_reader(OIFDataReader(args.pplogger, args.oifoutput, configs["eph_format"]))
 
-    reader.add_aux_data_reader(OrbitAuxReader(args.orbinfile, configs["aux_format"]))
-    reader.add_aux_data_reader(CSVDataReader(args.paramsinput, configs["aux_format"]))
+    reader.add_aux_data_reader(OrbitAuxReader(args.pplogger, args.orbinfile, configs["aux_format"]))
+    reader.add_aux_data_reader(CSVDataReader(args.pplogger, args.paramsinput, configs["aux_format"]))
     if configs["comet_activity"] is not None or configs["lc_model"] is not None:
-        reader.add_aux_data_reader(CSVDataReader(args.complex_parameters, configs["aux_format"]))
+        reader.add_aux_data_reader(CSVDataReader(args.pplogger, args.complex_parameters, configs["aux_format"]))
 
     # In case of a large input file, the data is read in chunks. The
     # "sizeSerialChunk" parameter in PPConfig.ini assigns the chunk.
@@ -157,7 +157,7 @@ def runLSSTSimulation(args, configs, pplogger=None):
     footprint = None
     if configs["camera_model"] == "footprint":
         verboselog("Creating sensor footprint object for filtering")
-        footprint = Footprint(configs["footprint_path"])
+        footprint = Footprint(args.pplogger, configs["footprint_path"])
 
     while endChunk < lenf:
         endChunk = startChunk + configs["size_serial_chunk"]
@@ -180,16 +180,17 @@ def runLSSTSimulation(args, configs, pplogger=None):
         # If the ephemeris file doesn't have any observations for the objects in the chunk
         # PPReadAllInput will return an empty dataframe. We thus log a warning.
         if len(observations) == 0:
-            pplogger.info(
+            args.pplogger.info(
                 "WARNING: no ephemeris observations found for these objects. Skipping to next chunk..."
             )
             startChunk = startChunk + configs["size_serial_chunk"]
             continue
 
-        observations = PPMatchPointingToObservations(observations, filterpointing)
+        observations = PPMatchPointingToObservations(observations, filterpointing, args.pplogger)
 
         verboselog("Calculating apparent magnitudes...")
         observations = PPCalculateApparentMagnitude(
+            args,
             observations,
             configs["phase_function"],
             configs["mainfilter"],
@@ -202,7 +203,7 @@ def runLSSTSimulation(args, configs, pplogger=None):
 
         if configs["trailing_losses_on"]:
             verboselog("Calculating trailing losses...")
-            dmagDetect = PPTrailingLoss(observations, "circularPSF")
+            dmagDetect = PPTrailingLoss(args.pplogger, observations, "circularPSF")
             observations["PSFMag"] = dmagDetect + observations["TrailedSourceMag"]
         else:
             observations["PSFMag"] = observations["TrailedSourceMag"]
@@ -212,7 +213,7 @@ def runLSSTSimulation(args, configs, pplogger=None):
 
         verboselog("Applying field-of-view filters...")
         observations = PPApplyFOVFilter(
-            observations, configs, args._rngs, footprint=footprint, verbose=args.verbose
+            observations, configs, args._rngs, args.pplogger, footprint=footprint, verbose=args.verbose
         )
 
         # Note that the below code creates observedTrailedSourceMag and observedPSFMag
@@ -221,7 +222,7 @@ def runLSSTSimulation(args, configs, pplogger=None):
         # Do NOT use TrailedSourceMag or PSFMag, these are cut later.
         verboselog("Calculating astrometric and photometric uncertainties...")
         observations = PPAddUncertainties.addUncertainties(
-            observations, configs, args._rngs, verbose=args.verbose
+            observations, configs, args._rngs, args.pplogger, verbose=args.verbose
         )
 
         verboselog("Randomising astrometry...")
@@ -234,7 +235,7 @@ def runLSSTSimulation(args, configs, pplogger=None):
         if configs["camera_model"] == "footprint":
             verboselog("Re-applying field-of-view filter...")
             observations = PPApplyFOVFilter(
-                observations, configs, args._rngs, footprint=footprint, verbose=args.verbose
+                observations, configs, args._rngs, args.pplogger, footprint=footprint, verbose=args.verbose
             )
 
         if configs["SNR_limit_on"]:
@@ -256,12 +257,13 @@ def runLSSTSimulation(args, configs, pplogger=None):
                 configs["fading_function_peak_efficiency"],
                 configs["fading_function_width"],
                 args._rngs,
+                args.pplogger,
                 verbose=args.verbose,
             )
 
         if configs["bright_limit_on"]:
             verboselog("Dropping observations that are too bright...")
-            observations = PPBrightLimit(observations, configs["observing_filters"], configs["bright_limit"])
+            observations = PPBrightLimit(observations, configs["observing_filters"], configs["bright_limit"], args.pplogger)
 
         if len(observations) == 0:
             verboselog("No observations left in chunk. Skipping to next chunk...")
@@ -285,12 +287,12 @@ def runLSSTSimulation(args, configs, pplogger=None):
             observations.reset_index(drop=True, inplace=True)
             verboselog("Number of rows AFTER applying SSP linking filter: " + str(len(observations.index)))
 
-        pplogger.info("Post processing completed for this chunk")
+        args.pplogger.info("Post processing completed for this chunk")
 
-        pplogger.info("Output results for this chunk")
+        args.pplogger.info("Output results for this chunk")
 
         # write output
-        PPWriteOutput(args, configs, observations, endChunk, verbose=args.verbose)
+        PPWriteOutput(args, configs, observations, args.pplogger, endChunk, verbose=args.verbose)
 
         startChunk = startChunk + configs["size_serial_chunk"]
         # end for
@@ -433,14 +435,14 @@ def main():
     args = parser.parse_args()
 
     # Extract the output file path now in order to set up logging.
-    outpath = PPFindFileOrExit(args.o, "-o, --outfile")
+    outpath = PPFindFileOrExit(args.o, "-o, --outfile") # ?????? called before logger initiated
     pplogger = PPGetLogger(outpath)
     pplogger.info("Sorcha Start (Main)")
     pplogger.info(f"Command line: {' '.join(sys.argv)}")
 
     # Extract and validate the remaining arguments.
-    cmd_args = PPCommandLineParser(args)
-    configs = PPConfigFileParser(cmd_args["configfile"], cmd_args["surveyname"])
+    cmd_args = PPCommandLineParser(args) # ?????? called before logger initiated
+    configs = PPConfigFileParser(cmd_args["configfile"], cmd_args["surveyname"], pplogger) # ??????? old pplogger needed here
 
     if configs["ephemerides_type"] == "external" and cmd_args["oifoutput"] is None:
         pplogger.error("ERROR: A+R simulation not enabled and no ephemerides file provided")

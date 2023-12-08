@@ -21,10 +21,12 @@ import sys
 
 
 class CombinedDataReader:
-    def __init__(self, ephem_primary=False, **kwargs):
+    def __init__(self, pplogger, ephem_primary=False, **kwargs):
         """
         Parameters
         ----------
+        pplogger (object): sorchaArguments object containing logger.
+        
         ephem_primary (bool, optional): Use the ephemeris reader as the primary
             reader. Otherwise uses the first auxiliary data reader.
         """
@@ -32,6 +34,7 @@ class CombinedDataReader:
         self.aux_data_readers = []
         self.block_start = 0
         self.ephem_primary = ephem_primary
+        self.pplogger = pplogger
 
     def add_ephem_reader(self, new_reader):
         """Add a new reader for ephemeris data.
@@ -40,9 +43,8 @@ class CombinedDataReader:
         ----------
         new_reader (ObjectDataReader): The reader for a specific input file.
         """
-        pplogger = logging.getLogger(__name__)
         if self.ephem_reader is not None:
-            pplogger.error("ERROR: Ephemeris reader already set.")
+            self.pplogger.error("ERROR: Ephemeris reader already set.")
             sys.exit("ERROR: Ephemeris reader already set.")
         self.ephem_reader = new_reader
 
@@ -72,14 +74,13 @@ class CombinedDataReader:
         res_df (Pandas dataframe): dataframe of the combined object data.
 
         """
-        pplogger = logging.getLogger(__name__)
-        verboselog = pplogger.info if verbose else lambda *a, **k: None
+        verboselog = self.pplogger.info if verbose else lambda *a, **k: None
 
         if self.ephem_reader is None:
-            pplogger.error("ERROR: No ephemeris reader provided.")
+            self.pplogger.error("ERROR: No ephemeris reader provided.")
             sys.exit("ERROR: No ephemeris reader provided.")
         if len(self.aux_data_readers) == 0:
-            pplogger.error("ERROR: No auxiliary readers provided.")
+            self.pplogger.error("ERROR: No auxiliary readers provided.")
             sys.exit("ERROR: No auxiliary readers provided.")
 
         # Load object IDs from the primary table.
@@ -89,7 +90,7 @@ class CombinedDataReader:
             self.block_start += len(ephem_df)
 
             if not "ObjID" in ephem_df.columns:
-                pplogger.error("ERROR: No ObjID provided for ephemerides.")
+                self.pplogger.error("ERROR: No ObjID provided for ephemerides.")
                 sys.exit("ERROR: No ObjID provided for ephemerides.")
 
             obj_ids = ephem_df["ObjID"].unique().tolist()
@@ -100,7 +101,7 @@ class CombinedDataReader:
             self.block_start += len(primary_df)
 
             if not "ObjID" in primary_df.columns:
-                pplogger.error("ERROR: No ObjID provided.")
+                self.pplogger.error("ERROR: No ObjID provided.")
                 sys.exit("ERROR: No ObjID provided.")
 
             obj_ids = primary_df["ObjID"].unique().tolist()
@@ -128,7 +129,7 @@ class CombinedDataReader:
             verboselog("Checking Object IDs in auxiliary data")
             current_ids = set(pd.unique(current_df["ObjID"]).astype(str))
             if not ephem_ids.issubset(current_ids):  # pragma: no cover
-                pplogger.error(f"ERROR: At least one missing ObjID in {reader.get_reader_info()}")
+                self.pplogger.error(f"ERROR: At least one missing ObjID in {reader.get_reader_info()}")
                 sys.exit(f"ERROR: At least one missing ObjID {reader.get_reader_info()}")
 
             verboselog("Joining auxiliary data with ephemeris")
@@ -157,11 +158,10 @@ class CombinedDataReader:
         any ephemeris data.
 
         """
-        pplogger = logging.getLogger(__name__)
-        verboselog = pplogger.info if verbose else lambda *a, **k: None
+        verboselog = self.pplogger.info if verbose else lambda *a, **k: None
 
         if len(self.aux_data_readers) == 0:
-            pplogger.error("ERROR: No auxiliary readers provided.")
+            self.pplogger.error("ERROR: No auxiliary readers provided.")
             sys.exit("ERROR: No auxiliary readers provided.")
 
         # Load object IDs from the primary table.
@@ -170,7 +170,7 @@ class CombinedDataReader:
         self.block_start += len(primary_df)
 
         if not "ObjID" in primary_df.columns:
-            pplogger.error("ERROR: No ObjID provided.")
+            self.pplogger.error("ERROR: No ObjID provided.")
             sys.exit("ERROR: No ObjID provided.")
 
         obj_ids = primary_df["ObjID"].unique().tolist()
@@ -193,7 +193,7 @@ class CombinedDataReader:
             verboselog("Checking Object IDs in auxiliary data")
             current_ids = set(pd.unique(current_df["ObjID"]).astype(str))
             if not current_ids.issubset(obj_ids):  # pragma: no cover
-                pplogger.error(f"ERROR: At least one missing ObjID in {reader.get_reader_info()}")
+                self.pplogger.error(f"ERROR: At least one missing ObjID in {reader.get_reader_info()}")
                 sys.exit(f"ERROR: At least one missing ObjID {reader.get_reader_info()}")
 
             if i == 0:

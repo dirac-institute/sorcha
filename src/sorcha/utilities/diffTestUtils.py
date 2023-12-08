@@ -96,6 +96,6 @@ def override_seed_and_run(outpath, arg_set="baseline"):
     # Override the random number generator seed.
     # WARNING: This is only acceptable in a test and should never be used for
     # science results.
-    configs = PPConfigFileParser(args.configfile, args.surveyname)
+    configs = PPConfigFileParser(args.configfile, args.surveyname, args.pplogger)
     args._rngs = PerModuleRNG(2023)
     runLSSTSimulation(args, configs)

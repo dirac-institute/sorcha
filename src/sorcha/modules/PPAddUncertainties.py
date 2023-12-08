@@ -18,7 +18,6 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import numpy as np
-import logging
 import astropy.units as u
 from sorcha.modules import PPTrailingLoss
 from sorcha.modules import PPRandomizeMeasurements
@@ -57,7 +56,7 @@ def degSin(x):
     return np.sin(x * np.pi / 180.0)
 
 
-def addUncertainties(detDF, configs, module_rngs, verbose=True):
+def addUncertainties(detDF, configs, module_rngs, pplogger, verbose=True):
     """
     Generates astrometric and photometric uncertainties, and SNR. Uses uncertainties
     to randomize the photometry. Accounts for trailing losses.
@@ -70,6 +69,8 @@ def addUncertainties(detDF, configs, module_rngs, verbose=True):
 
     module_rngs (PerModuleRNG): A collection of random number generators (per module).
 
+    pplogger (object): sorchaArguments object containing logger.
+
     Returns:
     -----------
     detDF (Pandas dataframe): dataframe of observations, with new columns for observed
@@ -77,16 +78,15 @@ def addUncertainties(detDF, configs, module_rngs, verbose=True):
 
     """
 
-    pplogger = logging.getLogger(__name__)
     verboselog = pplogger.info if verbose else lambda *a, **k: None
 
     detDF["AstrometricSigma(deg)"], detDF["PhotometricSigmaTrailedSource(mag)"], detDF["SNR"] = uncertainties(
-        detDF, configs, filterMagName="TrailedSourceMag"
+        detDF, configs, pplogger, filterMagName="TrailedSourceMag"
     )
 
     if configs.get("trailing_losses_on", False):
         _, detDF["PhotometricSigmaPSF(mag)"], detDF["SNR"] = uncertainties(
-            detDF, configs, filterMagName="PSFMag"
+            detDF, configs, pplogger, filterMagName="PSFMag"
         )
     else:
         detDF["PhotometricSigmaPSF(mag)"] = detDF["PhotometricSigmaTrailedSource(mag)"]
@@ -116,6 +116,7 @@ def addUncertainties(detDF, configs, module_rngs, verbose=True):
 def uncertainties(
     detDF,
     configs,
+    pplogger,
     limMagName="fiveSigmaDepthAtSource",
     seeingName="seeingFwhmGeom",
     filterMagName="TrailedSourceMag",
@@ -132,6 +133,9 @@ def uncertainties(
 
     configs (dictionary): dictionary of configurations from config file.
 
+    pplogger (object): sorchaArguments object containing logger.
+
+
     limMagName, seeingName, filterMagName, dra_name, ddec_name, dec_name (strings): column
     names of the limiting magnitude, seeing, magnitude, RA rate, DEC rate and DEC.
 
@@ -147,7 +151,7 @@ def uncertainties(
 
     if configs.get("trailing_losses_on", False):
         dMag = PPTrailingLoss.calcTrailingLoss(
-            detDF[dra_name] * degCos(detDF[dec_name]), detDF[ddec_name], detDF[seeingName]
+            pplogger, detDF[dra_name] * degCos(detDF[dec_name]), detDF[ddec_name], detDF[seeingName]
         )
     else:
         dMag = 0.0

@@ -1,5 +1,4 @@
 import pandas as pd
-import logging
 import sys
 
 from sorcha.readers.ObjectDataReader import ObjectDataReader
@@ -12,11 +11,14 @@ class CSVDataReader(ObjectDataReader):
     Requires that the file's first column is ObjID.
     """
 
-    def __init__(self, filename, sep="csv", header=-1, **kwargs):
+    def __init__(self, pplogger, filename, sep="csv", header=-1, **kwargs):
         """A class for reading the object data from a CSV file.
 
         Parameters
         -----------
+        pplogger : object
+            sorchaArguments object containing logger.
+
         filename : str
             Location/name of the data file.
 
@@ -28,10 +30,10 @@ class CSVDataReader(ObjectDataReader):
         """
         super().__init__(**kwargs)
         self.filename = filename
+        self.pplogger = pplogger
 
         if sep not in ["whitespace", "csv"]:
-            pplogger = logging.getLogger(__name__)
-            pplogger.error(f"ERROR: Unrecognized delimiter ({sep})")
+            self.pplogger.error(f"ERROR: Unrecognized delimiter ({sep})")
             sys.exit(f"ERROR: Unrecognized delimiter ({sep})")
         self.sep = sep
 
@@ -72,8 +74,7 @@ class CSVDataReader(ObjectDataReader):
                 if i > 100:  # pragma: no cover
                     break
 
-        pplogger = logging.getLogger(__name__)
-        pplogger.error(
+        self.pplogger.error(
             "ERROR: CSVReader: column headings not found. Ensure column headings exist in input files and first column is ObjID."
         )
         sys.exit(

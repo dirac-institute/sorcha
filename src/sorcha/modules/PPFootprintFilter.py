@@ -17,7 +17,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import logging
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -110,7 +109,7 @@ class Detector:
         self.centerx = np.sum(self.x) / len(self.x)
         self.centery = np.sum(self.y) / len(self.y)
 
-    def ison(self, point, ϵ=10.0 ** (-11), edge_thresh=None, plot=False):
+    def ison(self, point, pplogger, ϵ=10.0 ** (-11), edge_thresh=None, plot=False):
         """
         Determines whether a point (or array of points) falls on the
         detector.
@@ -118,6 +117,8 @@ class Detector:
         Parameters:
         -----------
         point (array): array of shape (2, n) for n points.
+
+        pplogger (object): sorchaArguments object containing logger.
 
         ϵ (float): threshold for whether point is on detector.
 
@@ -131,7 +132,6 @@ class Detector:
         ----------
         ison (array): indices of points in point array that fall on the sensor.
         """
-        pplogger = logging.getLogger(__name__)
 
         # points needs to be shape 2,n
         # if single point, needs to be an array of single element arrays
@@ -377,12 +377,14 @@ class Detector:
 
 
 class Footprint:
-    def __init__(self, path=None, detectorName="detector"):
+    def __init__(self, pplogger, path=None, detectorName="detector"):
         """
         Initiates a Footprint object.
 
         Parameters:
         -----------
+        pplogger (object): sorchaArguments object containing logger.
+
         path (string): path to a .csv file containing detector corners.
 
         detectorName (string): name of column in detector file indicating to
@@ -459,6 +461,7 @@ class Footprint:
     def applyFootprint(
         self,
         field_df,
+        pplogger,
         ra_name="AstRA(deg)",
         dec_name="AstDec(deg)",
         field_name="FieldID",
@@ -524,7 +527,7 @@ class Footprint:
         detectorId = []
         for detector in self.detectors:
             if True:
-                stuff = detector.ison(points, edge_thresh=edge_thresh)
+                stuff = detector.ison(points, pplogger, edge_thresh=edge_thresh)
                 detected.append(stuff)
                 detectorId.append([i] * len(stuff))
                 i += 1

@@ -1,8 +1,7 @@
-import logging
 import sys
 
 
-def PPBrightLimit(observations, observing_filters, bright_limit):
+def PPBrightLimit(observations, observing_filters, bright_limit, pplogger):
     """
     Drops observations brighter than the user-defined saturation
     limit. Can take either a single saturation limit for a straight cut, or
@@ -15,6 +14,8 @@ def PPBrightLimit(observations, observing_filters, bright_limit):
     observing_filters (list of strings): observing filters present in the data.
 
     bright_limit (float or list of floats): saturation limits: either single or per-filter.
+
+    pplogger (object): sorchaArguments object containing logger.
 
     Returns:
     ----------
@@ -42,7 +43,7 @@ def PPBrightLimit(observations, observing_filters, bright_limit):
         observations_out = observations.drop(flat_index)
 
     else:
-        logging.error("ERROR: PPBrightLimit: expected a float or list of floats for bright_limit.")
+        pplogger.error("ERROR: PPBrightLimit: expected a float or list of floats for bright_limit.")
         sys.exit("ERROR: PPBrightLimit: expected a float or list of floats for bright_limit.")
 
     observations_out.reset_index(drop=True, inplace=True)

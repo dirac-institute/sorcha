@@ -4,7 +4,7 @@ import logging
 import sys
 
 
-def PPMatchPointingToObservations(padain, pointfildb):
+def PPMatchPointingToObservations(padain, pointfildb, pplogger):
     """
     Merges all relevant columns of each observation from the pointing
     database onto the observations dataframe, then drops all observations which are not
@@ -15,6 +15,8 @@ def PPMatchPointingToObservations(padain, pointfildb):
     padain (Pandas dataframe): dataframe of observations.
 
     pointfildb (Pandas dataframe): dataframe of the pointing database.
+
+    pplogger (object): sorchaArguments object containing logger.
 
     Returns:
     -----------
@@ -43,7 +45,7 @@ def PPMatchPointingToObservations(padain, pointfildb):
     chktruemjd = np.isclose(resdf["observationStartMJD_TAI"], resdf["FieldMJD_TAI"])
 
     if not chktruemjd.all():
-        logging.error(
+        pplogger.error(
             "ERROR: PPMatchPointingToObservations: mismatch in pointing database and pointing output times."
         )
         sys.exit(

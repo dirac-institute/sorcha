@@ -1,6 +1,5 @@
 import pandas as pd
 import sqlite3
-import logging
 import sys
 
 from sorcha.readers.ObjectDataReader import ObjectDataReader
@@ -59,8 +58,7 @@ class DatabaseReader(ObjectDataReader):
         A non-None block size must be provided if block_start > 0.
         """
         if block_start > 0 and block_size is None:
-            pplogger = logging.getLogger(__name__)
-            pplogger.error("ERROR: DatabaseReader requires a block_size when block_start > 0.")
+            self.pplogger.error("ERROR: DatabaseReader requires a block_size when block_start > 0.")
             sys.exit("ERROR: DatabaseReader requires a block_size when block_start > 0.")
 
         con = sqlite3.connect(self.intermdb)

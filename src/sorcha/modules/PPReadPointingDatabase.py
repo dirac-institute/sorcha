@@ -1,10 +1,9 @@
 import sqlite3
 import pandas as pd
-import logging
 import sys
 
 
-def PPReadPointingDatabase(bsdbname, observing_filters, dbquery, surveyname):
+def PPReadPointingDatabase(bsdbname, observing_filters, dbquery, surveyname, pplogger):
     """
     Reads in the pointing database as a Pandas dataframe.
 
@@ -16,13 +15,13 @@ def PPReadPointingDatabase(bsdbname, observing_filters, dbquery, surveyname):
 
     dbquery (string): database query to perform on pointing database.
 
+    pplogger (object): sorchaArguments object containing logger.
+
     Returns:
     -----------
     dfo (Pandas dataframe): dataframe of pointing database.
 
     """
-
-    pplogger = logging.getLogger(__name__)
 
     con = sqlite3.connect(bsdbname)
 

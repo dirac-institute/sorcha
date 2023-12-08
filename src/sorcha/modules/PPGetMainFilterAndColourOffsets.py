@@ -1,8 +1,7 @@
 import sys
-import logging
 
 
-def PPGetMainFilterAndColourOffsets(filename, observing_filters, filesep):
+def PPGetMainFilterAndColourOffsets(filename, observing_filters, filesep, pplogger):
     """
     Function to obtain the main filter (i.e. the filter in which H is
     defined) from the header of the physical parameters file and then generate
@@ -22,6 +21,8 @@ def PPGetMainFilterAndColourOffsets(filename, observing_filters, filesep):
     filesep (string): the format of the physical parameters file. Should be "csv"/"comma"
     or "whitespace".
 
+    pplogger (object): sorchaArguments object containing logger.
+
     Returns:
     ----------
     mainfilter (string): the main filter in which H is defined.
@@ -30,8 +31,6 @@ def PPGetMainFilterAndColourOffsets(filename, observing_filters, filesep):
     physical parameters file.
 
     """
-
-    pplogger = logging.getLogger(__name__)
 
     with open(filename) as f:
         first_line = f.readline()

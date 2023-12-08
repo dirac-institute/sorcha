@@ -1,5 +1,4 @@
 import numpy as np
-import logging
 import sys
 
 from sorcha.readers.CSVReader import CSVDataReader
@@ -17,25 +16,27 @@ class OIFDataReader(ObjectDataReader):
     instead of M * N.
     """
 
-    def __init__(self, filename, inputformat, **kwargs):
+    def __init__(self, pplogger, filename, inputformat, **kwargs):
         """A class for reading the object data from a CSV file.
 
         Parameters:
         -----------
+        pplogger (object): sorchaArguments object containing logger.
+
         filename (string): location/name of the data file.
 
         inputformat (string): format of input file ("whitespace"/"comma"/"csv"/"h5"/"hdf5").
         """
         super().__init__(**kwargs)
+        self.pplogger = pplogger
 
-        pplogger = logging.getLogger(__name__)
         self.reader = None
         if (inputformat == "whitespace") or (inputformat == "comma") or (inputformat == "csv"):
             self.reader = CSVDataReader(filename, sep=inputformat, **kwargs)
         elif (inputformat == "h5") or (inputformat == "hdf5") or (inputformat == "HDF5"):
             self.reader = HDF5DataReader(filename, **kwargs)
         else:
-            pplogger.error(
+            self.pplogger.error(
                 f"ERROR: OIFDataReader: unknown format for ephemeris simulation results ({inputformat})."
             )
             sys.exit(
@@ -144,8 +145,7 @@ class OIFDataReader(ObjectDataReader):
         if not set(input_table.columns.values) == set(oif_cols):
             for column in input_table.columns.values:
                 if column not in oif_cols and column not in optional_cols:
-                    pplogger = logging.getLogger(__name__)
-                    pplogger.error(
+                    self.pplogger.error(
                         "ERROR: OIFDataReader: column headings do not match expected OIF column headings. Check format of file."
                     )
                     sys.exit(

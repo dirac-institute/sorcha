@@ -32,7 +32,7 @@ def PPGetLogger(
     """
 
     log = logging.getLogger(log_name)
-    log_formatter = logging.Formatter(log_format)
+    log_formatter = logging.Formatter(fmt="%(asctime)s %(funcName)20s() %(levelname)s     %(message)s")
 
     # comment this to suppress console output
     # stream_handler = logging.StreamHandler()

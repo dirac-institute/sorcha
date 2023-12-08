@@ -12,6 +12,7 @@ def PPCalculateApparentMagnitudeInFilter(
     padain,
     function,
     observing_filters,
+    pplogger,
     colname="TrailedSourceMag",
     lightcurve_choice=None,
     cometary_activity_choice=None,
@@ -37,6 +38,8 @@ def PPCalculateApparentMagnitudeInFilter(
 
     function (string): desired phase function model. Options are HG, HG12, HG1G2, linear, none.
 
+    pplogger (object): sorchaArguments object containing logger.
+
     colname (string): column name in which to store calculated magnitude.
 
     lightcurve_choice (string): choice of lightcurve model. Default None
@@ -47,8 +50,6 @@ def PPCalculateApparentMagnitudeInFilter(
     padain (Pandas dataframe): dataframe of observations with calculated magnitude column.
 
     """
-
-    pplogger = logging.getLogger(__name__)
 
     H_col = "H_filter"
 

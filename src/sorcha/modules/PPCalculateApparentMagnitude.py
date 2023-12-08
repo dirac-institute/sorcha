@@ -1,10 +1,10 @@
 from .PPCalculateApparentMagnitudeInFilter import PPCalculateApparentMagnitudeInFilter
 from .PPCalculateSimpleCometaryMagnitude import PPCalculateSimpleCometaryMagnitude
 from .PPApplyColourOffsets import PPApplyColourOffsets
-import logging
 
 
 def PPCalculateApparentMagnitude(
+    args,
     observations,
     phasefunction,
     mainfilter,
@@ -20,6 +20,8 @@ def PPCalculateApparentMagnitude(
 
     Parameters:
     -----------
+    args (object): object containing sorchaArguments. 
+
     observations (Pandas dataframe): dataframe of observations.
 
     phasefunction (string): desired phase function model. Options are HG, HG12, HG1G2, linear, H.
@@ -41,8 +43,7 @@ def PPCalculateApparentMagnitude(
     observations (Pandas dataframe): dataframe of observations with calculated magnitude column.
     """
 
-    pplogger = logging.getLogger(__name__)
-    verboselog = pplogger.info if verbose else lambda *a, **k: None
+    verboselog = args.pplogger.info if args.verbose else lambda *a, **k: None
 
     # apply correct colour offset to get H magnitude in observation filter
     # if user is only interested in one filter, we have no colour offsets to apply: assume H is in that filter
@@ -50,7 +51,7 @@ def PPCalculateApparentMagnitude(
         verboselog("Selecting and applying correct colour offset...")
 
         observations = PPApplyColourOffsets(
-            observations, phasefunction, othercolours, observing_filters, mainfilter
+            observations, phasefunction, othercolours, observing_filters, mainfilter, args.pplogger
         )
     else:
         observations.rename(columns={"H_" + mainfilter: "H_filter"}, inplace=True)
@@ -61,6 +62,7 @@ def PPCalculateApparentMagnitude(
         observations,
         phasefunction,
         observing_filters,
+        args.pplogger,
         lightcurve_choice=lightcurve_choice,
         cometary_activity_choice=cometary_activity_choice,
     )

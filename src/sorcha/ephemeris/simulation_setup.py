@@ -5,7 +5,6 @@ from . import simulation_parsing as sp
 import rebound
 from collections import defaultdict
 import assist
-import logging
 import sys
 import os
 
@@ -39,7 +38,6 @@ def create_assist_ephemeris(args) -> tuple:
     Ephem, gm_sun
         The ASSIST ephemeris object
     """
-    pplogger = logging.getLogger(__name__)
 
     retriever = make_retriever(args.ar_data_file_path)
     planets_file_path = retriever.fetch(JPL_PLANETS)
@@ -48,8 +46,8 @@ def create_assist_ephemeris(args) -> tuple:
     gm_sun = ephem.get_particle("Sun", 0).m
     gm_total = sum(sorted([ephem.get_particle(i, 0).m for i in range(27)]))
 
-    pplogger.info(f"Calculated GM_SUN value from ASSIST ephemeris: {gm_sun}")
-    pplogger.info(f"Calculated GM_TOTAL value from ASSIST ephemeris: {gm_total}")
+    args.pplogger.info(f"Calculated GM_SUN value from ASSIST ephemeris: {gm_sun}")
+    args.pplogger.info(f"Calculated GM_TOTAL value from ASSIST ephemeris: {gm_total}")
 
     return ephem, gm_sun, gm_total
 
@@ -57,8 +55,6 @@ def create_assist_ephemeris(args) -> tuple:
 def furnish_spiceypy(args):
     # The goal here would be to download the spice kernel files (if needed)
     # Then call spice.furnish(<filename>) on each of those files.
-
-    pplogger = logging.getLogger(__name__)
 
     retriever = make_retriever(args.ar_data_file_path)
 
@@ -73,7 +69,7 @@ def furnish_spiceypy(args):
     try:
         meta_kernel = retriever.fetch(META_KERNEL)
     except ValueError:
-        pplogger.error(
+        args.pplogger.error(
             "ERROR: furnish_spiceypy: Must create meta_kernel.txt by running `bootstrap_sorcha_data_files` on the command line."
         )
         sys.exit(

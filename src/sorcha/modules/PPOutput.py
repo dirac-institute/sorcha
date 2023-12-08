@@ -1,7 +1,6 @@
 import pandas as pd
 import os
 import sqlite3
-import logging
 
 
 def PPOutWriteCSV(padain, outf):
@@ -71,7 +70,7 @@ def PPOutWriteSqlite3(pp_results, outf):
     pp_results.to_sql("pp_results", con=cnx, if_exists="append", index=False)
 
 
-def PPWriteOutput(cmd_args, configs, observations_in, endChunk=0, verbose=False):
+def PPWriteOutput(cmd_args, configs, observations_in, pplogger, endChunk=0, verbose=False):
     """
     Writes the output in the format specified in the config file to a location
     specified by the user.
@@ -84,6 +83,8 @@ def PPWriteOutput(cmd_args, configs, observations_in, endChunk=0, verbose=False)
 
     observations_in (Pandas dataframe): dataframe of output.
 
+    pplogger (object): sorchaArguments object containing logger.
+
     endChunk (int): integer of last object in chunk. Used only for HDF5 output key.
 
     verbose (Boolean): verbose mode on or off.
@@ -94,7 +95,6 @@ def PPWriteOutput(cmd_args, configs, observations_in, endChunk=0, verbose=False)
 
     """
 
-    pplogger = logging.getLogger(__name__)
     verboselog = pplogger.info if verbose else lambda *a, **k: None
 
     if configs["output_size"] == "basic":

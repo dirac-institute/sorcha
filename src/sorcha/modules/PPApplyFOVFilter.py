@@ -1,11 +1,10 @@
-import logging
 import numpy as np
 from astropy.coordinates import SkyCoord
 
 from sorcha.modules.PPModuleRNG import PerModuleRNG
 
 
-def PPApplyFOVFilter(observations, configs, module_rngs, footprint=None, verbose=False):
+def PPApplyFOVFilter(observations, configs, module_rngs, pplogger, footprint=None, verbose=False):
     """
     Wrapper function for PPFootprintFilter and PPFilterDetectionEfficiency. Checks to see
     whether a camera footprint filter should be applied or if a simple fraction of the
@@ -19,6 +18,8 @@ def PPApplyFOVFilter(observations, configs, module_rngs, footprint=None, verbose
 
     module_rngs (PerModuleRNG): A collection of random number generators (per module).
 
+    pplogger (object): sorchaArguments object containing logger.
+
     footprint (Footprint): A Footprint object that represents the boundaries of
     the detector(s). Default `None`.
 
@@ -29,13 +30,12 @@ def PPApplyFOVFilter(observations, configs, module_rngs, footprint=None, verbose
     observations (Pandas dataframe): dataframe of observations after FOV filters have been applied.
     """
 
-    pplogger = logging.getLogger(__name__)
     verboselog = pplogger.info if verbose else lambda *a, **k: None
 
     if configs["camera_model"] == "footprint":
         verboselog("Applying sensor footprint filter...")
         onSensor, detectorIDs = footprint.applyFootprint(
-            observations, edge_thresh=configs["footprint_edge_threshold"]
+            observations, pplogger, edge_thresh=configs["footprint_edge_threshold"]
         )
 
         observations = observations.iloc[onSensor].copy()
