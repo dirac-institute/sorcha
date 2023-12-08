@@ -435,14 +435,14 @@ def main():
     args = parser.parse_args()
 
     # Extract the output file path now in order to set up logging.
-    outpath = PPFindFileOrExit(args.o, "-o, --outfile") # ?????? called before logger initiated
+    outpath = PPFindFileOrExit(args.o, "-o, --outfile")
     pplogger = PPGetLogger(outpath)
     pplogger.info("Sorcha Start (Main)")
     pplogger.info(f"Command line: {' '.join(sys.argv)}")
 
     # Extract and validate the remaining arguments.
-    cmd_args = PPCommandLineParser(args) # ?????? called before logger initiated
-    configs = PPConfigFileParser(cmd_args["configfile"], cmd_args["surveyname"], pplogger) # ??????? old pplogger needed here
+    cmd_args = PPCommandLineParser(args) 
+    configs = PPConfigFileParser(cmd_args["configfile"], cmd_args["surveyname"], pplogger)
 
     if configs["ephemerides_type"] == "external" and cmd_args["oifoutput"] is None:
         pplogger.error("ERROR: A+R simulation not enabled and no ephemerides file provided")
