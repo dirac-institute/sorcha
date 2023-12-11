@@ -210,11 +210,6 @@ def runLSSTSimulation(args, configs, pplogger=None):
         verboselog("Calculating effects of vignetting on limiting magnitude...")
         observations["fiveSigmaDepthAtSource"] = PPVignetting.vignettingEffects(observations)
 
-        verboselog("Applying field-of-view filters...")
-        observations = PPApplyFOVFilter(
-            observations, configs, args._rngs, footprint=footprint, verbose=args.verbose
-        )
-
         # Note that the below code creates observedTrailedSourceMag and observedPSFMag
         # as columns in the observations dataframe.
         # These are the columns that should be used moving forward for filters etc.
@@ -231,11 +226,10 @@ def runLSSTSimulation(args, configs, pplogger=None):
             observations, args._rngs, sigName="AstrometricSigma(deg)", sigUnits="deg"
         )
 
-        if configs["camera_model"] == "footprint":
-            verboselog("Re-applying field-of-view filter...")
-            observations = PPApplyFOVFilter(
-                observations, configs, args._rngs, footprint=footprint, verbose=args.verbose
-            )
+        verboselog("Applying field-of-view filters...")
+        observations = PPApplyFOVFilter(
+            observations, configs, args._rngs, footprint=footprint, verbose=args.verbose
+        )
 
         if configs["SNR_limit_on"]:
             verboselog(
