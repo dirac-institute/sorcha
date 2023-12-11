@@ -9,7 +9,7 @@
 [![Documentation Status](https://readthedocs.org/projects/sorcha/badge/?version=latest)](https://sorcha.readthedocs.io/en/latest/?badge=latest)
 [![astropy](http://img.shields.io/badge/powered%20by-AstroPy-orange.svg?style=flat)](http://www.astropy.org/) 
 [![Anaconda-Server Badge](https://anaconda.org/conda-forge/sorcha/badges/version.svg)](https://anaconda.org/conda-forge/sorcha)
-[![PyPI version](https://img.shields.io/pypi/v/numba.svg)](https://pypi.python.org/pypi)
+[![PyPI - Version](https://img.shields.io/pypi/v/sorcha)](https://pypi.python.org/pypi/sorcha)
 [![Template](https://img.shields.io/badge/Template-LINCC%20Frameworks%20Python%20Project%20Template-brightgreen)](https://lincc-ppt.readthedocs.io/en/latest/)
 
 Documentation: https://sorcha.readthedocs.io
