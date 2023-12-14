@@ -4,7 +4,7 @@ RADIUS_EARTH_KM = 6378.137
 AU_M = 149597870700
 AU_KM = AU_M / 1000.0
 SPEED_OF_LIGHT = 2.99792458e5 * 86400.0 / AU_KM
-OBLIQUITY_ECLIPTIC = 84381.4118 * (1.0 / 3600) * np.pi / 180.0
+OBLIQUITY_ECLIPTIC = 84381.448 * (1.0 / 3600) * np.pi / 180.0
 
 
 def create_ecl_to_eq_rotation_matrix(ecl):
