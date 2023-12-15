@@ -8,7 +8,7 @@ cmd_args_dict = {
     "orbinfile": get_demo_filepath("sspp_testset_orbits.des"),
     "oifoutput": get_demo_filepath("example_oif_output.txt"),
     "configfile": get_demo_filepath("PPConfig_test.ini"),
-    "outpath": "./data/out",
+    "outpath": "./tests/out",
     "surveyname": "LSST",
     "outfilestem": f"out_end2end",
     "verbose": False,
