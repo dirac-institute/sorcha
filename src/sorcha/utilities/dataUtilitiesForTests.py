@@ -58,7 +58,7 @@ def get_demo_filepath(filename):
 
 
 def get_data_out_filepath(filename):
-    """Return the full path to a test file in the ``.../data/out`` directory.
+    """Return the full path to a test file in the ``.../tests/out`` directory.
 
     Parameters
     ----------
@@ -76,4 +76,4 @@ def get_data_out_filepath(filename):
     THIS_DIR = Path(__file__).parent.parent.parent.parent
 
     # Returned path: `<base_directory>/tests/data/filename`
-    return os.path.join(THIS_DIR, "data/out", filename)
+    return os.path.join(THIS_DIR, "tests/out", filename)

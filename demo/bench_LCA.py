@@ -20,7 +20,7 @@ if __name__ == "__main__":  # pragma: no cover
         "oifoutput": f"./{args.object_type}_sample_1000_eph.csv",
         "configfile": "./OIFconfig_benchmark.ini",
         "pointing_database": "./baseline_v2.0_1yr.db",
-        "outpath": "../data/out",
+        "outpath": "../tests/out",
         "makeTemporaryEphemerisDatabase": False,
         "readTemporaryEphemerisDatabase": False,
         "deleteTemporaryEphemerisDatabase": False,
@@ -31,7 +31,7 @@ if __name__ == "__main__":  # pragma: no cover
 
     configs = PPConfigFileParser("./OIFconfig_benchmark.ini", "LSST")
 
-    cProfile.run("runLSSTSimulation(cmd_args_dict, configs)", "../data/out/restats")
+    cProfile.run("runLSSTSimulation(cmd_args_dict, configs)", "../tests/out/restats")
 
-    p = pstats.Stats("../data/out/restats")
+    p = pstats.Stats("../tests/out/restats")
     p.strip_dirs().sort_stats(SortKey.CUMULATIVE).print_stats()
