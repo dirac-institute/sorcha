@@ -398,10 +398,15 @@ class Footprint:
         # the center of the camera should be the origin
         # if the user doesn't provide their own version of the footprint,
         # we'll use the default LSST version that comes included.
+        pplogger = logging.getLogger(__name__)
+
         if path:
             allcornersdf = pd.read_csv(path)
+            pplogger.info(f"Using CCD Detector file: {path}")
         else:
-            stream = pkg_resources.resource_stream(__name__, "data/LSST_detector_corners_100123.csv")
+            default_camera_config_file = "data/LSST_detector_corners_100123.csv"
+            stream = pkg_resources.resource_stream(__name__, default_camera_config_file)
+            pplogger.info(f"Using built-in CCD Detector file: {default_camera_config_file}")
             allcornersdf = pd.read_csv(stream)
 
         # build dictionary of detectorName:[list_of_inds]
