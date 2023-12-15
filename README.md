@@ -16,10 +16,10 @@ Documentation: https://sorcha.readthedocs.io
 
 Other software utilities can be found in this github repository: [https://github.com/dirac-institute/sorcha-addons](https://github.com/dirac-institute/sorcha-addons)
 ## developer best practices
-* Data sets should be moved to the `data` folder, have a readme.txt or readme.md to explain where the data came from as well as a time stamp in the readme.txt.
+* Data sets should be moved to the `src/sorcha/modules/data` folder, have a readme.txt or readme.md to explain where the data came from as well as a time stamp in the readme.txt.
 * Data sets that are used for unit testing should live in `tests/data`.  
 * All required input files for the main software or unit tests should have extensions that clearly describe the file format (e.g. .csv, .txt, .db, .fits)
-* If you are working on addressing a specific issue ticket, assign yourself the ticket and set the status to "in progress"
+* If you are working on addressing a specific issue ticket, assign yourself the ticket.
 * When making a pull request that closes an issue, cite the issue ticket in the pull request summary
 
 ## Collaboration
