@@ -53,7 +53,7 @@ def PPOutWriteHDF5(pp_results, outf, keyin):
 
     # this suppresses a warning when ObjIDs begin with a number
     # as long as the user isn't going to use PyTables to access the data this doesn't matter
-    warnings.filterwarnings("ignore", category=NaturalNameWarning)
+#    warnings.filterwarnings("ignore", category=NaturalNameWarning)
 
     of = pp_results.to_hdf(outf, mode="a", format="table", append=True, key=keyin)
 
