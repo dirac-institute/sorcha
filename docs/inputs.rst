@@ -29,7 +29,7 @@ Orbit File
 This is a file which contains the orbital information of a set of synthetic objects.
 
 .. tip::
-  *  Sorcha is **only** designed to handle **Cometary (COM), Keplerian (KEP), and Cartesian (CART)** orbits
+  *  Sorcha is designed to handle heliocentric **Cometary (COM), Keplerian (KEP), and Cartesian (CART)** orbits, as well as their barycentric equivalents: **Barycentric Cometary (BCOM), Keplerian (BKEP) and Cartesian (BCART)**
   *  The orbit file **must** have a consistent format (i.e. Cometary or Keplerian or Cartesian) throughout
   *  The ordering of the columns does not matter as long as the required columns exist and have entries
   *  The first row in the orbit file **must** be a header listing the columns names
@@ -39,18 +39,16 @@ This is a file which contains the orbital information of a set of synthetic obje
   *  The orbit file **must only** have 9 columns (object identifier, format column, 6 orbital parameters, and a time epoch)
 
 .. warning::
-  Sorcha assumes **heliocentric** orbits are provided as input!
-
-
-.. warning::
   The orbit epoch is expected to be given in **TDB (Barycentric Dynamical Time)**
-
 
 .. tip::
   If using Sorcha's internal ephemeris generation mode (which is the default mode), **we recommend calculating/creating your input orbits with epochs close in time to the start of the first survey observation**. This will minimize the n-body integrations required to set up the ephemeris generation.
 
+.. tip::
+  Be careful about the way your input elements are defined! Using heliocentric elements as barycentric (or vice-versa) will lead to wrong outputs. Similarly, if using Cartesian elements, be careful about the orientation of the coordinate system! Sorcha assumes that Cartesian elements are Ecliptic-oriented.
+
 .. note::
-  For readability we show examples of white space separated files below.
+  For readability we show examples of white space separated files below. We show only the heliocentric versions of these inputs, as the barycentric column requirements are identical, changing only the `FORMAT` designation
 
 Cometary Orbit Format
 ~~~~~~~~~~~~~~~~~~~~~~~
@@ -68,9 +66,9 @@ An example of an orbit file in Cometary format::
 +=============+==================================================================================+
 | objID       | Object identifier for each synthetic planetesimal simulated (string)             |
 +-------------+----------------------------------------------------------------------------------+
-| FORMAT      | Orbit format string (COM)  						         |
+| FORMAT      | Orbit format string (COM for heliocentric or BCOM for barycentric)  		         |
 +-------------+----------------------------------------------------------------------------------+
-| q           | Perihelion (au)									 |
+| q           | Perihelion (au)	                                                								 |
 +-------------+----------------------------------------------------------------------------------+
 | e           | Eccentricity                                                                     |
 +-------------+----------------------------------------------------------------------------------+
@@ -102,7 +100,7 @@ An example of an orbit file in Keplarian format::
 +=============+==================================================================================+
 | objID       | Object identifier for each synthetic planetesimal simulated (string)             |
 +-------------+----------------------------------------------------------------------------------+
-| FORMAT      | Orbit format string (KEP)                                                        |
+| FORMAT      | Orbit format string (KEP for heliocentric or BKEP for barycentric)               |
 +-------------+----------------------------------------------------------------------------------+
 | a           | Semimajor axis (au)                                                              |
 +-------------+----------------------------------------------------------------------------------+
@@ -121,7 +119,7 @@ An example of an orbit file in Keplarian format::
 
 Cartesian Orbit Format
 ~~~~~~~~~~~~~~~~~~~~~~~
-An example of an orbit file, in Keplerian format, with the object ID represented by a unique set of numbers::
+An example of an orbit file, in Cartesian format, with the object ID represented by a unique set of numbers::
 
    ObjID,FORMAT,x,y,z,xdot,ydot,zdot,epochMJD_TDB
    STC001TFa,CART,36.701800449281706,-8.770729364470023,-0.6261488665458296,0.0007155581026554,0.0026593939322716,7.344098975957749e-06,54466.0,36.54594860110992,0.04317
@@ -139,19 +137,19 @@ An example of an orbit file, in Keplerian format, with the object ID represented
 +=============+==================================================================================+
 | objID       | Object identifier for each synthetic planetesimal simulated (string)             |
 +-------------+----------------------------------------------------------------------------------+
-| FORMAT      | Orbit format string (CART)                                                       |
+| FORMAT      | Orbit format string (CART for heliocentric or BCART for barycentric)             |
 +-------------+----------------------------------------------------------------------------------+
-| x           | heliocentric distance along the x axis (au)                                      |
+| x           | heliocentric or barycentric position on the ecliptic x axis (au)                 |
 +-------------+----------------------------------------------------------------------------------+
-| y           | heliocentric distance along the y axis (au)                                      |
+| y           | heliocentric or barycentric position on the ecliptic y axis (au)                 |
 +-------------+----------------------------------------------------------------------------------+
-| z           | heliocentric distance along the z axis (au)                                      |
+| z           | heliocentric or barycentric position on the ecliptic z axis (au)                 |
 +-------------+----------------------------------------------------------------------------------+
-| xdot        | Longitude of the ascending node (degrees)                                        |
+| xdot        | heliocentric or barycentric velocity on the ecliptic x axis (au/day)             |
 +-------------+----------------------------------------------------------------------------------+
-| ydot        | Argument of perihelion (degrees)                                                 |
+| ydot        | heliocentric or barycentric velocity on the ecliptic y axis (au/day)             |
 +-------------+----------------------------------------------------------------------------------+
-| zdot        | Mean Anomaly (degrees)                                                           |
+| zdot        | heliocentric or barycentric velocity on the ecliptic z axis (au/day)             |
 +-------------+----------------------------------------------------------------------------------+
 | epochMJD_TDB| Epoch (MJD)                                                                      |
 +-------------+----------------------------------------------------------------------------------+
