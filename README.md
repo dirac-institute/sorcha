@@ -26,6 +26,6 @@ Other software utilities can be found in this github repository: [https://github
 This effort is a collaboration between Queen's University Belfast, the University of Washington's DiRAC Institute, 
 the University of Illinois at Urbana-Champaign, the Center for Astrophysics | Harvard & Smithsonian, and LINCC Frameworks (through the LINCC Frameworks Incubator Program).
 
-This project is supported in part bythe generosity of Eric and Wendy Schmidt by recommendation of the Schmidt Futures program.
+This project is supported in part by the generosity of Eric and Wendy Schmidt by recommendation of the Schmidt Futures program.
 
 
