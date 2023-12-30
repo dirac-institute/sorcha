@@ -92,7 +92,7 @@ class CSVDataReader(ObjectDataReader):
             block_start=2 would skip the first two lines after the header
             and return data starting on row=2. [Default=0]
 
-        block_size int, optional, default=None
+        block_size: int, optional, default=None
             The number of rows to read in.
             Use block_size=None to read in all available data.
 

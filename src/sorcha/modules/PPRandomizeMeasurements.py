@@ -37,22 +37,24 @@ def randomizeAstrometry(
     Randomize astrometry with a normal distribution around the actual RADEC pointing.
     The randomized values are added to the input pandas data frame.
 
-    Parameters:
+    Parameters
     -----------
-    df (Pandas dataframe): dataframe containing astrometry and sigma.
+    df : pandas dataframe
+        Dataframe containing astrometry and sigma.
 
-    module_rngs (PerModuleRNG): A collection of random number generators (per module).
+    module_rngs : PerModuleRNG
+        A collection of random number generators (per module).
 
     *Name (string): column names for right ascension, declination,
     randomized right ascension, randomized declination, and standard deviation.
 
     *Units (string): units for RA and Dec and sigma ('deg'/'rad'/'mas').
 
-    Returns:
+    Returns
     -----------
     df (Pandas dataframe): as input, with randomized RADEC columns added
 
-    Comments:
+    Notes
     -----------
     Covariances in RADEC are currently not supported. The routine calculates
     a normal distribution on the unit sphere, so as to allow for a correct modeling of

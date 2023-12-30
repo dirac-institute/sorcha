@@ -15,9 +15,9 @@ def warn_or_remove_file(filepath, force_remove, pplogger):
 
     Parameters
     ----------
-    filepath : str
+    filepath : string
         The full file path to a given file. i.e. /home/data/output.csv
-    force_remove : bool
+    force_remove : boolean
         Whether to remove the file if it exists.
     pplogger : Logger
         Used to log the output.
@@ -42,13 +42,15 @@ def PPCommandLineParser(args):
 
     Will only look for the comet parameters file if it's actually given at the command line.
 
-    Parameters:
+    Parameters
     -----------
-    args (ArgumentParser object): argparse object of command line arguments
+    args : ArgumentParser object
+        argparse object of command line arguments
 
-    Returns:
+    Returns
     ----------
-    cmd_args_dict (dictionary): dictionary of variables taken from command line arguments
+    cmd_args_dict : dictionary
+        dictionary of variables taken from command line arguments
 
     """
 

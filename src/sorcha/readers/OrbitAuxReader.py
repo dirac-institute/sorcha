@@ -11,13 +11,16 @@ class OrbitAuxReader(CSVDataReader):
     def __init__(self, filename, sep="csv", header=-1, **kwargs):
         """A class for reading the object data from a CSV file.
 
-        Parameters:
+        Parameters
         -----------
-        filename (string): location/name of the data file.
+        filename : string
+            location/name of the data file.
 
-        sep (string, optional): format of input file ("whitespace"/"csv").
+        sep : string, optional
+            format of input file ("whitespace"/"csv").
 
-        header (int): The row number of the header. If not provided, does an automatic search.
+        header : int
+            The row number of the header. If not provided, does an automatic search.
         """
         super().__init__(filename, sep, header, **kwargs)
 
@@ -25,9 +28,10 @@ class OrbitAuxReader(CSVDataReader):
         """Return a string identifying the current reader name
         and input information (for logging and output).
 
-        Returns:
+        Returns
         --------
-        name (str): The reader information.
+        name : string
+            The reader information.
         """
         return f"OrbitAuxReader:{self.filename}"
 
@@ -35,19 +39,21 @@ class OrbitAuxReader(CSVDataReader):
         """Perform any input-specific processing and validation on the input table.
         Modifies the input dataframe in place.
 
-        Note
-        ----
+        Notes
+        ------
         The base implementation includes filtering that is common to most
         input types. Subclasses should call super.process_and_validate()
         to ensure that the ancestor’s validation is also applied.
 
-        Parameters:
+        Parameters
         -----------
-        input_table (Pandas dataframe): A loaded table.
+        input_table : Pandas dataframe
+            A loaded table.
 
-        Returns:
+        Returns
         -----------
-        res_df (Pandas dataframe): Returns the input dataframe modified in-place.
+        res_df : Pandas dataframe
+            Returns the input dataframe modified in-place.
         """
         # Do standard CSV file processing
         super()._process_and_validate_input_table(input_table, **kwargs)

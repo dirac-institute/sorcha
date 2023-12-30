@@ -11,21 +11,30 @@ def PPApplyColourOffsets(observations, function, othercolours, observing_filters
     If phase model variables exist for each colour, this function also selects the
     correct variables for each observation based on filter.
 
-    Parameters:
+    Parameters
     -----------
-    observations (Pandas dataframe): dataframe of observations.
+    observations: Pandas dataframe
+        dataframe of observations.
 
-    function (string): string of desired phase function model. Options are HG, HG12, HG1G2, linear, H.
+    function : string
+        string of desired phase function model. Options are HG, HG12, HG1G2, linear, H.
 
-    othercolours (list of strings): list of colour offsets present in input files.
+    othercolours : list of strings
+        list of colour offsets present in input files.
 
-    observing_filters (list of strings): list of observation filters of interest.
+    observing_filters : list of strings
+        list of observation filters of interest.
 
-    mainfilter (string): the main filter in which H is given and all colour offsets are calculated against.
+    mainfilter : string
+        the main filter in which H is given and all colour offsets are calculated against.
 
-    Returns:
+    Returns
     -----------
-    observations (Pandas dataframe): dataframe of observations with H calculated in relevant filter.
+    observations : Pandas dataframe
+        observations dataframe modified with H calculated in relevant filter (H_filter)
+        and renames the column for H in the main filter as H_original.
+        The dataframe has also been modified to have the appropriate phase curve filter specific values/columns.
+
 
     """
 
