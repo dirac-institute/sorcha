@@ -16,26 +16,34 @@ def vignettingEffects(
 ):
     """
     Calculates effective limiting magnitude at source, taking vignetting into account.
-    Wrapper for calcVignettingLosses.
+    Wrapper for calcVignettingLosses().
 
-    Parameters:
+    Parameters
     -----------
     oif_df : pandas dataframe
         dataframe of observations.
 
     raNameOIF : string, optional
         'oif_df' column name of object RA. Default = "AstRA(deg)"
-    
+
     decNameOIF : string, optional
         'oif_df' column name of object declination. Default = "AstDec(deg)"
 
-    field ID, field RA and field Dec respectively.
+    fieldNameOIF : string, optional
+        'oif_df' column name for observation pointing field ID. Default = "FieldID"
 
-    Returns:
+    raNameSurvey : string, optional
+         'oif_df' column name for observation pointing RA. Default = "fieldRA"
+
+
+     decNameSurvey : string, optional
+         'oif_df' column name for observation pointing declination. Default = "fieldDec"
+
+    Returns
     -----------
-     : list
+     : list of floats
          Five sigma limiting magnitude at object location adjusted for vignetting for each
-         row in "oif_df".
+         row in 'oif_df' dataframe.
 
     """
 
@@ -128,7 +136,7 @@ def vignetFunc(x):
     -----------
     :   float or array of floats
         Magnitude of dimming due to vignetting at object position.
-    
+
     Notes
     --------
     Grabbed from sims_selfcal. From VignettingFunc_v3.3.TXT. r is in degrees,
