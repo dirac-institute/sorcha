@@ -16,7 +16,7 @@ import os
 from sorcha.modules.PPConfigParser import PPFindDirectoryOrExit
 
 
-def create_results_table(cnx_out, filename, output_path, output_stem, table_name="sorcha_results"):
+def create_results_table(cnx_out, filename, output_path, output_stem, table_name="pp_results"):
     """
     Creates a table in a SQLite database from SSPP results.
 
@@ -35,7 +35,7 @@ def create_results_table(cnx_out, filename, output_path, output_stem, table_name
         stem filename for SSPP outputs.
 
     table_name : string, optional
-        name of table of for storing sorcha results. Default ="sorcha_results"
+        name of table of for storing sorcha results. Default ="pp_results"
 
     Returns
     -----------
@@ -156,7 +156,7 @@ def create_results_database(args):
         create_inputs_table(cnx_out, "comet")
 
 
-def get_column_names(filename, table_name="sorcha_results"):
+def get_column_names(filename, table_name="pp_results"):
     """
     Obtains column names from a table in a SQLite database.
 
@@ -166,7 +166,7 @@ def get_column_names(filename, table_name="sorcha_results"):
         Filepath/name of sqlite3 database.
 
     table_name : string, optional
-        Name of table. Default = "sorcha_results"
+        Name of table. Default = "pp_results"
 
     Returns
     -----------
