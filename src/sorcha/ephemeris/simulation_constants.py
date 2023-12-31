@@ -14,13 +14,16 @@ def create_ecl_to_eq_rotation_matrix(ecl):
     system's ecliptic obliquity is already provided as
     `ECL_TO_EQ_ROTATION_MATRIX`.
 
-    Parameters:
+    Parameters
     -----------
-    ecl (float): The ecliptical obliquity.
+    ecl : float
+        The ecliptical obliquity.
 
-    Returns:
+    Returns
     -----------
-    `numpy` array with shape (3,3).
+    rotmat: numpy array/matrix of floats
+        rotation matrix for transofmring ecliptical coordinates to equatorial coordinates.
+        Array has shape (3,3).
 
     """
     ce = np.cos(-ecl)

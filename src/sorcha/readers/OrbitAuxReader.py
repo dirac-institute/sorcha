@@ -18,9 +18,14 @@ class OrbitAuxReader(CSVDataReader):
 
         sep : string, optional
             format of input file ("whitespace"/"csv").
+            Default = "csv"
 
         header : int
             The row number of the header. If not provided, does an automatic search.
+            Default = -1
+
+        **kwargs : dictionary, optional
+            Extra arguments
         """
         super().__init__(filename, sep, header, **kwargs)
 
@@ -30,7 +35,7 @@ class OrbitAuxReader(CSVDataReader):
 
         Returns
         --------
-        name : string
+        : string
             The reader information.
         """
         return f"OrbitAuxReader:{self.filename}"
@@ -39,21 +44,24 @@ class OrbitAuxReader(CSVDataReader):
         """Perform any input-specific processing and validation on the input table.
         Modifies the input dataframe in place.
 
+        Parameters
+        -----------
+        input_table : pandas dataframe
+            A loaded table.
+
+        **kwargs : dictionary, optional
+
+        Returns
+        -----------
+        res_df : pandas dataframe
+            Returns the input dataframe modified in-place.
+
         Notes
         ------
         The base implementation includes filtering that is common to most
         input types. Subclasses should call super.process_and_validate()
         to ensure that the ancestor’s validation is also applied.
 
-        Parameters
-        -----------
-        input_table : Pandas dataframe
-            A loaded table.
-
-        Returns
-        -----------
-        res_df : Pandas dataframe
-            Returns the input dataframe modified in-place.
         """
         # Do standard CSV file processing
         super()._process_and_validate_input_table(input_table, **kwargs)

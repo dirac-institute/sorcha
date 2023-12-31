@@ -37,23 +37,24 @@ class HDF5DataReader(ObjectDataReader):
 
         Parameters
         -----------
-        block_start : int, optional
+        block_start : integer, optional
             The 0-indexed row number from which
             to start reading the data. For example in a CSV file
             block_start=2 would skip the first two lines after the header
-            and return data starting on row=2. [Default=0]
+            and return data starting on row=2. Default=0
 
-        block_size : int, optional
+        block_size : integer, optional
             the number of rows to read in.
             Use block_size=None to read in all available data.
-            [Default = None]
+            Default = None
 
-        validate_data : bool, optional
-            if True then checks the data for NaNs or nulls.
+        **kwargs : dictionary, optional
+            Extra arguments
 
         Returns
         -----------
-        res_df (Pandas dataframe): dataframe of the object data.
+        res_df  : pandas dataframe
+            Dataframe of the object data.
         """
         if block_size is None:
             res_df = pd.read_hdf(
@@ -83,6 +84,9 @@ class HDF5DataReader(ObjectDataReader):
         obj_ids : list
             A list of object IDs to use.
 
+        **kwargs : dictionary, optional
+            Extra arguments
+
         Returns
         -----------
         res_df : Pandas dataframe
@@ -106,12 +110,15 @@ class HDF5DataReader(ObjectDataReader):
 
         Parameters
         -----------
-        input_table : Pandas dataframe
+        input_table : pandas dataframe
             A loaded table.
+
+        **kwargs : dictionary, optional
+            Extra arguments
 
         Returns
         -----------
-        input_table : Pandas dataframe
+        input_table : pandas dataframe
             Returns the input dataframe modified in-place.
         """
         # Perform the parent class's validation (checking object ID column).

@@ -25,12 +25,12 @@ class CombinedDataReader:
         """
         Parameters
         ----------
-        ephem_primary: bool, optional
+        ephem_primary: boolean, optional
             Use the ephemeris reader as the primary
             reader. Otherwise uses the first auxiliary data reader.
-            Default = false
+            Default = False
 
-        **kwargs : dict, optional
+        **kwargs : dictionary, optional
         Extra arguments
 
         """
@@ -69,21 +69,21 @@ class CombinedDataReader:
 
         Parameters
         -----------
-        block_size: int, optional
+        block_size: integer, optional
             the number of rows to read in.
             Use block_size=None to read in all available data.
             Default = None
 
-        verbose : bool, optional
+        verbose : boolean, optional
             Use verbose logging.
-            Default = None
+            Default = False
 
-        **kwargs : dict, optional
+        **kwargs : dictionary, optional
             Extra arguments
 
         Returns
         -----------
-        res_df : Pandas dataframe
+        res_df : pandas dataframe
             dataframe of the combined object data.
 
         """
@@ -160,21 +160,21 @@ class CombinedDataReader:
 
         Parameters
         -----------
-        block_size : int, optional
+        block_size : integer, optional
             the number of rows to read in.
             Use block_size=None to read in all available data.
-            [Default = None]
+            Default = None
 
-        verbose : bool, optional
+        verbose : boolean, optional
             use verbose logging.
             Default = False
 
-        **kwargs : dict, optional
+        **kwargs : dictionary, optional
             Extra arguments
 
         Returns
         -----------
-        res_df : Pandas dataframe
+        res_df : pandas dataframe
             dataframe of the combined object data, excluding any ephemeris data.
         """
         pplogger = logging.getLogger(__name__)

@@ -26,6 +26,11 @@ class DatabaseReader(ObjectDataReader):
         -----------
         intermdb : string
             filepath/name of temporary database.
+
+            Default = None
+
+        **kwargs : dictionary, optional
+            Extra arguments
         """
         super().__init__(**kwargs)
         self.intermdb = intermdb
@@ -46,23 +51,24 @@ class DatabaseReader(ObjectDataReader):
 
         Parameters
         -----------
-        block_start : int, optional
+        block_start : integer, optional
             The 0-indexed row number from which
             to start reading the data. For example in a CSV file
             block_start=2 would skip the first two lines after the header
-            and return data starting on row=2. [Default=0]
+            and return data starting on row=2. Default=0
 
         block_size : int, optional
             the number of rows to read in.
             Use block_size=None to read in all available data.
             A non-None block size must be provided if block_start > 0.
+            Default = None
 
-        validate_data : bool, optional
-            if True then checks the data for NaNs or nulls.
+        **kwargs : dictionary, optional
+            Extra arguments
 
         Returns
         ----------
-        res_df : Pandas dataframe
+        res_df : pandas dataframe
             dataframe of the object data.
 
         Notes
@@ -90,9 +96,12 @@ class DatabaseReader(ObjectDataReader):
         obj_ids : list
             A list of object IDs to use.
 
+        **kwargs : dictionary, optional
+            Extra arguments
+
         Returns
         -----------
-        res_df : Pandas dataframe
+        res_df : pandas dataframe
             The dataframe for the object data.
         """
         con = sqlite3.connect(self.intermdb)
@@ -114,12 +123,15 @@ class DatabaseReader(ObjectDataReader):
 
         Parameters
         -----------
-        input_table : Pandas dataframe
+        input_table : pandas dataframe
             A loaded table.
+
+        **kwargs : dictionary, optional
+            Extra arguments
 
         Returns
         -----------
-        input_table : Pandas dataframe
+        input_table : pandas dataframe
             Returns the input dataframe modified in-place.
         """
         # Perform the parent class's validation (checking object ID column).

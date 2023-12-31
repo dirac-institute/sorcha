@@ -57,12 +57,15 @@ class ObjectDataReader(abc.ABC):
             The 0-indexed row number from which
             to start reading the data. For example in a CSV file
             block_start=2 would skip the first two lines after the header
-            and return data starting on row=2. [Default=0]
+            and return data starting on row=2. Default=0
 
         block_size : int (optional)
             the number of rows to read in.
             Use block_size=None to read in all available data.
-            [Default = None]
+            Default = None
+
+        **kwargs : dictionary, optional
+            Extra arguments
 
         Returns
         -----------
@@ -101,6 +104,9 @@ class ObjectDataReader(abc.ABC):
         -----------
         obj_ids : list
             A list of object IDs to use.
+
+        **kwargs : dictionary, optional
+            Extra arguments
 
         Returns
         -----------
@@ -153,24 +159,30 @@ class ObjectDataReader(abc.ABC):
         """Perform any input-specific processing and validation on the input table.
         Modifies the input dataframe in place.
 
-        Note
-        ----
-        The base implementation includes filtering that is common to most
-        input types. Subclasses should call super.process_and_validate()
-        to ensure that the ancestor’s validation is also applied.
-
         Parameters
         -----------
         input_table : Pandas dataframe
             A loaded table.
 
-        disallow_nan : bool (optional)
-            if True then checks the data for  NaNs or nulls.
+        **kwargs : dictionary, optional
+                Extra arguments
 
         Returns
         -----------
         input_table :Pandas dataframe
             Returns the input dataframe modified in-place.
+            
+        Notes
+        --------
+        The base implementation includes filtering that is common to most
+        input types. Subclasses should call super.process_and_validate()
+        to ensure that the ancestor’s validation is also applied.
+
+        Additional arguments to use:
+
+        disallow_nan : boolean
+            if True then checks the data for  NaNs or nulls.
+            
         """
         input_table = self._validate_object_id_column(input_table)
 

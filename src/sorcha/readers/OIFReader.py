@@ -27,6 +27,10 @@ class OIFDataReader(ObjectDataReader):
 
         inputformat : string
             format of input file ("whitespace"/"comma"/"csv"/"h5"/"hdf5").
+
+        **kwargs : dictionary, optional
+            Extra arguments
+
         """
         super().__init__(**kwargs)
 
@@ -50,7 +54,7 @@ class OIFDataReader(ObjectDataReader):
 
         Returns
         --------
-        name : string
+        : string
             The reader information.
         """
         return f"OIFDataReader|{self.reader.get_reader_info()}"
@@ -64,12 +68,15 @@ class OIFDataReader(ObjectDataReader):
             The 0-indexed row number from which
             to start reading the data. For example in a CSV file
             block_start=2 would skip the first two lines after the header
-            and return data starting on row=2. [Default=0]
+            and return data starting on row=2. Default =0
 
         block_size : int, optional
             the number of rows to read in.
             Use block_size=None to read in all available data.
-            [Default = None]
+            Default = None
+
+        **kwargs : dictionary, optional
+            Extra arguments
 
         Returns
         -----------
@@ -89,9 +96,12 @@ class OIFDataReader(ObjectDataReader):
         obj_ids : list
             A list of object IDs to use.
 
+        **kwargs : dictionary, optional
+            Extra arguments
+
         Returns
         -----------
-        res_df : Pandas dataframe
+        res_df : pandas dataframe
             The dataframe for the object data.
         """
         res_df = self.reader.read_objects(obj_ids, **kwargs)
@@ -101,21 +111,25 @@ class OIFDataReader(ObjectDataReader):
         """Perform any input-specific processing and validation on the input table.
         Modifies the input dataframe in place.
 
+        Parameters
+        -----------
+        input_table : Pandas dataframe
+            A loaded table.
+
+        **kwargs : dictionary, optional
+            Extra arguments
+
+        Returns
+        -----------
+        input_table : Pandas dataframe
+            Returns the input dataframe modified in-place.
+
         Notes
         -----
         The base implementation includes filtering that is common to most
         input types. Subclasses should call super.process_and_validate()
         to ensure that the ancestor’s validation is also applied.
 
-        Parameters
-        -----------
-        input_table : Pandas dataframe
-            A loaded table.
-
-        Returns
-        -----------
-        input_table : Pandas dataframe
-            Returns the input dataframe modified in-place.
         """
         # We do not call reader.process_and_validate_input_table() or
         # super().process_and_validate_input_table() because reader's read functions have
@@ -179,7 +193,7 @@ def read_full_oif_table(filename, inputformat):
 
     Returns
     -----------
-    res_df : Pandas dataframe
+    res_df : pandas dataframe
         dataframe of the object data.
 
     """

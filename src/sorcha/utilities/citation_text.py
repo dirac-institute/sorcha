@@ -4,6 +4,14 @@ import rebound
 def cite_sorcha():
     """Providing the bibtex, AAS Journals software latex command, and acknowledgement
     statements for Sorcha and the associated packages that power it.
+
+    Parameters
+    -----------
+    None
+
+    Returns
+    -----------
+    None
     """
     print("\nSorcha: \n")
     print("Merritt et al. (in prep)")
