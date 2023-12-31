@@ -171,7 +171,7 @@ class ObjectDataReader(abc.ABC):
         -----------
         input_table :Pandas dataframe
             Returns the input dataframe modified in-place.
-            
+
         Notes
         --------
         The base implementation includes filtering that is common to most
@@ -182,7 +182,7 @@ class ObjectDataReader(abc.ABC):
 
         disallow_nan : boolean
             if True then checks the data for  NaNs or nulls.
-            
+
         """
         input_table = self._validate_object_id_column(input_table)
 
