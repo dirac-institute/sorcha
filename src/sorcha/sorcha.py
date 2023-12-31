@@ -45,6 +45,14 @@ from sorcha.utilities.citation_text import cite_sorcha
 def cite():
     """Providing the bibtex, AAS Journals software latex command, and acknowledgement
     statements for Sorcha and the associated packages that power it.
+
+    Parameters
+    ----------
+    None
+
+    Returns
+    --------
+    None
     """
     cite_sorcha()
 
@@ -55,7 +63,7 @@ def runLSSTSimulation(args, configs, pplogger=None):
     filters to bias a model Solar System small body population to what the
     Vera C. Rubin Observatory Legacy Survey of Space and Time would observe.
 
-    Parameters:
+    Parameters
     -----------
     args (dictionary or `sorchaArguments` object):
         dictionary of command-line arguments.
@@ -215,6 +223,7 @@ def runLSSTSimulation(args, configs, pplogger=None):
         # These are the columns that should be used moving forward for filters etc.
         # Do NOT use TrailedSourceMag or PSFMag, these are cut later.
         verboselog("Calculating astrometric and photometric uncertainties...")
+        verboselog("Values are then used to randomize the photometry....")
         observations = PPAddUncertainties.addUncertainties(
             observations, configs, args._rngs, verbose=args.verbose
         )
