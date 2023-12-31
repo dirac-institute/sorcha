@@ -21,6 +21,7 @@ Other software utilities can be found in this github repository: [https://github
 * All required input files for the main software or unit tests should have extensions that clearly describe the file format (e.g. .csv, .txt, .db, .fits)
 * If you are working on addressing a specific issue ticket, assign yourself the ticket.
 * When making a pull request that closes an issue, cite the issue ticket in the pull request summary
+* Docstrings should follow the [NumPy style](https://numpydoc.readthedocs.io/en/latest/format.html) 
 
 ## Collaboration
 This effort is a collaboration between Queen's University Belfast, the University of Washington's DiRAC Institute, 
