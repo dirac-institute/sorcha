@@ -36,7 +36,8 @@ class PerModuleRNG:
         if module_name in self._rngs:
             return self._rngs[module_name]
 
-        seed_offset = int(hashlib.md5(module_name.encode("utf-8")).hexdigest(), 16)
+        hashed_name = hashlib.md5(module_name.encode())
+        seed_offset = int(hashed_name.hexdigest(), base=16)
         module_seed = (self._base_seed + seed_offset) % (2**31)
         new_rng = np.random.default_rng(module_seed)
         self._rngs[module_name] = new_rng
