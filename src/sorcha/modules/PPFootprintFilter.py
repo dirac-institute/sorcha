@@ -24,10 +24,15 @@ import matplotlib.pyplot as plt
 import sys
 import importlib_resources
 
+from numba import njit
+
 deg2rad = np.radians
 sin = np.sin
 cos = np.cos
 
+#==============================================================================
+# detector geometry functions
+#==============================================================================
 
 def distToSegment(points, x0, y0, x1, y1):
     """Compute the distance from each point to the line segment defined by
@@ -66,9 +71,88 @@ def distToSegment(points, x0, y0, x1, y1):
     # Compute the distances to the closest points on the line segment.
     return np.sqrt((points[0] - proj_x) * (points[0] - proj_x) + (points[1] - proj_y) * (points[1] - proj_y))
 
+#==============================================================================
+# coordinate transforms
+#==============================================================================
+
+def radec_to_tangent_plane(ra, dec, field_ra, field_dec):
+    """
+    Converts ra and dec to xy on the plane tangent to image center, in the 2-d coordinate system where y is aligned with the meridian.
+
+    Parameters:
+    -----------
+    ra (float/array of floats): observation Right Ascension, radians.
+
+    dec (float/array of floats): observation Declination, radians.
+
+    fieldra (float/array of floats): field pointing Right Ascension, radians.
+
+    fielddec (float/array of floats): field pointing Declination, radians.
+
+    fieldID (float/array of floats): Field ID, optional.
+
+    Returns:
+    ----------
+    x, y (float/array of floats): Coordinates on the focal plane, radians projected
+    to the plane tangent to the unit sphere.
+
+    """
+
+    # convert to cartesian coordiantes on unit sphere
+    observation_vectors = np.array([
+        cos(ra) * np.cos(dec), 
+        sin(ra) * np.cos(dec), 
+        sin(dec)])  # x  # y  # z
+
+    field_vectors = np.array(
+        [cos(field_ra) * np.cos(field_dec), 
+         sin(field_ra) * np.cos(field_dec), 
+         sin(field_dec)]  
+    )  
+
+    # make the basis vectors for the fields of view
+    # the "x" basis is easy, 90 d rotation of the x, y components
+    focalx = np.zeros(field_vectors.shape)
+    focalx[0] = -field_vectors[1]
+    focalx[1] = field_vectors[0]
+
+    # "y" by taking cross product of field vector and "x"
+    focaly = np.cross(field_vectors, focalx, axis=0)
+
+    # normalize
+    focalx /= np.linalg.norm(focalx, axis=0)
+    focaly /= np.linalg.norm(focaly, axis=0)
+
+    # extend observation vectors to plane tangent to field pointings
+    k = 1.0 / np.sum(field_vectors * observation_vectors, axis=0)
+    observation_vectors *= k
+    observation_vectors -= field_vectors
+
+    # get observation vectors as combinations of focal vectors
+    x = np.sum(observation_vectors * focalx, axis=0)
+    y = np.sum(observation_vectors * focaly, axis=0)
+
+    return x, y
+
+def radec_to_focal_plane( ra, dec, field_ra, field_dec, field_rot ):
+    # convert ra, dec to points on focal plane, x pointing to celestial north
+    x, y = radec_to_tangent_plane(ra, dec, field_ra, field_dec)
+    # rotate focal plane to align with detectors
+    xy = x + 1.0j * y
+    xy *= np.exp( 1.0j * field_rot ) # which direction to rotate?
+
+    x = np.real( xy )
+    y = np.imag( xy )
+
+    return x, y
+
+
+#==============================================================================
+# detector class
+#==============================================================================
 
 class Detector:
-    def __init__(self, points, ID=0, units="radians"):
+    def __init__(self, points, ID, units="radians"):
         """
         Initiates a detector object.
 
@@ -375,6 +459,9 @@ class Detector:
         if annotate is True:
             plt.annotate(str(detector.ID), (detector.centerx, detector.centery))
 
+#==============================================================================
+# camera class
+#==============================================================================
 
 class Footprint:
     def __init__(self, path=None, detectorName="detector"):
@@ -506,94 +593,19 @@ class Footprint:
         fielddec = deg2rad(field_df[dec_name_field])
         rotSkyPos = deg2rad(field_df[rot_name_field])
 
-        # quaternion method has been removed. uses direct projection method
         # (no rotation on 3d unit sphere):
-        x, y = radec2focalplane(ra, dec, fieldra, fielddec)
-
-        # apply field rotation
-        # first convert to complex numbers
-        # maybe do this in the focal plane function?
-        observations_complex = x + y * 1.0j
-        rotation = np.exp(-rotSkyPos * 1.0j)
-
-        observations_complex *= rotation
-        x = np.real(observations_complex)
-        y = np.imag(observations_complex)
-
-        plt.scatter(x, y, s=3.0)
-        points = np.array((x, y))
+        points=np.array((
+            radec_to_focal_plane(ra, dec, fieldra, fielddec, rotSkyPos)
+        ))
+        # x, y = radec_to_focal_plane(ra, dec, fieldra, fielddec, rotSkyPos)
+        # points = np.array((x, y))
 
         # check whether they land on any of the detectors
-        i = 0
         detected = []
         detectorId = []
         for detector in self.detectors:
-            if True:
-                stuff = detector.ison(points, edge_thresh=edge_thresh)
-                detected.append(stuff)
-                detectorId.append([i] * len(stuff))
-                i += 1
+            stuff = detector.ison(points, edge_thresh=edge_thresh)
+            detected.append(stuff)
+            detectorId.append([detector.ID] * len(stuff))
 
         return np.concatenate(detected), np.concatenate(detectorId)
-
-
-def radec2focalplane(ra, dec, fieldra, fielddec, fieldID=None):
-    """
-    Converts ra and dec to xy on the focal plane. Projects all pointings to
-    the same focal plane, but does not account for field rotation. Maintains
-    alignment with the meridian passing through the field center.
-
-    Parameters:
-    -----------
-    ra (float/array of floats): observation Right Ascension, radians.
-
-    dec (float/array of floats): observation Declination, radians.
-
-    fieldra (float/array of floats): field pointing Right Ascension, radians.
-
-    fielddec (float/array of floats): field pointing Declination, radians.
-
-    fieldID (float/array of floats): Field ID, optional.
-
-    Returns:
-    ----------
-    x, y (float/array of floats): Coordinates on the focal plane, radians projected
-    to the plane tangent to the unit sphere.
-
-    """
-
-    # convert to cartesian coordiantes on unit sphere
-    observation_vectors = np.array([cos(ra) * np.cos(dec), sin(ra) * np.cos(dec), sin(dec)])  # x  # y  # z
-
-    field_vectors = np.array(
-        [cos(fieldra) * np.cos(fielddec), sin(fieldra) * np.cos(fielddec), sin(fielddec)]  # x  # y
-    )  # z
-
-    # make the basis vectors for the fields of view
-    # the "x" basis is easy, 90 d rotation of the x, y components
-    focalx = np.zeros(field_vectors.shape)
-    focalx[0] = -field_vectors[1]
-    focalx[1] = field_vectors[0]
-
-    # "y" by taking cross product of field vector and "x"
-    focaly = np.cross(field_vectors, focalx, axis=0)
-
-    # normalize
-    focalx /= np.linalg.norm(focalx, axis=0)
-    focaly /= np.linalg.norm(focaly, axis=0)
-
-    # TODO: if fieldIDs are provided, match detections to field pointings
-    # may or may not add, benefits are likely negligible
-
-    # extend observation vectors to plane tangent to field pointings
-    k = 1.0 / np.sum(field_vectors * observation_vectors, axis=0)
-    # np.sum(field_vectors * field_vectors, axis=0) / np.sum(field_vectors * observation_vectors, axis=0)
-    observation_vectors *= k
-
-    observation_vectors -= field_vectors
-
-    # get observation vectors as combinations of focal vectors
-    x = np.sum(observation_vectors * focalx, axis=0)
-    y = np.sum(observation_vectors * focaly, axis=0)
-
-    return x, y
