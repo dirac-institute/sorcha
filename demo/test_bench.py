@@ -35,7 +35,7 @@ if __name__ == "__main__":  # pragma: no cover
     debug = False
     if debug:
         runLSSTSimulation(cmd_args_dict, configs)
-    else: # benchmark
+    else:  # benchmark
         cProfile.run("runLSSTSimulation(cmd_args_dict, configs)", "./tests/out/restats")
 
         p = pstats.Stats("./tests/out/restats")
