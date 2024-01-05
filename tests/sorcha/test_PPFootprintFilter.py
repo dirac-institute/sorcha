@@ -71,19 +71,19 @@ def test_ison():
 
 
 def test_areas():
-    from sorcha.modules.PPFootprintFilter import radec2focalplane
+    from sorcha.modules.PPFootprintFilter import radec_to_tangent_plane
 
     detector = dummy_detector()
     pointsin = np.array([np.linspace(0.0, 0.01, 10), np.linspace(0.0, 0.01, 10)])
     pointsout = np.array([np.linspace(0.0, 0.01, 10), np.linspace(0.0, 0.01, 10)]) + 1
 
     for p in pointsin.T:
-        pi = np.array(radec2focalplane(p[0], p[1], 0, 0))
+        pi = np.array(radec_to_tangent_plane(p[0], p[1], 0, 0))
         assert (
             np.abs(detector.segmentedArea(pi) - detector.trueArea()) < 1e-12
         )  # these are stricter tolerances than currently demanded in current use
     for p in pointsout.T:
-        pi = np.array(radec2focalplane(p[0], p[1], 0, 0))
+        pi = np.array(radec_to_tangent_plane(p[0], p[1], 0, 0))
         assert np.abs(detector.segmentedArea(pi) - detector.trueArea()) > 1e-12
 
 
@@ -153,10 +153,10 @@ def test_plots():
     footprintf.plot()
 
 
-def test_radec2focalplane():
-    from sorcha.modules.PPFootprintFilter import radec2focalplane
+def test_radec_to_tangent_plane():
+    from sorcha.modules.PPFootprintFilter import radec_to_tangent_plane
 
-    out = radec2focalplane(1.0, 1.0, 0.0, 0.0)
+    out = radec_to_tangent_plane(1.0, 1.0, 0.0, 0.0)
     out_expected = (1.5574077, 2.8824746)
 
     assert len(out) == 2
