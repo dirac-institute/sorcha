@@ -152,7 +152,7 @@ def radec_to_focal_plane( ra, dec, field_ra, field_dec, field_rot ):
 #==============================================================================
 
 class Detector:
-    def __init__(self, points, ID, units="radians"):
+    def __init__(self, points, ID=0, units="radians"):
         """
         Initiates a detector object.
 
