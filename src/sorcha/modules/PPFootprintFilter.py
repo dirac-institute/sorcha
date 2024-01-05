@@ -22,7 +22,6 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import sys
-# import pkg_resources
 import importlib_resources
 
 deg2rad = np.radians
@@ -406,7 +405,6 @@ class Footprint:
             pplogger.info(f"Using CCD Detector file: {path}")
         else:
             default_camera_config_file = "data/LSST_detector_corners_100123.csv"
-            # stream = pkg_resources.resource_stream(__name__, default_camera_config_file)
             stream = importlib_resources.files(__name__).joinpath(default_camera_config_file)
             pplogger.info(f"Using built-in CCD Detector file: {default_camera_config_file}")
             allcornersdf = pd.read_csv(stream)
