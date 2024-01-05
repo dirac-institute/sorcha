@@ -609,3 +609,4 @@ class Footprint:
             detectorId.append([detector.ID] * len(stuff))
 
         return np.concatenate(detected), np.concatenate(detectorId)
+    
