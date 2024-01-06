@@ -603,9 +603,12 @@ class Footprint:
         # check whether they land on any of the detectors
         detected = []
         detectorId = []
+        i=0
         for detector in self.detectors:
             stuff = detector.ison(points, edge_thresh=edge_thresh)
             detected.append(stuff)
-            detectorId.append([detector.ID] * len(stuff))
+            # detectorId.append([detector.ID] * len(stuff))
+            detectorId.append([i] * len(stuff))
+            i+=1
 
         return np.concatenate(detected), np.concatenate(detectorId)
