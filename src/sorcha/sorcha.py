@@ -5,6 +5,7 @@ import time
 import numpy as np
 import argparse
 import os
+import logging
 
 from sorcha.ephemeris.simulation_driver import create_ephemeris
 from sorcha.ephemeris.simulation_setup import precompute_pointing_information
@@ -49,7 +50,7 @@ def cite():
     cite_sorcha()
 
 
-def runLSSTSimulation(args, configs, pplogger=None):
+def runLSSTSimulation(args, configs):
     """
     Runs the post processing survey simulator functions that apply a series of
     filters to bias a model Solar System small body population to what the
@@ -68,24 +69,19 @@ def runLSSTSimulation(args, configs, pplogger=None):
     None.
 
     """
-    # Set up logging if it hasn't happened already.
-    if pplogger is None:
-        if type(args) is dict:
-            pplogger = PPGetLogger(args["outpath"])
-        else:
-            pplogger = PPGetLogger(args.outpath)
+    pplogger = logging.getLogger(__name__)
     pplogger.info("Post-processing begun.")
 
     update_lc_subclasses()
     update_activity_subclasses()
 
-    # Initialise argument parser, assign command line arguments, and validate.
-    if type(args) is dict:
-        try:
-            args = sorchaArguments(args, pplogger)
-        except Exception as err:
-            pplogger.error(err)
-            sys.exit(err)
+    # # Initialise argument parser, assign command line arguments, and validate.
+    # if type(args) is dict:
+    #     try:
+    #         args = sorchaArguments(args, pplogger)
+    #     except Exception as err:
+    #         pplogger.error(err)
+    #         sys.exit(err)
 
     try:
         args.validate_arguments()
@@ -454,7 +450,7 @@ def main():
 
     if cmd_args["surveyname"] in ["LSST", "lsst"]:
         try:
-            args = sorchaArguments(cmd_args, pplogger)
+            args = sorchaArguments(cmd_args)
         except Exception as err:
             pplogger.error(err)
             sys.exit(err)
@@ -463,7 +459,7 @@ def main():
         except Exception as err:
             pplogger.error(err)
             sys.exit(err)
-        runLSSTSimulation(args, configs, pplogger)
+        runLSSTSimulation(args, configs)
     else:
         pplogger.error(
             "ERROR: Survey name not recognised. Current allowed surveys are: {}".format(["LSST", "lsst"])
