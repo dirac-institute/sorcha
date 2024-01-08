@@ -54,7 +54,7 @@ def test_ephemeris_end2end(single_synthetic_pointing, tmp_path):
         "deleteTemporaryEphemerisDatabase": False,
         "surveyname": "LSST",
         "outfilestem": f"out_400k",
-        "verbose": True,
+        "verbose": False,
     }
 
     pplogger = PPGetLogger(cmd_args_dict["outpath"])
