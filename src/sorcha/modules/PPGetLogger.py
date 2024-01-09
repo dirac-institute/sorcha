@@ -13,21 +13,28 @@ def PPGetLogger(
     """
     Initialises log and error files.
 
-    Parameters:
+    Parameters
     -----------
-    log_location (string): filepath to directory in which to save logs.
+    log_location : string
+        Filepath to directory in which to save logs.
 
-    log_format (string): format for log filename.
+    log_format : string, optional
+        Format for log filename.
+        Default = "%(asctime)s %(name)-12s %(levelname)-8s %(message)s "
 
-    log_name (string): name of log.
+    log_name : string, optional
+        Name of log. Default = ""
 
-    log_file_info (string): name with which to save info log.
+    log_file_info : string, optional
+        Name with which to save info log. Default = "sorcha.log"
 
-    log_file_error (string): name with which to save error log.
+    log_file_error : string, optional
+        Name with which to save error log. Default = "sorcha.err"
 
-    Returns:
+    Returns
     ----------
-    log (logging object): log object.
+    log : logging object
+        Log object.
 
     """
 

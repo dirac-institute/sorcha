@@ -1,17 +1,20 @@
 def PPSNRLimit(observations, sigma_limit=2.0):
     """
-    Filter that performs a straight SNR cut based on a limit.
+    Filter that performs a straight SNR cut based on a limit, removing
+    observations that are less than a SNR limit
 
-    Parameters:
+    Parameters
     -----------
-    observations (Pandas dataframe) dataframe of observations. Must have
-    "SNR" column.
+    observations : pandas dataframe
+        Dataframe of observations. Must have "SNR" column.
 
-    sigma_limit (float): limit for SNR cut.
+    sigma_limit : float, optional.
+        Limit for SNR cut.
 
-    Returns:
+    Returns
     -----------
-    observations (Pandas dataframe): same as input, but with entries with SNR < the limit removed.
+    observations : pandas dataframe
+        "observations" dataframed modified with entries with SNR < the limit removed.
 
     """
 

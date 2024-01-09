@@ -7,26 +7,35 @@ from sorcha.modules.PPModuleRNG import PerModuleRNG
 
 def PPApplyFOVFilter(observations, configs, module_rngs, footprint=None, verbose=False):
     """
-    Wrapper function for PPFootprintFilter and PPFilterDetectionEfficiency. Checks to see
+    Wrapper function for PPFootprintFilter and PPFilterDetectionEfficiency that checks to see
     whether a camera footprint filter should be applied or if a simple fraction of the
-    circular footprint should be used, then applies the required filter.
+    circular footprint should be used, then applies the required filter where rows are
+     are removed from the inputted pandas dataframevfor moving objects that land outside of
+     their associated observation's footprint.
 
-    Parameters:
+    Parameters
     -----------
-    observations (Pandas dataframe): dataframe of observations.
+    observations: Pandas dataframe
+    dataframe of observations.
 
-    configs (dictionary): dictionary of variables from config file.
+    configs : dictionary
+        dictionary of variables from config file.
 
-    module_rngs (PerModuleRNG): A collection of random number generators (per module).
+    module_rngs : PerModuleRNG
+        A collection of random number generators (per module).
 
-    footprint (Footprint): A Footprint object that represents the boundaries of
-    the detector(s). Default `None`.
+    footprint: Footprint
+        A Footprint class object that represents the boundaries of the detector(s).
+        Default: None.
 
-    verbose (boolean): Verbose mode on or off.
+    verbose: boolean
+        Controls whether logging in verbose mode is on or off.
+        Default: False
 
-    Returns:
+    Returns
     -----------
-    observations (Pandas dataframe): dataframe of observations after FOV filters have been applied.
+    observations :  Pandas dataframe
+        dataframe of observations updated after field-of-view filters have been applied.
     """
 
     pplogger = logging.getLogger(__name__)
@@ -59,20 +68,25 @@ def PPGetSeparation(obj_RA, obj_Dec, cen_RA, cen_Dec):
     """
     Function to calculate the distance of an object from the field centre.
 
-    Parameters:
+    Parameters
     -----------
-    obj_RA (float): RA of object in decimal degrees.
+    obj_RA : float
+        RA of object in decimal degrees.
 
-    obj_Dec (float): Dec of object in decimal degrees.
+    obj_Dec: float
+        Dec of object in decimal degrees.
 
-    cen_RA (float): RA of field centre in decimal degrees.
+    cen_RA : float
+        RA of field centre in decimal degrees.
 
-    cen_Dec (float): Dec of field centre in decimal degrees.
+    cen_Dec : float
+        Dec of field centre in decimal degrees.
 
-    Returns:
+    Returns
     -----------
-    sep_degree (float): The separation of the object from the centre of the field, in decimal
-    degrees.
+    sep_degree : float
+        The separation of the object from the centre of the field, in decimal
+        degrees.
 
     """
 
@@ -89,16 +103,18 @@ def PPCircleFootprint(observations, circle_radius):
     Simple function which removes objects which lay outside of a circle
     of given radius centred on the field centre.
 
-    Parameters:
+    Parameters
     -----------
-    observations (Pandas dataframe): dataframe of observations.
+    observations : Pandas dataframe
+        dataframe of observations.
 
-    circle_radius (float): radius of circle footprint in degrees.
+    circle_radius : float
+        radius of circle footprint in degrees.
 
-    Returns:
+    Returns
     ----------
-    new_observations (Pandas dataframe): dataframe of observations with all lying
-    beyond the circle radius dropped.
+    new_observations : Pandas dataframe
+        dataframe of observations with all lying beyond the circle radius dropped.
 
     """
 
@@ -126,17 +142,23 @@ def PPSimpleSensorArea(ephemsdf, module_rngs, fillfactor=0.9):
     Randomly removes a number of observations proportional to the
     fraction of the field not covered by the detector.
 
-    Parameters:
+    Parameters
     -----------
-    ephemsdf (Pandas dataframe): dataframe containing observations.
+    ephemsdf : Pandas dataframe
+        Dataframe containing observations.
 
-    module_rngs (PerModuleRNG): A collection of random number generators (per module).
+    module_rngs : PerModuleRNG
+        A collection of random number generators (per module).
 
-    fillfactor (float): fraction of FOV covered by the sensor.
+    fillfactor : float
+        fraction of FOV covered by the sensor.
+        Default = 0.9
 
-    Returns:
+    Returns
     ----------
-    ephemsOut (Pandas dataframe): dataframe of observations with fraction removed.
+    ephemsOut : Pandas dataframe
+        Dataframe of observations with 1- fillfactor fraction of objects
+        removed per on-sky observation pointing.
 
     """
     # Set the module specific seed as an offset from the base seed.

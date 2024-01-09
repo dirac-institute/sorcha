@@ -19,12 +19,16 @@ def _decompress(fname, action, pup):
 
     Parameters
     ----------
-    fname : str
+    fname : string
         Original filename
-    action : str
+    action : string
         One of []"download", "update", "fetch"]
-    pup : pooch.Pooch
+    pup : pooch
         The Pooch object that defines the location of the file.
+
+    Returns
+    ----------
+    None
     """
     known_extentions = [".gz", ".bz2", ".xz"]
     if os.path.splitext(fname)[-1] in known_extentions:
@@ -39,7 +43,7 @@ def _remove_files(retriever: pooch.Pooch) -> None:
 
     Parameters
     ----------
-    retriever : pooch.Pooch
+    retriever : pooch
         Pooch object that maintains the registry of files to download.
     """
 
@@ -51,19 +55,19 @@ def _remove_files(retriever: pooch.Pooch) -> None:
 
 def _check_for_existing_files(retriever: pooch.Pooch, file_list: list[str]) -> bool:
     """Will check for existing local files, any file not found will be printed
-    to the terminal.
+     to the terminal.
 
-    Parameters
-    ----------
-    retriever : pooch.Pooch
-        Pooch object that maintains the registry of files to download.
-    file_list : list[str]
-        A list of file names look for in the local cache.
+     Parameters
+     ----------
+     retriever : pooch
+         Pooch object that maintains the registry of files to download.
+     file_list : list of strings
+         A list of file names look for in the local cache.
 
-    Returns
-    -------
-    bool
-        Returns True if all files are found in the local cache, False otherwise.
+     Returns
+     -------
+    :  bool
+         Returns True if all files are found in the local cache, False otherwise.
     """
 
     # choosing clarity over brevity with these variables.

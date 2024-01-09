@@ -29,13 +29,15 @@ def degCos(x):
     """
     Calculate cosine of an angle in degrees.
 
-    Parameters:
+    Parameters
     -----------
-    x (float): angle in degrees.
+    x : float
+        angle in degrees.
 
-    Returns:
+    Returns
     -----------
-    The cosine of x.
+    float
+        The cosine of x.
     """
 
     return np.cos(x * np.pi / 180.0)
@@ -45,13 +47,15 @@ def degSin(x):
     """
     Calculate sine of an angle in degrees.
 
-    Parameters:
+    Parameters
     -----------
-    x (float): angle in degrees.
+    x : float
+        angle in degrees.
 
-    Returns:
+    Returns
     -----------
-    The sine of x.
+    float
+        The sine of x.
     """
 
     return np.sin(x * np.pi / 180.0)
@@ -62,19 +66,25 @@ def addUncertainties(detDF, configs, module_rngs, verbose=True):
     Generates astrometric and photometric uncertainties, and SNR. Uses uncertainties
     to randomize the photometry. Accounts for trailing losses.
 
-    Parameters:
+    Parameters
     -----------
-    detDF (Pandas dataframe): Dataframe of observations.
+    detDF : Pandas dataframe)
+        Dataframe of observations.
 
-    configs (dictionary): dictionary of configurations from config file.
+    configs : dictionary
+        dictionary of configurations from config file.
 
-    module_rngs (PerModuleRNG): A collection of random number generators (per module).
+    module_rngs : PerModuleRNG
+        A collection of random number generators (per module).
 
-    Returns:
+    verbose: Boolean, optional
+    Verbose Logging Flag. Default = True
+
+    Returns
     -----------
-    detDF (Pandas dataframe): dataframe of observations, with new columns for observed
-    magnitudes, SNR, and astrometric/photometric uncertainties.
-
+    detDF : Pandas dataframe
+        dataframe of observations, with new columns for observed
+        magnitudes, SNR, and astrometric/photometric uncertainties.
     """
 
     pplogger = logging.getLogger(__name__)
@@ -126,23 +136,48 @@ def uncertainties(
     """
     Add astrometric and photometric uncertainties to observations.
 
-    Parameters:
+    Parameters
     -----------
-    detDF (Pandas dataframe): dataframe containing observations.
+    detDF : Pandas dataframe
+        dataframe containing observations.
 
-    configs (dictionary): dictionary of configurations from config file.
+    configs : dictionary
+        dictionary of configurations from config file.
 
-    limMagName, seeingName, filterMagName, dra_name, ddec_name, dec_name (strings): column
-    names of the limiting magnitude, seeing, magnitude, RA rate, DEC rate and DEC.
+    limMagName : string, optional
+        pandas dataframe column name of the limiting magnitude.
+        Default = "fiveSigmaDepthAtSource"
 
-    Returns:
+    seeingName : string, optional
+        pandas dataframe column name of the seeing
+        Default = "seeingFwhmGeom"
+
+    filterMagName : string, optional
+        pandas dataframe column name of the object magnitude
+        Default = "TrailedSourceMag"
+
+    dra_name : string, optional
+        pandas dataframe column name of the object RA rate
+        Default = "AstRARate(deg/day)"
+
+    ddec_name: string, optional
+        pandas dataframe column name of the object declination rate
+        Default = "AstDecRate(deg/day)"
+
+    dec_name : string, optional
+        pandas dataframe column name of the object declination
+        Default = "AstDec(deg)"
+
+    Returns
     -----------
-    astrSigDeg (numpy array): astrometric uncertainties in degrees.
+    astrSigDeg: numpy array
+        astrometric uncertainties in degrees.
 
-    photometric_sigma (numpy array): photometric uncertainties in magnitude.
+    photometric_sigma: numpy array
+        photometric uncertainties in magnitude.
 
-    SNR (numpy array): signal-to-noise ratio.
-
+    SNR: numpy array
+        signal-to-noise ratio.
     """
 
     if configs.get("trailing_losses_on", False):
@@ -165,6 +200,51 @@ def calcAstrometricUncertainty(
     mag, m5, nvisit=1, FWHMeff=700.0, error_sys=10.0, astErrCoeff=0.60, output_units="mas"
 ):
     """Calculate the astrometric uncertainty, for object catalog purposes.
+
+
+    Parameters
+    -----------
+    mag : float or array of floats)
+        magnitude of the observation.
+
+    m5 : float or array of floats
+        5-sigma limiting magnitude.
+
+    nvisit :int, optional
+        number of visits to consider.
+        Default = 1
+
+    FWHMeff : float, optional
+        effective Full Width at Half Maximum of Point Spread Function [mas].
+        Default = 700.0
+
+    error_sys : float, optional
+        systematic error [mas].
+        Default = 10.0
+
+    astErrCoeff : float, optional
+        Astrometric error coefficient
+        (see calcRandomAstrometricErrorPerCoord description).
+        Default = 0.60
+
+    output_units : string, optional
+       Default: "mas"  (milliarcseconds)
+        other options: "arcsec" (arcseconds)
+
+    Returns
+    -----------
+    astrom_error : float or array of floats)
+        astrometric error.
+
+    SNR : float or array of floats)
+        signal to noise ratio.
+
+    error_rand : float or array of floats
+        random error.
+
+    Notes
+    ------------
+
     The effective FWHMeff MUST BE given in miliarcsec (NOT arcsec!).
     Systematic error, error_sys, must be given in miliarcsec.
     The result corresponds to a single-coordinate uncertainty.
@@ -172,40 +252,16 @@ def calcAstrometricUncertainty(
     matching two catalogs) will be sqrt(2) times larger.
     Default values for parameters are based on estimates for LSST.
 
-    Parameters:
-    -----------
-    mag (float/array of floats): magnitude of the observation.
-
-    m5 (float/array of floats): 5-sigma limiting magnitude.
-
-    nvisit (int): number of visits to consider.
-
-    FWHMeff (float): effective Full Width at Half Maximum of Point Spread Function [mas].
-
-    error_sys (float): systematic error [mas].
-
-    output_units (string): 'mas' (default): milliarcseconds, 'arcsec': arcseconds.
-
-    Returns:
-    -----------
-    astrom_error (float/array of floats): astrometric error.
-
-    SNR (float/array of floats): signal to noise ratio.
-
-    error_rand (float/array of floats): random error.
-
-    Description:
-    ------------
     The astrometric error can be applied to parallax or proper motion (for nvisit>1).
     If applying to proper motion, should also divide by the # of years of the survey.
     This is also referenced in the LSST overview paper (arXiv:0805.2366, ls.st/lop)
+
 
     - assumes sqrt(Nvisit) scaling, which is the best-case scenario
     - calcRandomAstrometricError assumes maxiumm likelihood solution,
       which is also the best-case scenario
     - the systematic error, error_sys = 10 mas, corresponds to the
       design spec from the LSST Science Requirements Document (ls.st/srd)
-
     """
 
     # first compute SNR
@@ -229,26 +285,35 @@ def calcAstrometricUncertainty(
 
 def calcRandomAstrometricErrorPerCoord(FWHMeff, SNR, AstromErrCoeff=0.60):
     """Calculate the random astrometric uncertainty, as a function of
-    effective FWHMeff and signal-to-noise ratio SNR
-    Returns astrometric uncertainty in the same units as FWHM.
+    effective FWHMeff and signal-to-noise ratio SNR and return
+    the astrometric uncertainty in the same units as FWHM.
+
     ** This error corresponds to a single-coordinate error **
     the total astrometric uncertainty (e.g. relevant when matching
     two catalogs) will be sqrt(2) times larger.
 
-    Parameters:
+    Parameters
     -----------
-    FWHMeff (float/array of floats): Effective Full Width at Half Maximum of Point Spread Function [mas].
+    FWHMeff : float or array of floats
+        Effective Full Width at Half Maximum of Point Spread Function [mas].
 
-    SNR (float/array of floats): Signal-to-noise ratio.
+    SNR : float or array of floats
+        Signal-to-noise ratio.
 
-    AstromErrCoeff (float): Astrometric error coefficient (see description below).
+    AstromErrCoeff : float, optional
+        Astrometric error coefficient (see description below).
+        Default =0.60
 
-    Returns:
+    Returns
     -----------
-    RandomAstrometricErrorPerCoord (float/array of floats): random astrometric uncertainty per coordinate.
+    RandomAstrometricErrorPerCoord: float or array of floats
+        random astrometric uncertainty per coordinate.
 
-    Description:
+    Returns astrometric uncertainty in the same units as FWHMeff.
+
+    Notes
     ------------
+
     The coefficient AstromErrCoeff for Maximum Likelihood
     solution is given by
 
@@ -281,14 +346,15 @@ def calcPhotometricUncertainty(snr):
     """
     Convert flux signal to noise ratio to an uncertainty in magnitude.
 
-    Parameters:
+    Parameters
     -----------
-    snr (float/array of floats): The signal-to-noise-ratio in flux.
+    snr : float or array of floats
+        The signal-to-noise-ratio in flux.
 
-    Returns:
+    Returns
     -----------
-    magerr (float/array of floats): The resulting uncertainty in magnitude.
-
+    magerr : float or rray of floats
+        The resulting uncertainty in magnitude.
     """
 
     # see e.g. www.ucolick.org/~bolte/AY257/s_n.pdf section 3.1

@@ -20,21 +20,26 @@ def create_results_table(cnx_out, filename, output_path, output_stem, table_name
     """
     Creates a table in a SQLite database from SSPP results.
 
-    Parameters:
+    Parameters
     -----------
-    cnx_out (sqlite3 connection): Connection to sqlite3 database.
+    cnx_out : sqlite3 connection
+        Connection to sqlite3 database.
 
-    filename (string): filepath/name of sqlite3 database.
+    filename : string
+        filepath/name of sqlite3 database.
 
-    output_path (string): filepath of directory containing SSPP output folders.
+    output_path : string
+        filepath of directory containing SSPP output folders.
 
-    output_stem (string): stem filename for SSPP outputs.
+    output_stem : string
+        stem filename for SSPP outputs.
 
-    table_name (string): name of table of SSPP results.
+    table_name : string, optional
+        name of table of for storing sorcha results. Default ="pp_results"
 
-    Returns:
+    Returns
     -----------
-    None.
+    None
 
     """
 
@@ -83,17 +88,20 @@ def create_inputs_table(cnx_out, input_path, table_type):
     Creates a table in a SQLite database from the input files (i.e. orbits,
     physical parameters, etc).
 
-    Parameters:
+    Parameters
     -----------
-    cnx_out (sqlite3 connection): Connection to sqlite3 database.
+    cnx_out : sqlite3 connection
+        Connection to sqlite3 database.
 
-    input_path (string): filepath of directory containing input files.
+    input_path : string
+        Filepath of directory containing input files.
 
-    table_type (string): type of file. Should be "orbits"/"params"/"comet".
+    table_type : string
+        Type of file. Should be "orbits"/"params"/"comet".
 
-    Returns:
+    Returns
     -----------
-    None.
+    None
 
     """
 
@@ -121,13 +129,14 @@ def create_results_database(args):
     Creates a SQLite database with tables of SSPP results and all orbit/physical
     parameters/comet files.
 
-    Parameters:
+    Parameters
     -----------
-    args (argparse ArgumentParser object): command line arguments.
+    args : ArgumentParser
+        argparse ArgumentParser object; command line arguments.
 
-    Returns:
+    Returns
     -----------
-    None.
+    None
 
     """
 
@@ -151,13 +160,15 @@ def get_column_names(filename, table_name="pp_results"):
     """
     Obtains column names from a table in a SQLite database.
 
-    Parameters:
+    Parameters
     -----------
-    filename (string): filepath/name of sqlite3 database.
+    filename : string
+        Filepath/name of sqlite3 database.
 
-    table_name (string): name of table.
+    table_name : string, optional
+        Name of table. Default = "pp_results"
 
-    Returns:
+    Returns
     -----------
     col_names (list): list of column names.
 

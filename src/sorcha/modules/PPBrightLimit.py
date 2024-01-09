@@ -8,17 +8,23 @@ def PPBrightLimit(observations, observing_filters, bright_limit):
     limit. Can take either a single saturation limit for a straight cut, or
     filter-specific saturation limits.
 
-    Parameters:
+    Parameters
     -----------
-    observations (Pandas dataframe): dataframe of observations.
+    observations : Pandas dataframe
+        Dataframe of observations.
 
-    observing_filters (list of strings): observing filters present in the data.
+    observing_filters : list of strings
+        Observing filters present in the data.
 
-    bright_limit (float or list of floats): saturation limits: either single or per-filter.
+    bright_limit : float or list of floats
+        Saturation limits: either single value applied to all filters or a list of values for each filter.
 
-    Returns:
+    Returns
     ----------
-    observations_out (Pandas dataframe): dataframe of filtered observations.
+    observations_out : Pandas dataframe
+        observations dataframe modified with rows dropped for apparent
+        magnitudes brigher than the bright_limit for the given observation's
+        filter
 
     """
 

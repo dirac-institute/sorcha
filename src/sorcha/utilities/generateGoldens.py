@@ -8,6 +8,11 @@ from sorcha.utilities.diffTestUtils import override_seed_and_run
 from sorcha.utilities.dataUtilitiesForTests import get_demo_filepath
 
 if __name__ == "__main__":
+    """
+    Generates "golden" output for sorcha runs for testing. This should only b
+    be run sparingly when confident all changes have been confirmed and tested with
+    unit tests
+    """
     # Create a goldens directory if it does not exist.
     golden_dir = get_demo_filepath("goldens")
     if not os.path.exists(golden_dir):

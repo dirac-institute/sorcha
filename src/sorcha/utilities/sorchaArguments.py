@@ -46,7 +46,19 @@ class sorchaArguments:
             self.read_from_dict(cmd_args_dict)
 
     def read_from_dict(self, args):
-        """set the parameters from a cmd_args dict."""
+        """set the parameters from a cmd_args dict.
+
+        Parameters
+        ---------------
+        aguments : dictionary
+            dictionary of configuration parameters
+
+        Returns
+        ----------
+        None
+
+        """
+
         self.paramsinput = args["paramsinput"]
         self.orbinfile = args["orbinfile"]
         self.oifoutput = args.get("oifoutput")

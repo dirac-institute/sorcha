@@ -25,8 +25,14 @@ class CombinedDataReader:
         """
         Parameters
         ----------
-        ephem_primary (bool, optional): Use the ephemeris reader as the primary
+        ephem_primary: boolean, optional
+            Use the ephemeris reader as the primary
             reader. Otherwise uses the first auxiliary data reader.
+            Default = False
+
+        **kwargs : dictionary, optional
+        Extra arguments
+
         """
         self.ephem_reader = None
         self.aux_data_readers = []
@@ -38,7 +44,8 @@ class CombinedDataReader:
 
         Parameters
         ----------
-        new_reader (ObjectDataReader): The reader for a specific input file.
+        new_reader : ObjectDataReader
+            The reader for a specific input file.
         """
         pplogger = logging.getLogger(__name__)
         if self.ephem_reader is not None:
@@ -51,7 +58,8 @@ class CombinedDataReader:
 
         Parameters
         ----------
-        new_reader (ObjectDataReader): The reader for a specific input file.
+        new_reader : ObjectDataReader
+            The reader for a specific input file.
         """
         self.aux_data_readers.append(new_reader)
 
@@ -59,17 +67,24 @@ class CombinedDataReader:
         """Reads in a set number of rows from the input, performs
         post-processing and validation, and returns a data frame.
 
-        Parameters:
+        Parameters
         -----------
-        block_size (int, optional): the number of rows to read in.
+        block_size: integer, optional
+            the number of rows to read in.
             Use block_size=None to read in all available data.
-            [Default = None]
+            Default = None
 
-        verbose (bool, optional): use verbose logging.
+        verbose : boolean, optional
+            Use verbose logging.
+            Default = False
 
-        Returns:
+        **kwargs : dictionary, optional
+            Extra arguments
+
+        Returns
         -----------
-        res_df (Pandas dataframe): dataframe of the combined object data.
+        res_df : pandas dataframe
+            dataframe of the combined object data.
 
         """
         pplogger = logging.getLogger(__name__)
@@ -143,19 +158,24 @@ class CombinedDataReader:
         This function DOES NOT include the ephemeris data in the returned data frame.
         It is to be used when generating the ephemeris during the execution of Sorcha.
 
-        Parameters:
+        Parameters
         -----------
-        block_size (int, optional): the number of rows to read in.
+        block_size : integer, optional
+            the number of rows to read in.
             Use block_size=None to read in all available data.
-            [Default = None]
+            Default = None
 
-        verbose (bool, optional): use verbose logging.
+        verbose : boolean, optional
+            use verbose logging.
+            Default = False
 
-        Returns:
+        **kwargs : dictionary, optional
+            Extra arguments
+
+        Returns
         -----------
-        res_df (Pandas dataframe): dataframe of the combined object data, excluding
-        any ephemeris data.
-
+        res_df : pandas dataframe
+            dataframe of the combined object data, excluding any ephemeris data.
         """
         pplogger = logging.getLogger(__name__)
         verboselog = pplogger.info if verbose else lambda *a, **k: None

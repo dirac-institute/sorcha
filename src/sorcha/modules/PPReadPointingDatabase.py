@@ -8,17 +8,21 @@ def PPReadPointingDatabase(bsdbname, observing_filters, dbquery, surveyname):
     """
     Reads in the pointing database as a Pandas dataframe.
 
-    Parameters:
+    Parameters
     -----------
-    bsdbname (string): file location of pointing database.
+    bsdbname : string
+        File location of pointing database.
 
-    observing_filters (list of strings): list of observation filters of interest.
+    observing_filters : list of strings
+        List of observation filters of interest.
 
-    dbquery (string): database query to perform on pointing database.
+    dbquery : string
+        Databse query to perform on pointing database.
 
-    Returns:
+    Returns
     -----------
-    dfo (Pandas dataframe): dataframe of pointing database.
+    dfo : pandas dataframe
+        Dataframe of pointing database.
 
     """
 

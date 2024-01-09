@@ -6,10 +6,11 @@ class PerModuleRNG:
     """A collection of per-module random number generators."""
 
     def __init__(self, base_seed, pplogger=None):
-        """Parameters:
+        """Parameters
         --------------
 
-        base_seed (int): The base seed for a random number generator
+        base_seed : int
+            The base seed for a random number generator
         """
         self._base_seed = base_seed
         self._rngs = {}
@@ -25,13 +26,15 @@ class PerModuleRNG:
         Return a random number generator that is based on a base seed
         and the current module name.
 
-        Parameters:
+        Parameters
         -----------
-        module_name (str): The name of the module
+        module_name : string
+            The name of the module
 
-        Returns:
+        Returns
         ----------
-        rng (numpy Generator): The random number generator.
+        rng : numpy Generator
+            The random number generator.
         """
         if module_name in self._rngs:
             return self._rngs[module_name]

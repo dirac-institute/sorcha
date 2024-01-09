@@ -35,21 +35,27 @@ def distToSegment(points, x0, y0, x1, y1):
     units as the points are specified in (radians, degrees, etc.). Uses planar
     geometry for the calculations (assuming small angular distances).
 
-    Parameters:
+    Parameters
     -----------
-    points (array): array of shape (2, n) describing the corners of the sensor.
+    points : array
+        Array of shape (2, n) describing the corners of the sensor.
 
-    x0 (float): the x coordinate of the first end of the segment.
+    x0 : float
+        The x coordinate of the first end of the segment.
 
-    y0 (float): the y coordinate of the first end of the segment.
+    y0 : float
+        The y coordinate of the first end of the segment.
 
-    x1 (float): the x coordinate of the second end of the segment.
+    x1 : float
+        The x coordinate of the second end of the segment.
 
-    y1 (float): the y coordinate of the second end of the segment.
+    y1 : float
+        The y coordinate of the second end of the segment.
 
-    Returns:
+    Returns
     --------
-    dist (array): array of length n storing the distances.
+    dist : array
+        Array of length n storing the distances.
     """
     # Handle the case where the segment is a point: (x0 == x1) and (y0 == y1)
     len_sq = (x1 - x0) * (x1 - x0) + (y1 - y0) * (y1 - y0)
@@ -68,22 +74,28 @@ def distToSegment(points, x0, y0, x1, y1):
 
 
 class Detector:
+    """Detector class"""
+
     def __init__(self, points, ID=0, units="radians"):
         """
         Initiates a detector object.
 
-        Parameters:
+        Parameters
         -----------
-        points (array): array of shape (2, n) describing the corners of the sensor.
+        points : array
+            Array of shape (2, n) describing the corners of the sensor.
 
-        ID (int): an integer ID for the sensor.
+        ID : int, optional
+            Aan integer ID for the sensor. Default =0.
 
-        units (string): units that points is provided in, "radians" or "degrees" from
-                        center of the focal plane.
+        units : string, optional
+            Units that points is provided in, "radians" or "degrees" from
+            center of the focal plane. Default = "radians"
 
-        Returns:
+        Returns
         ----------
-        detector (Detector): a detector instance.
+        detector : Detector
+            A Detector object instance.
 
         """
 
@@ -115,21 +127,26 @@ class Detector:
         Determines whether a point (or array of points) falls on the
         detector.
 
-        Parameters:
+        Parameters
         -----------
-        point (array): array of shape (2, n) for n points.
+        point : array
+            Array of shape (2, n) for n points.
 
-        ϵ (float): threshold for whether point is on detector.
+        ϵ : float, optional
+            Threshold for whether point is on detector. Default: 10.0 ** (-11)
 
-        edge_thresh (float, optional): The focal plane distance (in arcseconds) from
-            the detector's edge for a point to be counted. Removes points that are too
-            close to the edge for source detection.
+        edge_thresh: float, optional
+            The focal plane distance (in arcseconds) from the detector's edge
+            for a point to be counted. Removes points that are too
+            close to the edge for source detection. Default = None
 
-        plot (Boolean): whether to plot the detector and the point.
+        plot : Boolean, optional
+            Flag for whether to plot the detector and the point. Default = False
 
-        Returns:
+        Returns
         ----------
-        ison (array): indices of points in point array that fall on the sensor.
+        selectedidx : array
+            Indices of points in point array that fall on the sensor.
         """
         pplogger = logging.getLogger(__name__)
 
@@ -183,13 +200,14 @@ class Detector:
         segmentedArea, but the test point is the mean of the corner coordinates.
         Will probably fail if the sensor is not convex.
 
-        Parameters:
+        Parameters
         -----------
         None.
 
-        Returns:
+        Returns
         ----------
-        area (float): the area of the detector.
+        area : float
+            The area of the detector.
 
         """
         x = self.x - self.centerx
@@ -210,14 +228,15 @@ class Detector:
         Fails if the point is not inside the sensor or if the sensor is not
         convex.
 
-        Parameters:
+        Parameters
         -----------
-        None.
+        point : array
+            Array of shape (2, n) for n points.
 
-        Returns:
+        Returns
         ----------
-        area (float): the area of the detector.
-
+        area : float
+            The area of the detector.
         """
 
         # so that both a single and many points work
@@ -247,11 +266,11 @@ class Detector:
         Sorts the corners to be counterclockwise by angle from center of
         the detector. Modifies self.
 
-        Parameters:
+        Parameters
         -----------
         None.
 
-        Returns:
+        Returns
         ----------
         None.
 
@@ -269,13 +288,15 @@ class Detector:
         Rotates a sensor around the origin of the coordinate system its
         corner locations are provided in.
 
-        Parameters:
+        Parameters
         -----------
-        θ (float): angle to rotate by, in radians.
+        θ : float
+            Angle to rotate by, in radians.
 
-        Returns:
+        Returns
         ----------
-        Detector: new Detector instance.
+        Detector:  Detector
+            New Detector instance.
 
         """
 
@@ -293,11 +314,11 @@ class Detector:
         """
         Converts corners from radians to degrees.
 
-        Parameters:
+        Parameters
         -----------
         None.
 
-        Returns:
+        Returns
         ----------
         None.
 
@@ -316,11 +337,11 @@ class Detector:
         """
         Converts corners from degrees to radians.
 
-        Parameters:
+        Parameters
         -----------
         None.
 
-        Returns:
+        Returns
         ----------
         None.
 
@@ -343,18 +364,22 @@ class Detector:
         internal demonstration purposes, but not for confirming algorithms or
         for offical plots.
 
-        Parameters:
+        Parameters
         -----------
-        θ (float): angle to rotate footprint by, radians or degrees.
+        θ : float, optional
+            Aangle to rotate footprint by, radians or degrees. Default =0.0
 
-        color  (string): line color.
+        color :string, optional
+            Line color. Default = "gray"
 
-        units (string): units θ is provided in ("deg" or "rad").
+        units: string, optional
+            Units. Units is provided in ("deg" or "rad"). Default = 'rad'.
 
-        annotate (Boolean): whether to annotate each sensor with its index in
-        self.detectors.
+        annotate : Boolean
+            Flag whether to annotate each sensor with its index in self.detectors.
+            Default = False
 
-        Returns:
+        Returns
         ----------
         None.
 
@@ -377,20 +402,26 @@ class Detector:
 
 
 class Footprint:
+
+    """Camera footprint class"""
+
     def __init__(self, path=None, detectorName="detector"):
         """
         Initiates a Footprint object.
 
-        Parameters:
+        Parameters
         -----------
-        path (string): path to a .csv file containing detector corners.
+        path : string, optional
+            Path to a .csv file containing detector corners. Default = None
 
-        detectorName (string): name of column in detector file indicating to
-        which sensor a corner belongs.
+        detectorName : string, optional
+            Name of column in detector file indicating to which sensor a
+            corner belongs. Default = "detector"
 
-        Returns:
+        Returns
         ----------
-        Footprint: Footprint object for the provided sensors.
+        Footprint : Footprint
+            Footprint object for the provided sensors.
 
         """
 
@@ -441,18 +472,22 @@ class Footprint:
         is <2.1 degrees), so should be fine for internal demonstration
         purposes, but not for confirming algorithms or for offical plots.
 
-        Parameters:
+        Parameters
         -----------
-        θ (float): angle to rotate footprint by, radians or degrees.
+        θ : float, optional
+            Angle to rotate footprint by, radians or degrees. Default = 0.0
 
-        color  (string): line color.
+        color : string, optional
+            Line color. Default = "gray"
 
-        units (string): units θ is provided in ("deg" or "rad").
+        units : string, optional
+            Units θ is provided in ("deg" or "rad"). Default = "rad"
 
-        annotate (Boolean): whether to annotate each sensor with its index in
-        self.detectors.
+        annotate : boolean, optional
+            Whether to annotate each sensor with its index in
+            self.detectors. Default = False
 
-        Returns:
+        Returns
         ----------
         None.
 
@@ -477,23 +512,42 @@ class Footprint:
         footprint. Also returns the an ID for the sensor a detection is made
         on.
 
-        Parameters:
+        Parameters
         -----------
-        field_df (Pandas dataframe): dataframe containing detection information with pointings.
+        field_df : Pandas dataframe
+            Dataframe containing detection information with pointings.
 
-        *_name (string): column names for object RA and Dec and field name.
+        ra_name : string, optional
+            "field_df" dataframe's column name for object's RA
+             for the given observation. Default = "AstRA(deg)" [units: degrees]
 
-        *_name_field (string): column names for field RA and Dec and rotation.
+        dec_name : string, optional
+            "field_df" dataframe's column name for object's declination
+             for the given observation. Default = "AstDec(deg)" [units: dgrees]
 
-        edge_thresh (float, optional): An angular threshold in arcseconds for dropping pixels too
-        close to the edge.
+        ra_name_field : string, optional
+            "field_df" dataframe's column name for the observation field's RA
+             Default = "fieldRA" [units: degrees]
 
-        Returns:
+        dec_name_field : string, optional
+            "field_df" dataframe's column name for the observation field's declination
+             Default = "fieldDec" [Units: degrees]
+
+        rot_name_field: string, optional
+            "field_df" dataframe's column name for the observation field's rotation angle
+            Default = "rotSkyPos" [Units: degrees]
+
+        edge_thresh: float, optional
+            An angular threshold in arcseconds for dropping pixels too close to the edge.
+            Default  = None
+
+        Returns
         ----------
-        detected (array): indices of rows in oifDF which fall on the sensor(s).
+        detected : array
+            Indices of rows in oifDF which fall on the sensor(s).
 
-        detectorID  (array): index corresponding to a detector in
-        self.detectors for each entry in detected.
+        detectorID : array
+            Index corresponding to a detector in self.detectors for each entry in detected.
 
         """
 
@@ -543,22 +597,32 @@ def radec2focalplane(ra, dec, fieldra, fielddec, fieldID=None):
     the same focal plane, but does not account for field rotation. Maintains
     alignment with the meridian passing through the field center.
 
-    Parameters:
+    Parameters
     -----------
-    ra (float/array of floats): observation Right Ascension, radians.
+    ra : float or array of floats
+        Observation Right Ascension, radians.
 
-    dec (float/array of floats): observation Declination, radians.
+    dec : float/array of floats
+        Observation Declination, radians.
 
-    fieldra (float/array of floats): field pointing Right Ascension, radians.
+    fieldra : float or array of floats
+        Field pointing Right Ascension, radians.
 
-    fielddec (float/array of floats): field pointing Declination, radians.
+    fielddec : float/array of floats)
+        Field pointing Declination, radians.
 
-    fieldID (float/array of floats): Field ID, optional.
+    fieldID : float/array of floats
+        Field ID, optional. Default = None
 
-    Returns:
+    Returns
     ----------
-    x, y (float/array of floats): Coordinates on the focal plane, radians projected
-    to the plane tangent to the unit sphere.
+    x : float or array of floats
+        x coordinates on the flocal plane, radians projected to the plane tagent ot the
+        unit sphere
+
+    y : float/array of floats
+        y coordinates on the focal plane, radians projected to the plane tangent to the
+        unit sphere.
 
     """
 

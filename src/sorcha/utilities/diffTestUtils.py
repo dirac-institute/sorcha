@@ -15,13 +15,16 @@ def compare_result_files(test_output, golden_output):
 
     Parameters
     ----------
-    test_output (str): The path and file name of the test results.
+    test_output : string
+        The path and file name of the test results.
 
-    golden_output (str): The path and file name of the golden set results.
+    golden_output : string
+        The path and file name of the golden set results.
 
     Returns
     -------
-    bool : Indicates whether the results are the same.
+    : bool
+        Indicates whether the results are the same.
     """
     test_data = pd.read_csv(test_output)
     golden_data = pd.read_csv(golden_output)
@@ -79,7 +82,14 @@ def override_seed_and_run(outpath, arg_set="baseline"):
 
     Parameters
     ----------
-    outpath (str): The path for the output files.
+    outpath : string
+        The path for the output files.
+
+    arg_set : string, optional
+        set of arguments for setting up the run. Options: "baseline" or "with_ephemeris".
+        "baseline"" run does not ephemeris generation. "with_ephemeeris" is a full end to end run
+        of all main components of sorcha.
+        Default = "baseline"
     """
 
     if arg_set == "baseline":

@@ -10,18 +10,21 @@ def PPDetectionEfficiency(padain, threshold, module_rngs):
     threshold: if the threshold is 0.95, for example, 5% of observations will be
     randomly dropped. Used by PPLinkingFilter.
 
-    Parameters:
+    Parameters
     -----------
-    padain (Pandas dataframe): dataframe of observations.
+    padain : Pandas dataframe
+        Dataframe of observations.
 
-    threshold (float): Fraction between 0 and 1 of detections retained in the dataframe.
+    threshold : float
+        Fraction between 0 and 1 of detections retained in the dataframe.
 
-    module_rngs (PerModuleRNG): A collection of random number generators (per module).
+    module_rngs : PerModuleRNG
+        A collection of random number generators (per module).
 
-    Returns:
+    Returns
     ----------
-    padain_drop: dataframe of observations with a fraction equal to 1-threshold
-    randomly dropped.
+     : Pandas dataframe
+        Dataframe of observations with a fraction equal to 1-threshold randomly dropped.
 
     """
 

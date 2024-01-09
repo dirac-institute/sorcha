@@ -12,13 +12,15 @@ def PPOutWriteCSV(padain, outf):
     """
     Writes a pandas dataframe out to a CSV file at a location given by the user.
 
-    Parameters:
+    Parameters
     -----------
-    padain (Pandas dataframe): dataframe of output.
+    padain : pandas dataframe
+        Dataframe of output.
 
-    outf (string): location to which file should be written.
+    outf : string
+        Location to which file should be written.
 
-    Returns:
+    Returns
     -----------
     None.
 
@@ -33,15 +35,18 @@ def PPOutWriteHDF5(pp_results, outf, keyin):
     """
     Writes a pandas dataframe out to a HDF5 file at a location given by the user.
 
-    Parameters:
+    Parameters
     -----------
-    padain (Pandas dataframe): dataframe of output.
+    padain : pandas dataframe
+        Dataframe of output.
 
-    outf (string): location to which file should be written.
+    outf : string
+        Location to which file should be written.
 
-    keyin (string): key at which data will be located.
+    keyin : string
+        Key at which data will be located.
 
-    Returns:
+    Returns
     -----------
     None.
 
@@ -64,13 +69,15 @@ def PPOutWriteSqlite3(pp_results, outf):
     """
     Writes a pandas dataframe out to a CSV file at a location given by the user.
 
-    Parameters:
+    Parameters
     -----------
-    pp_results (Pandas dataframe): dataframe of output.
+    pp_results : pandas dataframe
+        Dataframe of output.
 
-    outf (string): location to which file should be written.
+    outf : string
+        Location to which file should be written.
 
-    Returns:
+    Returns
     -----------
     None.
 
@@ -88,19 +95,25 @@ def PPWriteOutput(cmd_args, configs, observations_in, endChunk=0, verbose=False)
     Writes the output in the format specified in the config file to a location
     specified by the user.
 
-    Parameters:
+    Parameters
     -----------
-    cmd_args (dictionary): dictonary of command line arguments.
+    cmd_args : dictionary
+        Dictonary of command line arguments.
 
-    configs (dictionary): dictionary of config file arguments.
+    configs : Dictionary
+        Dictionary of config file arguments.
 
-    observations_in (Pandas dataframe): dataframe of output.
+    observations_in : Pandas dataframe
+        Dataframe of output.
 
-    endChunk (int): integer of last object in chunk. Used only for HDF5 output key.
+    endChunk : integer, optional
+        Integer of last object in chunk. Used only for HDF5 output key.
+        Default = 0
 
-    verbose (Boolean): verbose mode on or off.
+    verbose : boolean, optional
+        Verbose logging mode on or off. Default = False
 
-    Returns:
+    Returns
     -----------
     None.
 
