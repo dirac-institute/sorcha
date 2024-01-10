@@ -68,7 +68,7 @@ def PPCalculateApparentMagnitude(
             observations, phasefunction, othercolours, observing_filters, mainfilter
         )
     else:
-        observations.rename(columns={"H_" + mainfilter: "H_filter"}, inplace=True)
+        observations["H_filter"] = observations["H_" + mainfilter].copy()
 
     # calculate main body apparent magnitude in observation filter
     verboselog("Calculating apparent magnitude in filter...")
