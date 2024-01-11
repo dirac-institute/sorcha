@@ -27,15 +27,16 @@ def randomizeAstrometry(
     module_rngs,
     raName="AstRA(deg)",
     decName="AstDec(deg)",
-    raRndName="AstRARnd(deg)",
-    decRndName="AstDecRnd(deg)",
+    raOrigName="AstRATrue(deg)",
+    decOrigName="AstDecTrue(deg)",
     sigName="AstSig(deg)",
     radecUnits="deg",
     sigUnits="mas",
 ):
     """
     Randomize astrometry with a normal distribution around the actual RADEC pointing.
-    The randomized values are added to the input pandas data frame.
+    The randomized values replace the original astrometry, with the original values
+    stored in separate columns.
 
     Parameters
     -----------
@@ -52,13 +53,13 @@ def randomizeAstrometry(
     dec_Name : string, optional
         "df" dataframe column name for the declination. Default = "AstDec(deg)"
 
-     raRndName : string, optional
-        "df" dataframe column name for where to store new randomized right
-        ascension. Default = "AstRARnd(deg)"
+    raOrigName : string, optional
+        "df" dataframe column name for where to store original right
+        ascension. Default = "AstRATrue(deg)"
 
-     decRndName : string, optional
-        "df" dataframe column name for where to store  new randomized declination.
-        Default = "AstDecRnd(deg)"
+    decOrigName : string, optional
+        "df" dataframe column name for where to store original declination.
+        Default = "AstDecTrue(deg)"
 
     sigName : string, optional
         "df" dataframe column name for the standard deviation, uncertainty in the
@@ -74,11 +75,9 @@ def randomizeAstrometry(
 
     Returns
     ---------
-    ra : numpy array of floats
-        Randomized right ascension values for each entry in "df"
-
-    dec : array of floats
-       Randomized dec values for each entry in "df"
+    df : pandas dataframe
+       original input dataframe with RA and Dec columns randomized around
+       astrometric sigma and original RA and Dec stored in separate columns
 
     Notes
     -----------
@@ -86,13 +85,10 @@ def randomizeAstrometry(
     a normal distribution on the unit sphere, so as to allow for a correct modeling of
     the poles. Distributions close to the poles may look odd in RADEC.
 
-    "df" dataframe  is also modified with raRndName and decRndName columns added
-    with the new randomized right ascension and declination values stored
-
     """
 
-    deg2rad = np.deg2rad
-    zeros = np.zeros
+    df[raOrigName] = df[raName]
+    df[decOrigName] = df[decName]
 
     if radecUnits == "deg":
         center = radec2icrf(df[raName], df[decName]).T
@@ -104,16 +100,16 @@ def randomizeAstrometry(
         print("Bad units were provided for RA and Dec.")
 
     if sigUnits == "deg":
-        sigmarad = deg2rad(df[sigName])
+        sigmarad = np.deg2rad(df[sigName])
     elif sigUnits == "mas":
-        sigmarad = deg2rad(df[sigName] / 3600000.0)
+        sigmarad = np.deg2rad(df[sigName] / 3600000.0)
     elif sigUnits == "rad":
         sigmarad = df[sigName]
     else:
         print("Bad units were provided for astrometric uncertainty.")
 
     n = len(df.index)
-    xyz = zeros([n, 3])
+    xyz = np.zeros([n, 3])
 
     xyz = sampleNormalFOV(center, sigmarad, module_rngs, ndim=3)
 
@@ -123,7 +119,10 @@ def randomizeAstrometry(
     else:
         [ra, dec] = icrf2radec(xyz[:, 0], xyz[:, 1], xyz[:, 2], deg=False)
 
-    return ra, dec
+    df[raName] = ra
+    df[decName] = dec
+
+    return df
 
 
 def sampleNormalFOV(center, sigma, module_rngs, ndim=3):
