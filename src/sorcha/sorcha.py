@@ -218,9 +218,7 @@ def runLSSTSimulation(args, configs):
         )
 
         verboselog("Randomising astrometry...")
-        observations["AstRATrue(deg)"] = observations["AstRA(deg)"]
-        observations["AstDecTrue(deg)"] = observations["AstDec(deg)"]
-        observations["AstRA(deg)"], observations["AstDec(deg)"] = PPRandomizeMeasurements.randomizeAstrometry(
+        observations = PPRandomizeMeasurements.randomizeAstrometry(
             observations, args._rngs, sigName="AstrometricSigma(deg)", sigUnits="deg"
         )
 
