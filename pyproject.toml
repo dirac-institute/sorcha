@@ -38,7 +38,6 @@ dependencies = [
 
 [project.scripts]
 sorcha = "sorcha.sorcha:main"
-makeConfigSorcha = "sorcha.utilities.makeConfigPP:main"
 makeSLURMscript = "sorcha.utilities.makeSLURMscript:main"
 createResultsSQLDatabase = "sorcha.utilities.createResultsSQLDatabase:main"
 bootstrap_sorcha_data_files = "sorcha.utilities.retrieve_ephemeris_data_files:main"
