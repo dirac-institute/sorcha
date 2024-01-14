@@ -30,9 +30,10 @@ deg2rad = np.radians
 sin = np.sin
 cos = np.cos
 
-#==============================================================================
+# ==============================================================================
 # detector geometry functions
-#==============================================================================
+# ==============================================================================
+
 
 def distToSegment(points, x0, y0, x1, y1):
     """Compute the distance from each point to the line segment defined by
@@ -77,9 +78,11 @@ def distToSegment(points, x0, y0, x1, y1):
     # Compute the distances to the closest points on the line segment.
     return np.sqrt((points[0] - proj_x) * (points[0] - proj_x) + (points[1] - proj_y) * (points[1] - proj_y))
 
-#==============================================================================
+
+# ==============================================================================
 # coordinate transforms
-#==============================================================================
+# ==============================================================================
+
 
 def radec_to_tangent_plane(ra, dec, field_ra, field_dec):
     """
@@ -105,16 +108,11 @@ def radec_to_tangent_plane(ra, dec, field_ra, field_dec):
     """
 
     # convert to cartesian coordiantes on unit sphere
-    observation_vectors = np.array([
-        cos(ra) * np.cos(dec), 
-        sin(ra) * np.cos(dec), 
-        sin(dec)])  # x  # y  # z
+    observation_vectors = np.array([cos(ra) * np.cos(dec), sin(ra) * np.cos(dec), sin(dec)])  # x  # y  # z
 
     field_vectors = np.array(
-        [cos(field_ra) * np.cos(field_dec), 
-         sin(field_ra) * np.cos(field_dec), 
-         sin(field_dec)]  
-    )  
+        [cos(field_ra) * np.cos(field_dec), sin(field_ra) * np.cos(field_dec), sin(field_dec)]
+    )
 
     # make the basis vectors for the fields of view
     # the "x" basis is easy, 90 d rotation of the x, y components
@@ -140,22 +138,24 @@ def radec_to_tangent_plane(ra, dec, field_ra, field_dec):
 
     return x, y
 
-def radec_to_focal_plane( ra, dec, field_ra, field_dec, field_rot ):
+
+def radec_to_focal_plane(ra, dec, field_ra, field_dec, field_rot):
     # convert ra, dec to points on focal plane, x pointing to celestial north
     x, y = radec_to_tangent_plane(ra, dec, field_ra, field_dec)
     # rotate focal plane to align with detectors
     xy = x + 1.0j * y
-    xy *= np.exp( 1.0j * field_rot ) # which direction to rotate?
+    xy *= np.exp(1.0j * field_rot)  # which direction to rotate?
 
-    x = np.real( xy )
-    y = np.imag( xy )
+    x = np.real(xy)
+    y = np.imag(xy)
 
     return x, y
 
 
-#==============================================================================
+# ==============================================================================
 # detector class
-#==============================================================================
+# ==============================================================================
+
 
 class Detector:
     """Detector class"""
@@ -484,9 +484,11 @@ class Detector:
         if annotate is True:
             plt.annotate(str(detector.ID), (detector.centerx, detector.centery))
 
-#==============================================================================
+
+# ==============================================================================
 # camera class
-#==============================================================================
+# ==============================================================================
+
 
 class Footprint:
 
@@ -648,21 +650,19 @@ class Footprint:
         rotSkyPos = deg2rad(field_df[rot_name_field])
 
         # (no rotation on 3d unit sphere):
-        points=np.array((
-            radec_to_focal_plane(ra, dec, fieldra, fielddec, rotSkyPos)
-        ))
+        points = np.array((radec_to_focal_plane(ra, dec, fieldra, fielddec, rotSkyPos)))
         # x, y = radec_to_focal_plane(ra, dec, fieldra, fielddec, rotSkyPos)
         # points = np.array((x, y))
 
         # check whether they land on any of the detectors
         detected = []
         detectorId = []
-        i=0
+        i = 0
         for detector in self.detectors:
             stuff = detector.ison(points, edge_thresh=edge_thresh)
             detected.append(stuff)
             # detectorId.append([detector.ID] * len(stuff))
             detectorId.append([i] * len(stuff))
-            i+=1
+            i += 1
 
         return np.concatenate(detected), np.concatenate(detectorId)
