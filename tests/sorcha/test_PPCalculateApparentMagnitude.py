@@ -211,6 +211,8 @@ def test_PPCalculateApparentMagnitude():
 
     assert_almost_equal(asteroid_out["TrailedSourceMag"].values[0], 13.281578, decimal=6)
     assert_almost_equal(asteroid_out["H_filter"].values[0], 7.19, decimal=6)
+    assert_almost_equal(asteroid_out["H_r"].values[0], 7.3, decimal=6)
 
     assert_almost_equal(asteroid_single["TrailedSourceMag"].values[0], 13.391578, decimal=6)
     assert_almost_equal(asteroid_single["H_filter"].values[0], 7.3, decimal=6)
+    assert_almost_equal(asteroid_single["H_r"].values[0], 7.3, decimal=6)

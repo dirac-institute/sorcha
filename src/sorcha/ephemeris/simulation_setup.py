@@ -36,8 +36,12 @@ def create_assist_ephemeris(args) -> tuple:
 
     Returns
     -------
-    Ephem, gm_sun
+    Ephem : ASSIST ephemeris obejct
         The ASSIST ephemeris object
+    gm_sun : float
+        value for the GM_SUN value
+    gm_total : float
+        value for gm_total
     """
     pplogger = logging.getLogger(__name__)
 
@@ -133,16 +137,16 @@ def precompute_pointing_information(pointings_df, args, configs):
 
     Parameters
     ----------
-    pointings_df : pd.dataframe
+    pointings_df : pandas dataframe
         Contains the telescope pointing database.
-    args : dict
+    args : dictionary
         Command line arguments needed for initialization.
-    configs : dict
+    configs : dictionary
         Configuration settings.
 
     Returns
     -------
-    pointings_df : pd.dataframe
+    pointings_df : pandas dataframe
         The original dataframe with several additional columns of precomputed values.
     """
     ephem, _, _ = create_assist_ephemeris(args)

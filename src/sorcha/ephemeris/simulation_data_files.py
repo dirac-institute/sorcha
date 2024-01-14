@@ -74,16 +74,16 @@ def make_retriever(directory_path: str = None, registry: dict = REGISTRY) -> poo
 
     Parameters
     ----------
-    directory_path : str, optional
-        The base directory to place all downloaded files, by default None
-    registry : dict, optional
+    directory_path : string, optional
+        The base directory to place all downloaded files. Default = None
+    registry : dictionary, optional
         A dictionary of file names to SHA hashes. Generally we'll not use SHA=None
-        because the files we're tracking change frequently, by default REGISTRY
+        because the files we're tracking change frequently. Default = REGISTRY
 
     Returns
     -------
-    pooch.Pooch
-        The Pooch object used to track and retrieve files.
+    : pooch
+        The instance of a Pooch object used to track and retrieve files.
     """
     dir_path = pooch.os_cache("sorcha")
     if directory_path:

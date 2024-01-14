@@ -12,18 +12,24 @@ def PPFadingFunctionFilter(observations, fillfactor, width, module_rngs, verbose
     Calculates detection probability based on a fading function, then drops rows where the
     probabilty of detection is less than sample drawn from a uniform distribution.
 
-    Parameters:
+    Parameters
     -----------
-    observations (Pandas dataframe): dataframe of observations with a column containing the probability of detection.
+    observations : Pandas dataframe
+        Dataframe of observations with a column containing the probability of detection.
 
-    fillFactor (float): fraction of FOV covered by the camera sensor.
+    fillFactor : float
+        Fraction of camera field-of-view covered by detectors
 
-    module_rngs (PerModuleRNG): A collection of random number generators (per module).
+    module_rngs : PerModuleRNG
+        A collection of random number generators (per module).
 
-    Returns:
+    verbose : boolean, optional
+        Verbose logging flag. Default = False
+
+    Returns
     ----------
-    observations_drop (Pandas dataframe): new dataframe without observations that could not be observed.
-
+    observations_drop : Pandas dataframe)
+        Modified 'observations' dataframe without observations that could not be observed.
     """
 
     pplogger = logging.getLogger(__name__)

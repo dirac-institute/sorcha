@@ -18,12 +18,12 @@ def get_test_filepath(filename):
 
     Parameters
     ----------
-    filename : `str`
+    filename : string
         The name of the file inside the ``tests/data`` directory.
 
     Returns
     -------
-    filepath : `str`
+    : string
         The full path to the file.
     """
 
@@ -40,12 +40,12 @@ def get_demo_filepath(filename):
 
     Parameters
     ----------
-    filename : `str`
+    filename : string
         The name of the file inside the ``demo`` directory.
 
     Returns
     -------
-    filepath : `str`
+    : string
         The full path to the file.
     """
 
@@ -62,12 +62,12 @@ def get_data_out_filepath(filename):
 
     Parameters
     ----------
-    filename : `str`
+    filename : string
         The name of the file inside the ``data/out`` directory.
 
     Returns
     -------
-    filepath : `str`
+    : string
         The full path to the file.
     """
 

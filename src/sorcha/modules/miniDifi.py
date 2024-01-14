@@ -10,6 +10,28 @@ def haversine_np(lon1, lat1, lon2, lat2):
     Calculate the great circle distance between two points
     on the earth (specified in decimal degrees)
 
+    Parameters
+    -----------------
+
+    lon1 : float or array of floats
+        longitude of point 1
+
+    lat1 : float or array of floats
+        latitude of point 1
+
+    lon2 : float or array of floats
+        longitude of point 2
+
+    lat1 : float or array of floats
+        latitude of point 1
+
+    Returns
+    ----------
+        : float or array of floats
+        Great distance between the two points [Units: Decimal degrees]
+
+    Notes
+    -------
     All args must be of equal length.
 
     Because SkyCoord is slow AF.
@@ -29,12 +51,28 @@ def haversine_np(lon1, lat1, lon2, lat2):
 @njit(cache=True)
 def hasTracklet(mjd, ra, dec, maxdt_minutes, minlen_arcsec):
     """
-    Given a set of observations in one night, calculate it has at least one
-    detectable tracklet.
+     Given a set of observations in one night, calculate it has at least one
+     detectable tracklet.
 
-    Inputs: numpy arrays of mjd (time, days), ra (degrees), dec(degrees).
+    Parameters
+    -------------
+    mjd : numpy array of floats
+        Modified Julian date time [Units: days]
 
-    Output: True or False
+     ra : numpy array of floats
+         Object's RA at given mjd  [Units: degrees]
+
+     dec : numpy array of floats
+             Object's dec at given mjd  [Units: degrees]
+
+     maxdt_mintes: float
+
+     minlen_arcsec : float
+
+     Returns
+     ---------
+     : boolean
+         True if tracklet can be made else False
     """
     ## a tracklet must be longer than some minimum separation (1arcsec)
     ## and shorter than some maximum time (90 minutes). We find

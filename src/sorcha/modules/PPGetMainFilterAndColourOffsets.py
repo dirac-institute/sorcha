@@ -9,25 +9,31 @@ def PPGetMainFilterAndColourOffsets(filename, observing_filters, filesep):
     the expected colour offsets. Also makes sure that columns exist for all
     the expected colour offsets in the physical parameters file.
 
-    The main filter should be found as a column heading of H_[mainfilter]. If
-    this format isn't followed, this function will error out.
-
-    Parameters:
+    Parameters
     -----------
-    filename (string): the filename of the physical parameters file.
+    filename : string
+        The filename of the physical parameters file.
 
-    observing_filters (list of strings): the observation filters requested
-    in the config file.
+    observing_filters : list of strings
+        The observation filters requested in the configuration file.
 
-    filesep (string): the format of the physical parameters file. Should be "csv"/"comma"
-    or "whitespace".
+    filesep : string
+        The format of the physical parameters file. Should be "csv"/"comma"
+        or "whitespace".
 
-    Returns:
+    Returns
     ----------
-    mainfilter (string): the main filter in which H is defined.
+    mainfilter : string
+        The main filter in which H is defined.
 
-    colour_offsets (list of strings): a list of the colour offsets present in the
-    physical parameters file.
+    colour_offsets : list of strings
+        A list of the colour offsets present in the physical parameters file.
+
+    Notes
+    ------
+
+    The main filter should be found as a column heading of H_[mainfilter]. If
+    this format isn NOT followed, this function will error out.
 
     """
 

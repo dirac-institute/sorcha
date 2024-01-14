@@ -32,8 +32,8 @@ def test_randomizeAstrometry():
         test_data[0:1], PerModuleRNG(2021), sigName="AstrometricSigma(deg)", sigUnits="deg"
     )
 
-    np.testing.assert_almost_equal(test_out[0][0], 164.03771597, decimal=5)
-    np.testing.assert_almost_equal(test_out[1][0], -17.58257153, decimal=5)
+    np.testing.assert_almost_equal(test_out["AstRA(deg)"][0], 164.03771597, decimal=5)
+    np.testing.assert_almost_equal(test_out["AstDec(deg)"][0], -17.58257153, decimal=5)
 
     return
 

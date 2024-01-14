@@ -1,17 +1,21 @@
 def PPMagnitudeLimit(observations, mag_limit):
     """
-    Filter that performs a straight magnitude cut based on a defined limit.
+    Filter that performs a straight cut on apparent PSF magnitude
+    based on a defined threshold.
 
-    Parameters:
+    Parameters
     -----------
-    observations (Pandas dataframe) dataframe of observations. Must have
-    "observedTrailedSourceMag" column.
+    observations : pandas dataframe
+        Dataframe of observations. Must have "observedPSFMag" column.
 
-    mag_limit (float): limit for magnitude cut.
+    mag_limit : float
+        Limit for apparent magnitude cut.
 
-    Returns:
+    Returns
     -----------
-    observations (Pandas dataframe): same as input, but with entries fainter than the limit removed.
+    observations : pandas dataframe
+        "observations" dataframe modified with apparent PSF mag greater than
+        or equal to the limit removed.
 
     """
 

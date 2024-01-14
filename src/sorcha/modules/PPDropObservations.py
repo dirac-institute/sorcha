@@ -6,17 +6,21 @@ def PPDropObservations(observations, module_rngs, probability="detection probabi
     Drops rows where the probabilty of detection is less than sample drawn
     from a uniform distribution. Used by PPFadingFunctionFilter.
 
-    Parameters:
+    Parameters
     -----------
-    observations (Pandas dataframe): dataframe of observations with a column containing the probability of detection.
+    observations : Pandas dataframe
+        Dataframe of observations with a column containing the probability of detection.
 
-    module_rngs (PerModuleRNG): A collection of random number generators (per module).
+    module_rngs : PerModuleRNG
+        A collection of random number generators (per module).
 
-    probability (string): name of column containing detection probability.
+    probability : string
+        Name of column containing detection probability.
 
-    Returns:
+    Returns
     ----------
-    out (Pandas dataframe): new dataframe without observations that could not be observed.
+    out : Pandas dataframe
+        New dataframe of 'observations' modified to remove observations that could not be observed.
 
     """
     # Set the module specific seed as an offset from the base seed.

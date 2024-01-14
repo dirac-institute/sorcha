@@ -35,29 +35,15 @@ def create_ephemeris(orbits_df, pointings_df, args, configs):
     """Generate a set of observations given a collection of orbits
     and set of pointings.
 
-    This works by calculating and regularly updating the sky-plane
-    locations (unit vectors) of all the objects in the collection
-    of orbits.  The HEALPix index for each of the locations is calculated.
-    A dictionary with pixel indices as keys and lists of ObjIDs for
-    those objects in each HEALPix tile as values.  One of these
-    calculations is called a 'picket', as one element of a long picket
-    fence.  At present,
-
-    Given a specific pointing, the set of HEALPix tiles that are overlapped
-    by the pointing (and a buffer region) is computed.  These the precise
-    locations of just those objects within that set of HEALPix tiles are
-    computed.  Details for those that actually do land within the field
-    of view are passed along.
-
     Parameters
     ----------
-    orbits_df : pd.DataFrame
+    orbits_df : pandas dataframe
         The dataframe containing the collection of orbits.
-    pointings_df : pd.DataFrame
+    pointings_df : pandas dataframe
         The dataframe containing the collection of telescope/camera pointings.
     args :
         Various arguments necessary for the calculation
-    configs : dict
+    configs : dictionary
         Various configuration parameters necessary for the calculation
         ang_fov : float
             The angular size (deg) of the field of view
@@ -74,14 +60,30 @@ def create_ephemeris(orbits_df, pointings_df, args, configs):
             The MPC code for the observatory.  (This is current a configuration
             parameter, but these should be included in the visit information,
             to allow for multiple observatories.
-        nside : int
+        nside : integer
             The nside value used for the HEALPIx calculations.  Must be a
             power of 2 (1, 2, 4, ...)  nside=64 is current default.
 
     Returns
     -------
-    pd.DataFrame
+    observations: pandas dataframe
         The dataframe of observations needed for Sorcha to continue
+
+    Notes
+    -------
+    This works by calculating and regularly updating the sky-plane
+    locations (unit vectors) of all the objects in the collection
+    of orbits.  The HEALPix index for each of the locations is calculated.
+    A dictionary with pixel indices as keys and lists of ObjIDs for
+    those objects in each HEALPix tile as values.  One of these
+    calculations is called a 'picket', as one element of a long picket
+    fence.  At present,
+
+    Given a specific pointing, the set of HEALPix tiles that are overlapped
+    by the pointing (and a buffer region) is computed.  These the precise
+    locations of just those objects within that set of HEALPix tiles are
+    computed.  Details for those that actually do land within the field
+    of view are passed along.
     """
     verboselog = args.pplogger.info if args.verbose else lambda *a, **k: None
 
@@ -254,14 +256,14 @@ def calculate_rates_and_geometry(pointing: pd.DataFrame, ephem_geom_params: Ephe
 
     Parameters
     ----------
-    pointing : pd.DataFrame
+    pointing : pandas dataframe
         The dataframe containing the pointing database.
     ephem_geom_params : EphemerisGeometryParameters
         Various parameters necessary to calculate the ephemeris
 
     Returns
     -------
-    tuple
+    : tuple
         Tuple containing the ephemeris parameters needed for Sorcha post processing.
     """
     ra0, dec0 = vec2ra_dec(ephem_geom_params.rho_hat)

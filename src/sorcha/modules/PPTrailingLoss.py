@@ -36,31 +36,50 @@ def calcTrailingLoss(
     """
     Find the trailing loss from trailing and detection (Veres & Chesley 2017)
 
-    Parameters:
-    -----------
-    dRa (float/array of floats): on sky velocity component in RA*Cos(Dec), deg/day.
+    Parameters
+    -------------
+    dRa : float or array of floats
+        on sky velocity component in RA*Cos(Dec). [Units: deg/day]
 
-    dDec (float/array of floats): on sky velocity component in Dec, deg/day.
+    dDec : float/array of floats
+        on sky velocity component in Dec. [Units: deg/day]
 
-    seeing (float/array of floats): FWHM of the seeing disk, arcseconds.
+    seeing : float or array of floats
+        FWHM of the seeing disk. [Units: arcseconds]
 
-    texp (float): exposure length in seconds, defaults to 30 seconds.
+    texp : float, optional
+        Exposure length. [Units: seconds] Default = 30
 
-    model (str):
-        - 'circularPSF': Trailing loss due to the DM detection algorithm. Limit SNR:
+    model : string, optional
+        Options: 'circularPSF' or trailedSource'
+        'circularPSF': Trailing loss due to the DM detection algorithm. Limit SNR:
         5 sigma in a PSF-convolved image with a circular PSF (no trail fitting). Peak
         fluxes will be lower due to motion of the object.
-        -'trailedSource': Unavoidable trailing loss due to spreading the PSF
+        'trailedSource': Unavoidable trailing loss due to spreading the PSF
         over more pixels lowering the SNR in each pixel.
         See https://github.com/rhiannonlynne/318-proceedings/blob/master/Trailing%20Losses.ipynb for details.
+        Default = "circularPSF"
 
-    *_trail (float): fit parameters for trailedSource model. Default parameters from Veres & Chesley (2017).
+    a_trail : float, optional
+        a fit parameters for trailedSource model. Default parameters from Veres & Chesley (2017).
+        Default = 0.761
 
-    *_det (float): fit parameters for circularPSF model. Default parameters from Veres & Chesley (2017).
+    b_trail : float, optional
+        b fit parameters for trailedSource model. Default parameters from Veres & Chesley (2017).
+        Default = 1.162
 
-    Returns:
+    a_det : float, optional
+        a fit parameters for circularPSF model. Default parameters from Veres & Chesley (2017).
+        Default = 0.420
+
+    b_det : float, optional
+        b fit parameters for circularPSF model. Default parameters from Veres & Chesley (2017).
+        Default = 0.003
+
+    Returns
     -----------
-    dmag (float/array of floats): loss in detection magnitude due to trailing.
+    dmag : float or array of floats
+        Loss in detection magnitude due to trailing.
 
     """
 
@@ -95,20 +114,35 @@ def PPTrailingLoss(
     """
     Calculates detection trailing losses. Wrapper for calcTrailingLoss.
 
-    Parameters:
+    Parameters
+    -------------
+    oif_df : pandas dataframe
+        Dataframe of observations for which to calculate trailing losses.
+
+    model : string, optional
+        Photometric model. Either 'circularPSF' or 'trailedSource': see docstring for
+        calcTrailingLoss for details. Default = "circularPSF"
+
+    dra_name : string, optional
+        "oif_df" column name for object RA rate. Default = "AstRARate(deg/day)"
+
+    ddec_name : string, optional
+        "oif_df" column name for object dec rate. Default = "AstDecRate(deg/day)"
+
+    dec_name : string, default
+            "oif_df" column name for object declination. Default = "AstDec(deg)"
+
+    seeing_name_survey : string, optional
+        "oif_df" column name for seeing. Default = "seeingFwhmEff"
+
+    Returns
     -----------
-    oif_df (Pandas dataframe): dataframe of observations for which to calculate trailing losses.
+    dmag : float or array of floats
+        Loss in detection magnitude due to trailing losses.
 
-    model (string): Either 'circularPSF' or 'trailedSource': see docstring for calcTrailingLoss for details.
-
-    *_name (string): Column names for object RA rate, Dec rate and Dec respectively.
-
-    seeing_name_survey (string): Column name for seeing.
-
-    Returns:
-    -----------
-    dmag (float/array of floats): loss in detection magnitude due to trailing.
-
+    Notes
+    --------
+    Assumes 'oif_df" has RA and Dec stored in deg/dayrates and the seeing in arcseconds
     """
 
     dmag = calcTrailingLoss(

@@ -35,8 +35,12 @@ def build_meta_kernel_file(retriever: pooch.Pooch) -> None:
 
     Parameters
     ----------
-    retriever : pooch.Pooch
+    retriever : pooch
         Pooch object that maintains the registry of files to download
+
+    Returns
+    ---------
+    None
     """
     # build meta_kernel file path
     meta_kernel_file_path = os.path.join(retriever.abspath, META_KERNEL)
@@ -62,16 +66,16 @@ def _build_file_name(cache_dir: str, file_path: str) -> str:
 
     Parameters
     ----------
-    cache_dir : str
+    cache_dir : string
         The full path to the cache directory used when retrieving files for Assist
         and Rebound.
-    file_path : str
+    file_path : string
         The full file path for a given file that will have the cache directory
         segment replace.
 
     Returns
     -------
-    str
+    : string
         Shortened file path, appropriate for use in kernel_meta files.
     """
 
