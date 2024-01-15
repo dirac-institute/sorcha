@@ -8,7 +8,7 @@ from sorcha.modules.PPConfigParser import PPFindDirectoryOrExit
 
 
 def copy_demo_configs(copy_location, which_configs):
-    """ "
+    """
     Copies the example Sorcha configuration files to a user-specified location.
 
     Parameters
@@ -66,7 +66,7 @@ def main():
     usage: sorcha_copy_configs [-h] [-f FILEPATH] [-c [{rubin,demo,all}]]
         arguments:
           -h, --help                                             Show this help message and exit.
-          [-f FILEPATH, --filename FILEPATH]                       Filepath where you want to copy the config files. Default is current working directory.
+          [-f FILEPATH, --filename FILEPATH]                     Filepath where you want to copy the config files. Default is current working directory.
           [-c [{rubin,demo,all}]],--configs [{rubin,demo,all}]   Which config files you want: options are "rubin", "demo" and "all". Default is "all".
     """
 
