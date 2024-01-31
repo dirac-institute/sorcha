@@ -400,9 +400,7 @@ class Detector:
         if annotate is True:
             plt.annotate(str(detector.ID), (detector.centerx, detector.centery))
 
-
 class Footprint:
-
     """Camera footprint class"""
 
     def __init__(self, path=None, detectorName="detector"):
