@@ -85,6 +85,7 @@ def create_ephemeris(orbits_df, pointings_df, args, configs):
     computed.  Details for those that actually do land within the field
     of view are passed along.
     """
+
     verboselog = args.pplogger.info if args.verbose else lambda *a, **k: None
 
     ang_fov = configs["ar_ang_fov"]
