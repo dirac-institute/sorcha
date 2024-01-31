@@ -402,7 +402,6 @@ class Detector:
 
 
 class Footprint:
-
     """Camera footprint class"""
 
     def __init__(self, path=None, detectorName="detector"):
