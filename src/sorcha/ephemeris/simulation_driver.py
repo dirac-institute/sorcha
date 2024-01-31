@@ -75,12 +75,12 @@ def create_ephemeris(orbits_df, pointings_df, args, configs):
     locations (unit vectors) of all the objects in the collection
     of orbits.  The HEALPix index for each of the locations is calculated.
     A dictionary with pixel indices as keys and lists of ObjIDs for
-    those objects in each HEALPix tile as values.  One of these
-    calculations is called a 'picket', as one element of a long picket
-    fence.  At present,
+    those objects in each HEALPix tile as values is generated.  An individual
+    one of these calculations is called a 'picket', as one element of a long
+    picket fence.  Typically, the interval between pickets is one day.
 
     Given a specific pointing, the set of HEALPix tiles that are overlapped
-    by the pointing (and a buffer region) is computed.  These the precise
+    by the pointing (and a buffer region) is computed.  Then the precise
     locations of just those objects within that set of HEALPix tiles are
     computed.  Details for those that actually do land within the field
     of view are passed along.
