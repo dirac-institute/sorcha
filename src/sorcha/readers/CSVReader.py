@@ -121,7 +121,7 @@ class CSVDataReader(ObjectDataReader):
         if self.sep == "whitespace":
             res_df = pd.read_csv(
                 self.filename,
-                delim_whitespace=True,
+                sep="\s+",
                 skiprows=skip_rows,
                 nrows=block_size,
             )
@@ -142,7 +142,7 @@ class CSVDataReader(ObjectDataReader):
         if self.sep == "whitespace":
             self.obj_id_table = pd.read_csv(
                 self.filename,
-                delim_whitespace=True,
+                sep="\s+",
                 usecols=["ObjID"],
                 header=self.header_row,
             )
@@ -183,7 +183,7 @@ class CSVDataReader(ObjectDataReader):
         if self.sep == "whitespace":
             res_df = pd.read_csv(
                 self.filename,
-                delim_whitespace=True,
+                sep="\s+",
                 skiprows=(lambda x: skipped_row[x]),
             )
         else:
