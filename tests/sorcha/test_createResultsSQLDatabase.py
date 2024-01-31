@@ -65,7 +65,7 @@ def test_create_inputs_table(tmp_path):
     test_inputs.sort_values("ObjID", inplace=True)
     test_inputs.reset_index(drop=True, inplace=True)
 
-    expected_inputs = pd.read_csv(get_test_filepath("testcolour.txt"), delim_whitespace=True)
+    expected_inputs = pd.read_csv(get_test_filepath("testcolour.txt"), sep="\s+")
 
     assert_frame_equal(test_inputs, expected_inputs)
 
@@ -136,7 +136,7 @@ def test_create_results_database(tmp_path):
     test_orbits.rename(columns={"orig_index": "INDEX"}, inplace=True)
     test_orbits.reset_index(drop=True, inplace=True)
 
-    expected_orbits = pd.read_csv(get_test_filepath("testorb.des"), delim_whitespace=True)
+    expected_orbits = pd.read_csv(get_test_filepath("testorb.des"), sep="\s+")
     expected_results = pd.read_csv(get_test_filepath("testobs_clean.csv"))
 
     assert_frame_equal(test_orbits, expected_orbits)
