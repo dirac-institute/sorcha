@@ -22,6 +22,8 @@ out_csv_path = get_data_out_filepath("ephemeris_output.csv")
 
 @dataclass
 class EphemerisGeometryParameters:
+    """Data class for holding parameters related to ephemeris geometry"""
+
     obj_id: str = None
     mjd_tai: float = None
     rho: float = None
@@ -225,6 +227,18 @@ def create_ephemeris(orbits_df, pointings_df, args, configs):
 
 
 def get_residual_vectors(v1):
+    """
+    Decomposes the vector into two unit vectors to facilitate computation of on-sky angles
+
+    Parameters:
+    ----------
+        v1 (array, shape = (3,)):
+            The vector to be decomposed
+    Returns:
+    -------
+        A, D (array, shape = (3,))
+            Decomposition into longitude and latitude
+    """
     x, y, z = v1
     cosd = np.sqrt(1 - z * z)
     A = np.array((-y, x, 0.0)) / cosd
@@ -235,6 +249,38 @@ def get_residual_vectors(v1):
 # arguments: JD_TDB, t_picket, picket_interval, sim_dict, obsCode
 # returns t_picket, pixel_dict, r_obs
 def update_pixel_dict(JD_TDB, t_picket, picket_interval, sim_dict, ephem, obsCode, observatories, nside):
+    """
+    Updates the dictionary of HEALPix pixels for the on-sky positions of the particles
+    Particle pixel coordinates are computed with respect to a central time (t_picket)
+
+    Parameters
+    ----------
+        JD_TDB (float):
+            Julian date (in TDB scale)
+        t_picket (float):
+            Central time of the picket
+        picket_interval (float):
+            Interval between pickets
+        sim_dict (dict):
+            Dictionary of ASSIST simulations
+        ephem (Ephem):
+            ASSIST Ephem object
+        obsCopde (str):
+            MPC Observatory code
+        observatories (Observatory):
+            Observatory object
+        nside (int):
+            HEALPix nside
+
+    Returns
+    -------
+        t_picket (float):
+            Updated t_picket
+        pixel_dict (dict):
+            Dictionary of particles and their HEALPix pixels
+        r_obs (array, shape = (3,))
+            Barycentric coordinates of the observatory
+    """
     n = round((JD_TDB - t_picket) / picket_interval)
     t_picket += n * picket_interval
     et = (t_picket - spice.j2000()) * 24 * 60 * 60
