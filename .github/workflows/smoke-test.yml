@@ -17,6 +17,9 @@ jobs:
         python-version: ['3.9', '3.10', '3.11']
 
     runs-on: ${{ matrix.os }}
+    concurrency:
+      group: smoke-tests
+      cancel-in-progress: false
     steps:
     - uses: actions/checkout@v4
     - name: Set up - ${{ matrix.os }} - Python ${{ matrix.python-version }}
