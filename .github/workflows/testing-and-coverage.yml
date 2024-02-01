@@ -12,14 +12,12 @@ on:
 jobs:
   build:
     strategy:
+      max-parallel: 1
       matrix:
         os: ['ubuntu-latest', 'macos-latest']
         python-version: ['3.9', '3.10', '3.11']
 
     runs-on: ${{ matrix.os }}
-    concurrency:
-      group: unit-tests
-      cancel-in-progress: false
     steps:
     - uses: actions/checkout@v4
     - name: Set up - ${{ matrix.os }} - Python ${{ matrix.python-version }}
