@@ -8,7 +8,7 @@ from sorcha.utilities.dataUtilitiesForTests import get_test_filepath
 
 #@pytest.mark.parametrize("use_cache", [True, False])
 
-#@pytest.mark.parametrize("use_cache", [False])
+@pytest.mark.parametrize("use_cache", [False])
 def test_HDF5DataReader_read_rows(use_cache):
     """Test that we can read in the OIF data from an HDF5 file."""
     reader = HDF5DataReader(get_test_filepath("oiftestoutput.h5"), cache_table=use_cache)
