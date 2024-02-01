@@ -114,7 +114,7 @@ def create_inputs_table(cnx_out, input_path, table_type):
     cur_out.execute("DROP TABLE if exists " + table_type)
 
     for filename in input_list:
-        df = pd.read_csv(filename, sep='\\s+')
+        df = pd.read_csv(filename, sep="\\s+")
 
         if "INDEX" in df.columns:
             df = df.rename(columns={"INDEX": "orig_index"})
