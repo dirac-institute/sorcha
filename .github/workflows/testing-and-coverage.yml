@@ -27,7 +27,7 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        conda install h5py
+        brew install hdf5
         pip install -e .
         pip install -e .[dev]
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
