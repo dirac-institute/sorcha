@@ -26,7 +26,6 @@ dependencies = [
     "astropy",
     "matplotlib",
     "sbpy",
-    "h5py",
     "tables",
     "spiceypy",
     "healpy",
