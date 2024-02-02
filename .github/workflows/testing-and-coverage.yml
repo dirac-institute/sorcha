@@ -12,9 +12,9 @@ on:
 jobs:
   build:
     strategy:
-      max-parallel: 2
+      max-parallel: 6
       matrix:
-        os: ['ubuntu-latest','macos-latest']
+        os: ['ubuntu-latest','macos-14']
         python-version: ['3.9', '3.10', '3.11']
 
     runs-on: ${{ matrix.os }}
