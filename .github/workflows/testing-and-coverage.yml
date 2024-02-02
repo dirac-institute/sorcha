@@ -27,7 +27,6 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install conda
         pip install -e .
         pip install -e .[dev]
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
