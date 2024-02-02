@@ -62,6 +62,45 @@ def test_orbit_conversion_relationships():
         assert np.isclose(vz_0, vy_90)
 
 
+def test_orbit_conversion_edgecases():
+    from sorcha.ephemeris.orbit_conversion_utilities import universal_cartesian, universal_keplerian
+
+    # this will test weird edge cases that require additional work to converge to a solution
+    # fow now, this only has the Centaur from one of our larger test populations
+    # additional weirdos should be added as needed
+    gm_sun = 2.9591220828559115e-04
+
+    a = 23.38
+    e = 0.4839
+    inc = 31.58
+    node = 294.2
+    argPeri = 303.4
+    ma = 158.4
+    epochMJD_TDB = 60676.0
+
+    q = a * (1 - e)
+    Tp = epochMJD_TDB - (ma * np.pi / 180.0) * np.sqrt(a**3 / gm_sun)
+
+    x, y, z, vx, vy, vz = universal_cartesian(
+        gm_sun, q, e, inc * np.pi / 180, node * np.pi / 180, argPeri * np.pi / 180, Tp, epochMJD_TDB
+    )
+
+    # independently computed state vector from destnosim
+    x_p = 18.33081872
+    y_p = 23.99734358
+    z_p = 16.3251825
+    vx_p = -0.00132138
+    vy_p = 0.00165302
+    vz_p = -0.00032436
+
+    assert np.isclose(x, x_p)
+    assert np.isclose(y, y_p)
+    assert np.isclose(z, z_p)
+    assert np.isclose(vx, vx_p)
+    assert np.isclose(vy, vy_p)
+    assert np.isclose(vz, vz_p)
+
+
 def test_orbit_conversion_realdata():
     from sorcha.ephemeris.simulation_parsing import parse_orbit_row
     from collections import namedtuple
@@ -76,7 +115,7 @@ def test_orbit_conversion_realdata():
     # note that this needs to be a namedtuple due to the way `parse_orbit_row` expects the input
     Sun = namedtuple("Sun", "x y z vx vy vz")
 
-    # this is similar to the notebook - values come from JPL and are for asteroid Holman and 2I/Borisov
+    # this is similar to the notebook - values come from JPL and are for asteroid Holman
     # let's start with Holman
     epochJD_TDB = 2457545.5
     # note these are equatorially aligned\
