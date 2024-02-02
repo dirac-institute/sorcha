@@ -66,7 +66,7 @@ def test_orbit_conversion_edgecases():
     from sorcha.ephemeris.orbit_conversion_utilities import universal_cartesian, universal_keplerian
 
     # this will test weird edge cases that require additional work to converge to a solution
-    # fow now, this only has the Centaur from Joe's population
+    # fow now, this only has the Centaur from one of our larger test populations
     # additional weirdos should be added as needed
     gm_sun = 2.9591220828559115e-04
 
