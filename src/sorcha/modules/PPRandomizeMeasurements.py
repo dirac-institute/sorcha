@@ -98,6 +98,7 @@ def randomizeAstrometry(
         center = radec2icrf(df[raName], df[decName], deg=False).T
     else:
         print("Bad units were provided for RA and Dec.")
+        return df
 
     if sigUnits == "deg":
         sigmarad = np.deg2rad(df[sigName])
@@ -107,6 +108,7 @@ def randomizeAstrometry(
         sigmarad = df[sigName]
     else:
         print("Bad units were provided for astrometric uncertainty.")
+        return df
 
     n = len(df.index)
     xyz = np.zeros([n, 3])
