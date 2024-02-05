@@ -19,11 +19,15 @@
 
 
 import numpy as np
+import sys
+import logging
 from sorcha.modules.PPModuleRNG import PerModuleRNG
 
 import pandas as pd
 
 pd.options.mode.copy_on_write = True
+
+logger = logging.getLogger(__name__)
 
 
 def randomizeAstrometry(
@@ -97,8 +101,8 @@ def randomizeAstrometry(
     elif radecUnits == "rad":
         center = radec2icrf(df[raName], df[decName], deg=False).T
     else:
-        print("Bad units were provided for RA and Dec.")
-        return df
+        logger.error("Bad units were provided for RA and Dec, terminating...")
+        sys.exit(1)
 
     if sigUnits == "deg":
         sigmarad = np.deg2rad(df[sigName])
@@ -107,8 +111,8 @@ def randomizeAstrometry(
     elif sigUnits == "rad":
         sigmarad = df[sigName]
     else:
-        print("Bad units were provided for astrometric uncertainty.")
-        return df
+        logger.error("Bad units were provided for RA and Dec, terminating...")
+        sys.exit(1)
 
     n = len(df.index)
     xyz = np.zeros([n, 3])
