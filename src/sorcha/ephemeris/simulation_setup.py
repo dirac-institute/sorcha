@@ -142,7 +142,8 @@ def generate_simulations(ephem, gm_sun, gm_total, orbits_df, args):
         sim = rebound.Simulation()
         sim.t = epoch - ephem.jd_ref
         sim.dt = 10
-
+        # This turns off the iterative timestep introduced in arXiv:2401.02849 and default since rebound 4.0.3
+        sim.ri_ias15.adaptive_mode = 1
         # Add the particle to the simulation
         sim.add(ic)
 
