@@ -22,7 +22,9 @@ import numpy as np
 from sorcha.modules.PPModuleRNG import PerModuleRNG
 
 import pandas as pd
+
 pd.options.mode.copy_on_write = True
+
 
 def randomizeAstrometry(
     df,
@@ -119,7 +121,7 @@ def randomizeAstrometry(
     else:
         [ra, dec] = icrf2radec(xyz[:, 0], xyz[:, 1], xyz[:, 2], deg=False)
 
-    df.rename( columns={ raName: raOrigName, decName: decOrigName }, inplace=True )
+    df.rename(columns={raName: raOrigName, decName: decOrigName}, inplace=True)
 
     df[raName] = ra
     df[decName] = dec
