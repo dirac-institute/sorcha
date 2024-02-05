@@ -21,6 +21,8 @@
 import numpy as np
 from sorcha.modules.PPModuleRNG import PerModuleRNG
 
+import pandas as pd
+pd.options.mode.copy_on_write = True
 
 def randomizeAstrometry(
     df,
@@ -86,10 +88,6 @@ def randomizeAstrometry(
     the poles. Distributions close to the poles may look odd in RADEC.
 
     """
-
-    df[raOrigName] = df[raName]
-    df[decOrigName] = df[decName]
-
     if radecUnits == "deg":
         center = radec2icrf(df[raName], df[decName]).T
     elif radecUnits == "mas":
@@ -120,6 +118,8 @@ def randomizeAstrometry(
 
     else:
         [ra, dec] = icrf2radec(xyz[:, 0], xyz[:, 1], xyz[:, 2], deg=False)
+
+    df.rename( columns={ raName: raOrigName, decName: decOrigName }, inplace=True )
 
     df[raName] = ra
     df[decName] = dec
