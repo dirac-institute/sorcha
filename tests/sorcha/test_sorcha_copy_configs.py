@@ -33,8 +33,7 @@ def test_sorcha_copy_configs(tmp_path):
     with pytest.raises(SystemExit) as e:
         copy_demo_configs(dummy_folder, "all")
 
-    assert e.type == SystemExit
-    assert e.value.code == "ERROR: filepath {} supplied for -f, --filepath argument does not exist.".format(
+    assert e.value.code == "ERROR: filepath {} supplied for filepath argument does not exist.".format(
         dummy_folder
     )
 
@@ -42,8 +41,35 @@ def test_sorcha_copy_configs(tmp_path):
     with pytest.raises(SystemExit) as e2:
         copy_demo_configs(tmp_path, "laphroaig")
 
-    assert e2.type == SystemExit
     assert (
         e2.value.code
         == "String 'laphroaig' not recognised for 'configs' variable. Must be 'rubin', 'demo' or 'all'."
+    )
+
+
+def test_parse_file_selection():
+    from sorcha.utilities.sorcha_copy_configs import parse_file_selection
+
+    # test to make sure the inputs align with the correct options
+    test_rubin = parse_file_selection("1")
+    test_demo = parse_file_selection("2")
+    test_all = parse_file_selection("3")
+
+    assert test_rubin == "rubin"
+    assert test_demo == "demo"
+    assert test_all == "all"
+
+    # test error messages
+
+    with pytest.raises(SystemExit) as e:
+        test_string = parse_file_selection("not_an_integer")
+
+    assert e.value.code == "Input could not be converted to a valid integer. Please try again."
+
+    with pytest.raises(SystemExit) as e2:
+        test_wrong_integer = parse_file_selection("6")
+
+    assert (
+        e2.value.code
+        == "Input could not be converted to a valid integer. Please input an integer between 1 and 3."
     )
