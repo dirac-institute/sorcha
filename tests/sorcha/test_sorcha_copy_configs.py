@@ -6,9 +6,12 @@ def test_sorcha_copy_configs(tmp_path):
     from sorcha.utilities.sorcha_copy_configs import copy_demo_configs
 
     # test that the Rubin files are successfully copied
-    copy_demo_configs(tmp_path, "rubin")
+    copy_demo_configs(tmp_path, "rubin_circle")
 
     assert os.path.isfile(os.path.join(tmp_path, "Rubin_circular_approximation.ini"))
+
+    copy_demo_configs(tmp_path, "rubin_footprint")
+
     assert os.path.isfile(os.path.join(tmp_path, "Rubin_full_footprint.ini"))
 
     # test that the demo config is successfully copied
@@ -51,11 +54,13 @@ def test_parse_file_selection():
     from sorcha.utilities.sorcha_copy_configs import parse_file_selection
 
     # test to make sure the inputs align with the correct options
-    test_rubin = parse_file_selection("1")
-    test_demo = parse_file_selection("2")
-    test_all = parse_file_selection("3")
+    test_rubin_circle = parse_file_selection("1")
+    test_rubin_footprint = parse_file_selection("2")
+    test_demo = parse_file_selection("3")
+    test_all = parse_file_selection("4")
 
-    assert test_rubin == "rubin"
+    assert test_rubin_circle == "rubin_circle"
+    assert test_rubin_footprint == "rubin_footprint"
     assert test_demo == "demo"
     assert test_all == "all"
 
@@ -71,5 +76,5 @@ def test_parse_file_selection():
 
     assert (
         e2.value.code
-        == "Input could not be converted to a valid integer. Please input an integer between 1 and 3."
+        == "Input could not be converted to a valid integer. Please input an integer between 1 and 4."
     )

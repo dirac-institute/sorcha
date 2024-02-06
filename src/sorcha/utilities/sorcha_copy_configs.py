@@ -32,11 +32,10 @@ def copy_demo_configs(copy_location, which_configs):
     path_to_surveys = os.path.join(str(Path(path_to_file).parents[3]), "survey_setups")
     path_to_demo = os.path.join(str(Path(path_to_file).parents[3]), "demo")
 
-    if which_configs == "rubin":
-        config_locations = [
-            os.path.join(path_to_surveys, "Rubin_circular_approximation.ini"),
-            os.path.join(path_to_surveys, "Rubin_full_footprint.ini"),
-        ]
+    if which_configs == "rubin_circle":
+        config_locations = [os.path.join(path_to_surveys, "Rubin_circular_approximation.ini")]
+    elif which_configs == "rubin_footprint":
+        config_locations = [os.path.join(path_to_surveys, "Rubin_full_footprint.ini")]
     elif which_configs == "demo":
         config_locations = [os.path.join(path_to_demo, "sorcha_config_demo.ini")]
     elif which_configs == "all":
@@ -79,10 +78,10 @@ def parse_file_selection(file_select):
     except ValueError:
         sys.exit("Input could not be converted to a valid integer. Please try again.")
 
-    if file_select not in [1, 2, 3]:
-        sys.exit("Input could not be converted to a valid integer. Please input an integer between 1 and 3.")
+    if file_select not in [1, 2, 3, 4]:
+        sys.exit("Input could not be converted to a valid integer. Please input an integer between 1 and 4.")
 
-    selection_dict = {1: "rubin", 2: "demo", 3: "all"}
+    selection_dict = {1: "rubin_circle", 2: "rubin_footprint", 3: "demo", 4: "all"}
 
     which_configs = selection_dict[file_select]
 
@@ -92,7 +91,13 @@ def parse_file_selection(file_select):
 def main():
     """
     Copies example configuration files for Sorcha from the installation location
-    to a user-specified location. Controlled via command-line input from the user.
+    to a user-specified location. Filepath to copy files to is specified by command-line
+    flag. Selection of configuration files is done via user input.
+
+    usage: sorcha_copy_configs [-h] [-f FILEPATH]
+        arguments:
+          -h, --help                                  Show this help message and exit.
+          [-f FILEPATH, --filename FILEPATH]          Filepath where you want to copy the config files. Default is current working directory.
 
     Parameters
     -----------
@@ -104,18 +109,26 @@ def main():
 
     """
 
-    print("\nWhich configuration files would you like to copy?:\n")
-    print("1. Rubin-specific configuration files.\n")
-    print("2. Basic demo configuration file.\n")
-    print("3. All.\n")
+    parser.add_argument(
+        "-f",
+        "--filepath",
+        help="Filepath where you want to copy the config files. Default is current working directory.",
+        type=str,
+        default="./",
+    )
+
+    args = parser.parse_args()
+
+    print("\nWhich configuration file(s) would you like to copy?:\n")
+    print("1. Rubin-specific configuration file using circular approximation of camera footprint (faster).\n")
+    print("2. Rubin-specific configuration file using full camera footprint (slower, but more accurate).\n")
+    print("3. Basic demo configuration file.\n")
+    print("4. All.\n")
     file_select = input("Please enter a number and hit Return/Enter.\n")
 
     which_configs = parse_file_selection(file_select)
 
-    print("\nWhere would you like the configuration files to be copied to?\n")
-    copy_location = input("Enter a filepath, or simply . to copy to this location.\n")
-
-    copy_location = os.path.abspath(copy_location)
+    copy_location = os.path.abspath(args.filepath)
     copy_demo_configs(copy_location, which_configs)
 
 
