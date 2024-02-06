@@ -19,7 +19,15 @@
 
 
 import numpy as np
+import sys
+import logging
 from sorcha.modules.PPModuleRNG import PerModuleRNG
+
+import pandas as pd
+
+pd.options.mode.copy_on_write = True
+
+logger = logging.getLogger(__name__)
 
 
 def randomizeAstrometry(
@@ -86,10 +94,6 @@ def randomizeAstrometry(
     the poles. Distributions close to the poles may look odd in RADEC.
 
     """
-
-    df[raOrigName] = df[raName]
-    df[decOrigName] = df[decName]
-
     if radecUnits == "deg":
         center = radec2icrf(df[raName], df[decName]).T
     elif radecUnits == "mas":
@@ -97,7 +101,8 @@ def randomizeAstrometry(
     elif radecUnits == "rad":
         center = radec2icrf(df[raName], df[decName], deg=False).T
     else:
-        print("Bad units were provided for RA and Dec.")
+        logger.error("Bad units were provided for RA and Dec, terminating...")
+        sys.exit(1)
 
     if sigUnits == "deg":
         sigmarad = np.deg2rad(df[sigName])
@@ -106,7 +111,8 @@ def randomizeAstrometry(
     elif sigUnits == "rad":
         sigmarad = df[sigName]
     else:
-        print("Bad units were provided for astrometric uncertainty.")
+        logger.error("Bad units were provided for RA and Dec, terminating...")
+        sys.exit(1)
 
     n = len(df.index)
     xyz = np.zeros([n, 3])
@@ -118,6 +124,8 @@ def randomizeAstrometry(
 
     else:
         [ra, dec] = icrf2radec(xyz[:, 0], xyz[:, 1], xyz[:, 2], deg=False)
+
+    df.rename(columns={raName: raOrigName, decName: decOrigName}, inplace=True)
 
     df[raName] = ra
     df[decName] = dec
