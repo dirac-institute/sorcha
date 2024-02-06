@@ -109,6 +109,10 @@ def main():
 
     """
 
+    parser = argparse.ArgumentParser(
+        description="Copies example Sorcha configuration files to a user-specified location."
+    )
+
     parser.add_argument(
         "-f",
         "--filepath",
