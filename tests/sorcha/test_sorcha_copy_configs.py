@@ -14,22 +14,15 @@ def test_sorcha_copy_configs(tmp_path):
 
     assert os.path.isfile(os.path.join(tmp_path, "Rubin_full_footprint.ini"))
 
-    # test that the demo config is successfully copied
-    copy_demo_configs(tmp_path, "demo")
-
-    assert os.path.isfile(os.path.join(tmp_path, "sorcha_config_demo.ini"))
-
     # remove those files
     os.remove(os.path.join(tmp_path, "Rubin_circular_approximation.ini"))
     os.remove(os.path.join(tmp_path, "Rubin_full_footprint.ini"))
-    os.remove(os.path.join(tmp_path, "sorcha_config_demo.ini"))
 
     # test that all the configs are successfully copied
     copy_demo_configs(tmp_path, "all")
 
     assert os.path.isfile(os.path.join(tmp_path, "Rubin_circular_approximation.ini"))
     assert os.path.isfile(os.path.join(tmp_path, "Rubin_full_footprint.ini"))
-    assert os.path.isfile(os.path.join(tmp_path, "sorcha_config_demo.ini"))
 
     # test the error message if user supplies non-existent directory
     dummy_folder = os.path.join(tmp_path, "dummy_folder")
@@ -46,7 +39,7 @@ def test_sorcha_copy_configs(tmp_path):
 
     assert (
         e2.value.code
-        == "String 'laphroaig' not recognised for 'configs' variable. Must be 'rubin', 'demo' or 'all'."
+        == "String 'laphroaig' not recognised for 'configs' variable. Must be 'rubin_circle', 'rubin_footprint' or 'all'."
     )
 
 
@@ -56,12 +49,10 @@ def test_parse_file_selection():
     # test to make sure the inputs align with the correct options
     test_rubin_circle = parse_file_selection("1")
     test_rubin_footprint = parse_file_selection("2")
-    test_demo = parse_file_selection("3")
-    test_all = parse_file_selection("4")
+    test_all = parse_file_selection("3")
 
     assert test_rubin_circle == "rubin_circle"
     assert test_rubin_footprint == "rubin_footprint"
-    assert test_demo == "demo"
     assert test_all == "all"
 
     # test error messages
@@ -76,5 +67,5 @@ def test_parse_file_selection():
 
     assert (
         e2.value.code
-        == "Input could not be converted to a valid integer. Please input an integer between 1 and 4."
+        == "Input could not be converted to a valid integer. Please input an integer between 1 and 3."
     )

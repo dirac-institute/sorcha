@@ -36,17 +36,14 @@ def copy_demo_configs(copy_location, which_configs):
         config_locations = [os.path.join(path_to_surveys, "Rubin_circular_approximation.ini")]
     elif which_configs == "rubin_footprint":
         config_locations = [os.path.join(path_to_surveys, "Rubin_full_footprint.ini")]
-    elif which_configs == "demo":
-        config_locations = [os.path.join(path_to_demo, "sorcha_config_demo.ini")]
     elif which_configs == "all":
         config_locations = [
             os.path.join(path_to_surveys, "Rubin_circular_approximation.ini"),
             os.path.join(path_to_surveys, "Rubin_full_footprint.ini"),
-            os.path.join(path_to_demo, "sorcha_config_demo.ini"),
         ]
     else:
         sys.exit(
-            "String '{}' not recognised for 'configs' variable. Must be 'rubin', 'demo' or 'all'.".format(
+            "String '{}' not recognised for 'configs' variable. Must be 'rubin_circle', 'rubin_footprint' or 'all'.".format(
                 which_configs
             )
         )
@@ -79,9 +76,9 @@ def parse_file_selection(file_select):
         sys.exit("Input could not be converted to a valid integer. Please try again.")
 
     if file_select not in [1, 2, 3, 4]:
-        sys.exit("Input could not be converted to a valid integer. Please input an integer between 1 and 4.")
+        sys.exit("Input could not be converted to a valid integer. Please input an integer between 1 and 3.")
 
-    selection_dict = {1: "rubin_circle", 2: "rubin_footprint", 3: "demo", 4: "all"}
+    selection_dict = {1: "rubin_circle", 2: "rubin_footprint", 3: "all"}
 
     which_configs = selection_dict[file_select]
 
@@ -126,8 +123,7 @@ def main():
     print("\nWhich configuration file(s) would you like to copy?:\n")
     print("1. Rubin-specific configuration file using circular approximation of camera footprint (faster).\n")
     print("2. Rubin-specific configuration file using full camera footprint (slower, but more accurate).\n")
-    print("3. Basic demo configuration file.\n")
-    print("4. All.\n")
+    print("3. All.\n")
     file_select = input("Please enter a number and hit Return/Enter.\n")
 
     which_configs = parse_file_selection(file_select)
