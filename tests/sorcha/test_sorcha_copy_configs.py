@@ -63,7 +63,7 @@ def test_parse_file_selection():
     assert e.value.code == "Input could not be converted to a valid integer. Please try again."
 
     with pytest.raises(SystemExit) as e2:
-        test_wrong_integer = parse_file_selection("6")
+        test_wrong_integer = parse_file_selection("4")
 
     assert (
         e2.value.code

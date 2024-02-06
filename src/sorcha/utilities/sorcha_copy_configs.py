@@ -75,7 +75,7 @@ def parse_file_selection(file_select):
     except ValueError:
         sys.exit("Input could not be converted to a valid integer. Please try again.")
 
-    if file_select not in [1, 2, 3, 4]:
+    if file_select not in [1, 2, 3]:
         sys.exit("Input could not be converted to a valid integer. Please input an integer between 1 and 3.")
 
     selection_dict = {1: "rubin_circle", 2: "rubin_footprint", 3: "all"}
