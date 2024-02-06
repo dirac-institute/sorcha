@@ -6,11 +6,11 @@ def test_sorcha_copy_configs(tmp_path):
     from sorcha.utilities.sorcha_copy_configs import copy_demo_configs
 
     # test that the Rubin files are successfully copied
-    copy_demo_configs(tmp_path, "rubin_circle")
+    copy_demo_configs(tmp_path, "rubin_circle", True)
 
     assert os.path.isfile(os.path.join(tmp_path, "Rubin_circular_approximation.ini"))
 
-    copy_demo_configs(tmp_path, "rubin_footprint")
+    copy_demo_configs(tmp_path, "rubin_footprint", True)
 
     assert os.path.isfile(os.path.join(tmp_path, "Rubin_full_footprint.ini"))
 
@@ -19,7 +19,7 @@ def test_sorcha_copy_configs(tmp_path):
     os.remove(os.path.join(tmp_path, "Rubin_full_footprint.ini"))
 
     # test that all the configs are successfully copied
-    copy_demo_configs(tmp_path, "all")
+    copy_demo_configs(tmp_path, "all", True)
 
     assert os.path.isfile(os.path.join(tmp_path, "Rubin_circular_approximation.ini"))
     assert os.path.isfile(os.path.join(tmp_path, "Rubin_full_footprint.ini"))
@@ -27,7 +27,7 @@ def test_sorcha_copy_configs(tmp_path):
     # test the error message if user supplies non-existent directory
     dummy_folder = os.path.join(tmp_path, "dummy_folder")
     with pytest.raises(SystemExit) as e:
-        copy_demo_configs(dummy_folder, "all")
+        copy_demo_configs(dummy_folder, "all", True)
 
     assert e.value.code == "ERROR: filepath {} supplied for filepath argument does not exist.".format(
         dummy_folder
@@ -35,12 +35,19 @@ def test_sorcha_copy_configs(tmp_path):
 
     # test the error message if user supplies unrecognised keyword for which_configs variable
     with pytest.raises(SystemExit) as e2:
-        copy_demo_configs(tmp_path, "laphroaig")
+        copy_demo_configs(tmp_path, "laphroaig", True)
 
     assert (
         e2.value.code
         == "String 'laphroaig' not recognised for 'configs' variable. Must be 'rubin_circle', 'rubin_footprint' or 'all'."
     )
+
+    # test tthe error message if file exists and overwrite isn't forced
+
+    with pytest.raises(SystemExit) as e3:
+        copy_demo_configs(tmp_path, "rubin_footprint", False)
+
+    assert e3.value.code == "Identical file exists at location. Re-run with -f or --force to force overwrite."
 
 
 def test_parse_file_selection():

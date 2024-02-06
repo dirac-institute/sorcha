@@ -7,7 +7,7 @@ import sys
 from sorcha.modules.PPConfigParser import PPFindDirectoryOrExit
 
 
-def copy_demo_configs(copy_location, which_configs):
+def copy_demo_configs(copy_location, which_configs, force_overwrite):
     """
     Copies the example Sorcha configuration files to a user-specified location.
 
@@ -18,6 +18,9 @@ def copy_demo_configs(copy_location, which_configs):
 
     which_configs : string
         String indicating which configuration files to retrieve. Should be "rubin", "demo" or "all".
+
+    force_overwrite: boolean
+        Flag for determining whether existing files should be overwritten.
 
     Returns
     -----------
@@ -49,6 +52,9 @@ def copy_demo_configs(copy_location, which_configs):
         )
 
     for config in config_locations:
+        if not force_overwrite and os.path.isfile(config):
+            sys.exit("Identical file exists at location. Re-run with -f or --force to force overwrite.")
+
         shutil.copy(config, copy_location)
 
     print("Example configuration files {} copied to {}.".format(config_locations, copy_location))
@@ -91,10 +97,10 @@ def main():
     to a user-specified location. Filepath to copy files to is specified by command-line
     flag. Selection of configuration files is done via user input.
 
-    usage: sorcha_copy_configs [-h] [-f FILEPATH]
+    usage: sorcha_copy_configs [-h] [-p PATH]
         arguments:
           -h, --help                                  Show this help message and exit.
-          [-f FILEPATH, --filename FILEPATH]          Filepath where you want to copy the config files. Default is current working directory.
+          [-p PATH, --path PATH]          Filepath where you want to copy the config files. Default is current working directory.
 
     Parameters
     -----------
@@ -111,11 +117,19 @@ def main():
     )
 
     parser.add_argument(
-        "-f",
-        "--filepath",
+        "-p",
+        "--path",
         help="Filepath where you want to copy the config files. Default is current working directory.",
         type=str,
         default="./",
+    )
+
+    parser.add_argument(
+        "-f",
+        "--force",
+        help="Force deletion/overwrite of existing config file(s). Default False.",
+        action="store_true",
+        default=False,
     )
 
     args = parser.parse_args()
@@ -128,8 +142,8 @@ def main():
 
     which_configs = parse_file_selection(file_select)
 
-    copy_location = os.path.abspath(args.filepath)
-    copy_demo_configs(copy_location, which_configs)
+    copy_location = os.path.abspath(args.path)
+    copy_demo_configs(copy_location, which_configs, args.force)
 
 
 if __name__ == "__main__":
