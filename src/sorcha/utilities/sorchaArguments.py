@@ -1,7 +1,7 @@
 import numpy as np
 from dataclasses import dataclass
 import time
-from os import path
+from os import path, urandom
 import logging
 
 from sorcha.modules.PPModuleRNG import PerModuleRNG
@@ -78,7 +78,7 @@ class sorchaArguments:
         # WARNING: Take care if manually setting the seed. Re-using seeds between
         # simulations may result in hard-to-detect correlations in simulation
         # outputs.
-        seed = args.get("seed", int(time.time()))
+        seed = args.get("seed", int.from_bytes(urandom(4), "big"))
         self._rngs = PerModuleRNG(seed, self.pplogger)
 
     def validate_arguments(self):
