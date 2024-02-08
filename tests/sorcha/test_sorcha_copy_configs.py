@@ -6,11 +6,11 @@ def test_sorcha_copy_configs(tmp_path):
     from sorcha.utilities.sorcha_copy_configs import copy_demo_configs
 
     # test that the Rubin files are successfully copied
-    copy_demo_configs(tmp_path, "rubin_circle", True)
+    copy_demo_configs(tmp_path, "rubin_circle", False)
 
     assert os.path.isfile(os.path.join(tmp_path, "Rubin_circular_approximation.ini"))
 
-    copy_demo_configs(tmp_path, "rubin_footprint", True)
+    copy_demo_configs(tmp_path, "rubin_footprint", False)
 
     assert os.path.isfile(os.path.join(tmp_path, "Rubin_full_footprint.ini"))
 
@@ -19,15 +19,18 @@ def test_sorcha_copy_configs(tmp_path):
     os.remove(os.path.join(tmp_path, "Rubin_full_footprint.ini"))
 
     # test that all the configs are successfully copied
-    copy_demo_configs(tmp_path, "all", True)
+    copy_demo_configs(tmp_path, "all", False)
 
     assert os.path.isfile(os.path.join(tmp_path, "Rubin_circular_approximation.ini"))
     assert os.path.isfile(os.path.join(tmp_path, "Rubin_full_footprint.ini"))
 
+    # test that files are successfully overwritten if -f flag used
+    copy_demo_configs(tmp_path, "all", True)
+
     # test the error message if user supplies non-existent directory
     dummy_folder = os.path.join(tmp_path, "dummy_folder")
     with pytest.raises(SystemExit) as e:
-        copy_demo_configs(dummy_folder, "all", True)
+        copy_demo_configs(dummy_folder, "all", False)
 
     assert e.value.code == "ERROR: filepath {} supplied for filepath argument does not exist.".format(
         dummy_folder
@@ -47,7 +50,10 @@ def test_sorcha_copy_configs(tmp_path):
     with pytest.raises(SystemExit) as e3:
         copy_demo_configs(tmp_path, "rubin_footprint", False)
 
-    assert e3.value.code == "Identical file exists at location. Re-run with -f or --force to force overwrite."
+    assert (
+        e3.value.code
+        == "Identically named file exists at location. Re-run with -f or --force to force overwrite."
+    )
 
 
 def test_parse_file_selection():
