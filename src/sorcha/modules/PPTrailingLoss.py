@@ -109,7 +109,7 @@ def PPTrailingLoss(
     dra_name="AstRARate(deg/day)",
     ddec_name="AstDecRate(deg/day)",
     dec_name="AstDec(deg)",
-    seeing_name_survey="seeingFwhmEff",
+    seeing_name_survey="seeingFwhmGeom",
 ):
     """
     Calculates detection trailing losses. Wrapper for calcTrailingLoss.
@@ -133,7 +133,7 @@ def PPTrailingLoss(
             "oif_df" column name for object declination. Default = "AstDec(deg)"
 
     seeing_name_survey : string, optional
-        "oif_df" column name for seeing. Default = "seeingFwhmEff"
+        "oif_df" column name for seeing. Default = "seeingFwhmGeom"
 
     Returns
     -----------

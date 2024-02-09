@@ -127,7 +127,8 @@ def uncertainties(
     detDF,
     configs,
     limMagName="fiveSigmaDepthAtSource",
-    seeingName="seeingFwhmGeom",
+    trailingSeeingName="seeingFwhmGeom",
+    SNRSeeingName="seeingFwhmEff",
     filterMagName="TrailedSourceMag",
     dra_name="AstRARate(deg/day)",
     ddec_name="AstDecRate(deg/day)",
@@ -182,13 +183,13 @@ def uncertainties(
 
     if configs.get("trailing_losses_on", False):
         dMag = PPTrailingLoss.calcTrailingLoss(
-            detDF[dra_name] * degCos(detDF[dec_name]), detDF[ddec_name], detDF[seeingName]
+            detDF[dra_name] * degCos(detDF[dec_name]), detDF[ddec_name], detDF[trailingSeeingName]
         )
     else:
         dMag = 0.0
 
     astrSig, SNR, _ = calcAstrometricUncertainty(
-        detDF[filterMagName] + dMag, detDF[limMagName], FWHMeff=detDF[seeingName] * 1000, output_units="mas"
+        detDF[filterMagName] + dMag, detDF[limMagName], FWHMeff=detDF[SNRSeeingName] * 1000, output_units="mas"
     )
     photometric_sigma = calcPhotometricUncertainty(SNR)
     astrSigDeg = (astrSig.values * u.mas).to(u.deg).value
