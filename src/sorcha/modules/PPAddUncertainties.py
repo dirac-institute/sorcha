@@ -272,7 +272,7 @@ def calcAstrometricUncertainty(
     error_rand = calcRandomAstrometricErrorPerCoord(FWHMeff, SNR, astErrCoeff)
     # random astrometric error for nvisit observations
     if nvisit > 1:
-        error_rand = error_rand / sqrt(nvisit)
+        error_rand = error_rand / np.sqrt(nvisit)
     # add systematic error floor:
     astrom_error = np.sqrt(error_sys * error_sys + error_rand * error_rand)
 
