@@ -29,13 +29,14 @@ deg2rad = np.radians
 sin = np.sin
 cos = np.cos
 
-logger = logging.getLogger( __name__ )
+logger = logging.getLogger(__name__)
+
 
 @njit
-def segmented_area( vertices, test_point):
-    """ return the area of a polygon defined by the given vertices and a test point.
+def segmented_area(vertices, test_point):
+    """return the area of a polygon defined by the given vertices and a test point.
     If the test point is inside the polygon, andv the polygon is convex, the area will be correct.
-    Otherwise the are will be incorrect. 
+    Otherwise the are will be incorrect.
 
     Useful for testing whether a point is inside a polygon known to be convex.
 
@@ -43,14 +44,15 @@ def segmented_area( vertices, test_point):
     """
     n = len(vertices)
     area = 0.0
-    for i in range( n ): # indexes at -1, which is necessary to hit all triangles
-        x1 = vertices[i-1, 0] - test_point[0]
-        y1 = vertices[i-1, 1] - test_point[1]
+    for i in range(n):  # indexes at -1, which is necessary to hit all triangles
+        x1 = vertices[i - 1, 0] - test_point[0]
+        y1 = vertices[i - 1, 1] - test_point[1]
         x2 = vertices[i, 0] - test_point[0]
         y2 = vertices[i, 1] - test_point[1]
-        area += 0.5*np.abs( x1*y2 - x2*y1 )
+        area += 0.5 * np.abs(x1 * y2 - x2 * y1)
 
     return area
+
 
 def distToSegment(points, x0, y0, x1, y1):
     """Compute the distance from each point to the line segment defined by
@@ -94,6 +96,7 @@ def distToSegment(points, x0, y0, x1, y1):
 
     # Compute the distances to the closest points on the line segment.
     return np.sqrt((points[0] - proj_x) * (points[0] - proj_x) + (points[1] - proj_y) * (points[1] - proj_y))
+
 
 # ==============================================================================
 # coordinate transforms
@@ -531,9 +534,9 @@ class Footprint:
                 allcornersdf = pd.read_csv(path)
                 logger.info(f"Using CCD Detector file: {path}")
             except IOError:
-                logger.error(f'Provided detector footprint file does not exist.')
+                logger.error(f"Provided detector footprint file does not exist.")
                 sys.exit(1)
-            
+
         else:
             try:
                 default_camera_config_file = "data/LSST_detector_corners_100123.csv"
@@ -541,7 +544,7 @@ class Footprint:
                 logger.info(f"Using built-in CCD Detector file: {default_camera_config_file}")
                 allcornersdf = pd.read_csv(stream)
             except IOError:
-                logger.error( f'Error loading default camera footprint, exiting ...' )
+                logger.error(f"Error loading default camera footprint, exiting ...")
                 sys.exit(1)
 
         # build dictionary of detectorName:[list_of_inds]
