@@ -23,11 +23,34 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import sys
 import pkg_resources
+from numba import njit
 
 deg2rad = np.radians
 sin = np.sin
 cos = np.cos
 
+logger = logging.getLogger( __name__ )
+
+@njit
+def segmented_area( vertices, test_point):
+    """ return the area of a polygon defined by the given vertices and a test point.
+    If the test point is inside the polygon, andv the polygon is convex, the area will be correct.
+    Otherwise the are will be incorrect. 
+
+    Useful for testing whether a point is inside a polygon known to be convex.
+
+    vertices should be ordered, either clockwise or counterclockwise.
+    """
+    n = len(vertices)
+    area = 0.0
+    for i in range( n ): # indexes at -1, which is necessary to hit all triangles
+        x1 = vertices[i-1, 0] - test_point[0]
+        y1 = vertices[i-1, 1] - test_point[1]
+        x2 = vertices[i, 0] - test_point[0]
+        y2 = vertices[i, 1] - test_point[1]
+        area += 0.5*np.abs( x1*y2 - x2*y1 )
+
+    return area
 
 def distToSegment(points, x0, y0, x1, y1):
     """Compute the distance from each point to the line segment defined by
@@ -71,6 +94,83 @@ def distToSegment(points, x0, y0, x1, y1):
 
     # Compute the distances to the closest points on the line segment.
     return np.sqrt((points[0] - proj_x) * (points[0] - proj_x) + (points[1] - proj_y) * (points[1] - proj_y))
+
+# ==============================================================================
+# coordinate transforms
+# ==============================================================================
+
+
+def radec_to_tangent_plane(ra, dec, field_ra, field_dec):
+    """
+    Converts ra and dec to xy on the plane tangent to image center, in the 2-d coordinate system where y is aligned with the meridian.
+
+    Parameters:
+    -----------
+    ra (float/array of floats): observation Right Ascension, radians.
+
+    dec (float/array of floats): observation Declination, radians.
+
+    fieldra (float/array of floats): field pointing Right Ascension, radians.
+
+    fielddec (float/array of floats): field pointing Declination, radians.
+
+    fieldID (float/array of floats): Field ID, optional.
+
+    Returns:
+    ----------
+    x, y (float/array of floats): Coordinates on the focal plane, radians projected
+    to the plane tangent to the unit sphere.
+
+    """
+
+    # convert to cartesian coordiantes on unit sphere
+    observation_vectors = np.array([cos(ra) * np.cos(dec), sin(ra) * np.cos(dec), sin(dec)])  # x  # y  # z
+
+    field_vectors = np.array(
+        [cos(field_ra) * np.cos(field_dec), sin(field_ra) * np.cos(field_dec), sin(field_dec)]
+    )
+
+    # make the basis vectors for the fields of view
+    # the "x" basis is easy, 90 d rotation of the x, y components
+    focalx = np.zeros(field_vectors.shape)
+    focalx[0] = -field_vectors[1]
+    focalx[1] = field_vectors[0]
+
+    # "y" by taking cross product of field vector and "x"
+    focaly = np.cross(field_vectors, focalx, axis=0)
+
+    # normalize
+    focalx /= np.linalg.norm(focalx, axis=0)
+    focaly /= np.linalg.norm(focaly, axis=0)
+
+    # extend observation vectors to plane tangent to field pointings
+    k = 1.0 / np.sum(field_vectors * observation_vectors, axis=0)
+    observation_vectors *= k
+    observation_vectors -= field_vectors
+
+    # get observation vectors as combinations of focal vectors
+    x = np.sum(observation_vectors * focalx, axis=0)
+    y = np.sum(observation_vectors * focaly, axis=0)
+
+    return x, y
+
+
+def radec_to_focal_plane(ra, dec, field_ra, field_dec, field_rot):
+    # convert ra, dec to points on focal plane, x pointing to celestial north
+    x, y = radec_to_tangent_plane(ra, dec, field_ra, field_dec)
+    # rotate focal plane to align with detectors
+    xy = x + 1.0j * y
+    xy *= np.exp(1.0j * field_rot)  # which direction to rotate?
+
+    x = np.real(xy)
+    y = np.imag(xy)
+
+    return x, y
+
+
+# ==============================================================================
+# detector class
+# ==============================================================================
 
 
 class Detector:
@@ -148,12 +248,10 @@ class Detector:
         selectedidx : array
             Indices of points in point array that fall on the sensor.
         """
-        pplogger = logging.getLogger(__name__)
-
         # points needs to be shape 2,n
         # if single point, needs to be an array of single element arrays
         if len(point.shape) != 2 or point.shape[0] != 2:
-            pplogger.error(f"ERROR: Detector.ison invalid array {point.shape}")
+            logger.error(f"ERROR: Detector.ison invalid array {point.shape}")
             sys.exit(f"ERROR: Detector.ison invalid array {point.shape}")
 
         # check whether point is in circle bounding the detector
@@ -172,7 +270,7 @@ class Detector:
             elif self.units == "radians" or self.units == "rad":
                 edge_thresh = np.radians(edge_thresh / 3600.0)
             else:
-                pplogger.error(f"ERROR: Detector.ison unable to convert edge_thresh to {self.units}")
+                logger.error(f"ERROR: Detector.ison unable to convert edge_thresh to {self.units}")
                 sys.exit(f"ERROR: Detector.ison unable to convert edge_thresh to {self.units}")
 
             n = len(self.x)
@@ -428,16 +526,23 @@ class Footprint:
         # the center of the camera should be the origin
         # if the user doesn't provide their own version of the footprint,
         # we'll use the default LSST version that comes included.
-        pplogger = logging.getLogger(__name__)
-
         if path:
-            allcornersdf = pd.read_csv(path)
-            pplogger.info(f"Using CCD Detector file: {path}")
+            try:
+                allcornersdf = pd.read_csv(path)
+                logger.info(f"Using CCD Detector file: {path}")
+            except IOError:
+                logger.error(f'Provided detector footprint file does not exist.')
+                sys.exit(1)
+            
         else:
-            default_camera_config_file = "data/LSST_detector_corners_100123.csv"
-            stream = pkg_resources.resource_stream(__name__, default_camera_config_file)
-            pplogger.info(f"Using built-in CCD Detector file: {default_camera_config_file}")
-            allcornersdf = pd.read_csv(stream)
+            try:
+                default_camera_config_file = "data/LSST_detector_corners_100123.csv"
+                stream = pkg_resources.resource_stream(__name__, default_camera_config_file)
+                logger.info(f"Using built-in CCD Detector file: {default_camera_config_file}")
+                allcornersdf = pd.read_csv(stream)
+            except IOError:
+                logger.error( f'Error loading default camera footprint, exiting ...' )
+                sys.exit(1)
 
         # build dictionary of detectorName:[list_of_inds]
         det_to_inds = {}
