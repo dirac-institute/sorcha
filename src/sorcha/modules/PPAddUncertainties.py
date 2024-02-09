@@ -189,7 +189,10 @@ def uncertainties(
         dMag = 0.0
 
     astrSig, SNR, _ = calcAstrometricUncertainty(
-        detDF[filterMagName] + dMag, detDF[limMagName], FWHMeff=detDF[SNRSeeingName] * 1000, output_units="mas"
+        detDF[filterMagName] + dMag,
+        detDF[limMagName],
+        FWHMeff=detDF[SNRSeeingName] * 1000,
+        output_units="mas",
     )
     photometric_sigma = calcPhotometricUncertainty(SNR)
     astrSigDeg = (astrSig.values * u.mas).to(u.deg).value
