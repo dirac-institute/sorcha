@@ -28,7 +28,7 @@ def PPReadPointingDatabase(bsdbname, observing_filters, dbquery, surveyname):
 
     pplogger = logging.getLogger(__name__)
 
-    con = sqlite3.connect(bsdbname)
+    con = sqlite3.connect("file:" + bsdbname + "?mode=ro", uri=True)
 
     try:
         df = pd.read_sql_query(dbquery, con)
