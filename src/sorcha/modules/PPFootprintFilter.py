@@ -23,7 +23,6 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import sys
 import pkg_resources
-from numba import njit
 
 deg2rad = np.radians
 sin = np.sin
