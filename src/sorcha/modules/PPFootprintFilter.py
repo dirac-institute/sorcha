@@ -30,6 +30,7 @@ cos = np.cos
 
 logger = logging.getLogger(__name__)
 
+
 def distToSegment(points, x0, y0, x1, y1):
     """Compute the distance from each point to the line segment defined by
     the points (x0, y0) and (x1, y1).  Returns the distance in the same
@@ -72,6 +73,7 @@ def distToSegment(points, x0, y0, x1, y1):
 
     # Compute the distances to the closest points on the line segment.
     return np.sqrt((points[0] - proj_x) * (points[0] - proj_x) + (points[1] - proj_y) * (points[1] - proj_y))
+
 
 class Detector:
     """Detector class"""
