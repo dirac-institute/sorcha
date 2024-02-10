@@ -28,6 +28,8 @@ deg2rad = np.radians
 sin = np.sin
 cos = np.cos
 
+logger = logging.getLogger(__name__)
+
 
 def distToSegment(points, x0, y0, x1, y1):
     """Compute the distance from each point to the line segment defined by
@@ -148,12 +150,10 @@ class Detector:
         selectedidx : array
             Indices of points in point array that fall on the sensor.
         """
-        pplogger = logging.getLogger(__name__)
-
         # points needs to be shape 2,n
         # if single point, needs to be an array of single element arrays
         if len(point.shape) != 2 or point.shape[0] != 2:
-            pplogger.error(f"ERROR: Detector.ison invalid array {point.shape}")
+            logger.error(f"ERROR: Detector.ison invalid array {point.shape}")
             sys.exit(f"ERROR: Detector.ison invalid array {point.shape}")
 
         # check whether point is in circle bounding the detector
@@ -172,7 +172,7 @@ class Detector:
             elif self.units == "radians" or self.units == "rad":
                 edge_thresh = np.radians(edge_thresh / 3600.0)
             else:
-                pplogger.error(f"ERROR: Detector.ison unable to convert edge_thresh to {self.units}")
+                logger.error(f"ERROR: Detector.ison unable to convert edge_thresh to {self.units}")
                 sys.exit(f"ERROR: Detector.ison unable to convert edge_thresh to {self.units}")
 
             n = len(self.x)
@@ -428,16 +428,23 @@ class Footprint:
         # the center of the camera should be the origin
         # if the user doesn't provide their own version of the footprint,
         # we'll use the default LSST version that comes included.
-        pplogger = logging.getLogger(__name__)
-
         if path:
-            allcornersdf = pd.read_csv(path)
-            pplogger.info(f"Using CCD Detector file: {path}")
+            try:
+                allcornersdf = pd.read_csv(path)
+                logger.info(f"Using CCD Detector file: {path}")
+            except IOError:
+                logger.error(f"Provided detector footprint file does not exist.")
+                sys.exit(1)
+
         else:
-            default_camera_config_file = "data/LSST_detector_corners_100123.csv"
-            stream = pkg_resources.resource_stream(__name__, default_camera_config_file)
-            pplogger.info(f"Using built-in CCD Detector file: {default_camera_config_file}")
-            allcornersdf = pd.read_csv(stream)
+            try:
+                default_camera_config_file = "data/LSST_detector_corners_100123.csv"
+                stream = pkg_resources.resource_stream(__name__, default_camera_config_file)
+                logger.info(f"Using built-in CCD Detector file: {default_camera_config_file}")
+                allcornersdf = pd.read_csv(stream)
+            except IOError:
+                logger.error(f"Error loading default camera footprint, exiting ...")
+                sys.exit(1)
 
         # build dictionary of detectorName:[list_of_inds]
         det_to_inds = {}
