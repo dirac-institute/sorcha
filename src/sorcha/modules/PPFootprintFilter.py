@@ -526,7 +526,7 @@ class Footprint:
                 default_camera_config_file = "data/LSST_detector_corners_100123.csv"
                 # stream = pkg_resources.resource_stream(__name__, default_camera_config_file)
                 # stream = importlib_resources.as_file( default_camera_config_file )
-                stream = importlib_resources.files( __name__ ).joinpath( default_camera_config_file )
+                stream = importlib_resources.files(__name__).joinpath(default_camera_config_file)
                 logger.info(f"Using built-in CCD Detector file: {default_camera_config_file}")
                 allcornersdf = pd.read_csv(stream)
             except IOError:
