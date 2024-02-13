@@ -12,6 +12,7 @@ used with smaller data sets. Both ``read_rows`` and ``read_objects``
 will check for a cached table before reading the files, allowing them
 to perform direct pandas operations if the data is already in memory.
 """
+
 import abc
 import logging
 import sys

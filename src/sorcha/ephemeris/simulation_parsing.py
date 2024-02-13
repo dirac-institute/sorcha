@@ -15,6 +15,16 @@ from sorcha.ephemeris.orbit_conversion_utilities import universal_cartesian
 
 
 def mjd_tai_to_epoch(mjd_tai):
+    """
+    Converts a MJD value in TAI to SPICE ephemeris time
+    Parameters:
+    -------
+    mjd_tai (float):
+        Input mjd
+    Returns:
+    -------
+        Ephemeris time
+    """
     jd = mjd_tai + 2400000.5 + 32.184 / (24 * 60 * 60)
     epoch_str = "JD %lf TDT" % jd
     epoch = spice.j2000() + spice.str2et(epoch_str) / (24 * 60 * 60)
@@ -22,6 +32,31 @@ def mjd_tai_to_epoch(mjd_tai):
 
 
 def parse_orbit_row(row, epochJD_TDB, ephem, sun_dict, gm_sun, gm_total):
+    """
+    Parses the input orbit row, converting it to the format expected by
+    the ephemeris generation code later on
+
+    Parameters:
+    -------
+    row (Pandas dataframe row):
+        Row of the input dataframe
+    epochJD_TDB (float):
+        epoch of the elements, in JD TDB
+    ephem (Ephem):
+        ASSIST ephemeris object
+    sun_dict (dict):
+        Dictionary with the position of the Sun at each epoch
+    gm_sun (float):
+        Standard gravitational parameter GM for the Sun
+    gm_total (float):
+        Standard gravitational parameter GM for the Solar System barycenter
+
+    Returns:
+    -------
+    tuple:
+        State vector (position, velocity)
+
+    """
     orbit_format = row["FORMAT"]
 
     if orbit_format not in ["CART", "BCART"]:
@@ -93,7 +128,21 @@ def parse_orbit_row(row, epochJD_TDB, ephem, sun_dict, gm_sun, gm_total):
 
 
 class Observatory:
+    """
+    Class containing various utility tools related to the calculation of the observatory position
+    """
+
     def __init__(self, args, oc_file=OBSERVATORY_CODES):
+        """
+        Initialization method
+
+        Parameters
+        ----------
+            args (dictionary or `sorchaArguments` object):
+                dictionary of command-line arguments.
+            oc_file (str):
+                Path for the file with observatory codes
+        """
         self.observatoryPositionCache = {}  # previously calculated positions to speed up the process
 
         if oc_file == OBSERVATORY_CODES:
@@ -125,6 +174,18 @@ class Observatory:
             self.ObservatoryXYZ[obs_name] = self.convert_to_geocentric(obs_location)
 
     def convert_to_geocentric(self, obs_location: dict) -> tuple:
+        """
+        Converts the observatory location to geocentric coordinates
+
+        Parameters
+        ----------
+            obs_location (dict):
+                Dictionary with Longitude and sin/cos of the observatory Latitude
+        Returns
+        -------
+            tuple:
+                Geocentric position (x,y,z)
+        """
         returned_tuple = (None, None, None)
         if (
             obs_location.get("Longitude", False)
@@ -139,9 +200,25 @@ class Observatory:
 
         return returned_tuple
 
-    def barycentricObservatory(
-        self, et, obsCode, Rearth=RADIUS_EARTH_KM
-    ):  # This JPL's quoted Earth radius (km)
+    def barycentricObservatory(self, et, obsCode, Rearth=RADIUS_EARTH_KM):
+        """
+        Computes the barycentric position of the observatory
+
+        Parameters
+        ----------
+            et (float):
+                JPL internal ephemeris time
+            obsCode (str):
+                MPC Observatory code
+            Rearth (float):
+                Radius of the Earth
+        Returns
+        -------
+            array (3,):
+                Barycentric position of the observatory (x,y,z)
+        """
+
+        # This JPL's quoted Earth radius (km)
         # et is JPL's internal time
 
         # Get the barycentric position of Earth
