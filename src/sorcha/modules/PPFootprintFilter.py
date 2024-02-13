@@ -32,6 +32,7 @@ cos = np.cos
 
 logger = logging.getLogger(__name__)
 
+
 def distToSegment(points, x0, y0, x1, y1):
     """Compute the distance from each point to the line segment defined by
     the points (x0, y0) and (x1, y1).  Returns the distance in the same
@@ -529,7 +530,6 @@ class Footprint:
             except IOError:
                 logger.error(f"Error loading default camera footprint, exiting ...")
                 sys.exit(1)
-
 
         # build dictionary of detectorName:[list_of_inds]
         det_to_inds = {}
