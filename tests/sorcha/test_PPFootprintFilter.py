@@ -172,8 +172,36 @@ def test_applyFootprint():
     footprintf = Footprint(get_test_filepath("detectors_corners.csv"))
     onSensor, detectorIDs = footprintf.applyFootprint(observations)
 
-    assert_equal(onSensor, [0, 1, 6, 5, 7, 8, 9, 4, 2, 3,])
-    assert_equal(detectorIDs, [35., 35., 60., 88., 100., 106., 114., 127., 130., 130.,])
+    assert_equal(
+        onSensor,
+        [
+            0,
+            1,
+            6,
+            5,
+            7,
+            8,
+            9,
+            4,
+            2,
+            3,
+        ],
+    )
+    assert_equal(
+        detectorIDs,
+        [
+            35.0,
+            35.0,
+            60.0,
+            88.0,
+            100.0,
+            106.0,
+            114.0,
+            127.0,
+            130.0,
+            130.0,
+        ],
+    )
 
     # Setting an edge threshold to 0.0005 radians will further filter points 0, 7, 8, and 9.
     onSensor, detectorIDs = footprintf.applyFootprint(
@@ -181,8 +209,30 @@ def test_applyFootprint():
         edge_thresh=(np.degrees(0.0005) * 3600),  # as arcseconds
     )
 
-    assert_equal(onSensor, [0, 1, 6, 8, 9, 2, 3,])
-    assert_equal(detectorIDs, [35., 35., 60., 106., 114., 130., 130.,])
+    assert_equal(
+        onSensor,
+        [
+            0,
+            1,
+            6,
+            8,
+            9,
+            2,
+            3,
+        ],
+    )
+    assert_equal(
+        detectorIDs,
+        [
+            35.0,
+            35.0,
+            60.0,
+            106.0,
+            114.0,
+            130.0,
+            130.0,
+        ],
+    )
 
 
 def test_distToSegment():
