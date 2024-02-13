@@ -35,7 +35,6 @@ dependencies = [
     "tqdm",
     "numba",
     "importlib_resources",
-    "pkg_resources",
 ]
 
 [project.scripts]
