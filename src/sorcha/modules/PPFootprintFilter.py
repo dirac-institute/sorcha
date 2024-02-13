@@ -22,7 +22,8 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import sys
-import importlib_resources
+# import importlib_resources
+import pkg_resources
 
 from numba import njit
 
