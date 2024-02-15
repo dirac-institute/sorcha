@@ -123,7 +123,7 @@ To run the internal ephemeris generator, you will need to download the auxiliary
   
 To install the necessary SPICE auxiliary files for ephemeris generation (774 MB total in size)::
 
-    bootstrap_sorcha_data_files
+    sorcha_bootstrap_data_files
 
 .. note::
    This script will download and store the auxiliary files in your computer's local cache directory. 
