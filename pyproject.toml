@@ -44,6 +44,7 @@ createResultsSQLDatabase = "sorcha.utilities.createResultsSQLDatabase:main"
 bootstrap_sorcha_data_files = "sorcha.utilities.retrieve_ephemeris_data_files:main"
 sorcha_copy_configs = "sorcha.utilities.sorcha_copy_configs:main"
 sorcha_copy_demo_files = "sorcha.utilities.sorcha_copy_demo_files:main"
+sorcha_demo_command = "sorcha.utilities.sorcha_demo_command:print_demo_command"
 
 [project.urls]
 "Documentation" = "https://sorcha.readthedocs.io/en/latest/"

@@ -5,6 +5,7 @@ import shutil
 import sys
 
 from sorcha.modules.PPConfigParser import PPFindDirectoryOrExit
+from sorcha.utilities.sorcha_demo_command import print_demo_command
 
 
 def copy_demo_files(copy_location, force_overwrite):
@@ -48,6 +49,8 @@ def copy_demo_files(copy_location, force_overwrite):
         shutil.copy(demo_path, copy_location)
 
     print("Demo files {} copied to {}.".format(demo_files, copy_location))
+
+    print_demo_command(printall=False)
 
 
 def main():
