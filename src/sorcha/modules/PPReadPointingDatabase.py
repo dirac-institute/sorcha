@@ -43,7 +43,7 @@ def PPReadPointingDatabase(bsdbname, observing_filters, dbquery, surveyname):
     df["observationId_"] = df["observationId"]
     df = df.rename(columns={"observationId": "FieldID"})
     df = df.rename(columns={"filter": "optFilter"})  # not to confuse with the pandas filter command
-    df["optFilter"] = df["optFilter"].astype("category") # save memory
+    df["optFilter"] = df["optFilter"].astype("category")  # save memory
     dfo = df[df.optFilter.isin(observing_filters)].copy()
 
     # at the moment the RubinSim pointing databases don't record the observation

@@ -32,7 +32,7 @@ def PPMatchPointingToObservations(padain, pointfildb):
     # they don't need to be included in the result df, so exclude them from the merge.
     pointing_columns_to_skip = ["JD_TDB", "pixels_begin", "pixels_end"]
     for name in ["visit_vector", "pixels", "r_obs", "v_obs", "r_sun", "v_sun"]:
-        pointing_columns_to_skip += [ f"{name}_x", f"{name}_y", f"{name}_z" ]
+        pointing_columns_to_skip += [f"{name}_x", f"{name}_y", f"{name}_z"]
 
     resdf = pd.merge(
         padain,
