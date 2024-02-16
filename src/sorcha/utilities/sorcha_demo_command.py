@@ -1,6 +1,25 @@
+def get_demo_command():
+    """
+    Returns the current working version of the Sorcha demo command as a string.
+    If the Sorcha run command changes, updating this function will ensure
+    associated unit tests pass.
+
+    Parameters
+    -----------
+    None.
+
+    Returns
+    -----------
+    None.
+
+    """
+
+    return "sorcha -c sorcha_config_demo.ini -p sspp_testset_colours.txt -ob sspp_testset_orbits.des -pd baseline_v2.0_1yr.db -o ./ -t testrun_e2e"
+
+
 def print_demo_command(printall=True):
     """
-    Prints the current working version of the demo command to the terminal, with
+    Prints the current working version of the Sorcha demo command to the terminal, with
     optional functionality to also tell the user how to copy the demo files.
 
     Parameters
@@ -15,11 +34,11 @@ def print_demo_command(printall=True):
 
     """
 
+    current_demo_command = get_demo_command()
+
     print("\nThe command to run the Sorcha demo in this version of Sorcha is:\n")
 
-    print(
-        "\033[1;32;40msorcha -c sorcha_config_demo.ini -p sspp_testset_colours.txt -ob sspp_testset_orbits.des -pd baseline_v2.0_1yr.db -o ./ -t testrun_e2e\033[0m\n"
-    )
+    print("\033[1;32;40m" + current_demo_command + "\033[0m\n")
 
     print("WARNING: This command assumes that the demo files are in your working directory.\n")
 
