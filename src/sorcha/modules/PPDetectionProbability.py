@@ -26,19 +26,24 @@ def calcDetectionProbability(mag, limmag, fillFactor=1.0, w=0.1):
     limiting magnitude, and fill factor, determined by the fading function
     from Veres & Chesley (2017).
 
-    Parameters:
+    Parameters
     -----------
-    mag (float/array of floats): magnitude of object in filter used for that field.
+    mag : float or array of floats
+        Magnitude of object in filter used for that field.
 
-    limmag (float/array of floats): limiting magnitude of the field.
+    limmag : float or array of floats
+        Limiting magnitude of the field.
 
-    fillFactor (float): fraction of FOV covered by the camera sensor.
+    fillFactor : float), optional
+        Fraction of FOV covered by the camera sensor. Default = 1.0
 
-    w (float): distribution parameter.
+    w : float
+        Distribution parameter. Default = 0.1
 
-    Returns:
+    Returns
     ----------
-    P (float/array of floats): probability of detection.
+    P : float or array of floats
+        Probability of detection.
     """
 
     P = fillFactor / (1.0 + np.exp((mag - limmag) / w))
@@ -61,22 +66,35 @@ def PPDetectionProbability(
     Wrapper for calcDetectionProbability which takes into account column names
     and trailing losses. Used by PPFadingFunctionFilter.
 
-    Parameters:
+    Parameters
     -----------
-    oif_df (Pandas dataframe): dataframe of observations.
+    oif_df : Pandas dataframe
+        Dataframe of observations.
 
-    trailing_losses (Boolean): are trailing losses being applied?
+    trailing_losses : Boolean, optional
+        Are trailing losses being applied?, Default = False
 
-    *_name (string): Column names for trailing losses, magnitude, limiting magnitude
-    and field ID respectively.
+    trailing_loss_name : string, optional
+        oif_df column name for trailing losses, Default = dmagDetect
 
-    fillFactor (float): fraction of FOV covered by the camera sensor.
+    magnitude_name : string, optional
+        oif_df column name for observation limiting magnitude,
+        Default = fiveSigmaDepthAtSource
 
-    w (float): distribution parameter.
+    field ID : string, optional
+        oif_df column name for observation field_id
+        Default = FieldID
 
-    Returns:
+    fillFactor : float, optional
+        Fraction of FOV covered by the camera sensor. Default = 1.0
+
+    w : float
+        Distribution parameter. Default =0.1
+
+    Returns
     ----------
-    P (float/array of floats): probability of detection.
+     : float or array of floats
+        Probability of detection.
 
     """
 

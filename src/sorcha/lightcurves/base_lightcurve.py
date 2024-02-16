@@ -64,7 +64,7 @@ class AbstractLightCurve(ABC):
 
         Parameters
         ----------
-        error_msg : str
+        error_msg : string
             The string to be appended to the error log
         """
         logger.error(error_msg)

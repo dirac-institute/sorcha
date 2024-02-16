@@ -19,7 +19,15 @@
 
 
 import numpy as np
+import sys
+import logging
 from sorcha.modules.PPModuleRNG import PerModuleRNG
+
+import pandas as pd
+
+pd.options.mode.copy_on_write = True
+
+logger = logging.getLogger(__name__)
 
 
 def randomizeAstrometry(
@@ -27,42 +35,65 @@ def randomizeAstrometry(
     module_rngs,
     raName="AstRA(deg)",
     decName="AstDec(deg)",
-    raRndName="AstRARnd(deg)",
-    decRndName="AstDecRnd(deg)",
+    raOrigName="AstRATrue(deg)",
+    decOrigName="AstDecTrue(deg)",
     sigName="AstSig(deg)",
     radecUnits="deg",
     sigUnits="mas",
 ):
     """
     Randomize astrometry with a normal distribution around the actual RADEC pointing.
-    The randomized values are added to the input pandas data frame.
+    The randomized values replace the original astrometry, with the original values
+    stored in separate columns.
 
-    Parameters:
+    Parameters
     -----------
-    df (Pandas dataframe): dataframe containing astrometry and sigma.
+    df : pandas dataframe
+        Dataframe containing astrometry and sigma.
 
-    module_rngs (PerModuleRNG): A collection of random number generators (per module).
+    module_rngs : PerModuleRNG
+        A collection of random number generators (per module).
 
-    *Name (string): column names for right ascension, declination,
-    randomized right ascension, randomized declination, and standard deviation.
+    ra_Name : string, optional
+        "df" dataframe column name for the right ascension.
+        Default = "AstRA(deg)"
 
-    *Units (string): units for RA and Dec and sigma ('deg'/'rad'/'mas').
+    dec_Name : string, optional
+        "df" dataframe column name for the declination. Default = "AstDec(deg)"
 
-    Returns:
-    -----------
-    df (Pandas dataframe): as input, with randomized RADEC columns added
+    raOrigName : string, optional
+        "df" dataframe column name for where to store original right
+        ascension. Default = "AstRATrue(deg)"
 
-    Comments:
+    decOrigName : string, optional
+        "df" dataframe column name for where to store original declination.
+        Default = "AstDecTrue(deg)"
+
+    sigName : string, optional
+        "df" dataframe column name for the standard deviation, uncertainty in the
+        astrometric position.
+        Default = "AstSig(deg)"
+
+    radecUnits : string
+        Units for RA and Dec ('deg'/'rad'/'mas'). Default = "deg"
+
+    sigUnits : string
+        Units for standard deviation ('deg'/'rad'/'mas'). Default = "mas"
+
+
+    Returns
+    ---------
+    df : pandas dataframe
+       original input dataframe with RA and Dec columns randomized around
+       astrometric sigma and original RA and Dec stored in separate columns
+
+    Notes
     -----------
     Covariances in RADEC are currently not supported. The routine calculates
     a normal distribution on the unit sphere, so as to allow for a correct modeling of
     the poles. Distributions close to the poles may look odd in RADEC.
 
     """
-
-    deg2rad = np.deg2rad
-    zeros = np.zeros
-
     if radecUnits == "deg":
         center = radec2icrf(df[raName], df[decName]).T
     elif radecUnits == "mas":
@@ -70,19 +101,21 @@ def randomizeAstrometry(
     elif radecUnits == "rad":
         center = radec2icrf(df[raName], df[decName], deg=False).T
     else:
-        print("Bad units were provided for RA and Dec.")
+        logger.error("Bad units were provided for RA and Dec, terminating...")
+        sys.exit(1)
 
     if sigUnits == "deg":
-        sigmarad = deg2rad(df[sigName])
+        sigmarad = np.deg2rad(df[sigName])
     elif sigUnits == "mas":
-        sigmarad = deg2rad(df[sigName] / 3600000.0)
+        sigmarad = np.deg2rad(df[sigName] / 3600000.0)
     elif sigUnits == "rad":
         sigmarad = df[sigName]
     else:
-        print("Bad units were provided for astrometric uncertainty.")
+        logger.error("Bad units were provided for RA and Dec, terminating...")
+        sys.exit(1)
 
     n = len(df.index)
-    xyz = zeros([n, 3])
+    xyz = np.zeros([n, 3])
 
     xyz = sampleNormalFOV(center, sigmarad, module_rngs, ndim=3)
 
@@ -92,26 +125,37 @@ def randomizeAstrometry(
     else:
         [ra, dec] = icrf2radec(xyz[:, 0], xyz[:, 1], xyz[:, 2], deg=False)
 
-    return ra, dec
+    df.rename(columns={raName: raOrigName, decName: decOrigName}, inplace=True)
+
+    df[raName] = ra
+    df[decName] = dec
+
+    return df
 
 
 def sampleNormalFOV(center, sigma, module_rngs, ndim=3):
     """
     Sample n points randomly (normal distribution) on a region on the unit (hyper-)sphere.
 
-    Parameters:
+    Parameters
     -----------
-    center (float, ndim): center of hpyer-sphere: can be an [n, ndim] dimensional array, but only if n == npoints.
+    center : float
+        Center of hpyer-sphere: can be an [n, ndim] dimensional array,
+        but only if n == npoints.
 
-    sigma (n-dimensional array): 1 sigma distance on unit sphere [radians]x
+    sigma : n-dimensional array
+        1 sigma distance on unit sphere [radians]x
 
-    module_rngs (PerModuleRNG): A collection of random number generators (per module).
+    module_rngs : PerModuleRNG
+        A collection of random number generators (per module).
 
-    ndim (int): dimension of hyper-sphere.
+    ndim : integer, optional
+        Dimension of hyper-sphere. Default = 3
 
-    Returns:
+    Return
     --------
-    vec ... numpy array [npoints, ndim]
+    vec : numpy array
+        Size [npoints, ndim]
 
     """
     rng = module_rngs.getModuleRNG(__name__)
@@ -149,27 +193,38 @@ def randomizePhotometry(
     """
     Randomize photometry with normal distribution around magName value.
 
-    Parameters:
+    Parameters
     -----------
-    df (Pandas dataframe): dataframe containing astrometry and sigma.
+    df : pandas dataframe
+        Dataframe containing astrometry and sigma.
 
-    module_rngs (PerModuleRNG): A collection of random number generators (per module).
+    module_rngs : PerModuleRNG
+        A collection of random number generators (per module).
 
-    magName (string): column name of photometric data [mag]
+    magName : string, optional
+        'df' column name of apparent magnitude. Default = "Filtermag"
 
-    magRndName (string): column name of randomized photometric data [mag].
+    magRndName : string, optional
+       'df' column name for storing randomized apparent magnitude, Default = "FiltermagRnd"
 
-    sigName (string): column name of standard deviation [mag].
+    sigName : float, optional
+            'df' column name for magnitude standard deviation. Default = "FiltermagSig"
 
-    Returns:
+    Returns
     -----------
-    df (Pandas dataframe): as input pandas dataframe, with added column magRndName.
+     : array of floats
+         randomized magnitudes for each row in 'df'
 
-    Comments:
+
+    Notes
     -----------
     The normal distribution here is in magnitudes while it should be in flux. This will fail for large sigmas.
     Should be fixed at some point.
 
+    We assume that apparent magnitudes are stored within 'df' and that 'magName'
+    corresponds to the corresponding column within 'df'
+
+     'df' is also modified with added column magRndNam to store the randomize apparent magnitude
     """
 
     rng = module_rngs.getModuleRNG(__name__)
@@ -185,15 +240,18 @@ def flux2mag(f, f0=3631):
     """
     AB ugriz system (f0 = 3631 Jy) to magnitude conversion.
 
-    Parameters:
+    Parameters
     -----------
-    f (float/array of floats): flux [Jy].
+    f : float or array of floats
+        flux. [Units : Jy].
 
-    f0 (float): zero point flux.
+    f0: float, optional
+        Zero point flux. Default = 3631
 
-    Returns:
+    Returns
     -----------
-    mag (float/array of floats: pogson magnitude.
+    mag : float or array of floats
+        pogson magnitude. [Units: mag]
 
     """
 
@@ -206,15 +264,17 @@ def mag2flux(mag, f0=3631):
     """
     AB ugriz system (f0 = 3631 Jy) magnitude to flux conversion.
 
-    Parameters:
+    Parameters
     -----------
-    mag (float/array of floats): pogson magnitude.
+    mag : float or rray of floats
+        Pogson magnitude. [Units: mag]
 
-    f0 (float): zero point flux.
+    f0 : float, optional
+        Zero point flux. Default = 3631
 
-    Returns:
+    Returns
     -----------
-    f (float/array of floats): flux [Jy].
+    f (float/array of floats): flux [Units: Jy].
 
     """
 
@@ -228,17 +288,21 @@ def icrf2radec(x, y, z, deg=True):
     Convert ICRF xyz to Right Ascension and Declination.
     Geometric states on unit sphere, no light travel time/aberration correction.
 
-    Parameters:
+    Parameters
     -----------
-    x, y, z (floats/arrays of floats): 3D vector of unit length (ICRF)
+    x, y, z : floats/arrays of floats
+        3D vector of unit length (ICRF)
 
-    deg (Boolean): True for angles in degrees, False for angles in radians.
+    de : boolean, optional
+        True for angles in degrees, False for angles in radians. Default = True
 
-    Returns:
+    Returns
     -----------
-    ra (float/array of floats): Right Ascension [deg].
+    ra : float or array of floats
+        Right Ascension. [Units: deg]
 
-    dec(float/array of floats): Declination [deg].
+    dec: float or array of floats
+        Declination. [Units: deg]
 
     """
 
@@ -278,17 +342,21 @@ def radec2icrf(ra, dec, deg=True):
     Convert Right Ascension and Declination to ICRF xyz unit vector.
     Geometric states on unit sphere, no light travel time/aberration correction.
 
-    Parameters:
+    Parameters
     -----------
-    ra (float/array of floats): Right Ascension [deg].
+    ra : float or array of floats
+        Right Ascension. [Units: deg]
 
-    dec(float/array of floats): Declination [deg].
+    dec: float or array of floats
+        Declination. [Units deg]
 
-    deg (Boolean): True for angles in degrees, False for angles in radians.
+    deg : boolean, optional
+        True for angles in degrees, False for angles in radians. Default = True
 
-    Returns:
+    Returns
     -----------
-    array([x, y, z]) (arrays of floats/arrays): 3D vector of unit length (ICRF)
+    array([x, y, z]) : arrays/matrix of floats
+        3D vector of unit length (ICRF)
     """
 
     deg2rad = np.deg2rad

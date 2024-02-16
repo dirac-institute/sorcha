@@ -50,7 +50,7 @@ class IdentityLightCurve(AbstractLightCurve):
 
         Returns
         -------
-        str
+        string
             Unique identifier for this light curve calculator
         """
         return "identity"

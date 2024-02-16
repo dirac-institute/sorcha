@@ -1,37 +1,53 @@
 ## Notebooks:
 
 demo_ApparentMagnitudeValidation
-- **Validates:** PPCalculateApparentMagnitudeInFilter.
+- **Demonstrates:** PPCalculateApparentMagnitudeInFilter
 - **Files:** none
 
-demo_CalculateSimpleCometaryMagnitude
-- **Validates:** PPCalculateSimpleCometaryMagnitude
-- **Files:** lsst-total-r.dat
-
 demo_CircleFootprint
-- **Validates:** PPCircleFootprint
+- **Demonstrates:** PPCircleFootprint
 - **Files:** footprintFilterValidationObservations.csv, oneline_v2.0.db
 
+demo_CoordinateTransformations
+- **Demonstrates:** universal_cartesian, universal_keplerian
+- **Files:** none
+
 demo_DetectionEfficiencyValidation
-- **Validates:** PPFadingFunctionFilter
+- **Demonstrates:** PPFadingFunctionFilter
 - **Files:** oneline_v2.0.db
 
-demo_footprintFilter
-- **Validates:** PPFootprintFilter
+demo_FootprintFilter
+- **Demonstrates:** PPFootprintFilter
 - **Files:** detector_corners.csv, footprintFilterValidationObservations.csv, oneline_v2.0.db
 
+demo_GenerateBashScripts
+- **Demonstrates:** Generation of shell scripts for multiple runs of Sorcha
+- **Files:** example_file_structure.png
+
+demo_GenerateSLURMScripts
+- **Demonstrates:** Generation of SLURM scripts for multiple runs of Sorcha
+- **Files:** example_file_structure.png
+
+demo_Lightcurve
+- **Demonstrates:**  lightcurve_registration (LC_METHODS, update_lc_subclasses), AbstractLightCurve class
+- **Files:** none
+
 demo_LinkingFilter
-- **Validates:** PPLinkingFilter
+- **Demonstrates:** PPLinkingFilter
 - **Files:** none
 
 demo_MagnitudeAndSNRCuts
-- **Validates:** PPBrightLimit, PPMagnitudeLimit, PPSNRLimit
+- **Demonstrates:** PPBrightLimit, PPMagnitudeLimit, PPSNRLimit
 - **Files:** none
 
 demo_TrailingLossesValidation
-- **Validates:** PPTrailingLoss
+- **Demonstrates:** PPTrailingLoss
 - **Files:** none
 
 demo_UncertaintiesAndRandomization
-- **Validates:** PPAddUncertainty, PPRandomizeMeasurements
+- **Demonstrates:** PPAddUncertainty, PPRandomizeMeasurements
 - **Files:** none
+
+demo_Vignetting
+- **Demonstrates:** vignettingEffects
+- **Files:** oneline_v2.0.db, footprintFilterValidationObservations.csv

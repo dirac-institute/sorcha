@@ -8,6 +8,8 @@ Sorcha uses a configuration files to set the majority of the various parameters 
 .. tip::
   We have developed  a set of utilities that are installed alongside Sorcha that can generate a config file for Sorcha (See :ref:`makeConfigPP`). 
 
+.. _example_configs:
+
 Example Configuration Files
 ------------------------------------
 
@@ -47,11 +49,11 @@ Sorcha's **ppsqldbquery** config file parameter contain the sql query for obtain
 
 From rubin_sim v2.0 simulations onward use the query::
 
-  SELECT observationId, observationStartMJD as observationStartMJD_TAI, filter, seeingFwhmGeom, seeingFwhmEff, fiveSigmaDepth, fieldRA, fieldDec, rotSkyPos FROM observations order by observationId
+  SELECT observationId, observationStartMJD as observationStartMJD_TAI, visitTime, filter, seeingFwhmGeom, seeingFwhmEff, fiveSigmaDepth, fieldRA, fieldDec, rotSkyPos FROM observations order by observationId
 
 For past rubin_sim/OpSim simulations pre-v2.0 use the query::
 
-  SELECT observationId, observationStartMJD as observationStartMJD_TAI, filter, seeingFwhmGeom, seeingFwhmEff, fiveSigmaDepth, fieldRA, fieldDec, rotSkyPos FROM SummaryAllProps order by observationId
+  SELECT observationId, observationStartMJD as observationStartMJD_TAI, visitTime, filter, seeingFwhmGeom, seeingFwhmEff, fiveSigmaDepth, fieldRA, fieldDec, rotSkyPos FROM SummaryAllProps order by observationId
 
 .. _makeConfigPP:
 
@@ -112,7 +114,7 @@ They are described as follows:
 +------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | --brightlimit BRIGHTLIMIT, -brtlim BRIGHTLIMIT                               | Limit of brightness: detections brighter than this are omitted assuming saturation. Expects a float. Default is 16.0.                                                                                                                                                | 
 +------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| --outpath OUTPATH, -out OUTPATH                                              |  Path to output. Default is "./data/out".                                                                                                                                                                                                                            |                                                                                                                                            
+| --outpath OUTPATH, -out OUTPATH                                              |  Path to output. Default is "./".                                                                                                                                                                                                                            |                                                                                                                                            
 +------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | --outfilestem OUTFILESTEM, -outstem OUTFILESTEM                              |  Output file name stem. Default is "hundredcomets"                                                                                                                                                                                                                   | 
 +------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+

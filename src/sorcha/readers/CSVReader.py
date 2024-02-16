@@ -17,14 +17,19 @@ class CSVDataReader(ObjectDataReader):
 
         Parameters
         -----------
-        filename : str
+        filename : string
             Location/name of the data file.
 
-        sep : str, optional
+        sep : string, optional
             Format of input file ("whitespace"/"comma"/"csv").
+            Default = csv
 
-        header : int, optional
+        header : integer, optional
             The row number of the header. If not provided, does an automatic search.
+            Default = -1
+
+        **kwargs: dictionary, optional
+            Extra arguments
         """
         super().__init__(**kwargs)
         self.filename = filename
@@ -50,7 +55,7 @@ class CSVDataReader(ObjectDataReader):
 
         Returns
         --------
-        name : str
+        name : string
             The reader information.
         """
         return f"CSVDataReader:{self.filename}"
@@ -61,7 +66,7 @@ class CSVDataReader(ObjectDataReader):
 
         Returns
         --------
-        int
+        : integer
             The line index of the header.
 
         """
@@ -86,19 +91,23 @@ class CSVDataReader(ObjectDataReader):
 
         Parameters
         -----------
-        block_start : int, optional
+        block_start : integer, optional
             The 0-indexed row number from which
             to start reading the data. For example in a CSV file
             block_start=2 would skip the first two lines after the header
-            and return data starting on row=2. [Default=0]
+            and return data starting on row=2. Default =0
 
-        block_size int, optional, default=None
+        block_size: integer, optional, default=None
             The number of rows to read in.
             Use block_size=None to read in all available data.
+            default =None
+
+        **kwargs : dictionary, optional
+            Extra arguments
 
         Returns
         -----------
-        Pandas dataframe
+        res_df : pandas dataframe
             Dataframe of the object data.
         """
         # Skip the rows before the header and then begin_loc rows after the header.
@@ -112,7 +121,7 @@ class CSVDataReader(ObjectDataReader):
         if self.sep == "whitespace":
             res_df = pd.read_csv(
                 self.filename,
-                delim_whitespace=True,
+                sep="\\s+",
                 skiprows=skip_rows,
                 nrows=block_size,
             )
@@ -133,7 +142,7 @@ class CSVDataReader(ObjectDataReader):
         if self.sep == "whitespace":
             self.obj_id_table = pd.read_csv(
                 self.filename,
-                delim_whitespace=True,
+                sep="\\s+",
                 usecols=["ObjID"],
                 header=self.header_row,
             )
@@ -155,9 +164,12 @@ class CSVDataReader(ObjectDataReader):
         obj_ids : list
             A list of object IDs to use.
 
+        **kwargs : dictionary, optional
+            Extra arguments
+
         Returns
         -----------
-        Pandas dataframe
+        res_df : pandas dataframe
             The dataframe for the object data.
         """
         self._build_id_map()
@@ -171,7 +183,7 @@ class CSVDataReader(ObjectDataReader):
         if self.sep == "whitespace":
             res_df = pd.read_csv(
                 self.filename,
-                delim_whitespace=True,
+                sep="\\s+",
                 skiprows=(lambda x: skipped_row[x]),
             )
         else:
@@ -197,9 +209,12 @@ class CSVDataReader(ObjectDataReader):
         input_table : Pandas dataframe
             A loaded table.
 
+        **kwargs : dictionary, optional
+            Extra arguments
+
         Returns
         -----------
-        Pandas dataframe
+        input_table: pandas dataframe
             Returns the input dataframe modified in-place.
         """
         # Perform the parent class's validation (checking object ID column).

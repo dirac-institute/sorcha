@@ -14,3 +14,5 @@ nbsphinx
 ipython
 jupytext
 jupyter
+sorcha-addons
+importlib_resources

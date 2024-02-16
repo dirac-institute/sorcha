@@ -1,6 +1,7 @@
 """
 This package contains all of sorcha's test data.
 """
+
 import os
 from pathlib import Path
 
@@ -18,12 +19,12 @@ def get_test_filepath(filename):
 
     Parameters
     ----------
-    filename : `str`
+    filename : string
         The name of the file inside the ``tests/data`` directory.
 
     Returns
     -------
-    filepath : `str`
+    : string
         The full path to the file.
     """
 
@@ -40,12 +41,12 @@ def get_demo_filepath(filename):
 
     Parameters
     ----------
-    filename : `str`
+    filename : string
         The name of the file inside the ``demo`` directory.
 
     Returns
     -------
-    filepath : `str`
+    : string
         The full path to the file.
     """
 
@@ -58,16 +59,16 @@ def get_demo_filepath(filename):
 
 
 def get_data_out_filepath(filename):
-    """Return the full path to a test file in the ``.../data/out`` directory.
+    """Return the full path to a test file in the ``.../tests/out`` directory.
 
     Parameters
     ----------
-    filename : `str`
+    filename : string
         The name of the file inside the ``data/out`` directory.
 
     Returns
     -------
-    filepath : `str`
+    : string
         The full path to the file.
     """
 
@@ -76,4 +77,4 @@ def get_data_out_filepath(filename):
     THIS_DIR = Path(__file__).parent.parent.parent.parent
 
     # Returned path: `<base_directory>/tests/data/filename`
-    return os.path.join(THIS_DIR, "data/out", filename)
+    return os.path.join(THIS_DIR, "tests/out", filename)

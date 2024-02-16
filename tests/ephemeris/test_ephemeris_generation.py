@@ -5,6 +5,7 @@ import re
 
 from sorcha.utilities.dataUtilitiesForTests import get_test_filepath, get_demo_filepath
 from sorcha.modules.PPConfigParser import PPConfigFileParser
+from sorcha.modules.PPGetLogger import PPGetLogger
 from sorcha.utilities.sorchaArguments import sorchaArguments
 from sorcha.ephemeris.simulation_driver import create_ephemeris
 from sorcha.modules.PPReadPointingDatabase import PPReadPointingDatabase
@@ -55,6 +56,8 @@ def test_ephemeris_end2end(single_synthetic_pointing, tmp_path):
         "outfilestem": f"out_400k",
         "verbose": False,
     }
+
+    pplogger = PPGetLogger(cmd_args_dict["outpath"])
     args = sorchaArguments(cmd_args_dict)
 
     configs = PPConfigFileParser(
@@ -64,8 +67,9 @@ def test_ephemeris_end2end(single_synthetic_pointing, tmp_path):
     configs["seed"] = 24601
 
     filterpointing = PPReadPointingDatabase(
-        args.pointing_database, configs["observing_filters"], configs["pointing_sql_query"]
+        args.pointing_database, configs["observing_filters"], configs["pointing_sql_query"], "lsst"
     )
+
     filterpointing = precompute_pointing_information(filterpointing, args, configs)
 
     observations = create_ephemeris(

@@ -16,17 +16,34 @@ def vignettingEffects(
 ):
     """
     Calculates effective limiting magnitude at source, taking vignetting into account.
-    Wrapper for calcVignettingLosses.
+    Wrapper for calcVignettingLosses().
 
-    Parameters:
+    Parameters
     -----------
-    oif_df (Pandas dataframe): dataframe of observations.
+    oif_df : pandas dataframe
+        dataframe of observations.
 
-    *NameOIF (strings): column names of object RA, object Dec, field ID, field RA and field Dec respectively.
+    raNameOIF : string, optional
+        'oif_df' column name of object RA. Default = "AstRA(deg)"
 
-    Returns:
+    decNameOIF : string, optional
+        'oif_df' column name of object declination. Default = "AstDec(deg)"
+
+    fieldNameOIF : string, optional
+        'oif_df' column name for observation pointing field ID. Default = "FieldID"
+
+    raNameSurvey : string, optional
+         'oif_df' column name for observation pointing RA. Default = "fieldRA"
+
+
+     decNameSurvey : string, optional
+         'oif_df' column name for observation pointing declination. Default = "fieldDec"
+
+    Returns
     -----------
-    Pandas series: five sigma depth at object location, adjusted for vignetting.
+     : list of floats
+         Five sigma limiting magnitude at object location adjusted for vignetting for each
+         row in 'oif_df' dataframe.
 
     """
 
@@ -42,19 +59,24 @@ def calcVignettingLosses(ra, dec, fieldra, fielddec):
     Calculates magnitude loss due to vignetting for a point with the telescope
     centered on fieldra, fielddec.
 
-    Parameters:
+    Parameters
     -----------
-    ra (float/array of floats): RA of object(s).
+    ra : float or aarray of floats
+        RA of object(s).
 
-    dec (float/array of floats): Dec of object(s).
+    dec : float or array of floats
+        Dec of object(s).
 
-    fieldra (float/array of floats): RA of field(s).
+    fieldra : float or array of floats
+        RA of field(s).
 
-    fielddec (float/array of floats): Dec of field(s).
+    fielddec: float or array of floats
+        Dec of field(s).
 
-    Returns:
+    Returns
     -----------
-    Magnitude loss due to vignetting at object position (float/array of floats).
+    : floats or array of floats
+        Magnitude loss due to vignetting at object position.
 
     """
 
@@ -74,19 +96,24 @@ def haversine(ra1, dec1, ra2, dec2):
     errors for antipodal points, which are not intended to be encountered within
     the scope of this module.
 
-    Parameters:
+    Parameters
     -----------
-    ra1 (float/array of floats): RA of first point.
+    ra1 : float or array of floats
+        RA of first point.
 
-    dec1 (float/array of floats): Dec of first point.
+    dec1  or float or array of floats
+        Dec of first point.
 
-    ra2 (float/array of floats): RA of second point.
+    ra2 : float or array of floats
+        RA of second point.
 
-    dec2 (float/array of floats): Dec of second point.
+    dec2 : float/array of floats
+        Dec of second point.
 
-    Returns:
+    Returns
     -----------
-    Angular distance between two points (float/array of floats).
+     : float or array of floats
+         Angular distance between two points.
 
     """
 
@@ -97,17 +124,23 @@ def haversine(ra1, dec1, ra2, dec2):
 
 def vignetFunc(x):
     """
+    Returns the magnitude of dimming caused by the vignetting relative to the
+    center of the field.
+
+    Parameters
+    -----------
+    x : float or array of floats
+        Angular separation of point from field centre.
+
+    Returns
+    -----------
+    :   float or array of floats
+        Magnitude of dimming due to vignetting at object position.
+
+    Notes
+    --------
     Grabbed from sims_selfcal. From VignettingFunc_v3.3.TXT. r is in degrees,
-    frac is fraction of rays which were not vignetted. Returns the magnitudes
-    of dimming caused by the vignetting relative to the center of the field.
-
-    Parameters:
-    -----------
-    x (float/array of floats): angular separation of point from field centre.
-
-    Returns:
-    -----------
-    Magnitude of dimming due to vignetting at object position (float/array of floats).
+    frac is fraction of rays which were not vignetted.
 
     """
 

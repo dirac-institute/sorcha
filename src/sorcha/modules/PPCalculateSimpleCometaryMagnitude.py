@@ -11,11 +11,8 @@ def PPCalculateSimpleCometaryMagnitude(
     alpha: List[float],
     activity_choice: str = None,
 ) -> pd.DataFrame:
-    """This task calculates the brightness of the comet at a given pointing
-    using the model specified by `activity_choice`
-
-    The brightness is calculated first in the main filter, and the colour offset is
-    applied afterwards.
+    """Adjusts the  observations' trailed source apparent magnitude for cometary activity
+    using the model specified by `activity_choice` added by the user
 
     Parameters
     ----------
@@ -30,13 +27,14 @@ def PPCalculateSimpleCometaryMagnitude(
         Distance to Earth [units au]
     alpha : List[float]
         Phase angle [units degrees]
-    activity_choice : str, optional
+    activity_choice : string, optional
         The activity model to use, by default None
 
     Returns
     -------
     pd.DataFrame
-            The ``observations`` dataframe with updated brightness values.
+            The ``observations`` dataframe with updated trailed
+            source apparent magnitude values.
     """
 
     if activity_choice and CA_METHODS.get(activity_choice, False):

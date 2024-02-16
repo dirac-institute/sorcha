@@ -22,11 +22,15 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import sys
-import pkg_resources
+import importlib_resources
+
+from numba import njit
 
 deg2rad = np.radians
 sin = np.sin
 cos = np.cos
+
+logger = logging.getLogger(__name__)
 
 
 def distToSegment(points, x0, y0, x1, y1):
@@ -35,21 +39,27 @@ def distToSegment(points, x0, y0, x1, y1):
     units as the points are specified in (radians, degrees, etc.). Uses planar
     geometry for the calculations (assuming small angular distances).
 
-    Parameters:
+    Parameters
     -----------
-    points (array): array of shape (2, n) describing the corners of the sensor.
+    points : array
+        Array of shape (2, n) describing the corners of the sensor.
 
-    x0 (float): the x coordinate of the first end of the segment.
+    x0 : float
+        The x coordinate of the first end of the segment.
 
-    y0 (float): the y coordinate of the first end of the segment.
+    y0 : float
+        The y coordinate of the first end of the segment.
 
-    x1 (float): the x coordinate of the second end of the segment.
+    x1 : float
+        The x coordinate of the second end of the segment.
 
-    y1 (float): the y coordinate of the second end of the segment.
+    y1 : float
+        The y coordinate of the second end of the segment.
 
-    Returns:
+    Returns
     --------
-    dist (array): array of length n storing the distances.
+    dist : array
+        Array of length n storing the distances.
     """
     # Handle the case where the segment is a point: (x0 == x1) and (y0 == y1)
     len_sq = (x1 - x0) * (x1 - x0) + (y1 - y0) * (y1 - y0)
@@ -67,23 +77,107 @@ def distToSegment(points, x0, y0, x1, y1):
     return np.sqrt((points[0] - proj_x) * (points[0] - proj_x) + (points[1] - proj_y) * (points[1] - proj_y))
 
 
+# ==============================================================================
+# coordinate transforms
+# ==============================================================================
+
+
+def radec_to_tangent_plane(ra, dec, field_ra, field_dec):
+    """
+    Converts ra and dec to xy on the plane tangent to image center, in the 2-d coordinate system where y is aligned with the meridian.
+
+    Parameters:
+    -----------
+    ra (float/array of floats): observation Right Ascension, radians.
+
+    dec (float/array of floats): observation Declination, radians.
+
+    fieldra (float/array of floats): field pointing Right Ascension, radians.
+
+    fielddec (float/array of floats): field pointing Declination, radians.
+
+    fieldID (float/array of floats): Field ID, optional.
+
+    Returns:
+    ----------
+    x, y (float/array of floats): Coordinates on the focal plane, radians projected
+    to the plane tangent to the unit sphere.
+
+    """
+
+    # convert to cartesian coordiantes on unit sphere
+    observation_vectors = np.array([cos(ra) * np.cos(dec), sin(ra) * np.cos(dec), sin(dec)])  # x  # y  # z
+
+    field_vectors = np.array(
+        [cos(field_ra) * np.cos(field_dec), sin(field_ra) * np.cos(field_dec), sin(field_dec)]
+    )
+
+    # make the basis vectors for the fields of view
+    # the "x" basis is easy, 90 d rotation of the x, y components
+    focalx = np.zeros(field_vectors.shape)
+    focalx[0] = -field_vectors[1]
+    focalx[1] = field_vectors[0]
+
+    # "y" by taking cross product of field vector and "x"
+    focaly = np.cross(field_vectors, focalx, axis=0)
+
+    # normalize
+    focalx /= np.linalg.norm(focalx, axis=0)
+    focaly /= np.linalg.norm(focaly, axis=0)
+
+    # extend observation vectors to plane tangent to field pointings
+    k = 1.0 / np.sum(field_vectors * observation_vectors, axis=0)
+    observation_vectors *= k
+    observation_vectors -= field_vectors
+
+    # get observation vectors as combinations of focal vectors
+    x = np.sum(observation_vectors * focalx, axis=0)
+    y = np.sum(observation_vectors * focaly, axis=0)
+
+    return x, y
+
+
+def radec_to_focal_plane(ra, dec, field_ra, field_dec, field_rot):
+    # convert ra, dec to points on focal plane, x pointing to celestial north
+    x, y = radec_to_tangent_plane(ra, dec, field_ra, field_dec)
+    # rotate focal plane to align with detectors
+    xy = x + 1.0j * y
+    xy *= np.exp(1.0j * field_rot)  # which direction to rotate?
+
+    x = np.real(xy)
+    y = np.imag(xy)
+
+    return x, y
+
+
+# ==============================================================================
+# detector class
+# ==============================================================================
+
+
 class Detector:
+    """Detector class"""
+
     def __init__(self, points, ID=0, units="radians"):
         """
         Initiates a detector object.
 
-        Parameters:
+        Parameters
         -----------
-        points (array): array of shape (2, n) describing the corners of the sensor.
+        points : array
+            Array of shape (2, n) describing the corners of the sensor.
 
-        ID (int): an integer ID for the sensor.
+        ID : int, optional
+            Aan integer ID for the sensor. Default =0.
 
-        units (string): units that points is provided in, "radians" or "degrees" from
-                        center of the focal plane.
+        units : string, optional
+            Units that points is provided in, "radians" or "degrees" from
+            center of the focal plane. Default = "radians"
 
-        Returns:
+        Returns
         ----------
-        detector (Detector): a detector instance.
+        detector : Detector
+            A Detector object instance.
 
         """
 
@@ -115,28 +209,31 @@ class Detector:
         Determines whether a point (or array of points) falls on the
         detector.
 
-        Parameters:
+        Parameters
         -----------
-        point (array): array of shape (2, n) for n points.
+        point : array
+            Array of shape (2, n) for n points.
 
-        ϵ (float): threshold for whether point is on detector.
+        ϵ : float, optional
+            Threshold for whether point is on detector. Default: 10.0 ** (-11)
 
-        edge_thresh (float, optional): The focal plane distance (in arcseconds) from
-            the detector's edge for a point to be counted. Removes points that are too
-            close to the edge for source detection.
+        edge_thresh: float, optional
+            The focal plane distance (in arcseconds) from the detector's edge
+            for a point to be counted. Removes points that are too
+            close to the edge for source detection. Default = None
 
-        plot (Boolean): whether to plot the detector and the point.
+        plot : Boolean, optional
+            Flag for whether to plot the detector and the point. Default = False
 
-        Returns:
+        Returns
         ----------
-        ison (array): indices of points in point array that fall on the sensor.
+        selectedidx : array
+            Indices of points in point array that fall on the sensor.
         """
-        pplogger = logging.getLogger(__name__)
-
         # points needs to be shape 2,n
         # if single point, needs to be an array of single element arrays
         if len(point.shape) != 2 or point.shape[0] != 2:
-            pplogger.error(f"ERROR: Detector.ison invalid array {point.shape}")
+            logger.error(f"ERROR: Detector.ison invalid array {point.shape}")
             sys.exit(f"ERROR: Detector.ison invalid array {point.shape}")
 
         # check whether point is in circle bounding the detector
@@ -155,7 +252,7 @@ class Detector:
             elif self.units == "radians" or self.units == "rad":
                 edge_thresh = np.radians(edge_thresh / 3600.0)
             else:
-                pplogger.error(f"ERROR: Detector.ison unable to convert edge_thresh to {self.units}")
+                logger.error(f"ERROR: Detector.ison unable to convert edge_thresh to {self.units}")
                 sys.exit(f"ERROR: Detector.ison unable to convert edge_thresh to {self.units}")
 
             n = len(self.x)
@@ -183,13 +280,14 @@ class Detector:
         segmentedArea, but the test point is the mean of the corner coordinates.
         Will probably fail if the sensor is not convex.
 
-        Parameters:
+        Parameters
         -----------
         None.
 
-        Returns:
+        Returns
         ----------
-        area (float): the area of the detector.
+        area : float
+            The area of the detector.
 
         """
         x = self.x - self.centerx
@@ -210,14 +308,15 @@ class Detector:
         Fails if the point is not inside the sensor or if the sensor is not
         convex.
 
-        Parameters:
+        Parameters
         -----------
-        None.
+        point : array
+            Array of shape (2, n) for n points.
 
-        Returns:
+        Returns
         ----------
-        area (float): the area of the detector.
-
+        area : float
+            The area of the detector.
         """
 
         # so that both a single and many points work
@@ -247,11 +346,11 @@ class Detector:
         Sorts the corners to be counterclockwise by angle from center of
         the detector. Modifies self.
 
-        Parameters:
+        Parameters
         -----------
         None.
 
-        Returns:
+        Returns
         ----------
         None.
 
@@ -269,13 +368,15 @@ class Detector:
         Rotates a sensor around the origin of the coordinate system its
         corner locations are provided in.
 
-        Parameters:
+        Parameters
         -----------
-        θ (float): angle to rotate by, in radians.
+        θ : float
+            Angle to rotate by, in radians.
 
-        Returns:
+        Returns
         ----------
-        Detector: new Detector instance.
+        Detector:  Detector
+            New Detector instance.
 
         """
 
@@ -293,11 +394,11 @@ class Detector:
         """
         Converts corners from radians to degrees.
 
-        Parameters:
+        Parameters
         -----------
         None.
 
-        Returns:
+        Returns
         ----------
         None.
 
@@ -316,11 +417,11 @@ class Detector:
         """
         Converts corners from degrees to radians.
 
-        Parameters:
+        Parameters
         -----------
         None.
 
-        Returns:
+        Returns
         ----------
         None.
 
@@ -343,18 +444,22 @@ class Detector:
         internal demonstration purposes, but not for confirming algorithms or
         for offical plots.
 
-        Parameters:
+        Parameters
         -----------
-        θ (float): angle to rotate footprint by, radians or degrees.
+        θ : float, optional
+            Aangle to rotate footprint by, radians or degrees. Default =0.0
 
-        color  (string): line color.
+        color :string, optional
+            Line color. Default = "gray"
 
-        units (string): units θ is provided in ("deg" or "rad").
+        units: string, optional
+            Units. Units is provided in ("deg" or "rad"). Default = 'rad'.
 
-        annotate (Boolean): whether to annotate each sensor with its index in
-        self.detectors.
+        annotate : Boolean
+            Flag whether to annotate each sensor with its index in self.detectors.
+            Default = False
 
-        Returns:
+        Returns
         ----------
         None.
 
@@ -376,21 +481,31 @@ class Detector:
             plt.annotate(str(detector.ID), (detector.centerx, detector.centery))
 
 
+# ==============================================================================
+# camera class
+# ==============================================================================
+
+
 class Footprint:
+    """Camera footprint class"""
+
     def __init__(self, path=None, detectorName="detector"):
         """
         Initiates a Footprint object.
 
-        Parameters:
+        Parameters
         -----------
-        path (string): path to a .csv file containing detector corners.
+        path : string, optional
+            Path to a .csv file containing detector corners. Default = None
 
-        detectorName (string): name of column in detector file indicating to
-        which sensor a corner belongs.
+        detectorName : string, optional
+            Name of column in detector file indicating to which sensor a
+            corner belongs. Default = "detector"
 
-        Returns:
+        Returns
         ----------
-        Footprint: Footprint object for the provided sensors.
+        Footprint : Footprint
+            Footprint object for the provided sensors.
 
         """
 
@@ -399,10 +514,24 @@ class Footprint:
         # if the user doesn't provide their own version of the footprint,
         # we'll use the default LSST version that comes included.
         if path:
-            allcornersdf = pd.read_csv(path)
+            try:
+                allcornersdf = pd.read_csv(path)
+                logger.info(f"Using CCD Detector file: {path}")
+            except IOError:
+                logger.error(f"Provided detector footprint file does not exist.")
+                sys.exit(1)
+
         else:
-            stream = pkg_resources.resource_stream(__name__, "data/LSST_detector_corners_100123.csv")
-            allcornersdf = pd.read_csv(stream)
+            try:
+                default_camera_config_file = "data/LSST_detector_corners_100123.csv"
+                # stream = pkg_resources.resource_stream(__name__, default_camera_config_file)
+                # stream = importlib_resources.as_file( default_camera_config_file )
+                stream = importlib_resources.files(__name__).joinpath(default_camera_config_file)
+                logger.info(f"Using built-in CCD Detector file: {default_camera_config_file}")
+                allcornersdf = pd.read_csv(stream)
+            except IOError:
+                logger.error(f"Error loading default camera footprint, exiting ...")
+                sys.exit(1)
 
         # build dictionary of detectorName:[list_of_inds]
         det_to_inds = {}
@@ -436,18 +565,22 @@ class Footprint:
         is <2.1 degrees), so should be fine for internal demonstration
         purposes, but not for confirming algorithms or for offical plots.
 
-        Parameters:
+        Parameters
         -----------
-        θ (float): angle to rotate footprint by, radians or degrees.
+        θ : float, optional
+            Angle to rotate footprint by, radians or degrees. Default = 0.0
 
-        color  (string): line color.
+        color : string, optional
+            Line color. Default = "gray"
 
-        units (string): units θ is provided in ("deg" or "rad").
+        units : string, optional
+            Units θ is provided in ("deg" or "rad"). Default = "rad"
 
-        annotate (Boolean): whether to annotate each sensor with its index in
-        self.detectors.
+        annotate : boolean, optional
+            Whether to annotate each sensor with its index in
+            self.detectors. Default = False
 
-        Returns:
+        Returns
         ----------
         None.
 
@@ -472,23 +605,42 @@ class Footprint:
         footprint. Also returns the an ID for the sensor a detection is made
         on.
 
-        Parameters:
+        Parameters
         -----------
-        field_df (Pandas dataframe): dataframe containing detection information with pointings.
+        field_df : Pandas dataframe
+            Dataframe containing detection information with pointings.
 
-        *_name (string): column names for object RA and Dec and field name.
+        ra_name : string, optional
+            "field_df" dataframe's column name for object's RA
+             for the given observation. Default = "AstRA(deg)" [units: degrees]
 
-        *_name_field (string): column names for field RA and Dec and rotation.
+        dec_name : string, optional
+            "field_df" dataframe's column name for object's declination
+             for the given observation. Default = "AstDec(deg)" [units: dgrees]
 
-        edge_thresh (float, optional): An angular threshold in arcseconds for dropping pixels too
-        close to the edge.
+        ra_name_field : string, optional
+            "field_df" dataframe's column name for the observation field's RA
+             Default = "fieldRA" [units: degrees]
 
-        Returns:
+        dec_name_field : string, optional
+            "field_df" dataframe's column name for the observation field's declination
+             Default = "fieldDec" [Units: degrees]
+
+        rot_name_field: string, optional
+            "field_df" dataframe's column name for the observation field's rotation angle
+            Default = "rotSkyPos" [Units: degrees]
+
+        edge_thresh: float, optional
+            An angular threshold in arcseconds for dropping pixels too close to the edge.
+            Default  = None
+
+        Returns
         ----------
-        detected (array): indices of rows in oifDF which fall on the sensor(s).
+        detected : array
+            Indices of rows in oifDF which fall on the sensor(s).
 
-        detectorID  (array): index corresponding to a detector in
-        self.detectors for each entry in detected.
+        detectorID : array
+            Index corresponding to a detector in self.detectors for each entry in detected.
 
         """
 
@@ -501,94 +653,20 @@ class Footprint:
         fielddec = deg2rad(field_df[dec_name_field])
         rotSkyPos = deg2rad(field_df[rot_name_field])
 
-        # quaternion method has been removed. uses direct projection method
         # (no rotation on 3d unit sphere):
-        x, y = radec2focalplane(ra, dec, fieldra, fielddec)
-
-        # apply field rotation
-        # first convert to complex numbers
-        # maybe do this in the focal plane function?
-        observations_complex = x + y * 1.0j
-        rotation = np.exp(-rotSkyPos * 1.0j)
-
-        observations_complex *= rotation
-        x = np.real(observations_complex)
-        y = np.imag(observations_complex)
-
-        plt.scatter(x, y, s=3.0)
-        points = np.array((x, y))
+        points = np.array((radec_to_focal_plane(ra, dec, fieldra, fielddec, rotSkyPos)))
+        # x, y = radec_to_focal_plane(ra, dec, fieldra, fielddec, rotSkyPos)
+        # points = np.array((x, y))
 
         # check whether they land on any of the detectors
-        i = 0
         detected = []
         detectorId = []
+        i = 0
         for detector in self.detectors:
-            if True:
-                stuff = detector.ison(points, edge_thresh=edge_thresh)
-                detected.append(stuff)
-                detectorId.append([i] * len(stuff))
-                i += 1
+            stuff = detector.ison(points, edge_thresh=edge_thresh)
+            detected.append(stuff)
+            # detectorId.append([detector.ID] * len(stuff))
+            detectorId.append([i] * len(stuff))
+            i += 1
 
         return np.concatenate(detected), np.concatenate(detectorId)
-
-
-def radec2focalplane(ra, dec, fieldra, fielddec, fieldID=None):
-    """
-    Converts ra and dec to xy on the focal plane. Projects all pointings to
-    the same focal plane, but does not account for field rotation. Maintains
-    alignment with the meridian passing through the field center.
-
-    Parameters:
-    -----------
-    ra (float/array of floats): observation Right Ascension, radians.
-
-    dec (float/array of floats): observation Declination, radians.
-
-    fieldra (float/array of floats): field pointing Right Ascension, radians.
-
-    fielddec (float/array of floats): field pointing Declination, radians.
-
-    fieldID (float/array of floats): Field ID, optional.
-
-    Returns:
-    ----------
-    x, y (float/array of floats): Coordinates on the focal plane, radians projected
-    to the plane tangent to the unit sphere.
-
-    """
-
-    # convert to cartesian coordiantes on unit sphere
-    observation_vectors = np.array([cos(ra) * np.cos(dec), sin(ra) * np.cos(dec), sin(dec)])  # x  # y  # z
-
-    field_vectors = np.array(
-        [cos(fieldra) * np.cos(fielddec), sin(fieldra) * np.cos(fielddec), sin(fielddec)]  # x  # y
-    )  # z
-
-    # make the basis vectors for the fields of view
-    # the "x" basis is easy, 90 d rotation of the x, y components
-    focalx = np.zeros(field_vectors.shape)
-    focalx[0] = -field_vectors[1]
-    focalx[1] = field_vectors[0]
-
-    # "y" by taking cross product of field vector and "x"
-    focaly = np.cross(field_vectors, focalx, axis=0)
-
-    # normalize
-    focalx /= np.linalg.norm(focalx, axis=0)
-    focaly /= np.linalg.norm(focaly, axis=0)
-
-    # TODO: if fieldIDs are provided, match detections to field pointings
-    # may or may not add, benefits are likely negligible
-
-    # extend observation vectors to plane tangent to field pointings
-    k = 1.0 / np.sum(field_vectors * observation_vectors, axis=0)
-    # np.sum(field_vectors * field_vectors, axis=0) / np.sum(field_vectors * observation_vectors, axis=0)
-    observation_vectors *= k
-
-    observation_vectors -= field_vectors
-
-    # get observation vectors as combinations of focal vectors
-    x = np.sum(observation_vectors * focalx, axis=0)
-    y = np.sum(observation_vectors * focaly, axis=0)
-
-    return x, y

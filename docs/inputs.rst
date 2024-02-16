@@ -4,11 +4,11 @@ Inputs
 ==========
 
 .. note::
-  The user must specify the properties of each synthetic planetesimal individually: an orbit, other physical parameters (like color, asbolute magnitude, phase curve parameters, etc), and, optionally if needed, complex physical parameters and the computer ephemeris. 
+  The user must specify the properties of each synthetic planetesimal individually: an orbit, other physical parameters (like color, absolute magnitude, phase curve parameters, etc), and, optionally if needed, complex physical parameters and the computer ephemeris.
 
 
 There is a set of input files that are required to run the Sorcha codes, which describe the orbital
-and physical parameters for synthetic planetesimals that are being simulated. These files are: an orbit file, a physical paramerer file,the LSST pointing database, and optionally, an ephemeris file with positions of where the simulated particles are located within some distance of the survey field poitings, and a complex parameter file for more advanced handling of rotational light curves and other brigthness enhacements (such as due to cometary activity) . Each of these files are described within this section and example files are shown.
+and physical parameters for synthetic planetesimals that are being simulated. These files are: an orbit file, a physical parameter file,the LSST pointing database, and optionally, an ephemeris file with positions of where the simulated particles are located within some distance of the survey field poitings, and a complex parameter file for more advanced handling of rotational light curves and other brightness enhancements (such as due to cometary activity) . Each of these files are described within this section and example files are shown.
 
 
 .. image:: images/survey_simulator_flow_chart.png
@@ -16,10 +16,10 @@ and physical parameters for synthetic planetesimals that are being simulated. Th
   :alt: An overview of the inputs and outputs of the Sorcha code.
 
 .. tip::
-  Each synthetic planetesimal has its own unique object identifier set by the user and must have entries in the orbits and physical parameters files, as well as the cometary activity file, if used. 
+  Each synthetic planetesimal has its own unique object identifier set by the user and must have entries in the orbits and physical parameters files, as well as the cometary activity file, if used.
 
 .. warning::
-  Sorcha is not checking whether or not a planetesimal ID has been repeated in another row of the input files. **It is up to the user to ensure their input files include only unique IDs**. 
+  Sorcha is not checking whether or not a planetesimal ID has been repeated in another row of the input files. **It is up to the user to ensure their input files include only unique IDs**.
 
 .. _orbits:
 
@@ -29,28 +29,26 @@ Orbit File
 This is a file which contains the orbital information of a set of synthetic objects.
 
 .. tip::
-  *  Sorcha is **only** designed to handle **Cometary (COM), Keplerian (KEP), and Cartesian (CART)** orbits
+  *  Sorcha is designed to handle heliocentric **Cometary (COM), Keplerian (KEP), and Cartesian (CART)** orbits, as well as their barycentric equivalents: **Barycentric Cometary (BCOM), Keplerian (BKEP) and Cartesian (BCART)**
   *  The orbit file **must** have a consistent format (i.e. Cometary or Keplerian or Cartesian) throughout
   *  The ordering of the columns does not matter as long as the required columns exist and have entries
   *  The first row in the orbit file **must** be a header listing the columns names
-  *  The **correct capitalization of column names** is required 
+  *  The **correct capitalization of column names** is required
   *  The orbit file can be either **white space separated** or **comma value separated (CSV)**
-  *  Each simulated particle **must** have a unique string identifier 
-  *  The orbit file **must only** have 9 columns (object identifier, format column, 6 orbital parameters, and a time epoch) 
-
-.. warning::
-  Sorcha assumes **heliocentric** orbits are provided as input!
-
+  *  Each simulated particle **must** have a unique string identifier
+  *  The orbit file **must only** have 9 columns (object identifier, format column, 6 orbital parameters, and a time epoch)
 
 .. warning::
   The orbit epoch is expected to be given in **TDB (Barycentric Dynamical Time)**
 
-
 .. tip::
   If using Sorcha's internal ephemeris generation mode (which is the default mode), **we recommend calculating/creating your input orbits with epochs close in time to the start of the first survey observation**. This will minimize the n-body integrations required to set up the ephemeris generation.
 
+.. tip::
+  Be careful about the way your input elements are defined! Using heliocentric elements as barycentric (or vice-versa) will lead to wrong outputs. Similarly, if using Cartesian elements, be careful about the orientation of the coordinate system! Sorcha assumes that Cartesian elements are Ecliptic-oriented.
+
 .. note::
-  For readability we show examples of white space separated files below.
+  For readability we show examples of white space separated files below. We show only the heliocentric versions of these inputs, as the barycentric column requirements are identical, changing only the `FORMAT` designation
 
 Cometary Orbit Format
 ~~~~~~~~~~~~~~~~~~~~~~~
@@ -68,9 +66,9 @@ An example of an orbit file in Cometary format::
 +=============+==================================================================================+
 | objID       | Object identifier for each synthetic planetesimal simulated (string)             |
 +-------------+----------------------------------------------------------------------------------+
-| FORMAT      | Orbit format string (COM)  						         |
+| FORMAT      | Orbit format string (COM for heliocentric or BCOM for barycentric)  		         |
 +-------------+----------------------------------------------------------------------------------+
-| q           | Perihelion (au)									 |
+| q           | Perihelion (au)	                                                								 |
 +-------------+----------------------------------------------------------------------------------+
 | e           | Eccentricity                                                                     |
 +-------------+----------------------------------------------------------------------------------+
@@ -102,7 +100,7 @@ An example of an orbit file in Keplarian format::
 +=============+==================================================================================+
 | objID       | Object identifier for each synthetic planetesimal simulated (string)             |
 +-------------+----------------------------------------------------------------------------------+
-| FORMAT      | Orbit format string (KEP)                                                        |
+| FORMAT      | Orbit format string (KEP for heliocentric or BKEP for barycentric)               |
 +-------------+----------------------------------------------------------------------------------+
 | a           | Semimajor axis (au)                                                              |
 +-------------+----------------------------------------------------------------------------------+
@@ -121,7 +119,7 @@ An example of an orbit file in Keplarian format::
 
 Cartesian Orbit Format
 ~~~~~~~~~~~~~~~~~~~~~~~
-An example of an orbit file, in Keplarian format, with the object ID represented by a unique set of numbers::
+An example of an orbit file, in Cartesian format, with the object ID represented by a unique set of numbers::
 
    ObjID,FORMAT,x,y,z,xdot,ydot,zdot,epochMJD_TDB
    STC001TFa,CART,36.701800449281706,-8.770729364470023,-0.6261488665458296,0.0007155581026554,0.0026593939322716,7.344098975957749e-06,54466.0,36.54594860110992,0.04317
@@ -139,19 +137,19 @@ An example of an orbit file, in Keplarian format, with the object ID represented
 +=============+==================================================================================+
 | objID       | Object identifier for each synthetic planetesimal simulated (string)             |
 +-------------+----------------------------------------------------------------------------------+
-| FORMAT      | Orbit format string (CART)                                                       |
+| FORMAT      | Orbit format string (CART for heliocentric or BCART for barycentric)             |
 +-------------+----------------------------------------------------------------------------------+
-| x           | heliocentric distance along the x axis (au)                                      |
+| x           | heliocentric or barycentric position on the ecliptic x axis (au)                 |
 +-------------+----------------------------------------------------------------------------------+
-| y           | heliocentric distance along the y axis (au)                                      |
+| y           | heliocentric or barycentric position on the ecliptic y axis (au)                 |
 +-------------+----------------------------------------------------------------------------------+
-| z           | heliocentric distance along the z axis (au)                                      |
+| z           | heliocentric or barycentric position on the ecliptic z axis (au)                 |
 +-------------+----------------------------------------------------------------------------------+
-| xdot        | Longitude of the ascending node (degrees)                                        |
+| xdot        | heliocentric or barycentric velocity on the ecliptic x axis (au/day)             |
 +-------------+----------------------------------------------------------------------------------+
-| ydot        | Argument of perihelion (degrees)                                                 |
+| ydot        | heliocentric or barycentric velocity on the ecliptic y axis (au/day)             |
 +-------------+----------------------------------------------------------------------------------+
-| zdot        | Mean Anomaly (degrees)                                                           |
+| zdot        | heliocentric or barycentric velocity on the ecliptic z axis (au/day)             |
 +-------------+----------------------------------------------------------------------------------+
 | epochMJD_TDB| Epoch (MJD)                                                                      |
 +-------------+----------------------------------------------------------------------------------+
@@ -164,7 +162,7 @@ An example of an orbit file, in Keplarian format, with the object ID represented
 Physical Parameters File
 -------------------------------------------
 
-The input file for the physical parameters includes information about the objects optical colors, phase curve parameters, and absolute magnitude. The contents of this file are the bare minimum needed to simulate survey detections. For more advanced handling of the apparent magntiude of the synthetic objects including light curve effects and cometary activity,you would also specify values in the complex physical parameters file.   
+The input file for the physical parameters includes information about the objects optical colors, phase curve parameters, and absolute magnitude. The contents of this file are the bare minimum needed to simulate survey detections. For more advanced handling of the apparent magnitude of the synthetic objects including light curve effects and cometary activity,you would also specify values in the complex physical parameters file.
 
 .. tip::
   *  The ordering of the columns does not matter as long as the required columns exist and have entries
@@ -173,8 +171,8 @@ The input file for the physical parameters includes information about the object
   *  The physical parameters file can be either **white space separated** or **comma value separated (CSV)**
   *  Each simulated object **must** have a unique string identifier
   *  You  **must use the same phase curve prescription for all simulated objects**. If you want to use different phase curve prescriptions for different synthetic populations, you will need to run them in separate input files to Sorcha
-  *  If the  phase curve function is set to NONE in the configuration value then no phase curve parameters values are required in the physical paramters files. 
-  *  In the config file you can decide which filters you want have Sorcha run on and specify which filter is the main filter that the absolute magnitude is defined for. You only need to provide colors for those fliters specified in the config file.
+  *  If the  phase curve function is set to NONE in the configuration value then no phase curve parameters values are required in the physical parameters files.
+  *  In the config file you can decide which filters you want have Sorcha run on and specify which filter is the main filter that the absolute magnitude is defined for. You only need to provide colors for those filters specified in the config file.
 
 .. note::
   For readability we show examples of white space separated files below.
@@ -199,9 +197,9 @@ An example of the physical parameters file where a HG prescription is specified 
    St500003a 6.67 1.72 0.48 -0.11 -0.12 -0.12 0.15 0.16 0.12 0.20 0.15 0.19
    St500004a 10.2 1.90 0.58 -0.21 -0.30 -0.39 0.15 0.15 0.16 0.15 0.14 0.16
 
-Rubin Observatory will survey the sky in six broadband (optical filters), *u, g, r, i, z, and y* . In the physical parameters file, you will specify the object's absolute magnitude in the main filter (as specificed in the config file. usually this is g or r band) and then provide the synthetic planetesimal's color in other filters relative to the main filter.
+Rubin Observatory will survey the sky in six broadband (optical filters), *u, g, r, i, z, and y* . In the physical parameters file, you will specify the object's absolute magnitude in the main filter (as specified in the config file. usually this is g or r band) and then provide the synthetic planetesimal's color in other filters relative to the main filter.
 
-We have implemented several phase curve paramterizations that can be specified in the config file and the inputted through the physical parameters. **You can either specify one set of phase curve parameters for all filters or specify values for each filter examined by Sorcha.** We are using the  `sbpy <https://sbpy.org/>`_  phase function utilities. The supported options are: `HG <https://sbpy.readthedocs.io/en/latest/api/sbpy.photometry.HG.html#sbpy.photometry.HG>`_, `HG1G2 <https://sbpy.readthedocs.io/en/latest/api/sbpy.photometry.HG1G2.html#sbpy.photometry.HG1G2>`_, `HG12 <https://sbpy.readthedocs.io/en/latest/api/sbpy.photometry.HG12.html#sbpy.photometry.HG12>`_, `linear <https://sbpy.readthedocs.io/en/latest/api/sbpy.photometry.LinearPhaseFunc.html#sbpy.photometry.LinearPhaseFunc>`_ (specified by S in the header of the physical parameters file), and none (if no columnss for phase curve are included in the physical parameters file than the synthetic object is considered to have a flat phase curve). 
+We have implemented several phase curve paramterizations that can be specified in the config file and the inputted through the physical parameters. **You can either specify one set of phase curve parameters for all filters or specify values for each filter examined by Sorcha.** We are using the  `sbpy <https://sbpy.org/>`_  phase function utilities. The supported options are: `HG <https://sbpy.readthedocs.io/en/latest/api/sbpy.photometry.HG.html#sbpy.photometry.HG>`_, `HG1G2 <https://sbpy.readthedocs.io/en/latest/api/sbpy.photometry.HG1G2.html#sbpy.photometry.HG1G2>`_, `HG12 <https://sbpy.readthedocs.io/en/latest/api/sbpy.photometry.HG12.html#sbpy.photometry.HG12>`_, `linear <https://sbpy.readthedocs.io/en/latest/api/sbpy.photometry.LinearPhaseFunc.html#sbpy.photometry.LinearPhaseFunc>`_ (specified by S in the header of the physical parameters file), and none (if no columns for phase curve are included in the physical parameters file than the synthetic object is considered to have a flat phase curve).
 
 +------------------+----------------------------------------------------------------------------------+
 | Keyword          | Description                                                                      |
@@ -216,10 +214,10 @@ We have implemented several phase curve paramterizations that can be specified i
 +------------------+----------------------------------------------------------------------------------+
 
 ** note::
-  The Phase Curve Paramters(s) column will not be present if the phase curve function/calculation is set to None in the configuration file
+  The Phase Curve Parameters(s) column will not be present if the phase curve function/calculation is set to None in the configuration file
 
 .. note::
-  In the config file you can decide which filters you want have Sorcha run on and specify which filter is the main filter that the absolute magnitude is defined for. You only need to provide colors for those fliters specified in the config file.
+  In the config file you can decide which filters you want have Sorcha run on and specify which filter is the main filter that the absolute magnitude is defined for. You only need to provide colors for those filters specified in the config file.
 
 .. _pointing:
 
@@ -229,7 +227,7 @@ Survey Pointing Database
 .. note::
   Currently Sorcha is set up to run with the LSST cadence simulations pointing databases.
 
-This database contains information about the LSST pointing history and observing conditions.  We use observation mid-point time, right ascension, declination, rotation angle of the camera, 5-sigma limiting magnitude, filter, and seeing information in Objects in Field and Sorcha to determine if a synthetic Solar System object is observable.  
+This database contains information about the LSST pointing history and observing conditions.  We use observation mid-point time, right ascension, declination, rotation angle of the camera, 5-sigma limiting magnitude, filter, and seeing information in Objects in Field and Sorcha to determine if a synthetic Solar System object is observable.
 
 What we call the LSST pointing database (currently simulated since Rubin Observatory hasn’t started operations) is generated through the Rubin Observatory scheduler (since 2021 referred to as `rubin_sim <https://github.com/lsst/rubin_sim>`_ and previously known as OpSim). This software is currently under active development and is being used to run many simulated iterations of LSST scenarios showing what the cadence would look like with differing survey strategies. A description of an early version of this python software can be found in `Delgado et al.(2014) <https://ui.adsabs.harvard.edu/abs/2014SPIE.9150E..15D>`_.The output of rubin_sim is a sqlite database containing the pointing history and associated metadata of the simulated observation history of LSST.
 
@@ -239,7 +237,7 @@ What we call the LSST pointing database (currently simulated since Rubin Observa
 .. warning::
   The pointing databases times are expected to be TAI (Temps Atomique International; French for International Atomic Time),
 
-The latest version of rubin_sim cadence simulations can be found at https://s3df.slac.stanford.edu/data/rubin/sim-data/. An example rubin_sim simulation visualized on sky is shown in the plot below of the number of on-sky visits over the 10-year simulated baseline v3.2 survey (image credit: Lynne Jones): 
+The latest version of rubin_sim cadence simulations can be found at https://s3df.slac.stanford.edu/data/rubin/sim-data/. An example rubin_sim simulation visualized on sky is shown in the plot below of the number of on-sky visits over the 10-year simulated baseline v3.2 survey (image credit: Lynne Jones):
 
 .. image:: images/Rubin_v3.2_baseline_visits.png
   :width: 410
@@ -254,27 +252,27 @@ The latest version of rubin_sim cadence simulations can be found at https://s3df
 Complex Physical Parameters File (Optional)
 ---------------------------------------------------
 
-The complex physical parameters file is only needed if you're going to include your own rotational light curve class or cometary activity class to augment the calculated apparent magnitudes. Sorcha is set up such that any values required for this such as light curve amplitude and period per simulated object are included in file, separate from then physical paramters file, that we refer to as the complex physical parameteres file.  What columns are required in the complex physical parameters file  depends on what the classes you are using.
+The complex physical parameters file is only needed if you're going to include your own rotational light curve class or cometary activity class to augment the calculated apparent magnitudes. Sorcha is set up such that any values required for this such as light curve amplitude and period per simulated object are included in file, separate from then physical parameters file, that we refer to as the complex physical parameters file.  What columns are required in the complex physical parameters file  depends on what the classes you are using.
 
 .. tip::
   *  The ordering of the columns does not matter as long as the required columns exist and have entries
   *  The first row in the complex  physical parameters file **must** list  the columns names
   *  The **correct capitalization of column names** is required
-  *  The complex phyiscal parameters file can be either **white space separated** or **comma value separated (CSV)**
+  *  The complex physical parameters file can be either **white space separated** or **comma value separated (CSV)**
   *  Each simulated object **must** have a unique string identifier
 
 Ephemeris File (Optional)
 -----------------------------------------
 
 .. note::
-  Sorcha has an :ref:`ephemeris_gen` that we recommend using by default, but as an alternative Sorcha can read in an external file contains calculated ephemeris values for each simulated object wihtin a reasonable search radius of a given survey field pointing and observation times as specified in the survey pointing database. This could be the output from a previous Sorcha run or  provided from your own separate ephemeris generation method, 
+  Sorcha has an :ref:`ephemeris_gen` that we recommend using by default, but as an alternative Sorcha can read in an external file contains calculated ephemeris values for each simulated object within a reasonable search radius of a given survey field pointing and observation times as specified in the survey pointing database. This could be the output from a previous Sorcha run or  provided from your own separate ephemeris generation method,
 
 
 .. tip::
   *  The ordering of the columns does not matter as long as the required columns exist and have entries
   *  The first row in the physical parameters file **must** list  the columns names
   *  The **correct capitalization of column names** is required
-  *  The ephemerist file can be either **white space separated** or **comma value separated (CSV)**
+  *  The ephemeris file can be either **white space separated** or **comma value separated (CSV)**
   *  Each simulated object **must** have a unique string identifier
 
 .. note::
@@ -313,7 +311,7 @@ An example of an (optional) ephemeris file::
 +--------------------------+----------------------------------------------------------------------------------+
 | AstDecRate(deg/day)      | Synthetic plantesimal's declination rate of motion (deg/day)                     |
 +--------------------------+----------------------------------------------------------------------------------+
-| Ast-Sun(J2000x)(km)      |  Cartesian X-component of the synthetic planetesimal's heliocentric distamce (km)|
+| Ast-Sun(J2000x)(km)      |  Cartesian X-component of the synthetic planetesimal's heliocentric distance (km)|
 +--------------------------+----------------------------------------------------------------------------------+
 | Ast-Sun(J2000y)(km)      |  Cartesian Y-component of the synthetic planetesimal's heliocentric distance (km)|
 +--------------------------+----------------------------------------------------------------------------------+
@@ -325,19 +323,19 @@ An example of an (optional) ephemeris file::
 +--------------------------+----------------------------------------------------------------------------------+
 | Ast-Sun(J2000vz)(km/s)   |Cartesian Z-component of the synthetic planetesimal's heliocentric velocity (km/s)|
 +--------------------------+----------------------------------------------------------------------------------+
-| Obs-Sun(J2000x)(km)      |  Cartesian X-component of observer's heliocentric distamce (km)                  |
+| Obs-Sun(J2000x)(km)      |  Cartesian X-component of observer's heliocentric distance (km)                  |
 +--------------------------+----------------------------------------------------------------------------------+
 | Obs-Sun(J2000y)(km)      |  Cartesian Y-component of the observer's heliocentric distance (km)              |             
 +--------------------------+----------------------------------------------------------------------------------+
 | Obs-Sun(J2000z)(km)      |  Cartesian Z-component of the observer's heliocentric distance (km)              |
 +--------------------------+----------------------------------------------------------------------------------+
-|Obs-Sun(J2000vx)(km/s)    |  Cartesian X-component of the obsever's heliocentric velocity (km/s)             |
+|Obs-Sun(J2000vx)(km/s)    |  Cartesian X-component of the observer's heliocentric velocity (km/s)            |
 +--------------------------+----------------------------------------------------------------------------------+
 |Obs-Sun(J2000vy)(km/s)    |  Cartesian Y-component of the observer's heliocentric velocity (km/s)            |
 +--------------------------+----------------------------------------------------------------------------------+
 | Obs-Sun(J2000vz)(km/s)   |Cartesian Z-component of the observer's heliocentric velocity (km/s)              |
 +--------------------------+----------------------------------------------------------------------------------+
-| Sun-Ast-Obs(deg)         | The phase angle between the Sun,synthetic plantesimal, & observer (deg)          |
+| Sun-Ast-Obs(deg)         | The phase angle between the Sun,synthetic planetesimal, & observer (deg)         |
 +--------------------------+----------------------------------------------------------------------------------+
 
 .. note::

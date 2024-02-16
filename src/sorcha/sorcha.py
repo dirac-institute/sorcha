@@ -5,6 +5,7 @@ import time
 import numpy as np
 import argparse
 import os
+import logging
 
 from sorcha.ephemeris.simulation_driver import create_ephemeris
 from sorcha.ephemeris.simulation_setup import precompute_pointing_information
@@ -45,6 +46,14 @@ from sorcha.utilities.citation_text import cite_sorcha
 def cite():
     """Providing the bibtex, AAS Journals software latex command, and acknowledgement
     statements for Sorcha and the associated packages that power it.
+
+    Parameters
+    ----------
+    None
+
+    Returns
+    --------
+    None
     """
     cite_sorcha()
 
@@ -54,43 +63,31 @@ def mem(df):
         usage += v.nbytes
     return usage
 
-def runLSSTSimulation(args, configs, pplogger=None):
+def runLSSTSimulation(args, configs):
     """
     Runs the post processing survey simulator functions that apply a series of
     filters to bias a model Solar System small body population to what the
     Vera C. Rubin Observatory Legacy Survey of Space and Time would observe.
 
-    Parameters:
+    Parameters
     -----------
-    args (dictionary or `sorchaArguments` object):
+    args : dictionary or `sorchaArguments` object
         dictionary of command-line arguments.
 
     pplogger : logging.Logger, optional
         The logger to use in this function. If None creates a new one.
+        Default = None
 
-    Returns:
+    Returns
     -----------
     None.
 
     """
-    # Set up logging if it hasn't happened already.
-    if pplogger is None:
-        if type(args) is dict:
-            pplogger = PPGetLogger(args["outpath"])
-        else:
-            pplogger = PPGetLogger(args.outpath)
+    pplogger = logging.getLogger(__name__)
     pplogger.info("Post-processing begun.")
 
     update_lc_subclasses()
     update_activity_subclasses()
-
-    # Initialise argument parser, assign command line arguments, and validate.
-    if type(args) is dict:
-        try:
-            args = sorchaArguments(args, pplogger)
-        except Exception as err:
-            pplogger.error(err)
-            sys.exit(err)
 
     try:
         args.validate_arguments()
@@ -118,7 +115,7 @@ def runLSSTSimulation(args, configs, pplogger=None):
     verboselog("Reading pointing database...")
 
     filterpointing = PPReadPointingDatabase(
-        args.pointing_database, configs["observing_filters"], configs["pointing_sql_query"]
+        args.pointing_database, configs["observing_filters"], configs["pointing_sql_query"], args.surveyname
     )
 ##    print("POSTREAD:", len(filterpointing), type(filterpointing), mem(filterpointing))
 ##    print(filterpointing.dtypes)
@@ -224,32 +221,25 @@ def runLSSTSimulation(args, configs, pplogger=None):
         verboselog("Calculating effects of vignetting on limiting magnitude...")
         observations["fiveSigmaDepthAtSource"] = PPVignetting.vignettingEffects(observations)
 
-        verboselog("Applying field-of-view filters...")
-        observations = PPApplyFOVFilter(
-            observations, configs, args._rngs, footprint=footprint, verbose=args.verbose
-        )
-
         # Note that the below code creates observedTrailedSourceMag and observedPSFMag
         # as columns in the observations dataframe.
         # These are the columns that should be used moving forward for filters etc.
         # Do NOT use TrailedSourceMag or PSFMag, these are cut later.
         verboselog("Calculating astrometric and photometric uncertainties...")
+        verboselog("Values are then used to randomize the photometry....")
         observations = PPAddUncertainties.addUncertainties(
             observations, configs, args._rngs, verbose=args.verbose
         )
 
         verboselog("Randomising astrometry...")
-        observations["AstRATrue(deg)"] = observations["AstRA(deg)"]
-        observations["AstDecTrue(deg)"] = observations["AstDec(deg)"]
-        observations["AstRA(deg)"], observations["AstDec(deg)"] = PPRandomizeMeasurements.randomizeAstrometry(
+        observations = PPRandomizeMeasurements.randomizeAstrometry(
             observations, args._rngs, sigName="AstrometricSigma(deg)", sigUnits="deg"
         )
 
-        if configs["camera_model"] == "footprint":
-            verboselog("Re-applying field-of-view filter...")
-            observations = PPApplyFOVFilter(
-                observations, configs, args._rngs, footprint=footprint, verbose=args.verbose
-            )
+        verboselog("Applying field-of-view filters...")
+        observations = PPApplyFOVFilter(
+            observations, configs, args._rngs, footprint=footprint, verbose=args.verbose
+        )
 
         if configs["SNR_limit_on"]:
             verboselog(
@@ -318,32 +308,33 @@ def main():
     model Solar System small body population to what the specified wide-field
     survey would observe.
 
-    usage: sorcha [-h] -c C -o O -ob OB -p P -pd PD [-er E] [-ew E] [-cp CP] [-dw [DW]] [-dr DR] [-dl] [-f] [-s S] [-t T] [-v]
+    usage: sorcha [-h] -c C -o O -ob OB -p P -pd PD [-er ER] [-ew EW] [-ar AR] [-cp CP] [-f] [-s S] [-t T] [-v]
 
     options:
-      -h, --help            show this help message and exit
+        -h, --help            show this help message and exit
 
     Required arguments:
-      -c C, --config C      Input configuration file name (default: None)
-      -o O, --outfile O     Path to store output and logs. (default: None)
-      -ob OB, --orbit OB    Orbit file name (default: None)
-      -p P, --params P      Physical parameters file name (default: None)
-      -pd PD, --pointing_database PD
+        -c C, --config C      Input configuration file name (default: None)
+        -o O, --outfile O     Path to store output and logs. (default: None)
+        -ob OB, --orbit OB
+                            Orbit file name (default: None)
+        -p P, --params P      Physical parameters file name (default: None)
+        -pd PD, --pointing_database PD
                             Survey pointing information (default: None)
 
     Optional arguments:
-      -er E, --ephem_read E Existing ephemeris simulation output file name (default: None)
-      -ew E, --ephem_write E
-                            Output file name for newly generated ephemeris simulation (default: None)
-      -cp CP, --complex_physical_parameters CP
-                            Complex physical parameters file name (default: None)
-      -dw [DW]              Make temporary ephemeris database. If no filepath/name supplied, default name and ephemeris input location used. (default: None)
-      -dr DR                Location of existing/previous temporary ephemeris database to read from if wanted. (default: None)
-      -dl                   Delete the temporary ephemeris database after code has completed. (default: False)
-      -f, --force           Force deletion/overwrite of existing output file(s). (default: False)
-      -s S, --survey S      Survey to simulate (default: LSST)
-      -t T, --stem T        Output file name stem. (default: SSPPOutput)
-      -v, --verbose         Verbosity. Default currently true; include to turn off verbosity. (default: True)
+        -er ER, --ephem_read ER
+            Previously generated ephemeris simulation file name, required if ephemerides_type in config file is 'external'. (default: None)
+        -ew EW, --ephem_write EW
+            Output file name for newly generated ephemeris simulation, required if ephemerides_type in config file is not 'external'. (default: None)
+        -ar AR, --ar_data_path AR
+            Directory path where Assist+Rebound data files where stored when running bootstrap_sorcha_data_files from the command line. (default: None)
+        -cp CP, --complex_physical_parameters CP
+                        Complex physical parameters file name (default: None)
+        -f, --force           Force deletion/overwrite of existing output file(s). Default False. (default: False)
+        -s S, --survey S      Survey to simulate (default: LSST)
+        -t T, --stem T        Output file name stem. (default: SSPPOutput)
+        -v, --verbose         Verbosity. Default currently true; include to turn off verbosity. (default: True)
     """
 
     parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
@@ -474,7 +465,7 @@ def main():
 
     if cmd_args["surveyname"] in ["LSST", "lsst"]:
         try:
-            args = sorchaArguments(cmd_args, pplogger)
+            args = sorchaArguments(cmd_args)
         except Exception as err:
             pplogger.error(err)
             sys.exit(err)
@@ -483,7 +474,7 @@ def main():
         except Exception as err:
             pplogger.error(err)
             sys.exit(err)
-        runLSSTSimulation(args, configs, pplogger)
+        runLSSTSimulation(args, configs)
     else:
         pplogger.error(
             "ERROR: Survey name not recognised. Current allowed surveys are: {}".format(["LSST", "lsst"])

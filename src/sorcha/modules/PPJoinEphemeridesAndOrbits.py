@@ -8,15 +8,18 @@ def PPJoinEphemeridesAndOrbits(padafr, padaor):
     dataframe has to have same ObjIDs: NaNs will populate the fields for the
     missing objects.
 
-    Parameters:
+    Parameters
     -----------
-    padafr (Pandas dataframe): dataframe of ephemerides/OIF output.
+    padafr : Pandas dataframe
+        Dataframe of ephemerides output.
 
-    padaor (Pandas dataframe): dataframe of orbital information.
+    padaor : Pandas dataframe
+        Dataframe of orbital information.
 
-    Returns:
+    Returns
     ----------
-    resdf (Pandas dataframe): joined dataframe.
+    resdf : Pandas dataframe
+        Joined dataframe of "padafr" and "padaor"
 
     """
 

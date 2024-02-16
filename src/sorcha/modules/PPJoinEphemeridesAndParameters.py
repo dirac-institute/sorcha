@@ -4,15 +4,18 @@ def PPJoinEphemeridesAndParameters(padafr, padacl):
     dataframe. Each database has to have same ObjIDs: NaNs will
     be populate the fields for the missing objects.
 
-    Parameters:
+    Parameters
     -----------
-    padafr (Pandas dataframe): dataframe of ephemerides/OIF output.
+    padafr : Pandas dataframe:
+        Dataframe of ephemerides output.
 
-    padacl (Pandas dataframe): dataframe of physical parameters information.
+    padacl : Pandas dataframe
+        Dataframe of physical parameters information.
 
-    Returns:
+    Returns
     ----------
-    resdf (Pandas dataframe): joined dataframe.
+    resdf : Pandas dataframe
+        Joined dataframe of "padafr" and "padacl"
 
     """
 

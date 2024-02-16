@@ -9,9 +9,10 @@ class HDF5DataReader(ObjectDataReader):
     def __init__(self, filename, **kwargs):
         """A class for reading the object data from an HDF5 file.
 
-        Parameters:
+        Parameters
         -----------
-        filename (string): location/name of the data file.
+        filename : string
+            location/name of the data file.
         """
         super().__init__(**kwargs)
         self.filename = filename
@@ -24,32 +25,36 @@ class HDF5DataReader(ObjectDataReader):
         """Return a string identifying the current reader name
         and input information (for logging and output).
 
-        Returns:
+        Returns
         --------
-        name (str): The reader information.
+        name : string
+            The reader information.
         """
         return f"HDF5DataReader:{self.filename}"
 
     def _read_rows_internal(self, block_start=0, block_size=None, **kwargs):
         """Reads in a set number of rows from the input.
 
-        Parameters:
+        Parameters
         -----------
-        block_start (int, optional): The 0-indexed row number from which
+        block_start : integer, optional
+            The 0-indexed row number from which
             to start reading the data. For example in a CSV file
             block_start=2 would skip the first two lines after the header
-            and return data starting on row=2. [Default=0]
+            and return data starting on row=2. Default=0
 
-        block_size (int, optional): the number of rows to read in.
+        block_size : integer, optional
+            the number of rows to read in.
             Use block_size=None to read in all available data.
-            [Default = None]
+            Default = None
 
-        validate_data (bool, optional): if True then checks the data for
-            NaNs or nulls.
+        **kwargs : dictionary, optional
+            Extra arguments
 
-        Returns:
+        Returns
         -----------
-        res_df (Pandas dataframe): dataframe of the object data.
+        res_df  : pandas dataframe
+            Dataframe of the object data.
         """
         if block_size is None:
             res_df = pd.read_hdf(
@@ -74,13 +79,18 @@ class HDF5DataReader(ObjectDataReader):
     def _read_objects_internal(self, obj_ids, **kwargs):
         """Read in a chunk of data for given object IDs.
 
-        Parameters:
+        Parameters
         -----------
-        obj_ids (list): A list of object IDs to use.
+        obj_ids : list
+            A list of object IDs to use.
 
-        Returns:
+        **kwargs : dictionary, optional
+            Extra arguments
+
+        Returns
         -----------
-        res_df (Pandas dataframe): The dataframe for the object data.
+        res_df : Pandas dataframe
+            The dataframe for the object data.
         """
         self._build_id_map()
         row_match = self.obj_id_table["ObjID"].isin(obj_ids)
@@ -92,19 +102,24 @@ class HDF5DataReader(ObjectDataReader):
         """Perform any input-specific processing and validation on the input table.
         Modifies the input dataframe in place.
 
-        Note
-        ----
+        Notes
+        ------
         The base implementation includes filtering that is common to most
         input types. Subclasses should call super.process_and_validate()
         to ensure that the ancestor’s validation is also applied.
 
-        Parameters:
+        Parameters
         -----------
-        input_table (Pandas dataframe): A loaded table.
+        input_table : pandas dataframe
+            A loaded table.
 
-        Returns:
+        **kwargs : dictionary, optional
+            Extra arguments
+
+        Returns
         -----------
-        input_table (Pandas dataframe): Returns the input dataframe modified in-place.
+        input_table : pandas dataframe
+            Returns the input dataframe modified in-place.
         """
         # Perform the parent class's validation (checking object ID column).
         input_table = super()._process_and_validate_input_table(input_table, **kwargs)

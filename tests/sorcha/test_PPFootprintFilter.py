@@ -71,19 +71,19 @@ def test_ison():
 
 
 def test_areas():
-    from sorcha.modules.PPFootprintFilter import radec2focalplane
+    from sorcha.modules.PPFootprintFilter import radec_to_tangent_plane
 
     detector = dummy_detector()
     pointsin = np.array([np.linspace(0.0, 0.01, 10), np.linspace(0.0, 0.01, 10)])
     pointsout = np.array([np.linspace(0.0, 0.01, 10), np.linspace(0.0, 0.01, 10)]) + 1
 
     for p in pointsin.T:
-        pi = np.array(radec2focalplane(p[0], p[1], 0, 0))
+        pi = np.array(radec_to_tangent_plane(p[0], p[1], 0, 0))
         assert (
             np.abs(detector.segmentedArea(pi) - detector.trueArea()) < 1e-12
         )  # these are stricter tolerances than currently demanded in current use
     for p in pointsout.T:
-        pi = np.array(radec2focalplane(p[0], p[1], 0, 0))
+        pi = np.array(radec_to_tangent_plane(p[0], p[1], 0, 0))
         assert np.abs(detector.segmentedArea(pi) - detector.trueArea()) > 1e-12
 
 
@@ -153,10 +153,10 @@ def test_plots():
     footprintf.plot()
 
 
-def test_radec2focalplane():
-    from sorcha.modules.PPFootprintFilter import radec2focalplane
+def test_radec_to_tangent_plane():
+    from sorcha.modules.PPFootprintFilter import radec_to_tangent_plane
 
-    out = radec2focalplane(1.0, 1.0, 0.0, 0.0)
+    out = radec_to_tangent_plane(1.0, 1.0, 0.0, 0.0)
     out_expected = (1.5574077, 2.8824746)
 
     assert len(out) == 2
@@ -172,8 +172,36 @@ def test_applyFootprint():
     footprintf = Footprint(get_test_filepath("detectors_corners.csv"))
     onSensor, detectorIDs = footprintf.applyFootprint(observations)
 
-    assert_equal(onSensor, [1, 0, 2, 3, 8, 7, 4, 5, 6, 9])
-    assert_equal(detectorIDs, [59.0, 66.0, 87.0, 87.0, 100.0, 106.0, 127.0, 131.0, 144.0, 152.0])
+    assert_equal(
+        onSensor,
+        [
+            0,
+            1,
+            6,
+            5,
+            7,
+            8,
+            9,
+            4,
+            2,
+            3,
+        ],
+    )
+    assert_equal(
+        detectorIDs,
+        [
+            35.0,
+            35.0,
+            60.0,
+            88.0,
+            100.0,
+            106.0,
+            114.0,
+            127.0,
+            130.0,
+            130.0,
+        ],
+    )
 
     # Setting an edge threshold to 0.0005 radians will further filter points 0, 7, 8, and 9.
     onSensor, detectorIDs = footprintf.applyFootprint(
@@ -181,8 +209,30 @@ def test_applyFootprint():
         edge_thresh=(np.degrees(0.0005) * 3600),  # as arcseconds
     )
 
-    assert_equal(onSensor, [1, 2, 3, 4, 5, 6])
-    assert_equal(detectorIDs, [59.0, 87.0, 87.0, 127.0, 131.0, 144.0])
+    assert_equal(
+        onSensor,
+        [
+            0,
+            1,
+            6,
+            8,
+            9,
+            2,
+            3,
+        ],
+    )
+    assert_equal(
+        detectorIDs,
+        [
+            35.0,
+            35.0,
+            60.0,
+            106.0,
+            114.0,
+            130.0,
+            130.0,
+        ],
+    )
 
 
 def test_distToSegment():

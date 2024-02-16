@@ -10,16 +10,19 @@ def PPMatchPointingToObservations(padain, pointfildb):
     database onto the observations dataframe, then drops all observations which are not
     in one of the requested filters and any duplicate columns.
 
-    Parameters:
+    Parameters
     -----------
-    padain (Pandas dataframe): dataframe of observations.
+    padain : pandas dataframe
+        Dataframe of observations.
 
-    pointfildb (Pandas dataframe): dataframe of the pointing database.
+    pointfildb : pandas dataframe
+        Dataframe of the pointing database.
 
-    Returns:
+    Returns
     -----------
-    res_df (Pandas dataframe): Merged dataframe of observations with pointing
-    database, with all superfluous observations dropped.
+    res_df : Pandas dataframe
+        Merged dataframe of observations ("padain") with pointing
+        database ("pointfildb"), with all superfluous observations dropped.
 
     """
 

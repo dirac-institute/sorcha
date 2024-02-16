@@ -17,34 +17,47 @@ def PPCalculateApparentMagnitudeInFilter(
     cometary_activity_choice=None,
 ):
     """
-    This task calculates the apparent brightness of an object at a given pointing
-    according to one of the following photometric phase function models:
+    The trailed source apparent magnitude is calculated in the filter for given H,
+    phase function, light curve, and cometary activity parameters.
+
+    Notes
+    -------
+    PPApplyColourOffsets should be run beforehand to apply any needed colour offset to H and ensure correct
+    variables are present.
+
+    The phase function model options utlized are the sbpy package's implementation:
         - HG:                Bowell et al. (1989) Asteroids II book.
         - HG1G2:             Muinonen et al. (2010) Icarus 209 542.
         - HG12:              Penttilä et al. (2016) PSS 123 117.
         - linear:             (as implemented in sbpy)
+        - none :             No model is applied
 
-    The apparent magnitude is calculated in the filter for which the H and
-    phase function variables are given. PPApplyColourOffsets should be
-    run beforehand to apply any needed colour offset to H and ensure correct
-    variables are present.
 
-    The function makes use of implementations in the sbpy library.
-
-    Parameters:
+    Parameters
     -----------
-    padain (Pandas dataframe): dataframe of observations.
+    padain : Pandas dataframe
+        Dataframe of observations.
 
-    function (string): desired phase function model. Options are HG, HG12, HG1G2, linear, none.
+    function : string
+        Desired phase function model. Options are "HG", "HG12", "HG1G2", "linear", "none".
 
-    colname (string): column name in which to store calculated magnitude.
+    colname : string
+        Column name in which to store calculated magnitude to the padain dataframe.
+        Default = "TrailedSourceMag"
 
-    lightcurve_choice (string): choice of lightcurve model. Default None
+    lightcurve_choice : stringm optional
+        Choice of light curve model. Default = None
+
+    cometary_activity_choice : string, optional
+        Choice of cometary activity model. Default = None
 
 
-    Returns:
+    Returns
     ----------
-    padain (Pandas dataframe): dataframe of observations with calculated magnitude column.
+    padain : Pandas dataframe
+        Dataframe of observations (padain) modified with calculated trailed
+        source apparent magnitude column and any optional cometary actvity or
+        light curve added columns based on the models used.
 
     """
 

@@ -16,29 +16,44 @@ def PPCalculateApparentMagnitude(
 ):
     """This function applies the correct colour offset to H for the relevant filter, checks to make sure
     the correct columns are included (with additional functionality for colour-specific phase curves),
-    then calculates the apparent magnitude.
+    then calculates the trailed source apparent magnitude including optional adjustments for
+    cometary activity and rotational light curves.
 
-    Parameters:
+    Parameters
     -----------
-    observations (Pandas dataframe): dataframe of observations.
+    observations : Pandas dataframe
+        dataframe of observations.
 
-    phasefunction (string): desired phase function model. Options are HG, HG12, HG1G2, linear, H.
+    phasefunction : string
+        Desired phase function model. Options are HG, HG12, HG1G2, linear, none
 
-    mainfilter (string): the main filter in which H is given and all colour offsets are calculated against.
+    mainfilter : string
+        The main filter in which H is given and all colour offsets are calculated against.
 
-    othercolours (list of strings): list of colour offsets present in input files.
+    othercolours : list of strings
+        List of colour offsets present in input files.
 
-    observing_filters (list of strings): list of observation filters of interest.
+    observing_filters : ist of strings
+        List of observation filters of interest.
 
-    cometary_activity_choice (string): type of object for cometary activity. Either 'comet' or 'none'.
+    cometary_activity_choice : string
+        Choice of cometary activity model.
+        Default = None
 
-    lc_choice (string): choice of lightcurve model. Default None
+    lc_choice : string
+        Choice of lightcurve model. Default =  None
 
-    verbose (boolean): True/False trigger for verbosity.
+    verbose : boolean
+        Flag for turning on verbose logging. Default = False
 
-    Returns:
+    Returns
     ----------
-    observations (Pandas dataframe): dataframe of observations with calculated magnitude column.
+    observations : Pandas dataframe
+        Modified observations pandas dataframe with calculated trailed source
+        apparent magnitude column, H calculated in relevant filter (H_filter),
+        renames the column for H in the main filter as H_original and
+        adds a column for the light curve contribution to the trailed source
+        apparent magnitude (if included)
     """
 
     pplogger = logging.getLogger(__name__)
@@ -53,7 +68,7 @@ def PPCalculateApparentMagnitude(
             observations, phasefunction, othercolours, observing_filters, mainfilter
         )
     else:
-        observations.rename(columns={"H_" + mainfilter: "H_filter"}, inplace=True)
+        observations["H_filter"] = observations["H_" + mainfilter].copy()
 
     # calculate main body apparent magnitude in observation filter
     verboselog("Calculating apparent magnitude in filter...")

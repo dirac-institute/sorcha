@@ -22,6 +22,8 @@ out_csv_path = get_data_out_filepath("ephemeris_output.csv")
 
 @dataclass
 class EphemerisGeometryParameters:
+    """Data class for holding parameters related to ephemeris geometry"""
+
     obj_id: str = None
     mjd_tai: float = None
     rho: float = None
@@ -38,29 +40,15 @@ def create_ephemeris(orbits_df, pointings_df, args, configs):
     """Generate a set of observations given a collection of orbits
     and set of pointings.
 
-    This works by calculating and regularly updating the sky-plane
-    locations (unit vectors) of all the objects in the collection
-    of orbits.  The HEALPix index for each of the locations is calculated.
-    A dictionary with pixel indices as keys and lists of ObjIDs for
-    those objects in each HEALPix tile as values.  One of these
-    calculations is called a 'picket', as one element of a long picket
-    fence.  At present,
-
-    Given a specific pointing, the set of HEALPix tiles that are overlapped
-    by the pointing (and a buffer region) is computed.  These the precise
-    locations of just those objects within that set of HEALPix tiles are
-    computed.  Details for those that actually do land within the field
-    of view are passed along.
-
     Parameters
     ----------
-    orbits_df : pd.DataFrame
+    orbits_df : pandas dataframe
         The dataframe containing the collection of orbits.
-    pointings_df : pd.DataFrame
+    pointings_df : pandas dataframe
         The dataframe containing the collection of telescope/camera pointings.
     args :
         Various arguments necessary for the calculation
-    configs : dict
+    configs : dictionary
         Various configuration parameters necessary for the calculation
         ang_fov : float
             The angular size (deg) of the field of view
@@ -77,14 +65,30 @@ def create_ephemeris(orbits_df, pointings_df, args, configs):
             The MPC code for the observatory.  (This is current a configuration
             parameter, but these should be included in the visit information,
             to allow for multiple observatories.
-        nside : int
+        nside : integer
             The nside value used for the HEALPIx calculations.  Must be a
             power of 2 (1, 2, 4, ...)  nside=64 is current default.
 
     Returns
     -------
-    pd.DataFrame
+    observations: pandas dataframe
         The dataframe of observations needed for Sorcha to continue
+
+    Notes
+    -------
+    This works by calculating and regularly updating the sky-plane
+    locations (unit vectors) of all the objects in the collection
+    of orbits.  The HEALPix index for each of the locations is calculated.
+    A dictionary with pixel indices as keys and lists of ObjIDs for
+    those objects in each HEALPix tile as values is generated.  An individual
+    one of these calculations is called a 'picket', as one element of a long
+    picket fence.  Typically, the interval between pickets is one day.
+
+    Given a specific pointing, the set of HEALPix tiles that are overlapped
+    by the pointing (and a buffer region) is computed.  Then the precise
+    locations of just those objects within that set of HEALPix tiles are
+    computed.  Details for those that actually do land within the field
+    of view are passed along.
     """
     verboselog = args.pplogger.info if args.verbose else lambda *a, **k: None
 
@@ -151,7 +155,7 @@ def create_ephemeris(orbits_df, pointings_df, args, configs):
     verboselog("Generating ephemeris...")
 
     for _, pointing in pointings_df.iterrows():
-        mjd_tai = float(pointing["observationStartMJD_TAI"])
+        mjd_tai = float(pointing["observationMidpointMJD_TAI"])
 
         # If the observation time is too far from the
         # time of the last set of ballpark sky position,
@@ -229,6 +233,18 @@ def create_ephemeris(orbits_df, pointings_df, args, configs):
 
 
 def get_residual_vectors(v1):
+    """
+    Decomposes the vector into two unit vectors to facilitate computation of on-sky angles
+
+    Parameters:
+    ----------
+        v1 (array, shape = (3,)):
+            The vector to be decomposed
+    Returns:
+    -------
+        A, D (array, shape = (3,))
+            Decomposition into longitude and latitude
+    """
     x, y, z = v1
     cosd = np.sqrt(1 - z * z)
     A = np.array((-y, x, 0.0)) / cosd
@@ -239,6 +255,38 @@ def get_residual_vectors(v1):
 # arguments: JD_TDB, t_picket, picket_interval, sim_dict, obsCode
 # returns t_picket, pixel_dict, r_obs
 def update_pixel_dict(JD_TDB, t_picket, picket_interval, sim_dict, ephem, obsCode, observatories, nside):
+    """
+    Updates the dictionary of HEALPix pixels for the on-sky positions of the particles
+    Particle pixel coordinates are computed with respect to a central time (t_picket)
+
+    Parameters
+    ----------
+        JD_TDB (float):
+            Julian date (in TDB scale)
+        t_picket (float):
+            Central time of the picket
+        picket_interval (float):
+            Interval between pickets
+        sim_dict (dict):
+            Dictionary of ASSIST simulations
+        ephem (Ephem):
+            ASSIST Ephem object
+        obsCopde (str):
+            MPC Observatory code
+        observatories (Observatory):
+            Observatory object
+        nside (int):
+            HEALPix nside
+
+    Returns
+    -------
+        t_picket (float):
+            Updated t_picket
+        pixel_dict (dict):
+            Dictionary of particles and their HEALPix pixels
+        r_obs (array, shape = (3,))
+            Barycentric coordinates of the observatory
+    """
     n = round((JD_TDB - t_picket) / picket_interval)
     t_picket += n * picket_interval
     et = (t_picket - spice.j2000()) * 24 * 60 * 60
@@ -260,14 +308,14 @@ def calculate_rates_and_geometry(pointing: pd.DataFrame, ephem_geom_params: Ephe
 
     Parameters
     ----------
-    pointing : pd.DataFrame
+    pointing : pandas dataframe
         The dataframe containing the pointing database.
     ephem_geom_params : EphemerisGeometryParameters
         Various parameters necessary to calculate the ephemeris
 
     Returns
     -------
-    tuple
+    : tuple
         Tuple containing the ephemeris parameters needed for Sorcha post processing.
     """
     r_sun = get_vec(pointing, "r_sun")

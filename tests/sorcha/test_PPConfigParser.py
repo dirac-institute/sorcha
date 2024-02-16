@@ -248,7 +248,7 @@ def test_PPPrintConfigsToLog(tmp_path):
         "seed": 24601,
     }
 
-    args = sorchaArguments(cmd_args, pplogger=pplogger)
+    args = sorchaArguments(cmd_args)
 
     configs = {
         "eph_format": "csv",

@@ -21,7 +21,7 @@ if __name__ == "__main__":  # pragma: no cover
         "output_ephemeris_file": "ephemeris_output.csv",
         "configfile": "./demo/test_bench_config.ini",
         "pointing_database": "./demo/baseline_v2.0_1yr.db",
-        "outpath": "./data/out",
+        "outpath": "./tests/out",
         "makeTemporaryEphemerisDatabase": False,
         "readTemporaryEphemerisDatabase": False,
         "deleteTemporaryEphemerisDatabase": False,
@@ -35,8 +35,8 @@ if __name__ == "__main__":  # pragma: no cover
     debug = False
     if debug:
         runLSSTSimulation(cmd_args_dict, configs)
-    else: # benchmark
-        cProfile.run("runLSSTSimulation(cmd_args_dict, configs)", "./data/out/restats")
+    else:  # benchmark
+        cProfile.run("runLSSTSimulation(cmd_args_dict, configs)", "./tests/out/restats")
 
-        p = pstats.Stats("./data/out/restats")
+        p = pstats.Stats("./tests/out/restats")
         p.strip_dirs().sort_stats(SortKey.CUMULATIVE).print_stats(100)

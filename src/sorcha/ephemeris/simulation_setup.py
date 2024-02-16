@@ -8,6 +8,7 @@ import assist
 import logging
 import sys
 import os
+import numpy as np
 
 from sorcha.ephemeris.simulation_constants import *
 from sorcha.ephemeris.simulation_data_files import (
@@ -36,8 +37,12 @@ def create_assist_ephemeris(args) -> tuple:
 
     Returns
     -------
-    Ephem, gm_sun
+    Ephem : ASSIST ephemeris obejct
         The ASSIST ephemeris object
+    gm_sun : float
+        value for the GM_SUN value
+    gm_total : float
+        value for gm_total
     """
     pplogger = logging.getLogger(__name__)
 
@@ -55,6 +60,9 @@ def create_assist_ephemeris(args) -> tuple:
 
 
 def furnish_spiceypy(args):
+    """
+    Builds the SPICE kernel, downloading the required files if needed
+    """
     # The goal here would be to download the spice kernel files (if needed)
     # Then call spice.furnish(<filename>) on each of those files.
 
@@ -84,10 +92,32 @@ def furnish_spiceypy(args):
 
 
 def generate_simulations(ephem, gm_sun, gm_total, orbits_df, args):
+    """
+    Creates the dictionary of ASSIST simulations for the ephemeris generation
+
+    Parameters:
+    -------
+    ephem (Ephem):
+        The ASSIST ephemeris object
+    gm_sun (float):
+        Standard gravitational parameter GM for the Sun
+    gm_total (float):
+        Standard gravitational parameter GM for the Solar System barycenter
+    orbits_df (dataframe):
+        Pandas dataframe with the input orbits
+    args (dictionary or `sorchaArguments` object):
+        dictionary of command-line arguments.
+
+    Returns:
+    -------
+    dict
+        Dictionary of ASSIST simulations
+
+    """
     sim_dict = defaultdict(dict)  # return
 
     sun_dict = dict()  # This could be passed in and reused
-    for _, row in orbits_df.iterrows():
+    for i, row in orbits_df.iterrows():
         epoch = row["epochMJD_TDB"]
         # convert from MJD to JD, if not done already.
         if epoch < 2400000.5:
@@ -95,6 +125,11 @@ def generate_simulations(ephem, gm_sun, gm_total, orbits_df, args):
 
         try:
             x, y, z, vx, vy, vz = sp.parse_orbit_row(row, epoch, ephem, sun_dict, gm_sun, gm_total)
+            if np.isnan(x):
+                args.pplogger.error(
+                    f"Input elements for orbit {i} failed - see documentation for suggested solutions"
+                )
+                sys.exit(f"Input elements for orbit {i} failed - see documentation for suggested solutions")
         except ValueError as val_err:
             args.pplogger.error(val_err)
             sys.exit(val_err)
@@ -107,7 +142,8 @@ def generate_simulations(ephem, gm_sun, gm_total, orbits_df, args):
         sim = rebound.Simulation()
         sim.t = epoch - ephem.jd_ref
         sim.dt = 10
-
+        # This turns off the iterative timestep introduced in arXiv:2401.02849 and default since rebound 4.0.3
+        sim.ri_ias15.adaptive_mode = 1
         # Add the particle to the simulation
         sim.add(ic)
 
@@ -133,16 +169,16 @@ def precompute_pointing_information(pointings_df, args, configs):
 
     Parameters
     ----------
-    pointings_df : pd.dataframe
+    pointings_df : pandas dataframe
         Contains the telescope pointing database.
-    args : dict
+    args : dictionary
         Command line arguments needed for initialization.
-    configs : dict
+    configs : dictionary
         Configuration settings.
 
     Returns
     -------
-    pointings_df : pd.dataframe
+    pointings_df : pandas dataframe
         The original dataframe with several additional columns of precomputed values.
     """
     ephem, _, _ = create_assist_ephemeris(args)
@@ -159,7 +195,7 @@ def precompute_pointing_information(pointings_df, args, configs):
 
     # use pandas `apply` (even though it's slow) instead of looping over the df in a for loop
     pointings_df["JD_TDB"] = pointings_df.apply(
-        lambda row: mjd_tai_to_epoch(row["observationStartMJD_TAI"]), axis=1
+        lambda row: mjd_tai_to_epoch(row["observationMidpointMJD_TAI"]), axis=1
     )
     et = (pointings_df["JD_TDB"] - spice.j2000()) * 24 * 60 * 60
 
