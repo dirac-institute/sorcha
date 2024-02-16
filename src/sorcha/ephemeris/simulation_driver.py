@@ -34,7 +34,8 @@ class EphemerisGeometryParameters:
 
 
 def get_vec(row, vecname):
-    return np.asarray([ row[f"{vecname}_x"], row[f"{vecname}_y"], row[f"{vecname}_z"] ])
+    return np.asarray([row[f"{vecname}_x"], row[f"{vecname}_y"], row[f"{vecname}_z"]])
+
 
 def create_ephemeris(orbits_df, pointings_df, args, configs):
     """Generate a set of observations given a collection of orbits
@@ -173,7 +174,7 @@ def create_ephemeris(orbits_df, pointings_df, args, configs):
         # the majority of the computation to build out `pixel_dict`.
         desigs = set()
         pixId = pointings_df.attrs["pixels"]
-        for pix in pixId[pointing["pixels_begin"]:pointing["pixels_end"]]:
+        for pix in pixId[pointing["pixels_begin"] : pointing["pixels_end"]]:
             desigs.update(pixel_dict[pix])
 
         for obj_id in sorted(desigs):
@@ -193,14 +194,10 @@ def create_ephemeris(orbits_df, pointings_df, args, configs):
                     _,
                     ephem_geom_params.r_ast,
                     ephem_geom_params.v_ast,
-                ) = integrate_light_time(
-                    sim, ex, pointing["JD_TDB"] - ephem.jd_ref, r_obs, lt0=0.01
-                )
+                ) = integrate_light_time(sim, ex, pointing["JD_TDB"] - ephem.jd_ref, r_obs, lt0=0.01)
                 ephem_geom_params.rho_hat = ephem_geom_params.rho / ephem_geom_params.rho_mag
 
-                ang_from_center = (
-                    180 / np.pi * np.arccos(np.dot(ephem_geom_params.rho_hat, visit_vector))
-                )
+                ang_from_center = 180 / np.pi * np.arccos(np.dot(ephem_geom_params.rho_hat, visit_vector))
                 if ang_from_center < ang_fov:
                     out_tuple = calculate_rates_and_geometry(pointing, ephem_geom_params)
                     in_memory_csv.writerow(out_tuple)
