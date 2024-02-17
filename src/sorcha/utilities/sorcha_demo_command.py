@@ -10,8 +10,8 @@ def get_demo_command():
 
     Returns
     -----------
-    None.
-
+    : string
+        working sorcha demo command
     """
 
     return "sorcha -c sorcha_config_demo.ini -p sspp_testset_colours.txt -ob sspp_testset_orbits.des -pd baseline_v2.0_1yr.db -o ./ -t testrun_e2e"

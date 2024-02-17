@@ -36,7 +36,7 @@ def create_assist_ephemeris(args) -> tuple:
     """Build the ASSIST ephemeris object
 
     Returns
-    -------
+    ---------
     Ephem : ASSIST ephemeris obejct
         The ASSIST ephemeris object
     gm_sun : float
@@ -95,8 +95,8 @@ def generate_simulations(ephem, gm_sun, gm_total, orbits_df, args):
     """
     Creates the dictionary of ASSIST simulations for the ephemeris generation
 
-    Parameters:
-    -------
+    Parameters
+    ------------
     ephem (Ephem):
         The ASSIST ephemeris object
     gm_sun (float):
@@ -108,8 +108,8 @@ def generate_simulations(ephem, gm_sun, gm_total, orbits_df, args):
     args (dictionary or `sorchaArguments` object):
         dictionary of command-line arguments.
 
-    Returns:
-    -------
+    Returns
+    ---------
     dict
         Dictionary of ASSIST simulations
 
@@ -168,7 +168,7 @@ def precompute_pointing_information(pointings_df, args, configs):
     with additional information that Assist & Rebound needs for it's work.
 
     Parameters
-    ----------
+    -----------
     pointings_df : pandas dataframe
         Contains the telescope pointing database.
     args : dictionary
@@ -177,7 +177,7 @@ def precompute_pointing_information(pointings_df, args, configs):
         Configuration settings.
 
     Returns
-    -------
+    --------
     pointings_df : pandas dataframe
         The original dataframe with several additional columns of precomputed values.
     """

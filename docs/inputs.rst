@@ -66,9 +66,9 @@ An example of an orbit file in Cometary format::
 +=============+==================================================================================+
 | objID       | Object identifier for each synthetic planetesimal simulated (string)             |
 +-------------+----------------------------------------------------------------------------------+
-| FORMAT      | Orbit format string (COM for heliocentric or BCOM for barycentric)  		         |
+| FORMAT      | Orbit format string (COM for heliocentric or BCOM for barycentric)  		 |
 +-------------+----------------------------------------------------------------------------------+
-| q           | Perihelion (au)	                                                								 |
+| q           | Perihelion (au)	                                                                 |
 +-------------+----------------------------------------------------------------------------------+
 | e           | Eccentricity                                                                     |
 +-------------+----------------------------------------------------------------------------------+

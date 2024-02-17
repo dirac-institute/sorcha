@@ -15,3 +15,5 @@ Notebooks
     Uncertainties and Randomization <notebooks/demo_UncertaintiesAndRandomization>
     Vignetting Demo <notebooks/demo_Vignetting>
     Lightcurve demo <notebooks/demo_Lightcurve>
+    Example Bash Scripts for Multiple Runs <notebooks/demo_GenerateBashScripts>
+    Example Slurm Scripts for Multiple Runs <notebooks/demo_GenerateSLURMScripts>
