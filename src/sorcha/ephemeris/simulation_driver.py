@@ -233,8 +233,8 @@ def get_residual_vectors(v1):
     """
     Decomposes the vector into two unit vectors to facilitate computation of on-sky angles
 
-    Parameters:
-    ----------
+    Parameters
+    -----------
         v1 (array, shape = (3,)):
             The vector to be decomposed
     Returns:

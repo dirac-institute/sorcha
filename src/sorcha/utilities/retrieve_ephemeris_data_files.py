@@ -18,7 +18,7 @@ def _decompress(fname, action, pup):
     For instance `filename.json.bz` will be decompressed and saved as `filename.json`.
 
     Parameters
-    ----------
+    ------------
     fname : string
         Original filename
     action : string
@@ -42,7 +42,7 @@ def _remove_files(retriever: pooch.Pooch) -> None:
     list.
 
     Parameters
-    ----------
+    ------------
     retriever : pooch
         Pooch object that maintains the registry of files to download.
     """
@@ -55,19 +55,19 @@ def _remove_files(retriever: pooch.Pooch) -> None:
 
 def _check_for_existing_files(retriever: pooch.Pooch, file_list: list[str]) -> bool:
     """Will check for existing local files, any file not found will be printed
-     to the terminal.
+    to the terminal.
 
-     Parameters
-     ----------
-     retriever : pooch
-         Pooch object that maintains the registry of files to download.
-     file_list : list of strings
-         A list of file names look for in the local cache.
+    Parameters
+    -------------
+    retriever : pooch
+        Pooch object that maintains the registry of files to download.
+    file_list : list of strings
+        A list of file names look for in the local cache.
 
-     Returns
-     -------
+    Returns
+    ----------
     :  bool
-         Returns True if all files are found in the local cache, False otherwise.
+        Returns True if all files are found in the local cache, False otherwise.
     """
 
     # choosing clarity over brevity with these variables.

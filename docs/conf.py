@@ -12,13 +12,12 @@ from importlib.metadata import version
 
 # Define path to the code to be documented **relative to where conf.py (this file) is kept**
 sys.path.insert(0, os.path.abspath("../src/"))
-from pkg_resources import get_distribution
 
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
 
-copyright = "2023"
+copyright = "2024"
 project = "Sorcha"
 author = "Sorcha development team"
 release = version("sorcha")
@@ -29,7 +28,7 @@ version = ".".join(release.split(".")[:2])
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
-extensions = ["sphinx.ext.mathjax", "sphinx.ext.napoleon", "sphinx.ext.viewcode"]
+extensions = ["sphinx.ext.mathjax", "sphinx.ext.napoleon", "sphinx.ext.viewcode", "sphinx_exec_directive"]
 
 extensions.append("autoapi.extension")
 extensions.append("nbsphinx")
@@ -40,7 +39,6 @@ exclude_patterns = ["_build", "**.ipynb_checkpoints"]
 master_doc = "index"  # This assumes that sphinx-build is called from the root directory
 html_show_sourcelink = False  # Remove 'view source code' from top of page (for html, not python)
 add_module_names = False  # Remove namespaces from class/method signatures
-
 autoapi_type = "python"
 autoapi_dirs = ["../src"]
 autoapi_ignore = ["*/__main__.py", "*/_version.py"]

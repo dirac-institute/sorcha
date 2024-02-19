@@ -71,9 +71,17 @@ will produce
 .. literalinclude:: ./example_files/help_output.txt 
     :language: text
 
-Now that you know how to provide the input files, let's go run a simulation::
+Now that you know how to provide the input files, let's go run a simulation: You can find the command to run the sorcha demo on the command line in two ways. First on the command line::
 
-   sorcha -c ./demo/sorcha_config_demo.ini  -p ./demo/sspp_testset_colours.txt -ob ./demo/sspp_testset_orbits.des -pd ./demo/baseline_v2.0_1yr.db -o ./ -t testrun_e2e -ar ./ar_files 
+   sorcha_demo_command
+
+Or you can in an interactive python session or jupyter notebook. You can run the following
+
+.. exec::
+
+   from sorcha.utilities.sorcha_demo_command import get_demo_command
+   print(get_demo_command())
+
 
 .. tip::
    Sorcha outputs a log file (*.sorcha.log) and error file (*.sorcha.err) in the output directory. If all has gone well, the error file will be empty. The log file has the configuration parameters outputted to it as a record of the run setup.
