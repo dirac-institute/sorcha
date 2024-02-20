@@ -18,6 +18,7 @@ import sorcha; print("sorcha", sorcha.__version__)
 import pandas; print("pandas", pandas.__version__)
 import assist; print("assist", assist.__version__)
 import rebound; print("rebound", rebound.__version__)
+import sbpy; print("rebound", sbpy.__version__)
 ```
 ```
 # Copy the result here
