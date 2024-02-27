@@ -101,11 +101,6 @@ def runLSSTSimulation(args, configs):
     # if not, verboselog does absolutely nothing
     verboselog = pplogger.info if args.verbose else lambda *a, **k: None
 
-    verboselog("Reading configuration file...")
-    configs = PPConfigFileParser(args.configfile, args.surveyname)
-
-    verboselog("Configuration file successfully read.")
-
     configs["mainfilter"], configs["othercolours"] = PPGetMainFilterAndColourOffsets(
         args.paramsinput, configs["observing_filters"], configs["aux_format"]
     )
@@ -447,7 +442,9 @@ def main():
 
     # Extract and validate the remaining arguments.
     cmd_args = PPCommandLineParser(args)
+    pplogger.info("Reading configuration file...")
     configs = PPConfigFileParser(cmd_args["configfile"], cmd_args["surveyname"])
+    pplogger.info("Configuration file read.")
 
     if configs["ephemerides_type"] == "external" and cmd_args["oifoutput"] is None:
         pplogger.error("ERROR: A+R simulation not enabled and no ephemerides file provided")
