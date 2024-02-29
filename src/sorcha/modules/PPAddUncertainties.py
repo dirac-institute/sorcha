@@ -66,6 +66,15 @@ def addUncertainties(detDF, configs, module_rngs, verbose=True):
     Generates astrometric and photometric uncertainties, and SNR. Uses uncertainties
     to randomize the photometry. Accounts for trailing losses.
 
+    Adds the following columns to the observations dataframe:
+
+    - AstrometricSigma(deg)
+    - PhotometricSigmaTrailedSource(mag)
+    - PhotometricSigmaPSF(mag)
+    - SNR
+    - observedTrailedSourceMag
+    - observedPSFMag
+
     Parameters
     -----------
     detDF : Pandas dataframe)
