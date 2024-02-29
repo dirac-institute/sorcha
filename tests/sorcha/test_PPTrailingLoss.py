@@ -67,6 +67,9 @@ def test_PPTrailingLoss():
         }
     )
 
+    # add cos dec term
+    testoifdf[ "AstRARate(deg/day)" ] *= np.cos( testoifdf["AstDec(deg)"] * np.pi/180.0 )
+
     np.testing.assert_array_almost_equal(0.25893924959480374, PPTrailingLoss(oif_df=testoifdf)[5], decimal=14)
 
     # Check that we give an error for an unknown model.
