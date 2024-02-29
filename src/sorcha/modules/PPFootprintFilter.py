@@ -357,20 +357,20 @@ class Detector:
         """
 
         # convert corners to angles (radians)
-        θ = np.arctan2(self.y - self.centery, self.x - self.centerx)
+        theta = np.arctan2(self.y - self.centery, self.x - self.centerx)
 
-        neworder = np.argsort(θ)
+        neworder = np.argsort(theta)
         self.x = self.x[neworder]
         self.y = self.y[neworder]
 
-    def rotateDetector(self, θ):
+    def rotateDetector(self, theta):
         """
         Rotates a sensor around the origin of the coordinate system its
         corner locations are provided in.
 
         Parameters
         -----------
-        θ : float
+        theta : float
             Angle to rotate by, in radians.
 
         Returns
@@ -381,7 +381,7 @@ class Detector:
         """
 
         # convert rotation angle to complex number
-        q = cos(θ) + sin(θ) * 1.0j
+        q = cos(theta) + sin(theta) * 1.0j
 
         # convert points to complex numbers
         coords = self.x + self.y * 1.0j
@@ -436,7 +436,7 @@ class Detector:
         else:
             print("Units are already radians")
 
-    def plot(self, θ=0.0, color="gray", units="rad", annotate=False):
+    def plot(self, theta=0.0, color="gray", units="rad", annotate=False):
         """
         Plots the footprint for an individual sensor. Currently not on the
         focal plane, just the sky coordinates. Relatively minor difference
@@ -446,7 +446,7 @@ class Detector:
 
         Parameters
         -----------
-        θ : float, optional
+        theta : float, optional
             Aangle to rotate footprint by, radians or degrees. Default =0.0
 
         color :string, optional
@@ -465,7 +465,7 @@ class Detector:
 
         """
 
-        detector = self.rotateDetector(θ)
+        detector = self.rotateDetector(theta)
         if units == "deg":
             detector.rad2deg()
         nd = len(self.x)
@@ -558,7 +558,7 @@ class Footprint:
         for i in range(self.N):
             self.detectors[i].sortCorners()
 
-    def plot(self, θ=0.0, color="gray", units="rad", annotate=False):
+    def plot(self, theta=0.0, color="gray", units="rad", annotate=False):
         """
         Plots the footprint. Currently not on the focal plane, just the sky
         coordinates. Relatively minor difference (width of footprint for LSST
@@ -567,14 +567,14 @@ class Footprint:
 
         Parameters
         -----------
-        θ : float, optional
+        theta : float, optional
             Angle to rotate footprint by, radians or degrees. Default = 0.0
 
         color : string, optional
             Line color. Default = "gray"
 
         units : string, optional
-            Units θ is provided in ("deg" or "rad"). Default = "rad"
+            Units theta is provided in ("deg" or "rad"). Default = "rad"
 
         annotate : boolean, optional
             Whether to annotate each sensor with its index in
@@ -587,7 +587,7 @@ class Footprint:
         """
 
         for i in range(self.N):
-            self.detectors[i].plot(θ=θ, color=color, units=units, annotate=annotate)
+            self.detectors[i].plot(theta=theta, color=color, units=units, annotate=annotate)
 
     def applyFootprint(
         self,
