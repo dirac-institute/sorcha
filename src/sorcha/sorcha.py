@@ -43,7 +43,7 @@ from sorcha.utilities.sorchaArguments import sorchaArguments
 from sorcha.utilities.citation_text import cite_sorcha
 
 
-def cite():
+def cite():  # pragma: no cover
     """Providing the bibtex, AAS Journals software latex command, and acknowledgement
     statements for Sorcha and the associated packages that power it.
 

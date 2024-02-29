@@ -53,7 +53,7 @@ def copy_demo_files(copy_location, force_overwrite):
     print_demo_command(printall=False)
 
 
-def main():
+def main():  # pragma: no cover
     """
     Copies demo files for Sorcha from the installation location
     to a user-specified location. Filepath to copy files to is specified by command-line
@@ -100,5 +100,5 @@ def main():
     copy_demo_files(copy_location, args.force)
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     main()
