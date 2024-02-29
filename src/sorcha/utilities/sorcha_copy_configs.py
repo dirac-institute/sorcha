@@ -91,7 +91,7 @@ def parse_file_selection(file_select):
     return which_configs
 
 
-def main():
+def main():  # pragma: no cover
     """
     Copies example configuration files for Sorcha from the installation location
     to a user-specified location. Filepath to copy files to is specified by command-line
@@ -146,5 +146,5 @@ def main():
     copy_demo_configs(copy_location, which_configs, args.force)
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     main()

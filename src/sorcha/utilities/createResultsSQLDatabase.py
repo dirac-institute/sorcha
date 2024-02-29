@@ -183,7 +183,7 @@ def get_column_names(filename, table_name="pp_results"):
     return col_names
 
 
-def main():
+def main():  # pragma: no cover
     """
     Creates a SQLite database with tables of SSPP results and all orbit/physical
     parameters/comet files. Assumes orbit/physical parameters/comet files are all
@@ -256,5 +256,5 @@ def main():
     create_results_database(args)
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     main()

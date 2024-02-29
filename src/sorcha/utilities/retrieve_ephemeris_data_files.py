@@ -12,7 +12,7 @@ from sorcha.ephemeris.simulation_data_files import (
 from sorcha.utilities.generate_meta_kernel import build_meta_kernel_file
 
 
-def _decompress(fname, action, pup):
+def _decompress(fname, action, pup):  # pragma: no cover
     """Override the functionality of Pooch's `Decompress` class so that the resulting
     decompressed file uses the original file name without the compression extension.
     For instance `filename.json.bz` will be decompressed and saved as `filename.json`.
@@ -35,7 +35,7 @@ def _decompress(fname, action, pup):
         pooch.Decompress(method="auto", name=os.path.splitext(fname)[0]).__call__(fname, action, pup)
 
 
-def _remove_files(retriever: pooch.Pooch) -> None:
+def _remove_files(retriever: pooch.Pooch) -> None:  # pragma: no cover
     """Utility to remove all the files tracked by the pooch retriever. This includes
     the decompressed ObservatoryCodes.json file as well as the META_KERNEL file
     that are created after downloading the files in the DATA_FILES_TO_DOWNLOAD
@@ -53,7 +53,7 @@ def _remove_files(retriever: pooch.Pooch) -> None:
         os.remove(file_path)
 
 
-def _check_for_existing_files(retriever: pooch.Pooch, file_list: list[str]) -> bool:
+def _check_for_existing_files(retriever: pooch.Pooch, file_list: list[str]) -> bool:  # pragma: no cover
     """Will check for existing local files, any file not found will be printed
     to the terminal.
 
@@ -89,7 +89,7 @@ def _check_for_existing_files(retriever: pooch.Pooch, file_list: list[str]) -> b
     return found_all_files
 
 
-def main():
+def main():  # pragma: no cover
     # parse the input arguments
     parser = argparse.ArgumentParser(
         description="Fetch the NAIF high precision EOP kernel file store its checksum."
@@ -134,5 +134,5 @@ def main():
         _check_for_existing_files(retriever, DATA_FILE_LIST)
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     main()

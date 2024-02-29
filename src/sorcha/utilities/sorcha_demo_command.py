@@ -56,5 +56,5 @@ def print_demo_command(printall=True):
     )
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     print_demo_command()
