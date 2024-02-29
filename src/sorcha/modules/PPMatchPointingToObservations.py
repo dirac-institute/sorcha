@@ -10,6 +10,18 @@ def PPMatchPointingToObservations(padain, pointfildb):
     database onto the observations dataframe, then drops all observations which are not
     in one of the requested filters and any duplicate columns.
 
+    Adds the following columns to the dataframe of observations:
+
+        - visitTime
+        - optFilter
+        - seeingFwhmGeom
+        - seeingFwhmEff
+        - fiveSigmaDepth
+        - fieldRA
+        - fieldDec
+        - rotSkyPos
+        - observationMidpointMJD_TAI
+
     Parameters
     -----------
     padain : pandas dataframe

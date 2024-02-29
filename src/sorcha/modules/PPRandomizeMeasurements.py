@@ -46,6 +46,11 @@ def randomizeAstrometry(
     The randomized values replace the original astrometry, with the original values
     stored in separate columns.
 
+    Adds the following columns to the observations dataframe:
+
+    - AstRATrue(deg)
+    - AstDecTrue(deg)
+
     Parameters
     -----------
     df : pandas dataframe
