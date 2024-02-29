@@ -106,7 +106,7 @@ def calcTrailingLoss(
 def PPTrailingLoss(
     oif_df,
     model="circularPSF",
-    dra_name="AstRARate(deg/day)",
+    dra_cosdec_name="AstRARate(deg/day)",
     ddec_name="AstDecRate(deg/day)",
     dec_name="AstDec(deg)",
     seeing_name_survey="seeingFwhmEff",
@@ -147,7 +147,7 @@ def PPTrailingLoss(
     """
 
     dmag = calcTrailingLoss(
-        oif_df[dra_name],
+        oif_df[dra_cosdec_name],
         oif_df[ddec_name],
         oif_df[seeing_name_survey],
         model=model,
