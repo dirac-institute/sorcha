@@ -175,8 +175,8 @@ def create_ephemeris(orbits_df, pointings_df, args, configs):
 
         desigs = pixdict.get_designations(pointing['JD_TDB'], pointing['fieldRA'], pointing['fieldDec'], ang_fov)
         unit_vectors = pixdict.interpolate_unit_vectors(desigs, pointing['JD_TDB'])
-        visit_vector = get_vec(pointing, "visit_vector")
-        r_obs = get_vec(pointing, "r_obs")
+        visit_vector = pointing['visit_vector']
+        r_obs = pointing['r_obs']
 
         for k, uv in unit_vectors.items():
             ephem_geom_params = EphemerisGeometryParameters()
