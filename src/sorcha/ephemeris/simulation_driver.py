@@ -184,7 +184,7 @@ def create_ephemeris(orbits_df, pointings_df, args, configs):
             ephem_geom_params.mjd_tai = mjd_tai
 
             v = sim_dict[k]
-            sim, ex, H = v['sim'], v['ex'], v['H']
+            sim, ex = v['sim'], v['ex']
             uv /= np.linalg.norm(uv)
             ang = np.arccos(np.dot(uv, visit_vector))*180/np.pi
             if ang < ang_fov + buffer:
