@@ -165,7 +165,7 @@ def create_ephemeris(orbits_df, pointings_df, args, configs):
 
     verboselog("Generating ephemeris...")
 
-    pixdict = PixelDict(pointings_df['JD_TDB'][0], sim_dict, ephem, obsCode, observatories, picket_interval, nside,n_sub_intervals=n_sub_intervals)
+    pixdict = PixelDict(pointings_df['JD_TDB'].iloc[0], sim_dict, ephem, obsCode, observatories, picket_interval, nside,n_sub_intervals=n_sub_intervals)
     for _, pointing in pointings_df.iterrows():
         mjd_tai = float(pointing["observationMidpointMJD_TAI"])
 
