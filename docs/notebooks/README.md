@@ -40,6 +40,10 @@ demo_MagnitudeAndSNRCuts
 - **Demonstrates:** PPBrightLimit, PPMagnitudeLimit, PPSNRLimit
 - **Files:** none
 
+demo_PlotLSSTCamCornersFOVs.ipynb
+- **Demonstrates:** What the internal Sorcha LSSTCam CCD footprint looks like with various circle FOVs that can be used within Sorcha
+- **Files:** Installed version of LSST_detector_corners_100123.csv  
+
 demo_TrailingLossesValidation
 - **Demonstrates:** PPTrailingLoss
 - **Files:** none
