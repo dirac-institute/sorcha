@@ -43,7 +43,7 @@ from sorcha.utilities.sorchaArguments import sorchaArguments
 from sorcha.utilities.citation_text import cite_sorcha
 
 
-def cite():
+def cite():  # pragma: no cover
     """Providing the bibtex, AAS Journals software latex command, and acknowledgement
     statements for Sorcha and the associated packages that power it.
 
@@ -56,6 +56,13 @@ def cite():
     None
     """
     cite_sorcha()
+
+
+def mem(df):
+    usage = df.memory_usage(deep=True).sum()
+    for k, v in df.attrs.items():
+        usage += v.nbytes
+    return usage
 
 
 def runLSSTSimulation(args, configs):
@@ -94,11 +101,6 @@ def runLSSTSimulation(args, configs):
     # if not, verboselog does absolutely nothing
     verboselog = pplogger.info if args.verbose else lambda *a, **k: None
 
-    verboselog("Reading configuration file...")
-    configs = PPConfigFileParser(args.configfile, args.surveyname)
-
-    verboselog("Configuration file successfully read.")
-
     configs["mainfilter"], configs["othercolours"] = PPGetMainFilterAndColourOffsets(
         args.paramsinput, configs["observing_filters"], configs["aux_format"]
     )
@@ -112,12 +114,17 @@ def runLSSTSimulation(args, configs):
     filterpointing = PPReadPointingDatabase(
         args.pointing_database, configs["observing_filters"], configs["pointing_sql_query"], args.surveyname
     )
+    ##    print("POSTREAD:", len(filterpointing), type(filterpointing), mem(filterpointing))
+    ##    print(filterpointing.dtypes)
 
     # if we are going to compute the ephemerides, then we should pre-compute all
     # of the needed values derived from the pointing information.
     if configs["ephemerides_type"].casefold() != "external":
         verboselog("Pre-computing pointing information for ephemeris generation")
         filterpointing = precompute_pointing_information(filterpointing, args, configs)
+    ##        print("POSTPOINTING:", len(filterpointing), type(filterpointing), mem(filterpointing))
+    ##        print(filterpointing.dtypes)
+    ##        print("POSTPOINTING:", len(filterpointing), type(filterpointing), filterpointing.memory_usage(deep=True))
 
     # Set up the data readers.
     ephem_type = configs["ephemerides_type"]
@@ -139,6 +146,10 @@ def runLSSTSimulation(args, configs):
     reader.add_aux_data_reader(CSVDataReader(args.paramsinput, configs["aux_format"]))
     if configs["comet_activity"] is not None or configs["lc_model"] is not None:
         reader.add_aux_data_reader(CSVDataReader(args.complex_parameters, configs["aux_format"]))
+
+    #    import time
+    #    time.sleep(100)
+    #    exit()
 
     # In case of a large input file, the data is read in chunks. The
     # "sizeSerialChunk" parameter in PPConfig.ini assigns the chunk.
@@ -431,7 +442,9 @@ def main():
 
     # Extract and validate the remaining arguments.
     cmd_args = PPCommandLineParser(args)
+    pplogger.info("Reading configuration file...")
     configs = PPConfigFileParser(cmd_args["configfile"], cmd_args["surveyname"])
+    pplogger.info("Configuration file read.")
 
     if configs["ephemerides_type"] == "external" and cmd_args["oifoutput"] is None:
         pplogger.error("ERROR: A+R simulation not enabled and no ephemerides file provided")

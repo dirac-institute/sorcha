@@ -20,6 +20,11 @@ def PPCalculateApparentMagnitudeInFilter(
     The trailed source apparent magnitude is calculated in the filter for given H,
     phase function, light curve, and cometary activity parameters.
 
+    Adds the following columns to the observations dataframe:
+
+    - TrailedSourceMag
+    - any columns created by the optional light curve and cometary activity models
+
     Notes
     -------
     PPApplyColourOffsets should be run beforehand to apply any needed colour offset to H and ensure correct

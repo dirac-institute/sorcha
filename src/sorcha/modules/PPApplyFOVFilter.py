@@ -13,6 +13,10 @@ def PPApplyFOVFilter(observations, configs, module_rngs, footprint=None, verbose
      are removed from the inputted pandas dataframevfor moving objects that land outside of
      their associated observation's footprint.
 
+    Adds the following columns to the observations dataframe:
+
+    - detectorId (if full camera footprint is used)
+
     Parameters
     -----------
     observations: Pandas dataframe

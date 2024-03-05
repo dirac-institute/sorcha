@@ -36,7 +36,7 @@ def create_assist_ephemeris(args) -> tuple:
     """Build the ASSIST ephemeris object
 
     Returns
-    -------
+    ---------
     Ephem : ASSIST ephemeris obejct
         The ASSIST ephemeris object
     gm_sun : float
@@ -95,8 +95,8 @@ def generate_simulations(ephem, gm_sun, gm_total, orbits_df, args):
     """
     Creates the dictionary of ASSIST simulations for the ephemeris generation
 
-    Parameters:
-    -------
+    Parameters
+    ------------
     ephem (Ephem):
         The ASSIST ephemeris object
     gm_sun (float):
@@ -108,8 +108,8 @@ def generate_simulations(ephem, gm_sun, gm_total, orbits_df, args):
     args (dictionary or `sorchaArguments` object):
         dictionary of command-line arguments.
 
-    Returns:
-    -------
+    Returns
+    ---------
     dict
         Dictionary of ASSIST simulations
 
@@ -168,7 +168,7 @@ def precompute_pointing_information(pointings_df, args, configs):
     with additional information that Assist & Rebound needs for it's work.
 
     Parameters
-    ----------
+    -----------
     pointings_df : pandas dataframe
         Contains the telescope pointing database.
     args : dictionary
@@ -177,7 +177,7 @@ def precompute_pointing_information(pointings_df, args, configs):
         Configuration settings.
 
     Returns
-    -------
+    --------
     pointings_df : pandas dataframe
         The original dataframe with several additional columns of precomputed values.
     """
@@ -189,7 +189,9 @@ def precompute_pointing_information(pointings_df, args, configs):
 
     # vectorize the calculation to get x,y,z vector from ra/dec
     vectors = ra_dec2vec(pointings_df["fieldRA"].astype("float"), pointings_df["fieldDec"].astype("float"))
-    pointings_df["visit_vector"] = vectors.tolist()
+    pointings_df["visit_vector_x"] = vectors[:, 0]
+    pointings_df["visit_vector_y"] = vectors[:, 1]
+    pointings_df["visit_vector_z"] = vectors[:, 2]
 
     # use pandas `apply` (even though it's slow) instead of looping over the df in a for loop
     pointings_df["JD_TDB"] = pointings_df.apply(
@@ -206,10 +208,19 @@ def precompute_pointing_information(pointings_df, args, configs):
     )
 
     # use pandas `apply` again because healpy.query_disc is not easily vectorizable
-    pointings_df["pixels"] = pointings_df.apply(
-        lambda row: partial_get_hp_neighbors(ra_c=float(row["fieldRA"]), dec_c=float(row["fieldDec"])),
-        axis=1,
-    )
+    pixels, i = [], 0
+    pixBeginEnd = np.empty((len(pointings_df), 2), dtype=np.int32)
+    for k, (fieldRa, fieldDec) in enumerate(
+        zip(pointings_df["fieldRA"].values, pointings_df["fieldDec"].values)
+    ):
+        fieldPix = partial_get_hp_neighbors(fieldRa, fieldDec)
+        nPix = len(fieldPix)
+        pixels.append(fieldPix)
+        pixBeginEnd[k] = i, i + nPix
+        i += nPix
+    pointings_df["pixels_begin"], pointings_df["pixels_end"] = pixBeginEnd[:, 0], pixBeginEnd[:, 1]
+    pixels = np.concatenate(pixels, dtype=np.int32)
+    pointings_df.attrs = {"pixels": pixels}
 
     # create empty arrays for observatory position and velocity to be filled in
     r_obs = np.empty((len(pointings_df), 3))
@@ -221,8 +232,12 @@ def precompute_pointing_information(pointings_df, args, configs):
     r_obs /= AU_KM  # convert to au
     v_obs *= (24 * 60 * 60) / AU_KM  # convert to au/day
 
-    pointings_df["r_obs"] = r_obs.tolist()
-    pointings_df["v_obs"] = v_obs.tolist()
+    pointings_df["r_obs_x"] = r_obs[:, 0]
+    pointings_df["r_obs_y"] = r_obs[:, 1]
+    pointings_df["r_obs_z"] = r_obs[:, 2]
+    pointings_df["v_obs_x"] = v_obs[:, 0]
+    pointings_df["v_obs_y"] = v_obs[:, 1]
+    pointings_df["v_obs_z"] = v_obs[:, 2]
 
     # create empty arrays for sun position and velocity to be filled in
     r_sun = np.empty((len(pointings_df), 3))
@@ -233,8 +248,12 @@ def precompute_pointing_information(pointings_df, args, configs):
         r_sun[idx] = np.array((sun.x, sun.y, sun.z))
         v_sun[idx] = np.array((sun.vx, sun.vy, sun.vz))
 
-    pointings_df["r_sun"] = r_sun.tolist()
-    pointings_df["v_sun"] = v_sun.tolist()
+    pointings_df["r_sun_x"] = r_sun[:, 0]
+    pointings_df["r_sun_y"] = r_sun[:, 1]
+    pointings_df["r_sun_z"] = r_sun[:, 2]
+    pointings_df["v_sun_x"] = v_sun[:, 0]
+    pointings_df["v_sun_y"] = v_sun[:, 1]
+    pointings_df["v_sun_z"] = v_sun[:, 2]
 
     spice.kclear()
     return pointings_df

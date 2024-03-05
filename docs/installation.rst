@@ -123,7 +123,7 @@ To run the internal ephemeris generator, you will need to download the auxiliary
   
 To install the necessary SPICE auxiliary files for ephemeris generation (774 MB total in size)::
 
-    bootstrap_sorcha_data_files
+    sorcha_bootstrap_data_files
 
 .. note::
    This script will download and store the auxiliary files in your computer's local cache directory. 
@@ -136,9 +136,16 @@ To install the necessary SPICE auxiliary files for ephemeris generation (774 MB 
 Testing Your Sorcha Installation
 ----------------------------------
 
-You can check that the Sorcha installation was done correctly, by downloading the Sorcha source code repository (Steps 1-4 **only**  of :ref:`dev_mode`) and then running::
+You can check that the Sorcha installation was done correctly, by downloading the Sorcha source code repository (Steps 1-4 **only**  of :ref:`dev_mode`) and then running the demo command. You can find the command to run the sorcha demo on the command line in two ways. First on the command line::
 
-   sorcha -c ./demo/sorcha_config_demo.ini -p ./demo/sspp_testset_colours.txt -ob ./demo/sspp_testset_orbits.des -pd ./demo/baseline_v2.0_1yr.db -o ./ -t testrun_e2e
+   sorcha_demo_command 
+
+Or you can in an interactive python session or jupyter notebook. You can run the following
+
+.. exec::
+
+   from sorcha.utilities.sorcha_demo_command import get_demo_command
+   print(get_demo_command())
    
 The output will appear in a csv file (testrun_e2e.csv) in your current directory. The first 51 lines of the csv file should look like this:
 

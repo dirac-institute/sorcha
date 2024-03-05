@@ -9,10 +9,7 @@ In some cases its the location of the given file being used in the test rather t
 Small (10k lines) version of pointing database located at /demo/baseline_v2.0_1yr.db.  
 Used by:  
 - test_combined_data_reading.py
-- test_createResultsSQLDatabase.py
-- test_makeConfigPP.py  
-- test_makeConfigOIF.py   
-- test_makeSLURMscript.py  
+- test_createResultsSQLDatabase.py  
 - test_PPCommandLineParser.py
 - test_PPConfigParser.py
 - test_PPMatchPointingToObservations.py
@@ -22,80 +19,68 @@ Used by:
 **detectors_corners.csv**  
 Corners of the LSST camera footprint.  
 Used by:  
-- test_makeConfigPP.py  
 - test_PPApplyFOVFilter.py
 - test_PPConfigParser.py
 - test_PPFootprintFilter.py
 
-**orbit_test_files/orbit_bcart.csv**
-Barycentric cartesian orbit format test input file
-Used by:
--test_OrbitAuxReader.py
-
-**orbit_test_files/orbit_bcom.csv**
-Barycentric cometary orbit format test input file
-Used by:
--test_OrbitAuxReader.py
-
-**orbit_test_files/orbit_bkep.csv**
-Barycentric Keplarian orbit format test input file
-Used by:
--test_OrbitAuxReader.py
-
-**orbit_test_files/orbit_cart.csv**
-Heliocentric cartesian orbit format test input file
-Used by:
--test_OrbitAuxReader.py
-
-**orbit_cart_wrong_cols.csv**
-Heliocentric cartesian orbit format test input file with incorrect headers
-Used by:
--test_OrbitAuxReader.py
-
-**orbit_test_files/orbit_com.csv**
-Heliocentric cometary orbit format test input file
-Used by:
--test_OrbitAuxReader.py
-
-**orbit_test_files.orbit_com_wrong_cols.csv**
-Heliocentric cometary orbit format test input file with incorrect columns
-Used by:
--test_OrbitAuxReader.py
-
-**orbit_test_files/orbit_extra_cols.csv**
-Heliocentric cartiesian orbit format test input file with extra columns
-Used by:
--test_OrbitAuxReader.py
-
-**orbit_test_files/orbit_kep.csv**
-Heliocentric Keplarian orbit format test input file
-Used by:
--test_OrbitAuxReader.py
-
-**orbit_test_files/orbit_kep_wrong_cols.csv**
-Heliocentric Keplarian orbit format test input file with incorrect columns
-Used by:
--test_OrbitAuxReader.py
-
-**orbit_test_files/orbit_unknown_format.csv**
-Orbit input file with unallowed orbit format 
-Used by:
--test_OrbitAuxReader.py
-
-
-**makeConfigPP_config.ini**  
-Example Sorcha config file.  
+**orbit_test_files/orbit_bcart.csv**  
+Barycentric cartesian orbit format test input file.  
 Used by:  
-- test_makeConfigPP.py
+-test_OrbitAuxReader.py
 
-**makeSLURMscript_*.sh**  
-Example SLURM scripts.  
+**orbit_test_files/orbit_bcom.csv**  
+Barycentric cometary orbit format test input file.  
 Used by:  
-- test_makeSLURMscript.py
+-test_OrbitAuxReader.py
 
-**ObsCodes_test.json**
-Example MPC-style observatory codes files
-Used by:
+**orbit_test_files/orbit_bkep.csv**  
+Barycentric Keplarian orbit format test input file.  
+Used by:  
+-test_OrbitAuxReader.py
+
+**orbit_test_files/orbit_cart.csv**  
+Heliocentric cartesian orbit format test input file.  
+Used by:  
+-test_OrbitAuxReader.py
+
+**orbit_cart_wrong_cols.csv**  
+Heliocentric cartesian orbit format test input file with incorrect headers.  
+Used by:  
+-test_OrbitAuxReader.py
+
+**orbit_test_files/orbit_com.csv**  
+Heliocentric cometary orbit format test input file.  
+Used by:  
+-test_OrbitAuxReader.py
+
+**orbit_test_files.orbit_com_wrong_cols.csv**  
+Heliocentric cometary orbit format test input file with incorrect columns.  
+Used by:  
+-test_OrbitAuxReader.py
+
+**orbit_test_files/orbit_extra_cols.csv**  
+Heliocentric cartiesian orbit format test input file with extra columns.  
+Used by:  
+-test_OrbitAuxReader.py
+
+**orbit_test_files/orbit_kep.csv**  
+Heliocentric Keplarian orbit format test input file.  
+Used by:  
+-test_OrbitAuxReader.py
+
+**orbit_test_files/orbit_kep_wrong_cols.csv**  
+Heliocentric Keplerian orbit format test input file with incorrect columns.  
+Used by:  
+-test_OrbitAuxReader.py
+
+**orbit_test_files/orbit_unknown_format.csv**  
+Orbit input file with unallowed orbit format.  
+Used by:  
+-test_OrbitAuxReader.py
+
+**ObsCodes_test.json**  
+Example MPC-style observatory codes files.  
+Used by:  
 - test_simulation_parsing.py
 
 **oiftestoutput.csv**  
@@ -105,8 +90,8 @@ Used by:
 - test_OIFReader.py
 
 **oiftestoutput.h5**  
-Example ephemeris output, in HDF5 format
-Used by:
+Example ephemeris output, in HDF5 format.  
+Used by:  
 - test_OIFReader.py
 - tests/readers/test_HDF5Reader.py
 
@@ -117,8 +102,6 @@ Used by:
 - test_createResultsSQLDatabase.py 
 - test_CSVReader.py 
 - test_PPJoinEphemeridesAndOrbits.py
-- test_makeConfigOIF.py  
-- test_makeSLURMscript.py
 - test_OIFReader.py
 - test_PPCheckInputObjectIDs.py
 - test_PPCommandLineParser.py
@@ -127,27 +110,29 @@ Used by:
 
 **oiftestoutput_comment.csv**  
 Example ephemeris output in .csv format when the columns 
-are not the start of row 0 but later in the file after a header
-Used by:
+are not the start of row 0 but later in the file after a header.  
+Used by:  
 - tests/readers/test_CSVReader.py
 
 **orbits_test1.txt**  
 Example orbits files with standardised names.  
 Used by:  
-- test_makeSLURMscript.py
+- test_createResultsSQLDatabase.py
 
 **orbits_test2.txt**  
-Example orbits files with standardised names. 
+Example orbits files with standardised names.  
 Used by:  
-- test_makeSLURMscript.py 
+- test_createResultsSQLDatabase.py
 
 **params_test1.txt**  
-Example physical parameters files with standardised names.
-Used by:   
+Example physical parameters files with standardised names.  
+Used by:  
+- test_createResultsSQLDatabase.py
 
 **params_test2.txt**  
-Example physical parameters files with standardised names.
-Used by:   
+Example physical parameters files with standardised names.  
+Used by:  
+- test_createResultsSQLDatabase.py
 
 **PPReadAllInput_oif.txt**  
 Example OIF output, compatible with pointing database.  
@@ -181,7 +166,7 @@ Used by:
 
 **test_input_fullobs.csv**  
 Example of full dataframe of observations created by sorcha.py.  
-Used by: 
+Used by:  
 - test_PPApplyFOVFilter.py   
 - test_PPCommandLineParser.py  
 - test_PPConfigParser.py  
@@ -195,9 +180,7 @@ Used by:
 Test Sorcha config file.  
 Used by:  
 - test_combined_data_reading.py
-- test_makeSLURMscript.py
 - test_PPCommandLineParser.py
-
 
 **test_PPPrintConfigsToLog.txt**  
 Example of an SSPP log file.  
@@ -227,9 +210,9 @@ Used by:
 - test_CSVReader.py
 - test_PPCommandLineParser.py
 
-**test_ephem_config.ini**
-Example Sorcha config file with ephemeris keywords.
-Used by:
+**test_ephem_config.ini**  
+Example Sorcha config file with ephemeris keywords.  
+Used by:  
  - test_ephemeris_generation.py
 
 **testobs_clean.csv**  
@@ -237,9 +220,9 @@ Reduced version of test_input_fullobs.csv.
 Used by:  
 - test_createResultsSQLDatabase.py
 
-**testdb_PPIntermDB.db**
+**testdb_PPIntermDB.db**  
 SQL database of epehemeris output. Functionality no longer used but kept in for
-possible future software development. 
+possible future software development.  
 Used by:  
 - test_DatabaseReader.py
 
@@ -251,7 +234,7 @@ Used by:
 
 **testorb.des**  
 Example orbits file, whitespace-separated.  
-Used by: 
+Used by:  
 - test_createResultsSQLDatabase.py
 - test_CSVReader.py
 - test_OrbitAuxReader.py 
