@@ -13,6 +13,7 @@ def PPMatchPointingToObservations(padain, pointfildb):
     Adds the following columns to the dataframe of observations:
 
         - visitTime
+        - visitExposureTime
         - optFilter
         - seeingFwhmGeom
         - seeingFwhmEff

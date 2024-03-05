@@ -72,10 +72,8 @@ def test_PPMatchPointingToObservations():
     joined_df = PPJoinEphemeridesAndParameters(test_oif, test_params)
     joined_df_2 = PPJoinEphemeridesAndOrbits(joined_df, test_orb)
 
-    dbq = "SELECT observationId, observationStartMJD as observationStartMJD_TAI, visitTime, filter, seeingFwhmGeom, seeingFwhmEff, fiveSigmaDepth, fieldRA, fieldDec, rotSkyPos FROM observations order by observationId"
+    dbq = "SELECT observationId, observationStartMJD as observationStartMJD_TAI, visitTime, visitExposureTime, filter, seeingFwhmGeom, seeingFwhmEff, fiveSigmaDepth, fieldRA, fieldDec, rotSkyPos FROM observations order by observationId"
 
-    # note that surveyname here is "test". this is because this test pointing dataframe doesn't have the visitTime column
-    # and thus cannot calculate 'observationMidpointMJD_TAI'. we don't need it here, so that's okay.
     pointing_db = PPReadPointingDatabase(
         get_test_filepath("baseline_10klines_2.0.db"), ["g", "r", "i"], dbq, "lsst"
     )
@@ -129,6 +127,7 @@ def test_PPMatchPointingToObservations():
             "e": [0.09654, 0.09654],
             "q": [33.01305, 33.01305],
             "visitTime": [34.0, 34.0],
+            "visitExposureTime": [30.0, 30.0],
             "optFilter": ["r", "i"],
             "seeingFwhmGeom": [0.9072793403337696, 0.9738200113477326],
             "seeingFwhmEff": [1.0404858154912038, 1.1214355369193827],
