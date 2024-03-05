@@ -4,6 +4,7 @@ Notebooks
 .. toctree::
     :maxdepth: 1
 
+    LSST Camera Footprint and Various Other Sorcha Related Fields-of-View <notebooks/demo_PlotLSSTCamCornersFOVs>
     Apparent Magnitude Validation <notebooks/demo_ApparentMagnitudeValidation>
     Circle Footprint Filter <notebooks/demo_CircleFootprint>
     LSST Camera Footprint Filter <notebooks/demo_FootprintFilter>
