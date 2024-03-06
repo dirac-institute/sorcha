@@ -16,6 +16,8 @@ from sorcha.ephemeris.simulation_constants import *
 from sorcha.ephemeris.simulation_geometry import *
 from sorcha.ephemeris.simulation_parsing import *
 from sorcha.utilities.dataUtilitiesForTests import get_data_out_filepath
+from sorcha.ephemeris.pixel_dict import PixelDict
+
 
 out_csv_path = get_data_out_filepath("ephemeris_output.csv")
 
@@ -31,6 +33,20 @@ class EphemerisGeometryParameters:
     rho_mag: float = None
     r_ast: float = None
     v_ast: float = None
+
+
+def get_vec(row, vecname):
+    """
+    Extracts a vector from a Pandas dataframe row
+    Parameters
+    ----------
+    row : row from the dataframe
+    vecname : name of the vector
+    Returns
+    -------
+    3D numpy array
+    """
+    return np.asarray([row[f"{vecname}_x"], row[f"{vecname}_y"], row[f"{vecname}_z"]])
 
 
 def get_vec(row, vecname):
@@ -98,7 +114,7 @@ def create_ephemeris(orbits_df, pointings_df, args, configs):
     picket_interval = configs["ar_picket"]
     obsCode = configs["ar_obs_code"]
     nside = 2 ** configs["ar_healpix_order"]
-    first = 1  # Try to get away from this
+    n_sub_intervals = 101  # configs["n_sub_intervals"]
 
     ephemeris_csv_filename = None
     if args.output_ephemeris_file and args.outpath:
@@ -155,38 +171,39 @@ def create_ephemeris(orbits_df, pointings_df, args, configs):
 
     verboselog("Generating ephemeris...")
 
+    pixdict = PixelDict(
+        pointings_df["JD_TDB"].iloc[0],
+        sim_dict,
+        ephem,
+        obsCode,
+        observatories,
+        picket_interval,
+        nside,
+        n_sub_intervals=n_sub_intervals,
+    )
     for _, pointing in pointings_df.iterrows():
         mjd_tai = float(pointing["observationMidpointMJD_TAI"])
 
         # If the observation time is too far from the
         # time of the last set of ballpark sky position,
         # compute a new set
-        while (
-            abs(pointing["JD_TDB"] - t_picket) > 0.5 * picket_interval or first == 1
-        ):  # right now this assumes time ordering
-            t_picket, pixel_dict, _ = update_pixel_dict(
-                pointing["JD_TDB"], t_picket, picket_interval, sim_dict, ephem, obsCode, observatories, nside
-            )
-            first = 0
 
-        # This loop builds a python set containing ids for objects in the pixels
-        # around the current pointing. The function `update_pixel_dict` does
-        # the majority of the computation to build out `pixel_dict`.
-        desigs = set()
-        pixId = pointings_df.attrs["pixels"]
-        for pix in pixId[pointing["pixels_begin"] : pointing["pixels_end"]]:
-            desigs.update(pixel_dict[pix])
+        desigs = pixdict.get_designations(
+            pointing["JD_TDB"], pointing["fieldRA"], pointing["fieldDec"], ang_fov
+        )
+        unit_vectors = pixdict.interpolate_unit_vectors(desigs, pointing["JD_TDB"])
+        visit_vector = get_vec(pointing, "visit_vector")
+        r_obs = get_vec(pointing, "r_obs")
 
-        for obj_id in sorted(desigs):
+        for k, uv in unit_vectors.items():
             ephem_geom_params = EphemerisGeometryParameters()
-            ephem_geom_params.obj_id = obj_id
+            ephem_geom_params.obj_id = k
             ephem_geom_params.mjd_tai = mjd_tai
 
-            v = sim_dict[obj_id]
-            sim, ex, rho_hat_rough = v["sim"], v["ex"], v["rho_hat"]
-            visit_vector = get_vec(pointing, "visit_vector")
-            r_obs = get_vec(pointing, "r_obs")
-            ang = np.arccos(np.dot(rho_hat_rough, visit_vector)) * 180 / np.pi
+            v = sim_dict[k]
+            sim, ex = v["sim"], v["ex"]
+            uv /= np.linalg.norm(uv)
+            ang = np.arccos(np.dot(uv, visit_vector)) * 180 / np.pi
             if ang < ang_fov + buffer:
                 (
                     ephem_geom_params.rho,
@@ -247,57 +264,6 @@ def get_residual_vectors(v1):
     A = np.array((-y, x, 0.0)) / cosd
     D = np.array((-z * x / cosd, -z * y / cosd, cosd))
     return A, D
-
-
-# arguments: JD_TDB, t_picket, picket_interval, sim_dict, obsCode
-# returns t_picket, pixel_dict, r_obs
-def update_pixel_dict(JD_TDB, t_picket, picket_interval, sim_dict, ephem, obsCode, observatories, nside):
-    """
-    Updates the dictionary of HEALPix pixels for the on-sky positions of the particles
-    Particle pixel coordinates are computed with respect to a central time (t_picket)
-
-    Parameters
-    ----------
-        JD_TDB (float):
-            Julian date (in TDB scale)
-        t_picket (float):
-            Central time of the picket
-        picket_interval (float):
-            Interval between pickets
-        sim_dict (dict):
-            Dictionary of ASSIST simulations
-        ephem (Ephem):
-            ASSIST Ephem object
-        obsCopde (str):
-            MPC Observatory code
-        observatories (Observatory):
-            Observatory object
-        nside (int):
-            HEALPix nside
-
-    Returns
-    -------
-        t_picket (float):
-            Updated t_picket
-        pixel_dict (dict):
-            Dictionary of particles and their HEALPix pixels
-        r_obs (array, shape = (3,))
-            Barycentric coordinates of the observatory
-    """
-    n = round((JD_TDB - t_picket) / picket_interval)
-    t_picket += n * picket_interval
-    et = (t_picket - spice.j2000()) * 24 * 60 * 60
-    r_obs = observatories.barycentricObservatory(et, obsCode) / AU_KM
-    pixel_dict = defaultdict(list)
-    for k, v in sim_dict.items():
-        sim, ex = v["sim"], v["ex"]
-        ex.integrate_or_interpolate(t_picket - ephem.jd_ref)
-        rho = np.array(sim.particles[0].xyz) - r_obs
-        rho_hat = rho / np.linalg.norm(rho)
-        sim_dict[k]["rho_hat"] = rho_hat
-        this_pix = hp.vec2pix(nside, rho_hat[0], rho_hat[1], rho_hat[2], nest=True)
-        pixel_dict[this_pix].append(k)
-    return t_picket, pixel_dict, r_obs
 
 
 def calculate_rates_and_geometry(pointing: pd.DataFrame, ephem_geom_params: EphemerisGeometryParameters):
