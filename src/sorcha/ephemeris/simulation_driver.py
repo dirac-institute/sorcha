@@ -266,57 +266,6 @@ def get_residual_vectors(v1):
     return A, D
 
 
-# arguments: JD_TDB, t_picket, picket_interval, sim_dict, obsCode
-# returns t_picket, pixel_dict, r_obs
-def update_pixel_dict(JD_TDB, t_picket, picket_interval, sim_dict, ephem, obsCode, observatories, nside):
-    """
-    Updates the dictionary of HEALPix pixels for the on-sky positions of the particles
-    Particle pixel coordinates are computed with respect to a central time (t_picket)
-
-    Parameters
-    ----------
-        JD_TDB (float):
-            Julian date (in TDB scale)
-        t_picket (float):
-            Central time of the picket
-        picket_interval (float):
-            Interval between pickets
-        sim_dict (dict):
-            Dictionary of ASSIST simulations
-        ephem (Ephem):
-            ASSIST Ephem object
-        obsCopde (str):
-            MPC Observatory code
-        observatories (Observatory):
-            Observatory object
-        nside (int):
-            HEALPix nside
-
-    Returns
-    -------
-        t_picket (float):
-            Updated t_picket
-        pixel_dict (dict):
-            Dictionary of particles and their HEALPix pixels
-        r_obs (array, shape = (3,))
-            Barycentric coordinates of the observatory
-    """
-    n = round((JD_TDB - t_picket) / picket_interval)
-    t_picket += n * picket_interval
-    et = (t_picket - spice.j2000()) * 24 * 60 * 60
-    r_obs = observatories.barycentricObservatory(et, obsCode) / AU_KM
-    pixel_dict = defaultdict(list)
-    for k, v in sim_dict.items():
-        sim, ex = v["sim"], v["ex"]
-        ex.integrate_or_interpolate(t_picket - ephem.jd_ref)
-        rho = np.array(sim.particles[0].xyz) - r_obs
-        rho_hat = rho / np.linalg.norm(rho)
-        sim_dict[k]["rho_hat"] = rho_hat
-        this_pix = hp.vec2pix(nside, rho_hat[0], rho_hat[1], rho_hat[2], nest=True)
-        pixel_dict[this_pix].append(k)
-    return t_picket, pixel_dict, r_obs
-
-
 def calculate_rates_and_geometry(pointing: pd.DataFrame, ephem_geom_params: EphemerisGeometryParameters):
     """Calculate rates and geometry for objects within the field of view
 
