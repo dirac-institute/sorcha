@@ -34,6 +34,7 @@ class EphemerisGeometryParameters:
     r_ast: float = None
     v_ast: float = None
 
+
 def get_vec(row, vecname):
     """
     Extracts a vector from a Pandas dataframe row
@@ -46,6 +47,7 @@ def get_vec(row, vecname):
     3D numpy array
     """
     return np.asarray([row[f"{vecname}_x"], row[f"{vecname}_y"], row[f"{vecname}_z"]])
+
 
 def get_vec(row, vecname):
     return np.asarray([row[f"{vecname}_x"], row[f"{vecname}_y"], row[f"{vecname}_z"]])
@@ -112,7 +114,7 @@ def create_ephemeris(orbits_df, pointings_df, args, configs):
     picket_interval = configs["ar_picket"]
     obsCode = configs["ar_obs_code"]
     nside = 2 ** configs["ar_healpix_order"]
-    n_sub_intervals = 101# configs["n_sub_intervals"]
+    n_sub_intervals = 101  # configs["n_sub_intervals"]
 
     ephemeris_csv_filename = None
     if args.output_ephemeris_file and args.outpath:
@@ -169,7 +171,16 @@ def create_ephemeris(orbits_df, pointings_df, args, configs):
 
     verboselog("Generating ephemeris...")
 
-    pixdict = PixelDict(pointings_df['JD_TDB'].iloc[0], sim_dict, ephem, obsCode, observatories, picket_interval, nside,n_sub_intervals=n_sub_intervals)
+    pixdict = PixelDict(
+        pointings_df["JD_TDB"].iloc[0],
+        sim_dict,
+        ephem,
+        obsCode,
+        observatories,
+        picket_interval,
+        nside,
+        n_sub_intervals=n_sub_intervals,
+    )
     for _, pointing in pointings_df.iterrows():
         mjd_tai = float(pointing["observationMidpointMJD_TAI"])
 
@@ -177,10 +188,12 @@ def create_ephemeris(orbits_df, pointings_df, args, configs):
         # time of the last set of ballpark sky position,
         # compute a new set
 
-        desigs = pixdict.get_designations(pointing['JD_TDB'], pointing['fieldRA'], pointing['fieldDec'], ang_fov)
-        unit_vectors = pixdict.interpolate_unit_vectors(desigs, pointing['JD_TDB'])
-        visit_vector = pointing['visit_vector']
-        r_obs = pointing['r_obs']
+        desigs = pixdict.get_designations(
+            pointing["JD_TDB"], pointing["fieldRA"], pointing["fieldDec"], ang_fov
+        )
+        unit_vectors = pixdict.interpolate_unit_vectors(desigs, pointing["JD_TDB"])
+        visit_vector = get_vec(pointing, "visit_vector")
+        r_obs = get_vec(pointing, "r_obs")
 
         for k, uv in unit_vectors.items():
             ephem_geom_params = EphemerisGeometryParameters()
@@ -188,9 +201,9 @@ def create_ephemeris(orbits_df, pointings_df, args, configs):
             ephem_geom_params.mjd_tai = mjd_tai
 
             v = sim_dict[k]
-            sim, ex = v['sim'], v['ex']
+            sim, ex = v["sim"], v["ex"]
             uv /= np.linalg.norm(uv)
-            ang = np.arccos(np.dot(uv, visit_vector))*180/np.pi
+            ang = np.arccos(np.dot(uv, visit_vector)) * 180 / np.pi
             if ang < ang_fov + buffer:
                 (
                     ephem_geom_params.rho,
@@ -198,14 +211,10 @@ def create_ephemeris(orbits_df, pointings_df, args, configs):
                     _,
                     ephem_geom_params.r_ast,
                     ephem_geom_params.v_ast,
-                ) = integrate_light_time(
-                    sim, ex, pointing["JD_TDB"] - ephem.jd_ref, r_obs, lt0=0.01
-                )
+                ) = integrate_light_time(sim, ex, pointing["JD_TDB"] - ephem.jd_ref, r_obs, lt0=0.01)
                 ephem_geom_params.rho_hat = ephem_geom_params.rho / ephem_geom_params.rho_mag
 
-                ang_from_center = (
-                    180 / np.pi * np.arccos(np.dot(ephem_geom_params.rho_hat, visit_vector))
-                )
+                ang_from_center = 180 / np.pi * np.arccos(np.dot(ephem_geom_params.rho_hat, visit_vector))
                 if ang_from_center < ang_fov:
                     out_tuple = calculate_rates_and_geometry(pointing, ephem_geom_params)
                     in_memory_csv.writerow(out_tuple)

@@ -207,21 +207,6 @@ def precompute_pointing_information(pointings_df, args, configs):
         nested=True,
     )
 
-    # use pandas `apply` again because healpy.query_disc is not easily vectorizable
-    pixels, i = [], 0
-    pixBeginEnd = np.empty((len(pointings_df), 2), dtype=np.int32)
-    for k, (fieldRa, fieldDec) in enumerate(
-        zip(pointings_df["fieldRA"].values, pointings_df["fieldDec"].values)
-    ):
-        fieldPix = partial_get_hp_neighbors(fieldRa, fieldDec)
-        nPix = len(fieldPix)
-        pixels.append(fieldPix)
-        pixBeginEnd[k] = i, i + nPix
-        i += nPix
-    pointings_df["pixels_begin"], pointings_df["pixels_end"] = pixBeginEnd[:, 0], pixBeginEnd[:, 1]
-    pixels = np.concatenate(pixels, dtype=np.int32)
-    pointings_df.attrs = {"pixels": pixels}
-
     # create empty arrays for observatory position and velocity to be filled in
     r_obs = np.empty((len(pointings_df), 3))
     v_obs = np.empty((len(pointings_df), 3))
