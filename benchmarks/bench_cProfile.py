@@ -36,7 +36,7 @@ if __name__ == "__main__":  # pragma: no cover
     
     args_obj = sorchaArguments(cmd_args_dict)
 
-    configs = PPConfigFileParser(os.path.join(path_to_sorcha, "demo/sorcha_config_demo.ini"), "LSST")
+    configs = PPConfigFileParser(os.path.join(path_to_sorcha, "benchmarks/test_bench_config.ini"), "LSST")
 
     cProfile.run("runLSSTSimulation(args_obj, configs)", os.path.join(path_to_sorcha, "tests/out/restats"))
 
