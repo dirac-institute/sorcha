@@ -90,7 +90,6 @@ def test_PPReadAllInput():
             11.104605793427162,
             -1.2000819393055593,
             273.9055664032884,
-            60225.290312576966,
         ],
         dtype=object,
     )
@@ -143,7 +142,6 @@ def test_PPReadAllInput():
             "fieldRA",
             "fieldDec",
             "rotSkyPos",
-            "observationMidpointMJD_TAI",
         ],
         dtype=object,
     )

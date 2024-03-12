@@ -135,7 +135,6 @@ def test_PPMatchPointingToObservations():
             "fieldRA": [10.286608210708128, 10.286608210708128],
             "fieldDec": [-2.177840811640851, -2.177840811640851],
             "rotSkyPos": [298.5944886818567, 302.40143247632597],
-            "observationMidpointMJD_TAI": [60229.284567, 60229.308459],
         }
     )
     expected_df["optFilter"] = expected_df["optFilter"].astype("category")
