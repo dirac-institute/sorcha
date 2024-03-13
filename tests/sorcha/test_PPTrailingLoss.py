@@ -67,6 +67,7 @@ def test_PPTrailingLoss():
         }
     )
 
+    testoifdf["visitExposureTime"] = 30.0
     # add cos dec term
     testoifdf["AstRARate(deg/day)"] *= np.cos(testoifdf["AstDec(deg)"] * np.pi / 180.0)
 

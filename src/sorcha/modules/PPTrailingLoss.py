@@ -110,6 +110,7 @@ def PPTrailingLoss(
     ddec_name="AstDecRate(deg/day)",
     dec_name="AstDec(deg)",
     seeing_name_survey="seeingFwhmEff_arcsec",
+    visit_time_name="visitExposureTime",
 ):
     """
     Calculates detection trailing losses. Wrapper for calcTrailingLoss.
@@ -150,6 +151,7 @@ def PPTrailingLoss(
         oif_df[dra_cosdec_name],
         oif_df[ddec_name],
         oif_df[seeing_name_survey],
+        texp=oif_df[visit_time_name],
         model=model,
     )
 
