@@ -178,6 +178,10 @@ def uncertainties(
         pandas dataframe column name of the object declination
         Default = "AstDec(deg)"
 
+    visit_time_name : string, optional
+        pandas dataframe column name for exposure length
+        Default = "visitExposureTime"
+
     Returns
     -----------
     astrSigDeg: numpy array

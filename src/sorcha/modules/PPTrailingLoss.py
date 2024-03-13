@@ -137,6 +137,9 @@ def PPTrailingLoss(
     seeing_name_survey : string, optional
         "oif_df" column name for seeing. Default = "seeingFwhmEff_arcsec"
 
+    visit_time_name : string, optional
+        "oif_df" column name for exposure length. Default = "visitExposureTime"
+
     Returns
     -----------
     dmag : float or array of floats
