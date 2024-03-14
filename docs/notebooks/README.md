@@ -40,9 +40,13 @@ demo_MagnitudeAndSNRCuts
 - **Demonstrates:** PPBrightLimit, PPMagnitudeLimit, PPSNRLimit
 - **Files:** none
 
-demo_PlotLSSTCamCornersFOVs.ipynb
+demo_PlotLSSTCamCornersFOVs
 - **Demonstrates:** What the internal Sorcha LSSTCam CCD footprint looks like with various circle FOVs that can be used within Sorcha
 - **Files:** Installed version of LSST_detector_corners_100123.csv  
+
+demo_TrailingLossPhasecurve
+- **Demonstrates:** That the appropriate magnitude to use for any photometric analysis by the user such as phase curves should be done with the trailed source magnitude. 
+- **Files:** none
 
 demo_TrailingLossesValidation
 - **Demonstrates:** PPTrailingLoss
