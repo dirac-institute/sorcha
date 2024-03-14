@@ -69,6 +69,6 @@ def PPMatchPointingToObservations(padain, pointfildb):
             "ERROR:: PPMatchPointingToObservations: mismatch in pointing database and pointing output times."
         )
 
-    resdf = resdf.drop(columns=["observationStartMJD_TAI", "observationId_"])
+    resdf = resdf.drop(columns=["observationStartMJD_TAI", "observationId_", "observationMidpointMJD_TAI"])
 
     return resdf
