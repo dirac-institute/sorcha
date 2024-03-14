@@ -13,6 +13,7 @@ Notebooks
     SSP Linking Filter <notebooks/demo_LinkingFilter>
     Magnitude and SNR Cuts <notebooks/demo_MagnitudeAndSNRCuts>
     Trailing Losses Validation <notebooks/demo_TrailingLossesValidation>
+    Trailed Source Magnitude Versus PSF Magnitude <notebooks/demo_TrailingLossPhasecurve>
     Uncertainties and Randomization <notebooks/demo_UncertaintiesAndRandomization>
     Vignetting Demo <notebooks/demo_Vignetting>
     Lightcurve demo <notebooks/demo_Lightcurve>
