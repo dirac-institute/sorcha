@@ -77,7 +77,11 @@ def PPCommandLineParser(args):
 
     # if a value was provided, warn the user about overwriting if the file exists
     if cmd_args_dict["output_ephemeris_file"]:
-        warn_or_remove_file( os.path.join(cmd_args_dict["outpath"], cmd_args_dict["output_ephemeris_file"]+ ".*"), args.f, pplogger)
+        warn_or_remove_file(
+            os.path.join(cmd_args_dict["outpath"], cmd_args_dict["output_ephemeris_file"] + ".*"),
+            args.f,
+            pplogger,
+        )
 
     cmd_args_dict["surveyname"] = args.s
     cmd_args_dict["outfilestem"] = args.t
