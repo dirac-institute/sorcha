@@ -29,7 +29,7 @@ def test_calculate_rates_and_geometry():
             "visit_vector_x": 0.555998946329719,
             "visit_vector_y": -0.7289145382156643,
             "visit_vector_z": -0.399435561333849,
-            "JD_TDB": 2460219.484998981,
+            "fieldJD_TDB": 2460219.484998981,
             "pixels": None,
             "r_obs_x": 0.9825025212987633,
             "r_obs_y": 0.12894773431445178,

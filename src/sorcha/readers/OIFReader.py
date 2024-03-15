@@ -163,7 +163,7 @@ class OIFDataReader(ObjectDataReader):
             "Sun-Ast-Obs(deg)",
         ]
 
-        optional_cols = ["JD_TDB"]
+        optional_cols = ["fieldJD_TDB"]
 
         if not set(input_table.columns.values) == set(oif_cols):
             for column in input_table.columns.values:

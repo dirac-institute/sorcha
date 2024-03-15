@@ -136,7 +136,7 @@ def create_ephemeris(orbits_df, pointings_df, args, configs):
         "ObjID",
         "FieldID",
         "FieldMJD_TAI",
-        "JD_TDB",
+        "fieldJD_TDB",
         "AstRange(km)",
         "AstRangeRate(km/s)",
         "AstRA(deg)",
@@ -172,7 +172,7 @@ def create_ephemeris(orbits_df, pointings_df, args, configs):
     verboselog("Generating ephemeris...")
 
     pixdict = PixelDict(
-        pointings_df["JD_TDB"].iloc[0],
+        pointings_df["fieldJD_TDB"].iloc[0],
         sim_dict,
         ephem,
         obsCode,
@@ -189,9 +189,9 @@ def create_ephemeris(orbits_df, pointings_df, args, configs):
         # compute a new set
 
         desigs = pixdict.get_designations(
-            pointing["JD_TDB"], pointing["fieldRA"], pointing["fieldDec"], ang_fov
+            pointing["fieldJD_TDB"], pointing["fieldRA"], pointing["fieldDec"], ang_fov
         )
-        unit_vectors = pixdict.interpolate_unit_vectors(desigs, pointing["JD_TDB"])
+        unit_vectors = pixdict.interpolate_unit_vectors(desigs, pointing["fieldJD_TDB"])
         visit_vector = get_vec(pointing, "visit_vector")
         r_obs = get_vec(pointing, "r_obs")
 
@@ -211,7 +211,7 @@ def create_ephemeris(orbits_df, pointings_df, args, configs):
                     _,
                     ephem_geom_params.r_ast,
                     ephem_geom_params.v_ast,
-                ) = integrate_light_time(sim, ex, pointing["JD_TDB"] - ephem.jd_ref, r_obs, lt0=0.01)
+                ) = integrate_light_time(sim, ex, pointing["fieldJD_TDB"] - ephem.jd_ref, r_obs, lt0=0.01)
                 ephem_geom_params.rho_hat = ephem_geom_params.rho / ephem_geom_params.rho_mag
 
                 ang_from_center = 180 / np.pi * np.arccos(np.dot(ephem_geom_params.rho_hat, visit_vector))
@@ -311,7 +311,7 @@ def calculate_rates_and_geometry(pointing: pd.DataFrame, ephem_geom_params: Ephe
         ephem_geom_params.obj_id,
         pointing["FieldID"],
         ephem_geom_params.mjd_tai,
-        pointing["JD_TDB"],
+        pointing["fieldJD_TDB"],
         ephem_geom_params.rho_mag * AU_KM,
         drho_magdt * AU_KM / (24 * 60 * 60),
         ra0,
