@@ -59,6 +59,18 @@ def cite():  # pragma: no cover
 
 
 def mem(df):
+    """
+    Memory utility function that returns back how much memory the inputted pandas dataframe is using
+    Parameters
+    ------------
+    df : pandas dataframe
+
+    Returns
+    -----------
+    usage : int
+
+    """
+
     usage = df.memory_usage(deep=True).sum()
     for k, v in df.attrs.items():
         usage += v.nbytes
@@ -132,6 +144,7 @@ def runLSSTSimulation(args, configs):
     # TODO: Once more ephemerides_types are added this should be wrapped in a EphemerisDataReader
     # That does the selection and checks. We are holding off adding this level of indirection until there
     # is a second ephemerides_type.
+
     if ephem_type.casefold() not in ["ar", "external"]:  # pragma: no cover
         pplogger.error(f"PPReadAllInput: Unsupported value for ephemerides_type {ephem_type}")
         sys.exit(f"PPReadAllInput: Unsupported value for ephemerides_type {ephem_type}")
@@ -216,8 +229,17 @@ def runLSSTSimulation(args, configs):
         # Do NOT use TrailedSourceMag or PSFMag, these are cut later.
         verboselog("Calculating astrometric and photometric uncertainties...")
         verboselog("Values are then used to randomize the photometry....")
+        verboselog(
+            "Number of rows BEFORE caclulating astrometric and photometric uncertainties : "
+            + str(len(observations.index))
+        )
+
         observations = PPAddUncertainties.addUncertainties(
             observations, configs, args._rngs, verbose=args.verbose
+        )
+        verboselog(
+            "Number of rows AFTER caclulating astrometric and photometric uncertainties : "
+            + str(len(observations.index))
         )
 
         verboselog("Randomising astrometry...")
@@ -226,9 +248,11 @@ def runLSSTSimulation(args, configs):
         )
 
         verboselog("Applying field-of-view filters...")
+        verboselog("Number of rows BEFORE applying FOV filters: " + str(len(observations.index)))
         observations = PPApplyFOVFilter(
             observations, configs, args._rngs, footprint=footprint, verbose=args.verbose
         )
+        verboselog("Number of rows AFTER applying FOV filters: " + str(len(observations.index)))
 
         if configs["SNR_limit_on"]:
             verboselog(
@@ -236,11 +260,15 @@ def runLSSTSimulation(args, configs):
                     configs["SNR_limit"]
                 )
             )
+            verboselog("Number ≈ rows BEFORE applying SNR limit filter: " + str(len(observations.index)))
             observations = PPSNRLimit(observations, configs["SNR_limit"])
+            verboselog("Number of rows AFTER applying SNR limit filter: " + str(len(observations.index)))
 
         if configs["mag_limit_on"]:
             verboselog("Dropping detections fainter than user-defined magnitude limit... ")
+            verboselog("Number of rows BEFORE applying mag limit filter: " + str(len(observations.index)))
             observations = PPMagnitudeLimit(observations, configs["mag_limit"])
+            verboselog("Number of rows AFTER applying mag limit filter: " + str(len(observations.index)))
 
         if configs["fading_function_on"]:
             verboselog("Applying detection efficiency fading function...")
@@ -254,7 +282,9 @@ def runLSSTSimulation(args, configs):
 
         if configs["bright_limit_on"]:
             verboselog("Dropping observations that are too bright...")
+            verboselog("Number of rows BEFORE applying bright limit filter " + str(len(observations.index)))
             observations = PPBrightLimit(observations, configs["observing_filters"], configs["bright_limit"])
+            verboselog("Number of rows AFTER applying bright limit filter " + str(len(observations.index)))
 
         if len(observations) == 0:
             verboselog("No observations left in chunk. Skipping to next chunk...")
