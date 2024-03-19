@@ -145,18 +145,28 @@ def PPWriteOutput(cmd_args, configs, observations_in, endChunk=0, verbose=False)
     observations["FieldMJD_TAI"] = observations["FieldMJD_TAI"].round(decimals=5)
 
     if configs["position_decimals"]:
-        for position_col in ["fieldRA", "fieldDec", "AstRA(deg)", "AstDec(deg)", "AstrometricSigma(deg)"]:
+        for position_col in [
+            "fieldRA",
+            "fieldDec",
+            "AstRA(deg)",
+            "AstDec(deg)",
+            "AstrometricSigma(deg)",
+            "AstRATrue(deg)",
+            "AstDecTrue(deg)",
+        ]:
             try:  # depending on type of output selected, some of these columns may not exist.
                 observations[position_col] = observations[position_col].round(
                     decimals=configs["position_decimals"]
                 )
-            except:
+            except KeyError:
                 continue
 
     if configs["magnitude_decimals"]:
         for magnitude_col in [
             "observedPSFMag",
             "observedTrailedSourceMag",
+            "TrailedSourceMag",
+            "PSFMag",
             "PhotometricSigmaPSF(mag)",
             "PhotometricSigmaTrailedSource(mag)",
             "fiveSigmaDepth",
@@ -166,7 +176,7 @@ def PPWriteOutput(cmd_args, configs, observations_in, endChunk=0, verbose=False)
                 observations[magnitude_col] = observations[magnitude_col].round(
                     decimals=configs["magnitude_decimals"]
                 )
-            except:
+            except KeyError:
                 continue
 
     verboselog("Constructing output path...")
