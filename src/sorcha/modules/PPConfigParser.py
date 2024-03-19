@@ -674,12 +674,8 @@ def PPConfigFileParser(configfile, survey_name):
         pplogger.error("ERROR: output_size not recognised.")
         sys.exit("ERROR: output_size not recognised.")
 
-    config_dict["position_decimals"] = PPGetIntOrExit(
-        config, "OUTPUT", "position_decimals", "ERROR: positional decimal places not specified."
-    )
-    config_dict["magnitude_decimals"] = PPGetIntOrExit(
-        config, "OUTPUT", "magnitude_decimals", "ERROR: magnitude decimal places not specified."
-    )
+    config_dict["position_decimals"], _ = PPGetValueAndFlag(config, "OUTPUT", "position_decimals", "int")
+    config_dict["magnitude_decimals"], _ = PPGetValueAndFlag(config, "OUTPUT", "magnitude_decimals", "int")
 
     if config_dict["position_decimals"] < 0 or config_dict["magnitude_decimals"] < 0:
         pplogger.error("ERROR: decimal places config variables cannot be negative.")
