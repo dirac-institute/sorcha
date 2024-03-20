@@ -44,6 +44,7 @@ def setup_and_teardown_for_PPWriteOutput():
 
     os.remove(os.path.join(tmp_path, "PPOutput_test_out.csv"))
     os.remove(os.path.join(tmp_path, "PPOutput_test_out.db"))
+    os.remove(os.path.join(tmp_path, "PPOutput_test_all.csv"))
 
 
 def test_PPOutWriteCSV(setup_and_teardown_for_PPOutWriteCSV):
@@ -134,11 +135,9 @@ def test_PPWriteOutput(setup_and_teardown_for_PPWriteOutput):
             -17.582575,
             3e-06,
             "r",
-            19.647,
             19.648,
             0.007,
             0.007,
-            23.864,
             23.839,
         ],
         dtype=object,
@@ -146,5 +145,86 @@ def test_PPWriteOutput(setup_and_teardown_for_PPWriteOutput):
 
     assert_equal(csv_test_in.loc[0, :].values, expected)
     assert_equal(sql_test_in.loc[0, :].values, expected)
+
+    # additional test to ensure that "all" output option and no rounding works
+
+    configs = {
+        "output_size": "all",
+        "position_decimals": None,
+        "magnitude_decimals": None,
+        "output_format": "csv",
+    }
+
+    args.outfilestem = "PPOutput_test_all"
+
+    PPWriteOutput(args, configs, observations, 10)
+
+    all_test_in = pd.read_csv(os.path.join(tmp_path, "PPOutput_test_all.csv"))
+
+    expected_all = np.array(
+        [
+            "S1000000a",
+            894816,
+            61769.32062,
+            393817194.335,
+            -22.515,
+            164.0377129999997,
+            0.059181,
+            -17.582575000001285,
+            -0.103034,
+            -381360770.152,
+            236918119.898,
+            -61023282.708,
+            -8.456,
+            -15.118,
+            -2.703,
+            -20416770.015,
+            133676144.369,
+            57941007.918,
+            -30.238,
+            -4.221,
+            -1.691,
+            18.341701,
+            5.454,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.15,
+            "COM",
+            3.01822,
+            0.05208,
+            22.56035,
+            211.00286,
+            335.42134,
+            51575.94061,
+            14.2,
+            54800.0,
+            "r",
+            1.0585375509059165,
+            1.2244982371118207,
+            23.86356436464961,
+            163.87542090842982,
+            -18.84327137012991,
+            115.45370443821976,
+            19.6553455147994,
+            19.65971332007237,
+            23.839403736057715,
+            2.9880927198448093e-06,
+            0.0067559265881139,
+            159.7413150392024,
+            0.0067756541324796,
+            19.64807294986914,
+            19.647048752490328,
+            164.037713,
+            -17.582575,
+            66.0,
+            19,
+        ],
+        dtype=object,
+    )
+
+    assert_equal(all_test_in.loc[0, :].values, expected_all)
 
     return

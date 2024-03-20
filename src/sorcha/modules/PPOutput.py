@@ -133,11 +133,9 @@ def PPWriteOutput(cmd_args, configs, observations_in, endChunk=0, verbose=False)
                 "AstDec(deg)",
                 "AstrometricSigma(deg)",
                 "optFilter",
-                "observedPSFMag",
                 "observedTrailedSourceMag",
                 "PhotometricSigmaPSF(mag)",
                 "PhotometricSigmaTrailedSource(mag)",
-                "fiveSigmaDepth",
                 "fiveSigmaDepthAtSource",
             ]
         ]
@@ -146,20 +144,40 @@ def PPWriteOutput(cmd_args, configs, observations_in, endChunk=0, verbose=False)
 
     observations["FieldMJD_TAI"] = observations["FieldMJD_TAI"].round(decimals=5)
 
-    for position_col in ["fieldRA", "fieldDec", "AstRA(deg)", "AstDec(deg)", "AstrometricSigma(deg)"]:
-        observations[position_col] = observations[position_col].round(decimals=configs["position_decimals"])
+    if configs["position_decimals"]:
+        for position_col in [
+            "fieldRA",
+            "fieldDec",
+            "AstRA(deg)",
+            "AstDec(deg)",
+            "AstrometricSigma(deg)",
+            "AstRATrue(deg)",
+            "AstDecTrue(deg)",
+        ]:
+            try:  # depending on type of output selected, some of these columns may not exist.
+                observations[position_col] = observations[position_col].round(
+                    decimals=configs["position_decimals"]
+                )
+            except KeyError:
+                continue
 
-    for magnitude_col in [
-        "observedPSFMag",
-        "observedTrailedSourceMag",
-        "PhotometricSigmaPSF(mag)",
-        "PhotometricSigmaTrailedSource(mag)",
-        "fiveSigmaDepth",
-        "fiveSigmaDepthAtSource",
-    ]:
-        observations[magnitude_col] = observations[magnitude_col].round(
-            decimals=configs["magnitude_decimals"]
-        )
+    if configs["magnitude_decimals"]:
+        for magnitude_col in [
+            "observedPSFMag",
+            "observedTrailedSourceMag",
+            "TrailedSourceMag",
+            "PSFMag",
+            "PhotometricSigmaPSF(mag)",
+            "PhotometricSigmaTrailedSource(mag)",
+            "fiveSigmaDepth",
+            "fiveSigmaDepthAtSource",
+        ]:
+            try:  # depending on type of output selected, some of these columns may not exist.
+                observations[magnitude_col] = observations[magnitude_col].round(
+                    decimals=configs["magnitude_decimals"]
+                )
+            except KeyError:
+                continue
 
     verboselog("Constructing output path...")
 
