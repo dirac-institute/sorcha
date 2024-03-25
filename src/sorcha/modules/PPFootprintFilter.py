@@ -595,9 +595,9 @@ class Footprint:
         ra_name="AstRA(deg)",
         dec_name="AstDec(deg)",
         field_name="FieldID",
-        ra_name_field="fieldRA",
-        dec_name_field="fieldDec",
-        rot_name_field="rotSkyPos",
+        ra_name_field="fieldRA_deg",
+        dec_name_field="fieldDec_deg",
+        rot_name_field="fieldRotSkyPos_deg",
         edge_thresh=None,
     ):
         """
@@ -620,15 +620,15 @@ class Footprint:
 
         ra_name_field : string, optional
             "field_df" dataframe's column name for the observation field's RA
-             Default = "fieldRA" [units: degrees]
+             Default = "fieldRA_deg" [units: degrees]
 
         dec_name_field : string, optional
             "field_df" dataframe's column name for the observation field's declination
-             Default = "fieldDec" [Units: degrees]
+             Default = "fieldDec_deg" [Units: degrees]
 
         rot_name_field: string, optional
             "field_df" dataframe's column name for the observation field's rotation angle
-            Default = "rotSkyPos" [Units: degrees]
+            Default = "fieldRotSkyPos_deg" [Units: degrees]
 
         edge_thresh: float, optional
             An angular threshold in arcseconds for dropping pixels too close to the edge.

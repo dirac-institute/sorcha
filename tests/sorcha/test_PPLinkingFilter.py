@@ -22,7 +22,7 @@ def test_PPLinkingFilter():
     dec = [8, 8.1, 9, 9.1, 10, 10.1]
 
     observations = pd.DataFrame(
-        {"ObjID": obj_id, "FieldID": field_id, "FieldMJD_TAI": times, "AstRA(deg)": ra, "AstDec(deg)": dec}
+        {"ObjID": obj_id, "FieldID": field_id, "fieldMJD_TAI": times, "AstRA(deg)": ra, "AstDec(deg)": dec}
     )
 
     linked_observations = PPLinkingFilter(
@@ -52,7 +52,7 @@ def test_PPLinkingFilter():
 
     # put one tracklet outside of the track time window
     observations_large_window = observations.copy()
-    observations_large_window["FieldMJD_TAI"] = [60000.03, 60000.06, 60005.03, 60005.06, 60016.03, 60016.06]
+    observations_large_window["fieldMJD_TAI"] = [60000.03, 60000.06, 60005.03, 60005.06, 60016.03, 60016.06]
     unlinked_observations_2 = PPLinkingFilter(
         observations_large_window,
         detection_efficiency,
@@ -81,7 +81,7 @@ def test_PPLinkingFilter():
 
     # move two observations too far away in time for a tracklet
     observations_large_time = observations.copy()
-    observations_large_time["FieldMJD_TAI"] = [60000.03, 60000.10, 60005.03, 60005.06, 60008.03, 60008.06]
+    observations_large_time["fieldMJD_TAI"] = [60000.03, 60000.10, 60005.03, 60005.06, 60008.03, 60008.06]
     unlinked_observations_4 = PPLinkingFilter(
         observations_large_time,
         detection_efficiency,
@@ -117,7 +117,7 @@ def test_PPLinkingFilter():
         {
             "ObjID": obj_id_long,
             "FieldID": field_id_long,
-            "FieldMJD_TAI": times_long,
+            "fieldMJD_TAI": times_long,
             "AstRA(deg)": ra_long,
             "AstDec(deg)": dec_long,
         }

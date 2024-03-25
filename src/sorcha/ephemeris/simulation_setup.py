@@ -188,16 +188,18 @@ def precompute_pointing_information(pointings_df, args, configs):
     observatories = Observatory(args)
 
     # vectorize the calculation to get x,y,z vector from ra/dec
-    vectors = ra_dec2vec(pointings_df["fieldRA"].astype("float"), pointings_df["fieldDec"].astype("float"))
+    vectors = ra_dec2vec(
+        pointings_df["fieldRA_deg"].astype("float"), pointings_df["fieldDec_deg"].astype("float")
+    )
     pointings_df["visit_vector_x"] = vectors[:, 0]
     pointings_df["visit_vector_y"] = vectors[:, 1]
     pointings_df["visit_vector_z"] = vectors[:, 2]
 
     # use pandas `apply` (even though it's slow) instead of looping over the df in a for loop
-    pointings_df["JD_TDB"] = pointings_df.apply(
+    pointings_df["fieldJD_TDB"] = pointings_df.apply(
         lambda row: mjd_tai_to_epoch(row["observationMidpointMJD_TAI"]), axis=1
     )
-    et = (pointings_df["JD_TDB"] - spice.j2000()) * 24 * 60 * 60
+    et = (pointings_df["fieldJD_TDB"] - spice.j2000()) * 24 * 60 * 60
 
     # create a partial function since most params don't change, and it makes the lambda easier to read
     partial_get_hp_neighbors = partial(
@@ -227,7 +229,7 @@ def precompute_pointing_information(pointings_df, args, configs):
     # create empty arrays for sun position and velocity to be filled in
     r_sun = np.empty((len(pointings_df), 3))
     v_sun = np.empty((len(pointings_df), 3))
-    time_offsets = pointings_df["JD_TDB"] - ephem.jd_ref
+    time_offsets = pointings_df["fieldJD_TDB"] - ephem.jd_ref
     for idx, time_offset_i in enumerate(time_offsets):
         sun = ephem.get_particle("Sun", time_offset_i)
         r_sun[idx] = np.array((sun.x, sun.y, sun.z))

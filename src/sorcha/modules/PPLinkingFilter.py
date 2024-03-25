@@ -54,7 +54,7 @@ def PPLinkingFilter(
         {
             "ssObjectId": observations["ObjID"],
             "diaSourceId": observations["FieldID"],
-            "midPointTai": observations["FieldMJD_TAI"],
+            "midPointTai": observations["fieldMJD_TAI"],
             "ra": observations["AstRA(deg)"],
             "decl": observations["AstDec(deg)"],
         }

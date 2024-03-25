@@ -52,7 +52,7 @@ def test_PPTrailingLoss():
                 0.74395827,
                 0.47139718,
             ],
-            "seeingFwhmEff": [
+            "seeingFwhmEff_arcsec": [
                 0.96801413,
                 0.35969965,
                 0.33634724,
@@ -68,7 +68,7 @@ def test_PPTrailingLoss():
     )
 
     # add cos dec term
-    testoifdf[ "AstRARate(deg/day)" ] *= np.cos( testoifdf["AstDec(deg)"] * np.pi/180.0 )
+    testoifdf["AstRARate(deg/day)"] *= np.cos(testoifdf["AstDec(deg)"] * np.pi / 180.0)
 
     np.testing.assert_array_almost_equal(0.25893924959480374, PPTrailingLoss(oif_df=testoifdf)[5], decimal=14)
 

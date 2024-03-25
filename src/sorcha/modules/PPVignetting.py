@@ -11,8 +11,8 @@ def vignettingEffects(
     raNameOIF="AstRA(deg)",
     decNameOIF="AstDec(deg)",
     fieldNameOIF="FieldID",
-    raNameSurvey="fieldRA",
-    decNameSurvey="fieldDec",
+    raNameSurvey="fieldRA_deg",
+    decNameSurvey="fieldDec_deg",
 ):
     """
     Calculates effective limiting magnitude at source, taking vignetting into account.
@@ -33,11 +33,11 @@ def vignettingEffects(
         'oif_df' column name for observation pointing field ID. Default = "FieldID"
 
     raNameSurvey : string, optional
-         'oif_df' column name for observation pointing RA. Default = "fieldRA"
+         'oif_df' column name for observation pointing RA. Default = "fieldRA_deg"
 
 
      decNameSurvey : string, optional
-         'oif_df' column name for observation pointing declination. Default = "fieldDec"
+         'oif_df' column name for observation pointing declination. Default = "fieldDec_deg"
 
     Returns
     -----------
@@ -51,7 +51,7 @@ def vignettingEffects(
         oifdf[raNameOIF], oifdf[decNameOIF], oifdf[raNameSurvey], oifdf[decNameSurvey]
     )
 
-    return oifdf["fiveSigmaDepth"] - dmagVignet
+    return oifdf["fieldFiveSigmaDepth_mag"] - dmagVignet
 
 
 def calcVignettingLosses(ra, dec, fieldra, fielddec):

@@ -94,7 +94,7 @@ def test_addUncertainties():
             "TrailedSourceMag": obj_mags,
             "PSFMag": psf_mags,
             "fiveSigmaDepthAtSource": sig_limit,
-            "seeingFwhmGeom": seeing,
+            "seeingFwhmGeom_arcsec": seeing,
             "AstRARate(deg/day)": astRArate,
             "AstDecRate(deg/day)": astDecrate,
             "AstRA(deg)": astRA,
@@ -156,7 +156,7 @@ def test_uncertainties():
         {
             "ObjID": ["S1000000a"],
             "fiveSigmaDepthAtSource": [23.0],
-            "seeingFwhmGeom": [1.0],
+            "seeingFwhmGeom_arcsec": [1.0],
             "TrailedSourceMag": [20.0],
             "PSFMag": [20.1],
             "AstRARate(deg/day)": [0.03],

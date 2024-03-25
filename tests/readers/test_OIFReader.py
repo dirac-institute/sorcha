@@ -49,7 +49,7 @@ def test_OIFDataReader():
         [
             "ObjID",
             "FieldID",
-            "FieldMJD_TAI",
+            "fieldMJD_TAI",
             "AstRange(km)",
             "AstRangeRate(km/s)",
             "AstRA(deg)",

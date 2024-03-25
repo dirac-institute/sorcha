@@ -20,7 +20,7 @@ def test_PPMatchPointingToObservations():
         {
             "ObjID": ["356450", "356450"],
             "FieldID": [9212, 9262],
-            "FieldMJD_TAI": [60229.28437, 60229.308262],
+            "fieldMJD_TAI": [60229.28437, 60229.308262],
             "AstRange(km)": [5710968952.677331, 5710979387.71679],
             "AstRangeRate(km/s)": [5.027, 5.082],
             "AstRA(deg)": [11.240711, 11.240231],
@@ -72,7 +72,7 @@ def test_PPMatchPointingToObservations():
     joined_df = PPJoinEphemeridesAndParameters(test_oif, test_params)
     joined_df_2 = PPJoinEphemeridesAndOrbits(joined_df, test_orb)
 
-    dbq = "SELECT observationId, observationStartMJD as observationStartMJD_TAI, visitTime, visitExposureTime, filter, seeingFwhmGeom, seeingFwhmEff, fiveSigmaDepth, fieldRA, fieldDec, rotSkyPos FROM observations order by observationId"
+    dbq = "SELECT observationId, observationStartMJD as observationStartMJD_TAI, visitTime, visitExposureTime, filter, seeingFwhmGeom as seeingFwhmGeom_arcsec, seeingFwhmEff as seeingFwhmEff_arcsec, fiveSigmaDepth as fieldFiveSigmaDepth_mag , fieldRA as fieldRA_deg, fieldDec as fieldDec_deg, rotSkyPos as fieldRotSkyPos_deg FROM observations order by observationId"
 
     pointing_db = PPReadPointingDatabase(
         get_test_filepath("baseline_10klines_2.0.db"), ["g", "r", "i"], dbq, "lsst"
@@ -92,7 +92,7 @@ def test_PPMatchPointingToObservations():
         {
             "ObjID": ["356450", "356450"],
             "FieldID": [9212, 9262],
-            "FieldMJD_TAI": [60229.28437, 60229.308262],
+            "fieldMJD_TAI": [60229.28437, 60229.308262],
             "AstRange(km)": [5710968952.677331, 5710979387.71679],
             "AstRangeRate(km/s)": [5.027, 5.082],
             "AstRA(deg)": [11.240711, 11.240231],
@@ -129,12 +129,12 @@ def test_PPMatchPointingToObservations():
             "visitTime": [34.0, 34.0],
             "visitExposureTime": [30.0, 30.0],
             "optFilter": ["r", "i"],
-            "seeingFwhmGeom": [0.9072793403337696, 0.9738200113477326],
-            "seeingFwhmEff": [1.0404858154912038, 1.1214355369193827],
-            "fiveSigmaDepth": [23.85277692149377, 23.216004807761653],
-            "fieldRA": [10.286608210708128, 10.286608210708128],
-            "fieldDec": [-2.177840811640851, -2.177840811640851],
-            "rotSkyPos": [298.5944886818567, 302.40143247632597],
+            "seeingFwhmGeom_arcsec": [0.9072793403337696, 0.9738200113477326],
+            "seeingFwhmEff_arcsec": [1.0404858154912038, 1.1214355369193827],
+            "fieldFiveSigmaDepth_mag": [23.85277692149377, 23.216004807761653],
+            "fieldRA_deg": [10.286608210708128, 10.286608210708128],
+            "fieldDec_deg": [-2.177840811640851, -2.177840811640851],
+            "fieldRotSkyPos_deg": [298.5944886818567, 302.40143247632597],
         }
     )
     expected_df["optFilter"] = expected_df["optFilter"].astype("category")
