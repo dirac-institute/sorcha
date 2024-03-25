@@ -8,7 +8,7 @@ def test_PPCalculateApparentMagnitudeInFilter_default():
     """Baseline test, no phase function"""
     test_observations = pd.DataFrame(
         {
-            "FieldMJD_TAI": [2459215.5],
+            "fieldMJD_TAI": [2459215.5],
             "H_filter": [7.3],
             "GS": [0.19],
             "G1": [0.62],
@@ -34,7 +34,7 @@ def test_PPCalculateApparentMagnitudeInFilterWithIdentityLightcurve():
     """
     test_observations = pd.DataFrame(
         {
-            "FieldMJD_TAI": [2459215.5],
+            "fieldMJD_TAI": [2459215.5],
             "H_filter": [7.3],
             "GS": [0.19],
             "G1": [0.62],
@@ -57,7 +57,7 @@ def test_PPCalculateApparentMagnitudeInFilterWithIdentityLightcurve():
 def test_PPCalculateApparentMagnitudeInFilter():
     test_observations = pd.DataFrame(
         {
-            "FieldMJD_TAI": [2459215.5],
+            "fieldMJD_TAI": [2459215.5],
             "H_filter": [7.3],
             "GS": [0.19],
             "G1": [0.62],
@@ -102,7 +102,7 @@ def test_PPCalculateSimpleCometaryMagnitude_no_activity():
             "H_r": [15.35, 15.35],
             "afrho1": [1552, 1552],
             "k": [-3.35, -3.35],
-            "seeingFwhmEff": [8.064748, 3.206723],
+            "seeingFwhmEff_arcsec": [8.064748, 3.206723],
         }
     )
 

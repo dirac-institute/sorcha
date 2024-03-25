@@ -15,12 +15,12 @@ def PPMatchPointingToObservations(padain, pointfildb):
         - visitTime
         - visitExposureTime
         - optFilter
-        - seeingFwhmGeom
-        - seeingFwhmEff
-        - fiveSigmaDepth
-        - fieldRA
-        - fieldDec
-        - rotSkyPos
+        - seeingFwhmGeom_arcsec
+        - seeingFwhmEff_arcsec
+        - fieldFiveSigmaDepth_mag
+        - fieldRA_deg
+        - fieldDec_deg
+        - fieldRotSkyPos_deg
         - observationMidpointMJD_TAI
 
     Parameters
@@ -43,7 +43,7 @@ def PPMatchPointingToObservations(padain, pointfildb):
 
     # certain columns were added to the pointing db dataframe to help with ephemeris generation.
     # they don't need to be included in the result df, so exclude them from the merge.
-    pointing_columns_to_skip = ["JD_TDB", "pixels_begin", "pixels_end"]
+    pointing_columns_to_skip = ["fieldJD_TDB", "pixels_begin", "pixels_end"]
     for name in ["visit_vector", "pixels", "r_obs", "v_obs", "r_sun", "v_sun"]:
         pointing_columns_to_skip += [f"{name}_x", f"{name}_y", f"{name}_z"]
 
@@ -59,7 +59,7 @@ def PPMatchPointingToObservations(padain, pointfildb):
 
     resdf = resdf.dropna(subset=["optFilter"]).reset_index(drop=True)
 
-    chktruemjd = np.isclose(resdf["observationStartMJD_TAI"], resdf["FieldMJD_TAI"])
+    chktruemjd = np.isclose(resdf["observationStartMJD_TAI"], resdf["fieldMJD_TAI"])
 
     if not chktruemjd.all():
         logging.error(

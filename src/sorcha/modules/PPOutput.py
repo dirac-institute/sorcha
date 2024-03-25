@@ -126,9 +126,9 @@ def PPWriteOutput(cmd_args, configs, observations_in, endChunk=0, verbose=False)
         observations = observations_in.copy()[
             [
                 "ObjID",
-                "FieldMJD_TAI",
-                "fieldRA",
-                "fieldDec",
+                "fieldMJD_TAI",
+                "fieldRA_deg",
+                "fieldDec_deg",
                 "AstRA(deg)",
                 "AstDec(deg)",
                 "AstrometricSigma(deg)",
@@ -142,12 +142,12 @@ def PPWriteOutput(cmd_args, configs, observations_in, endChunk=0, verbose=False)
     elif configs["output_size"] == "all":
         observations = observations_in.copy()
 
-    observations["FieldMJD_TAI"] = observations["FieldMJD_TAI"].round(decimals=5)
+    observations["fieldMJD_TAI"] = observations["fieldMJD_TAI"].round(decimals=5)
 
     if configs["position_decimals"]:
         for position_col in [
-            "fieldRA",
-            "fieldDec",
+            "fieldRA_deg",
+            "fieldDec_deg",
             "AstRA(deg)",
             "AstDec(deg)",
             "AstrometricSigma(deg)",
@@ -169,7 +169,7 @@ def PPWriteOutput(cmd_args, configs, observations_in, endChunk=0, verbose=False)
             "PSFMag",
             "PhotometricSigmaPSF(mag)",
             "PhotometricSigmaTrailedSource(mag)",
-            "fiveSigmaDepth",
+            "fieldFiveSigmaDepth_mag",
             "fiveSigmaDepthAtSource",
         ]:
             try:  # depending on type of output selected, some of these columns may not exist.

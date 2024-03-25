@@ -27,7 +27,7 @@ def test_PPReadAllInput():
         "ephemerides_type": "external",
         "eph_format": "csv",
         "observing_filters": ["u", "g", "r", "i", "z", "y"],
-        "pointing_sql_query": "SELECT observationId, observationStartMJD as observationStartMJD_TAI, visitTime, visitExposureTime, filter, seeingFwhmGeom, seeingFwhmEff, fiveSigmaDepth, fieldRA, fieldDec, rotSkyPos FROM observations order by observationId",
+        "pointing_sql_query": "SELECT observationId, observationStartMJD as observationStartMJD_TAI, visitTime, visitExposureTime, filter, seeingFwhmGeom as seeingFwhmGeom_arcsec, seeingFwhmEff as seeingFwhmEff_arcsec, fiveSigmaDepth as fieldFiveSigmaDepth_mag , fieldRA as fieldRA_deg, fieldDec as fieldDec_deg, rotSkyPos as fieldRotSkyPos_deg FROM observations order by observationId",
     }
 
     filterpointing = PPReadPointingDatabase(
@@ -98,7 +98,7 @@ def test_PPReadAllInput():
         [
             "ObjID",
             "FieldID",
-            "FieldMJD_TAI",
+            "fieldMJD_TAI",
             "AstRange(km)",
             "AstRangeRate(km/s)",
             "AstRA(deg)",
@@ -136,12 +136,12 @@ def test_PPReadAllInput():
             "visitTime",
             "visitExposureTime",
             "optFilter",
-            "seeingFwhmGeom",
-            "seeingFwhmEff",
-            "fiveSigmaDepth",
-            "fieldRA",
-            "fieldDec",
-            "rotSkyPos",
+            "seeingFwhmGeom_arcsec",
+            "seeingFwhmEff_arcsec",
+            "fieldFiveSigmaDepth_mag",
+            "fieldRA_deg",
+            "fieldDec_deg",
+            "fieldRotSkyPos_deg",
         ],
         dtype=object,
     )

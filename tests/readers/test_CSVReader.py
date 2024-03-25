@@ -56,7 +56,7 @@ def test_CSVDataReader_oif(use_cache):
         [
             "ObjID",
             "FieldID",
-            "FieldMJD_TAI",
+            "fieldMJD_TAI",
             "AstRange(km)",
             "AstRangeRate(km/s)",
             "AstRA(deg)",
@@ -130,7 +130,7 @@ def test_CSVDataReader_oif_header():
         [
             "ObjID",
             "FieldID",
-            "FieldMJD_TAI",
+            "fieldMJD_TAI",
             "AstRange(km)",
             "AstRangeRate(km/s)",
             "AstRA(deg)",
@@ -179,7 +179,7 @@ def test_CSVDataReader_specific_oif(use_cache):
         [
             "ObjID",
             "FieldID",
-            "FieldMJD_TAI",
+            "fieldMJD_TAI",
             "AstRange(km)",
             "AstRangeRate(km/s)",
             "AstRA(deg)",

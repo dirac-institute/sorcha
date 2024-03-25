@@ -136,7 +136,7 @@ def uncertainties(
     detDF,
     configs,
     limMagName="fiveSigmaDepthAtSource",
-    seeingName="seeingFwhmGeom",
+    seeingName="seeingFwhmGeom_arcsec",
     filterMagName="TrailedSourceMag",
     dra_name="AstRARate(deg/day)",
     ddec_name="AstDecRate(deg/day)",
@@ -159,7 +159,7 @@ def uncertainties(
 
     seeingName : string, optional
         pandas dataframe column name of the seeing
-        Default = "seeingFwhmGeom"
+        Default = "seeingFwhmGeom_arcsec"
 
     filterMagName : string, optional
         pandas dataframe column name of the object magnitude
