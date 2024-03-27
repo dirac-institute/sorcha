@@ -47,7 +47,7 @@ def calcTrailingLoss(
     seeing : float or array of floats
         FWHM of the seeing disk. [Units: arcseconds]
 
-    texp : float, optional
+    texp : float or array of floats, optional
         Exposure length. [Units: seconds] Default = 30
 
     model : string, optional
