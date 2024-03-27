@@ -196,7 +196,7 @@ def uncertainties(
 
     if configs.get("trailing_losses_on", False):
         dMag = PPTrailingLoss.calcTrailingLoss(
-            detDF[dra_name] * degCos(detDF[dec_name]),
+            detDF[dra_name],
             detDF[ddec_name],
             detDF[seeingName],
             texp=detDF[visit_time_name],
