@@ -141,6 +141,7 @@ def uncertainties(
     dra_name="AstRARate(deg/day)",
     ddec_name="AstDecRate(deg/day)",
     dec_name="AstDec(deg)",
+    visit_time_name="visitExposureTime",
 ):
     """
     Add astrometric and photometric uncertainties to observations.
@@ -177,6 +178,10 @@ def uncertainties(
         pandas dataframe column name of the object declination
         Default = "AstDec(deg)"
 
+    visit_time_name : string, optional
+        pandas dataframe column name for exposure length
+        Default = "visitExposureTime"
+
     Returns
     -----------
     astrSigDeg: numpy array
@@ -191,7 +196,10 @@ def uncertainties(
 
     if configs.get("trailing_losses_on", False):
         dMag = PPTrailingLoss.calcTrailingLoss(
-            detDF[dra_name] * degCos(detDF[dec_name]), detDF[ddec_name], detDF[seeingName]
+            detDF[dra_name],
+            detDF[ddec_name],
+            detDF[seeingName],
+            texp=detDF[visit_time_name],
         )
     else:
         dMag = 0.0

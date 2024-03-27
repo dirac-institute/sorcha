@@ -87,6 +87,7 @@ def test_addUncertainties():
     astDecrate = [-0.01, -0.01, -0.01, -0.01]
     astRA = [260.0, 260.0, 260.0, 260.0]
     astDec = [-5.0, -5.0, -5.0, -5]
+    t_exp = [30.0, 30.0, 30.0, 30.0]
 
     test_data = pd.DataFrame(
         {
@@ -99,6 +100,7 @@ def test_addUncertainties():
             "AstDecRate(deg/day)": astDecrate,
             "AstRA(deg)": astRA,
             "AstDec(deg)": astDec,
+            "visitExposureTime": t_exp,
         }
     )
 
@@ -162,6 +164,7 @@ def test_uncertainties():
             "AstRARate(deg/day)": [0.03],
             "AstDecRate(deg/day)": [-0.01],
             "AstDec(deg)": [-5.0],
+            "visitExposureTime": [30.0],
         }
     )
 
