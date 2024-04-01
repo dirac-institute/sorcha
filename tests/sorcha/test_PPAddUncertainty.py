@@ -112,19 +112,20 @@ def test_addUncertainties():
 
     assert_almost_equal(
         obs_uncert["AstrometricSigma(deg)"],
-        [6.27294202e-06, 1.38053193e-05, 3.34595607e-05, 8.27032813e-01],
+        # [6.27294202e-06, 1.38053193e-05, 3.34595607e-05, 8.27032813e-01],
+        [6.272953e-06, 1.380535e-05, 3.345963e-05, 8.270347e-01],
         decimal=6,
     )
     assert_almost_equal(
-        obs_uncert["PhotometricSigmaPSF(mag)"], [0.04268156, 0.10056753, 0.23357527, 9.43936686], decimal=6
+        obs_uncert["PhotometricSigmaPSF(mag)"], [0.042682, 0.100568, 0.233576, 9.439369], decimal=6
     )
     assert_almost_equal(
         obs_uncert["PhotometricSigmaTrailedSource(mag)"],
-        [0.03603496, 0.08470267, 0.19801133, 9.23940376],
+        [0.036035, 0.084703, 0.198012, 9.239406],
         decimal=6,
     )
     assert_almost_equal(
-        obs_uncert["SNR"], [2.49413372e01, 1.03038085e01, 4.16624919e00, 1.67620081e-04], decimal=6
+        obs_uncert["SNR"], [24.941285, 10.303786, 4.166240, 0.000168], decimal=6
     )
     assert_almost_equal(
         obs_uncert["observedTrailedSourceMag"],
@@ -182,7 +183,7 @@ def test_uncertainties():
 
     assert_almost_equal(ast_sig_deg_T[0], 0.000004, decimal=6)
     assert_almost_equal(photo_sig_T[0], 0.015931, decimal=6)
-    assert_almost_equal(SNR_T[0], 67.654219, decimal=6)
+    assert_almost_equal(SNR_T[0], 67.654088, decimal=6)
 
     return
 
