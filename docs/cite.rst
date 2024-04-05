@@ -19,6 +19,7 @@ Please also cite the software and ancillary data files that helps power Sorcha:
 * assist https://assist.readthedocs.io/en/latest/
 * astropy https://www.astropy.org/acknowledging.html
 * healpy https://healpy.readthedocs.io/en/latest/
+* importlib_resources https://github.com/python/importlib_resources 
 * matplotlib https://matplotlib.org/stable/users/project/citing.html
 * Minor Planet Center https://www.minorplanetcenter.net/data
 * numba https://numba.pydata.org/ 

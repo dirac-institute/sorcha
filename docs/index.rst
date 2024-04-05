@@ -13,7 +13,7 @@
 What is Sorcha?
 =========================================================================
 
-Sorcha (pronounced "surk-ha") is an open source  Solar System survey simulator written in Python. 
+Sorcha (pronounced "surk-ha") is an open-source Solar System survey simulator written in Python. 
 Sorcha means light or brightness in Irish and Scots Gaelic. Sorcha estimates the brightness of
 simulated Solar System small bodies and determines which ones the survey could detect in
 each of the survey's observations  based on user set criteria. Sorcha has been designed 
