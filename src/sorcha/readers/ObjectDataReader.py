@@ -185,6 +185,18 @@ class ObjectDataReader(abc.ABC):
             if True then checks the data for  NaNs or nulls.
 
         """
+        pplogger = logging.getLogger(__name__)
+
+        # Check that the table has more than one column.
+        if len(input_table.columns) <= 1:
+            outstr = (
+                f"ERROR: While reading table {self.filename}. Only one column found. "
+                "Check that you specified the correct format."
+            )
+            pplogger.error(outstr)
+            sys.exit(outstr)
+
+        # Check that "ObjID" is a column and is a string.
         input_table = self._validate_object_id_column(input_table)
 
         # Check for NaNs or nulls.
@@ -193,8 +205,6 @@ class ObjectDataReader(abc.ABC):
                 pdt = input_table[input_table.isna().any(axis=1)]
                 inds = str(pdt["ObjID"].values)
                 outstr = f"ERROR: While reading table {self.filename} found uninitialised values ObjID: {str(inds)}."
-
-                pplogger = logging.getLogger(__name__)
                 pplogger.error(outstr)
                 sys.exit(outstr)
         return input_table

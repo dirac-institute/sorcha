@@ -90,7 +90,9 @@ def test_OIFDataReader():
         "oiftestoutput.csv"
     )
 
-    # Check a mismatched file.
+
+def test_OIFDataReader_wrong_data():
+    """Test that we fail if we read an OIF data with the wrong type of data"""
     with pytest.raises(SystemExit) as e:
         reader_ws2 = OIFDataReader(get_test_filepath("testcolour.txt"), inputformat="whitespace")
         _ = reader_ws2.read_rows()
@@ -100,7 +102,19 @@ def test_OIFDataReader():
         == "ERROR: OIFDataReader: column headings do not match expected OIF column headings. Check format of file."
     )
 
+
+def test_OIFDataReader_wrong_format():
+    """Test that we fail if we read an OIF data with the wrong type of data"""
     # Check an invalid file type.
     with pytest.raises(SystemExit) as e:
-        reader_ws2 = OIFDataReader(get_test_filepath("testcolour.txt"), inputformat="invalid")
+        _ = OIFDataReader(get_test_filepath("testcolour.txt"), inputformat="invalid")
+    assert e.type == SystemExit
+
+    # Check mismatched file types.
+    with pytest.raises(SystemExit) as e:
+        _ = OIFDataReader(get_test_filepath("oiftestoutput.txt"), inputformat="csv")
+    assert e.type == SystemExit
+
+    with pytest.raises(SystemExit) as e:
+        _ = OIFDataReader(get_test_filepath("oiftestoutput.csv"), inputformat="whitespace")
     assert e.type == SystemExit

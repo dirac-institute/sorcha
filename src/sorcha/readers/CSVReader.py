@@ -16,7 +16,7 @@ class CSVDataReader(ObjectDataReader):
         """A class for reading the object data from a CSV file.
 
         Parameters
-        -----------
+        ----------
         filename : string
             Location/name of the data file.
 
@@ -34,16 +34,13 @@ class CSVDataReader(ObjectDataReader):
         super().__init__(**kwargs)
         self.filename = filename
 
-        if sep not in ["whitespace", "csv"]:
+        if sep not in ["whitespace", "csv", "comma"]:
             pplogger = logging.getLogger(__name__)
             pplogger.error(f"ERROR: Unrecognized delimiter ({sep})")
             sys.exit(f"ERROR: Unrecognized delimiter ({sep})")
         self.sep = sep
 
-        if header < 0:
-            self.header_row = self._find_header_line()
-        else:
-            self.header_row = header
+        self.header_row = self._find_and_validate_header_line(header)
 
         # A table holding just the object ID for each row. Only populated
         # if we try to read data for specific object IDs.
@@ -60,9 +57,16 @@ class CSVDataReader(ObjectDataReader):
         """
         return f"CSVDataReader:{self.filename}"
 
-    def _find_header_line(self):
-        """Find the line number of the CSV header. Used for cases
+    def _find_and_validate_header_line(self, header=-1):
+        """Read and validate the header line. If no line number is provided, use
+        a heuristic match to find the header line. This is used in cases
         where the header is not the first line and we want to skip down.
+
+        Parameters
+        ----------
+        header : integer, optional
+            The row number of the header. If not provided, does an automatic search.
+            Default = -1
 
         Returns
         --------
@@ -70,21 +74,62 @@ class CSVDataReader(ObjectDataReader):
             The line index of the header.
 
         """
+        pplogger = logging.getLogger(__name__)
+
         with open(self.filename) as fh:
             for i, line in enumerate(fh):
-                if line.startswith("ObjID"):
+                # Check we have either found the specified line or no line is specified and
+                # our heuristic matches.
+                if (header >= 0 and header == i) or (header < 0 and line.startswith("ObjID")):
+                    pplogger.info("Reading line {i} of {self.filename} as header:\n{line}")
+                    self._check_header_line(line)
                     return i
+
+                # Give up after 100 lines.
                 if i > 100:  # pragma: no cover
                     break
 
-        pplogger = logging.getLogger(__name__)
-        pplogger.error(
-            "ERROR: CSVReader: column headings not found. Ensure column headings exist in input files and first column is ObjID."
+        error_str = (
+            f"ERROR: CSVReader: column headings not found in the first 100 lines of {self.filename}. "
+            "Ensure column headings exist in input files and first column is ObjID."
         )
-        sys.exit(
-            "ERROR: CSVReader: column headings not found. Ensure column headings exist in input files and first column is ObjID."
-        )
+        pplogger.error(error_str)
+        sys.exit(error_str)
         return 0
+
+    def _check_header_line(self, header_line):
+        """Check that a given header line is valid and exit if it is invalid.
+
+        Parameters
+        ----------
+        header_line : str
+            The proposed header line.
+        """
+        pplogger = logging.getLogger(__name__)
+
+        if self.sep == "csv" or self.sep == "comma":
+            column_names = header_line.split(",")
+        elif self.sep == "whitespace":
+            column_names = header_line.split()
+        else:
+            pplogger.error(f"ERROR: Unrecognized delimiter ({sep})")
+            sys.exit(f"ERROR: Unrecognized delimiter ({sep})")
+
+        if len(column_names) < 2:
+            error_str = (
+                f"ERROR: {self.filename} header has {len(column_names)} column(s) but requires >= 2. "
+                "Confirm that you using the correct delimiter."
+            )
+            pplogger.error(error_str)
+            sys.exit(error_str)
+
+        if "ObjID" not in column_names:
+            error_str = (
+                f"ERROR: {self.filename} header does not have 'ObjID' column.  "
+                "Confirm that you using the correct delimiter."
+            )
+            pplogger.error(error_str)
+            sys.exit(error_str)
 
     def _read_rows_internal(self, block_start=0, block_size=None, **kwargs):
         """Reads in a set number of rows from the input.

@@ -124,9 +124,7 @@ def test_addUncertainties():
         [0.036035, 0.084703, 0.198012, 9.239406],
         decimal=6,
     )
-    assert_almost_equal(
-        obs_uncert["SNR"], [24.941285, 10.303786, 4.166240, 0.000168], decimal=6
-    )
+    assert_almost_equal(obs_uncert["SNR"], [24.941285, 10.303786, 4.166240, 0.000168], decimal=6)
     assert_almost_equal(
         obs_uncert["observedTrailedSourceMag"],
         [21.0419, 22.0064, 23.1822, 37.3978],

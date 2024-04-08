@@ -156,3 +156,10 @@ def test_HDF5DataReader_read_objects(use_cache):
     oif_data2 = reader.read_objects(["S000021"])
     assert len(oif_data2) == 1
     assert_equal(oif_data2.iloc[0].values[0], "S000021")
+
+
+def test_bad_format():
+    """Test that we fail if we try to read a non-HDF5 file."""
+    reader = HDF5DataReader(get_test_filepath("testcolour.txt"))
+    with pytest.raises(RuntimeError):
+        _ = reader.read_rows()
