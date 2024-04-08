@@ -295,3 +295,14 @@ def test_orbit_reader_extra_columns():
     with pytest.raises(SystemExit) as err:
         _ = csv_reader.read_rows()
     assert "only provide the required columns" in str(err.value)
+
+
+def test_orbit_reader_wrong_delim():
+    """If the wrong columns for the format defined in the orbit file, raise
+    exception.
+    """
+    with pytest.raises(SystemExit) as err:
+        _ = OrbitAuxReader(get_test_filepath("orbit_test_files/orbit_com_wrong_cols.csv"), "whitespace")
+
+    with pytest.raises(SystemExit) as err:
+        _ = OrbitAuxReader(get_test_filepath("testorb.des"), "csv")

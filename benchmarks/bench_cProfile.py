@@ -31,9 +31,9 @@ if __name__ == "__main__":  # pragma: no cover
         "outpath": os.path.join(path_to_sorcha, "tests/out"),
         "outfilestem": os.path.join(path_to_sorcha, f"out_{args.object_type}"),
         "verbose": False,
-        "surveyname": "lsst"
+        "surveyname": "lsst",
     }
-    
+
     args_obj = sorchaArguments(cmd_args_dict)
 
     configs = PPConfigFileParser(os.path.join(path_to_sorcha, "benchmarks/test_bench_config.ini"), "LSST")
