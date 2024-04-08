@@ -99,6 +99,3 @@ The output will appear in a csv file (testrun_e2e.csv) in your current directory
 
 .. warning::
    Only one instance of Sorcha should be run per output directory to ensure that distinct log and error files are created for each Sorcha run. Make sure to have different output pathways if you are running multiple instances on the same compute node.
-
-.. note::
-   This test run is using pre-generated ephemeris already stored in the demo directory of the Sorcha GitHub repository.

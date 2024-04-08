@@ -73,6 +73,7 @@ The trailing losses filter is on by default, but it can be turned off by includi
     [EXPERT]
     trailing_losses_on = False
 
+.. _the_camera_footprint:
 
 Camera Footprint
 -----------------
@@ -110,8 +111,8 @@ be given in degrees. To include this filter, the following options should be set
     circle_radius = 1.8
 
 .. warning::
-    Note that ASSIST+REBOUND also uses a circular radius for its search area, with a default of 2.06.
-    Setting circle_radius to be larger than the radius used for ASSIST+REBOUND will have no effect. 
+    Note that :ref:`ASSIST+REBOUND ephemeris generator<ephemeris_gen>` also uses a circular radius for its search area, with a default of 2.06.
+    Setting the circle_radius to be larger than the radius used for ASSIST+REBOUND will have no effect. 
 
 **Camera footprint:** Using this filter applies a full camera footprint, including chip gaps. This is the 
 slowest and most accurate version of the footprint filter.

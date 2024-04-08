@@ -23,6 +23,7 @@ and physical parameters for synthetic planetesimals that are being simulated. Th
 
 .. _orbits:
 
+
 Orbit File
 -----------------
 
@@ -31,7 +32,7 @@ This is a file which contains the orbital information of a set of synthetic obje
 .. tip::
   *  Sorcha is designed to handle heliocentric **Cometary (COM), Keplerian (KEP), and Cartesian (CART)** orbits, as well as their barycentric equivalents: **Barycentric Cometary (BCOM), Keplerian (BKEP) and Cartesian (BCART)**
   *  The orbit file **must** have a consistent format (i.e. Cometary or Keplerian or Cartesian) throughout
-  *  The ordering of the columns does not matter as long as the required columns exist and have entries
+  *  The first column must be ObjID, but the ordering of the remaining columns does not matter as long as the required columns exist and have entries
   *  The first row in the orbit file **must** be a header listing the columns names
   *  The **correct capitalization of column names** is required
   *  The orbit file can be either **white space separated** or **comma value separated (CSV)**
@@ -54,7 +55,7 @@ Cometary Orbit Format
 ~~~~~~~~~~~~~~~~~~~~~~~
 An example of an orbit file in Cometary format::
 
-   objID FORMAT q e inc node argPeri t_p_MJD_TDB epochMJD_TDB
+   ObjID FORMAT q e inc node argPeri t_p_MJD_TDB epochMJD_TDB
    S1000000a COM 3.01822 0.05208 22.56035 211.00286 335.42134 51575.94061 54800.00000
    S1000001a COM 2.10974 0.07518 4.91571 209.40298 322.66447 54205.77161 54800.00000
    S1000002a COM 2.80523 0.07777 1.24945 112.52284 139.86858 54468.71747 54800.00000
@@ -64,7 +65,7 @@ An example of an orbit file in Cometary format::
 +-------------+----------------------------------------------------------------------------------+
 | Keyword     | Description                                                                      |
 +=============+==================================================================================+
-| objID       | Object identifier for each synthetic planetesimal simulated (string)             |
+| ObjID       | Object identifier for each synthetic planetesimal simulated (string)             |
 +-------------+----------------------------------------------------------------------------------+
 | FORMAT      | Orbit format string (COM for heliocentric or BCOM for barycentric)  		 |
 +-------------+----------------------------------------------------------------------------------+
@@ -87,7 +88,7 @@ Keplerian Orbit Format
 ~~~~~~~~~~~~~~~~~~~~~~~~
 An example of an orbit file in Keplarian format::
 
-   objID FORMAT a e inc node argPeri ma epochMJD_TDB 
+   ObjID FORMAT a e inc node argPeri ma epochMJD_TDB 
    t1 KEP 47.9877 0.0585 11.3584 148.4661 140.4756 308.3244 53157.00 
    t2 KEP 47.7468 0.0552 7.1829 171.9226 55.3728 158.9403 53157.00
    t3 KEP 47.9300 0.3805 3.4292 72.9463 7.0754 84.7860 53157.00 
@@ -98,7 +99,7 @@ An example of an orbit file in Keplarian format::
 +-------------+----------------------------------------------------------------------------------+
 | Keyword     | Description                                                                      |
 +=============+==================================================================================+
-| objID       | Object identifier for each synthetic planetesimal simulated (string)             |
+| ObjID       | Object identifier for each synthetic planetesimal simulated (string)             |
 +-------------+----------------------------------------------------------------------------------+
 | FORMAT      | Orbit format string (KEP for heliocentric or BKEP for barycentric)               |
 +-------------+----------------------------------------------------------------------------------+
@@ -135,7 +136,7 @@ An example of an orbit file, in Cartesian format, with the object ID represented
 +-------------+----------------------------------------------------------------------------------+
 | Keyword     | Description                                                                      |
 +=============+==================================================================================+
-| objID       | Object identifier for each synthetic planetesimal simulated (string)             |
+| ObjID       | Object identifier for each synthetic planetesimal simulated (string)             |
 +-------------+----------------------------------------------------------------------------------+
 | FORMAT      | Orbit format string (CART for heliocentric or BCART for barycentric)             |
 +-------------+----------------------------------------------------------------------------------+
@@ -165,7 +166,7 @@ Physical Parameters File
 The input file for the physical parameters includes information about the objects optical colors, phase curve parameters, and absolute magnitude. The contents of this file are the bare minimum needed to simulate survey detections. For more advanced handling of the apparent magnitude of the synthetic objects including light curve effects and cometary activity,you would also specify values in the complex physical parameters file.
 
 .. tip::
-  *  The ordering of the columns does not matter as long as the required columns exist and have entries
+  *  The first column must be ObjID, but the ordering of the remaining columns does not matter as long as the required columns exist and have entries
   *  The first row in the physical parameters file **must** be a header listing the columns names
   *  The **correct capitalization of column names** is required
   *  The physical parameters file can be either **white space separated** or **comma value separated (CSV)**
@@ -180,7 +181,7 @@ The input file for the physical parameters includes information about the object
 An example of the physical parameters file where a single linear slope phase curve parameter is used for all filters::
 
 
-   objID H u-r g-r i-r z-r y-r GS 
+   ObjID H u-r g-r i-r z-r y-r GS 
    St500000a 5.63 2.55 0.92 -0.38 -0.59 -0.70 0.15
    St500001a 6.25 2.55 0.92 -0.38 -0.59 -0.70 0.15
    St500002a 6.36 1.72 0.48 -0.11 -0.12 -0.12 0.15
@@ -190,7 +191,7 @@ An example of the physical parameters file where a single linear slope phase cur
 
 An example of the physical parameters file where a HG prescription is specified for each filter::
 
-   objID H u-r g-r i-r z-r y-r Gr Gu Gg Gi Gz Gy
+   ObjID H u-r g-r i-r z-r y-r Gr Gu Gg Gi Gz Gy
    St500000a 5.63 2.55 0.92 -0.38 -0.59 -0.70 0.15 0.17 0.14 0.19 0.18 0.20
    St500001a 6.25 2.55 0.92 -0.38 -0.59 -0.70 0.15 0.17 0.14 0.17 0.19 0.17
    St500002a 6.36 1.72 0.48 -0.11 -0.12 -0.12 0.15 0.17 0.13 0.17 0.16 0.18
@@ -245,7 +246,25 @@ The latest version of rubin_sim cadence simulations can be found at https://s3df
   :align: center
 
 .. attention::
-   There may be changes to how this information is read in when the Rubin Observatory operations begin in ~mid-2025.
+   There may be changes to how this information is read in when the Rubin Observatory operations begin in the ~end of-2025/early 2026.
+
+
+.. _database_query:
+
+Setting Up the Correct LSST Pointing Database Query
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Sorcha's **ppsqldbquery** config file parameter contain the sql query for obtaining this information from the pointing database.
+
+From rubin_sim v2.0 simulations onward use the query::
+
+  SELECT observationId, observationStartMJD as observationStartMJD_TAI, visitTime, visitExposureTime, filter, seeingFwhmGeom, seeingFwhmEff, fiveSigmaDepth, fieldRA, fieldDec, rotSkyPos FROM observations order by observationId
+
+For past rubin_sim/OpSim simulations pre-v2.0 use the query::
+
+  SELECT observationId, observationStartMJD as observationStartMJD_TAI, visitTime, visitExposureTime, filter, seeingFwhmGeom, seeingFwhmEff, fiveSigmaDepth, fieldRA, fieldDec, rotSkyPos FROM SummaryAllProps order by observationId
+
+
 
 .. _CPP:
 
@@ -255,11 +274,13 @@ Complex Physical Parameters File (Optional)
 The complex physical parameters file is only needed if you're going to include your own rotational light curve class or cometary activity class to augment the calculated apparent magnitudes. Sorcha is set up such that any values required for this such as light curve amplitude and period per simulated object are included in file, separate from then physical parameters file, that we refer to as the complex physical parameters file.  What columns are required in the complex physical parameters file  depends on what the classes you are using.
 
 .. tip::
-  *  The ordering of the columns does not matter as long as the required columns exist and have entries
+  *  The first column must be ObjID, but the ordering of the remaining columns does not matter as long as the required columns exist and have entries
   *  The first row in the complex  physical parameters file **must** list  the columns names
   *  The **correct capitalization of column names** is required
   *  The complex physical parameters file can be either **white space separated** or **comma value separated (CSV)**
   *  Each simulated object **must** have a unique string identifier
+
+.. _ephemf:
 
 Ephemeris File (Optional)
 -----------------------------------------
@@ -269,7 +290,7 @@ Ephemeris File (Optional)
 
 
 .. tip::
-  *  The ordering of the columns does not matter as long as the required columns exist and have entries
+  *  The first column must be ObjID, but the ordering of the remaining columns does not matter as long as the required columns exist and have entries
   *  The first row in the physical parameters file **must** list  the columns names
   *  The **correct capitalization of column names** is required
   *  The ephemeris file can be either **white space separated** or **comma value separated (CSV)**
