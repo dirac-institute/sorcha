@@ -245,7 +245,25 @@ The latest version of rubin_sim cadence simulations can be found at https://s3df
   :align: center
 
 .. attention::
-   There may be changes to how this information is read in when the Rubin Observatory operations begin in ~mid-2025.
+   There may be changes to how this information is read in when the Rubin Observatory operations begin in the ~end of-2025/early 2026.
+
+
+.. _database_query:
+
+Setting Up the Correct LSST Pointing Database Query
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Sorcha's **ppsqldbquery** config file parameter contain the sql query for obtaining this information from the pointing database.
+
+From rubin_sim v2.0 simulations onward use the query::
+
+  SELECT observationId, observationStartMJD as observationStartMJD_TAI, visitTime, visitExposureTime, filter, seeingFwhmGeom, seeingFwhmEff, fiveSigmaDepth, fieldRA, fieldDec, rotSkyPos FROM observations order by observationId
+
+For past rubin_sim/OpSim simulations pre-v2.0 use the query::
+
+  SELECT observationId, observationStartMJD as observationStartMJD_TAI, visitTime, visitExposureTime, filter, seeingFwhmGeom, seeingFwhmEff, fiveSigmaDepth, fieldRA, fieldDec, rotSkyPos FROM SummaryAllProps order by observationId
+
+
 
 .. _CPP:
 
@@ -260,6 +278,8 @@ The complex physical parameters file is only needed if you're going to include y
   *  The **correct capitalization of column names** is required
   *  The complex physical parameters file can be either **white space separated** or **comma value separated (CSV)**
   *  Each simulated object **must** have a unique string identifier
+
+.. _ephemf:
 
 Ephemeris File (Optional)
 -----------------------------------------
