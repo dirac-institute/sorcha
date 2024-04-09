@@ -8,8 +8,8 @@ cos = np.cos
 
 def vignettingEffects(
     oifdf,
-    raNameOIF="AstRA(deg)",
-    decNameOIF="AstDec(deg)",
+    raNameOIF="RA_deg",
+    decNameOIF="Dec_deg",
     fieldNameOIF="FieldID",
     raNameSurvey="fieldRA_deg",
     decNameSurvey="fieldDec_deg",
@@ -24,17 +24,16 @@ def vignettingEffects(
         dataframe of observations.
 
     raNameOIF : string, optional
-        'oif_df' column name of object RA. Default = "AstRA(deg)"
+        'oif_df' column name of object RA. Default = "RA_deg"
 
     decNameOIF : string, optional
-        'oif_df' column name of object declination. Default = "AstDec(deg)"
+        'oif_df' column name of object declination. Default = "Dec_deg"
 
     fieldNameOIF : string, optional
         'oif_df' column name for observation pointing field ID. Default = "FieldID"
 
     raNameSurvey : string, optional
          'oif_df' column name for observation pointing RA. Default = "fieldRA_deg"
-
 
      decNameSurvey : string, optional
          'oif_df' column name for observation pointing declination. Default = "fieldDec_deg"

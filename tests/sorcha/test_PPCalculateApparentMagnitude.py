@@ -15,9 +15,9 @@ def test_PPCalculateApparentMagnitudeInFilter_default():
             "G2": [0.14],
             "G12": [0.68],
             "S": [0.04],
-            "AstRange(km)": [4.899690e08],
-            "Ast-Sun(km)": [6.301740e08],
-            "Sun-Ast-Obs(deg)": [4.5918],
+            "Range_LTC_km": [4.899690e08],
+            "Obj_Sun_LTC_km": [6.301740e08],
+            "phase_deg": [4.5918],
         }
     )
 
@@ -41,9 +41,9 @@ def test_PPCalculateApparentMagnitudeInFilterWithIdentityLightcurve():
             "G2": [0.14],
             "G12": [0.68],
             "S": [0.04],
-            "AstRange(km)": [4.899690e08],
-            "Ast-Sun(km)": [6.301740e08],
-            "Sun-Ast-Obs(deg)": [4.5918],
+            "Range_LTC_km": [4.899690e08],
+            "Obj_Sun_LTC_km": [6.301740e08],
+            "phase_deg": [4.5918],
         }
     )
 
@@ -64,9 +64,9 @@ def test_PPCalculateApparentMagnitudeInFilter():
             "G2": [0.14],
             "G12": [0.68],
             "S": [0.04],
-            "AstRange(km)": [4.899690e08],
-            "Ast-Sun(km)": [6.301740e08],
-            "Sun-Ast-Obs(deg)": [4.5918],
+            "Range_LTC_km": [4.899690e08],
+            "Obj_Sun_LTC_km": [6.301740e08],
+            "phase_deg": [4.5918],
         }
     )
 
@@ -182,9 +182,9 @@ def test_PPCalculateApparentMagnitude():
             "G2": [0.14],
             "G12": [0.68],
             "S": [0.04],
-            "AstRange(km)": [4.899690e08],
-            "Ast-Sun(km)": [6.301740e08],
-            "Sun-Ast-Obs(deg)": [4.5918],
+            "Range_LTC_km": [4.899690e08],
+            "Obj_Sun_LTC_km": [6.301740e08],
+            "phase_deg": [4.5918],
             "optFilter": ["i"],
             "i-r": [-0.11],
         }
@@ -199,9 +199,9 @@ def test_PPCalculateApparentMagnitude():
             "G2": [0.14],
             "G12": [0.68],
             "S": [0.04],
-            "AstRange(km)": [4.899690e08],
-            "Ast-Sun(km)": [6.301740e08],
-            "Sun-Ast-Obs(deg)": [4.5918],
+            "Range_LTC_km": [4.899690e08],
+            "Obj_Sun_LTC_km": [6.301740e08],
+            "phase_deg": [4.5918],
             "optFilter": ["r"],
         }
     )

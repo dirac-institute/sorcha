@@ -22,7 +22,7 @@ def test_PPLinkingFilter():
     dec = [8, 8.1, 9, 9.1, 10, 10.1]
 
     observations = pd.DataFrame(
-        {"ObjID": obj_id, "FieldID": field_id, "fieldMJD_TAI": times, "AstRA(deg)": ra, "AstDec(deg)": dec}
+        {"ObjID": obj_id, "FieldID": field_id, "fieldMJD_TAI": times, "RA_deg": ra, "Dec_deg": dec}
     )
 
     linked_observations = PPLinkingFilter(
@@ -66,8 +66,8 @@ def test_PPLinkingFilter():
 
     # move two observations too close together for a tracklet
     observations_small_sep = observations.copy()
-    observations_small_sep["AstRA(deg)"] = [142, 142.00001, 143, 143.1, 144, 144.1]
-    observations_small_sep["AstDec(deg)"] = [8, 8.00001, 9, 9.1, 10, 10.1]
+    observations_small_sep["RA_deg"] = [142, 142.00001, 143, 143.1, 144, 144.1]
+    observations_small_sep["Dec_deg"] = [8, 8.00001, 9, 9.1, 10, 10.1]
     unlinked_observations_3 = PPLinkingFilter(
         observations_small_sep,
         detection_efficiency,
@@ -118,8 +118,8 @@ def test_PPLinkingFilter():
             "ObjID": obj_id_long,
             "FieldID": field_id_long,
             "fieldMJD_TAI": times_long,
-            "AstRA(deg)": ra_long,
-            "AstDec(deg)": dec_long,
+            "RA_deg": ra_long,
+            "Dec_deg": dec_long,
         }
     )
 

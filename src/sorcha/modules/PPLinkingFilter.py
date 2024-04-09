@@ -55,8 +55,8 @@ def PPLinkingFilter(
             "ssObjectId": observations["ObjID"],
             "diaSourceId": observations["FieldID"],
             "midPointTai": observations["fieldMJD_TAI"],
-            "ra": observations["AstRA(deg)"],
-            "decl": observations["AstDec(deg)"],
+            "ra": observations["RA_deg"],
+            "decl": observations["Dec_deg"],
         }
     )
     nameLen = obsv["ssObjectId"].str.len().max()

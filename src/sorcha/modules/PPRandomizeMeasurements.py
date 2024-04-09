@@ -33,10 +33,10 @@ logger = logging.getLogger(__name__)
 def randomizeAstrometry(
     df,
     module_rngs,
-    raName="AstRA(deg)",
-    decName="AstDec(deg)",
-    raOrigName="AstRATrue(deg)",
-    decOrigName="AstDecTrue(deg)",
+    raName="RA_deg",
+    decName="Dec_deg",
+    raOrigName="RA_true_deg",
+    decOrigName="Dec_true_deg",
     sigName="AstSig(deg)",
     radecUnits="deg",
     sigUnits="mas",
@@ -61,18 +61,18 @@ def randomizeAstrometry(
 
     ra_Name : string, optional
         "df" dataframe column name for the right ascension.
-        Default = "AstRA(deg)"
+        Default = "RA_deg"
 
     dec_Name : string, optional
-        "df" dataframe column name for the declination. Default = "AstDec(deg)"
+        "df" dataframe column name for the declination. Default = "Dec_deg"
 
     raOrigName : string, optional
         "df" dataframe column name for where to store original right
-        ascension. Default = "AstRATrue(deg)"
+        ascension. Default = "RA_true_deg"
 
     decOrigName : string, optional
         "df" dataframe column name for where to store original declination.
-        Default = "AstDecTrue(deg)"
+        Default = "Dec_true_deg"
 
     sigName : string, optional
         "df" dataframe column name for the standard deviation, uncertainty in the

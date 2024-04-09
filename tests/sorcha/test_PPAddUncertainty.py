@@ -96,10 +96,10 @@ def test_addUncertainties():
             "PSFMag": psf_mags,
             "fiveSigmaDepthAtSource": sig_limit,
             "seeingFwhmGeom_arcsec": seeing,
-            "AstRARate(deg/day)": astRArate,
-            "AstDecRate(deg/day)": astDecrate,
-            "AstRA(deg)": astRA,
-            "AstDec(deg)": astDec,
+            "RARateCosDec_deg_day": astRArate,
+            "DecRate_deg_day": astDecrate,
+            "RA_deg": astRA,
+            "Dec_deg": astDec,
             "visitExposureTime": t_exp,
         }
     )
@@ -160,9 +160,9 @@ def test_uncertainties():
             "seeingFwhmGeom_arcsec": [1.0],
             "TrailedSourceMag": [20.0],
             "PSFMag": [20.1],
-            "AstRARate(deg/day)": [0.03],
-            "AstDecRate(deg/day)": [-0.01],
-            "AstDec(deg)": [-5.0],
+            "RARateCosDec_deg_day": [0.03],
+            "DecRate_deg_day": [-0.01],
+            "Dec_deg": [-5.0],
             "visitExposureTime": [30.0],
         }
     )

@@ -122,9 +122,7 @@ def PPCircleFootprint(observations, circle_radius):
 
     """
 
-    data_coords = SkyCoord(
-        ra=observations["AstRA(deg)"].values, dec=observations["AstDec(deg)"].values, unit="deg"
-    )
+    data_coords = SkyCoord(ra=observations["RA_deg"].values, dec=observations["Dec_deg"].values, unit="deg")
 
     field_coords = SkyCoord(
         ra=observations["fieldRA_deg"].values, dec=observations["fieldDec_deg"].values, unit="deg"
