@@ -82,12 +82,15 @@ def PPOutWriteSqlite3(pp_results, outf):
     None.
 
     """
+    pplogger = logging.getLogger(__name__)
 
     pp_results = pp_results.drop("level_0", axis=1, errors="ignore")
 
     cnx = sqlite3.connect(outf)
 
-    pp_results.to_sql("pp_results", con=cnx, if_exists="append", index=False)
+    pp_results.to_sql("sorcha_results", con=cnx, if_exists="append", index=False)
+
+    pplogger.info("SQL results saved in table sorcha_results in database {}.".format(outf))
 
 
 def PPWriteOutput(cmd_args, configs, observations_in, endChunk=0, verbose=False):

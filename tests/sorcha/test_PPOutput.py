@@ -72,7 +72,7 @@ def test_PPOutWriteSqlite3(setup_and_teardown_for_PPOutWriteSqlite3):
 
     cnx = sqlite3.connect(os.path.join(tmp_path, "test_sql_out.db"))
     cur = cnx.cursor()
-    cur.execute("select * from pp_results")
+    cur.execute("select * from sorcha_results")
     col_names = list(map(lambda x: x[0], cur.description))
 
     test_in = pd.DataFrame(cur.fetchall(), columns=col_names)
@@ -121,7 +121,7 @@ def test_PPWriteOutput(setup_and_teardown_for_PPWriteOutput):
     PPWriteOutput(args, configs, observations, 10)
     cnx = sqlite3.connect(os.path.join(tmp_path, "PPOutput_test_out.db"))
     cur = cnx.cursor()
-    cur.execute("select * from pp_results")
+    cur.execute("select * from sorcha_results")
     col_names = list(map(lambda x: x[0], cur.description))
     sql_test_in = pd.DataFrame(cur.fetchall(), columns=col_names)
 
