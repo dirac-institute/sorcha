@@ -137,6 +137,9 @@ def PPWriteOutput(cmd_args, configs, observations_in, endChunk=0, verbose=False)
                 "PhotometricSigmaPSF(mag)",
                 "PhotometricSigmaTrailedSource(mag)",
                 "fiveSigmaDepthAtSource",
+                "Sun-Ast-Obs(deg)",
+                "AstRange(km)",
+                "AstRangeRate(km/s)",
             ]
         ]
     elif configs["output_size"] == "all":
