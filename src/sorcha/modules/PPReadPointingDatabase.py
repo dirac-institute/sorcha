@@ -52,7 +52,7 @@ def PPReadPointingDatabase(bsdbname, observing_filters, dbquery, surveyname):
     # once we have the actual pointings this check could be changed to, eg,
     # lsst_sim for the RubinSim pointings, and 'lsst' would produce different
     # behaviour.
-    if surveyname in ["lsst", "LSST"]:
+    if surveyname in ["rubin_sim", "RUBIN_SIM"]:
         dfo["observationMidpointMJD_TAI"] = dfo["observationStartMJD_TAI"] + (
             (dfo["visitTime"] / 2.0) / 86400.0
         )

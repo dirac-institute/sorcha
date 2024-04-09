@@ -12,7 +12,7 @@ def test_PPReadPointingDatabase():
     filter_list = ["u", "g", "r", "i", "z", "y"]
 
     pointing_db = PPReadPointingDatabase(
-        get_test_filepath("baseline_10klines_2.0.db"), filter_list, sql_query, "lsst"
+        get_test_filepath("baseline_10klines_2.0.db"), filter_list, sql_query, "rubin_sim"
     )
 
     expected_first_line = np.array(
@@ -59,7 +59,7 @@ def test_PPReadPointingDatabase():
 
     with pytest.raises(SystemExit) as e:
         pointing_db = PPReadPointingDatabase(
-            get_test_filepath("baseline_10klines_2.0.db"), filter_list, bad_query, "lsst"
+            get_test_filepath("baseline_10klines_2.0.db"), filter_list, bad_query, "rubin_sim"
         )
 
     assert e.type == SystemExit

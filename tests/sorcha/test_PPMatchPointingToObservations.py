@@ -75,7 +75,7 @@ def test_PPMatchPointingToObservations():
     dbq = "SELECT observationId, observationStartMJD as observationStartMJD_TAI, visitTime, visitExposureTime, filter, seeingFwhmGeom as seeingFwhmGeom_arcsec, seeingFwhmEff as seeingFwhmEff_arcsec, fiveSigmaDepth as fieldFiveSigmaDepth_mag , fieldRA as fieldRA_deg, fieldDec as fieldDec_deg, rotSkyPos as fieldRotSkyPos_deg FROM observations order by observationId"
 
     pointing_db = PPReadPointingDatabase(
-        get_test_filepath("baseline_10klines_2.0.db"), ["g", "r", "i"], dbq, "lsst"
+        get_test_filepath("baseline_10klines_2.0.db"), ["g", "r", "i"], dbq, "rubin_sim"
     )
 
     # simulate adding extra columns to the pointing db for the precomputed values

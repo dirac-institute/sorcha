@@ -10,7 +10,7 @@ def PPLinkingFilter(
     tracklet_interval,
     minimum_separation,
     maximum_time,
-    survey_name="lsst",
+    survey_name="rubin_sim",
 ):
     """
     A function which mimics the effects of the SSP linking process by looking
@@ -38,7 +38,7 @@ def PPLinkingFilter(
     rng (numpy Generator object): numpy random number generator object.
 
     survey_name (str): a string with the survey name. used for time-zone purposes.
-    Currently only accepts "lsst", "LSST".
+    Currently only accepts "rubin_sim", "RUBIN_SIM", "lsst", "LSST".
 
     Returns:
     -----------
