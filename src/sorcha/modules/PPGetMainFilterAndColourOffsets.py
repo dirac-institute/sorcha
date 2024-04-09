@@ -79,21 +79,29 @@ def PPGetMainFilterAndColourOffsets(filename, observing_filters, filesep):
         )
 
     # check that the columns match up with the othercolours calculated from observing_filters config variable
-
     if filesep == "whitespace":
-        sep = " "
+        split_line = first_line[:-1].split()
     elif filesep == "comma" or filesep == "csv":
-        sep = ","
+        split_line = first_line[:-1].split(",")
     else:
-        pplogger.error(
-            "ERROR: PPGetMainFilterAndColourOffsets: unexpected valye for auxFormat keyword in configs."
-        )
-        sys.exit("ERROR: PPGetMainFilterAndColourOffsets: unexpected valye for auxFormat keyword in configs.")
+        err_str = f"ERROR: PPGetMainFilterAndColourOffsets: unexpected value for auxFormat keyword in configs: {filesep}"
+        pplogger.error(err_str)
+        sys.exit(err_str)
 
-    if colour_offsets and not all(colour in first_line[:-1].split(sep) for colour in colour_offsets):
+    # Check that the delimiter split things into at least 2 columns
+    if len(split_line) <= 1:
+        err_str = (
+            "ERROR: PPGetMainFilterAndColourOffsets: Too few colour columns found. "
+            "Confirm you are using the correct 'aux_format' configuration parameter."
+        )
+        pplogger.error(err_str)
+        sys.exit(err_str)
+
+    if colour_offsets and not all(colour in split_line for colour in colour_offsets):
         pplogger.error(
             "ERROR: PPGetMainFilterAndColourOffsets: colour offset columns in physical parameters file do not match with observing filters specified in config file."
         )
+        pplogger.error(f"Expected {colour_offsets}")
         sys.exit(
             "ERROR: PPGetMainFilterAndColourOffsets: colour offset columns in physical parameters file do not match with observing filters specified in config file."
         )
