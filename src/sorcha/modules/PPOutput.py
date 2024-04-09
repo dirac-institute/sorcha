@@ -129,17 +129,17 @@ def PPWriteOutput(cmd_args, configs, observations_in, endChunk=0, verbose=False)
                 "fieldMJD_TAI",
                 "fieldRA_deg",
                 "fieldDec_deg",
-                "AstRA(deg)",
-                "AstDec(deg)",
+                "RA_deg",
+                "Dec_deg",
                 "AstrometricSigma(deg)",
                 "optFilter",
                 "observedTrailedSourceMag",
                 "PhotometricSigmaPSF(mag)",
                 "PhotometricSigmaTrailedSource(mag)",
                 "fiveSigmaDepthAtSource",
-                "Sun-Ast-Obs(deg)",
-                "AstRange(km)",
-                "AstRangeRate(km/s)",
+                "phase_deg",
+                "Range_LTC_km",
+                "RangeRate_LTC_km_s",
             ]
         ]
     elif configs["output_size"] == "all":
@@ -151,11 +151,11 @@ def PPWriteOutput(cmd_args, configs, observations_in, endChunk=0, verbose=False)
         for position_col in [
             "fieldRA_deg",
             "fieldDec_deg",
-            "AstRA(deg)",
-            "AstDec(deg)",
+            "RA_deg",
+            "Dec_deg",
             "AstrometricSigma(deg)",
-            "AstRATrue(deg)",
-            "AstDecTrue(deg)",
+            "RA_true_deg",
+            "Dec_true_deg",
         ]:
             try:  # depending on type of output selected, some of these columns may not exist.
                 observations[position_col] = observations[position_col].round(

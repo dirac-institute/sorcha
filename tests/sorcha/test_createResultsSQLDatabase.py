@@ -25,11 +25,11 @@ def test_get_column_names():
 
     expected_colnames = [
         "ObjID",
-        "FieldMJD_TAI",
+        "fieldMJD_TAI",
         "fieldRA",
         "fieldDec",
-        "AstRA(deg)",
-        "AstDec(deg)",
+        "RA_deg",
+        "Dec_deg",
         "AstrometricSigma(deg)",
         "optFilter",
         "observedPSFMag",

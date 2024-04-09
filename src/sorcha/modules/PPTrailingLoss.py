@@ -106,9 +106,9 @@ def calcTrailingLoss(
 def PPTrailingLoss(
     oif_df,
     model="circularPSF",
-    dra_cosdec_name="AstRARate(deg/day)",
-    ddec_name="AstDecRate(deg/day)",
-    dec_name="AstDec(deg)",
+    dra_cosdec_name="RARateCosDec_deg_day",
+    ddec_name="DecRate_deg_day",
+    dec_name="Dec_deg",
     seeing_name_survey="seeingFwhmEff_arcsec",
     visit_time_name="visitExposureTime",
 ):
@@ -125,14 +125,14 @@ def PPTrailingLoss(
         calcTrailingLoss for details. Default = "circularPSF"
 
     dra_name : string, optional
-        "oif_df" column name for object RA rate. Default = "AstRARate(deg/day)"
+        "oif_df" column name for object RA rate. Default = "RARateCosDec_deg_day"
         Assumes cos(dec) normalization has already been applied
 
     ddec_name : string, optional
-        "oif_df" column name for object dec rate. Default = "AstDecRate(deg/day)"
+        "oif_df" column name for object dec rate. Default = "DecRate_deg_day"
 
     dec_name : string, default
-            "oif_df" column name for object declination. Default = "AstDec(deg)"
+            "oif_df" column name for object declination. Default = "Dec_deg"
 
     seeing_name_survey : string, optional
         "oif_df" column name for seeing. Default = "seeingFwhmEff_arcsec"

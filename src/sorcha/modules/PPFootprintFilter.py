@@ -592,8 +592,8 @@ class Footprint:
     def applyFootprint(
         self,
         field_df,
-        ra_name="AstRA(deg)",
-        dec_name="AstDec(deg)",
+        ra_name="RA_deg",
+        dec_name="Dec_deg",
         field_name="FieldID",
         ra_name_field="fieldRA_deg",
         dec_name_field="fieldDec_deg",
@@ -612,11 +612,11 @@ class Footprint:
 
         ra_name : string, optional
             "field_df" dataframe's column name for object's RA
-             for the given observation. Default = "AstRA(deg)" [units: degrees]
+             for the given observation. Default = "RA_deg" [units: degrees]
 
         dec_name : string, optional
             "field_df" dataframe's column name for object's declination
-             for the given observation. Default = "AstDec(deg)" [units: dgrees]
+             for the given observation. Default = "Dec_deg" [units: dgrees]
 
         ra_name_field : string, optional
             "field_df" dataframe's column name for the observation field's RA

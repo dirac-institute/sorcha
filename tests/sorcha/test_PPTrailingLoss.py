@@ -16,7 +16,7 @@ def test_PPTrailingLoss():
     testoifdf = pd.DataFrame(
         {
             "FieldID": np.arange(0, 10),
-            "AstRARate(deg/day)": [
+            "RARateCosDec_deg_day": [
                 0.2302361,
                 0.59039849,
                 0.51966227,
@@ -28,7 +28,7 @@ def test_PPTrailingLoss():
                 0.23515252,
                 0.49184532,
             ],
-            "AstDecRate(deg/day)": [
+            "DecRate_deg_day": [
                 0.07060338,
                 0.63168302,
                 0.90364059,
@@ -40,7 +40,7 @@ def test_PPTrailingLoss():
                 0.38174909,
                 0.03332251,
             ],
-            "AstDec(deg)": [
+            "Dec_deg": [
                 0.45697193,
                 0.39612113,
                 0.91493552,
@@ -69,7 +69,7 @@ def test_PPTrailingLoss():
 
     testoifdf["visitExposureTime"] = 30.0
     # add cos dec term
-    testoifdf["AstRARate(deg/day)"] *= np.cos(testoifdf["AstDec(deg)"] * np.pi / 180.0)
+    testoifdf["RARateCosDec_deg_day"] *= np.cos(testoifdf["Dec_deg"] * np.pi / 180.0)
 
     np.testing.assert_array_almost_equal(0.25893924959480374, PPTrailingLoss(oif_df=testoifdf)[5], decimal=14)
 

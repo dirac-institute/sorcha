@@ -138,9 +138,9 @@ def uncertainties(
     limMagName="fiveSigmaDepthAtSource",
     seeingName="seeingFwhmGeom_arcsec",
     filterMagName="TrailedSourceMag",
-    dra_name="AstRARate(deg/day)",
-    ddec_name="AstDecRate(deg/day)",
-    dec_name="AstDec(deg)",
+    dra_name="RARateCosDec_deg_day",
+    ddec_name="DecRate_deg_day",
+    dec_name="Dec_deg",
     visit_time_name="visitExposureTime",
 ):
     """
@@ -168,15 +168,15 @@ def uncertainties(
 
     dra_name : string, optional
         pandas dataframe column name of the object RA rate
-        Default = "AstRARate(deg/day)"
+        Default = "RARateCosDec_deg_day"
 
     ddec_name: string, optional
         pandas dataframe column name of the object declination rate
-        Default = "AstDecRate(deg/day)"
+        Default = "DecRate_deg_day"
 
     dec_name : string, optional
         pandas dataframe column name of the object declination
-        Default = "AstDec(deg)"
+        Default = "Dec_deg"
 
     visit_time_name : string, optional
         pandas dataframe column name for exposure length
