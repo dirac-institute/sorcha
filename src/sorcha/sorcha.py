@@ -441,7 +441,9 @@ def main():
         action="store_true",
         default=False,
     )
-    optional.add_argument("-s", "--survey", help="Survey to simulate", type=str, dest="s", default="rubin_sim")
+    optional.add_argument(
+        "-s", "--survey", help="Survey to simulate", type=str, dest="s", default="rubin_sim"
+    )
     optional.add_argument(
         "-t", "--stem", help="Output file name stem.", type=str, dest="t", default="SSPPOutput"
     )
@@ -498,17 +500,25 @@ def main():
         runLSSTSimulation(args, configs)
     elif cmd_args["surveyname"] in ["LSST", "lsst"]:
         pplogger.error(
-            "ERROR: The LSST has not started yet Current allowed surveys are: {}".format(["rubin_sim", "RUBIN_SIM"])
+            "ERROR: The LSST has not started yet Current allowed surveys are: {}".format(
+                ["rubin_sim", "RUBIN_SIM"]
+            )
         )
         sys.exit(
-            "ERROR: The LSST has not started. Current allowed surveys are: {}".format(["rubin_sim", "RUBIN_SIM"])
+            "ERROR: The LSST has not started. Current allowed surveys are: {}".format(
+                ["rubin_sim", "RUBIN_SIM"]
+            )
         )
     else:
         pplogger.error(
-            "ERROR: Survey name not recognised. Current allowed surveys are: {}".format(["rubin_sim", "RUBIN_SIM"])
+            "ERROR: Survey name not recognised. Current allowed surveys are: {}".format(
+                ["rubin_sim", "RUBIN_SIM"]
+            )
         )
         sys.exit(
-            "ERROR: Survey name not recognised. Current allowed surveys are: {}".format(["rubin_sim", "RUBIN_SIM"])
+            "ERROR: Survey name not recognised. Current allowed surveys are: {}".format(
+                ["rubin_sim", "RUBIN_SIM"]
+            )
         )
 
 
