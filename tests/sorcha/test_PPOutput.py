@@ -139,6 +139,9 @@ def test_PPWriteOutput(setup_and_teardown_for_PPWriteOutput):
             0.007,
             0.007,
             23.839,
+            18.341701,
+            393817194.335,
+            -22.515,
         ],
         dtype=object,
     )
