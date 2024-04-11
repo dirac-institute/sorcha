@@ -31,7 +31,7 @@ def setup_and_teardown_for_PPConfigFileParser(tmp_path):
 def test_PPConfigFileParser(setup_and_teardown_for_PPConfigFileParser):
     from sorcha.modules.PPConfigParser import PPConfigFileParser
 
-    configs = PPConfigFileParser(get_test_filepath("test_PPConfig.ini"), "lsst")
+    configs = PPConfigFileParser(get_test_filepath("test_PPConfig.ini"), "rubin_sim")
 
     test_configs = {
         "eph_format": "csv",
@@ -219,10 +219,10 @@ def test_PPFindDirectoryOrExit():
 def test_PPCheckFiltersForSurvey():
     from sorcha.modules.PPConfigParser import PPCheckFiltersForSurvey
 
-    PPCheckFiltersForSurvey("lsst", ["u", "g", "r", "i", "z", "y"])
+    PPCheckFiltersForSurvey("rubin_sim", ["u", "g", "r", "i", "z", "y"])
 
     with pytest.raises(SystemExit) as e:
-        PPCheckFiltersForSurvey("lsst", ["j"])
+        PPCheckFiltersForSurvey("rubin_sim", ["j"])
 
     assert e.type == SystemExit
 
@@ -242,7 +242,7 @@ def test_PPPrintConfigsToLog(tmp_path):
         "configfile": "test_PPConfig.ini",
         "pointing_database": "./baseline_10klines_2.0.db",
         "outpath": "./",
-        "surveyname": "lsst",
+        "surveyname": "rubin_sim",
         "outfilestem": "testout",
         "verbose": True,
         "seed": 24601,

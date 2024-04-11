@@ -29,7 +29,7 @@ class sorchaArguments:
     """logger verbosity"""
 
     surveyname: str = ""
-    """name of the survey (`lsst` is only one implemented currently)"""
+    """name of the survey (`rubin_sim` is only one implemented currently)"""
 
     complex_parameters: str = ""
     """optional, extra complex physical parameter input files"""

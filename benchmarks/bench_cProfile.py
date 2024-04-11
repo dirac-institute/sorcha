@@ -31,7 +31,7 @@ if __name__ == "__main__":  # pragma: no cover
         "outpath": os.path.join(path_to_sorcha, "tests/out"),
         "outfilestem": os.path.join(path_to_sorcha, f"out_{args.object_type}"),
         "verbose": False,
-        "surveyname": "lsst",
+        "surveyname": "rubin_sim",
     }
 
     args_obj = sorchaArguments(cmd_args_dict)

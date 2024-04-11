@@ -325,7 +325,7 @@ def PPCheckFiltersForSurvey(survey_name, observing_filters):
 
     pplogger = logging.getLogger(__name__)
 
-    if survey_name in ["LSST", "lsst"]:
+    if survey_name in ["rubin_sim", "RUBIN_SIM"]:
         lsst_filters = ["u", "g", "r", "i", "z", "y"]
         filters_ok = all(elem in lsst_filters for elem in observing_filters)
 
@@ -476,7 +476,7 @@ def PPConfigFileParser(configfile, survey_name):
         )
         if external_file:
             PPFindFileOrExit(config_dict["footprint_path"], "footprint_path")
-        elif survey_name.lower() != "lsst":
+        elif survey_name.lower() not in ["lsst", "rubin_sim"]:
             log_error_and_exit(
                 "a default detector footprint is currently only provided for LSST; please provide your own footprint file."
             )

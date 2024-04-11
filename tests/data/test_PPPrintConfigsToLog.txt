@@ -3,7 +3,7 @@ sorcha.modules.PPConfigParser INFO     The config file used is located at test_P
 sorcha.modules.PPConfigParser INFO     The physical parameters file used is located at testcolour.txt 
 sorcha.modules.PPConfigParser INFO     The orbits file used is located at testorb.des 
 sorcha.modules.PPConfigParser INFO     The ephemerides file used is located at oiftestoutput.txt 
-sorcha.modules.PPConfigParser INFO     The survey selected is: lsst 
+sorcha.modules.PPConfigParser INFO     The survey selected is: rubin_sim 
 sorcha.modules.PPConfigParser INFO     No cometary activity selected. 
 sorcha.modules.PPConfigParser INFO     Format of ephemerides file is: csv 
 sorcha.modules.PPConfigParser INFO     Format of auxiliary files is: whitespace 

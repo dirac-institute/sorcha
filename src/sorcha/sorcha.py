@@ -351,7 +351,7 @@ def main():
         -cp CP, --complex_physical_parameters CP
                         Complex physical parameters file name (default: None)
         -f, --force           Force deletion/overwrite of existing output file(s). Default False. (default: False)
-        -s S, --survey S      Survey to simulate (default: LSST)
+        -s S, --survey S      Survey to simulate (default: rubin_sim)
         -t T, --stem T        Output file name stem. (default: SSPPOutput)
         -v, --verbose         Verbosity. Default currently true; include to turn off verbosity. (default: True)
     """
@@ -441,7 +441,9 @@ def main():
         action="store_true",
         default=False,
     )
-    optional.add_argument("-s", "--survey", help="Survey to simulate", type=str, dest="s", default="LSST")
+    optional.add_argument(
+        "-s", "--survey", help="Survey to simulate", type=str, dest="s", default="rubin_sim"
+    )
     optional.add_argument(
         "-t", "--stem", help="Output file name stem.", type=str, dest="t", default="SSPPOutput"
     )
@@ -484,7 +486,7 @@ def main():
         cmd_args["seed"] = int(os.environ["SORCHA_SEED"])
         pplogger.info(f"Random seed overridden via environmental variable, SORCHA_SEED={cmd_args['seed']}")
 
-    if cmd_args["surveyname"] in ["LSST", "lsst"]:
+    if cmd_args["surveyname"] in ["rubin_sim", "RUBIN_SIM"]:
         try:
             args = sorchaArguments(cmd_args)
         except Exception as err:
@@ -496,12 +498,27 @@ def main():
             pplogger.error(err)
             sys.exit(err)
         runLSSTSimulation(args, configs)
-    else:
+    elif cmd_args["surveyname"] in ["LSST", "lsst"]:
         pplogger.error(
-            "ERROR: Survey name not recognised. Current allowed surveys are: {}".format(["LSST", "lsst"])
+            "ERROR: The LSST has not started yet Current allowed surveys are: {}".format(
+                ["rubin_sim", "RUBIN_SIM"]
+            )
         )
         sys.exit(
-            "ERROR: Survey name not recognised. Current allowed surveys are: {}".format(["LSST", "lsst"])
+            "ERROR: The LSST has not started. Current allowed surveys are: {}".format(
+                ["rubin_sim", "RUBIN_SIM"]
+            )
+        )
+    else:
+        pplogger.error(
+            "ERROR: Survey name not recognised. Current allowed surveys are: {}".format(
+                ["rubin_sim", "RUBIN_SIM"]
+            )
+        )
+        sys.exit(
+            "ERROR: Survey name not recognised. Current allowed surveys are: {}".format(
+                ["rubin_sim", "RUBIN_SIM"]
+            )
         )
 
 
