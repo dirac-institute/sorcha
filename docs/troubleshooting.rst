@@ -11,15 +11,15 @@ If sorcha runs successfully the .err log file created will be empty. If the soft
 Using Relative File Paths
 ---------------------------------------------------------------
 
-If you're using relative paths (e.g. '../this_directory') and those does not seem to be working, try using the full directory/file paths.
+If you're using relative paths (e.g. '../this_directory') and those do not seem to be working, try using the full directory/file paths.
 
 Running Multiple Instances With the Same Output Directories
 ---------------------------------------------------------------
-If your output looks mixed up or garbled, double check that you are not running more than one Sorcha process with 
-the same output path. You can **only run one** instance of Sorcha  at the same time for a given output directory. 
-Otherwise, you run the risk of the output files being mixed up. If you want to run multiple versions of Sorcha on 
+If your output looks mixed up or garbled, double check that you are not running more than one sorcha process with 
+the same output path. You **should only run one** instance of sorcha at the same time for a given output directory. 
+Otherwise, you run the risk of the output files being mixed up. If you want to run multiple versions of sorcha on 
 the same computer/compute node, make sure to update the output path in the config file or commandline arguments, 
-as appropriate. We have developed tools and example slurm scripts to help you run multiple instances safely. 
+as appropriate. We have developed tools and example Slurm scripts to help you run multiple instances safely. 
 
 Pointing Database 
 ---------------------
@@ -38,24 +38,21 @@ it might be your computer setup. SQLite uses a temporary store to hold temporary
 
 Mismatch in Inputs 
 ---------------------
-There are several files associated with the synthetic small bodies  which are passed into Sorcha. These are
+There are several files associated with the synthetic small bodies  which are passed into sorcha. These are
 the orbit file, the physical parameter file and an optional complex parameters file and optional ephemeris 
-file (if not using the ephemeris generator within sorcha. Each provide specific information about the 
+file (if not using the internal ephemeris generator within sorcha). Each provide specific information about the 
 synthetic population that is being analysed. Within these files, it is necessary to specify an entry for every 
-object. The Sorcha code will run a check to ensure that all entries have an associated orbit and 
+object. The sorcha code will run a check to ensure that all entries have an associated orbit and 
 physical/complex physical  parameter value, so if you get an error like::
 
    ERROR: PPCheckOrbitAndColourMatching: input colour/cometary parameter and orbit files do not match.
 
-then make sure that for each file (orbit, ephemerides and phs) contains information 
-for each object you wish to simulate.
+then make sure to check that you have entries in all the input files for each object you wish to simulate.
 
 
 ERROR: Unable to find ObjID column headings (OrbitAuxReader:....)
 --------------------------------------------------------------------
-You can get this error if the configuration file is listing a different format for the input files than what Sorcha is ingesting. 
-Check that the **aux_format** variable in the configuration file is set to the appropriate format for your input files.
-
+Check your input files and ensure that they have ObjID column as the first column. 
 
 
 
