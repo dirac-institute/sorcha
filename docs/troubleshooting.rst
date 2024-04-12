@@ -38,7 +38,7 @@ it might be your computer setup. SQLite uses a temporary store to hold temporary
 
 Mismatch in Inputs 
 ---------------------
-There are several files associated with the synthetic small bodies  which are passed into sorcha. These are
+There are several files associated with the synthetic small bodies  which are passed into Sorcha. These are
 the orbit file, the physical parameter file and an optional complex parameters file and optional ephemeris 
 file (if not using the internal ephemeris generator within sorcha). Each provide specific information about the 
 synthetic population that is being analysed. Within these files, it is necessary to specify an entry for every 
