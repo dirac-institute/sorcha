@@ -128,7 +128,7 @@ def test_PPWriteOutput(setup_and_teardown_for_PPWriteOutput):
     expected = np.array(
         [
             "S1000000a",
-            61769.32062,
+            61769.320619,
             163.8754209,
             -18.8432714,
             164.037713,
@@ -141,6 +141,7 @@ def test_PPWriteOutput(setup_and_teardown_for_PPWriteOutput):
             18.341701,
             393817194.335,
             -22.515,
+            453089476.3503012,
         ],
         dtype=object,
     )
@@ -167,7 +168,7 @@ def test_PPWriteOutput(setup_and_teardown_for_PPWriteOutput):
         [
             "S1000000a",
             894816,
-            61769.32062,
+            61769.320619,
             393817194.335,
             -22.515,
             164.0377129999997,
@@ -187,7 +188,6 @@ def test_PPWriteOutput(setup_and_teardown_for_PPWriteOutput):
             -4.221,
             -1.691,
             18.341701,
-            5.454,
             0.0,
             0.0,
             0.0,
@@ -223,6 +223,7 @@ def test_PPWriteOutput(setup_and_teardown_for_PPWriteOutput):
             -17.582575,
             66.0,
             19,
+            453089476.3503012,
         ],
         dtype=object,
     )

@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 import os
 import sqlite3
 import logging
@@ -125,6 +126,13 @@ def PPWriteOutput(cmd_args, configs, observations_in, endChunk=0, verbose=False)
     pplogger = logging.getLogger(__name__)
     verboselog = pplogger.info if verbose else lambda *a, **k: None
 
+    # calculate heliocentric distance
+    observations_in["Obj_Sun_LTC_km"] = np.sqrt(
+        observations_in["Obj_Sun_x_LTC_km"].values ** 2
+        + observations_in["Obj_Sun_y_LTC_km"].values ** 2
+        + observations_in["Obj_Sun_z_LTC_km"].values ** 2
+    )
+
     if configs["output_size"] == "basic":
         observations = observations_in.copy()[
             [
@@ -142,12 +150,11 @@ def PPWriteOutput(cmd_args, configs, observations_in, endChunk=0, verbose=False)
                 "phase_deg",
                 "Range_LTC_km",
                 "RangeRate_LTC_km_s",
+                "Obj_Sun_LTC_km",
             ]
         ]
     elif configs["output_size"] == "all":
         observations = observations_in.copy()
-
-    observations["fieldMJD_TAI"] = observations["fieldMJD_TAI"].round(decimals=5)
 
     if configs["position_decimals"]:
         for position_col in [
