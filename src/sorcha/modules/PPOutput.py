@@ -156,8 +156,6 @@ def PPWriteOutput(cmd_args, configs, observations_in, endChunk=0, verbose=False)
     elif configs["output_size"] == "all":
         observations = observations_in.copy()
 
-    # observations["fieldMJD_TAI"] = observations["fieldMJD_TAI"].round(decimals=5)
-
     if configs["position_decimals"]:
         for position_col in [
             "fieldRA_deg",
