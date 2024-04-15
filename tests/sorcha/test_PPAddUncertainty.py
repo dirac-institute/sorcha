@@ -92,9 +92,9 @@ def test_addUncertainties():
     test_data = pd.DataFrame(
         {
             "ObjID": obj_ids,
-            "TrailedSourceMag": obj_mags,
-            "PSFMag": psf_mags,
-            "fiveSigmaDepthAtSource": sig_limit,
+            "trailedSourceMagTrue": obj_mags,
+            "PSFMagTrue": psf_mags,
+            "fiveSigmaDepth_mag": sig_limit,
             "seeingFwhmGeom_arcsec": seeing,
             "RARateCosDec_deg_day": astRArate,
             "DecRate_deg_day": astDecrate,
@@ -111,34 +111,32 @@ def test_addUncertainties():
     obs_uncert = addUncertainties(test_data, configs, rng)
 
     assert_almost_equal(
-        obs_uncert["AstrometricSigma(deg)"],
+        obs_uncert["astrometricSigma_deg"],
         # [6.27294202e-06, 1.38053193e-05, 3.34595607e-05, 8.27032813e-01],
         [6.272953e-06, 1.380535e-05, 3.345963e-05, 8.270347e-01],
         decimal=6,
     )
+    assert_almost_equal(obs_uncert["PSFMagSigma"], [0.042682, 0.100568, 0.233576, 9.439369], decimal=6)
     assert_almost_equal(
-        obs_uncert["PhotometricSigmaPSF(mag)"], [0.042682, 0.100568, 0.233576, 9.439369], decimal=6
-    )
-    assert_almost_equal(
-        obs_uncert["PhotometricSigmaTrailedSource(mag)"],
+        obs_uncert["trailedSourceMagSigma"],
         [0.036035, 0.084703, 0.198012, 9.239406],
         decimal=6,
     )
     assert_almost_equal(obs_uncert["SNR"], [24.941285, 10.303786, 4.166240, 0.000168], decimal=6)
     assert_almost_equal(
-        obs_uncert["observedTrailedSourceMag"],
+        obs_uncert["trailedSourceMag"],
         [21.0419, 22.0064, 23.1822, 37.3978],
         decimal=4,
     )
-    assert_almost_equal(obs_uncert["observedPSFMag"], [21.239301, 22.050202, 23.006519, 37.514547], decimal=6)
+    assert_almost_equal(obs_uncert["PSFMag"], [21.239301, 22.050202, 23.006519, 37.514547], decimal=6)
 
     configs_notrail = {"trailing_losses_on": False, "default_SNR_cut": False}
 
     obs_notrail = addUncertainties(test_data, configs_notrail, rng)
 
     assert_equal(
-        obs_notrail["PhotometricSigmaPSF(mag)"].values,
-        obs_notrail["PhotometricSigmaTrailedSource(mag)"].values,
+        obs_notrail["PSFMagSigma"].values,
+        obs_notrail["trailedSourceMagSigma"].values,
     )
 
     configs_SNRcut = {"trailing_losses_on": False, "default_SNR_cut": True}
@@ -156,10 +154,10 @@ def test_uncertainties():
     observations = pd.DataFrame(
         {
             "ObjID": ["S1000000a"],
-            "fiveSigmaDepthAtSource": [23.0],
+            "fiveSigmaDepth_mag": [23.0],
             "seeingFwhmGeom_arcsec": [1.0],
-            "TrailedSourceMag": [20.0],
-            "PSFMag": [20.1],
+            "trailedSourceMagTrue": [20.0],
+            "PSFMagTrue": [20.1],
             "RARateCosDec_deg_day": [0.03],
             "DecRate_deg_day": [-0.01],
             "Dec_deg": [-5.0],

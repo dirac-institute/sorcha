@@ -26,18 +26,18 @@ def test_get_column_names():
     expected_colnames = [
         "ObjID",
         "fieldMJD_TAI",
-        "fieldRA",
-        "fieldDec",
+        "fieldRA_deg",
+        "fieldDec_deg",
         "RA_deg",
         "Dec_deg",
-        "AstrometricSigma(deg)",
+        "astrometricSigma_deg",
         "optFilter",
-        "observedPSFMag",
-        "observedTrailedSourceMag",
-        "PhotometricSigmaPSF(mag)",
-        "PhotometricSigmaTrailedSource(mag)",
-        "fiveSigmaDepth",
-        "fiveSigmaDepthAtSource",
+        "PSFMag",
+        "trailedSourceMag",
+        "PSFMagSigma",
+        "trailedSourceMagSigma",
+        "fieldFiveSigmaDepth_mag",
+        "fiveSigmaDepth_mag",
     ]
 
     assert col_names == expected_colnames

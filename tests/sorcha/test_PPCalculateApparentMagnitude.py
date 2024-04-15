@@ -98,7 +98,7 @@ def test_PPCalculateSimpleCometaryMagnitude_no_activity():
     cometary_obs = pd.DataFrame(
         {
             "optFilter": ["r", "r"],
-            "TrailedSourceMag": [19.676259, 22.748274],
+            "trailedSourceMagTrue": [19.676259, 22.748274],
             "H_r": [15.35, 15.35],
             "afrho1": [1552, 1552],
             "k": [-3.35, -3.35],
@@ -112,7 +112,7 @@ def test_PPCalculateSimpleCometaryMagnitude_no_activity():
 
     df_comet = PPCalculateSimpleCometaryMagnitude(cometary_obs, ["r"], rho, delta, alpha)
 
-    assert_almost_equal(df_comet["TrailedSourceMag"], [19.676259, 22.748274], decimal=3)
+    assert_almost_equal(df_comet["trailedSourceMagTrue"], [19.676259, 22.748274], decimal=3)
 
 
 def test_PPApplyColourOffsets():
@@ -209,10 +209,10 @@ def test_PPCalculateApparentMagnitude():
     asteroid_out = PPCalculateApparentMagnitude(asteroid_obs, "HG", "r", ["i-r"], ["r", "i"], "none")
     asteroid_single = PPCalculateApparentMagnitude(asteroid_obs_single, "HG", "r", ["r-r"], ["r"], "none")
 
-    assert_almost_equal(asteroid_out["TrailedSourceMag"].values[0], 13.281578, decimal=6)
+    assert_almost_equal(asteroid_out["trailedSourceMagTrue"].values[0], 13.281578, decimal=6)
     assert_almost_equal(asteroid_out["H_filter"].values[0], 7.19, decimal=6)
     assert_almost_equal(asteroid_out["H_r"].values[0], 7.3, decimal=6)
 
-    assert_almost_equal(asteroid_single["TrailedSourceMag"].values[0], 13.391578, decimal=6)
+    assert_almost_equal(asteroid_single["trailedSourceMagTrue"].values[0], 13.391578, decimal=6)
     assert_almost_equal(asteroid_single["H_filter"].values[0], 7.3, decimal=6)
     assert_almost_equal(asteroid_single["H_r"].values[0], 7.3, decimal=6)

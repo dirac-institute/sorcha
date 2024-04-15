@@ -35,8 +35,8 @@ def randomizeAstrometry(
     module_rngs,
     raName="RA_deg",
     decName="Dec_deg",
-    raOrigName="RA_true_deg",
-    decOrigName="Dec_true_deg",
+    raOrigName="RATrue_deg",
+    decOrigName="DecTrue_deg",
     sigName="AstSig(deg)",
     radecUnits="deg",
     sigUnits="mas",
@@ -68,11 +68,11 @@ def randomizeAstrometry(
 
     raOrigName : string, optional
         "df" dataframe column name for where to store original right
-        ascension. Default = "RA_true_deg"
+        ascension. Default = "RATrue_deg"
 
     decOrigName : string, optional
         "df" dataframe column name for where to store original declination.
-        Default = "Dec_true_deg"
+        Default = "DecTrue_deg"
 
     sigName : string, optional
         "df" dataframe column name for the standard deviation, uncertainty in the
