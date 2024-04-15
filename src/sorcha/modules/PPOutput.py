@@ -134,12 +134,11 @@ def PPWriteOutput(cmd_args, configs, observations_in, endChunk=0, verbose=False)
                 "fieldDec_deg",
                 "RA_deg",
                 "Dec_deg",
-                "AstrometricSigma(deg)",
+                "astrometricSigma_deg",
                 "optFilter",
-                "observedTrailedSourceMag",
-                "PhotometricSigmaPSF(mag)",
-                "PhotometricSigmaTrailedSource(mag)",
-                "fiveSigmaDepthAtSource",
+                "trailedSourceMag",
+                "trailedSourceMagSigma",
+                "fiveSigmaDepth_mag",
                 "phase_deg",
                 "Range_LTC_km",
                 "RangeRate_LTC_km_s",
@@ -156,9 +155,9 @@ def PPWriteOutput(cmd_args, configs, observations_in, endChunk=0, verbose=False)
             "fieldDec_deg",
             "RA_deg",
             "Dec_deg",
-            "AstrometricSigma(deg)",
-            "RA_true_deg",
-            "Dec_true_deg",
+            "astrometricSigma_deg",
+            "RATrue_deg",
+            "DecTrue_deg",
         ]:
             try:  # depending on type of output selected, some of these columns may not exist.
                 observations[position_col] = observations[position_col].round(
@@ -169,14 +168,14 @@ def PPWriteOutput(cmd_args, configs, observations_in, endChunk=0, verbose=False)
 
     if configs["magnitude_decimals"]:
         for magnitude_col in [
-            "observedPSFMag",
-            "observedTrailedSourceMag",
-            "TrailedSourceMag",
             "PSFMag",
-            "PhotometricSigmaPSF(mag)",
-            "PhotometricSigmaTrailedSource(mag)",
+            "trailedSourceMag",
+            "trailedSourceMagTrue",
+            "PSFMagTrue",
+            "PSFMagSigma",
+            "trailedSourceMagSigma",
             "fieldFiveSigmaDepth_mag",
-            "fiveSigmaDepthAtSource",
+            "fiveSigmaDepth_mag",
         ]:
             try:  # depending on type of output selected, some of these columns may not exist.
                 observations[magnitude_col] = observations[magnitude_col].round(

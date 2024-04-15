@@ -14,8 +14,8 @@ def test_randomizePhotometry():
     test_out = randomizePhotometry(
         test_data[0:1],
         PerModuleRNG(2021),
-        magName="TrailedSourceMag",
-        sigName="PhotometricSigmaTrailedSource(mag)",
+        magName="trailedSourceMagTrue",
+        sigName="trailedSourceMagSigma",
     )
 
     np.testing.assert_almost_equal(test_out.values[0], 19.663194, decimal=5)
@@ -29,7 +29,7 @@ def test_randomizeAstrometry():
     test_data = pd.read_csv(get_test_filepath("test_input_fullobs.csv"))
 
     test_out = randomizeAstrometry(
-        test_data[0:1], PerModuleRNG(2021), sigName="AstrometricSigma(deg)", sigUnits="deg"
+        test_data[0:1], PerModuleRNG(2021), sigName="astrometricSigma_deg", sigUnits="deg"
     )
 
     np.testing.assert_almost_equal(test_out["RA_deg"][0], 164.03771597, decimal=5)
@@ -62,7 +62,7 @@ def test_sampleNormalFOV():
     observations = pd.read_csv(get_test_filepath("test_input_fullobs.csv"), nrows=1)
 
     centre = radec2icrf(observations["RA_deg"], observations["Dec_deg"])
-    sigmarad = np.deg2rad(observations["AstrometricSigma(deg)"])
+    sigmarad = np.deg2rad(observations["astrometricSigma_deg"])
 
     n = len(observations.index)
     xyz = np.zeros([n, 3])
@@ -84,12 +84,12 @@ def test_flux_mag_conversion():
 
     observations = pd.read_csv(get_test_filepath("test_input_fullobs.csv"), nrows=1)
 
-    flux_test = mag2flux(observations["observedTrailedSourceMag"])
+    flux_test = mag2flux(observations["trailedSourceMag"])
     mag_test = flux2mag(flux_test)
 
     expected_flux = 5.02107917e-05
 
     assert_almost_equal(flux_test.values[0], expected_flux)
-    assert_almost_equal(observations["observedTrailedSourceMag"][0], mag_test.values[0])
+    assert_almost_equal(observations["trailedSourceMag"][0], mag_test.values[0])
 
     return

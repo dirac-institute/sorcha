@@ -18,10 +18,10 @@ def test_PPVignetting():
 
     test_df = pd.DataFrame(test_data)
 
-    test_df["fiveSigmaDepthAtSource"] = PPVignetting.vignettingEffects(test_df)
+    test_df["fiveSigmaDepth_mag"] = PPVignetting.vignettingEffects(test_df)
     expected = [23.83940373, 22.39012774, 23.35663436, 22.3797003, 22.44707285]
 
-    assert_almost_equal(test_df["fiveSigmaDepthAtSource"].values, expected, decimal=6)
+    assert_almost_equal(test_df["fiveSigmaDepth_mag"].values, expected, decimal=6)
 
     return
 

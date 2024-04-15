@@ -12,7 +12,7 @@ def PPCalculateApparentMagnitudeInFilter(
     padain,
     function,
     observing_filters,
-    colname="TrailedSourceMag",
+    colname="trailedSourceMagTrue",
     lightcurve_choice=None,
     cometary_activity_choice=None,
 ):
@@ -22,7 +22,7 @@ def PPCalculateApparentMagnitudeInFilter(
 
     Adds the following columns to the observations dataframe:
 
-    - TrailedSourceMag
+    - trailedSourceMagTrue
     - any columns created by the optional light curve and cometary activity models
 
     Notes

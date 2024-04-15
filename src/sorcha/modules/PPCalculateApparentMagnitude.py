@@ -22,7 +22,7 @@ def PPCalculateApparentMagnitude(
     Adds the following columns to the observations dataframe:
 
     - H_filter
-    - TrailedSourceMag
+    - trailedSourceMagTrue
     - any columns created by the optional light curve and cometary activity models
 
     Removes the following columns from the observations dataframe:

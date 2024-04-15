@@ -55,8 +55,8 @@ def PPDetectionProbability(
     oif_df,
     trailing_losses=False,
     trailing_loss_name="dmagDetect",
-    magnitude_name="observedPSFMag",
-    limiting_magnitude_name="fiveSigmaDepthAtSource",
+    magnitude_name="PSFMag",
+    limiting_magnitude_name="fiveSigmaDepth_mag",
     field_id_name="FieldID",
     fillFactor=1.0,
     w=0.1,
@@ -78,8 +78,12 @@ def PPDetectionProbability(
         oif_df column name for trailing losses, Default = dmagDetect
 
     magnitude_name : string, optional
-        oif_df column name for observation limiting magnitude,
-        Default = fiveSigmaDepthAtSource
+        oif_df column name for observation limiting magnitude
+        Default = PSFMag
+
+    limiting_magnitude_name : string, optional
+        oif_df column used for observation limiting magnitude.
+        Default = fiveSigmaDepth_mag
 
     field ID : string, optional
         oif_df column name for observation field_id

@@ -68,12 +68,12 @@ def addUncertainties(detDF, configs, module_rngs, verbose=True):
 
     Adds the following columns to the observations dataframe:
 
-    - AstrometricSigma(deg)
-    - PhotometricSigmaTrailedSource(mag)
-    - PhotometricSigmaPSF(mag)
+    - astrometricSigma_deg
+    - trailedSourceMagSigma
+    - PSFMagSigma
     - SNR
-    - observedTrailedSourceMag
-    - observedPSFMag
+    - trailedSourceMag
+    - PSFMag
 
     Parameters
     -----------
@@ -99,16 +99,14 @@ def addUncertainties(detDF, configs, module_rngs, verbose=True):
     pplogger = logging.getLogger(__name__)
     verboselog = pplogger.info if verbose else lambda *a, **k: None
 
-    detDF["AstrometricSigma(deg)"], detDF["PhotometricSigmaTrailedSource(mag)"], detDF["SNR"] = uncertainties(
-        detDF, configs, filterMagName="TrailedSourceMag"
+    detDF["astrometricSigma_deg"], detDF["trailedSourceMagSigma"], detDF["SNR"] = uncertainties(
+        detDF, configs, filterMagName="trailedSourceMagTrue"
     )
 
     if configs.get("trailing_losses_on", False):
-        _, detDF["PhotometricSigmaPSF(mag)"], detDF["SNR"] = uncertainties(
-            detDF, configs, filterMagName="PSFMag"
-        )
+        _, detDF["PSFMagSigma"], detDF["SNR"] = uncertainties(detDF, configs, filterMagName="PSFMagTrue")
     else:
-        detDF["PhotometricSigmaPSF(mag)"] = detDF["PhotometricSigmaTrailedSource(mag)"]
+        detDF["PSFMagSigma"] = detDF["trailedSourceMagSigma"]
 
     # default SNR cut can be disabled in the config file under EXPERT
     # at low SNR, high photometric sigma causes randomisation to sometimes
@@ -118,16 +116,16 @@ def addUncertainties(detDF, configs, module_rngs, verbose=True):
         detDF = PPSNRLimit(detDF.copy(), 2.0)
 
     verboselog("Randomising photometry...")
-    detDF["observedTrailedSourceMag"] = PPRandomizeMeasurements.randomizePhotometry(
-        detDF, module_rngs, magName="TrailedSourceMag", sigName="PhotometricSigmaTrailedSource(mag)"
+    detDF["trailedSourceMag"] = PPRandomizeMeasurements.randomizePhotometry(
+        detDF, module_rngs, magName="trailedSourceMagTrue", sigName="trailedSourceMagSigma"
     )
 
     if configs.get("trailing_losses_on", False):
-        detDF["observedPSFMag"] = PPRandomizeMeasurements.randomizePhotometry(
-            detDF, module_rngs, magName="PSFMag", sigName="PhotometricSigmaPSF(mag)"
+        detDF["PSFMag"] = PPRandomizeMeasurements.randomizePhotometry(
+            detDF, module_rngs, magName="PSFMagTrue", sigName="PSFMagSigma"
         )
     else:
-        detDF["observedPSFMag"] = detDF["observedTrailedSourceMag"]
+        detDF["PSFMag"] = detDF["trailedSourceMag"]
 
     return detDF
 
@@ -135,9 +133,9 @@ def addUncertainties(detDF, configs, module_rngs, verbose=True):
 def uncertainties(
     detDF,
     configs,
-    limMagName="fiveSigmaDepthAtSource",
+    limMagName="fiveSigmaDepth_mag",
     seeingName="seeingFwhmGeom_arcsec",
-    filterMagName="TrailedSourceMag",
+    filterMagName="trailedSourceMagTrue",
     dra_name="RARateCosDec_deg_day",
     ddec_name="DecRate_deg_day",
     dec_name="Dec_deg",
@@ -156,7 +154,7 @@ def uncertainties(
 
     limMagName : string, optional
         pandas dataframe column name of the limiting magnitude.
-        Default = "fiveSigmaDepthAtSource"
+        Default = "fiveSigmaDepth_mag"
 
     seeingName : string, optional
         pandas dataframe column name of the seeing
@@ -164,7 +162,7 @@ def uncertainties(
 
     filterMagName : string, optional
         pandas dataframe column name of the object magnitude
-        Default = "TrailedSourceMag"
+        Default = "trailedSourceMagTrue"
 
     dra_name : string, optional
         pandas dataframe column name of the object RA rate

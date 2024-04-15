@@ -216,17 +216,17 @@ def runLSSTSimulation(args, configs):
         if configs["trailing_losses_on"]:
             verboselog("Calculating trailing losses...")
             dmagDetect = PPTrailingLoss(observations, "circularPSF")
-            observations["PSFMag"] = dmagDetect + observations["TrailedSourceMag"]
+            observations["PSFMagTrue"] = dmagDetect + observations["trailedSourceMagTrue"]
         else:
-            observations["PSFMag"] = observations["TrailedSourceMag"]
+            observations["PSFMagTrue"] = observations["trailedSourceMagTrue"]
 
         verboselog("Calculating effects of vignetting on limiting magnitude...")
-        observations["fiveSigmaDepthAtSource"] = PPVignetting.vignettingEffects(observations)
+        observations["fiveSigmaDepth_mag"] = PPVignetting.vignettingEffects(observations)
 
-        # Note that the below code creates observedTrailedSourceMag and observedPSFMag
+        # Note that the below code creates trailedSourceMag and PSFMag
         # as columns in the observations dataframe.
         # These are the columns that should be used moving forward for filters etc.
-        # Do NOT use TrailedSourceMag or PSFMag, these are cut later.
+        # Do NOT use trailedSourceMagTrue or PSFMagTrue, these are the unrandomised magnitudes.
         verboselog("Calculating astrometric and photometric uncertainties...")
         verboselog("Values are then used to randomize the photometry....")
         verboselog(
@@ -244,7 +244,7 @@ def runLSSTSimulation(args, configs):
 
         verboselog("Randomising astrometry...")
         observations = PPRandomizeMeasurements.randomizeAstrometry(
-            observations, args._rngs, sigName="AstrometricSigma(deg)", sigUnits="deg"
+            observations, args._rngs, sigName="astrometricSigma_deg", sigUnits="deg"
         )
 
         verboselog("Applying field-of-view filters...")
