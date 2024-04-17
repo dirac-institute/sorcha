@@ -160,6 +160,7 @@ def runLSSTSimulation(args, configs):
     # "sizeSerialChunk" parameter in PPConfig.ini assigns the chunk.
     startChunk = 0
     endChunk = 0
+    loopCounter= 0
 
     ii = -1
     with open(args.orbinfile) as f:
@@ -173,8 +174,11 @@ def runLSSTSimulation(args, configs):
         footprint = Footprint(configs["footprint_path"])
 
     while endChunk < lenf:
+        verboselog("Starting main Sorcha processing loop round {}".format(loopCounter))
         endChunk = startChunk + configs["size_serial_chunk"]
-        verboselog("Working on objects {}-{}.".format(startChunk, endChunk))
+        verboselog("Working on objects {}-{}".format(startChunk, endChunk))
+       
+
 
         # Processing begins, all processing is done for chunks
         if configs["ephemerides_type"].casefold() == "external":
@@ -316,6 +320,7 @@ def runLSSTSimulation(args, configs):
         PPWriteOutput(args, configs, observations, endChunk, verbose=args.verbose)
 
         startChunk = startChunk + configs["size_serial_chunk"]
+        loopCounter=loopCounter +1
         # end for
 
     pplogger.info("Sorcha process is completed.")
