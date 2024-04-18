@@ -204,7 +204,7 @@ We have implemented several phase curve parameterizations that can be specified 
 +------------------+----------------------------------------------------------------------------------+
 | H                | Absolute magnitude in the main filter                                            |
 +------------------+----------------------------------------------------------------------------------+
-| u-r,g-r,etc      | Photometric colors in the relevant survey filters                               |
+| u-r,g-r,etc      | Photometric colors in the relevant survey filters                                |
 +------------------+----------------------------------------------------------------------------------+
 | G, G1&G2, G12, S | Phase curve parameter(s) for all filters (either G12, G1 & G2, or β) (optional)  |
 +------------------+----------------------------------------------------------------------------------+
@@ -293,14 +293,11 @@ Ephemeris File (Optional)
 .. note::
   For readability we show an example of a whitespace-separated file below.
 
-An example of an (optional) ephemeris file::
+An example of an (optional) ephemeris file:
 
-   ObjID FieldID FieldMJD_TAI AstRange(km) AstRangeRate(km/s) AstRA(deg) AstRARate(deg/day) AstDec(deg) AstDecRate(deg/day) Ast-Sun(J2000x)(km) Ast-Sun(J2000y)(km) Ast-Sun(J2000z)(km) Ast-Sun(J2000vx)(km/s) Ast-Sun(J2000vy)(km/s) Ast-Sun(J2000vz)(km/s) Obs-Sun(J2000x)(km) Obs-Sun(J2000y)(km) Obs-Sun(J2000z)(km) Obs-Sun(J2000vx)(km/s) Obs-Sun(J2000vy)(km/s) Obs-Sun(J2000vz)(km/s) Sun-Ast-Obs(deg)
-   S1000000a     144993 60425.402338    458272140.052  -21.379  302.104404  0.134147   3.473196  0.155803    120337437.532   -467360529.440     -6863861.395   15.814    3.135    3.395   -122770233.618    -79879875.157    -34626711.017   17.120  -22.269   -9.707   18.169656 
-   S1000000a     145013 60425.411933    458254426.575  -21.355  302.105691  0.134050   3.474691  0.155787    120350548.117   -467357930.249     -6861046.878   15.813    3.135    3.395   -122756042.340    -79898326.109    -34634757.414   17.116  -22.244   -9.705   18.169632 
-   S1000000a     180614 60503.206627    355295647.270   -4.213  299.360478 -0.185502  11.819392  0.002961    222559162.829   -434204364.757     15938036.863   14.472    6.666    3.359     52050159.823   -131110990.022    -56836222.957   27.873    9.424    4.014   10.189588 
-   S1000000a     180664 60503.230597    355286994.232   -4.144  299.356031 -0.185547  11.819460  0.002695    222589133.907   -434190558.767     15944993.943   14.472    6.667    3.359     52107850.839   -131091407.626    -56827904.911   27.840    9.487    4.019   10.187081 
-   S1000000a     183625 60507.194642    354133809.129   -2.598  298.635794 -0.188904  11.800365 -0.012248    227530687.962   -431878159.331     17094459.598   14.384    6.836    3.353     61402244.381   -127629446.799    -55326708.672   27.127   11.100    4.742    9.831253   
+.. literalinclude:: ../docs/example_files/assist_rebound.csv
+    :language: text
+    :lines: 1-20
 
 +--------------------------+----------------------------------------------------------------------------------+
 | Keyword                  | Description                                                                      |
@@ -347,7 +344,7 @@ An example of an (optional) ephemeris file::
 +--------------------------+----------------------------------------------------------------------------------+
 | Obs-Sun(J2000vz)(km/s)   |Cartesian Z-component of the observer's heliocentric velocity (km/s)              |
 +--------------------------+----------------------------------------------------------------------------------+
-| Sun-Ast-Obs(deg)         | The phase angle between the Sun, synthetic planetesimal, & observer (deg)         |
+| Sun-Ast-Obs(deg)         | The phase angle between the Sun, synthetic planetesimal, & observer (deg)        |
 +--------------------------+----------------------------------------------------------------------------------+
 
 .. note::
