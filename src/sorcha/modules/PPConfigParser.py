@@ -410,6 +410,10 @@ def PPConfigFileParser(configfile, survey_name):
         pplogger.error("ERROR: size_serial_chunk is zero or negative.")
         sys.exit("ERROR: size_serial_chunk is zero or negative.")
 
+    config_dict["pointing_sql_query"] = PPGetOrExit(
+        config, "INPUT", "pointing_sql_query", "ERROR: no pointing database SQLite3 query provided."
+    )
+
     # ACTIVITY
 
     config_dict["comet_activity"] = config.get("ACTIVITY", "comet_activity", fallback=None)
@@ -725,10 +729,6 @@ def PPConfigFileParser(configfile, survey_name):
         sys.exit(
             "ERROR: could not parse value for default_SNR_cut as a boolean. Check formatting and try again."
         )
-
-    config_dict["pointing_sql_query"] = PPGetOrExit(
-        config, "EXPERT", "pointing_sql_query", "ERROR: no pointing database SQLite3 query provided."
-    )
 
     config_dict["lc_model"] = config.get("EXPERT", "lc_model", fallback=None)
     config_dict["lc_model"] = None if config_dict["lc_model"] == "none" else config_dict["lc_model"]
