@@ -5,6 +5,8 @@ Configuration File
 
 Sorcha uses a configuration files to set the majority of the various parameters required for running these software packages. The configuration file for Sorcha allows turning on and off various filters for biasing the simulated small body population to what the survey should have found. An overview of the possible options for the configuration file are described below with recommendations on what you should set these config parameters to depending on your use case.
 
+.. _example_configs:
+
 Example Configuration Files
 ------------------------------------
 
