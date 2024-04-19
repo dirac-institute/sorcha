@@ -48,7 +48,7 @@ def PPLinkingFilter(
     """
 
     # create the ndarray that the linker expects
-    from sorcha.modules.miniDifi import linkObservations
+    from sorcha.modules.PPMiniDifi import linkObservations
 
     obsv = pd.DataFrame(
         {
