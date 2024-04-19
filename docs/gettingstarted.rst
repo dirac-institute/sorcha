@@ -8,7 +8,7 @@ In this tutorial, we will show you how to setup and run a basic simulation using
 
 
 .. important::
-  All the input files and configuration files used in this demonstration are available in the demo directory(sorcha/demo). We provide the contents of these files and the links below to download each. You can also grab them in one go by downloading the Sorcha source code repository (Steps 1-4 **only**  of :ref:`dev_mode`).
+  You can copy all the files used in this tutorial to your local directory  via the **sorcha_copy_demo_files** command. 
 
 .. note::
   All input data files in this example are white-space separated format solely for the ease of reading.   
@@ -21,7 +21,7 @@ of our synthetic Solar System population that we wish to input into the simulato
 Making the Orbit File
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-First, we will start with creating an :ref:`orbits`, and generate a file called 'sspp_testset_orbits.des', which contains the orbits of five synthetic objects. You can download the file from `here <https://github.com/dirac-institute/sorcha/blob/main/demo/sspp_testset_orbits.des>`__. The contents of the file is below:
+First, we will start with creating an :ref:`orbits`, and generate a file called 'sspp_testset_orbits.des', which contains the orbits of five synthetic objects The contents of the file is below:
 
 .. literalinclude:: ../demo/sspp_testset_orbits.des
     :language: text
@@ -29,7 +29,7 @@ First, we will start with creating an :ref:`orbits`, and generate a file called 
 Make the Physical Parameters File
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Next, we need to produce the :ref:`physical`, which we call 'sspp_testset_colours.txt'. This file assigns colors, phase curve properties, and absolute magnitudes to each of the simulated small bodies whose orbits are defined in our input orbit file. You can download the file from `here <https://github.com/dirac-institute/sorcha/blob/main/demo/sspp_testset_colours.txt>`__.  The contents of the file is below:
+Next, we need to produce the :ref:`physical`, which we call 'sspp_testset_colours.txt'. This file assigns colors, phase curve properties, and absolute magnitudes to each of the simulated small bodies whose orbits are defined in our input orbit file. The contents of the file is below:
 
 .. literalinclude:: ../demo/sspp_testset_colours.txt
     :language: text
@@ -39,13 +39,12 @@ Next, we need to produce the :ref:`physical`, which we call 'sspp_testset_colour
 
 Getting the Pointing Database 
 ------------------------------------------
-For this tutorial, we're using the first year of the baseline v2.0 LSST cadence simulation as the :ref:`pointing`. You can download the file from `here <https://github.com/dirac-institute/sorcha/blob/main/demo/baseline_v2.0_1yr.db>`__.
-
+For this tutorial, we're using the first year of the baseline v2.0 LSST cadence simulation as the :ref:`pointing`.
 
 Setting Up Sorcha's Configuration File 
 ------------------------------------------
 
-The key information about the simulation parameters are held in the configuration file. For further details check out our :ref:`configs` page. We'll be using the configuration file we have set up to get you started. You can download the file from `here <https://github.com/dirac-institute/sorcha/blob/main/demo/sorcha_config_demo.ini>`__. The contents of the file is below: 
+The key information about the simulation parameters are held in the configuration file. For further details check out our :ref:`configs` page. We'll be using the configuration file we have set up to get you started. The contents of the file is below: 
 
 .. literalinclude:: ../demo/sorcha_config_demo.ini
     :language: text

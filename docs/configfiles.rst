@@ -3,12 +3,14 @@
 Configuration File
 =====================
 
-Sorcha uses a configuration files to set the majority of the various parameters required for running these software packages. The configuration file for Sorcha allows turning on and off various filters for biasing the simulated small body population to what the survey should have found. An overview of the possible options for the configuration file are described below with recommendations on what you should set these config parameters to depending on your use case.
+Sorcha uses a configuration file to set the majority of the various required and optional parameters and well as providing the ability to turn on and off various filters applied to the simulated small body population. Details about the various settings and options available in the configuration files are described in the  :ref:`inputs`, :ref:`filters`, :ref:`ephemeris_gen`, and :ref:`output` pages. 
+
+.. _example_configs:
 
 Example Configuration Files
 ------------------------------------
 
-The following sections show reasonable configuration files for various settings.
+The example configuration files are appropriate for setting up Sorcha to simulate what the LSST would discover. These examples come pre-installed with Sorcha. You use the **sorcha_copy_configs** command on the terminal to copy these files to your working directory. 
 
 Rubin Full Footprint
 ~~~~~~~~~~~~~~~~~~~~~~
