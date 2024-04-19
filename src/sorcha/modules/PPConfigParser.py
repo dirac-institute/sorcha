@@ -730,7 +730,9 @@ def PPConfigFileParser(configfile, survey_name):
             "ERROR: could not parse value for default_SNR_cut as a boolean. Check formatting and try again."
         )
 
-    config_dict["lc_model"] = config.get("EXPERT", "lc_model", fallback=None)
+    # LIGHTCURVEß
+
+    config_dict["lc_model"] = config.get("LIGHTCURVE", "lc_model", fallback=None)
     config_dict["lc_model"] = None if config_dict["lc_model"] == "none" else config_dict["lc_model"]
 
     # If the user defined a lightcurve model, but the model has not been registered, exit the program.
