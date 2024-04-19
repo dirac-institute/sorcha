@@ -84,7 +84,7 @@ To use Sorcha's internal ephemeris generation engine, the configuration file sho
    ar_healpix_order = 6
 
 .. tip::
-   We recommend you use the above default values which we also use inn our :ref:`example_configs`, as they are sufficient for most Solar System populations you'll want to simulate for LSST observations. For further details about these default values, we refer the reader to the :ref:`Footprint filter<the_camera_footprint>` discussion.
+   We recommend you use the above default values which we also use in our :ref:`example_configs`, as they are sufficient for most Solar System populations you'll want to simulate for LSST observations. For further details about these default values, we refer the reader to the :ref:`Footprint filter<the_camera_footprint>` discussion.
 
 Required Auxiliary Files 
 ---------------------------
