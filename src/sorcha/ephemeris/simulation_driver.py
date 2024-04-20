@@ -44,12 +44,8 @@ def get_vec(row, vecname):
     vecname : name of the vector
     Returns
     -------
-    3D numpy array
+    : 3D numpy array
     """
-    return np.asarray([row[f"{vecname}_x"], row[f"{vecname}_y"], row[f"{vecname}_z"]])
-
-
-def get_vec(row, vecname):
     return np.asarray([row[f"{vecname}_x"], row[f"{vecname}_y"], row[f"{vecname}_z"]])
 
 
@@ -252,12 +248,14 @@ def get_residual_vectors(v1):
 
     Parameters
     -----------
-        v1 (array, shape = (3,)):
+        v1 : array, shape = (3,))
             The vector to be decomposed
-    Returns:
-    -------
-        A, D (array, shape = (3,))
+    Returns
+    ----------
+        A :  array, shape = (3,))
             Decomposition into longitude and latitude
+        D : array, shape = (3,))
+            Decomposition into longitude and  latitude
     """
     x, y, z = v1
     cosd = np.sqrt(1 - z * z)

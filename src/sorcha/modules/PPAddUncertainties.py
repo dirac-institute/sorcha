@@ -303,7 +303,7 @@ def calcRandomAstrometricErrorPerCoord(FWHMeff, SNR, AstromErrCoeff=0.60):
     effective FWHMeff and signal-to-noise ratio SNR and return
     the astrometric uncertainty in the same units as FWHM.
 
-    ** This error corresponds to a single-coordinate error **
+    This error corresponds to a single-coordinate error
     the total astrometric uncertainty (e.g. relevant when matching
     two catalogs) will be sqrt(2) times larger.
 

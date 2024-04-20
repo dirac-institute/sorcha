@@ -97,20 +97,20 @@ def generate_simulations(ephem, gm_sun, gm_total, orbits_df, args):
 
     Parameters
     ------------
-    ephem (Ephem):
+    ephem : Ephem
         The ASSIST ephemeris object
-    gm_sun (float):
+    gm_sun : float
         Standard gravitational parameter GM for the Sun
-    gm_total (float):
+    gm_total : float
         Standard gravitational parameter GM for the Solar System barycenter
-    orbits_df (dataframe):
+    orbits_df : dataframe
         Pandas dataframe with the input orbits
-    args (dictionary or `sorchaArguments` object):
+    args : dictionary or `sorchaArguments` object
         dictionary of command-line arguments.
 
     Returns
     ---------
-    dict
+    sim_dict : dict
         Dictionary of ASSIST simulations
 
     """

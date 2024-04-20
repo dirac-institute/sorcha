@@ -17,7 +17,7 @@ def copy_demo_files(copy_location, force_overwrite):
     copy_location : string
         String containing the filepath of the location to which the configuration files should be copied.
 
-    force_overwrite: boolean
+    force_overwrite : boolean
         Flag for determining whether existing files should be overwritten.
 
     Returns
