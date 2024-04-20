@@ -21,7 +21,7 @@ def mjd_tai_to_epoch(mjd_tai):
     Parameters
     -------------
     mjd_tai : float
-	Input mjd
+        Input mjd
 
     Returns
     -------------
@@ -41,15 +41,15 @@ def parse_orbit_row(row, epochJD_TDB, ephem, sun_dict, gm_sun, gm_total):
     Parameters
     ---------------
     row : Pandas dataframe row
-	Row of the input dataframe
+        Row of the input dataframe
     epochJD_TDB : float
-	epoch of the elements, in JD TDB
+        epoch of the elements, in JD TDB
     ephem: Ephem
-	ASSIST ephemeris object
+        ASSIST ephemeris object
     sun_dict : dict
-	Dictionary with the position of the Sun at each epoch
+        Dictionary with the position of the Sun at each epoch
     gm_sun : float
-	Standard gravitational parameter GM for the Sun
+        Standard gravitational parameter GM for the Sun
     gm_total : float
         Standard gravitational parameter GM for the Solar System barycenter
 
@@ -142,7 +142,7 @@ class Observatory:
         ----------
             args : dictionary or `sorchaArguments` object
                 dictionary of command-line arguments.
-            oc_file : str 
+            oc_file : str
                 Path for the file with observatory codes
         """
         self.observatoryPositionCache = {}  # previously calculated positions to speed up the process

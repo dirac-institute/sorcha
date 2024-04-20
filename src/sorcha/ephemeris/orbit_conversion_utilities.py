@@ -72,7 +72,7 @@ def root_function(s, mu, alpha, r0, r0dot, t):
         Initial position
     r0dot : float
         Initial velocity
-    t : float 
+    t : float
         Time
 
     Returns
