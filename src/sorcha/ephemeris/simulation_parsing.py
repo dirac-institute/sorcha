@@ -17,13 +17,15 @@ from sorcha.ephemeris.orbit_conversion_utilities import universal_cartesian
 def mjd_tai_to_epoch(mjd_tai):
     """
     Converts a MJD value in TAI to SPICE ephemeris time
-    Parameters:
-    -------
-    mjd_tai (float):
+
+    Parameters
+    -------------
+    mjd_tai : float
         Input mjd
-    Returns:
-    -------
-        Ephemeris time
+
+    Returns
+    -------------
+        : Ephemeris time
     """
     jd = mjd_tai + 2400000.5 + 32.184 / (24 * 60 * 60)
     epoch_str = "JD %lf TDT" % jd
@@ -36,24 +38,24 @@ def parse_orbit_row(row, epochJD_TDB, ephem, sun_dict, gm_sun, gm_total):
     Parses the input orbit row, converting it to the format expected by
     the ephemeris generation code later on
 
-    Parameters:
-    -------
-    row (Pandas dataframe row):
+    Parameters
+    ---------------
+    row : Pandas dataframe row
         Row of the input dataframe
-    epochJD_TDB (float):
+    epochJD_TDB : float
         epoch of the elements, in JD TDB
-    ephem (Ephem):
+    ephem: Ephem
         ASSIST ephemeris object
-    sun_dict (dict):
+    sun_dict : dict
         Dictionary with the position of the Sun at each epoch
-    gm_sun (float):
+    gm_sun : float
         Standard gravitational parameter GM for the Sun
-    gm_total (float):
+    gm_total : float
         Standard gravitational parameter GM for the Solar System barycenter
 
-    Returns:
-    -------
-    tuple:
+    Returns
+    ------------
+    : tuple
         State vector (position, velocity)
 
     """
@@ -138,9 +140,9 @@ class Observatory:
 
         Parameters
         ----------
-            args (dictionary or `sorchaArguments` object):
+            args : dictionary or `sorchaArguments` object
                 dictionary of command-line arguments.
-            oc_file (str):
+            oc_file : str
                 Path for the file with observatory codes
         """
         self.observatoryPositionCache = {}  # previously calculated positions to speed up the process
@@ -179,11 +181,11 @@ class Observatory:
 
         Parameters
         ----------
-            obs_location (dict):
+            obs_location : dict
                 Dictionary with Longitude and sin/cos of the observatory Latitude
         Returns
         -------
-            tuple:
+            : tuple
                 Geocentric position (x,y,z)
         """
         returned_tuple = (None, None, None)
@@ -206,15 +208,15 @@ class Observatory:
 
         Parameters
         ----------
-            et (float):
+            et : float
                 JPL internal ephemeris time
-            obsCode (str):
+            obsCode : str
                 MPC Observatory code
-            Rearth (float):
+            Rearth : float
                 Radius of the Earth
         Returns
         -------
-            array (3,):
+            : array (3,)
                 Barycentric position of the observatory (x,y,z)
         """
 
