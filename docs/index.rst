@@ -47,8 +47,8 @@ works, tutorials, and demonstration notebooks that show how each of the various 
    installation
    inputs
    ephemerisgen
+   apparentmag 
    filters
-   complexparameters
    configfiles
    outputs
    gettingstarted
