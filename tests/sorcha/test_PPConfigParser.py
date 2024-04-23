@@ -73,6 +73,8 @@ def test_PPConfigFileParser(setup_and_teardown_for_PPConfigFileParser):
         "magnitude_decimals": 3,
         "size_serial_chunk": 10,
         "lc_model": None,
+        "randomization_on": True,
+        "vignetting_on": True,
     }
 
     assert configs == test_configs
@@ -292,6 +294,8 @@ def test_PPPrintConfigsToLog(tmp_path):
         "mainfilter": "r",
         "othercolours": ["g-r", "i-r", "z-r"],
         "lc_model": None,
+        "randomization_on": True,
+        "vignetting_on": True,
     }
 
     PPPrintConfigsToLog(configs, args)

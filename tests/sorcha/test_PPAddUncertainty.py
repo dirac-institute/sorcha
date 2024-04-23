@@ -104,7 +104,7 @@ def test_addUncertainties():
         }
     )
 
-    configs = {"trailing_losses_on": True, "default_SNR_cut": False}
+    configs = {"trailing_losses_on": True, "default_SNR_cut": False, "randomization_on": True}
 
     rng = PerModuleRNG(2021)
 
@@ -130,7 +130,7 @@ def test_addUncertainties():
     )
     assert_almost_equal(obs_uncert["PSFMag"], [21.239301, 22.050202, 23.006519, 37.514547], decimal=6)
 
-    configs_notrail = {"trailing_losses_on": False, "default_SNR_cut": False}
+    configs_notrail = {"trailing_losses_on": False, "default_SNR_cut": False, "randomization_on": True}
 
     obs_notrail = addUncertainties(test_data, configs_notrail, rng)
 
@@ -139,11 +139,16 @@ def test_addUncertainties():
         obs_notrail["trailedSourceMagSigma"].values,
     )
 
-    configs_SNRcut = {"trailing_losses_on": False, "default_SNR_cut": True}
+    configs_SNRcut = {"trailing_losses_on": False, "default_SNR_cut": True, "randomization_on": True}
 
     obs_SNRcut = addUncertainties(test_data, configs_SNRcut, rng)
 
     assert_equal(obs_SNRcut["ObjID"].values, ["a21", "b22", "c23"])
+
+    configs_norand = {"trailing_losses_on": False, "default_SNR_cut": False, "randomization_on": False}
+    obs_norand = addUncertainties(test_data, configs_norand, rng)
+
+    assert_almost_equal(obs_norand["PSFMag"], [21.2, 22.2, 23.2, 34.2])
 
     return
 
@@ -165,7 +170,7 @@ def test_uncertainties():
         }
     )
 
-    configs = {"trailing_losses_on": False}
+    configs = {"trailing_losses_on": False, "randomization_on": True}
 
     ast_sig_deg, photo_sig, SNR = uncertainties(observations, configs)
 

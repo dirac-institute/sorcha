@@ -115,17 +115,23 @@ def addUncertainties(detDF, configs, module_rngs, verbose=True):
         verboselog("Removing all observations with SNR < 2.0...")
         detDF = PPSNRLimit(detDF.copy(), 2.0)
 
-    verboselog("Randomising photometry...")
-    detDF["trailedSourceMag"] = PPRandomizeMeasurements.randomizePhotometry(
-        detDF, module_rngs, magName="trailedSourceMagTrue", sigName="trailedSourceMagSigma"
-    )
-
-    if configs.get("trailing_losses_on", False):
-        detDF["PSFMag"] = PPRandomizeMeasurements.randomizePhotometry(
-            detDF, module_rngs, magName="PSFMagTrue", sigName="PSFMagSigma"
+    if configs["randomization_on"]:
+        verboselog("Randomising photometry...")
+        detDF["trailedSourceMag"] = PPRandomizeMeasurements.randomizePhotometry(
+            detDF, module_rngs, magName="trailedSourceMagTrue", sigName="trailedSourceMagSigma"
         )
+
+        if configs.get("trailing_losses_on", False):
+            detDF["PSFMag"] = PPRandomizeMeasurements.randomizePhotometry(
+                detDF, module_rngs, magName="PSFMagTrue", sigName="PSFMagSigma"
+            )
+        else:
+            detDF["PSFMag"] = detDF["trailedSourceMag"]
+
     else:
-        detDF["PSFMag"] = detDF["trailedSourceMag"]
+        verboselog("Randomization turned off in config file. No magnitude randomization performed.")
+        detDF["trailedSourceMag"] = detDF["trailedSourceMagTrue"].copy()
+        detDF["PSFMag"] = detDF["PSFMagTrue"].copy()
 
     return detDF
 
