@@ -92,7 +92,7 @@ def test_PPApplyFOVFilters():
     configs = {
         "camera_model": "footprint",
         "footprint_path": get_test_filepath("detectors_corners.csv"),
-        "footprint_edge_threshold": 0.0,
+        "footprint_edge_threshold": 10.0,
     }
     footprint = Footprint(configs["footprint_path"])
     new_obs = PPApplyFOVFilter(observations, configs, rng, footprint=footprint)
@@ -101,7 +101,6 @@ def test_PPApplyFOVFilters():
         894838,
         897478,
         897521,
-        901987,
         902035,
         907363,
         907416,
@@ -109,7 +108,6 @@ def test_PPApplyFOVFilters():
         909426,
         909452,
         910850,
-        910872,
         915246,
         915268,
         922013,
@@ -121,4 +119,6 @@ def test_PPApplyFOVFilters():
 
     assert_equal(new_obs["FieldID"].values, expected)
 
-    return
+    configs = {"camera_model": "none"}
+    new_obs = PPApplyFOVFilter(observations, configs, rng)
+    assert len(new_obs) == 20

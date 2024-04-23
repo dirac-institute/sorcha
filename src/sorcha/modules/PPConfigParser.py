@@ -470,7 +470,7 @@ def PPConfigFileParser(configfile, survey_name):
         config, "FOV", "camera_model", "ERROR: camera model not defined."
     )
 
-    if config_dict["camera_model"] not in ["circle", "footprint"]:
+    if config_dict["camera_model"] not in ["circle", "footprint", "none"]:
         pplogger.error('ERROR: camera_model should be either "circle" or "footprint".')
         sys.exit('ERROR: camera_model should be either "circle" or "footprint".')
 
@@ -730,6 +730,26 @@ def PPConfigFileParser(configfile, survey_name):
             "ERROR: could not parse value for default_SNR_cut as a boolean. Check formatting and try again."
         )
 
+    try:
+        config_dict["randomization_on"] = config.getboolean("EXPERT", "randomization_on", fallback=True)
+    except ValueError:
+        pplogger.error(
+            "ERROR: could not parse value for randomization_on as a boolean. Check formatting and try again."
+        )
+        sys.exit(
+            "ERROR: could not parse value for randomization_on as a boolean. Check formatting and try again."
+        )
+
+    try:
+        config_dict["vignetting_on"] = config.getboolean("EXPERT", "vignetting_on", fallback=True)
+    except ValueError:
+        pplogger.error(
+            "ERROR: could not parse value for vignetting_on as a boolean. Check formatting and try again."
+        )
+        sys.exit(
+            "ERROR: could not parse value for vignetting_on as a boolean. Check formatting and try again."
+        )
+
     # LIGHTCURVEß
 
     config_dict["lc_model"] = config.get("LIGHTCURVE", "lc_model", fallback=None)
@@ -805,13 +825,23 @@ def PPPrintConfigsToLog(configs, cmd_args):
     else:
         pplogger.info("Computation of trailing losses is switched OFF.")
 
+    if configs["randomization_on"]:
+        pplogger.info("Randomization of position and magnitude around uncertainties is switched ON.")
+    else:
+        pplogger.info("Randomization of position and magnitude around uncertainties is switched OFF.")
+
+    if configs["vignetting_on"]:
+        pplogger.info("Vignetting is switched ON.")
+    else:
+        pplogger.info("Vignetting is switched OFF.")
+
     if configs["camera_model"] == "footprint":
         pplogger.info("Footprint is modelled after the actual camera footprint.")
         if configs["footprint_path"]:
             pplogger.info("Loading camera footprint from " + configs["footprint_path"])
         else:
             pplogger.info("Loading default LSST footprint LSST_detector_corners_100123.csv")
-    else:
+    elif configs["camera_model"] == "circle":
         pplogger.info("Footprint is circular.")
         if configs["fill_factor"]:
             pplogger.info(
@@ -821,6 +851,8 @@ def PPPrintConfigsToLog(configs, cmd_args):
             pplogger.info(
                 "A circular footprint will be applied with radius: " + str(configs["circle_radius"])
             )
+    else:
+        pplogger.info("Camera footprint is turned OFF.")
 
     if configs["bright_limit_on"]:
         pplogger.info("The upper saturation limit(s) is/are: " + str(configs["bright_limit"]))

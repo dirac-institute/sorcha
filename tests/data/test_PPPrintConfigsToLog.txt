@@ -15,6 +15,8 @@ sorcha.modules.PPConfigParser INFO     The filters included in the post-processi
 sorcha.modules.PPConfigParser INFO     Thus, the colour indices included in the simulation are g-r i-r z-r 
 sorcha.modules.PPConfigParser INFO     The apparent brightness is calculated using the following phase function model: HG 
 sorcha.modules.PPConfigParser INFO     Computation of trailing losses is switched ON. 
+sorcha.modules.PPConfigParser INFO     Randomization of position and magnitude around uncertainties is switched ON. 
+sorcha.modules.PPConfigParser INFO     Vignetting is switched ON. 
 sorcha.modules.PPConfigParser INFO     Footprint is modelled after the actual camera footprint. 
 sorcha.modules.PPConfigParser INFO     Loading camera footprint from ./detectors_corners.csv 
 sorcha.modules.PPConfigParser INFO     The upper saturation limit(s) is/are: 16.0 

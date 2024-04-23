@@ -222,15 +222,22 @@ def runLSSTSimulation(args, configs):
         else:
             observations["PSFMagTrue"] = observations["trailedSourceMagTrue"]
 
-        verboselog("Calculating effects of vignetting on limiting magnitude...")
-        observations["fiveSigmaDepth_mag"] = PPVignetting.vignettingEffects(observations)
+        if configs["vignetting_on"]:
+            verboselog("Calculating effects of vignetting on limiting magnitude...")
+            observations["fiveSigmaDepth_mag"] = PPVignetting.vignettingEffects(observations)
+        else:
+            verboselog(
+                "Vignetting turned OFF in config file. 5-sigma depth of field will be used for subsequent calculations."
+            )
+            observations["fiveSigmaDepth_mag"] = observations["fieldFiveSigmaDepth_mag"]
 
         # Note that the below code creates trailedSourceMag and PSFMag
         # as columns in the observations dataframe.
         # These are the columns that should be used moving forward for filters etc.
         # Do NOT use trailedSourceMagTrue or PSFMagTrue, these are the unrandomised magnitudes.
         verboselog("Calculating astrometric and photometric uncertainties...")
-        verboselog("Values are then used to randomize the photometry....")
+        if configs["randomization_on"]:
+            verboselog("Values are then used to randomize the photometry....")
         verboselog(
             "Number of rows BEFORE caclulating astrometric and photometric uncertainties : "
             + str(len(observations.index))
@@ -244,10 +251,13 @@ def runLSSTSimulation(args, configs):
             + str(len(observations.index))
         )
 
-        verboselog("Randomising astrometry...")
-        observations = PPRandomizeMeasurements.randomizeAstrometry(
-            observations, args._rngs, sigName="astrometricSigma_deg", sigUnits="deg"
-        )
+        if configs["randomization_on"]:
+            verboselog("Randomizing astrometry...")
+            observations = PPRandomizeMeasurements.randomizeAstrometry(
+                observations, args._rngs, sigName="astrometricSigma_deg", sigUnits="deg"
+            )
+        else:
+            verboselog("Randomization turned off in config file. No astrometric randomization performed.")
 
         verboselog("Applying field-of-view filters...")
         verboselog("Number of rows BEFORE applying FOV filters: " + str(len(observations.index)))
@@ -262,7 +272,7 @@ def runLSSTSimulation(args, configs):
                     configs["SNR_limit"]
                 )
             )
-            verboselog("Number ≈ rows BEFORE applying SNR limit filter: " + str(len(observations.index)))
+            verboselog("Number of rows BEFORE applying SNR limit filter: " + str(len(observations.index)))
             observations = PPSNRLimit(observations, configs["SNR_limit"])
             verboselog("Number of rows AFTER applying SNR limit filter: " + str(len(observations.index)))
 

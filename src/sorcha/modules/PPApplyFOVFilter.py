@@ -65,6 +65,9 @@ def PPApplyFOVFilter(observations, configs, module_rngs, footprint=None, verbose
             verboselog("Fill factor is set. Removing random observations to mimic chip gaps.")
             observations = PPSimpleSensorArea(observations, module_rngs, configs["fill_factor"])
 
+    if configs["camera_model"] == "none":
+        verboselog("Camera model set to None in configs. No FOV filter will be applied.")
+
     return observations
 
 
