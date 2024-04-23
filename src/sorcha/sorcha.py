@@ -258,6 +258,11 @@ def runLSSTSimulation(args, configs):
             )
         else:
             verboselog("Randomization turned off in config file. No astrometric randomization performed.")
+            verboselog(
+                "NOTE: new columns RATrue_deg and DecTrue_deg are EQUAL to columns RA_deg and Dec_deg."
+            )
+            observations["RATrue_deg"] = observations["RA_deg"]
+            observations["DecTrue_deg"] = observations["Dec_deg"]
 
         verboselog("Applying field-of-view filters...")
         verboselog("Number of rows BEFORE applying FOV filters: " + str(len(observations.index)))
