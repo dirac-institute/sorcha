@@ -58,7 +58,7 @@ def test_pixeldict(tmp_path):
         "makeTemporaryEphemerisDatabase": False,
         "readTemporaryEphemerisDatabase": False,
         "deleteTemporaryEphemerisDatabase": False,
-        "surveyname": "LSST",
+        "surveyname": "rubin_sim",
         "outfilestem": f"out_400k",
         "verbose": False,
     }
