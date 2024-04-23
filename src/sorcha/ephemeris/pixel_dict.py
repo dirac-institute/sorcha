@@ -24,16 +24,6 @@ def lagrange3(t0, t1, t2, t):
     return L0, L1, L2
 
 
-def get_hp_neighbors(ra_c, dec_c, search_radius, nside=32, nested=True):
-    sr = search_radius * np.pi / 180.0
-    phi_c = ra_c * np.pi / 180.0
-    theta_c = np.pi / 2.0 - dec_c * np.pi / 180.0
-
-    vec = hp.ang2vec(theta_c, phi_c)
-    res = hp.query_disc(nside, vec, sr, nest=nested, inclusive=True)
-
-    return res
-
 
 class PixelDict:
     def __init__(
