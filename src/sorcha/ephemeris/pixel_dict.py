@@ -24,7 +24,6 @@ def lagrange3(t0, t1, t2, t):
     return L0, L1, L2
 
 
-
 class PixelDict:
     def __init__(
         self,
