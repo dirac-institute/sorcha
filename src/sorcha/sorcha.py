@@ -261,8 +261,8 @@ def runLSSTSimulation(args, configs):
             verboselog(
                 "NOTE: new columns RATrue_deg and DecTrue_deg are EQUAL to columns RA_deg and Dec_deg."
             )
-            observations["RATrue_deg"] = observations["RA_deg"]
-            observations["DecTrue_deg"] = observations["Dec_deg"]
+            observations["RATrue_deg"] = observations["RA_deg"].copy()
+            observations["DecTrue_deg"] = observations["Dec_deg"].copy()
 
         verboselog("Applying field-of-view filters...")
         verboselog("Number of rows BEFORE applying FOV filters: " + str(len(observations.index)))

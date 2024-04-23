@@ -130,8 +130,8 @@ def addUncertainties(detDF, configs, module_rngs, verbose=True):
 
     else:
         verboselog("Randomization turned off in config file. No magnitude randomization performed.")
-        detDF["trailedSourceMag"] = detDF["trailedSourceMagTrue"]
-        detDF["PSFMag"] = detDF["PSFMagTrue"]
+        detDF["trailedSourceMag"] = detDF["trailedSourceMagTrue"].copy()
+        detDF["PSFMag"] = detDF["PSFMagTrue"].copy()
 
     return detDF
 
