@@ -72,7 +72,7 @@ def test_pixeldict(tmp_path):
     configs["seed"] = 24601
 
     filterpointing = PPReadPointingDatabase(
-        args.pointing_database, configs["observing_filters"], configs["pointing_sql_query"], "lsst"
+        args.pointing_database, configs["observing_filters"], configs["pointing_sql_query"], "rubin_sim"
     )
 
     filterpointing = precompute_pointing_information(filterpointing, args, configs)
