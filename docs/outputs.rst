@@ -24,7 +24,7 @@ The format of any output from Sorcha will look something like::
 Basic Output
 ----------------------
 The "basic" output includes the columns most relevant to general photometry and detection purposes. The column names, formats, and
-descriptions are as follows::
+descriptions are as follows
    
 +------------------------------------+--------------+----------------------------------------------------------------------------------+
 | Keyword                            | Format       | Description                                                                      |
