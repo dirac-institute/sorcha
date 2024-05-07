@@ -7,51 +7,16 @@ from numpy.testing import assert_equal
 
 from sorcha.utilities.dataUtilitiesForTests import get_test_filepath
 from sorcha.utilities.sorchaArguments import sorchaArguments
+from sorcha.modules.PPOutput import PPWriteOutput
 
 
-@pytest.fixture
-def setup_and_teardown_for_PPOutWriteCSV():
-    yield
-
-    tmp_path = os.path.dirname(get_test_filepath("test_input_fullobs.csv"))
-
-    os.remove(os.path.join(tmp_path, "test_csv_out.csv"))
+# some global variables used by tests
+observations = pd.read_csv(get_test_filepath("test_input_fullobs.csv"), nrows=1)
+args = sorchaArguments()
 
 
-@pytest.fixture
-def setup_and_teardown_for_PPOutWriteHDF5():
-    yield
-
-    tmp_path = os.path.dirname(get_test_filepath("test_input_fullobs.csv"))
-
-    os.remove(os.path.join(tmp_path, "test_hdf5_out.h5"))
-
-
-@pytest.fixture
-def setup_and_teardown_for_PPOutWriteSqlite3():
-    yield
-
-    tmp_path = os.path.dirname(get_test_filepath("test_input_fullobs.csv"))
-
-    os.remove(os.path.join(tmp_path, "test_sql_out.db"))
-
-
-@pytest.fixture
-def setup_and_teardown_for_PPWriteOutput():
-    yield
-
-    tmp_path = os.path.dirname(get_test_filepath("test_input_fullobs.csv"))
-
-    os.remove(os.path.join(tmp_path, "PPOutput_test_out.csv"))
-    os.remove(os.path.join(tmp_path, "PPOutput_test_out.db"))
-    os.remove(os.path.join(tmp_path, "PPOutput_test_all.csv"))
-
-
-def test_PPOutWriteCSV(setup_and_teardown_for_PPOutWriteCSV):
+def test_PPOutWriteCSV(tmp_path):
     from sorcha.modules.PPOutput import PPOutWriteCSV
-
-    observations = pd.read_csv(get_test_filepath("test_input_fullobs.csv"), nrows=1)
-    tmp_path = os.path.dirname(get_test_filepath("test_input_fullobs.csv"))
 
     PPOutWriteCSV(observations, os.path.join(tmp_path, "test_csv_out.csv"))
 
@@ -59,14 +24,9 @@ def test_PPOutWriteCSV(setup_and_teardown_for_PPOutWriteCSV):
 
     pd.testing.assert_frame_equal(observations, test_in)
 
-    return
 
-
-def test_PPOutWriteSqlite3(setup_and_teardown_for_PPOutWriteSqlite3):
+def test_PPOutWriteSqlite3(tmp_path):
     from sorcha.modules.PPOutput import PPOutWriteSqlite3
-
-    observations = pd.read_csv(get_test_filepath("test_input_fullobs.csv"), nrows=1)
-    tmp_path = os.path.dirname(get_test_filepath("test_input_fullobs.csv"))
 
     PPOutWriteSqlite3(observations, os.path.join(tmp_path, "test_sql_out.db"))
 
@@ -79,14 +39,9 @@ def test_PPOutWriteSqlite3(setup_and_teardown_for_PPOutWriteSqlite3):
 
     pd.testing.assert_frame_equal(observations, test_in)
 
-    return
 
-
-def test_PPOutWriteHDF5(setup_and_teardown_for_PPOutWriteHDF5):
+def test_PPOutWriteHDF5(tmp_path):
     from sorcha.modules.PPOutput import PPOutWriteHDF5
-
-    observations = pd.read_csv(get_test_filepath("test_input_fullobs.csv"), nrows=1)
-    tmp_path = os.path.dirname(get_test_filepath("test_input_fullobs.csv"))
 
     PPOutWriteHDF5(observations, os.path.join(tmp_path, "test_hdf5_out.h5"), "testchunk")
 
@@ -94,36 +49,17 @@ def test_PPOutWriteHDF5(setup_and_teardown_for_PPOutWriteHDF5):
 
     pd.testing.assert_frame_equal(observations, test_in)
 
-    return
 
-
-def test_PPWriteOutput(setup_and_teardown_for_PPWriteOutput):
-    from sorcha.modules.PPOutput import PPWriteOutput
-
-    observations = pd.read_csv(get_test_filepath("test_input_fullobs.csv"), nrows=1)
-    tmp_path = os.path.dirname(get_test_filepath("test_input_fullobs.csv"))
-
-    args = sorchaArguments()
+def test_PPWriteOutput_csv(tmp_path):
     args.outpath = tmp_path
     args.outfilestem = "PPOutput_test_out"
 
     configs = {
-        "output_size": "basic",
+        "output_columns": "basic",
         "position_decimals": 7,
         "magnitude_decimals": 3,
         "output_format": "csv",
     }
-
-    PPWriteOutput(args, configs, observations, 10)
-    csv_test_in = pd.read_csv(os.path.join(tmp_path, "PPOutput_test_out.csv"))
-
-    configs["output_format"] = "sqlite3"
-    PPWriteOutput(args, configs, observations, 10)
-    cnx = sqlite3.connect(os.path.join(tmp_path, "PPOutput_test_out.db"))
-    cur = cnx.cursor()
-    cur.execute("select * from sorcha_results")
-    col_names = list(map(lambda x: x[0], cur.description))
-    sql_test_in = pd.DataFrame(cur.fetchall(), columns=col_names)
 
     expected = np.array(
         [
@@ -146,18 +82,66 @@ def test_PPWriteOutput(setup_and_teardown_for_PPWriteOutput):
         dtype=object,
     )
 
+    # test basic CSV
+
+    PPWriteOutput(args, configs, observations, 10)
+    csv_test_in = pd.read_csv(os.path.join(tmp_path, "PPOutput_test_out.csv"))
     assert_equal(csv_test_in.loc[0, :].values, expected)
+
+
+def test_PPWriteOutput_sql(tmp_path):
+    args.outpath = tmp_path
+    args.outfilestem = "PPOutput_test_out"
+
+    configs = {
+        "output_columns": "basic",
+        "position_decimals": 7,
+        "magnitude_decimals": 3,
+        "output_format": "sqlite3",
+    }
+
+    expected = np.array(
+        [
+            "S1000000a",
+            61769.320619,
+            163.8754209,
+            -18.8432714,
+            164.037713,
+            -17.582575,
+            3e-06,
+            "r",
+            19.648,
+            0.007,
+            23.839,
+            18.341701,
+            393817194.335,
+            -22.515,
+            453089476.3503012,
+        ],
+        dtype=object,
+    )
+
+    PPWriteOutput(args, configs, observations, 10)
+    cnx = sqlite3.connect(os.path.join(tmp_path, "PPOutput_test_out.db"))
+    cur = cnx.cursor()
+    cur.execute("select * from sorcha_results")
+    col_names = list(map(lambda x: x[0], cur.description))
+    sql_test_in = pd.DataFrame(cur.fetchall(), columns=col_names)
+
     assert_equal(sql_test_in.loc[0, :].values, expected)
 
+
+def test_PPWriteOutput_all(tmp_path):
     # additional test to ensure that "all" output option and no rounding works
 
     configs = {
-        "output_size": "all",
+        "output_columns": "all",
         "position_decimals": None,
         "magnitude_decimals": None,
         "output_format": "csv",
     }
 
+    args.outpath = tmp_path
     args.outfilestem = "PPOutput_test_all"
 
     PPWriteOutput(args, configs, observations, 10)
@@ -230,4 +214,34 @@ def test_PPWriteOutput(setup_and_teardown_for_PPWriteOutput):
 
     assert_equal(all_test_in.loc[0, :].values, expected_all)
 
-    return
+
+def test_PPWriteOutput_custom(tmp_path):
+    configs = {
+        "output_columns": ["ObjID", "fieldMJD_TAI"],
+        "position_decimals": 7,
+        "magnitude_decimals": 3,
+        "output_format": "csv",
+    }
+
+    args.outpath = tmp_path
+    args.outfilestem = "PPOutput_test_multi"
+
+    PPWriteOutput(args, configs, observations, 10)
+
+    multi_test_in = pd.read_csv(os.path.join(tmp_path, "PPOutput_test_multi.csv"))
+
+    expected_multi = np.array(["S1000000a", 61769.320619], dtype=object)
+
+    assert_equal(multi_test_in.loc[0, :].values, expected_multi)
+
+    # and now we test the error message
+
+    configs["output_columns"] = ["ObjID", "fieldMJD_TAI", "dummy_column"]
+
+    with pytest.raises(SystemExit) as e:
+        PPWriteOutput(args, configs, observations, 10)
+
+    assert (
+        e.value.code
+        == "ERROR: at least one of the columns provided in output_columns does not seem to exist. Check docs and try again."
+    )

@@ -46,4 +46,4 @@ sorcha.modules.PPConfigParser INFO     Output files will be saved in path: ./ wi
 sorcha.modules.PPConfigParser INFO     Output files will be saved as format: csv 
 sorcha.modules.PPConfigParser INFO     In the output, positions will be rounded to 7 decimal places. 
 sorcha.modules.PPConfigParser INFO     In the output, magnitudes will be rounded to 3 decimal places. 
-sorcha.modules.PPConfigParser INFO     The output size is set to: basic 
+sorcha.modules.PPConfigParser INFO     The output columns are set to: basic 
