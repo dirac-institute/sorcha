@@ -673,10 +673,23 @@ def PPConfigFileParser(configfile, survey_name):
 
     config_dict["output_size"] = PPGetOrExit(
         config, "OUTPUT", "output_size", "ERROR: output size not specified."
-    ).lower()
-    if config_dict["output_size"] not in ["basic", "all"]:
-        pplogger.error("ERROR: output_size not recognised.")
-        sys.exit("ERROR: output_size not recognised.")
+    )
+
+    if (config_dict["output_size"] not in ["basic", "all"]) and ("," not in config_dict["output_size"]):
+        pplogger.error(
+            "ERROR: output_size not recognised. Must be 'basic', 'all', or a comma-separated list of columns."
+        )
+        sys.exit(
+            "ERROR: output_size not recognised. Must be 'basic', 'all', or a comma-separated list of columns."
+        )
+
+    # note: if providing a comma-separated list of column names, this is NOT ERROR-HANDLED
+    # as we have no way of knowing ahead of time of columns that user-generated code or add-ons may add.
+
+    if (
+        "," in config_dict["output_size"]
+    ):  # assume list of column names: turn into a list and strip whitespace
+        config_dict["output_size"] = [colname.strip(" ") for colname in config_dict["output_size"].split(",")]
 
     config_dict["position_decimals"], _ = PPGetValueAndFlag(config, "OUTPUT", "position_decimals", "int")
     config_dict["magnitude_decimals"], _ = PPGetValueAndFlag(config, "OUTPUT", "magnitude_decimals", "int")
@@ -945,4 +958,7 @@ def PPPrintConfigsToLog(configs, cmd_args):
         + str(configs["magnitude_decimals"])
         + " decimal places."
     )
-    pplogger.info("The output size is set to: " + configs["output_size"])
+    if isinstance(configs["output_size"], list):
+        pplogger.info("The output size is set to: " + " ".join(configs["output_size"]))
+    else:
+        pplogger.info("The output size is set to: " + configs["output_size"])
