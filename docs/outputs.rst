@@ -3,8 +3,13 @@
 Outputs
 ==================
 Sorcha produces an output file describing each predicted observation the survey will record of the input simulated objects, 
-with a row for each predicted detection and a column for each parameter to be calculated. The output format can be set to either 
-"basic" or "all" settings (described below). Optionally (with the -ew flag set), an ephemerides of all detections near the 
+with a row for each predicted detection and a column for each parameter to be calculated. This output file can be in several formats
+set by the output_format configuration file keyword.
+
+Additionally, the output columns can be set to either "basic" or "all" settings (described below) using the output_columns configuration file keyword. 
+Alternatively, you may specify the columns you wish to be output.
+
+Optionally (with the -ew flag set), an ephemerides of all detections near the 
 field can be generated to a separate file, which could be provided back to Sorcha as an optional ephemeris file with the -er flag.
 
 The format of any output from Sorcha will look something like::
@@ -20,11 +25,31 @@ The format of any output from Sorcha will look something like::
    S1000000a,61781.263141,163.95033588103914,-18.031113105727716,164.4419770000004,-18.63294700000159,3.042088583360277e-06,z,19.486562767073988,19.47832341807803,0.011723502868190884,0.011688663662533069,22.899894717824814,22.898283896399494
    S1000000a,61789.27659,164.99043640246796,-19.09523631317997,164.29665099999988,-19.110176000000447,2.8895553381860802e-06,z,19.376978135088684,19.359651855968583,0.008079363622311368,0.00805998568672928,23.293210067462763,23.293123719813384   
    
+ 
+Output Formats
+----------------------
+The configuration file keyword output_format allows Sorcha to output files in CSV, SQLite3 or HDF5 formats.  For example::
+
+    [OUTPUT]
+   # The options: csv, sqlite3, hdf5
+    output_format = csv
+ 
+.. note::
+   If you are outputting to a SQLite3 database, the data will be saved in a table named 'sorcha_results'.
+
+.. warning::
+   If you are writing to a HDF5 file that you plan to access using the PyTables library, note that your object IDs cannot begin
+   with a number (due to a limitation in PyTables).
   
 Basic Output
 ----------------------
-The "basic" output includes the columns most relevant to general photometry and detection purposes. The column names, formats, and
-descriptions are as follows
+The "basic" output includes the columns most relevant to general photometry and detection purposes. This is declared
+in the configuration file like so::
+
+    [OUTPUT]
+    output_columns = basic
+
+The column names, formats, and descriptions are as follows:
    
 +------------------------------------+--------------+----------------------------------------------------------------------------------+
 | Keyword                            | Format       | Description                                                                      |
@@ -66,8 +91,13 @@ descriptions are as follows
 All Output
 ----------------------
 The 'all' output option includes all columns from the basic output, as well as those relevant to ephemeris generation for each 
-predicted detection, and some of the input orbital and physical parameters of each simulated object. The column names, formats, 
-and descriptions are as follows
+predicted detection, and some of the input orbital and physical parameters of each simulated object. This is declared
+in the configuration file like so::
+
+    [OUTPUT]
+    output_columns = all
+
+The column names, formats, and descriptions are as follows
 
 +------------------------------------+--------------+----------------------------------------------------------------------------------------------------------+
 | Keyword                            | Format       | Description                                                                                              |
@@ -185,3 +215,18 @@ and descriptions are as follows
 
 .. note::
    All positions, positions, and velocities are in respect to J2000.
+
+Custom Output
+----------------------
+By setting the value of the output_columns configuration file keyword to a comma-separated list of column names, you may 
+specify your own custom output, using this page as a reference for potential column names.
+
+For example, you could state this in your configuration file to get the object ID, position and magnitude only::
+
+    [OUTPUT]
+    output_columns = ObjID,RA_deg,Dec_deg,trailedSourceMag
+
+.. warning::
+   If you are choosing to specify the column names in this way, please perform a quick test-run first to ensure your column names are correct before
+   embarking on any long runs. As we allow for user-written code and add-ons to add new column names, we do not error-handle the column names until 
+   late in the code, upon output.
