@@ -134,7 +134,7 @@ def PPWriteOutput(cmd_args, configs, observations_in, endChunk=0, verbose=False)
         + observations_in["Obj_Sun_z_LTC_km"].values ** 2
     )
 
-    if configs["output_size"] == "basic":
+    if configs["output_columns"] == "basic":
         observations = observations_in.copy()[
             [
                 "ObjID",
@@ -154,17 +154,17 @@ def PPWriteOutput(cmd_args, configs, observations_in, endChunk=0, verbose=False)
                 "Obj_Sun_LTC_km",
             ]
         ]
-    elif configs["output_size"] == "all":
+    elif configs["output_columns"] == "all":
         observations = observations_in.copy()
-    elif len(configs["output_size"]) > 1:  # assume a list of column names...
+    elif len(configs["output_columns"]) > 1:  # assume a list of column names...
         try:
-            observations = observations_in.copy()[configs["output_size"]]
+            observations = observations_in.copy()[configs["output_columns"]]
         except KeyError:
             pplogger.error(
-                "ERROR: at least one of the columns provided in output_size does not seem to exist. Check docs and try again."
+                "ERROR: at least one of the columns provided in output_columns does not seem to exist. Check docs and try again."
             )
             sys.exit(
-                "ERROR: at least one of the columns provided in output_size does not seem to exist. Check docs and try again."
+                "ERROR: at least one of the columns provided in output_columns does not seem to exist. Check docs and try again."
             )
 
     if configs["position_decimals"]:
