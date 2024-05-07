@@ -33,6 +33,9 @@ The configuration file keyword output_format allows Sorcha to output files in CS
     [OUTPUT]
     output_format = csv
 
+.. note::
+   If you are outputting to a SQLite3 database, the data will be saved in a table named 'sorcha_results'.
+
 .. warning::
    If you are writing to a HDF5 file that you plan to access using the PyTables library, note that your object IDs cannot begin
    with a number (due to a limitation in PyTables).
