@@ -55,7 +55,7 @@ def test_PPWriteOutput_csv(tmp_path):
     args.outfilestem = "PPOutput_test_out"
 
     configs = {
-        "output_size": "basic",
+        "output_columns": "basic",
         "position_decimals": 7,
         "magnitude_decimals": 3,
         "output_format": "csv",
@@ -94,7 +94,7 @@ def test_PPWriteOutput_sql(tmp_path):
     args.outfilestem = "PPOutput_test_out"
 
     configs = {
-        "output_size": "basic",
+        "output_columns": "basic",
         "position_decimals": 7,
         "magnitude_decimals": 3,
         "output_format": "sqlite3",
@@ -135,7 +135,7 @@ def test_PPWriteOutput_all(tmp_path):
     # additional test to ensure that "all" output option and no rounding works
 
     configs = {
-        "output_size": "all",
+        "output_columns": "all",
         "position_decimals": None,
         "magnitude_decimals": None,
         "output_format": "csv",
@@ -217,7 +217,7 @@ def test_PPWriteOutput_all(tmp_path):
 
 def test_PPWriteOutput_custom(tmp_path):
     configs = {
-        "output_size": ["ObjID", "fieldMJD_TAI"],
+        "output_columns": ["ObjID", "fieldMJD_TAI"],
         "position_decimals": 7,
         "magnitude_decimals": 3,
         "output_format": "csv",
@@ -236,12 +236,12 @@ def test_PPWriteOutput_custom(tmp_path):
 
     # and now we test the error message
 
-    configs["output_size"] = ["ObjID", "fieldMJD_TAI", "dummy_column"]
+    configs["output_columns"] = ["ObjID", "fieldMJD_TAI", "dummy_column"]
 
     with pytest.raises(SystemExit) as e:
         PPWriteOutput(args, configs, observations, 10)
 
     assert (
         e.value.code
-        == "ERROR: at least one of the columns provided in output_size does not seem to exist. Check docs and try again."
+        == "ERROR: at least one of the columns provided in output_columns does not seem to exist. Check docs and try again."
     )
