@@ -28,11 +28,12 @@ The format of any output from Sorcha will look something like::
  
 Output Formats
 ----------------------
-The configuration file keyword output_format allows Sorcha to output files in CSV, SQLite3 or HDF5 formats. For example::
+The configuration file keyword output_format allows Sorcha to output files in CSV, SQLite3 or HDF5 formats.  For example::
 
     [OUTPUT]
+   # The options: csv, sqlite3, hdf5
     output_format = csv
-
+ 
 .. note::
    If you are outputting to a SQLite3 database, the data will be saved in a table named 'sorcha_results'.
 
