@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import os
+import sys
 import sqlite3
 import logging
 
@@ -155,6 +156,16 @@ def PPWriteOutput(cmd_args, configs, observations_in, endChunk=0, verbose=False)
         ]
     elif configs["output_size"] == "all":
         observations = observations_in.copy()
+    elif len(configs["output_size"]) > 1:  # assume a list of column names...
+        try:
+            observations = observations_in.copy()[configs["output_size"]]
+        except KeyError:
+            pplogger.error(
+                "ERROR: at least one of the columns provided in output_size does not seem to exist. Check docs and try again."
+            )
+            sys.exit(
+                "ERROR: at least one of the columns provided in output_size does not seem to exist. Check docs and try again."
+            )
 
     if configs["position_decimals"]:
         for position_col in [
