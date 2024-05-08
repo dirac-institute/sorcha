@@ -34,6 +34,9 @@ class sorchaArguments:
     complex_parameters: str = ""
     """optional, extra complex physical parameter input files"""
 
+    linking: bool = True
+    """Turns on or off the rejection of unlinked sources"""
+
     _rngs = None
     """A collection of per-module random number generators"""
 
@@ -69,6 +72,7 @@ class sorchaArguments:
         self.output_ephemeris_file = args.get("output_ephemeris_file")
         self.ar_data_file_path = args.get("ar_data_path")
         self.verbose = args["verbose"]
+        self.linking = args["linking"]
 
         self.surveyname = args["surveyname"]
 

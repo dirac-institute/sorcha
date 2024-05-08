@@ -11,6 +11,7 @@ def PPLinkingFilter(
     minimum_separation,
     maximum_time,
     survey_name="rubin_sim",
+    drop_unlinked=True,
 ):
     """
     A function which mimics the effects of the SSP linking process by looking
@@ -39,6 +40,8 @@ def PPLinkingFilter(
 
     survey_name (str): a string with the survey name. used for time-zone purposes.
     Currently only accepts "rubin_sim", "RUBIN_SIM", "lsst", "LSST".
+
+    drop_unlinked (boolean): rejects all observations that are considered to not be linked. Default is True
 
     Returns:
     -----------
@@ -80,6 +83,9 @@ def PPLinkingFilter(
     # unpack the results and filter the observations
     objs_found = obj["ssObjectId"][~np.isnan(obj["discoverySubmissionDate"])]
     obsv_found = np.isin(obsv["ssObjectId"], objs_found)
-    linked_object_observations = observations.iloc[obsv_found]
-
+    observations["Linked"] = obsv_found
+    if drop_unlinked:
+        linked_object_observations = observations.iloc[obsv_found]
+    else:
+        linked_object_observations = observations
     return linked_object_observations
