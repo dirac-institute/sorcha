@@ -236,8 +236,6 @@ def runLSSTSimulation(args, configs):
         # These are the columns that should be used moving forward for filters etc.
         # Do NOT use trailedSourceMagTrue or PSFMagTrue, these are the unrandomised magnitudes.
         verboselog("Calculating astrometric and photometric uncertainties...")
-        if configs["randomization_on"]:
-            verboselog("Values are then used to randomize the photometry....")
         verboselog(
             "Number of rows BEFORE caclulating astrometric and photometric uncertainties : "
             + str(len(observations.index))
@@ -252,17 +250,24 @@ def runLSSTSimulation(args, configs):
         )
 
         if configs["randomization_on"]:
-            verboselog("Randomizing astrometry...")
-            observations = PPRandomizeMeasurements.randomizeAstrometry(
-                observations, args._rngs, sigName="astrometricSigma_deg", sigUnits="deg"
+            observations = PPRandomizeMeasurements.randomizeAstrometryAndPhotometry(
+                observations, configs, args._rngs, verbose=args.verbose
             )
+
         else:
-            verboselog("Randomization turned off in config file. No astrometric randomization performed.")
+            verboselog(
+                "Randomization turned off in config file. No astrometric or photometric randomization performed."
+            )
             verboselog(
                 "NOTE: new columns RATrue_deg and DecTrue_deg are EQUAL to columns RA_deg and Dec_deg."
             )
+            verboselog(
+                "NOTE: columns trailedSourceMagTrue and PSFMagTrue are EQUAL to columns trailedSourceMag and PSFMag."
+            )
             observations["RATrue_deg"] = observations["RA_deg"].copy()
             observations["DecTrue_deg"] = observations["Dec_deg"].copy()
+            observations["trailedSourceMag"] = observations["trailedSourceMagTrue"].copy()
+            observations["PSFMag"] = observations["PSFMagTrue"].copy()
 
         verboselog("Applying field-of-view filters...")
         verboselog("Number of rows BEFORE applying FOV filters: " + str(len(observations.index)))
