@@ -54,7 +54,7 @@ BASELINE_ARGS = {
     "surveyname": "rubin_sim",
     "outfilestem": f"out_end2end",
     "verbose": False,
-    "linking": True
+    "linking": True,
 }
 
 WITH_EPHEMERIS_ARGS = {
@@ -66,7 +66,7 @@ WITH_EPHEMERIS_ARGS = {
     "surveyname": "rubin_sim",
     "outfilestem": f"out_end2end_with_ephemeris_generation",
     "verbose": False,
-    "linking": True
+    "linking": True,
 }
 
 
