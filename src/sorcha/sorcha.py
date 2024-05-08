@@ -261,7 +261,6 @@ def runLSSTSimulation(args, configs):
         if configs["SSP_linking_on"]:
             verboselog("Applying SSP linking filter...")
             verboselog("Number of rows BEFORE applying SSP linking filter: " + str(len(observations.index)))
-
             observations = PPLinkingFilter(
                 observations,
                 configs["SSP_detection_efficiency"],
@@ -270,8 +269,8 @@ def runLSSTSimulation(args, configs):
                 configs["SSP_track_window"],
                 configs["SSP_separation_threshold"],
                 configs["SSP_maximum_time"],
+                drop_unlinked=args.linking,
             )
-
             observations.reset_index(drop=True, inplace=True)
             verboselog("Number of rows AFTER applying SSP linking filter: " + str(len(observations.index)))
 
@@ -321,6 +320,7 @@ def main():
         -s S, --survey S      Survey to simulate (default: LSST)
         -t T, --stem T        Output file name stem. (default: SSPPOutput)
         -v, --verbose         Verbosity. Default currently true; include to turn off verbosity. (default: True)
+        -l, --linked          Reject unlinked observations. Default is true, include to include unlinked observations (default: True)
     """
 
     parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
@@ -417,6 +417,14 @@ def main():
         "--verbose",
         help="Verbosity. Default currently true; include to turn off verbosity.",
         dest="v",
+        default=True,
+        action="store_false",
+    )
+
+    optional.add_argument(
+        "-l",
+        "--linking",
+        help="Reject unlinked observations. Default is true, include to include unlinked observations",
         default=True,
         action="store_false",
     )
