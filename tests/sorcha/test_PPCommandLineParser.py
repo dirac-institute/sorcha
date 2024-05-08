@@ -19,6 +19,7 @@ class args:
         self.v = True
         self.f = f
         self.ar = None
+        self.linking = True
 
 
 def test_PPCommandLineParser():
@@ -39,6 +40,7 @@ def test_PPCommandLineParser():
         "verbose": True,
         "ar_data_path": None,
         "output_ephemeris_file": None,
+        "linking": True,
     }
 
     cmd_dict_2 = PPCommandLineParser(args(get_test_filepath("testcomet.txt")))
@@ -55,6 +57,7 @@ def test_PPCommandLineParser():
         "verbose": True,
         "ar_data_path": None,
         "output_ephemeris_file": None,
+        "linking": True,
     }
 
     with open(os.path.join(tmp_path, "dummy_file.txt"), "w") as _:

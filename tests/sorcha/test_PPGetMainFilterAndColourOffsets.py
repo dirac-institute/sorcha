@@ -25,11 +25,9 @@ def test_PPGetMainFilterAndColourOffsets():
     # Test incorrect (but valid) separator.
     with pytest.raises(SystemExit) as err:
         _, _ = PPGetMainFilterAndColourOffsets(colour_fn, observing_filters, "csv")
-    assert (
-        err.value.args[0] == (
-            "ERROR: PPGetMainFilterAndColourOffsets: Too few colour columns found. "
-            "Confirm you are using the correct 'aux_format' configuration parameter."
-        )
+    assert err.value.args[0] == (
+        "ERROR: PPGetMainFilterAndColourOffsets: Too few colour columns found. "
+        "Confirm you are using the correct 'aux_format' configuration parameter."
     )
 
     # Test invalid separator
