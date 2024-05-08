@@ -93,3 +93,37 @@ def test_flux_mag_conversion():
     assert_almost_equal(observations["trailedSourceMag"][0], mag_test.values[0])
 
     return
+
+
+def test_randomizeAstrometryAndPhotometry():
+    from sorcha.modules.PPRandomizeMeasurements import randomizeAstrometryAndPhotometry
+
+    data_in = {
+        "RA_deg": 164.037713,
+        "Dec_deg": -17.582575,
+        "trailedSourceMagTrue": 19.655346,
+        "trailedSourceMagSigma": 0.006756,
+        "PSFMagTrue": 19.659713,
+        "PSFMagSigma": 0.006776,
+        "astrometricSigma_deg": 0.000003,
+        "SNR": 159.741315,
+    }
+
+    observations = pd.DataFrame(data_in, index=[0])
+
+    configs = {"default_SNR_cut": True, "trailing_losses_on": True}
+
+    obs_out = randomizeAstrometryAndPhotometry(observations, configs, PerModuleRNG(2021))
+
+    assert_almost_equal(obs_out["trailedSourceMag"][0], 19.663194, decimal=6)
+    assert_almost_equal(obs_out["PSFMag"][0], 19.660227, decimal=6)
+    assert_almost_equal(obs_out["RA_deg"][0], 164.037711, decimal=6)
+    assert_almost_equal(obs_out["Dec_deg"][0], -17.582573, decimal=6)
+
+    assert obs_out["RATrue_deg"][0] == data_in["RA_deg"]
+    assert obs_out["DecTrue_deg"][0] == data_in["Dec_deg"]
+
+    configs["trailing_losses_on"] = False
+
+    obs_out_noloss = randomizeAstrometryAndPhotometry(observations, configs, PerModuleRNG(2021))
+    assert obs_out_noloss["PSFMag"][0] == obs_out_noloss["trailedSourceMag"][0]

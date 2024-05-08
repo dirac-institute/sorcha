@@ -108,31 +108,6 @@ def addUncertainties(detDF, configs, module_rngs, verbose=True):
     else:
         detDF["PSFMagSigma"] = detDF["trailedSourceMagSigma"]
 
-    # default SNR cut can be disabled in the config file under EXPERT
-    # at low SNR, high photometric sigma causes randomisation to sometimes
-    # grossly inflate/decrease magnitudes.
-    if configs.get("default_SNR_cut", False):
-        verboselog("Removing all observations with SNR < 2.0...")
-        detDF = PPSNRLimit(detDF.copy(), 2.0)
-
-    if configs["randomization_on"]:
-        verboselog("Randomising photometry...")
-        detDF["trailedSourceMag"] = PPRandomizeMeasurements.randomizePhotometry(
-            detDF, module_rngs, magName="trailedSourceMagTrue", sigName="trailedSourceMagSigma"
-        )
-
-        if configs.get("trailing_losses_on", False):
-            detDF["PSFMag"] = PPRandomizeMeasurements.randomizePhotometry(
-                detDF, module_rngs, magName="PSFMagTrue", sigName="PSFMagSigma"
-            )
-        else:
-            detDF["PSFMag"] = detDF["trailedSourceMag"]
-
-    else:
-        verboselog("Randomization turned off in config file. No magnitude randomization performed.")
-        detDF["trailedSourceMag"] = detDF["trailedSourceMagTrue"].copy()
-        detDF["PSFMag"] = detDF["PSFMagTrue"].copy()
-
     return detDF
 
 

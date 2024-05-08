@@ -22,12 +22,76 @@ import numpy as np
 import sys
 import logging
 from sorcha.modules.PPModuleRNG import PerModuleRNG
+from sorcha.modules.PPSNRLimit import PPSNRLimit
 
 import pandas as pd
 
 pd.options.mode.copy_on_write = True
 
 logger = logging.getLogger(__name__)
+
+
+def randomizeAstrometryAndPhotometry(observations, configs, module_rngs, verbose=False):
+    """
+    Wrapper function to perform randomisation of astrometry and photometry around
+    their uncertainties. Calls randomizePhotometry() and randomizeAstrometry().
+
+    Adds the following columns to the dataframe:
+    - trailedSourceMag
+    - PSFMag
+    - AstRATrue(deg)
+    - AstDecTrue(deg)
+
+    Parameters
+    -----------
+    observations : pandas dataframe
+       Dataframe containing observations.
+
+    configs : dict
+       Dictionary of config file variables.
+
+    module_rngs : PerModuleRNG
+       A collection of random number generators (per module).
+
+    verbose : bool
+       Verbosity on or off. Default False.
+
+    Returns
+    ---------
+    observations : pandas dataframe
+       Original input dataframe with RA and Dec columns and trailedSourceMag and PSFMag
+       columns randomized around astrometric and photometric sigma. Original RA and Dec/magnitudes
+       stored in separate columns.
+
+    """
+
+    verboselog = logger.info if verbose else lambda *a, **k: None
+
+    # default SNR cut can be disabled in the config file under EXPERT
+    # at low SNR, high photometric sigma causes randomisation to sometimes
+    # grossly inflate/decrease magnitudes.
+    if configs.get("default_SNR_cut", False):
+        verboselog("Removing all observations with SNR < 2.0...")
+        observations = PPSNRLimit(observations.copy(), 2.0)
+
+    verboselog("Randomising photometry...")
+    observations["trailedSourceMag"] = randomizePhotometry(
+        observations, module_rngs, magName="trailedSourceMagTrue", sigName="trailedSourceMagSigma"
+    )
+
+    if configs.get("trailing_losses_on", False):
+        observations["PSFMag"] = randomizePhotometry(
+            observations, module_rngs, magName="PSFMagTrue", sigName="PSFMagSigma"
+        )
+    else:
+        observations["PSFMag"] = observations["trailedSourceMag"]
+
+    verboselog("Randomizing astrometry...")
+    observations = randomizeAstrometry(
+        observations, module_rngs, sigName="astrometricSigma_deg", sigUnits="deg"
+    )
+
+    return observations
 
 
 def randomizeAstrometry(
