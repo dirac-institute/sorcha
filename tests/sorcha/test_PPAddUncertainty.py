@@ -87,64 +87,68 @@ def test_addUncertainties():
     astDecrate = [-0.01, -0.01, -0.01, -0.01]
     astRA = [260.0, 260.0, 260.0, 260.0]
     astDec = [-5.0, -5.0, -5.0, -5]
+    t_exp = [30.0, 30.0, 30.0, 30.0]
 
     test_data = pd.DataFrame(
         {
             "ObjID": obj_ids,
-            "TrailedSourceMag": obj_mags,
-            "PSFMag": psf_mags,
-            "fiveSigmaDepthAtSource": sig_limit,
-            "seeingFwhmGeom": seeing,
-            "AstRARate(deg/day)": astRArate,
-            "AstDecRate(deg/day)": astDecrate,
-            "AstRA(deg)": astRA,
-            "AstDec(deg)": astDec,
+            "trailedSourceMagTrue": obj_mags,
+            "PSFMagTrue": psf_mags,
+            "fiveSigmaDepth_mag": sig_limit,
+            "seeingFwhmGeom_arcsec": seeing,
+            "RARateCosDec_deg_day": astRArate,
+            "DecRate_deg_day": astDecrate,
+            "RA_deg": astRA,
+            "Dec_deg": astDec,
+            "visitExposureTime": t_exp,
         }
     )
 
-    configs = {"trailing_losses_on": True, "default_SNR_cut": False}
+    configs = {"trailing_losses_on": True, "default_SNR_cut": False, "randomization_on": True}
 
     rng = PerModuleRNG(2021)
 
     obs_uncert = addUncertainties(test_data, configs, rng)
 
     assert_almost_equal(
-        obs_uncert["AstrometricSigma(deg)"],
-        [6.27294202e-06, 1.38053193e-05, 3.34595607e-05, 8.27032813e-01],
+        obs_uncert["astrometricSigma_deg"],
+        # [6.27294202e-06, 1.38053193e-05, 3.34595607e-05, 8.27032813e-01],
+        [6.272953e-06, 1.380535e-05, 3.345963e-05, 8.270347e-01],
         decimal=6,
     )
+    assert_almost_equal(obs_uncert["PSFMagSigma"], [0.042682, 0.100568, 0.233576, 9.439369], decimal=6)
     assert_almost_equal(
-        obs_uncert["PhotometricSigmaPSF(mag)"], [0.04268156, 0.10056753, 0.23357527, 9.43936686], decimal=6
-    )
-    assert_almost_equal(
-        obs_uncert["PhotometricSigmaTrailedSource(mag)"],
-        [0.03603496, 0.08470267, 0.19801133, 9.23940376],
+        obs_uncert["trailedSourceMagSigma"],
+        [0.036035, 0.084703, 0.198012, 9.239406],
         decimal=6,
     )
+    assert_almost_equal(obs_uncert["SNR"], [24.941285, 10.303786, 4.166240, 0.000168], decimal=6)
     assert_almost_equal(
-        obs_uncert["SNR"], [2.49413372e01, 1.03038085e01, 4.16624919e00, 1.67620081e-04], decimal=6
-    )
-    assert_almost_equal(
-        obs_uncert["observedTrailedSourceMag"],
+        obs_uncert["trailedSourceMag"],
         [21.0419, 22.0064, 23.1822, 37.3978],
         decimal=4,
     )
-    assert_almost_equal(obs_uncert["observedPSFMag"], [21.239301, 22.050202, 23.006519, 37.514547], decimal=6)
+    assert_almost_equal(obs_uncert["PSFMag"], [21.239301, 22.050202, 23.006519, 37.514547], decimal=6)
 
-    configs_notrail = {"trailing_losses_on": False, "default_SNR_cut": False}
+    configs_notrail = {"trailing_losses_on": False, "default_SNR_cut": False, "randomization_on": True}
 
     obs_notrail = addUncertainties(test_data, configs_notrail, rng)
 
     assert_equal(
-        obs_notrail["PhotometricSigmaPSF(mag)"].values,
-        obs_notrail["PhotometricSigmaTrailedSource(mag)"].values,
+        obs_notrail["PSFMagSigma"].values,
+        obs_notrail["trailedSourceMagSigma"].values,
     )
 
-    configs_SNRcut = {"trailing_losses_on": False, "default_SNR_cut": True}
+    configs_SNRcut = {"trailing_losses_on": False, "default_SNR_cut": True, "randomization_on": True}
 
     obs_SNRcut = addUncertainties(test_data, configs_SNRcut, rng)
 
     assert_equal(obs_SNRcut["ObjID"].values, ["a21", "b22", "c23"])
+
+    configs_norand = {"trailing_losses_on": False, "default_SNR_cut": False, "randomization_on": False}
+    obs_norand = addUncertainties(test_data, configs_norand, rng)
+
+    assert_almost_equal(obs_norand["PSFMag"], [21.2, 22.2, 23.2, 34.2])
 
     return
 
@@ -155,17 +159,18 @@ def test_uncertainties():
     observations = pd.DataFrame(
         {
             "ObjID": ["S1000000a"],
-            "fiveSigmaDepthAtSource": [23.0],
-            "seeingFwhmGeom": [1.0],
-            "TrailedSourceMag": [20.0],
-            "PSFMag": [20.1],
-            "AstRARate(deg/day)": [0.03],
-            "AstDecRate(deg/day)": [-0.01],
-            "AstDec(deg)": [-5.0],
+            "fiveSigmaDepth_mag": [23.0],
+            "seeingFwhmGeom_arcsec": [1.0],
+            "trailedSourceMagTrue": [20.0],
+            "PSFMagTrue": [20.1],
+            "RARateCosDec_deg_day": [0.03],
+            "DecRate_deg_day": [-0.01],
+            "Dec_deg": [-5.0],
+            "visitExposureTime": [30.0],
         }
     )
 
-    configs = {"trailing_losses_on": False}
+    configs = {"trailing_losses_on": False, "randomization_on": True}
 
     ast_sig_deg, photo_sig, SNR = uncertainties(observations, configs)
 
@@ -179,7 +184,7 @@ def test_uncertainties():
 
     assert_almost_equal(ast_sig_deg_T[0], 0.000004, decimal=6)
     assert_almost_equal(photo_sig_T[0], 0.015931, decimal=6)
-    assert_almost_equal(SNR_T[0], 67.654219, decimal=6)
+    assert_almost_equal(SNR_T[0], 67.654088, decimal=6)
 
     return
 

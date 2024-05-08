@@ -73,6 +73,7 @@ The trailing losses filter is on by default, but it can be turned off by includi
     [EXPERT]
     trailing_losses_on = False
 
+.. _the_camera_footprint:
 
 Camera Footprint
 -----------------
@@ -110,8 +111,8 @@ be given in degrees. To include this filter, the following options should be set
     circle_radius = 1.8
 
 .. warning::
-    Note that ASSIST+REBOUND also uses a circular radius for its search area, with a default of 2.06.
-    Setting circle_radius to be larger than the radius used for ASSIST+REBOUND will have no effect. 
+    Note that :ref:`ASSIST+REBOUND ephemeris generator<ephemeris_gen>` also uses a circular radius for its search area, with a default of 2.06.
+    Setting the circle_radius to be larger than the radius used for ASSIST+REBOUND will have no effect. 
 
 **Camera footprint:** Using this filter applies a full camera footprint, including chip gaps. This is the 
 slowest and most accurate version of the footprint filter.
@@ -121,6 +122,8 @@ To include this filter, the following options should be set in the configuration
     [FOV]
     camera_model = footprint
     footprint_path = ./data/detectors_corners.csv
+
+The camera footprint file is a comma separated text file with three columns describing the detector shapes, with the header “detector,x,y”. The first column indicates which detector a point belongs to, and should be an integer. Second and third columns specify where on the focal plane the corners are. Values are unitless, equal to tan( ra ), tan( dec ), where ra and dec are the vertical and horizontal angles of the points from the center of the sphere tangent to origin in the focal plane. Ordering does not matter, as the constructor sorts the points automatically.
 
 Additionally, the camera footprint can model losses at the edge of the detectors at a threshold measured in arcseconds on 
 the focal plane using the `footprint_edge_threshold` key: omitting this key omits this functionality. Include::

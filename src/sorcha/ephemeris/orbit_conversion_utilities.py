@@ -16,18 +16,15 @@ def stumpff(x):
 
     Parameters
     ----------
-    x (float):
+    x : float
         Argument of the Stumpff function
+
     Returns
-    -------
-    float
-        c_0(x)
-    float
-        c_1(x)
-    float
-        c_2(x)
-    float
-        c_3(x)
+    ---------
+    c_0(x) : float
+    c_1(x) : float
+    c_2(x) : float
+    c_3(x) : float
     """
     n = 0
     xm = 0.1
@@ -65,29 +62,29 @@ def root_function(s, mu, alpha, r0, r0dot, t):
 
     Parameters
     ----------
-    s (float):
+    s : float
         Eccentric anomaly
-    mu (float):
+    mu : float
         Standard gravitational parameter GM
-    alpha (float):
+    alpha : float
         Total energy
-    r0 (float):
+    r0 : float
         Initial position
-    r0dot (float):
+    r0dot : float
         Initial velocity
-    t (float):
+    t : float
         Time
 
     Returns
     -------
-    float
-        f (universal Kepler equation)
-    float
-        fp (first derivative of f)
-    float
-        fpp (second derivative of f)
-    float
-        fppp (third derivative of f)
+    f : float
+        universal Kepler equation)
+    fp : float
+        (first derivative of f
+    fpp : float
+        second derivative of f
+    fppp : float
+        third derivative of f
 
     """
     c0, c1, c2, c3 = stumpff(alpha * s * s)
@@ -106,32 +103,32 @@ def halley_safe(x1, x2, mu, alpha, r0, r0dot, t, xacc=1e-14, maxit=100):
 
     Parameters
     ----------
-    x1 (float):
+    x1 : float
         Previous guess used in minimization
-    x2 (float):
+    x2 : float
         Current guess for minimization
-    mu (float):
+    mu : float
         Standard gravitational parameter GM
-    alpha (float):
+    alpha : float
         Total energy
-    r0 (float):
+    r0 : float
         Initial position
-    r0dot (float):
+    r0dot : float
         Initial velocity
-    t (float):
+    t : float
         Time
-    xacc (float):
+    xacc : float
         Accuracy in x before algorithm declares convergence
-    maxit (int):
+    maxit : int
         Maximum number of iterations
 
     Returns
     ----------
-    boolean
+    : boolean
         True if minimization converged, False otherwise
-    float
+    : float
         Solution
-    float
+    : float
         First derivative of solution
 
     """
@@ -208,36 +205,36 @@ def universal_cartesian(mu, q, e, incl, longnode, argperi, tp, epochMJD_TDB):
 
     Parameters
     ----------
-    mu (float):
+    mu : float
         Standard gravitational parameter GM (see note above about units)
-    q (float):
+    q : float
         Perihelion (see note above about units)
-    e (float):
+    e : float
         Eccentricity
-    incl (float):
+    incl : float
         Inclination (radians)
-    longnode (float):
+    longnode : float
         Longitude of ascending node (radians)
-    argperi (float):
+    argperi : float
         Argument of perihelion (radians)
-    tp (float):
+    tp : float
         Time of perihelion passage in TDB scale (see note above about units)
-    epochMJD_TDB (float):
+    epochMJD_TDB : float
         Epoch (in TDB) when the elements are defined (see note above about units)
 
     Returns
     ----------
-    float
+    : float
         x coordinate
-    float
+    : float
         y coordinate
-    float
+    : float
         z coordinate
-    float
+    : float
         x velocity
-    float
+    : float
         y velocity
-    float
+    : float
         z velocity
     """
     # General constant
@@ -340,11 +337,12 @@ def principal_value(theta):
 
     Parameters
     ----------
-    theta (float):
+    theta : float
         Angle
+
     Returns
     ----------
-    float
+    : float
         Principal value of angle
     """
     if theta < 0:
@@ -370,20 +368,20 @@ def universal_keplerian(mu, x, y, z, vx, vy, vz, epochMJD_TDB):
 
 
     Parameters
-    ----------
-    mu (float):
+    -----------
+    mu : float
         Standard gravitational parameter GM (see note above about units)
-    x (float):
+    x : float
         x coordinate
-    y (float):
+    y : float
         y coordinate
-    z (float):
+    z : float
         z coordinate
-    vx (float):
+    vx : float
         x velocity
-    vy (float):
+    vy : float
         y velocity
-    vz (float):
+    vz : float
         z velocity
     epochMJD_TDB (float):
         Epoch (in TDB) when the elements are defined (see note above about units)

@@ -18,7 +18,7 @@ class IdentityLightCurve(AbstractLightCurve):
     created for testing purposes.
     """
 
-    def __init__(self, required_column_names: List[str] = ["FieldMJD_TAI"]) -> None:
+    def __init__(self, required_column_names: List[str] = ["fieldMJD_TAI"]) -> None:
         super().__init__(required_column_names)
 
     def compute(self, df: pd.DataFrame) -> np.array:
@@ -38,7 +38,7 @@ class IdentityLightCurve(AbstractLightCurve):
 
         self._validate_column_names(df)
 
-        return np.zeros_like(df["FieldMJD_TAI"])
+        return np.zeros_like(df["fieldMJD_TAI"])
 
     @staticmethod
     def name_id() -> str:

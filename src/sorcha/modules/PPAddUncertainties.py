@@ -66,6 +66,15 @@ def addUncertainties(detDF, configs, module_rngs, verbose=True):
     Generates astrometric and photometric uncertainties, and SNR. Uses uncertainties
     to randomize the photometry. Accounts for trailing losses.
 
+    Adds the following columns to the observations dataframe:
+
+    - astrometricSigma_deg
+    - trailedSourceMagSigma
+    - PSFMagSigma
+    - SNR
+    - trailedSourceMag
+    - PSFMag
+
     Parameters
     -----------
     detDF : Pandas dataframe)
@@ -90,16 +99,14 @@ def addUncertainties(detDF, configs, module_rngs, verbose=True):
     pplogger = logging.getLogger(__name__)
     verboselog = pplogger.info if verbose else lambda *a, **k: None
 
-    detDF["AstrometricSigma(deg)"], detDF["PhotometricSigmaTrailedSource(mag)"], detDF["SNR"] = uncertainties(
-        detDF, configs, filterMagName="TrailedSourceMag"
+    detDF["astrometricSigma_deg"], detDF["trailedSourceMagSigma"], detDF["SNR"] = uncertainties(
+        detDF, configs, filterMagName="trailedSourceMagTrue"
     )
 
     if configs.get("trailing_losses_on", False):
-        _, detDF["PhotometricSigmaPSF(mag)"], detDF["SNR"] = uncertainties(
-            detDF, configs, filterMagName="PSFMag"
-        )
+        _, detDF["PSFMagSigma"], detDF["SNR"] = uncertainties(detDF, configs, filterMagName="PSFMagTrue")
     else:
-        detDF["PhotometricSigmaPSF(mag)"] = detDF["PhotometricSigmaTrailedSource(mag)"]
+        detDF["PSFMagSigma"] = detDF["trailedSourceMagSigma"]
 
     # default SNR cut can be disabled in the config file under EXPERT
     # at low SNR, high photometric sigma causes randomisation to sometimes
@@ -108,17 +115,23 @@ def addUncertainties(detDF, configs, module_rngs, verbose=True):
         verboselog("Removing all observations with SNR < 2.0...")
         detDF = PPSNRLimit(detDF.copy(), 2.0)
 
-    verboselog("Randomising photometry...")
-    detDF["observedTrailedSourceMag"] = PPRandomizeMeasurements.randomizePhotometry(
-        detDF, module_rngs, magName="TrailedSourceMag", sigName="PhotometricSigmaTrailedSource(mag)"
-    )
-
-    if configs.get("trailing_losses_on", False):
-        detDF["observedPSFMag"] = PPRandomizeMeasurements.randomizePhotometry(
-            detDF, module_rngs, magName="PSFMag", sigName="PhotometricSigmaPSF(mag)"
+    if configs["randomization_on"]:
+        verboselog("Randomising photometry...")
+        detDF["trailedSourceMag"] = PPRandomizeMeasurements.randomizePhotometry(
+            detDF, module_rngs, magName="trailedSourceMagTrue", sigName="trailedSourceMagSigma"
         )
+
+        if configs.get("trailing_losses_on", False):
+            detDF["PSFMag"] = PPRandomizeMeasurements.randomizePhotometry(
+                detDF, module_rngs, magName="PSFMagTrue", sigName="PSFMagSigma"
+            )
+        else:
+            detDF["PSFMag"] = detDF["trailedSourceMag"]
+
     else:
-        detDF["observedPSFMag"] = detDF["observedTrailedSourceMag"]
+        verboselog("Randomization turned off in config file. No magnitude randomization performed.")
+        detDF["trailedSourceMag"] = detDF["trailedSourceMagTrue"].copy()
+        detDF["PSFMag"] = detDF["PSFMagTrue"].copy()
 
     return detDF
 
@@ -126,12 +139,13 @@ def addUncertainties(detDF, configs, module_rngs, verbose=True):
 def uncertainties(
     detDF,
     configs,
-    limMagName="fiveSigmaDepthAtSource",
-    seeingName="seeingFwhmGeom",
-    filterMagName="TrailedSourceMag",
-    dra_name="AstRARate(deg/day)",
-    ddec_name="AstDecRate(deg/day)",
-    dec_name="AstDec(deg)",
+    limMagName="fiveSigmaDepth_mag",
+    seeingName="seeingFwhmGeom_arcsec",
+    filterMagName="trailedSourceMagTrue",
+    dra_name="RARateCosDec_deg_day",
+    ddec_name="DecRate_deg_day",
+    dec_name="Dec_deg",
+    visit_time_name="visitExposureTime",
 ):
     """
     Add astrometric and photometric uncertainties to observations.
@@ -146,27 +160,31 @@ def uncertainties(
 
     limMagName : string, optional
         pandas dataframe column name of the limiting magnitude.
-        Default = "fiveSigmaDepthAtSource"
+        Default = "fiveSigmaDepth_mag"
 
     seeingName : string, optional
         pandas dataframe column name of the seeing
-        Default = "seeingFwhmGeom"
+        Default = "seeingFwhmGeom_arcsec"
 
     filterMagName : string, optional
         pandas dataframe column name of the object magnitude
-        Default = "TrailedSourceMag"
+        Default = "trailedSourceMagTrue"
 
     dra_name : string, optional
         pandas dataframe column name of the object RA rate
-        Default = "AstRARate(deg/day)"
+        Default = "RARateCosDec_deg_day"
 
     ddec_name: string, optional
         pandas dataframe column name of the object declination rate
-        Default = "AstDecRate(deg/day)"
+        Default = "DecRate_deg_day"
 
     dec_name : string, optional
         pandas dataframe column name of the object declination
-        Default = "AstDec(deg)"
+        Default = "Dec_deg"
+
+    visit_time_name : string, optional
+        pandas dataframe column name for exposure length
+        Default = "visitExposureTime"
 
     Returns
     -----------
@@ -182,7 +200,10 @@ def uncertainties(
 
     if configs.get("trailing_losses_on", False):
         dMag = PPTrailingLoss.calcTrailingLoss(
-            detDF[dra_name] * degCos(detDF[dec_name]), detDF[ddec_name], detDF[seeingName]
+            detDF[dra_name],
+            detDF[ddec_name],
+            detDF[seeingName],
+            texp=detDF[visit_time_name],
         )
     else:
         dMag = 0.0
@@ -272,7 +293,7 @@ def calcAstrometricUncertainty(
     error_rand = calcRandomAstrometricErrorPerCoord(FWHMeff, SNR, astErrCoeff)
     # random astrometric error for nvisit observations
     if nvisit > 1:
-        error_rand = error_rand / sqrt(nvisit)
+        error_rand = error_rand / np.sqrt(nvisit)
     # add systematic error floor:
     astrom_error = np.sqrt(error_sys * error_sys + error_rand * error_rand)
 
@@ -288,7 +309,7 @@ def calcRandomAstrometricErrorPerCoord(FWHMeff, SNR, AstromErrCoeff=0.60):
     effective FWHMeff and signal-to-noise ratio SNR and return
     the astrometric uncertainty in the same units as FWHM.
 
-    ** This error corresponds to a single-coordinate error **
+    This error corresponds to a single-coordinate error
     the total astrometric uncertainty (e.g. relevant when matching
     two catalogs) will be sqrt(2) times larger.
 

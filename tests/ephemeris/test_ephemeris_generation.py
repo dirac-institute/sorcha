@@ -49,10 +49,7 @@ def test_ephemeris_end2end(single_synthetic_pointing, tmp_path):
         "configfile": get_test_filepath("test_ephem_config.ini"),
         "pointing_database": get_demo_filepath("baseline_v2.0_1yr.db"),
         "outpath": tmp_path,
-        "makeTemporaryEphemerisDatabase": False,
-        "readTemporaryEphemerisDatabase": False,
-        "deleteTemporaryEphemerisDatabase": False,
-        "surveyname": "LSST",
+        "surveyname": "rubin_sim",
         "outfilestem": f"out_400k",
         "verbose": False,
     }
@@ -67,7 +64,7 @@ def test_ephemeris_end2end(single_synthetic_pointing, tmp_path):
     configs["seed"] = 24601
 
     filterpointing = PPReadPointingDatabase(
-        args.pointing_database, configs["observing_filters"], configs["pointing_sql_query"], "lsst"
+        args.pointing_database, configs["observing_filters"], configs["pointing_sql_query"], "rubin_sim"
     )
 
     filterpointing = precompute_pointing_information(filterpointing, args, configs)

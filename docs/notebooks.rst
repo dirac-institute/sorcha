@@ -1,9 +1,10 @@
-Notebooks
+Demo Notebooks
 ========================================================================================
 
 .. toctree::
     :maxdepth: 1
 
+    LSST Camera Footprint and Various Other Sorcha Related Fields-of-View <notebooks/demo_PlotLSSTCamCornersFOVs>
     Apparent Magnitude Validation <notebooks/demo_ApparentMagnitudeValidation>
     Circle Footprint Filter <notebooks/demo_CircleFootprint>
     LSST Camera Footprint Filter <notebooks/demo_FootprintFilter>
@@ -12,6 +13,9 @@ Notebooks
     SSP Linking Filter <notebooks/demo_LinkingFilter>
     Magnitude and SNR Cuts <notebooks/demo_MagnitudeAndSNRCuts>
     Trailing Losses Validation <notebooks/demo_TrailingLossesValidation>
+    Trailed Source Magnitude Versus PSF Magnitude <notebooks/demo_TrailingLossPhasecurve>
     Uncertainties and Randomization <notebooks/demo_UncertaintiesAndRandomization>
     Vignetting Demo <notebooks/demo_Vignetting>
     Lightcurve demo <notebooks/demo_Lightcurve>
+    Example Bash Scripts for Multiple Runs <notebooks/demo_GenerateBashScripts>
+    Example Slurm Scripts for Multiple Runs <notebooks/demo_GenerateSLURMScripts>

@@ -16,6 +16,8 @@ from sorcha.ephemeris.simulation_constants import *
 from sorcha.ephemeris.simulation_geometry import *
 from sorcha.ephemeris.simulation_parsing import *
 from sorcha.utilities.dataUtilitiesForTests import get_data_out_filepath
+from sorcha.ephemeris.pixel_dict import PixelDict
+
 
 out_csv_path = get_data_out_filepath("ephemeris_output.csv")
 
@@ -31,6 +33,20 @@ class EphemerisGeometryParameters:
     rho_mag: float = None
     r_ast: float = None
     v_ast: float = None
+
+
+def get_vec(row, vecname):
+    """
+    Extracts a vector from a Pandas dataframe row
+    Parameters
+    ----------
+    row : row from the dataframe
+    vecname : name of the vector
+    Returns
+    -------
+    : 3D numpy array
+    """
+    return np.asarray([row[f"{vecname}_x"], row[f"{vecname}_y"], row[f"{vecname}_z"]])
 
 
 def create_ephemeris(orbits_df, pointings_df, args, configs):
@@ -94,7 +110,7 @@ def create_ephemeris(orbits_df, pointings_df, args, configs):
     picket_interval = configs["ar_picket"]
     obsCode = configs["ar_obs_code"]
     nside = 2 ** configs["ar_healpix_order"]
-    first = 1  # Try to get away from this
+    n_sub_intervals = 101  # configs["n_sub_intervals"]
 
     ephemeris_csv_filename = None
     if args.output_ephemeris_file and args.outpath:
@@ -115,27 +131,27 @@ def create_ephemeris(orbits_df, pointings_df, args, configs):
     column_names = (
         "ObjID",
         "FieldID",
-        "FieldMJD_TAI",
-        "JD_TDB",
-        "AstRange(km)",
-        "AstRangeRate(km/s)",
-        "AstRA(deg)",
-        "AstRARate(deg/day)",
-        "AstDec(deg)",
-        "AstDecRate(deg/day)",
-        "Ast-Sun(J2000x)(km)",
-        "Ast-Sun(J2000y)(km)",
-        "Ast-Sun(J2000z)(km)",
-        "Ast-Sun(J2000vx)(km/s)",
-        "Ast-Sun(J2000vy)(km/s)",
-        "Ast-Sun(J2000vz)(km/s)",
-        "Obs-Sun(J2000x)(km)",
-        "Obs-Sun(J2000y)(km)",
-        "Obs-Sun(J2000z)(km)",
-        "Obs-Sun(J2000vx)(km/s)",
-        "Obs-Sun(J2000vy)(km/s)",
-        "Obs-Sun(J2000vz)(km/s)",
-        "Sun-Ast-Obs(deg)",
+        "fieldMJD_TAI",
+        "fieldJD_TDB",
+        "Range_LTC_km",
+        "RangeRate_LTC_km_s",
+        "RA_deg",
+        "RARateCosDec_deg_day",
+        "Dec_deg",
+        "DecRate_deg_day",
+        "Obj_Sun_x_LTC_km",
+        "Obj_Sun_y_LTC_km",
+        "Obj_Sun_z_LTC_km",
+        "Obj_Sun_vx_LTC_km_s",
+        "Obj_Sun_vy_LTC_km_s",
+        "Obj_Sun_vz_LTC_km_s",
+        "Obs_Sun_x_km",
+        "Obs_Sun_y_km",
+        "Obs_Sun_z_km",
+        "Obs_Sun_vx_km_s",
+        "Obs_Sun_vy_km_s",
+        "Obs_Sun_vz_km_s",
+        "phase_deg",
     )
     column_types = defaultdict(ObjID=str, FieldID=str).setdefault(float)
     in_memory_csv.writerow(column_names)
@@ -151,35 +167,39 @@ def create_ephemeris(orbits_df, pointings_df, args, configs):
 
     verboselog("Generating ephemeris...")
 
+    pixdict = PixelDict(
+        pointings_df["fieldJD_TDB"].iloc[0],
+        sim_dict,
+        ephem,
+        obsCode,
+        observatories,
+        picket_interval,
+        nside,
+        n_sub_intervals=n_sub_intervals,
+    )
     for _, pointing in pointings_df.iterrows():
         mjd_tai = float(pointing["observationMidpointMJD_TAI"])
 
         # If the observation time is too far from the
         # time of the last set of ballpark sky position,
         # compute a new set
-        while (
-            abs(pointing["JD_TDB"] - t_picket) > 0.5 * picket_interval or first == 1
-        ):  # right now this assumes time ordering
-            t_picket, pixel_dict, _ = update_pixel_dict(
-                pointing["JD_TDB"], t_picket, picket_interval, sim_dict, ephem, obsCode, observatories, nside
-            )
-            first = 0
 
-        # This loop builds a python set containing ids for objects in the pixels
-        # around the current pointing. The function `update_pixel_dict` does
-        # the majority of the computation to build out `pixel_dict`.
-        desigs = set()
-        for pix in pointing["pixels"]:
-            desigs.update(pixel_dict[pix])
+        desigs = pixdict.get_designations(
+            pointing["fieldJD_TDB"], pointing["fieldRA_deg"], pointing["fieldDec_deg"], ang_fov
+        )
+        unit_vectors = pixdict.interpolate_unit_vectors(desigs, pointing["fieldJD_TDB"])
+        visit_vector = get_vec(pointing, "visit_vector")
+        r_obs = get_vec(pointing, "r_obs")
 
-        for obj_id in sorted(desigs):
+        for k, uv in unit_vectors.items():
             ephem_geom_params = EphemerisGeometryParameters()
-            ephem_geom_params.obj_id = obj_id
+            ephem_geom_params.obj_id = k
             ephem_geom_params.mjd_tai = mjd_tai
 
-            v = sim_dict[obj_id]
-            sim, ex, rho_hat_rough = v["sim"], v["ex"], v["rho_hat"]
-            ang = np.arccos(np.dot(rho_hat_rough, pointing["visit_vector"])) * 180 / np.pi
+            v = sim_dict[k]
+            sim, ex = v["sim"], v["ex"]
+            uv /= np.linalg.norm(uv)
+            ang = np.arccos(np.dot(uv, visit_vector)) * 180 / np.pi
             if ang < ang_fov + buffer:
                 (
                     ephem_geom_params.rho,
@@ -187,14 +207,10 @@ def create_ephemeris(orbits_df, pointings_df, args, configs):
                     _,
                     ephem_geom_params.r_ast,
                     ephem_geom_params.v_ast,
-                ) = integrate_light_time(
-                    sim, ex, pointing["JD_TDB"] - ephem.jd_ref, pointing["r_obs"], lt0=0.01
-                )
+                ) = integrate_light_time(sim, ex, pointing["fieldJD_TDB"] - ephem.jd_ref, r_obs, lt0=0.01)
                 ephem_geom_params.rho_hat = ephem_geom_params.rho / ephem_geom_params.rho_mag
 
-                ang_from_center = (
-                    180 / np.pi * np.arccos(np.dot(ephem_geom_params.rho_hat, pointing["visit_vector"]))
-                )
+                ang_from_center = 180 / np.pi * np.arccos(np.dot(ephem_geom_params.rho_hat, visit_vector))
                 if ang_from_center < ang_fov:
                     out_tuple = calculate_rates_and_geometry(pointing, ephem_geom_params)
                     in_memory_csv.writerow(out_tuple)
@@ -230,71 +246,22 @@ def get_residual_vectors(v1):
     """
     Decomposes the vector into two unit vectors to facilitate computation of on-sky angles
 
-    Parameters:
-    ----------
-        v1 (array, shape = (3,)):
+    Parameters
+    -----------
+        v1 : array, shape = (3,))
             The vector to be decomposed
-    Returns:
-    -------
-        A, D (array, shape = (3,))
+    Returns
+    ----------
+        A :  array, shape = (3,))
             Decomposition into longitude and latitude
+        D : array, shape = (3,))
+            Decomposition into longitude and  latitude
     """
     x, y, z = v1
     cosd = np.sqrt(1 - z * z)
     A = np.array((-y, x, 0.0)) / cosd
     D = np.array((-z * x / cosd, -z * y / cosd, cosd))
     return A, D
-
-
-# arguments: JD_TDB, t_picket, picket_interval, sim_dict, obsCode
-# returns t_picket, pixel_dict, r_obs
-def update_pixel_dict(JD_TDB, t_picket, picket_interval, sim_dict, ephem, obsCode, observatories, nside):
-    """
-    Updates the dictionary of HEALPix pixels for the on-sky positions of the particles
-    Particle pixel coordinates are computed with respect to a central time (t_picket)
-
-    Parameters
-    ----------
-        JD_TDB (float):
-            Julian date (in TDB scale)
-        t_picket (float):
-            Central time of the picket
-        picket_interval (float):
-            Interval between pickets
-        sim_dict (dict):
-            Dictionary of ASSIST simulations
-        ephem (Ephem):
-            ASSIST Ephem object
-        obsCopde (str):
-            MPC Observatory code
-        observatories (Observatory):
-            Observatory object
-        nside (int):
-            HEALPix nside
-
-    Returns
-    -------
-        t_picket (float):
-            Updated t_picket
-        pixel_dict (dict):
-            Dictionary of particles and their HEALPix pixels
-        r_obs (array, shape = (3,))
-            Barycentric coordinates of the observatory
-    """
-    n = round((JD_TDB - t_picket) / picket_interval)
-    t_picket += n * picket_interval
-    et = (t_picket - spice.j2000()) * 24 * 60 * 60
-    r_obs = observatories.barycentricObservatory(et, obsCode) / AU_KM
-    pixel_dict = defaultdict(list)
-    for k, v in sim_dict.items():
-        sim, ex = v["sim"], v["ex"]
-        ex.integrate_or_interpolate(t_picket - ephem.jd_ref)
-        rho = np.array(sim.particles[0].xyz) - r_obs
-        rho_hat = rho / np.linalg.norm(rho)
-        sim_dict[k]["rho_hat"] = rho_hat
-        this_pix = hp.vec2pix(nside, rho_hat[0], rho_hat[1], rho_hat[2], nest=True)
-        pixel_dict[this_pix].append(k)
-    return t_picket, pixel_dict, r_obs
 
 
 def calculate_rates_and_geometry(pointing: pd.DataFrame, ephem_geom_params: EphemerisGeometryParameters):
@@ -312,11 +279,16 @@ def calculate_rates_and_geometry(pointing: pd.DataFrame, ephem_geom_params: Ephe
     : tuple
         Tuple containing the ephemeris parameters needed for Sorcha post processing.
     """
+    r_sun = get_vec(pointing, "r_sun")
+    r_obs = get_vec(pointing, "r_obs")
+    v_sun = get_vec(pointing, "v_sun")
+    v_obs = get_vec(pointing, "v_obs")
+
     ra0, dec0 = vec2ra_dec(ephem_geom_params.rho_hat)
-    drhodt = ephem_geom_params.v_ast - pointing["v_obs"]
+    drhodt = ephem_geom_params.v_ast - v_obs
     drho_magdt = (1 / ephem_geom_params.rho_mag) * np.dot(ephem_geom_params.rho, drhodt)
     ddeltatdt = drho_magdt / (SPEED_OF_LIGHT)
-    drhodt = ephem_geom_params.v_ast * (1 - ddeltatdt) - pointing["v_obs"]
+    drhodt = ephem_geom_params.v_ast * (1 - ddeltatdt) - v_obs
     A, D = get_residual_vectors(ephem_geom_params.rho_hat)
     drho_hatdt = (
         drhodt / ephem_geom_params.rho_mag
@@ -324,20 +296,20 @@ def calculate_rates_and_geometry(pointing: pd.DataFrame, ephem_geom_params: Ephe
     )
     dradt = np.dot(A, drho_hatdt)
     ddecdt = np.dot(D, drho_hatdt)
-    r_ast_sun = ephem_geom_params.r_ast - pointing["r_sun"]
-    v_ast_sun = ephem_geom_params.v_ast - pointing["v_sun"]
-    r_ast_obs = ephem_geom_params.r_ast - pointing["r_obs"]
+    r_ast_sun = ephem_geom_params.r_ast - r_sun
+    v_ast_sun = ephem_geom_params.v_ast - v_sun
+    r_ast_obs = ephem_geom_params.r_ast - r_obs
     phase_angle = np.arccos(
         np.dot(r_ast_sun, r_ast_obs) / (np.linalg.norm(r_ast_sun) * np.linalg.norm(r_ast_obs))
     )
-    obs_sun = np.asarray(pointing["r_obs"]) - np.asarray(pointing["r_sun"])
-    dobs_sundt = np.asarray(pointing["v_obs"]) - np.asarray(pointing["v_sun"])
+    obs_sun = r_obs - r_sun
+    dobs_sundt = v_obs - v_sun
 
     return (
         ephem_geom_params.obj_id,
         pointing["FieldID"],
         ephem_geom_params.mjd_tai,
-        pointing["JD_TDB"],
+        pointing["fieldJD_TDB"],
         ephem_geom_params.rho_mag * AU_KM,
         drho_magdt * AU_KM / (24 * 60 * 60),
         ra0,

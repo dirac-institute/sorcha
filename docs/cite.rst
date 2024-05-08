@@ -3,7 +3,7 @@ Citing the Software
 
 Built-In Citation Function
 ----------------------------
-If you use Sorcha in your research, please do include a citation in your published papers for sorcha and the software packages and resources that sorcha is based on. The simplest way to find this information is to use our built-in citation function. In an interactive python session or a Jupyter notebook::
+If you use Sorcha in your research, please do include a citation in your published papers for sorcha and the software packages and resources that sorcha is based on. The simplest way to find this information is to use our built-in citation function. In an interactive Python session or a Jupyter notebook::
 
    import sorcha
    sorcha.cite()
@@ -12,13 +12,14 @@ If you use Sorcha in your research, please do include a citation in your publish
 Additional Citation Details
 ----------------------------
 
-The main overview of Sorcha is provided in our AAS journal software papers and JOS paper. (in prep)
+The main overview of Sorcha is provided in our AAS journal software papers and JOSS paper. (in prep)
 
 Please also cite the software and ancillary data files that helps power Sorcha:
 
 * assist https://assist.readthedocs.io/en/latest/
 * astropy https://www.astropy.org/acknowledging.html
 * healpy https://healpy.readthedocs.io/en/latest/
+* importlib_resources https://github.com/python/importlib_resources 
 * matplotlib https://matplotlib.org/stable/users/project/citing.html
 * Minor Planet Center https://www.minorplanetcenter.net/data
 * numba https://numba.pydata.org/ 

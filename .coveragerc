@@ -1,2 +1,8 @@
 [run]
 omit = src/sorcha/utilities/citation_text.py
+
+[report]
+exclude_also =
+    # pragma: no cover
+
+omit = src/sorcha/utilities/citation_text.py

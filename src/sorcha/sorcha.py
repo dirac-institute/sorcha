@@ -43,7 +43,7 @@ from sorcha.utilities.sorchaArguments import sorchaArguments
 from sorcha.utilities.citation_text import cite_sorcha
 
 
-def cite():
+def cite():  # pragma: no cover
     """Providing the bibtex, AAS Journals software latex command, and acknowledgement
     statements for Sorcha and the associated packages that power it.
 
@@ -56,6 +56,25 @@ def cite():
     None
     """
     cite_sorcha()
+
+
+def mem(df):
+    """
+    Memory utility function that returns back how much memory the inputted pandas dataframe is using
+    Parameters
+    ------------
+    df : pandas dataframe
+
+    Returns
+    -----------
+    usage : int
+
+    """
+
+    usage = df.memory_usage(deep=True).sum()
+    for k, v in df.attrs.items():
+        usage += v.nbytes
+    return usage
 
 
 def runLSSTSimulation(args, configs):
@@ -94,11 +113,6 @@ def runLSSTSimulation(args, configs):
     # if not, verboselog does absolutely nothing
     verboselog = pplogger.info if args.verbose else lambda *a, **k: None
 
-    verboselog("Reading configuration file...")
-    configs = PPConfigFileParser(args.configfile, args.surveyname)
-
-    verboselog("Configuration file successfully read.")
-
     configs["mainfilter"], configs["othercolours"] = PPGetMainFilterAndColourOffsets(
         args.paramsinput, configs["observing_filters"], configs["aux_format"]
     )
@@ -115,6 +129,7 @@ def runLSSTSimulation(args, configs):
 
     # if we are going to compute the ephemerides, then we should pre-compute all
     # of the needed values derived from the pointing information.
+
     if configs["ephemerides_type"].casefold() != "external":
         verboselog("Pre-computing pointing information for ephemeris generation")
         filterpointing = precompute_pointing_information(filterpointing, args, configs)
@@ -129,6 +144,7 @@ def runLSSTSimulation(args, configs):
     # TODO: Once more ephemerides_types are added this should be wrapped in a EphemerisDataReader
     # That does the selection and checks. We are holding off adding this level of indirection until there
     # is a second ephemerides_type.
+
     if ephem_type.casefold() not in ["ar", "external"]:  # pragma: no cover
         pplogger.error(f"PPReadAllInput: Unsupported value for ephemerides_type {ephem_type}")
         sys.exit(f"PPReadAllInput: Unsupported value for ephemerides_type {ephem_type}")
@@ -144,6 +160,7 @@ def runLSSTSimulation(args, configs):
     # "sizeSerialChunk" parameter in PPConfig.ini assigns the chunk.
     startChunk = 0
     endChunk = 0
+    loopCounter = 0
 
     ii = -1
     with open(args.orbinfile) as f:
@@ -157,8 +174,9 @@ def runLSSTSimulation(args, configs):
         footprint = Footprint(configs["footprint_path"])
 
     while endChunk < lenf:
+        verboselog("Starting main Sorcha processing loop round {}".format(loopCounter))
         endChunk = startChunk + configs["size_serial_chunk"]
-        verboselog("Working on objects {}-{}.".format(startChunk, endChunk))
+        verboselog("Working on objects {}-{}".format(startChunk, endChunk))
 
         # Processing begins, all processing is done for chunks
         if configs["ephemerides_type"].casefold() == "external":
@@ -200,32 +218,58 @@ def runLSSTSimulation(args, configs):
         if configs["trailing_losses_on"]:
             verboselog("Calculating trailing losses...")
             dmagDetect = PPTrailingLoss(observations, "circularPSF")
-            observations["PSFMag"] = dmagDetect + observations["TrailedSourceMag"]
+            observations["PSFMagTrue"] = dmagDetect + observations["trailedSourceMagTrue"]
         else:
-            observations["PSFMag"] = observations["TrailedSourceMag"]
+            observations["PSFMagTrue"] = observations["trailedSourceMagTrue"]
 
-        verboselog("Calculating effects of vignetting on limiting magnitude...")
-        observations["fiveSigmaDepthAtSource"] = PPVignetting.vignettingEffects(observations)
+        if configs["vignetting_on"]:
+            verboselog("Calculating effects of vignetting on limiting magnitude...")
+            observations["fiveSigmaDepth_mag"] = PPVignetting.vignettingEffects(observations)
+        else:
+            verboselog(
+                "Vignetting turned OFF in config file. 5-sigma depth of field will be used for subsequent calculations."
+            )
+            observations["fiveSigmaDepth_mag"] = observations["fieldFiveSigmaDepth_mag"]
 
-        # Note that the below code creates observedTrailedSourceMag and observedPSFMag
+        # Note that the below code creates trailedSourceMag and PSFMag
         # as columns in the observations dataframe.
         # These are the columns that should be used moving forward for filters etc.
-        # Do NOT use TrailedSourceMag or PSFMag, these are cut later.
+        # Do NOT use trailedSourceMagTrue or PSFMagTrue, these are the unrandomised magnitudes.
         verboselog("Calculating astrometric and photometric uncertainties...")
-        verboselog("Values are then used to randomize the photometry....")
+        if configs["randomization_on"]:
+            verboselog("Values are then used to randomize the photometry....")
+        verboselog(
+            "Number of rows BEFORE caclulating astrometric and photometric uncertainties : "
+            + str(len(observations.index))
+        )
+
         observations = PPAddUncertainties.addUncertainties(
             observations, configs, args._rngs, verbose=args.verbose
         )
-
-        verboselog("Randomising astrometry...")
-        observations = PPRandomizeMeasurements.randomizeAstrometry(
-            observations, args._rngs, sigName="AstrometricSigma(deg)", sigUnits="deg"
+        verboselog(
+            "Number of rows AFTER caclulating astrometric and photometric uncertainties : "
+            + str(len(observations.index))
         )
 
+        if configs["randomization_on"]:
+            verboselog("Randomizing astrometry...")
+            observations = PPRandomizeMeasurements.randomizeAstrometry(
+                observations, args._rngs, sigName="astrometricSigma_deg", sigUnits="deg"
+            )
+        else:
+            verboselog("Randomization turned off in config file. No astrometric randomization performed.")
+            verboselog(
+                "NOTE: new columns RATrue_deg and DecTrue_deg are EQUAL to columns RA_deg and Dec_deg."
+            )
+            observations["RATrue_deg"] = observations["RA_deg"].copy()
+            observations["DecTrue_deg"] = observations["Dec_deg"].copy()
+
         verboselog("Applying field-of-view filters...")
+        verboselog("Number of rows BEFORE applying FOV filters: " + str(len(observations.index)))
         observations = PPApplyFOVFilter(
             observations, configs, args._rngs, footprint=footprint, verbose=args.verbose
         )
+        verboselog("Number of rows AFTER applying FOV filters: " + str(len(observations.index)))
 
         if configs["SNR_limit_on"]:
             verboselog(
@@ -233,11 +277,15 @@ def runLSSTSimulation(args, configs):
                     configs["SNR_limit"]
                 )
             )
+            verboselog("Number of rows BEFORE applying SNR limit filter: " + str(len(observations.index)))
             observations = PPSNRLimit(observations, configs["SNR_limit"])
+            verboselog("Number of rows AFTER applying SNR limit filter: " + str(len(observations.index)))
 
         if configs["mag_limit_on"]:
             verboselog("Dropping detections fainter than user-defined magnitude limit... ")
+            verboselog("Number of rows BEFORE applying mag limit filter: " + str(len(observations.index)))
             observations = PPMagnitudeLimit(observations, configs["mag_limit"])
+            verboselog("Number of rows AFTER applying mag limit filter: " + str(len(observations.index)))
 
         if configs["fading_function_on"]:
             verboselog("Applying detection efficiency fading function...")
@@ -251,7 +299,9 @@ def runLSSTSimulation(args, configs):
 
         if configs["bright_limit_on"]:
             verboselog("Dropping observations that are too bright...")
+            verboselog("Number of rows BEFORE applying bright limit filter " + str(len(observations.index)))
             observations = PPBrightLimit(observations, configs["observing_filters"], configs["bright_limit"])
+            verboselog("Number of rows AFTER applying bright limit filter " + str(len(observations.index)))
 
         if len(observations) == 0:
             verboselog("No observations left in chunk. Skipping to next chunk...")
@@ -282,6 +332,7 @@ def runLSSTSimulation(args, configs):
         PPWriteOutput(args, configs, observations, endChunk, verbose=args.verbose)
 
         startChunk = startChunk + configs["size_serial_chunk"]
+        loopCounter = loopCounter + 1
         # end for
 
     pplogger.info("Sorcha process is completed.")
@@ -317,7 +368,7 @@ def main():
         -cp CP, --complex_physical_parameters CP
                         Complex physical parameters file name (default: None)
         -f, --force           Force deletion/overwrite of existing output file(s). Default False. (default: False)
-        -s S, --survey S      Survey to simulate (default: LSST)
+        -s S, --survey S      Survey to simulate (default: rubin_sim)
         -t T, --stem T        Output file name stem. (default: SSPPOutput)
         -v, --verbose         Verbosity. Default currently true; include to turn off verbosity. (default: True)
         -l, --linked          Reject unlinked observations. Default is true, include to include unlinked observations (default: True)
@@ -408,7 +459,9 @@ def main():
         action="store_true",
         default=False,
     )
-    optional.add_argument("-s", "--survey", help="Survey to simulate", type=str, dest="s", default="LSST")
+    optional.add_argument(
+        "-s", "--survey", help="Survey to simulate", type=str, dest="s", default="rubin_sim"
+    )
     optional.add_argument(
         "-t", "--stem", help="Output file name stem.", type=str, dest="t", default="SSPPOutput"
     )
@@ -439,7 +492,9 @@ def main():
 
     # Extract and validate the remaining arguments.
     cmd_args = PPCommandLineParser(args)
+    pplogger.info("Reading configuration file...")
     configs = PPConfigFileParser(cmd_args["configfile"], cmd_args["surveyname"])
+    pplogger.info("Configuration file read.")
 
     if configs["ephemerides_type"] == "external" and cmd_args["oifoutput"] is None:
         pplogger.error("ERROR: A+R simulation not enabled and no ephemerides file provided")
@@ -457,7 +512,7 @@ def main():
         cmd_args["seed"] = int(os.environ["SORCHA_SEED"])
         pplogger.info(f"Random seed overridden via environmental variable, SORCHA_SEED={cmd_args['seed']}")
 
-    if cmd_args["surveyname"] in ["LSST", "lsst"]:
+    if cmd_args["surveyname"] in ["rubin_sim", "RUBIN_SIM"]:
         try:
             args = sorchaArguments(cmd_args)
         except Exception as err:
@@ -469,12 +524,27 @@ def main():
             pplogger.error(err)
             sys.exit(err)
         runLSSTSimulation(args, configs)
-    else:
+    elif cmd_args["surveyname"] in ["LSST", "lsst"]:
         pplogger.error(
-            "ERROR: Survey name not recognised. Current allowed surveys are: {}".format(["LSST", "lsst"])
+            "ERROR: The LSST has not started yet Current allowed surveys are: {}".format(
+                ["rubin_sim", "RUBIN_SIM"]
+            )
         )
         sys.exit(
-            "ERROR: Survey name not recognised. Current allowed surveys are: {}".format(["LSST", "lsst"])
+            "ERROR: The LSST has not started. Current allowed surveys are: {}".format(
+                ["rubin_sim", "RUBIN_SIM"]
+            )
+        )
+    else:
+        pplogger.error(
+            "ERROR: Survey name not recognised. Current allowed surveys are: {}".format(
+                ["rubin_sim", "RUBIN_SIM"]
+            )
+        )
+        sys.exit(
+            "ERROR: Survey name not recognised. Current allowed surveys are: {}".format(
+                ["rubin_sim", "RUBIN_SIM"]
+            )
         )
 
 

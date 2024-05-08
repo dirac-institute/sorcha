@@ -4,14 +4,17 @@ pytest
 pytest-cov
 astropy
 astroquery
+sorcha
 scipy
 sbpy
 matplotlib
 sphinx
 sphinx-rtd-theme
 sphinx-autoapi
+sphinx-exec-directive
 nbsphinx
 ipython
 jupytext
 jupyter
 sorcha-addons
+importlib_resources

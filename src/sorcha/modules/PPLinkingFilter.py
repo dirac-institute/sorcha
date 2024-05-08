@@ -10,7 +10,7 @@ def PPLinkingFilter(
     tracklet_interval,
     minimum_separation,
     maximum_time,
-    survey_name="lsst",
+    survey_name="rubin_sim",
     drop_unlinked=True,
 ):
     """
@@ -39,7 +39,7 @@ def PPLinkingFilter(
     rng (numpy Generator object): numpy random number generator object.
 
     survey_name (str): a string with the survey name. used for time-zone purposes.
-    Currently only accepts "lsst", "LSST".
+    Currently only accepts "rubin_sim", "RUBIN_SIM", "lsst", "LSST".
 
     drop_unlinked (boolean): rejects all observations that are considered to not be linked. Default is True
 
@@ -51,15 +51,15 @@ def PPLinkingFilter(
     """
 
     # create the ndarray that the linker expects
-    from sorcha.modules.miniDifi import linkObservations
+    from sorcha.modules.PPMiniDifi import linkObservations
 
     obsv = pd.DataFrame(
         {
             "ssObjectId": observations["ObjID"],
             "diaSourceId": observations["FieldID"],
-            "midPointTai": observations["FieldMJD_TAI"],
-            "ra": observations["AstRA(deg)"],
-            "decl": observations["AstDec(deg)"],
+            "midPointTai": observations["fieldMJD_TAI"],
+            "ra": observations["RA_deg"],
+            "decl": observations["Dec_deg"],
         }
     )
     nameLen = obsv["ssObjectId"].str.len().max()

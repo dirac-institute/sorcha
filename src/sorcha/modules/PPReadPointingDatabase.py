@@ -28,7 +28,7 @@ def PPReadPointingDatabase(bsdbname, observing_filters, dbquery, surveyname):
 
     pplogger = logging.getLogger(__name__)
 
-    con = sqlite3.connect(bsdbname)
+    con = sqlite3.connect("file:" + bsdbname + "?mode=ro", uri=True)
 
     try:
         df = pd.read_sql_query(dbquery, con)
@@ -43,6 +43,7 @@ def PPReadPointingDatabase(bsdbname, observing_filters, dbquery, surveyname):
     df["observationId_"] = df["observationId"]
     df = df.rename(columns={"observationId": "FieldID"})
     df = df.rename(columns={"filter": "optFilter"})  # not to confuse with the pandas filter command
+    df["optFilter"] = df["optFilter"].astype("category")  # save memory
     dfo = df[df.optFilter.isin(observing_filters)].copy()
 
     # at the moment the RubinSim pointing databases don't record the observation
@@ -51,7 +52,7 @@ def PPReadPointingDatabase(bsdbname, observing_filters, dbquery, surveyname):
     # once we have the actual pointings this check could be changed to, eg,
     # lsst_sim for the RubinSim pointings, and 'lsst' would produce different
     # behaviour.
-    if surveyname in ["lsst", "LSST"]:
+    if surveyname in ["rubin_sim", "RUBIN_SIM"]:
         dfo["observationMidpointMJD_TAI"] = dfo["observationStartMJD_TAI"] + (
             (dfo["visitTime"] / 2.0) / 86400.0
         )

@@ -34,13 +34,16 @@ dependencies = [
     "pooch",
     "tqdm",
     "numba",
+    "importlib_resources",
 ]
 
 [project.scripts]
 sorcha = "sorcha.sorcha:main"
-makeSLURMscript = "sorcha.utilities.makeSLURMscript:main"
-createResultsSQLDatabase = "sorcha.utilities.createResultsSQLDatabase:main"
-bootstrap_sorcha_data_files = "sorcha.utilities.retrieve_ephemeris_data_files:main"
+sorcha_create_results_db = "sorcha.utilities.createResultsSQLDatabase:main"
+sorcha_bootstrap_data_files = "sorcha.utilities.retrieve_ephemeris_data_files:main"
+sorcha_copy_configs = "sorcha.utilities.sorcha_copy_configs:main"
+sorcha_copy_demo_files = "sorcha.utilities.sorcha_copy_demo_files:main"
+sorcha_demo_command = "sorcha.utilities.sorcha_demo_command:print_demo_command"
 
 [project.urls]
 "Documentation" = "https://sorcha.readthedocs.io/en/latest/"
@@ -54,6 +57,7 @@ dev = [
     "pre-commit", # Used to run checks before finalizing a git commit
     "sphinx", # Used to automatically generate documentation
     "sphinx-rtd-theme", # Used to render documentation
+    "sphinx-exec-directive", # running sphinx python commands in documentation
     "sphinx-autoapi", # Used to automatically generate api documentation
     "black", # Used for static linting of files
     # if you add dependencies here while experimenting in a notebook and you
@@ -74,9 +78,10 @@ test = [
 ]
 
 docs = [
-    "sphinx==6.1.3", # Used to automatically generate documentation
-    "sphinx-rtd-theme==1.2.0", # Used to render documentation
-    "sphinx-autoapi==2.0.1", # Used to automatically generate api documentation
+    "sphinx", # Used to automatically generate documentation
+    "sphinx-rtd-theme", # Used to render documentation
+    "sphinx-autoapi", # Used to automatically generate api documentation
+    "sphinx-exec-directive", # running sphinx python commands in documentation
     "nbconvert",
     "nbsphinx",
     "ipython",

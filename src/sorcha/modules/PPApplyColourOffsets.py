@@ -11,6 +11,17 @@ def PPApplyColourOffsets(observations, function, othercolours, observing_filters
     If phase model variables exist for each colour, this function also selects the
     correct variables for each observation based on filter.
 
+    Adds the following columns to the observations dataframe:
+
+    - H_filter
+
+    Removes the following columns from the observations dataframe:
+
+    - Colour offset columns (i.e. u-r, g-r)
+    - Colour-specific phase curve variables (if extant): the correct filter-specific value
+    for each observation is located and stored instead. i.e. GS_r and GS_g columns will be deleted
+    and replaced with a GS column containing either GS_r or GS_g depending on observation filter.
+
     Parameters
     -----------
     observations: Pandas dataframe
@@ -32,7 +43,6 @@ def PPApplyColourOffsets(observations, function, othercolours, observing_filters
     -----------
     observations : Pandas dataframe
         observations dataframe modified with H calculated in relevant filter (H_filter)
-        and renames the column for H in the main filter as H_original.
         The dataframe has also been modified to have the appropriate phase curve filter specific values/columns.
 
 

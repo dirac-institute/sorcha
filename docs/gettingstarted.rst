@@ -8,7 +8,7 @@ In this tutorial, we will show you how to setup and run a basic simulation using
 
 
 .. important::
-  All the input files and configuration files used in this demonstration are available in the demo directory(sorcha/demo). We provide the contents of these files and the links below to download each. You can also grab them in one go by downloading the Sorcha source code repository (Steps 1-4 **only**  of :ref:`dev_mode`).
+  You can copy all the files used in this tutorial to your local directory  via the **sorcha_copy_demo_files** command. 
 
 .. note::
   All input data files in this example are white-space separated format solely for the ease of reading.   
@@ -21,7 +21,7 @@ of our synthetic Solar System population that we wish to input into the simulato
 Making the Orbit File
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-First, we will start with creating an :ref:`orbits`, and generate a file called 'sspp_testset_orbits.des', which contains the orbits of five synthetic objects. You can download the file from `here <https://github.com/dirac-institute/sorcha/blob/main/demo/sspp_testset_orbits.des>`__. The contents of the file is below:
+First, we will start with creating an :ref:`orbits`, and generate a file called 'sspp_testset_orbits.des', which contains the orbits of five synthetic objects The contents of the file is below:
 
 .. literalinclude:: ../demo/sspp_testset_orbits.des
     :language: text
@@ -29,7 +29,7 @@ First, we will start with creating an :ref:`orbits`, and generate a file called 
 Make the Physical Parameters File
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Next, we need to produce the :ref:`physical`, which we call 'sspp_testset_colours.txt'. This file assigns colors, phase curve properties, and absolute magnitudes to each of the simulated small bodies whose orbits are defined in our input orbit file. You can download the file from `here <https://github.com/dirac-institute/sorcha/blob/main/demo/sspp_testset_colours.txt>`__.  The contents of the file is below:
+Next, we need to produce the :ref:`physical`, which we call 'sspp_testset_colours.txt'. This file assigns colors, phase curve properties, and absolute magnitudes to each of the simulated small bodies whose orbits are defined in our input orbit file. The contents of the file is below:
 
 .. literalinclude:: ../demo/sspp_testset_colours.txt
     :language: text
@@ -39,13 +39,12 @@ Next, we need to produce the :ref:`physical`, which we call 'sspp_testset_colour
 
 Getting the Pointing Database 
 ------------------------------------------
-For this tutorial, we're using the first year of the baseline v2.0 LSST cadence simulation as the :ref:`pointing`. You can download the file from `here <https://github.com/dirac-institute/sorcha/blob/main/demo/baseline_v2.0_1yr.db>`__.
-
+For this tutorial, we're using the first year of the baseline v2.0 LSST cadence simulation as the :ref:`pointing`.
 
 Setting Up Sorcha's Configuration File 
 ------------------------------------------
 
-The key information about the simulation parameters are held in the configuration file. For further details check out our :ref:`configs` page. We'll be using the configuration file we have set up to get you started. You can download the file from `here <https://github.com/dirac-institute/sorcha/blob/main/demo/sorcha_config_demo.ini>`__. The contents of the file is below: 
+The key information about the simulation parameters are held in the configuration file. For further details check out our :ref:`configs` page. We'll be using the configuration file we have set up to get you started. The contents of the file is below: 
 
 .. literalinclude:: ../demo/sorcha_config_demo.ini
     :language: text
@@ -71,9 +70,17 @@ will produce
 .. literalinclude:: ./example_files/help_output.txt 
     :language: text
 
-Now that you know how to provide the input files, let's go run a simulation::
+Now that you know how to provide the input files, let's go run a simulation: You can find the command to run the sorcha demo on the command line in two ways. First on the command line::
 
-   sorcha -c ./demo/sorcha_config_demo.ini  -p ./demo/sspp_testset_colours.txt -ob ./demo/sspp_testset_orbits.des -pd ./demo/baseline_v2.0_1yr.db -o ./ -t testrun_e2e -ar ./ar_files 
+   sorcha_demo_command
+
+Or you can in an interactive python session or jupyter notebook. You can run the following
+
+.. exec::
+
+   from sorcha.utilities.sorcha_demo_command import get_demo_command
+   print(get_demo_command())
+
 
 .. tip::
    Sorcha outputs a log file (*.sorcha.log) and error file (*.sorcha.err) in the output directory. If all has gone well, the error file will be empty. The log file has the configuration parameters outputted to it as a record of the run setup.
@@ -91,6 +98,3 @@ The output will appear in a csv file (testrun_e2e.csv) in your current directory
 
 .. warning::
    Only one instance of Sorcha should be run per output directory to ensure that distinct log and error files are created for each Sorcha run. Make sure to have different output pathways if you are running multiple instances on the same compute node.
-
-.. note::
-   This test run is using pre-generated ephemeris already stored in the demo directory of the Sorcha GitHub repository.

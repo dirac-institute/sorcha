@@ -9,7 +9,7 @@ cmd_args_dict = {
     "oifoutput": get_demo_filepath("example_oif_output.txt"),
     "configfile": get_demo_filepath("PPConfig_test.ini"),
     "outpath": "./tests/out",
-    "surveyname": "LSST",
+    "surveyname": "RUBIN_SIM",
     "outfilestem": f"out_end2end",
     "verbose": False,
     "pointing_database": get_demo_filepath("baseline_v2.0_1yr.db"),
@@ -20,7 +20,7 @@ def test_sorchaArguments():
     """make sure that valid args can be parsed"""
     args = sorchaArguments(cmd_args_dict)
 
-    assert args.surveyname == "LSST"
+    assert args.surveyname == "RUBIN_SIM"
 
 
 def test_validate_arguments():
