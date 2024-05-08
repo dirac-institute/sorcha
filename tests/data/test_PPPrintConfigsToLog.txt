@@ -3,18 +3,20 @@ sorcha.modules.PPConfigParser INFO     The config file used is located at test_P
 sorcha.modules.PPConfigParser INFO     The physical parameters file used is located at testcolour.txt 
 sorcha.modules.PPConfigParser INFO     The orbits file used is located at testorb.des 
 sorcha.modules.PPConfigParser INFO     The ephemerides file used is located at oiftestoutput.txt 
-sorcha.modules.PPConfigParser INFO     The survey selected is: lsst 
+sorcha.modules.PPConfigParser INFO     The survey selected is: rubin_sim 
 sorcha.modules.PPConfigParser INFO     No cometary activity selected. 
 sorcha.modules.PPConfigParser INFO     Format of ephemerides file is: csv 
 sorcha.modules.PPConfigParser INFO     Format of auxiliary files is: whitespace 
 sorcha.modules.PPConfigParser INFO     Pointing database path is: ./baseline_10klines_2.0.db 
-sorcha.modules.PPConfigParser INFO     Pointing database required query is: SELECT observationId, observationStartMJD as observationStartMJD_TAI, filter, seeingFwhmGeom, seeingFwhmEff, fiveSigmaDepth, fieldRA, fieldDec, rotSkyPos FROM observations order by observationId 
+sorcha.modules.PPConfigParser INFO     Pointing database required query is: SELECT observationId, observationStartMJD as observationStartMJD_TAI, visitTime, visitExposureTime, filter, seeingFwhmGeom, seeingFwhmEff, fiveSigmaDepth, fieldRA, fieldDec, rotSkyPos FROM observations order by observationId 
 sorcha.modules.PPConfigParser INFO     The number of objects processed in a single chunk is: 10 
 sorcha.modules.PPConfigParser INFO     The main filter in which H is defined is r 
 sorcha.modules.PPConfigParser INFO     The filters included in the post-processing results are r g i z 
 sorcha.modules.PPConfigParser INFO     Thus, the colour indices included in the simulation are g-r i-r z-r 
 sorcha.modules.PPConfigParser INFO     The apparent brightness is calculated using the following phase function model: HG 
 sorcha.modules.PPConfigParser INFO     Computation of trailing losses is switched ON. 
+sorcha.modules.PPConfigParser INFO     Randomization of position and magnitude around uncertainties is switched ON. 
+sorcha.modules.PPConfigParser INFO     Vignetting is switched ON. 
 sorcha.modules.PPConfigParser INFO     Footprint is modelled after the actual camera footprint. 
 sorcha.modules.PPConfigParser INFO     Loading camera footprint from ./detectors_corners.csv 
 sorcha.modules.PPConfigParser INFO     The upper saturation limit(s) is/are: 16.0 
@@ -44,4 +46,4 @@ sorcha.modules.PPConfigParser INFO     Output files will be saved in path: ./ wi
 sorcha.modules.PPConfigParser INFO     Output files will be saved as format: csv 
 sorcha.modules.PPConfigParser INFO     In the output, positions will be rounded to 7 decimal places. 
 sorcha.modules.PPConfigParser INFO     In the output, magnitudes will be rounded to 3 decimal places. 
-sorcha.modules.PPConfigParser INFO     The output size is set to: basic 
+sorcha.modules.PPConfigParser INFO     The output columns are set to: basic 

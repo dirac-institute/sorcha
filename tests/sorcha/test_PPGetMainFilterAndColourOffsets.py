@@ -22,12 +22,22 @@ def test_PPGetMainFilterAndColourOffsets():
         == "ERROR: PPGetMainFilterAndColourOffsets: H is given as r, but r is not listed as a requested observation filter in config file."
     )
 
+    # Test incorrect (but valid) separator.
+    with pytest.raises(SystemExit) as err:
+        _, _ = PPGetMainFilterAndColourOffsets(colour_fn, observing_filters, "csv")
+    assert (
+        err.value.args[0] == (
+            "ERROR: PPGetMainFilterAndColourOffsets: Too few colour columns found. "
+            "Confirm you are using the correct 'aux_format' configuration parameter."
+        )
+    )
+
     # Test invalid separator
     with pytest.raises(SystemExit) as err:
         _, _ = PPGetMainFilterAndColourOffsets(colour_fn, observing_filters, "pipe")
     assert (
         err.value.args[0]
-        == "ERROR: PPGetMainFilterAndColourOffsets: unexpected valye for auxFormat keyword in configs."
+        == "ERROR: PPGetMainFilterAndColourOffsets: unexpected value for auxFormat keyword in configs: pipe"
     )
 
     # Test missing colour

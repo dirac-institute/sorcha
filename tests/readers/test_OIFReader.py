@@ -49,26 +49,26 @@ def test_OIFDataReader():
         [
             "ObjID",
             "FieldID",
-            "FieldMJD_TAI",
-            "AstRange(km)",
-            "AstRangeRate(km/s)",
-            "AstRA(deg)",
-            "AstRARate(deg/day)",
-            "AstDec(deg)",
-            "AstDecRate(deg/day)",
-            "Ast-Sun(J2000x)(km)",
-            "Ast-Sun(J2000y)(km)",
-            "Ast-Sun(J2000z)(km)",
-            "Ast-Sun(J2000vx)(km/s)",
-            "Ast-Sun(J2000vy)(km/s)",
-            "Ast-Sun(J2000vz)(km/s)",
-            "Obs-Sun(J2000x)(km)",
-            "Obs-Sun(J2000y)(km)",
-            "Obs-Sun(J2000z)(km)",
-            "Obs-Sun(J2000vx)(km/s)",
-            "Obs-Sun(J2000vy)(km/s)",
-            "Obs-Sun(J2000vz)(km/s)",
-            "Sun-Ast-Obs(deg)",
+            "fieldMJD_TAI",
+            "Range_LTC_km",
+            "RangeRate_LTC_km_s",
+            "RA_deg",
+            "RARateCosDec_deg_day",
+            "Dec_deg",
+            "DecRate_deg_day",
+            "Obj_Sun_x_LTC_km",
+            "Obj_Sun_y_LTC_km",
+            "Obj_Sun_z_LTC_km",
+            "Obj_Sun_vx_LTC_km_s",
+            "Obj_Sun_vy_LTC_km_s",
+            "Obj_Sun_vz_LTC_km_s",
+            "Obs_Sun_x_km",
+            "Obs_Sun_y_km",
+            "Obs_Sun_z_km",
+            "Obs_Sun_vx_km_s",
+            "Obs_Sun_vy_km_s",
+            "Obs_Sun_vz_km_s",
+            "phase_deg",
         ],
         dtype=object,
     )
@@ -90,7 +90,9 @@ def test_OIFDataReader():
         "oiftestoutput.csv"
     )
 
-    # Check a mismatched file.
+
+def test_OIFDataReader_wrong_data():
+    """Test that we fail if we read an OIF data with the wrong type of data"""
     with pytest.raises(SystemExit) as e:
         reader_ws2 = OIFDataReader(get_test_filepath("testcolour.txt"), inputformat="whitespace")
         _ = reader_ws2.read_rows()
@@ -100,7 +102,19 @@ def test_OIFDataReader():
         == "ERROR: OIFDataReader: column headings do not match expected OIF column headings. Check format of file."
     )
 
+
+def test_OIFDataReader_wrong_format():
+    """Test that we fail if we read an OIF data with the wrong type of data"""
     # Check an invalid file type.
     with pytest.raises(SystemExit) as e:
-        reader_ws2 = OIFDataReader(get_test_filepath("testcolour.txt"), inputformat="invalid")
+        _ = OIFDataReader(get_test_filepath("testcolour.txt"), inputformat="invalid")
+    assert e.type == SystemExit
+
+    # Check mismatched file types.
+    with pytest.raises(SystemExit) as e:
+        _ = OIFDataReader(get_test_filepath("oiftestoutput.txt"), inputformat="csv")
+    assert e.type == SystemExit
+
+    with pytest.raises(SystemExit) as e:
+        _ = OIFDataReader(get_test_filepath("oiftestoutput.csv"), inputformat="whitespace")
     assert e.type == SystemExit

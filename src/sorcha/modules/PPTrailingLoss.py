@@ -47,7 +47,7 @@ def calcTrailingLoss(
     seeing : float or array of floats
         FWHM of the seeing disk. [Units: arcseconds]
 
-    texp : float, optional
+    texp : float or array of floats, optional
         Exposure length. [Units: seconds] Default = 30
 
     model : string, optional
@@ -106,10 +106,11 @@ def calcTrailingLoss(
 def PPTrailingLoss(
     oif_df,
     model="circularPSF",
-    dra_name="AstRARate(deg/day)",
-    ddec_name="AstDecRate(deg/day)",
-    dec_name="AstDec(deg)",
-    seeing_name_survey="seeingFwhmEff",
+    dra_cosdec_name="RARateCosDec_deg_day",
+    ddec_name="DecRate_deg_day",
+    dec_name="Dec_deg",
+    seeing_name_survey="seeingFwhmEff_arcsec",
+    visit_time_name="visitExposureTime",
 ):
     """
     Calculates detection trailing losses. Wrapper for calcTrailingLoss.
@@ -124,16 +125,20 @@ def PPTrailingLoss(
         calcTrailingLoss for details. Default = "circularPSF"
 
     dra_name : string, optional
-        "oif_df" column name for object RA rate. Default = "AstRARate(deg/day)"
+        "oif_df" column name for object RA rate. Default = "RARateCosDec_deg_day"
+        Assumes cos(dec) normalization has already been applied
 
     ddec_name : string, optional
-        "oif_df" column name for object dec rate. Default = "AstDecRate(deg/day)"
+        "oif_df" column name for object dec rate. Default = "DecRate_deg_day"
 
     dec_name : string, default
-            "oif_df" column name for object declination. Default = "AstDec(deg)"
+            "oif_df" column name for object declination. Default = "Dec_deg"
 
     seeing_name_survey : string, optional
-        "oif_df" column name for seeing. Default = "seeingFwhmEff"
+        "oif_df" column name for seeing. Default = "seeingFwhmEff_arcsec"
+
+    visit_time_name : string, optional
+        "oif_df" column name for exposure length. Default = "visitExposureTime"
 
     Returns
     -----------
@@ -146,9 +151,10 @@ def PPTrailingLoss(
     """
 
     dmag = calcTrailingLoss(
-        oif_df[dra_name] * np.cos(oif_df[dec_name] * np.pi / 180),
+        oif_df[dra_cosdec_name],
         oif_df[ddec_name],
         oif_df[seeing_name_survey],
+        texp=oif_df[visit_time_name],
         model=model,
     )
 

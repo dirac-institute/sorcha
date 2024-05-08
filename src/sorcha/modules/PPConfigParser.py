@@ -325,7 +325,7 @@ def PPCheckFiltersForSurvey(survey_name, observing_filters):
 
     pplogger = logging.getLogger(__name__)
 
-    if survey_name in ["LSST", "lsst"]:
+    if survey_name in ["rubin_sim", "RUBIN_SIM"]:
         lsst_filters = ["u", "g", "r", "i", "z", "y"]
         filters_ok = all(elem in lsst_filters for elem in observing_filters)
 
@@ -410,6 +410,10 @@ def PPConfigFileParser(configfile, survey_name):
         pplogger.error("ERROR: size_serial_chunk is zero or negative.")
         sys.exit("ERROR: size_serial_chunk is zero or negative.")
 
+    config_dict["pointing_sql_query"] = PPGetOrExit(
+        config, "INPUT", "pointing_sql_query", "ERROR: no pointing database SQLite3 query provided."
+    )
+
     # ACTIVITY
 
     config_dict["comet_activity"] = config.get("ACTIVITY", "comet_activity", fallback=None)
@@ -466,7 +470,7 @@ def PPConfigFileParser(configfile, survey_name):
         config, "FOV", "camera_model", "ERROR: camera model not defined."
     )
 
-    if config_dict["camera_model"] not in ["circle", "footprint"]:
+    if config_dict["camera_model"] not in ["circle", "footprint", "none"]:
         pplogger.error('ERROR: camera_model should be either "circle" or "footprint".')
         sys.exit('ERROR: camera_model should be either "circle" or "footprint".')
 
@@ -476,7 +480,7 @@ def PPConfigFileParser(configfile, survey_name):
         )
         if external_file:
             PPFindFileOrExit(config_dict["footprint_path"], "footprint_path")
-        elif survey_name.lower() != "lsst":
+        elif survey_name.lower() not in ["lsst", "rubin_sim"]:
             log_error_and_exit(
                 "a default detector footprint is currently only provided for LSST; please provide your own footprint file."
             )
@@ -667,19 +671,30 @@ def PPConfigFileParser(configfile, survey_name):
         pplogger.error("ERROR: output_format should be either csv, sqlite3 or hdf5.")
         sys.exit("ERROR: output_format should be either csv, sqlite3 or hdf5.")
 
-    config_dict["output_size"] = PPGetOrExit(
-        config, "OUTPUT", "output_size", "ERROR: output size not specified."
-    ).lower()
-    if config_dict["output_size"] not in ["basic", "all"]:
-        pplogger.error("ERROR: output_size not recognised.")
-        sys.exit("ERROR: output_size not recognised.")
+    config_dict["output_columns"] = PPGetOrExit(
+        config, "OUTPUT", "output_columns", "ERROR: output size not specified."
+    )
 
-    config_dict["position_decimals"] = PPGetIntOrExit(
-        config, "OUTPUT", "position_decimals", "ERROR: positional decimal places not specified."
-    )
-    config_dict["magnitude_decimals"] = PPGetIntOrExit(
-        config, "OUTPUT", "magnitude_decimals", "ERROR: magnitude decimal places not specified."
-    )
+    if (config_dict["output_columns"] not in ["basic", "all"]) and ("," not in config_dict["output_columns"]):
+        pplogger.error(
+            "ERROR: output_columns not recognised. Must be 'basic', 'all', or a comma-separated list of columns."
+        )
+        sys.exit(
+            "ERROR: output_columns not recognised. Must be 'basic', 'all', or a comma-separated list of columns."
+        )
+
+    # note: if providing a comma-separated list of column names, this is NOT ERROR-HANDLED
+    # as we have no way of knowing ahead of time of columns that user-generated code or add-ons may add.
+
+    if (
+        "," in config_dict["output_columns"]
+    ):  # assume list of column names: turn into a list and strip whitespace
+        config_dict["output_columns"] = [
+            colname.strip(" ") for colname in config_dict["output_columns"].split(",")
+        ]
+
+    config_dict["position_decimals"], _ = PPGetValueAndFlag(config, "OUTPUT", "position_decimals", "int")
+    config_dict["magnitude_decimals"], _ = PPGetValueAndFlag(config, "OUTPUT", "magnitude_decimals", "int")
 
     if config_dict["position_decimals"] < 0 or config_dict["magnitude_decimals"] < 0:
         pplogger.error("ERROR: decimal places config variables cannot be negative.")
@@ -730,11 +745,29 @@ def PPConfigFileParser(configfile, survey_name):
             "ERROR: could not parse value for default_SNR_cut as a boolean. Check formatting and try again."
         )
 
-    config_dict["pointing_sql_query"] = PPGetOrExit(
-        config, "EXPERT", "pointing_sql_query", "ERROR: no pointing database SQLite3 query provided."
-    )
+    try:
+        config_dict["randomization_on"] = config.getboolean("EXPERT", "randomization_on", fallback=True)
+    except ValueError:
+        pplogger.error(
+            "ERROR: could not parse value for randomization_on as a boolean. Check formatting and try again."
+        )
+        sys.exit(
+            "ERROR: could not parse value for randomization_on as a boolean. Check formatting and try again."
+        )
 
-    config_dict["lc_model"] = config.get("EXPERT", "lc_model", fallback=None)
+    try:
+        config_dict["vignetting_on"] = config.getboolean("EXPERT", "vignetting_on", fallback=True)
+    except ValueError:
+        pplogger.error(
+            "ERROR: could not parse value for vignetting_on as a boolean. Check formatting and try again."
+        )
+        sys.exit(
+            "ERROR: could not parse value for vignetting_on as a boolean. Check formatting and try again."
+        )
+
+    # LIGHTCURVEß
+
+    config_dict["lc_model"] = config.get("LIGHTCURVE", "lc_model", fallback=None)
     config_dict["lc_model"] = None if config_dict["lc_model"] == "none" else config_dict["lc_model"]
 
     # If the user defined a lightcurve model, but the model has not been registered, exit the program.
@@ -807,13 +840,23 @@ def PPPrintConfigsToLog(configs, cmd_args):
     else:
         pplogger.info("Computation of trailing losses is switched OFF.")
 
+    if configs["randomization_on"]:
+        pplogger.info("Randomization of position and magnitude around uncertainties is switched ON.")
+    else:
+        pplogger.info("Randomization of position and magnitude around uncertainties is switched OFF.")
+
+    if configs["vignetting_on"]:
+        pplogger.info("Vignetting is switched ON.")
+    else:
+        pplogger.info("Vignetting is switched OFF.")
+
     if configs["camera_model"] == "footprint":
         pplogger.info("Footprint is modelled after the actual camera footprint.")
         if configs["footprint_path"]:
             pplogger.info("Loading camera footprint from " + configs["footprint_path"])
         else:
             pplogger.info("Loading default LSST footprint LSST_detector_corners_100123.csv")
-    else:
+    elif configs["camera_model"] == "circle":
         pplogger.info("Footprint is circular.")
         if configs["fill_factor"]:
             pplogger.info(
@@ -823,6 +866,8 @@ def PPPrintConfigsToLog(configs, cmd_args):
             pplogger.info(
                 "A circular footprint will be applied with radius: " + str(configs["circle_radius"])
             )
+    else:
+        pplogger.info("Camera footprint is turned OFF.")
 
     if configs["bright_limit_on"]:
         pplogger.info("The upper saturation limit(s) is/are: " + str(configs["bright_limit"]))
@@ -915,4 +960,7 @@ def PPPrintConfigsToLog(configs, cmd_args):
         + str(configs["magnitude_decimals"])
         + " decimal places."
     )
-    pplogger.info("The output size is set to: " + configs["output_size"])
+    if isinstance(configs["output_columns"], list):
+        pplogger.info("The output columns are set to: " + " ".join(configs["output_columns"]))
+    else:
+        pplogger.info("The output columns are set to: " + configs["output_columns"])

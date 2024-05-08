@@ -10,6 +10,19 @@ def PPMatchPointingToObservations(padain, pointfildb):
     database onto the observations dataframe, then drops all observations which are not
     in one of the requested filters and any duplicate columns.
 
+    Adds the following columns to the dataframe of observations:
+
+        - visitTime
+        - visitExposureTime
+        - optFilter
+        - seeingFwhmGeom_arcsec
+        - seeingFwhmEff_arcsec
+        - fieldFiveSigmaDepth_mag
+        - fieldRA_deg
+        - fieldDec_deg
+        - fieldRotSkyPos_deg
+        - observationMidpointMJD_TAI
+
     Parameters
     -----------
     padain : pandas dataframe
@@ -30,7 +43,10 @@ def PPMatchPointingToObservations(padain, pointfildb):
 
     # certain columns were added to the pointing db dataframe to help with ephemeris generation.
     # they don't need to be included in the result df, so exclude them from the merge.
-    pointing_columns_to_skip = ["visit_vector", "JD_TDB", "pixels", "r_obs", "v_obs", "r_sun", "v_sun"]
+    pointing_columns_to_skip = ["fieldJD_TDB", "pixels_begin", "pixels_end"]
+    for name in ["visit_vector", "pixels", "r_obs", "v_obs", "r_sun", "v_sun"]:
+        pointing_columns_to_skip += [f"{name}_x", f"{name}_y", f"{name}_z"]
+
     resdf = pd.merge(
         padain,
         pointfildb.loc[:, ~pointfildb.columns.isin(pointing_columns_to_skip)],
@@ -43,7 +59,7 @@ def PPMatchPointingToObservations(padain, pointfildb):
 
     resdf = resdf.dropna(subset=["optFilter"]).reset_index(drop=True)
 
-    chktruemjd = np.isclose(resdf["observationStartMJD_TAI"], resdf["FieldMJD_TAI"])
+    chktruemjd = np.isclose(resdf["observationStartMJD_TAI"], resdf["fieldMJD_TAI"])
 
     if not chktruemjd.all():
         logging.error(
@@ -53,6 +69,6 @@ def PPMatchPointingToObservations(padain, pointfildb):
             "ERROR:: PPMatchPointingToObservations: mismatch in pointing database and pointing output times."
         )
 
-    resdf = resdf.drop(columns=["observationStartMJD_TAI", "observationId_"])
+    resdf = resdf.drop(columns=["observationStartMJD_TAI", "observationId_", "observationMidpointMJD_TAI"])
 
     return resdf

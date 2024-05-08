@@ -19,6 +19,19 @@ def PPCalculateApparentMagnitude(
     then calculates the trailed source apparent magnitude including optional adjustments for
     cometary activity and rotational light curves.
 
+    Adds the following columns to the observations dataframe:
+
+    - H_filter
+    - trailedSourceMagTrue
+    - any columns created by the optional light curve and cometary activity models
+
+    Removes the following columns from the observations dataframe:
+
+    - Colour offset columns (i.e. u-r)
+    - Colour-specific phase curve variables (if extant): the correct filter-specific value
+    for each observation is located and stored instead. i.e. GS_r and GS_g columns will be deleted
+    and replaced with a GS column containing either GS_r or GS_g depending on observation filter.
+
     Parameters
     -----------
     observations : Pandas dataframe
@@ -33,7 +46,7 @@ def PPCalculateApparentMagnitude(
     othercolours : list of strings
         List of colour offsets present in input files.
 
-    observing_filters : ist of strings
+    observing_filters : list of strings
         List of observation filters of interest.
 
     cometary_activity_choice : string

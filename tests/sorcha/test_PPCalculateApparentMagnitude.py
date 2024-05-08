@@ -8,16 +8,16 @@ def test_PPCalculateApparentMagnitudeInFilter_default():
     """Baseline test, no phase function"""
     test_observations = pd.DataFrame(
         {
-            "FieldMJD_TAI": [2459215.5],
+            "fieldMJD_TAI": [2459215.5],
             "H_filter": [7.3],
             "GS": [0.19],
             "G1": [0.62],
             "G2": [0.14],
             "G12": [0.68],
             "S": [0.04],
-            "AstRange(km)": [4.899690e08],
-            "Ast-Sun(km)": [6.301740e08],
-            "Sun-Ast-Obs(deg)": [4.5918],
+            "Range_LTC_km": [4.899690e08],
+            "Obj_Sun_LTC_km": [6.301740e08],
+            "phase_deg": [4.5918],
         }
     )
 
@@ -34,16 +34,16 @@ def test_PPCalculateApparentMagnitudeInFilterWithIdentityLightcurve():
     """
     test_observations = pd.DataFrame(
         {
-            "FieldMJD_TAI": [2459215.5],
+            "fieldMJD_TAI": [2459215.5],
             "H_filter": [7.3],
             "GS": [0.19],
             "G1": [0.62],
             "G2": [0.14],
             "G12": [0.68],
             "S": [0.04],
-            "AstRange(km)": [4.899690e08],
-            "Ast-Sun(km)": [6.301740e08],
-            "Sun-Ast-Obs(deg)": [4.5918],
+            "Range_LTC_km": [4.899690e08],
+            "Obj_Sun_LTC_km": [6.301740e08],
+            "phase_deg": [4.5918],
         }
     )
 
@@ -57,16 +57,16 @@ def test_PPCalculateApparentMagnitudeInFilterWithIdentityLightcurve():
 def test_PPCalculateApparentMagnitudeInFilter():
     test_observations = pd.DataFrame(
         {
-            "FieldMJD_TAI": [2459215.5],
+            "fieldMJD_TAI": [2459215.5],
             "H_filter": [7.3],
             "GS": [0.19],
             "G1": [0.62],
             "G2": [0.14],
             "G12": [0.68],
             "S": [0.04],
-            "AstRange(km)": [4.899690e08],
-            "Ast-Sun(km)": [6.301740e08],
-            "Sun-Ast-Obs(deg)": [4.5918],
+            "Range_LTC_km": [4.899690e08],
+            "Obj_Sun_LTC_km": [6.301740e08],
+            "phase_deg": [4.5918],
         }
     )
 
@@ -98,11 +98,11 @@ def test_PPCalculateSimpleCometaryMagnitude_no_activity():
     cometary_obs = pd.DataFrame(
         {
             "optFilter": ["r", "r"],
-            "TrailedSourceMag": [19.676259, 22.748274],
+            "trailedSourceMagTrue": [19.676259, 22.748274],
             "H_r": [15.35, 15.35],
             "afrho1": [1552, 1552],
             "k": [-3.35, -3.35],
-            "seeingFwhmEff": [8.064748, 3.206723],
+            "seeingFwhmEff_arcsec": [8.064748, 3.206723],
         }
     )
 
@@ -112,7 +112,7 @@ def test_PPCalculateSimpleCometaryMagnitude_no_activity():
 
     df_comet = PPCalculateSimpleCometaryMagnitude(cometary_obs, ["r"], rho, delta, alpha)
 
-    assert_almost_equal(df_comet["TrailedSourceMag"], [19.676259, 22.748274], decimal=3)
+    assert_almost_equal(df_comet["trailedSourceMagTrue"], [19.676259, 22.748274], decimal=3)
 
 
 def test_PPApplyColourOffsets():
@@ -182,9 +182,9 @@ def test_PPCalculateApparentMagnitude():
             "G2": [0.14],
             "G12": [0.68],
             "S": [0.04],
-            "AstRange(km)": [4.899690e08],
-            "Ast-Sun(km)": [6.301740e08],
-            "Sun-Ast-Obs(deg)": [4.5918],
+            "Range_LTC_km": [4.899690e08],
+            "Obj_Sun_LTC_km": [6.301740e08],
+            "phase_deg": [4.5918],
             "optFilter": ["i"],
             "i-r": [-0.11],
         }
@@ -199,9 +199,9 @@ def test_PPCalculateApparentMagnitude():
             "G2": [0.14],
             "G12": [0.68],
             "S": [0.04],
-            "AstRange(km)": [4.899690e08],
-            "Ast-Sun(km)": [6.301740e08],
-            "Sun-Ast-Obs(deg)": [4.5918],
+            "Range_LTC_km": [4.899690e08],
+            "Obj_Sun_LTC_km": [6.301740e08],
+            "phase_deg": [4.5918],
             "optFilter": ["r"],
         }
     )
@@ -209,10 +209,10 @@ def test_PPCalculateApparentMagnitude():
     asteroid_out = PPCalculateApparentMagnitude(asteroid_obs, "HG", "r", ["i-r"], ["r", "i"], "none")
     asteroid_single = PPCalculateApparentMagnitude(asteroid_obs_single, "HG", "r", ["r-r"], ["r"], "none")
 
-    assert_almost_equal(asteroid_out["TrailedSourceMag"].values[0], 13.281578, decimal=6)
+    assert_almost_equal(asteroid_out["trailedSourceMagTrue"].values[0], 13.281578, decimal=6)
     assert_almost_equal(asteroid_out["H_filter"].values[0], 7.19, decimal=6)
     assert_almost_equal(asteroid_out["H_r"].values[0], 7.3, decimal=6)
 
-    assert_almost_equal(asteroid_single["TrailedSourceMag"].values[0], 13.391578, decimal=6)
+    assert_almost_equal(asteroid_single["trailedSourceMagTrue"].values[0], 13.391578, decimal=6)
     assert_almost_equal(asteroid_single["H_filter"].values[0], 7.3, decimal=6)
     assert_almost_equal(asteroid_single["H_r"].values[0], 7.3, decimal=6)

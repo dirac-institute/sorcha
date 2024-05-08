@@ -56,26 +56,26 @@ def test_CSVDataReader_oif(use_cache):
         [
             "ObjID",
             "FieldID",
-            "FieldMJD_TAI",
-            "AstRange(km)",
-            "AstRangeRate(km/s)",
-            "AstRA(deg)",
-            "AstRARate(deg/day)",
-            "AstDec(deg)",
-            "AstDecRate(deg/day)",
-            "Ast-Sun(J2000x)(km)",
-            "Ast-Sun(J2000y)(km)",
-            "Ast-Sun(J2000z)(km)",
-            "Ast-Sun(J2000vx)(km/s)",
-            "Ast-Sun(J2000vy)(km/s)",
-            "Ast-Sun(J2000vz)(km/s)",
-            "Obs-Sun(J2000x)(km)",
-            "Obs-Sun(J2000y)(km)",
-            "Obs-Sun(J2000z)(km)",
-            "Obs-Sun(J2000vx)(km/s)",
-            "Obs-Sun(J2000vy)(km/s)",
-            "Obs-Sun(J2000vz)(km/s)",
-            "Sun-Ast-Obs(deg)",
+            "fieldMJD_TAI",
+            "Range_LTC_km",
+            "RangeRate_LTC_km_s",
+            "RA_deg",
+            "RARateCosDec_deg_day",
+            "Dec_deg",
+            "DecRate_deg_day",
+            "Obj_Sun_x_LTC_km",
+            "Obj_Sun_y_LTC_km",
+            "Obj_Sun_z_LTC_km",
+            "Obj_Sun_vx_LTC_km_s",
+            "Obj_Sun_vy_LTC_km_s",
+            "Obj_Sun_vz_LTC_km_s",
+            "Obs_Sun_x_km",
+            "Obs_Sun_y_km",
+            "Obs_Sun_z_km",
+            "Obs_Sun_vx_km_s",
+            "Obs_Sun_vy_km_s",
+            "Obs_Sun_vz_km_s",
+            "phase_deg",
         ],
         dtype=object,
     )
@@ -130,26 +130,26 @@ def test_CSVDataReader_oif_header():
         [
             "ObjID",
             "FieldID",
-            "FieldMJD_TAI",
-            "AstRange(km)",
-            "AstRangeRate(km/s)",
-            "AstRA(deg)",
-            "AstRARate(deg/day)",
-            "AstDec(deg)",
-            "AstDecRate(deg/day)",
-            "Ast-Sun(J2000x)(km)",
-            "Ast-Sun(J2000y)(km)",
-            "Ast-Sun(J2000z)(km)",
-            "Ast-Sun(J2000vx)(km/s)",
-            "Ast-Sun(J2000vy)(km/s)",
-            "Ast-Sun(J2000vz)(km/s)",
-            "Obs-Sun(J2000x)(km)",
-            "Obs-Sun(J2000y)(km)",
-            "Obs-Sun(J2000z)(km)",
-            "Obs-Sun(J2000vx)(km/s)",
-            "Obs-Sun(J2000vy)(km/s)",
-            "Obs-Sun(J2000vz)(km/s)",
-            "Sun-Ast-Obs(deg)",
+            "fieldMJD_TAI",
+            "Range_LTC_km",
+            "RangeRate_LTC_km_s",
+            "RA_deg",
+            "RARateCosDec_deg_day",
+            "Dec_deg",
+            "DecRate_deg_day",
+            "Obj_Sun_x_LTC_km",
+            "Obj_Sun_y_LTC_km",
+            "Obj_Sun_z_LTC_km",
+            "Obj_Sun_vx_LTC_km_s",
+            "Obj_Sun_vy_LTC_km_s",
+            "Obj_Sun_vz_LTC_km_s",
+            "Obs_Sun_x_km",
+            "Obs_Sun_y_km",
+            "Obs_Sun_z_km",
+            "Obs_Sun_vx_km_s",
+            "Obs_Sun_vy_km_s",
+            "Obs_Sun_vz_km_s",
+            "phase_deg",
         ],
         dtype=object,
     )
@@ -166,6 +166,15 @@ def test_CSVDataReader_oif_header():
     oif_data2 = csv_reader2.read_rows()
     assert len(oif_data2) == 9
 
+    # Check that we fail if we provide the wrong header line number (skip the true header)
+    with pytest.raises(SystemExit) as e1:
+        _ = CSVDataReader(get_test_filepath("oiftestoutput_comment.csv"), "csv", header=4)
+    assert e1.type == SystemExit
+
+    with pytest.raises(SystemExit) as e1:
+        _ = CSVDataReader(get_test_filepath("oiftestoutput_comment.csv"), "csv", header=1)
+    assert e1.type == SystemExit
+
 
 @pytest.mark.parametrize("use_cache", [True, False])
 def test_CSVDataReader_specific_oif(use_cache):
@@ -179,26 +188,26 @@ def test_CSVDataReader_specific_oif(use_cache):
         [
             "ObjID",
             "FieldID",
-            "FieldMJD_TAI",
-            "AstRange(km)",
-            "AstRangeRate(km/s)",
-            "AstRA(deg)",
-            "AstRARate(deg/day)",
-            "AstDec(deg)",
-            "AstDecRate(deg/day)",
-            "Ast-Sun(J2000x)(km)",
-            "Ast-Sun(J2000y)(km)",
-            "Ast-Sun(J2000z)(km)",
-            "Ast-Sun(J2000vx)(km/s)",
-            "Ast-Sun(J2000vy)(km/s)",
-            "Ast-Sun(J2000vz)(km/s)",
-            "Obs-Sun(J2000x)(km)",
-            "Obs-Sun(J2000y)(km)",
-            "Obs-Sun(J2000z)(km)",
-            "Obs-Sun(J2000vx)(km/s)",
-            "Obs-Sun(J2000vy)(km/s)",
-            "Obs-Sun(J2000vz)(km/s)",
-            "Sun-Ast-Obs(deg)",
+            "fieldMJD_TAI",
+            "Range_LTC_km",
+            "RangeRate_LTC_km_s",
+            "RA_deg",
+            "RARateCosDec_deg_day",
+            "Dec_deg",
+            "DecRate_deg_day",
+            "Obj_Sun_x_LTC_km",
+            "Obj_Sun_y_LTC_km",
+            "Obj_Sun_z_LTC_km",
+            "Obj_Sun_vx_LTC_km_s",
+            "Obj_Sun_vy_LTC_km_s",
+            "Obj_Sun_vz_LTC_km_s",
+            "Obs_Sun_x_km",
+            "Obs_Sun_y_km",
+            "Obs_Sun_z_km",
+            "Obs_Sun_vx_km_s",
+            "Obs_Sun_vy_km_s",
+            "Obs_Sun_vz_km_s",
+            "phase_deg",
         ],
         dtype=object,
     )
@@ -358,16 +367,28 @@ def test_CSVDataReader_comets():
     expected = pd.DataFrame({"ObjID": ["67P/Churyumov-Gerasimenko"], "afrho1": [1552], "k": [-3.35]})
     assert_frame_equal(observations, expected)
 
+    # Check reading with a bad format specification.
+    with pytest.raises(SystemExit) as e1:
+        reader = CSVDataReader(get_test_filepath("testcomet.txt"), "csv")
+        _ = reader.read_rows(0, 1)
+    assert e1.type == SystemExit
+
 
 def test_CSVDataReader_delims():
-    """Test that we check the delimiter during reader creation."""
-    for delim in ["whitespace", "csv"]:
-        _ = CSVDataReader(get_test_filepath("testcolour.txt"), delim)
+    """Test that we check and match the delimiter during reader creation."""
+    _ = CSVDataReader(get_test_filepath("testcolour.txt"), "whitespace")
 
+    # Wrong delim type.
+    with pytest.raises(SystemExit) as e1:
+        _ = CSVDataReader(get_test_filepath("testcolour.txt"), "csv")
+    assert e1.type == SystemExit
+
+    # Invalid delim type.
     with pytest.raises(SystemExit) as e1:
         _ = CSVDataReader(get_test_filepath("testcolour.txt"), "many_commas")
     assert e1.type == SystemExit
 
+    # Empty delim type.
     with pytest.raises(SystemExit) as e2:
         _ = CSVDataReader(get_test_filepath("testcolour.txt"), "")
     assert e2.type == SystemExit

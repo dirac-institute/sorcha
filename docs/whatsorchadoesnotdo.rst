@@ -11,6 +11,7 @@ Here is a short summary of the key effects not accounted for in Sorcha:
 - Changing phase curves due to changing viewing angles (impacts some inner Solar System objects)
 - Stellar crowding as a function of galactic latitude
 - Non-gravitational forces including cometary outgassing or YORP (Yarkovsky–O'Keefe–Radzievskii–Paddack) effect. Although not directly handled,you can input your own ephemeris files that account for these effects if required.  
+- Properly handling collisions between the planets and the simulated objects 
 - Removing simulated objects due to small body collisions and breakup events
 - Handling or including false detections/linkages. 
 

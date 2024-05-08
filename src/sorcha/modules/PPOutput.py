@@ -1,5 +1,7 @@
 import pandas as pd
+import numpy as np
 import os
+import sys
 import sqlite3
 import logging
 
@@ -82,12 +84,15 @@ def PPOutWriteSqlite3(pp_results, outf):
     None.
 
     """
+    pplogger = logging.getLogger(__name__)
 
     pp_results = pp_results.drop("level_0", axis=1, errors="ignore")
 
     cnx = sqlite3.connect(outf)
 
-    pp_results.to_sql("pp_results", con=cnx, if_exists="append", index=False)
+    pp_results.to_sql("sorcha_results", con=cnx, if_exists="append", index=False)
+
+    pplogger.info("SQL results saved in table sorcha_results in database {}.".format(outf))
 
 
 def PPWriteOutput(cmd_args, configs, observations_in, endChunk=0, verbose=False):
@@ -122,44 +127,80 @@ def PPWriteOutput(cmd_args, configs, observations_in, endChunk=0, verbose=False)
     pplogger = logging.getLogger(__name__)
     verboselog = pplogger.info if verbose else lambda *a, **k: None
 
-    if configs["output_size"] == "basic":
+    # calculate heliocentric distance
+    observations_in["Obj_Sun_LTC_km"] = np.sqrt(
+        observations_in["Obj_Sun_x_LTC_km"].values ** 2
+        + observations_in["Obj_Sun_y_LTC_km"].values ** 2
+        + observations_in["Obj_Sun_z_LTC_km"].values ** 2
+    )
+
+    if configs["output_columns"] == "basic":
         observations = observations_in.copy()[
             [
                 "ObjID",
-                "FieldMJD_TAI",
-                "fieldRA",
-                "fieldDec",
-                "AstRA(deg)",
-                "AstDec(deg)",
-                "AstrometricSigma(deg)",
+                "fieldMJD_TAI",
+                "fieldRA_deg",
+                "fieldDec_deg",
+                "RA_deg",
+                "Dec_deg",
+                "astrometricSigma_deg",
                 "optFilter",
-                "observedPSFMag",
-                "observedTrailedSourceMag",
-                "PhotometricSigmaPSF(mag)",
-                "PhotometricSigmaTrailedSource(mag)",
-                "fiveSigmaDepth",
-                "fiveSigmaDepthAtSource",
+                "trailedSourceMag",
+                "trailedSourceMagSigma",
+                "fiveSigmaDepth_mag",
+                "phase_deg",
+                "Range_LTC_km",
+                "RangeRate_LTC_km_s",
+                "Obj_Sun_LTC_km",
             ]
         ]
-    elif configs["output_size"] == "all":
+    elif configs["output_columns"] == "all":
         observations = observations_in.copy()
+    elif len(configs["output_columns"]) > 1:  # assume a list of column names...
+        try:
+            observations = observations_in.copy()[configs["output_columns"]]
+        except KeyError:
+            pplogger.error(
+                "ERROR: at least one of the columns provided in output_columns does not seem to exist. Check docs and try again."
+            )
+            sys.exit(
+                "ERROR: at least one of the columns provided in output_columns does not seem to exist. Check docs and try again."
+            )
 
-    observations["FieldMJD_TAI"] = observations["FieldMJD_TAI"].round(decimals=5)
+    if configs["position_decimals"]:
+        for position_col in [
+            "fieldRA_deg",
+            "fieldDec_deg",
+            "RA_deg",
+            "Dec_deg",
+            "astrometricSigma_deg",
+            "RATrue_deg",
+            "DecTrue_deg",
+        ]:
+            try:  # depending on type of output selected, some of these columns may not exist.
+                observations[position_col] = observations[position_col].round(
+                    decimals=configs["position_decimals"]
+                )
+            except KeyError:
+                continue
 
-    for position_col in ["fieldRA", "fieldDec", "AstRA(deg)", "AstDec(deg)", "AstrometricSigma(deg)"]:
-        observations[position_col] = observations[position_col].round(decimals=configs["position_decimals"])
-
-    for magnitude_col in [
-        "observedPSFMag",
-        "observedTrailedSourceMag",
-        "PhotometricSigmaPSF(mag)",
-        "PhotometricSigmaTrailedSource(mag)",
-        "fiveSigmaDepth",
-        "fiveSigmaDepthAtSource",
-    ]:
-        observations[magnitude_col] = observations[magnitude_col].round(
-            decimals=configs["magnitude_decimals"]
-        )
+    if configs["magnitude_decimals"]:
+        for magnitude_col in [
+            "PSFMag",
+            "trailedSourceMag",
+            "trailedSourceMagTrue",
+            "PSFMagTrue",
+            "PSFMagSigma",
+            "trailedSourceMagSigma",
+            "fieldFiveSigmaDepth_mag",
+            "fiveSigmaDepth_mag",
+        ]:
+            try:  # depending on type of output selected, some of these columns may not exist.
+                observations[magnitude_col] = observations[magnitude_col].round(
+                    decimals=configs["magnitude_decimals"]
+                )
+            except KeyError:
+                continue
 
     verboselog("Constructing output path...")
 

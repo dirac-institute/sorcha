@@ -12,13 +12,18 @@ def PPCalculateApparentMagnitudeInFilter(
     padain,
     function,
     observing_filters,
-    colname="TrailedSourceMag",
+    colname="trailedSourceMagTrue",
     lightcurve_choice=None,
     cometary_activity_choice=None,
 ):
     """
     The trailed source apparent magnitude is calculated in the filter for given H,
     phase function, light curve, and cometary activity parameters.
+
+    Adds the following columns to the observations dataframe:
+
+    - trailedSourceMagTrue
+    - any columns created by the optional light curve and cometary activity models
 
     Notes
     -------
@@ -67,17 +72,17 @@ def PPCalculateApparentMagnitudeInFilter(
 
     # first, get H, rho, delta and alpha as ndarrays
     # delta, rho and alpha are converted to au from kilometres
-    delta = (padain["AstRange(km)"].values * u.km).to(u.au).value
+    delta = (padain["Range_LTC_km"].values * u.km).to(u.au).value
 
-    try:
-        rho = (padain["Ast-Sun(km)"].values * u.km).to(u.au).value
+    try:  # this is included for testing purposes
+        rho = (padain["Obj_Sun_LTC_km"].values * u.km).to(u.au).value
     except KeyError:
         rho = (
             (
                 np.sqrt(
-                    padain["Ast-Sun(J2000x)(km)"].values ** 2
-                    + padain["Ast-Sun(J2000y)(km)"].values ** 2
-                    + padain["Ast-Sun(J2000z)(km)"].values ** 2
+                    padain["Obj_Sun_x_LTC_km"].values ** 2
+                    + padain["Obj_Sun_y_LTC_km"].values ** 2
+                    + padain["Obj_Sun_z_LTC_km"].values ** 2
                 )
                 * u.km
             )
@@ -85,7 +90,7 @@ def PPCalculateApparentMagnitudeInFilter(
             .value
         )
 
-    alpha = padain["Sun-Ast-Obs(deg)"].values
+    alpha = padain["phase_deg"].values
     H = padain[H_col].values
 
     # calculate reduced magnitude and contribution from phase function

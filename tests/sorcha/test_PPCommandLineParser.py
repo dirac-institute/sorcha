@@ -14,7 +14,7 @@ class args:
         self.pd = get_test_filepath("baseline_10klines_2.0.db")
         self.o = o
         self.cp = cp
-        self.s = "lsst"
+        self.s = "rubin_sim"
         self.t = t
         self.v = True
         self.f = f
@@ -34,7 +34,7 @@ def test_PPCommandLineParser():
         "configfile": get_test_filepath("test_PPConfig.ini"),
         "pointing_database": get_test_filepath("baseline_10klines_2.0.db"),
         "outpath": "./",
-        "surveyname": "lsst",
+        "surveyname": "rubin_sim",
         "outfilestem": "testout",
         "verbose": True,
         "ar_data_path": None,
@@ -50,7 +50,7 @@ def test_PPCommandLineParser():
         "pointing_database": get_test_filepath("baseline_10klines_2.0.db"),
         "outpath": "./",
         "complex_physical_parameters": get_test_filepath("testcomet.txt"),
-        "surveyname": "lsst",
+        "surveyname": "rubin_sim",
         "outfilestem": "testout",
         "verbose": True,
         "ar_data_path": None,

@@ -16,7 +16,7 @@ import os
 from sorcha.modules.PPConfigParser import PPFindDirectoryOrExit
 
 
-def create_results_table(cnx_out, filename, output_path, output_stem, table_name="pp_results"):
+def create_results_table(cnx_out, filename, output_path, output_stem, table_name="sorcha_results"):
     """
     Creates a table in a SQLite database from SSPP results.
 
@@ -35,7 +35,7 @@ def create_results_table(cnx_out, filename, output_path, output_stem, table_name
         stem filename for SSPP outputs.
 
     table_name : string, optional
-        name of table of for storing sorcha results. Default ="pp_results"
+        name of table of for storing sorcha results. Default ="sorcha_results"
 
     Returns
     -----------
@@ -71,7 +71,7 @@ def create_results_table(cnx_out, filename, output_path, output_stem, table_name
         con = sqlite3.connect(filename)
         cur = con.cursor()
 
-        cur.execute("SELECT * FROM pp_results")
+        cur.execute("SELECT * FROM sorcha_results")
         output = cur.fetchall()
 
         for row in output:
@@ -156,7 +156,7 @@ def create_results_database(args):
         create_inputs_table(cnx_out, "comet")
 
 
-def get_column_names(filename, table_name="pp_results"):
+def get_column_names(filename, table_name="sorcha_results"):
     """
     Obtains column names from a table in a SQLite database.
 
@@ -166,7 +166,7 @@ def get_column_names(filename, table_name="pp_results"):
         Filepath/name of sqlite3 database.
 
     table_name : string, optional
-        Name of table. Default = "pp_results"
+        Name of table. Default = "sorcha_results"
 
     Returns
     -----------
@@ -183,7 +183,7 @@ def get_column_names(filename, table_name="pp_results"):
     return col_names
 
 
-def main():
+def main():  # pragma: no cover
     """
     Creates a SQLite database with tables of SSPP results and all orbit/physical
     parameters/comet files. Assumes orbit/physical parameters/comet files are all
@@ -256,5 +256,5 @@ def main():
     create_results_database(args)
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     main()

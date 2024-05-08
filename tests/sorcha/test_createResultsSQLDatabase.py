@@ -25,19 +25,19 @@ def test_get_column_names():
 
     expected_colnames = [
         "ObjID",
-        "FieldMJD_TAI",
-        "fieldRA",
-        "fieldDec",
-        "AstRA(deg)",
-        "AstDec(deg)",
-        "AstrometricSigma(deg)",
+        "fieldMJD_TAI",
+        "fieldRA_deg",
+        "fieldDec_deg",
+        "RA_deg",
+        "Dec_deg",
+        "astrometricSigma_deg",
         "optFilter",
-        "observedPSFMag",
-        "observedTrailedSourceMag",
-        "PhotometricSigmaPSF(mag)",
-        "PhotometricSigmaTrailedSource(mag)",
-        "fiveSigmaDepth",
-        "fiveSigmaDepthAtSource",
+        "PSFMag",
+        "trailedSourceMag",
+        "PSFMagSigma",
+        "trailedSourceMagSigma",
+        "fieldFiveSigmaDepth_mag",
+        "fiveSigmaDepth_mag",
     ]
 
     assert col_names == expected_colnames
@@ -91,7 +91,7 @@ def test_create_results_table(tmp_path):
 
     cnx_in = sqlite3.connect(os.path.join(tmp_path, "test_results_table.db"))
     cur = cnx_in.cursor()
-    cur.execute("select * from pp_results")
+    cur.execute("select * from sorcha_results")
     col_names = list(map(lambda x: x[0], cur.description))
     test_inputs = pd.DataFrame(cur.fetchall(), columns=col_names)
     cnx_out.close()
@@ -125,7 +125,7 @@ def test_create_results_database(tmp_path):
     col_names = list(map(lambda x: x[0], cur.description))
     test_orbits = pd.DataFrame(cur.fetchall(), columns=col_names)
 
-    cur.execute("select * from pp_results")
+    cur.execute("select * from sorcha_results")
     col_names = list(map(lambda x: x[0], cur.description))
     test_results = pd.DataFrame(cur.fetchall(), columns=col_names)
 

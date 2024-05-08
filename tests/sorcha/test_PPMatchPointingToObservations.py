@@ -20,26 +20,26 @@ def test_PPMatchPointingToObservations():
         {
             "ObjID": ["356450", "356450"],
             "FieldID": [9212, 9262],
-            "FieldMJD_TAI": [60229.28437, 60229.308262],
-            "AstRange(km)": [5710968952.677331, 5710979387.71679],
-            "AstRangeRate(km/s)": [5.027, 5.082],
-            "AstRA(deg)": [11.240711, 11.240231],
-            "AstRARate(deg/day)": [-0.020115, -0.020077],
-            "AstDec(deg)": [-2.329568, -2.329769],
-            "AstDecRate(deg/day)": [-0.008383, -0.00838],
-            "Ast-Sun(J2000x)(km)": [5738514267.542, 5738511944.992],
-            "Ast-Sun(J2000y)(km)": [1155496538.993, 1155505324.219],
-            "Ast-Sun(J2000z)(km)": [-213429030.257, -213426267.84],
-            "Ast-Sun(J2000vx)(km/s)": [-1.125, -1.125],
-            "Ast-Sun(J2000vy)(km/s)": [4.256, 4.256],
-            "Ast-Sun(J2000vz)(km/s)": [1.338, 1.338],
-            "Obs-Sun(J2000x)(km)": [141728571.959, 141707497.927],
-            "Obs-Sun(J2000y)(km)": [43170140.218, 43223951.125],
-            "Obs-Sun(J2000z)(km)": [18707327.816, 18730458.18],
-            "Obs-Sun(J2000vx)(km/s)": [-10.186, -10.231],
-            "Obs-Sun(J2000vy)(km/s)": [26.095, 26.041],
-            "Obs-Sun(J2000vz)(km/s)": [11.206, 11.205],
-            "Sun-Ast-Obs(deg)": [0.281093, 0.281579],
+            "fieldMJD_TAI": [60229.28437, 60229.308262],
+            "Range_LTC_km": [5710968952.677331, 5710979387.71679],
+            "RangeRate_LTC_km_s": [5.027, 5.082],
+            "RA_deg": [11.240711, 11.240231],
+            "RARateCosDec_deg_day": [-0.020115, -0.020077],
+            "Dec_deg": [-2.329568, -2.329769],
+            "DecRate_deg_day": [-0.008383, -0.00838],
+            "Obj_Sun_x_LTC_km": [5738514267.542, 5738511944.992],
+            "Obj_Sun_y_LTC_km": [1155496538.993, 1155505324.219],
+            "Obj_Sun_z_LTC_km": [-213429030.257, -213426267.84],
+            "Obj_Sun_vx_LTC_km_s": [-1.125, -1.125],
+            "Obj_Sun_vy_LTC_km_s": [4.256, 4.256],
+            "Obj_Sun_vz_LTC_km_s": [1.338, 1.338],
+            "Obs_Sun_x_km": [141728571.959, 141707497.927],
+            "Obs_Sun_y_km": [43170140.218, 43223951.125],
+            "Obs_Sun_z_km": [18707327.816, 18730458.18],
+            "Obs_Sun_vx_km_s": [-10.186, -10.231],
+            "Obs_Sun_vy_km_s": [26.095, 26.041],
+            "Obs_Sun_vz_km_s": [11.206, 11.205],
+            "phase_deg": [0.281093, 0.281579],
         }
     )
 
@@ -72,19 +72,19 @@ def test_PPMatchPointingToObservations():
     joined_df = PPJoinEphemeridesAndParameters(test_oif, test_params)
     joined_df_2 = PPJoinEphemeridesAndOrbits(joined_df, test_orb)
 
-    dbq = "SELECT observationId, observationStartMJD as observationStartMJD_TAI, visitTime, filter, seeingFwhmGeom, seeingFwhmEff, fiveSigmaDepth, fieldRA, fieldDec, rotSkyPos FROM observations order by observationId"
+    dbq = "SELECT observationId, observationStartMJD as observationStartMJD_TAI, visitTime, visitExposureTime, filter, seeingFwhmGeom as seeingFwhmGeom_arcsec, seeingFwhmEff as seeingFwhmEff_arcsec, fiveSigmaDepth as fieldFiveSigmaDepth_mag , fieldRA as fieldRA_deg, fieldDec as fieldDec_deg, rotSkyPos as fieldRotSkyPos_deg FROM observations order by observationId"
 
-    # note that surveyname here is "test". this is because this test pointing dataframe doesn't have the visitTime column
-    # and thus cannot calculate 'observationMidpointMJD_TAI'. we don't need it here, so that's okay.
     pointing_db = PPReadPointingDatabase(
-        get_test_filepath("baseline_10klines_2.0.db"), ["g", "r", "i"], dbq, "lsst"
+        get_test_filepath("baseline_10klines_2.0.db"), ["g", "r", "i"], dbq, "rubin_sim"
     )
 
     # simulate adding extra columns to the pointing db for the precomputed values
     # needed for ephemeris generation. This ensures that the extra columns are not
     # included in the merge in PPMatchPointingToObservations.
     r_sun = np.empty((len(pointing_db), 3))
-    pointing_db["r_sun"] = r_sun.tolist()
+    pointing_db["r_sun_x"] = r_sun[:, 0]
+    pointing_db["r_sun_y"] = r_sun[:, 1]
+    pointing_db["r_sun_z"] = r_sun[:, 2]
 
     final_join = PPMatchPointingToObservations(joined_df_2, pointing_db)
 
@@ -92,26 +92,26 @@ def test_PPMatchPointingToObservations():
         {
             "ObjID": ["356450", "356450"],
             "FieldID": [9212, 9262],
-            "FieldMJD_TAI": [60229.28437, 60229.308262],
-            "AstRange(km)": [5710968952.677331, 5710979387.71679],
-            "AstRangeRate(km/s)": [5.027, 5.082],
-            "AstRA(deg)": [11.240711, 11.240231],
-            "AstRARate(deg/day)": [-0.020115, -0.020077],
-            "AstDec(deg)": [-2.329568, -2.329769],
-            "AstDecRate(deg/day)": [-0.008383, -0.00838],
-            "Ast-Sun(J2000x)(km)": [5738514267.542, 5738511944.992],
-            "Ast-Sun(J2000y)(km)": [1155496538.993, 1155505324.219],
-            "Ast-Sun(J2000z)(km)": [-213429030.257, -213426267.84],
-            "Ast-Sun(J2000vx)(km/s)": [-1.125, -1.125],
-            "Ast-Sun(J2000vy)(km/s)": [4.256, 4.256],
-            "Ast-Sun(J2000vz)(km/s)": [1.338, 1.338],
-            "Obs-Sun(J2000x)(km)": [141728571.959, 141707497.927],
-            "Obs-Sun(J2000y)(km)": [43170140.218, 43223951.125],
-            "Obs-Sun(J2000z)(km)": [18707327.816, 18730458.18],
-            "Obs-Sun(J2000vx)(km/s)": [-10.186, -10.231],
-            "Obs-Sun(J2000vy)(km/s)": [26.095, 26.041],
-            "Obs-Sun(J2000vz)(km/s)": [11.206, 11.205],
-            "Sun-Ast-Obs(deg)": [0.281093, 0.281579],
+            "fieldMJD_TAI": [60229.28437, 60229.308262],
+            "Range_LTC_km": [5710968952.677331, 5710979387.71679],
+            "RangeRate_LTC_km_s": [5.027, 5.082],
+            "RA_deg": [11.240711, 11.240231],
+            "RARateCosDec_deg_day": [-0.020115, -0.020077],
+            "Dec_deg": [-2.329568, -2.329769],
+            "DecRate_deg_day": [-0.008383, -0.00838],
+            "Obj_Sun_x_LTC_km": [5738514267.542, 5738511944.992],
+            "Obj_Sun_y_LTC_km": [1155496538.993, 1155505324.219],
+            "Obj_Sun_z_LTC_km": [-213429030.257, -213426267.84],
+            "Obj_Sun_vx_LTC_km_s": [-1.125, -1.125],
+            "Obj_Sun_vy_LTC_km_s": [4.256, 4.256],
+            "Obj_Sun_vz_LTC_km_s": [1.338, 1.338],
+            "Obs_Sun_x_km": [141728571.959, 141707497.927],
+            "Obs_Sun_y_km": [43170140.218, 43223951.125],
+            "Obs_Sun_z_km": [18707327.816, 18730458.18],
+            "Obs_Sun_vx_km_s": [-10.186, -10.231],
+            "Obs_Sun_vy_km_s": [26.095, 26.041],
+            "Obs_Sun_vz_km_s": [11.206, 11.205],
+            "phase_deg": [0.281093, 0.281579],
             "H_r": [7.99, 7.99],
             "u-r": [2.55, 2.55],
             "g-r": [0.92, 0.92],
@@ -127,17 +127,18 @@ def test_PPMatchPointingToObservations():
             "e": [0.09654, 0.09654],
             "q": [33.01305, 33.01305],
             "visitTime": [34.0, 34.0],
+            "visitExposureTime": [30.0, 30.0],
             "optFilter": ["r", "i"],
-            "seeingFwhmGeom": [0.9072793403337696, 0.9738200113477326],
-            "seeingFwhmEff": [1.0404858154912038, 1.1214355369193827],
-            "fiveSigmaDepth": [23.85277692149377, 23.216004807761653],
-            "fieldRA": [10.286608210708128, 10.286608210708128],
-            "fieldDec": [-2.177840811640851, -2.177840811640851],
-            "rotSkyPos": [298.5944886818567, 302.40143247632597],
-            "observationMidpointMJD_TAI": [60229.284567, 60229.308459],
+            "seeingFwhmGeom_arcsec": [0.9072793403337696, 0.9738200113477326],
+            "seeingFwhmEff_arcsec": [1.0404858154912038, 1.1214355369193827],
+            "fieldFiveSigmaDepth_mag": [23.85277692149377, 23.216004807761653],
+            "fieldRA_deg": [10.286608210708128, 10.286608210708128],
+            "fieldDec_deg": [-2.177840811640851, -2.177840811640851],
+            "fieldRotSkyPos_deg": [298.5944886818567, 302.40143247632597],
         }
     )
+    expected_df["optFilter"] = expected_df["optFilter"].astype("category")
 
-    assert_frame_equal(expected_df, final_join)
+    assert_frame_equal(expected_df, final_join, check_categorical=False)
 
     return

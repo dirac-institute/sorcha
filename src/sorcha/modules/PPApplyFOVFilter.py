@@ -13,6 +13,10 @@ def PPApplyFOVFilter(observations, configs, module_rngs, footprint=None, verbose
      are removed from the inputted pandas dataframevfor moving objects that land outside of
      their associated observation's footprint.
 
+    Adds the following columns to the observations dataframe:
+
+    - detectorId (if full camera footprint is used)
+
     Parameters
     -----------
     observations: Pandas dataframe
@@ -60,6 +64,9 @@ def PPApplyFOVFilter(observations, configs, module_rngs, footprint=None, verbose
         if configs["fill_factor"]:
             verboselog("Fill factor is set. Removing random observations to mimic chip gaps.")
             observations = PPSimpleSensorArea(observations, module_rngs, configs["fill_factor"])
+
+    if configs["camera_model"] == "none":
+        verboselog("Camera model set to None in configs. No FOV filter will be applied.")
 
     return observations
 
@@ -118,12 +125,10 @@ def PPCircleFootprint(observations, circle_radius):
 
     """
 
-    data_coords = SkyCoord(
-        ra=observations["AstRA(deg)"].values, dec=observations["AstDec(deg)"].values, unit="deg"
-    )
+    data_coords = SkyCoord(ra=observations["RA_deg"].values, dec=observations["Dec_deg"].values, unit="deg")
 
     field_coords = SkyCoord(
-        ra=observations["fieldRA"].values, dec=observations["fieldDec"].values, unit="deg"
+        ra=observations["fieldRA_deg"].values, dec=observations["fieldDec_deg"].values, unit="deg"
     )
 
     separations = data_coords.separation(field_coords).degree

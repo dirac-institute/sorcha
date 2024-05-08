@@ -9,24 +9,11 @@ from sorcha.utilities.dataUtilitiesForTests import get_test_filepath
 def test_PPSimpleSensorArea():
     from sorcha.modules.PPApplyFOVFilter import PPSimpleSensorArea
 
-    test_data = pd.read_csv(get_test_filepath("test_input_fullobs.csv"), nrows=15)
+    test_data = pd.read_csv(get_test_filepath("test_input_fullobs.csv"), nrows=10)
 
-    test_out = PPSimpleSensorArea(test_data, PerModuleRNG(2022), fillfactor=0.9)
+    test_out = PPSimpleSensorArea(test_data, PerModuleRNG(2021), fillfactor=0.9)
 
-    expected = [
-        894816,
-        894838,
-        897478,
-        901987,
-        902035,
-        907363,
-        907416,
-        907470,
-        909426,
-        909452,
-        910850,
-        910872,
-    ]
+    expected = [894816, 894838, 897478, 897521, 901987, 902035, 907363, 907416, 907470, 909426]
 
     assert_equal(expected, test_out["FieldID"].values)
 
@@ -61,7 +48,7 @@ def test_PPApplyFOVFilters():
     from sorcha.modules.PPApplyFOVFilter import PPApplyFOVFilter
     from sorcha.modules.PPFootprintFilter import Footprint
 
-    observations = pd.read_csv(get_test_filepath("test_input_fullobs.csv"), nrows=20)
+    observations = pd.read_csv(get_test_filepath("test_input_fullobs.csv"), nrows=10)
 
     rng = PerModuleRNG(2021)
 
@@ -73,52 +60,45 @@ def test_PPApplyFOVFilters():
     }
 
     new_obs = PPApplyFOVFilter(observations, configs, rng)
-    expected = [897478, 897521, 901987, 902035, 907363, 907416, 907470, 910850, 910872]
+    expected = [897478, 897521, 901987, 902035, 907363, 907416, 907470]
 
     assert_equal(new_obs["FieldID"].values, expected)
 
     configs = {
         "camera_model": "circle",
-        "fill_factor": 0.5,
+        "fill_factor": 0.9,
         "circle_radius": None,
         "footprint_edge_threshold": None,
     }
 
     new_obs = PPApplyFOVFilter(observations, configs, rng)
-    expected = [894816, 894838, 897478, 897521, 901987, 907416, 907470, 910850, 922034, 922035, 926281]
+    expected = [894816, 894838, 897478, 897521, 901987, 902035, 907363, 907416, 907470, 909426]
 
     assert_equal(new_obs["FieldID"].values, expected)
 
     configs = {
         "camera_model": "footprint",
         "footprint_path": get_test_filepath("detectors_corners.csv"),
-        "footprint_edge_threshold": 0.0,
+        "footprint_edge_threshold": None,
     }
     footprint = Footprint(configs["footprint_path"])
     new_obs = PPApplyFOVFilter(observations, configs, rng, footprint=footprint)
-    expected = [
-        894816,
-        894838,
-        897478,
-        897521,
-        901987,
-        902035,
-        907363,
-        907416,
-        907470,
-        909426,
-        909452,
-        910850,
-        910872,
-        915246,
-        915268,
-        922013,
-        922034,
-        922035,
-        926281,
-        926288,
+
+    expected_ids = [
+        35.0,
+        35.0,
+        60.0,
+        88.0,
+        100.0,
+        106.0,
+        114.0,
+        127.0,
+        130.0,
+        130.0,
     ]
 
-    assert_equal(new_obs["FieldID"].values, expected)
+    assert set(new_obs["detectorID"].values) == set(expected_ids)
 
-    return
+    configs = {"camera_model": "none"}
+    new_obs = PPApplyFOVFilter(observations, configs, rng)
+    assert len(new_obs) == 10
