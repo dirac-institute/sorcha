@@ -34,7 +34,35 @@ logger = logging.getLogger(__name__)
 def randomizeAstrometryAndPhotometry(observations, configs, module_rngs, verbose=False):
     """
     Wrapper function to perform randomisation of astrometry and photometry around
-    their uncertainties.
+    their uncertainties. Calls randomizePhotometry() and randomizeAstrometry().
+
+    Adds the following columns to the dataframe:
+    - trailedSourceMag
+    - PSFMag
+    - AstRATrue(deg)
+    - AstDecTrue(deg)
+
+    Parameters
+    -----------
+    observations : pandas dataframe
+       Dataframe containing observations.
+
+    configs : dict
+       Dictionary of config file variables.
+
+    module_rngs : PerModuleRNG
+       A collection of random number generators (per module).
+
+    verbose : bool
+       Verbosity on or off. Default False.
+
+    Returns
+    ---------
+    observations : pandas dataframe
+       Original input dataframe with RA and Dec columns and trailedSourceMag and PSFMag
+       columns randomized around astrometric and photometric sigma. Original RA and Dec/magnitudes
+       stored in separate columns.
+
     """
 
     verboselog = logger.info if verbose else lambda *a, **k: None
