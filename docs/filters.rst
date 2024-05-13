@@ -52,70 +52,52 @@ To include this filter, the following options should be set in the configuration
   :align: center
 
 
-Trailing Losses
------------------
-
-.. warning::
-    We **very strongly recommend** that the user never turn this off, but we provide 
-    this option for debugging or for speed increases when the user is absolutely sure 
-    they are only supplying slow-moving objects.
-
-If the observed object is fast-moving, the signal will form a trail, reducing the measured magnitude.
-This filter will recalculate the PSF magnitude of the observations, adjusting for trailing losses.
-
-.. image:: images/Trail.png
-  :width: 400
-  :alt: Sky image showing a short trailing source circled in red.
-  :align: center
-
-The trailing losses filter is on by default, but it can be turned off by including the option in the configuration file::
-
-    [EXPERT]
-    trailing_losses_on = False
-
 .. _the_camera_footprint:
 
 Camera Footprint
 -----------------
 
 .. attention::
-    Applying some form of the camera footprint filter is mandatory: the config file must include the `camera_model` keyword and
-    at least one of the additional variables as shown below.
+    Applying some form of the camera footprint filter is mandatory.
 
-Due to the footprint of the LSST detector (see figure below), it is possible that some objects may be lost in
-gaps between the chips. The LSST detector shape is included in the repo and described by the file `./data/detector_corners.csv`. 
+Due to the footprint of the LSST Camera (LSSTCam), see the figure below, it is possible that some object detections  may be lost in
+gaps between the chips. 
 
 .. image:: images/Footprint.png
   :width: 600
   :alt: Plot of the LSST camera footprint where x and y are x and y distance from the pupil in degrees. The footprint also shows two overplotted circle radii of 1.75deg (corresponding to a 75% fill factor) and 2.06deg.
+  :align: center
 
-However, the full camera footprint is most relevant for slow-moving objects, where an 
-object may move only a small amount per night and could thus in a subsequent observation fall into a chip gap. This is less concerning for 
-faster-moving objects such as asteroids and NEOs. 
+However, the full camera footprint is most relevant for slow-moving objects, where an object may move only a small amount per night and could thus in a 
+subsequent observation fall into a chip gap. This is less concerning for faster-moving objects such as asteroids and near-Earth objects. As a result, 
+we provide two methods of applying the camera footprint.
 
-As a result, we provide three methods of applying the camera footprint.
+Circle Radius (Simple Sensor Area)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-**Simple sensor area:** Using this filter removes random observations to roughly mimic the chip gaps. The
-fraction of observations not removed is controlled by the config variable fill_factor. To include this filter, the following 
-options should be set in the configuration file::
+Using this filter applies a very simple circular camera footprint. The radius of the circle (**circle_radius** key) should
+be given in degrees. The **fill_factor** key specifics what fraction of observations should be randomly removed to roughly mimic detector chip
+ gaps in this circular footprint approximation. The fraction of observations not removed is controlled by the config variable fill_factor. 
+To include this filter, the following options should be set in the configuration file::
 
     [FOV]
     camera_model = circle
+    circle_radius = 1.75
     fill_factor = 0.9
 
-**Circle radius:** Using this filter applies a very simple circular camera footprint. The radius of the circle should
-be given in degrees. To include this filter, the following options should be set in the configuration file::
-
-    [FOV]
-    camera_model = circle
-    circle_radius = 1.8
-
 .. warning::
-    Note that :ref:`ASSIST+REBOUND ephemeris generator<ephemeris_gen>` also uses a circular radius for its search area, with a default of 2.06.
-    Setting the circle_radius to be larger than the radius used for ASSIST+REBOUND will have no effect. 
+    Note that :ref:`ASSIST+REBOUND ephemeris generator<ephemeris_gen>` also uses a circular radius for its search area. To get accurate results, the ASSIST+REBOUND radius must be set to be larger than the circle_radius. For simmulating the LSST, we rcommend setting **ar_ang_fov = 2.06** and **ar_fov_buffer = 0.2**. Setting the circle_radius to be larger than the radius used for ASSIST+REBOUND will have no effect. 
 
-**Camera footprint:** Using this filter applies a full camera footprint, including chip gaps. This is the 
-slowest and most accurate version of the footprint filter.
+.. tip::
+   For Rubin Observatory, the circle radius should be set to 1.75 degrees with a fill factor of 0.9 to approximate the detector area of LSSTCam.
+
+
+.. _full_camera_footprint:
+
+Full Camera Footprint
+~~~~~~~~~~~~~~~~~~~~~~~
+
+Using this filter applies a full camera footprint, including chip gaps. This is the slowest and most accurate version of the footprint filter.
 
 To include this filter, the following options should be set in the configuration file::
 
@@ -123,15 +105,22 @@ To include this filter, the following options should be set in the configuration
     camera_model = footprint
     footprint_path = ./data/detectors_corners.csv
 
-The camera footprint file is a comma separated text file with three columns describing the detector shapes, with the header “detector,x,y”. The first column indicates which detector a point belongs to, and should be an integer. Second and third columns specify where on the focal plane the corners are. Values are unitless, equal to tan( ra ), tan( dec ), where ra and dec are the vertical and horizontal angles of the points from the center of the sphere tangent to origin in the focal plane. Ordering does not matter, as the constructor sorts the points automatically.
+.. tip::
+    Sorcha comes with a representation of the LSSTCam footprint already installed. If you do not include the **footprint_path** in the configuration file, then Sorcha assumes you're using its internal LSSTCam footprint. 
 
-Additionally, the camera footprint can model losses at the edge of the detectors at a threshold measured in arcseconds on 
-the focal plane using the `footprint_edge_threshold` key: omitting this key omits this functionality. Include::
+.. warning::
+    Note that :ref:`ASSIST+REBOUND ephemeris generator<ephemeris_gen>` uses a circular radius for its search area. To get accurate results, the ASSIST+REBOUND radius must be set to be larger than the circle_radius. For simmulating the LSST, we rcommend setting **ar_ang_fov = 2.06** and **ar_fov_buffer = 0.2**.  
+
+Additionally, the camera footprint  model can account for the losses at the edge of the CCDs where the detection software will not be able to pick out sources close to the edge. You can add an exclusion zone around each CCD measured in arcseconds (on the focal plane) using the `footprint_edge_threshold` key to the configuraiton file.  An example setup in the configuration file::
 
     [FOV]
     camera_model = footprint
     footprint_path = ./data/detectors_corners.csv
     footprint_edge_threshold = 0.0001
+
+.. tip::
+    Sorcha comes with a representation of the LSSTCam footprint already installed. If you do not include the **footprint_path** in the configuration file, then Sorcha assumes you're using its internal LSSTCam footprint.
+
 
 Vignetting
 -----------------
@@ -147,28 +136,6 @@ Vignetting is applied by default and cannot be turned off by the user in the con
   :width: 500
   :alt: Plot of the LSST camera footprint in Dec vs. RA, showing shaded dimming due to vignetting.
   :align: center
-
-
-SNR/Magnitude Limits
----------------------
-
-These two mutually-exclusive filters serve to cut observations of faint objects. 
-The user may either implement the SNR limit, to remove all observations of objects
-below a user-defined SNR threshold; or the magnitude limit, to remove all observations
-of objects above a user-defined magnitude.
-
-To implement the SNR limit, include the following in the config file::
-
-    [EXPERT]
-    SNR_limit = 2.0
-    
-To implement the magnitude limit, include the following in the config file::
-
-    [EXPERT]
-    magnitude_limit = 22.0
-
-.. attention::
-    Only one of these filters may be implemented at once.
 
 
 Linking 
@@ -209,4 +176,31 @@ The defaults given below are those used by SSP and are explained in the comments
     # complete track/detection.
     SSP_track_window = 15
 
+
+Expert Filters
+----------------------
+
+SNR/Apparent Magnitude Cuts
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. warning::
+    These filters are for the advanced user. If you only want to know what the survey will discover, you **DO NOT** need these filters on. 
+
+These two mutually-exclusive filters serve to cut observations of faint objects.
+The user may either implement the SNR limit, to remove all observations of objects
+below a user-defined SNR threshold; or the magnitude limit, to remove all observations
+of objects above a user-defined magnitude.
+
+To implement the SNR limit, include the following in the config file::
+
+    [EXPERT]
+    SNR_limit = 2.0
+
+To implement the magnitude limit, include the following in the config file::
+
+    [EXPERT]
+    magnitude_limit = 22.0
+
+.. attention::
+    Only one of these filters may be implemented at once.
  

@@ -12,5 +12,5 @@ Testing Your Sorcha Installation
 .. note::
    These files are stored in your system's cache by default if the --cache flag is not provided. If the files already downloaded and want a fresh download, you need to use the -f flag.
 
-.. warning:: These files can change/be updated with the revised positions of the planets every once in a while. So if you're running simulations for population statistics, we recommend downloading these files to a directory and having all Sorcha runs these files for consistency.
+.. warning:: These files can change/be updated with the revised positions of the planets every once in a while. So if you're running simulations for population statistics, we recommend downloading these files to a directory and having all Sorcha runs use these files for consistency.
 
