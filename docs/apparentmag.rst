@@ -6,6 +6,9 @@ Apparent Magnitude Calculations
 Trailed Source Magnitude and PSF (Point Spread Function) Magnitude
 ---------------------------------------------------------------------
 
+Sorcha calculates two apparent magnitudes that we will refer to as the **trailed source magnitude** and the **PSF magnitude**. 
+
+
 
 .. image:: images/trailed_source.png
   :width: 500
@@ -40,3 +43,25 @@ The base lightcurve class is `AbstractLightCurve <https://github.com/dirac-insti
 
 Applying Photometric and Astrometric Uncerainties 
 ------------------------------------------------------------
+
+Trailing Losses
+-----------------
+
+.. warning::
+    We **very strongly recommend** that the user never turn this off, but we provide
+    this option for debugging or for speed increases when the user is absolutely sure
+    they are only supplying slow-moving objects.
+
+If the observed object is fast-moving, the signal will form a trail, reducing the measured magnitude.
+This filter will recalculate the PSF magnitude of the observations, adjusting for trailing losses.
+
+.. image:: images/Trail.png
+  :width: 400
+  :alt: Sky image showing a short trailing source circled in red.
+  :align: center
+
+The trailing losses filter is on by default, but it can be turned off by including the option in the configuration file::
+
+    [EXPERT]
+    trailing_losses_on = False
+

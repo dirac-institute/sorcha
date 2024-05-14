@@ -9,6 +9,7 @@ Inputs
 .. image:: images/survey_simulator_flow_chart.png
   :width: 800
   :alt: An overview of the inputs and outputs of the Sorcha code.
+  :align: center
 
 .. tip::
   Each synthetic planetesimal has its own unique object identifier set by the user and must have entries in the orbits and physical parameters files, as well as the cometary activity file, if used.
@@ -350,3 +351,21 @@ An example of an (optional) ephemeris file:
 .. note::
    All positions and velocities are in respect to J2000 
 
+Camera Footprint File (Optional)
+-----------------------------------------
+
+.. attention::
+    The camera footprint file is only required if you are using the camera footprint 
+
+If you are going to simulate the full camera architecture including CCD locations and chip gaps in the camera focal plane, you will need to provide a file that describes the layout of detectors on the camera focal plane. 
+
+The camera footprint file is a comma-separated text file with three columns describing the detector shapes, with the header “detector,x,y”. The first column indicates which detector a point belongs to, and should be an integer. Second and third columns specify where on the focal plane the corners are. Values are unitless, equal to tan( ra ), tan( dec ), where ra and dec are the vertical and horizontal angles of the points from the center of the sphere tangent to origin in the focal plane. Ordering does not matter, as the constructor sorts the points automatically.
+
+.. tip::
+Sorcha comes with a representation of the LSSTCam architecture already installed. Further details of how to use this built-in default file can be found in the description of the :ref:`Full Camera Footprint Filter<full_camera_footprint>`.
+
+An example of an (optional) camera footprint file:
+
+.. literalinclude:: ../src/sorcha/modules/data/LSST_detector_corners_100123.csv 
+    :language: text
+    :lines: 1-20
