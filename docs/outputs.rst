@@ -30,7 +30,7 @@ Output Formats
 ----------------------
 The configuration file keyword output_format allows Sorcha to output files in CSV, SQLite3 or HDF5 formats.  For example::
 
-    [OUTPUT]
+   [OUTPUT]
    # The options: csv, sqlite3, hdf5
     output_format = csv
  
@@ -40,7 +40,19 @@ The configuration file keyword output_format allows Sorcha to output files in CS
 .. warning::
    If you are writing to a HDF5 file that you plan to access using the PyTables library, note that your object IDs cannot begin
    with a number (due to a limitation in PyTables).
-  
+
+
+Output Rounding
+----------------------
+By default, no rounding is performed on any of the output values. If you wish to round
+output values, this can be done separately for magnitude and position values using the following
+configuration file keywords::
+
+   [OUTPUT]
+   position_decimals = 7
+   magnitude_decimals = 3
+
+
 Basic Output
 ----------------------
 The "basic" output includes the columns most relevant to general photometry and detection purposes. This is declared
