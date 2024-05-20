@@ -13,7 +13,7 @@ cmd_args_dict = {
     "outfilestem": f"out_end2end",
     "verbose": False,
     "pointing_database": get_demo_filepath("baseline_v2.0_1yr.db"),
-    "linking": True,
+    "stats": "./test.csv",
 }
 
 
@@ -58,3 +58,7 @@ def test_validate_arguments():
     args.configfile = get_demo_filepath("PPConfig_test.ini")
 
     args.validate_arguments()
+
+    with pytest.raises(ValueError, match="stats"):
+        args.stats = "./imaginary_folder/test.csv"
+        args.validate_arguments()

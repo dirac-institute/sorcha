@@ -248,7 +248,7 @@ def test_PPPrintConfigsToLog(tmp_path):
         "outfilestem": "testout",
         "verbose": True,
         "seed": 24601,
-        "linking": True,
+        "stats": None,
     }
 
     args = sorchaArguments(cmd_args)

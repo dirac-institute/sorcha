@@ -81,7 +81,7 @@ class CSVDataReader(ObjectDataReader):
                 # Check we have either found the specified line or no line is specified and
                 # our heuristic matches.
                 if (header >= 0 and header == i) or (header < 0 and line.startswith("ObjID")):
-                    pplogger.info("Reading line {i} of {self.filename} as header:\n{line}")
+                    pplogger.info(f"Reading line {i} of {self.filename} as header:\n{line}")
                     self._check_header_line(line)
                     return i
 

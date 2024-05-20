@@ -29,6 +29,7 @@ from sorcha.modules.PPMagnitudeLimit import PPMagnitudeLimit
 from sorcha.modules.PPOutput import PPWriteOutput
 from sorcha.modules.PPGetMainFilterAndColourOffsets import PPGetMainFilterAndColourOffsets
 from sorcha.modules.PPFootprintFilter import Footprint
+from sorcha.modules.PPStats import stats
 
 from sorcha.readers.CombinedDataReader import CombinedDataReader
 from sorcha.readers.DatabaseReader import DatabaseReader
@@ -324,7 +325,7 @@ def runLSSTSimulation(args, configs):
                 configs["SSP_track_window"],
                 configs["SSP_separation_threshold"],
                 configs["SSP_maximum_time"],
-                drop_unlinked=args.linking,
+                drop_unlinked=args.stats,
             )
             observations.reset_index(drop=True, inplace=True)
             verboselog("Number of rows AFTER applying SSP linking filter: " + str(len(observations.index)))
@@ -335,6 +336,9 @@ def runLSSTSimulation(args, configs):
 
         # write output
         PPWriteOutput(args, configs, observations, endChunk, verbose=args.verbose)
+        
+        if args.stats is not None:
+            stats(observations, args.stats, configs["observing_filters"])
 
         startChunk = startChunk + configs["size_serial_chunk"]
         loopCounter = loopCounter + 1
@@ -480,11 +484,12 @@ def main():
     )
 
     optional.add_argument(
-        "-l",
-        "--linking",
-        help="Reject unlinked observations. Default is true, include to include unlinked observations",
-        default=True,
-        action="store_false",
+        "-st",
+        "--stats",
+        help="Output summary statistics table to this filename.",
+        type=str,
+        dest="st",
+        default=None,
     )
 
     args = parser.parse_args()

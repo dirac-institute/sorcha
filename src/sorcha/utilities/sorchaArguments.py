@@ -72,7 +72,7 @@ class sorchaArguments:
         self.output_ephemeris_file = args.get("output_ephemeris_file")
         self.ar_data_file_path = args.get("ar_data_path")
         self.verbose = args["verbose"]
-        self.linking = args["linking"]
+        self.stats = args["stats"]
 
         self.surveyname = args["surveyname"]
 
@@ -103,3 +103,6 @@ class sorchaArguments:
 
         if self.ar_data_file_path and not path.isdir(self.ar_data_file_path):
             raise ValueError("`ar_data_path` is not a valid directory.")
+        
+        if self.stats and not path.isdir(path.dirname(self.stats)):
+            raise ValueError("`stats` is not a valid directory.")
