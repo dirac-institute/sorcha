@@ -696,7 +696,11 @@ def PPConfigFileParser(configfile, survey_name):
     config_dict["position_decimals"], _ = PPGetValueAndFlag(config, "OUTPUT", "position_decimals", "int")
     config_dict["magnitude_decimals"], _ = PPGetValueAndFlag(config, "OUTPUT", "magnitude_decimals", "int")
 
-    if config_dict["position_decimals"] < 0 or config_dict["magnitude_decimals"] < 0:
+    if config_dict["position_decimals"] and config_dict["position_decimals"] < 0:
+        pplogger.error("ERROR: decimal places config variables cannot be negative.")
+        sys.exit("ERROR: decimal places config variables cannot be negative.")
+
+    if config_dict["magnitude_decimals"] and config_dict["magnitude_decimals"] < 0:
         pplogger.error("ERROR: decimal places config variables cannot be negative.")
         sys.exit("ERROR: decimal places config variables cannot be negative.")
 
