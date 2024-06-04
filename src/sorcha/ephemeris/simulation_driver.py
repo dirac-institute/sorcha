@@ -245,7 +245,9 @@ def create_ephemeris(orbits_df, pointings_df, args, configs):
 def get_residual_vectors(v1):
     """
     Decomposes the vector into two unit vectors to facilitate computation of on-sky angles
-
+    The decomposition is such that A  = (-sin (RA), cos(RA), 0) is in the direction of increasing RA,
+    and D = (-sin(dec)cos (RA), -sin(dec) sin(RA), cos(dec)) is in the direction of increasing Dec
+    The triplet (A,D,v1) forms an orthonormal basis of the 3D vector space
     Parameters
     -----------
         v1 : array, shape = (3,))
@@ -253,9 +255,9 @@ def get_residual_vectors(v1):
     Returns
     ----------
         A :  array, shape = (3,))
-            Decomposition into longitude and latitude
+            A  vector
         D : array, shape = (3,))
-            Decomposition into longitude and  latitude
+            D vector
     """
     x, y, z = v1
     cosd = np.sqrt(1 - z * z)
