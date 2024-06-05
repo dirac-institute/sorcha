@@ -67,7 +67,7 @@ def PPOutWriteHDF5(pp_results, outf, keyin):
     return of
 
 
-def PPOutWriteSqlite3(pp_results, outf):
+def PPOutWriteSqlite3(pp_results, outf, lastchunk=False, tablename="sorcha_results"):
     """
     Writes a pandas dataframe out to a CSV file at a location given by the user.
 
@@ -90,12 +90,22 @@ def PPOutWriteSqlite3(pp_results, outf):
 
     cnx = sqlite3.connect(outf)
 
-    pp_results.to_sql("sorcha_results", con=cnx, if_exists="append", index=False)
+    pp_results.to_sql(tablename, con=cnx, if_exists="append", index=False)
 
-    pplogger.info("SQL results saved in table sorcha_results in database {}.".format(outf))
+    # we don't want to index the table until we're sure we're done appending to it
+    # as recreating the indexes on every append is slow
+    if lastchunk:
+        pplogger.info("Last chunk detected. Indexing SQL table...")
+        cur = cnx.cursor()
+        cur.execute("CREATE INDEX ObjID ON {} (ObjID)".format(tablename))
+        cur.execute("CREATE INDEX fieldMJD_TAI ON {} (fieldMJD_TAI)".format(tablename))
+        cur.execute("CREATE INDEX optFilter ON {} (optFilter)".format(tablename))
+        cnx.commit()
+
+    pplogger.info("SQL results saved in table {} in database {}.".format(tablename, outf))
 
 
-def PPWriteOutput(cmd_args, configs, observations_in, endChunk=0, verbose=False):
+def PPWriteOutput(cmd_args, configs, observations_in, endChunk=0, verbose=False, lastchunk=False):
     """
     Writes the output in the format specified in the config file to a location
     specified by the user.
@@ -214,7 +224,7 @@ def PPWriteOutput(cmd_args, configs, observations_in, endChunk=0, verbose=False)
         outputsuffix = ".db"
         out = os.path.join(cmd_args.outpath, cmd_args.outfilestem + outputsuffix)
         verboselog("Output to sqlite3 database...")
-        observations = PPOutWriteSqlite3(observations, out)
+        observations = PPOutWriteSqlite3(observations, out, lastchunk)
 
     elif configs["output_format"] == "hdf5" or configs["output_format"] == "h5":
         outputsuffix = ".h5"

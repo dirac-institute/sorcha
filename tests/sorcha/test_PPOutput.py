@@ -121,7 +121,7 @@ def test_PPWriteOutput_sql(tmp_path):
         dtype=object,
     )
 
-    PPWriteOutput(args, configs, observations, 10)
+    PPWriteOutput(args, configs, observations, 10, lastchunk=True)
     cnx = sqlite3.connect(os.path.join(tmp_path, "PPOutput_test_out.db"))
     cur = cnx.cursor()
     cur.execute("select * from sorcha_results")
@@ -129,6 +129,13 @@ def test_PPWriteOutput_sql(tmp_path):
     sql_test_in = pd.DataFrame(cur.fetchall(), columns=col_names)
 
     assert_equal(sql_test_in.loc[0, :].values, expected)
+
+    # check indexes were properly created
+    cur.execute("PRAGMA index_list('sorcha_results')")
+    indexes = cur.fetchall()
+
+    index_list = [indexes[i][1] for i in range(0, 3)]
+    assert index_list == ["optFilter", "fieldMJD_TAI", "ObjID"]
 
 
 def test_PPWriteOutput_all(tmp_path):
