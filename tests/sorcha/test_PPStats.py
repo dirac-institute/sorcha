@@ -60,3 +60,4 @@ def test_PPStats(tmp_path):
 
     assert_equal(expected_row_one, stats_df.iloc[0].values)
     assert_equal(expected_row_two, stats_df.iloc[1].values)
+    assert_equal(expected_row_three, stats_df.iloc[2].values)
