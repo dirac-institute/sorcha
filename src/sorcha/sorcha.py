@@ -341,7 +341,7 @@ def runLSSTSimulation(args, configs):
         # write output
 
         PPWriteOutput(args, configs, observations, endChunk, verbose=args.verbose, lastchunk=lastChunk)
-        
+
         if args.stats is not None:
             stats(observations, args.stats, configs["observing_filters"])
 

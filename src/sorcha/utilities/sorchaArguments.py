@@ -103,6 +103,6 @@ class sorchaArguments:
 
         if self.ar_data_file_path and not path.isdir(self.ar_data_file_path):
             raise ValueError("`ar_data_path` is not a valid directory.")
-        
+
         if self.stats and not path.isdir(path.dirname(self.stats)):
             raise ValueError("`stats` is not a valid directory.")
