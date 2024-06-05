@@ -45,21 +45,22 @@ def stats(observations, statsfilepath, filters):
         filter_value_counts = df.value_counts("optFilter")
 
         for filter_name in filters:
-            stats_dict["number_obs_"+filter_name].append(filter_value_counts[filter_name])
             
-            if filter_value_counts[filter_name] == 0:
-                stats_dict["max_phase_"+filter_name].append(0)
-                stats_dict["min_phase_"+filter_name].append(0)
-                stats_dict["med_apparent_mag_"+filter_name].append(0)
-                stats_dict["max_apparent_mag_"+filter_name].append(0)
-                stats_dict["min_apparent_mag_"+filter_name].append(0)
-            else:
+            try:
+                stats_dict["number_obs_"+filter_name].append(filter_value_counts[filter_name])
                 stats_dict["max_phase_"+filter_name].append(np.max(df[df["optFilter"]==filter_name]['phase_deg']))
                 stats_dict["min_phase_"+filter_name].append(np.min(df[df["optFilter"]==filter_name]['phase_deg']))
                 stats_dict["med_apparent_mag_"+filter_name].append(np.median(df[df["optFilter"]==filter_name]['trailedSourceMag']))
                 stats_dict["max_apparent_mag_"+filter_name].append(np.max(df[df["optFilter"]==filter_name]['trailedSourceMag']))
                 stats_dict["min_apparent_mag_"+filter_name].append(np.min(df[df["optFilter"]==filter_name]['trailedSourceMag']))
-
+            
+            except KeyError:
+                stats_dict["number_obs_"+filter_name].append(0)
+                stats_dict["max_phase_"+filter_name].append(0)
+                stats_dict["min_phase_"+filter_name].append(0)
+                stats_dict["med_apparent_mag_"+filter_name].append(0)
+                stats_dict["max_apparent_mag_"+filter_name].append(0)
+                stats_dict["min_apparent_mag_"+filter_name].append(0)
 
     stats_df = pd.DataFrame(stats_dict)
     stats_df.to_csv(path_or_buf=statsfilepath, mode="a", header=not os.path.exists(statsfilepath), index=False)
