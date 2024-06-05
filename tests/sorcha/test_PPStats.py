@@ -14,7 +14,7 @@ def test_PPStats(tmp_path):
     Linked = ([True] * 10) + ([False] * 5)
     optFilter = (["r"] * 6) + (["g"] * 4) + (["r"] * 5)
     trailedSourceMag = np.concatenate((np.linspace(18, 21, 10), np.linspace(19, 22, 5)))
-    phase_deg = np.concatenate((np.linspace(18, 21, 10), np.linspace(19, 22, 5)))
+    phase_deg = np.concatenate((np.linspace(3, 20, 10), np.linspace(5, 10, 5)))
 
     test_dict = {
         "ObjID": ObjID,
@@ -65,19 +65,19 @@ def test_PPStats(tmp_path):
             18.833333333333336,
             18.0,
             19.666666666666668,
-            19.666666666666668,
-            18.0,
+            12.444444444444445,
+            3.0,
             4,
             20.5,
             20.0,
             21.0,
-            21.0,
             20.0,
+            14.333333333333332,
         ],
         dtype=object,
     )
     expected_row_two = np.array(
-        ["object_two", False, 5, 20.5, 19.0, 22.0, 22.0, 19.0, 0, 0.0, 0.0, 0.0, 0.0, 0.0], dtype=object
+        ["object_two", False, 5, 20.5, 19.0, 22.0, 10.0, 5.0, 0, 0.0, 0.0, 0.0, 0.0, 0.0], dtype=object
     )
 
     assert_equal(expected_row_one, stats_df.iloc[0].values)
