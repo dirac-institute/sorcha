@@ -61,7 +61,7 @@ def test_pixeldict(tmp_path):
         "surveyname": "rubin_sim",
         "outfilestem": f"out_400k",
         "verbose": False,
-        "linking": True,
+        "stats": None,
     }
 
     args = sorchaArguments(cmd_args_dict)

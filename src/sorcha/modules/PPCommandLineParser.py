@@ -86,7 +86,7 @@ def PPCommandLineParser(args):
     cmd_args_dict["surveyname"] = args.s
     cmd_args_dict["outfilestem"] = args.t
     cmd_args_dict["verbose"] = args.v
-    cmd_args_dict["linking"] = args.linking
+    cmd_args_dict["stats"] = args.st
 
     cmd_args_dict["ar_data_path"] = args.ar  # default value for args.ar is `None`.
     if cmd_args_dict["ar_data_path"]:
