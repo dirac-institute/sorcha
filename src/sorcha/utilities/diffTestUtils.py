@@ -54,7 +54,7 @@ BASELINE_ARGS = {
     "surveyname": "rubin_sim",
     "outfilestem": f"out_end2end",
     "verbose": False,
-    "linking": True,
+    "stats": None,
 }
 
 WITH_EPHEMERIS_ARGS = {
@@ -66,7 +66,7 @@ WITH_EPHEMERIS_ARGS = {
     "surveyname": "rubin_sim",
     "outfilestem": f"out_end2end_with_ephemeris_generation",
     "verbose": False,
-    "linking": True,
+    "stats": None,
 }
 
 
@@ -79,9 +79,8 @@ VERIFICATION_TRUTH = {
     "surveyname": "rubin_sim",
     "outfilestem": f"verification_output",
     "verbose": False,
-    "linking": True,
+    "stats": None,
 }
-
 
 def override_seed_and_run(outpath, arg_set="baseline"):
     """Run the full Rubin sim on the demo data and a fixed seed.
