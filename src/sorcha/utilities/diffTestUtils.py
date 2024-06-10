@@ -79,7 +79,7 @@ VERIFICATION_TRUTH = {
     "surveyname": "rubin_sim",
     "outfilestem": f"verification_output",
     "verbose": False,
-    "linking": True,
+    "stats": None,
 }
 
 
