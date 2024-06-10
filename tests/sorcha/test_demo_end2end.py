@@ -47,3 +47,41 @@ def test_demo_ephemeris_generation():
             print("Result files do not match. There may be an error in the code, or you may need")
             print("to regenerate the goldens with 'python src/sorcha/utilities/generateGoldens.py'")
             assert False
+
+
+def test_demo_verification():
+    """verification that should be almost identical to machine precision."""
+    import numpy as np 
+    import astropy.table as tb
+    golden_dir = get_demo_filepath("goldens")
+    golden_fn = os.path.join(golden_dir, "verification_truth.csv")
+    truth = tb.Table.read(golden_fn)
+    t = {}
+    t['2011 OB60'] = truth[truth['ObjID'] == '2011 OB60']
+    t['2010 TU149'] = truth[truth['ObjID'] == '2010 TU149']
+
+    print(f"Golden File: {golden_fn}")
+    
+    with tempfile.TemporaryDirectory() as dir_name:
+        override_seed_and_run(dir_name, arg_set="truth")
+        res_file = os.path.join(dir_name, "verification_output.csv")
+        out = tb.Table.read(res_file)
+        print(f"Res File: {res_file}")
+
+        v = {}
+        v['2011 OB60'] = out[out['ObjID'] == '2011_OB60']
+        v['2010 TU149'] = out[out['ObjID'] == '2010_TU149']
+        
+
+        for i in v:
+            v[i].sort('fieldMJD_TAI')
+            t[i].sort('observationStartMJD_TAI')
+            for j, k in zip(['fieldRA_deg', 'fieldDec_deg', 'trailedSourceMag'], ['fieldRA_deg', 'fieldDec_deg', 'mag']):
+                m = np.abs(np.mean(v[i][j] - t[i][k]))
+                if k == 'mag':
+                    assert np.isclose(np.max(m), 0, atol=1e-3) #1 mmag 
+                else:
+                    assert np.isclose(np.max(m), 0, atol=0.001/3600) # 1 mas
+
+
+test_demo_verification()

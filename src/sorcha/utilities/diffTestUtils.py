@@ -70,6 +70,18 @@ WITH_EPHEMERIS_ARGS = {
 }
 
 
+VERIFICATION_TRUTH = {
+    "paramsinput": get_demo_filepath("verification_colors.txt"),
+    "orbinfile": get_demo_filepath("verification_orbits.txt"),
+    "configfile": get_demo_filepath("verification.ini"),
+    "pointing_database": get_demo_filepath("baseline_v2.0_1yr.db"),
+    "output_ephemeris_file": "sorcha_ephemeris.csv",
+    "surveyname": "rubin_sim",
+    "outfilestem": f"verification_output",
+    "verbose": False,
+    "linking": True
+}
+
 def override_seed_and_run(outpath, arg_set="baseline"):
     """Run the full Rubin sim on the demo data and a fixed seed.
 
@@ -92,8 +104,10 @@ def override_seed_and_run(outpath, arg_set="baseline"):
         cmd_args_dict = BASELINE_ARGS
     elif arg_set == "with_ephemeris":
         cmd_args_dict = WITH_EPHEMERIS_ARGS
+    elif arg_set == "truth":
+            cmd_args_dict = VERIFICATION_TRUTH
     else:
-        raise ValueError(f"Unknown arg set name, {arg_set}. Must be one of: 'baseline', 'with_ephemeris'.")
+        raise ValueError(f"Unknown arg set name, {arg_set}. Must be one of: 'baseline', 'with_ephemeris', 'truth'.")
 
     cmd_args_dict["outpath"] = outpath
 
