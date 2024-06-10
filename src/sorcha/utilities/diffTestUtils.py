@@ -82,6 +82,7 @@ VERIFICATION_TRUTH = {
     "stats": None,
 }
 
+
 def override_seed_and_run(outpath, arg_set="baseline"):
     """Run the full Rubin sim on the demo data and a fixed seed.
 
