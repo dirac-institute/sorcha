@@ -96,5 +96,6 @@ def PPLinkingFilter(
     )
     obj_discovery["ObjID"] = obj_discovery["ObjID"].str.decode("utf-8")
     linked_object_observations = pd.merge(linked_object_observations, obj_discovery, on="ObjID")
+    linked_object_observations = linked_object_observations.sort_values("fieldMJD_TAI").reset_index(drop=True)
 
     return linked_object_observations
