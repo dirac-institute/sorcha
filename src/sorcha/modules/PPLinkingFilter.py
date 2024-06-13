@@ -83,9 +83,24 @@ def PPLinkingFilter(
     # unpack the results and filter the observations
     objs_found = obj["ssObjectId"][~np.isnan(obj["discoverySubmissionDate"])]
     obsv_found = np.isin(obsv["ssObjectId"], objs_found)
-    observations["Linked"] = obsv_found
+    observations["object_linked"] = obsv_found
+
+    observations.to_csv("before_dropping_unlinked.csv")
+
     if drop_unlinked is None:
         linked_object_observations = observations.iloc[obsv_found]
     else:
         linked_object_observations = observations
+
+    linked_object_observations.to_csv("before_date.csv")
+
+    # adding discovery submission date
+    obj_discovery = pd.DataFrame(
+        {"ObjID": obj["ssObjectId"], "date_linked_MJD": obj["discoverySubmissionDate"]}
+    )
+    obj_discovery["ObjID"] = obj_discovery["ObjID"].str.decode("utf-8")
+    linked_object_observations = pd.merge(linked_object_observations, obj_discovery, on="ObjID")
+
+    linked_object_observations.to_csv("after_date.csv")
+
     return linked_object_observations
