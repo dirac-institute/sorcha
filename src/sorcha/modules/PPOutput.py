@@ -164,6 +164,11 @@ def PPWriteOutput(cmd_args, configs, observations_in, endChunk=0, verbose=False,
                 "Obj_Sun_LTC_km",
             ]
         ]
+
+        if configs["SSP_linking_on"]:
+            observations["object_linked"] = observations_in["object_linked"].copy()
+            observations["date_linked_MJD"] = observations_in["date_linked_MJD"].copy()
+
     elif configs["output_columns"] == "all":
         observations = observations_in.copy()
     elif len(configs["output_columns"]) > 1:  # assume a list of column names...
