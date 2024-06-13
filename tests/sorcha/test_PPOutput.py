@@ -59,6 +59,7 @@ def test_PPWriteOutput_csv(tmp_path):
         "position_decimals": 7,
         "magnitude_decimals": 3,
         "output_format": "csv",
+        "SSP_linking_on": False,
     }
 
     expected = np.array(
@@ -98,6 +99,7 @@ def test_PPWriteOutput_sql(tmp_path):
         "position_decimals": 7,
         "magnitude_decimals": 3,
         "output_format": "sqlite3",
+        "SSP_linking_on": False,
     }
 
     expected = np.array(
