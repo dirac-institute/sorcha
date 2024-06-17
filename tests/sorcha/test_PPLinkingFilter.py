@@ -20,6 +20,7 @@ def test_PPLinkingFilter():
     times = [60000.03, 60000.06, 60005.03, 60005.06, 60008.03, 60008.06]
     ra = [142, 142.1, 143, 143.1, 144, 144.1]
     dec = [8, 8.1, 9, 9.1, 10, 10.1]
+    date = [60007.0] * 6
 
     observations = pd.DataFrame(
         {"ObjID": obj_id, "FieldID": field_id, "fieldMJD_TAI": times, "RA_deg": ra, "Dec_deg": dec}
@@ -34,6 +35,8 @@ def test_PPLinkingFilter():
         min_angular_separation,
         max_time_separation,
     )
+
+    observations["date_linked_MJD"] = date
 
     pd.testing.assert_frame_equal(observations, linked_observations)
 

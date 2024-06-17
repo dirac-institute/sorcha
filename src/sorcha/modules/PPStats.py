@@ -37,10 +37,10 @@ def stats(observations, statsfilepath):
         group_by["phase_deg"].agg(["min", "max"]).rename(columns={"min": "min_phase", "max": "max_phase"})
     )
     num_obs = group_by.agg("size").to_frame("number_obs")
-    linked = group_by["Linked"].agg("all").to_frame("isLinked")
+    linked = group_by["object_linked"].agg("all").to_frame("object_linked")
+    date_linked = group_by["date_linked_MJD"].agg("first").to_frame("date_linked_MJD")
 
-    joined_stats = num_obs.join([mag, phase_deg, linked])
-
+    joined_stats = num_obs.join([mag, phase_deg, linked, date_linked])
     joined_stats.to_csv(
         path_or_buf=statsfilepath, mode="a", header=not os.path.exists(statsfilepath), index=True
     )
