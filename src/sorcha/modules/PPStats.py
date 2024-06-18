@@ -26,7 +26,7 @@ def stats(observations, statsfilename, outpath):
 
     statsfilepath = os.path.join(outpath, statsfilename + ".csv")
 
-    group_by = observations.groupby(["ObjID", "optFilter"])
+    group_by = observations.groupby(["ObjID", "optFilter"], observed=False)
 
     mag = (
         group_by["trailedSourceMag"]
