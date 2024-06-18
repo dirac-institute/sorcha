@@ -343,7 +343,7 @@ def runLSSTSimulation(args, configs):
         PPWriteOutput(args, configs, observations, endChunk, verbose=args.verbose, lastchunk=lastChunk)
 
         if args.stats is not None:
-            stats(observations, args.stats, configs["observing_filters"])
+            stats(observations, args.stats, args.outpath)
 
         startChunk = startChunk + configs["size_serial_chunk"]
         loopCounter = loopCounter + 1
@@ -491,7 +491,7 @@ def main():
     optional.add_argument(
         "-st",
         "--stats",
-        help="Output summary statistics table to this filename.",
+        help="Output summary statistics table to this stem filename.",
         type=str,
         dest="st",
         default=None,
