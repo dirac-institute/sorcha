@@ -28,10 +28,10 @@ def test_PPStats(tmp_path):
     }
     test_df = pd.DataFrame(test_dict)
 
-    filepath_stats = os.path.join(tmp_path, "test_stats.csv")
-    stats(test_df, filepath_stats)
+    filename_stats = "test_stats"
+    stats(test_df, filename_stats, tmp_path)
 
-    stats_df = pd.read_csv(filepath_stats)
+    stats_df = pd.read_csv(os.path.join(tmp_path, filename_stats + ".csv"))
 
     # For comparison purposes, change NaNs to Nones
     stats_df.replace({np.nan: None}, inplace=True)

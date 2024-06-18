@@ -3,7 +3,7 @@ import pandas as pd
 import os
 
 
-def stats(observations, statsfilepath):
+def stats(observations, statsfilename, outpath):
     """
     Write a summary statistics file including whether each object was linked
     or not within miniDifi, their number of observations, min/max phase angles,
@@ -15,14 +15,16 @@ def stats(observations, statsfilepath):
     observations : Pandas dataframe
         Pandas dataframe of observations
 
-    statsfilepath : string
-        Path to write summary stats file to
+    statsfilename : string
+        Stem filename to write summary stats file to
 
     Returns
     -------
     None.
 
     """
+
+    statsfilepath = os.path.join(outpath, statsfilename + ".csv")
 
     group_by = observations.groupby(["ObjID", "optFilter"])
 

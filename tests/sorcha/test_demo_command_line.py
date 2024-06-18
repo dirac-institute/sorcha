@@ -26,6 +26,7 @@ def setup_and_teardown_for_demo_command_line():
     # After running the test, delete the created files...
 
     os.remove("testrun_e2e.csv")
+    os.remove("testrun_stats.csv")
 
     os.remove(glob.glob("*sorcha.err")[0])
     os.remove(glob.glob("*sorcha.log")[0])

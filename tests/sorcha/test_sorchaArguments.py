@@ -54,11 +54,3 @@ def test_validate_arguments():
         args.configfile = get_demo_filepath("NOPE.txt")
 
         args.validate_arguments()
-
-    args.configfile = get_demo_filepath("PPConfig_test.ini")
-
-    args.validate_arguments()
-
-    with pytest.raises(ValueError, match="stats"):
-        args.stats = "./imaginary_folder/test.csv"
-        args.validate_arguments()
