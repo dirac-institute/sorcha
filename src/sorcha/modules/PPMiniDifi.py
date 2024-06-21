@@ -122,45 +122,51 @@ def trackletsInNights(night, mjd, ra, dec, maxdt_minutes, minlen_arcsec):
 
 @njit(cache=True)
 def discoveryOpportunities(nights, nightHasTracklets, window, nlink, p, rng):
-    # Find all nights where a trailing window of <window> nights
-    # (including the current night) has at least <nlink> tracklets.
-    #
-    # algorithm: create an array of length [0 ... num_nights],
-    #    representing the nights where there are tracklets.
-    #    populate it with the tracklets (1 for each night where)
-    #    there's a detectable tracklet. Then convolve it with a
-    #    <window>-length window (we do this with .cumsum() and
-    #    then subtracting the shifted array -- basic integration)
-    #    And then find nights where the # of tracklets >= nlink
-    #
-    n0, n1 = nights.min(), nights.max()
-    nlen = n1 - n0 + 1
-    arr = np.zeros(nlen, dtype="i8")
-    arr[nights - n0] = nightHasTracklets
-    arr = arr.cumsum()
-    arr[window:] -= arr[:-window].copy()
-    disc = (arr >= nlink).nonzero()[0] + n0
+    if nlink > 1:
+        # Find all nights where a trailing window of <window> nights
+        # (including the current night) has at least <nlink> tracklets.
+        #
+        # algorithm: create an array of length [0 ... num_nights],
+        #    representing the nights where there are tracklets.
+        #    populate it with the tracklets (1 for each night where)
+        #    there's a detectable tracklet. Then convolve it with a
+        #    <window>-length window (we do this with .cumsum() and
+        #    then subtracting the shifted array -- basic integration)
+        #    And then find nights where the # of tracklets >= nlink
+        #
+        n0, n1 = nights.min(), nights.max()
+        nlen = n1 - n0 + 1
+        arr = np.zeros(nlen, dtype="i8")
+        arr[nights - n0] = nightHasTracklets
+        arr = arr.cumsum()
+        arr[window:] -= arr[:-window].copy()
+        disc = (arr >= nlink).nonzero()[0] + n0
 
-    # we're not done yet. the above gives us a list of nights when
-    #    the object is discoverable, but this involves many duplicates
-    #    (e.g., if there are tracklets on nights 3, 4, and 5, the object)
-    #    will be discoverable on nights 5 through 17. What we really
-    #    need is a list of nights with unique discovery opportunities.
-    # algorithm: we essentially do the same as above, but instead of
-    #    filling an array with "1", for each night with a tracklet, we
-    #    fill it with a random number. The idea is that when we do the
-    #    convolution, these random numbers will sum up to unique sums
-    #    every time the same three (or more) tracklets make up for a
-    #    discovery opportunity. We then find unique discovery
-    #    opportunities by filtering on when the sums change.
-    arr2 = np.zeros(nlen)
-    arr2[nights - n0] = nightHasTracklets
-    arr2[arr2 != 0] = np.random.rand(np.count_nonzero(nightHasTracklets))
-    arr2 = arr2.cumsum()
-    arr2[window:] -= arr2[:-window].copy()
-    arr2 = arr2[disc - n0]
-    arr2[1:] -= arr2[:-1].copy()
-    disc = disc[arr2.nonzero()]
+        # we're not done yet. the above gives us a list of nights when
+        #    the object is discoverable, but this involves many duplicates
+        #    (e.g., if there are tracklets on nights 3, 4, and 5, the object)
+        #    will be discoverable on nights 5 through 17. What we really
+        #    need is a list of nights with unique discovery opportunities.
+        # algorithm: we essentially do the same as above, but instead of
+        #    filling an array with "1", for each night with a tracklet, we
+        #    fill it with a random number. The idea is that when we do the
+        #    convolution, these random numbers will sum up to unique sums
+        #    every time the same three (or more) tracklets make up for a
+        #    discovery opportunity. We then find unique discovery
+        #    opportunities by filtering on when the sums change.
+        arr2 = np.zeros(nlen)
+        arr2[nights - n0] = nightHasTracklets
+        arr2[arr2 != 0] = np.random.rand(np.count_nonzero(nightHasTracklets))
+        arr2 = arr2.cumsum()
+        arr2[window:] -= arr2[:-window].copy()
+        arr2 = arr2[disc - n0]
+        arr2[1:] -= arr2[:-1].copy()
+        disc = disc[arr2.nonzero()]
+    else:
+        # Special-case nlink=1 case: if there's no linking to perform,
+        # then the window doesn't matter and each night with a tracklet
+        # is considered a separate discovery opportunity
+        disc = nights[nightHasTracklets]
 
     # finally, at every discovery opportunity we have a probability <p>
     # to discover the object. Figure out when we'll discover it.
