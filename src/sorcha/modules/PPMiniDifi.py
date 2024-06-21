@@ -154,9 +154,10 @@ def discoveryOpportunities(nights, nightHasTracklets, window, nlink, p, rng):
     #    discovery opportunity. We then find unique discovery
     #    opportunities by filtering on when the sums change.
     arr2 = np.zeros(nlen)
-    arr2[nights - n0] = rng.uniform(size=len(nights))
+    arr2[nights - n0] = nightHasTracklets
+    arr2[arr2 != 0] = np.random.rand(np.count_nonzero(nightHasTracklets))
     arr2 = arr2.cumsum()
-    arr[window:] -= arr[:-window].copy()
+    arr2[window:] -= arr2[:-window].copy()
     arr2 = arr2[disc - n0]
     arr2[1:] -= arr2[:-1].copy()
     disc = disc[arr2.nonzero()]
@@ -166,6 +167,8 @@ def discoveryOpportunities(nights, nightHasTracklets, window, nlink, p, rng):
     discN = (rng.uniform(size=len(disc)) < p).nonzero()[0]
     discIdx = discN[0] if len(discN) else -1
 
+    # returns: the list of distinct discovery opportunities, and the
+    # index of the discovery opportunity where the object was found.
     return discIdx, disc
 
 
@@ -207,6 +210,18 @@ def linkObject(obsv, seed, maxdt_minutes, minlen_arcsec, window, nlink, p, night
             i, j = np.searchsorted(night, [discoverySubmissionDate, discoverySubmissionDate + 1])
             k = i + np.argmin(mjd[i:j])
             discoveryObservationId = diaSourceId[k]
+
+            # find the first observation in the discovery window.
+            # we'll (somewhat arbitrarily) define this as the "asterisk" observation.
+            # in reality, we'll run precovery on linkages so the asterisk observation
+            # will sometimes be (much) earlier.
+            i, j = np.searchsorted(night, [discoverySubmissionDate - window + 1, discoverySubmissionDate + 1])
+            k = i + np.argmin(obsv["midPointTai"][i:j])
+            discoveryObservationId = obsv["diaSourceId"][k]
+            # make sure our asterisk observation is within the trailing window.
+            assert (
+                night[k] + window > discoverySubmissionDate
+            ), f"{obsv['night'][k]=}, {window=}, {discoverySubmissionDate=}"
 
     return discoveryObservationId, discoverySubmissionDate, discoveryChances
 

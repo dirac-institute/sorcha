@@ -3,6 +3,62 @@ import numpy as np
 
 from sorcha.utilities.dataUtilitiesForTests import get_test_filepath
 
+def test_PPLinkingFilter_window():
+    from sorcha.modules.PPLinkingFilter import PPLinkingFilter
+
+    min_observations = 2
+    min_angular_separation = 0.5
+    max_time_separation = 0.0625
+    min_tracklets = 3
+    min_tracklet_window = 15
+    detection_efficiency = 1
+
+    # create object that should /not/ be linked not all tracklets are within
+    # the window.
+    obj_id = ["pretend_object"] * 6
+    field_id = np.arange(1, 7)
+    t0 = 60000.
+    times = np.asarray([0.03, 0.06, 5.03, 5.06, min_tracklet_window + .03, min_tracklet_window + .06]) + t0
+    ra = [142, 142.1, 143, 143.1, 144, 144.1]
+    dec = [8, 8.1, 9, 9.1, 10, 10.1]
+
+    observations = pd.DataFrame(
+        {"ObjID": obj_id, "FieldID": field_id, "fieldMJD_TAI": times, "RA_deg": ra, "Dec_deg": dec}
+    )
+
+    linked_observations = PPLinkingFilter(
+        observations,
+        detection_efficiency,
+        min_observations,
+        min_tracklets,
+        min_tracklet_window,
+        min_angular_separation,
+        max_time_separation,
+    )
+    assert len(linked_observations) == 0
+
+    # now bring it into the linking window by changing the
+    # time of the last tracklet, and verify it's successfully linked
+    observations = pd.DataFrame(
+        {"ObjID": obj_id, "FieldID": field_id, "fieldMJD_TAI": times, "RA_deg": ra, "Dec_deg": dec}
+    )
+    observations.loc[observations["fieldMJD_TAI"] > min_tracklet_window + t0, "fieldMJD_TAI"] -= 1.
+
+    linked_observations = PPLinkingFilter(
+        observations,
+        detection_efficiency,
+        min_observations,
+        min_tracklets,
+        min_tracklet_window,
+        min_angular_separation,
+        max_time_separation,
+    )
+    observations["date_linked_MJD"] = int(observations["fieldMJD_TAI"].max()) - 1.
+
+    print(linked_observations)
+    print(observations)
+    pd.testing.assert_frame_equal(observations, linked_observations)
+
 
 def test_PPLinkingFilter():
     from sorcha.modules.PPLinkingFilter import PPLinkingFilter
