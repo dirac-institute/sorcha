@@ -6,6 +6,7 @@ import sys
 
 from sorcha.modules.PPConfigParser import PPFindDirectoryOrExit
 
+
 def copy_demo_configs(copy_location, which_configs, force_overwrite):
     """
     Copies the example Sorcha configuration files to a user-specified location.

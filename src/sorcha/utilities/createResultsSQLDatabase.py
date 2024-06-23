@@ -14,6 +14,7 @@ import argparse
 import sys
 import os
 
+
 def create_results_table(cnx_out, filename, output_path, output_stem, table_name="sorcha_results"):
     """
     Creates a table in a SQLite database from SSPP results.

@@ -3,8 +3,11 @@
 #
 import argparse
 
+
 def main():
-    parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter, description="Run a simulation.")
+    parser = argparse.ArgumentParser(
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter, description="Run a simulation."
+    )
     required = parser.add_argument_group("Required arguments")
     required.add_argument(
         "-c",
@@ -114,8 +117,9 @@ def main():
     )
 
     args = parser.parse_args()
-    
+
     return execute(args)
+
 
 def execute(args):
     #
@@ -127,7 +131,14 @@ def execute(args):
     #       more, and making the user wait that long just to print out an erro message
     #       is poor user experience.
     #
-    from sorcha.sorcha import PPFindFileOrExit, PPGetLogger, PPCommandLineParser, PPConfigFileParser, runLSSTSimulation, sorchaArguments
+    from sorcha.sorcha import (
+        PPFindFileOrExit,
+        PPGetLogger,
+        PPCommandLineParser,
+        PPConfigFileParser,
+        runLSSTSimulation,
+        sorchaArguments,
+    )
     import sys, os
 
     # Extract the output file path now in order to set up logging.

@@ -8,6 +8,7 @@ import os
 # Generic verb dispatcher code
 #
 
+
 def find_sorcha_verbs():
     """Find available sorcha commands in the system's PATH."""
     sorcha_verbs = []
@@ -15,8 +16,9 @@ def find_sorcha_verbs():
         if os.path.isdir(directory):
             for item in os.listdir(directory):
                 if item.startswith("sorcha-") and os.access(os.path.join(directory, item), os.X_OK):
-                    sorcha_verbs.append(item[len("sorcha-"):])
+                    sorcha_verbs.append(item[len("sorcha-") :])
     return sorted(set(sorcha_verbs))
+
 
 def main():
     # Discover available sorcha verbs
@@ -27,29 +29,31 @@ def main():
         sys.exit(1)
 
     # Set up the argument parser with epilog text
-    description = 'Sorcha survey simulator suite.'
-    epilog_text = "These are the most common sorcha verbs:\n\n" \
-                  "   run       Run a simulation\n" \
-                  "   demo      Set up a demo simulation\n" \
-                  "   config    Prepare or manipulate configuration files\n" \
-                  "   outputs   Manipulate/package sorcha outputs\n" \
-                  "   bootstrap Download datafiles required to run sorcha\n" \
-                  "\n" \
-                  "To get more information, run the verb with --help. For example:\n\n" \
-                  "   sorcha run --help\n" \
-                  " "
+    description = "Sorcha survey simulator suite."
+    epilog_text = (
+        "These are the most common sorcha verbs:\n\n"
+        "   run       Run a simulation\n"
+        "   demo      Set up a demo simulation\n"
+        "   config    Prepare or manipulate configuration files\n"
+        "   outputs   Manipulate/package sorcha outputs\n"
+        "   bootstrap Download datafiles required to run sorcha\n"
+        "\n"
+        "To get more information, run the verb with --help. For example:\n\n"
+        "   sorcha run --help\n"
+        " "
+    )
 
-    parser = argparse.ArgumentParser(description=description,
-                                     epilog=epilog_text,
-                                     formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser = argparse.ArgumentParser(
+        description=description, epilog=epilog_text, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
 
-    parser.add_argument('verb', choices=available_verbs, help='Verb to execute')
-    parser.add_argument('args', nargs=argparse.REMAINDER, help='Arguments for the verb')
+    parser.add_argument("verb", choices=available_verbs, help="Verb to execute")
+    parser.add_argument("args", nargs=argparse.REMAINDER, help="Arguments for the verb")
 
     args = parser.parse_args()
 
     # Construct the full command name
-    utility = f'sorcha-{args.verb}'
+    utility = f"sorcha-{args.verb}"
 
     # Ensure the command is available
     if not shutil.which(utility):
@@ -64,5 +68,6 @@ def main():
         print(f"Error: Command '{utility}' failed with exit code {e.returncode}.")
         sys.exit(e.returncode)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main()

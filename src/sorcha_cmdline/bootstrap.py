@@ -4,6 +4,7 @@
 import argparse
 import pooch
 
+
 def main():  # pragma: no cover
     # parse the input arguments
     parser = argparse.ArgumentParser(
@@ -22,8 +23,9 @@ def main():  # pragma: no cover
         help="Delete and re-download data files.",
     )
     args = parser.parse_args()
-    
+
     return execute(args)
+
 
 def execute(args):
     #
@@ -35,9 +37,13 @@ def execute(args):
     #       more, and making the user wait that long just to print out an erro message
     #       is poor user experience.
     #
-    from sorcha.utilities.retrieve_ephemeris_data_files import ( make_retriever, 
-        DATA_FILE_LIST, DATA_FILES_TO_DOWNLOAD, _check_for_existing_files,
-        _decompress, build_meta_kernel_file
+    from sorcha.utilities.retrieve_ephemeris_data_files import (
+        make_retriever,
+        DATA_FILE_LIST,
+        DATA_FILES_TO_DOWNLOAD,
+        _check_for_existing_files,
+        _decompress,
+        build_meta_kernel_file,
     )
     from functools import partial
     import concurrent.futures
@@ -66,6 +72,7 @@ def execute(args):
 
         print("Checking cache after attempting to download and create files.")
         _check_for_existing_files(retriever, DATA_FILE_LIST)
+
 
 if __name__ == "__main__":
     main()

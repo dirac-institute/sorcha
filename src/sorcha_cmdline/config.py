@@ -5,6 +5,7 @@ import sys
 # sorcha config prepare
 #
 
+
 def parse_file_selection(file_select):
     """Turns the number entered by the user at the command line into a string
     prompt. Also performs error handling.
@@ -35,6 +36,7 @@ def parse_file_selection(file_select):
 
     return which_configs
 
+
 def cmd_prepare(args):  # pragma: no cover
     print("\nWhich configuration file(s) would you like to copy?:\n")
     print("1. Rubin-specific configuration file using circular approximation of camera footprint (faster).\n")
@@ -59,30 +61,47 @@ def cmd_prepare(args):  # pragma: no cover
     copy_location = os.path.abspath(args.path)
     return copy_demo_configs(copy_location, which_configs, args.force)
 
+
 #
 # sorcha config
 #
 
+
 def main():
     # Create the top-level parser
     parser = argparse.ArgumentParser(prog="sorcha-config", description="Sorcha Configuration Utility")
-    subparsers = parser.add_subparsers(title="commands", description="Available commands", help="Command to execute", dest='command')
+    subparsers = parser.add_subparsers(
+        title="commands", description="Available commands", help="Command to execute", dest="command"
+    )
 
     # Add the `prepare` subcommand
     prepare_parser = subparsers.add_parser("prepare", help="Prepare configuration")
     prepare_parser.set_defaults(func=cmd_prepare)
     prepare_parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose output")
-    prepare_parser.add_argument("-p", "--path", type=str, default="./", help="Filepath where you want to copy the config files. Default is current working directory.")
-    prepare_parser.add_argument("-f", "--force", action="store_true", default=False, help="Force deletion/overwrite of existing config file(s). Default False.")
+    prepare_parser.add_argument(
+        "-p",
+        "--path",
+        type=str,
+        default="./",
+        help="Filepath where you want to copy the config files. Default is current working directory.",
+    )
+    prepare_parser.add_argument(
+        "-f",
+        "--force",
+        action="store_true",
+        default=False,
+        help="Force deletion/overwrite of existing config file(s). Default False.",
+    )
 
     # Parse the command-line arguments
     args = parser.parse_args()
 
     # Call the appropriate function based on the subcommand
-    if hasattr(args, 'func'):
+    if hasattr(args, "func"):
         args.func(args)
     else:
         parser.print_help()
+
 
 if __name__ == "__main__":
     main()
