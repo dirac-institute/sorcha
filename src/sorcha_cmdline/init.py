@@ -2,7 +2,7 @@ import argparse
 import sys
 
 #
-# sorcha config prepare
+# sorcha init
 #
 
 
@@ -37,7 +37,7 @@ def parse_file_selection(file_select):
     return which_configs
 
 
-def cmd_prepare(args):  # pragma: no cover
+def execute(args):  # pragma: no cover
     print("\nWhich configuration file(s) would you like to copy?:\n")
     print("1. Rubin-specific configuration file using circular approximation of camera footprint (faster).\n")
     print("2. Rubin-specific configuration file using full camera footprint (slower, but more accurate).\n")
@@ -63,29 +63,24 @@ def cmd_prepare(args):  # pragma: no cover
 
 
 #
-# sorcha config
+# sorcha init
 #
 
 
 def main():
     # Create the top-level parser
-    parser = argparse.ArgumentParser(prog="sorcha-config", description="Sorcha Configuration Utility")
-    subparsers = parser.add_subparsers(
-        title="commands", description="Available commands", help="Command to execute", dest="command"
+    parser = argparse.ArgumentParser(
+        prog="sorcha-init", description="Initialize configuration files for a new simulation."
     )
-
-    # Add the `prepare` subcommand
-    prepare_parser = subparsers.add_parser("prepare", help="Prepare configuration")
-    prepare_parser.set_defaults(func=cmd_prepare)
-    prepare_parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose output")
-    prepare_parser.add_argument(
+    parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose output")
+    parser.add_argument(
         "-p",
         "--path",
         type=str,
         default="./",
         help="Filepath where you want to copy the config files. Default is current working directory.",
     )
-    prepare_parser.add_argument(
+    parser.add_argument(
         "-f",
         "--force",
         action="store_true",
@@ -93,14 +88,8 @@ def main():
         help="Force deletion/overwrite of existing config file(s). Default False.",
     )
 
-    # Parse the command-line arguments
     args = parser.parse_args()
-
-    # Call the appropriate function based on the subcommand
-    if hasattr(args, "func"):
-        args.func(args)
-    else:
-        parser.print_help()
+    return execute(args)
 
 
 if __name__ == "__main__":

@@ -40,7 +40,7 @@ dependencies = [
 [project.scripts]
 sorcha = "sorcha_cmdline.main:main"
 sorcha-run = "sorcha_cmdline.run:main"
-sorcha-config = "sorcha_cmdline.config:main"
+sorcha-init = "sorcha_cmdline.init:main"
 sorcha-demo = "sorcha_cmdline.demo:main"
 sorcha-outputs = "sorcha_cmdline.outputs:main"
 sorcha-boostrap = "sorcha_cmdline.bootstrap:main"

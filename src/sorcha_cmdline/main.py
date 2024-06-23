@@ -32,10 +32,10 @@ def main():
     description = "Sorcha survey simulator suite."
     epilog_text = (
         "These are the most common sorcha verbs:\n\n"
+        "   init      Initialize a new simulation\n"
         "   run       Run a simulation\n"
-        "   demo      Set up a demo simulation\n"
-        "   config    Prepare or manipulate configuration files\n"
         "   outputs   Manipulate/package sorcha outputs\n"
+        "   demo      Set up a demo simulation\n"
         "   bootstrap Download datafiles required to run sorcha\n"
         "\n"
         "To get more information, run the verb with --help. For example:\n\n"
