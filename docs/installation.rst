@@ -87,7 +87,7 @@ To run Sorcha's built in :ref:`ephemeris generator<ephemeris_gen>`, you will nee
   
 To install the necessary `SPICE (Spacecraft, Planet, Instrument, C-matrix, Events) <https://naif.jpl.nasa.gov/naif/spiceconcept.html>`_ auxiliary files and other required data files for ephemeris generation (774 MB total in size)::
 
-    sorcha init
+    sorcha bootstrap
 
 .. note::
    This script will download and store the auxiliary files in your computer's local cache directory by default. 

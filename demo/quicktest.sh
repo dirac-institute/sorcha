@@ -15,7 +15,7 @@ test -d demo || { echo "$0 must be run from the top-level source code directory"
 
 rm -f quicktest-result.csv
 
-sorcha init
+sorcha bootstrap
 sorcha run -c ./demo/sorcha_config_demo.ini -p ./demo/sspp_testset_colours.txt -ob ./demo/sspp_testset_orbits.des -pd ./demo/baseline_v2.0_1yr.db -o ./ -t quicktest-result
 
 # check that the output file size is larger than ~10k

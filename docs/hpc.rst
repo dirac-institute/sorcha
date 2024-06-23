@@ -4,7 +4,7 @@ Testing Your Sorcha Installation
 
 **Step 6** Install the necessary SPICE auxiliary files for ephemeris generation (774 MB total in size)::
 
-    sorcha init --cache <directory>
+    sorcha bootstrap [--cache <directory>]
 
 .. tip::
    For the getting started tutorial we recommend installing these auxiliary files in ./ar_files

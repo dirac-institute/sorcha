@@ -4,7 +4,7 @@
 import argparse
 
 def main():
-    parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+    parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter, description="Run a simulation.")
     required = parser.add_argument_group("Required arguments")
     required.add_argument(
         "-c",

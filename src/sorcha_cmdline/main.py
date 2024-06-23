@@ -28,11 +28,12 @@ def main():
 
     # Set up the argument parser with epilog text
     description = 'Sorcha survey simulator suite.'
-    epilog_text = "These the most common sorcha verbs:\n\n" \
+    epilog_text = "These are the most common sorcha verbs:\n\n" \
                   "   run       Run a simulation\n" \
-                  "   demo      Run a demo\n" \
+                  "   demo      Set up a demo simulation\n" \
                   "   config    Prepare or manipulate configuration files\n" \
                   "   outputs   Manipulate/package sorcha outputs\n" \
+                  "   bootstrap Download datafiles required to run sorcha\n" \
                   "\n" \
                   "To get more information, run the verb with --help. For example:\n\n" \
                   "   sorcha run --help\n" \
