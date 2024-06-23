@@ -13,8 +13,6 @@ import glob
 import argparse
 import sys
 import os
-from sorcha.modules.PPConfigParser import PPFindDirectoryOrExit
-
 
 def create_results_table(cnx_out, filename, output_path, output_stem, table_name="sorcha_results"):
     """
@@ -181,80 +179,3 @@ def get_column_names(filename, table_name="sorcha_results"):
     cur_col.close()
 
     return col_names
-
-
-def main():  # pragma: no cover
-    """
-    Creates a SQLite database with tables of SSPP results and all orbit/physical
-    parameters/comet files. Assumes orbit/physical parameters/comet files are all
-    in one folder and have names starting with "orbits", "params" and "comet"
-    respectively. Assumes SSPP output files are all SQL databases and can all be
-    found in the same parent directory with the same stem filename.
-
-    usage: createResultsSQLDatabase [-h] -f FILENAME -i INPUTS -o OUTPUTS [-s STEM] [-c]
-        arguments:
-          -h, --help                                show this help message and exit
-          -f FILENAME, --filename FILENAME          Filepath and name where you want to save the database.
-          -i INPUTS, --inputs INPUTS                Path location of input text files (orbits, colours and config files).
-          -o OUTPUTS, --outputs OUTPUTS             Path location of SSPP output files/folders. Code will search subdirectories recursively.
-          -s STEM, --stem STEM                      Stem filename of outputs. Used to find output filenames. Use if you want to specify.
-          -c, --comet                               Toggle whether to look for cometary activity files. Default False.
-
-    """
-
-    parser = argparse.ArgumentParser(description="Creating a combined results+inputs SQL database.")
-
-    # filepath/name to save script as
-    parser.add_argument(
-        "-f",
-        "--filename",
-        help="Filepath and name where you want to save the database.",
-        type=str,
-        required=True,
-    )
-    # path to inputs
-    parser.add_argument(
-        "-i",
-        "--inputs",
-        help="Path location of input text files (orbits, colours and config files).",
-        type=str,
-        required=True,
-    )
-    # path to outputs
-    parser.add_argument(
-        "-o",
-        "--outputs",
-        help="Path location of SSPP output files/folders. Code will search subdirectories recursively.",
-        type=str,
-        required=True,
-    )
-    # stem filename for outputs
-    parser.add_argument(
-        "-s",
-        "--stem",
-        help="Stem filename of outputs. Used to find output filenames. Use if you want to specify.",
-        type=str,
-    )
-    # include cometary?
-    parser.add_argument(
-        "-c",
-        "--comet",
-        help="Toggle whether to look for cometary activity files. Default False.",
-        default=False,
-        action="store_true",
-    )
-
-    args = parser.parse_args()
-
-    args.filename = os.path.abspath(args.filename)
-    args.inputs = os.path.abspath(args.inputs)
-    args.outputs = os.path.abspath(args.outputs)
-
-    _ = PPFindDirectoryOrExit(args.inputs, "-i, --inputs")
-    _ = PPFindDirectoryOrExit(args.outputs, "-o, --outputs")
-
-    create_results_database(args)
-
-
-if __name__ == "__main__":  # pragma: no cover
-    main()

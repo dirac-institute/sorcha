@@ -38,12 +38,12 @@ dependencies = [
 ]
 
 [project.scripts]
-sorcha = "sorcha.sorcha:main"
-sorcha_create_results_db = "sorcha.utilities.createResultsSQLDatabase:main"
-sorcha_bootstrap_data_files = "sorcha.utilities.retrieve_ephemeris_data_files:main"
-sorcha_copy_configs = "sorcha.utilities.sorcha_copy_configs:main"
-sorcha_copy_demo_files = "sorcha.utilities.sorcha_copy_demo_files:main"
-sorcha_demo_command = "sorcha.utilities.sorcha_demo_command:print_demo_command"
+sorcha = "sorcha_cmdline.main:main"
+sorcha-run = "sorcha_cmdline.run:main"
+sorcha-config = "sorcha_cmdline.config:main"
+sorcha-demo = "sorcha_cmdline.demo:main"
+sorcha-outputs = "sorcha_cmdline.outputs:main"
+sorcha-init = "sorcha_cmdline.init:main"
 
 [project.urls]
 "Documentation" = "https://sorcha.readthedocs.io/en/latest/"
@@ -99,6 +99,10 @@ requires = [
     "setuptools_scm>=7.0", # Gets release version from git. Makes it available programmatically
 ]
 build-backend = "setuptools.build_meta"
+
+[tool.setuptools.package-dir]
+sorcha = "src/sorcha"
+sorcha_cmdline = "src/sorcha_cmdline"
 
 [tool.setuptools]
 zip-safe = false

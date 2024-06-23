@@ -87,7 +87,7 @@ To run Sorcha's built in :ref:`ephemeris generator<ephemeris_gen>`, you will nee
   
 To install the necessary `SPICE (Spacecraft, Planet, Instrument, C-matrix, Events) <https://naif.jpl.nasa.gov/naif/spiceconcept.html>`_ auxiliary files and other required data files for ephemeris generation (774 MB total in size)::
 
-    sorcha_bootstrap_data_files
+    sorcha init
 
 .. note::
    This script will download and store the auxiliary files in your computer's local cache directory by default. 
@@ -104,14 +104,14 @@ You can check that the Sorcha installation was successful, by obtaining the demo
 
 The demo input files and configuration file are installed with the socha package. You can run the following command on the command line to copy the files to the current directory (or a different location)::
 
-    sorcha_copy_demo_files
+    sorcha demo prepare
 
 .. note::
    The optional -p flag allows you to specify a specific location to copy the demo input files. If the files already exist, the  -f flag can be used to force a fresh copy of the files to be generated. .
 
 You can find the command to run the sorcha demo on the command line in two ways. First on the command line::
 
-   sorcha_demo_command 
+   sorcha demo howto
 
 Or you can in an interactive python session or jupyter notebook. You can run the following
 

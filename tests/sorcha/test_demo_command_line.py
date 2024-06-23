@@ -49,7 +49,7 @@ def test_demo_command_line(setup_and_teardown_for_demo_command_line):
     # usually the ephemeris files have already been downloaded by the
     # ephemeris end-to-end test, but we can't rely on test order for this to
     # work! if the files already exist in the default location this will do nothing.
-    os.system("sorcha_bootstrap_data_files")
+    os.system("sorcha init")
 
     os.system(current_demo_command)
 

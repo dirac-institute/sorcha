@@ -57,7 +57,7 @@ def test_sorcha_copy_configs(tmp_path):
 
 
 def test_parse_file_selection():
-    from sorcha.utilities.sorcha_copy_configs import parse_file_selection
+    from sorcha_cmdline.config import parse_file_selection
 
     # test to make sure the inputs align with the correct options
     test_rubin_circle = parse_file_selection("1")
