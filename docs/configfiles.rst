@@ -10,7 +10,7 @@ Sorcha uses a configuration file to set the majority of the various required and
 Example Configuration Files
 ------------------------------------
 
-The example configuration files are appropriate for setting up Sorcha to simulate what the LSST would discover. These examples come pre-installed with Sorcha. You use the **sorcha_copy_configs** command on the terminal to copy these files to your working directory. 
+The example configuration files are appropriate for setting up Sorcha to simulate what the LSST would discover. These examples come pre-installed with Sorcha. You use the **sorcha init** command on the terminal to copy these files to your working directory. 
 
 Rubin Full Footprint
 ~~~~~~~~~~~~~~~~~~~~~~

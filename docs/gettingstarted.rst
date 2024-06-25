@@ -8,7 +8,7 @@ In this tutorial, we will show you how to setup and run a basic simulation using
 
 
 .. important::
-  You can copy all the files used in this tutorial to your local directory  via the **sorcha_copy_demo_files** command. 
+  You can copy all the files used in this tutorial to your local directory  via the **sorcha demo prepare** command. 
 
 .. note::
   All input data files in this example are white-space separated format solely for the ease of reading.   
@@ -72,7 +72,7 @@ will produce
 
 Now that you know how to provide the input files, let's go run a simulation: You can find the command to run the sorcha demo on the command line in two ways. First on the command line::
 
-   sorcha_demo_command
+   sorcha demo howto
 
 Or you can in an interactive python session or jupyter notebook. You can run the following
 
