@@ -107,9 +107,6 @@ sorcha_cmdline = "src/sorcha_cmdline"
 [tool.setuptools]
 zip-safe = false
 
-#[tool.setuptools.package-data]
-#sorcha = ["data/*"]
-
 [tool.setuptools_scm]
 write_to = "src/sorcha/_version.py"
 
