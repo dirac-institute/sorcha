@@ -8,112 +8,91 @@ def main():
     parser = argparse.ArgumentParser(
         formatter_class=argparse.ArgumentDefaultsHelpFormatter, description="Run a simulation."
     )
-    required = parser.add_argument_group("Required arguments")
-    required.add_argument(
+    inputs = parser.add_argument_group("inputs")
+    inputs.add_argument(
         "-c",
         "--config",
         help="Input configuration file name",
         type=str,
-        dest="c",
         required=True,
+        # default="sorcha.ini"
     )
-    required.add_argument(
-        "-o",
-        "--outfile",
-        help="Path to store output and logs.",
+    inputs.add_argument(
+        "--pointings",
+        help="Survey pointing database.",
         type=str,
-        dest="o",
         required=True,
+        # default="pointings.db"
     )
-    required.add_argument(
-        "-ob",
-        "--orbit",
-        help="Orbit file name",
+    inputs.add_argument(
+        "--orbits",
+        help="Orbit catalog.",
         type=str,
-        dest="ob",
         required=True,
+        # default="orbits.des"
     )
-    required.add_argument(
-        "-p",
-        "--params",
-        help="Physical parameters file name",
+    inputs.add_argument(
+        "--colors",
+        help="Catalog of object colors.",
         type=str,
-        dest="p",
         required=True,
-    )
-    required.add_argument(
-        "-pd",
-        "--pointing_database",
-        help="Survey pointing information",
-        type=str,
-        dest="pd",
-        required=True,
+        # default="colors.txt"
     )
 
-    optional = parser.add_argument_group("Optional arguments")
-    optional.add_argument(
-        "-er",
-        "--ephem_read",
-        help="Previously generated ephemeris simulation file name, required if ephemerides_type in config file is 'external'.",
+    outputs = parser.add_argument_group("outputs")
+    outputs.add_argument("-o", "--output-dir", help="Path to store output and logs.", type=str, default=".")
+    outputs.add_argument(
+        "--prefix",
+        help="Prefix of output files. Outputs will be written to <output-dir>/<prefix>-...",
         type=str,
-        dest="er",
-        required=False,
-        default=None,
+        default="sorcha-results",
     )
-    optional.add_argument(
-        "-ew",
-        "--ephem_write",
-        help="Output file name for newly generated ephemeris simulation, required if ephemerides_type in config file is not 'external'.",
-        type=str,
-        dest="ew",
-        required=False,
-        default=None,
-    )
-    optional.add_argument(
-        "-ar",
-        "--ar_data_path",
-        help="Directory path where Assist+Rebound data files where stored when running bootstrap_sorcha_data_files from the command line.",
-        type=str,
-        dest="ar",
-        required=False,
-    )
-    optional.add_argument(
-        "-cp",
-        "--complex_physical_parameters",
-        help="Complex physical parameters file name",
-        type=str,
-        dest="cp",
-    )
-    optional.add_argument(
-        "-f",
-        "--force",
-        help="Force deletion/overwrite of existing output file(s). Default False.",
-        dest="f",
+    outputs.add_argument(
+        "--stats",
+        help="Output the summary statistics table into <output-dir>/<prefix>-stats.csv",
         action="store_true",
         default=False,
     )
-    optional.add_argument(
-        "-s", "--survey", help="Survey to simulate", type=str, dest="s", default="rubin_sim"
+
+    advanced = parser.add_argument_group("advanced")
+    advanced.add_argument(
+        "--ephem-input",
+        help="Previously generated ephemeris simulation file name, required if ephemerides_type in config file is 'external'.",
+        type=str,
+        required=False,
+        default=None,
     )
-    optional.add_argument(
-        "-t", "--stem", help="Output file name stem.", type=str, dest="t", default="SSPPOutput"
+    advanced.add_argument(
+        "--ephem-output",
+        help="Output file name for newly generated ephemeris simulation, required if ephemerides_type in config file is not 'external'.",
+        type=str,
+        required=False,
+        default=None,
     )
-    optional.add_argument(
+    advanced.add_argument(
+        "--integrator-data",
+        help="Directory path where Assist+Rebound data files where stored when running bootstrap_sorcha_data_files from the command line.",
+        type=str,
+        required=False,
+    )
+    advanced.add_argument(
+        "--extra-object-data",
+        help="Catalog of additional object parameters used by sorcha and sorcha add-ons (e.g., data needed to simulate light-curves, activity, etc)",
+        type=str,
+    )
+    advanced.add_argument(
+        "--force",
+        help="Force deletion/overwrite of existing output file(s).",
+        action="store_true",
+        default=False,
+    )
+    advanced.add_argument("-s", "--survey", help="Survey to simulate", type=str, default="rubin_sim")
+    advanced.add_argument(
         "-v",
         "--verbose",
-        help="Verbosity. Default currently true; include to turn off verbosity.",
-        dest="v",
-        default=True,
-        action="store_false",
-    )
-
-    optional.add_argument(
-        "-st",
-        "--stats",
-        help="Output summary statistics table to this stem filename.",
-        type=str,
-        dest="st",
-        default=None,
+        help="Print additional information while running.",
+        default=False,
+        action="store_true",
     )
 
     args = parser.parse_args()
@@ -142,9 +121,11 @@ def execute(args):
     import sys, os
 
     # Extract the output file path now in order to set up logging.
-    outpath = PPFindFileOrExit(args.o, "-o, --outfile")
-    pplogger = PPGetLogger(outpath)
-    pplogger.info("Sorcha Start (Main)")
+    outpath = PPFindFileOrExit(args.output_dir, "-o, --output-dir")
+    args.log_file = f"{outpath}/{args.prefix}.log"
+    pplogger = PPGetLogger(args.log_file)
+
+    pplogger.info(f"Starting sorcha run, pid={os.getpid()}")
     pplogger.info(f"Command line: {' '.join(sys.argv)}")
 
     # Extract and validate the remaining arguments.
@@ -157,13 +138,13 @@ def execute(args):
         pplogger.error("ERROR: A+R simulation not enabled and no ephemerides file provided")
         sys.exit("ERROR: A+R simulation not enabled and no ephemerides file provided")
 
-    if configs["lc_model"] and cmd_args["complex_physical_parameters"] is None:
-        pplogger.error("ERROR: No complex physical parameter file provided for light curve model")
-        sys.exit("ERROR: No complex physical parameter file provided for light curve model")
+    if configs["lc_model"] and cmd_args["extra_objects_data"] is None:
+        pplogger.error("ERROR: No extra object data catalog provided for light curve model")
+        sys.exit("ERROR: No extra object data catalog provided for light curve model")
 
-    if configs["comet_activity"] and cmd_args["complex_physical_parameters"] is None:
-        pplogger.error("ERROR: No complex physical parameter file provided for comet activity model")
-        sys.exit("ERROR: No complex physical parameter file provided for comet activity model")
+    if configs["comet_activity"] and cmd_args["extra_objects_data"] is None:
+        pplogger.error("ERROR: No extra object data catalog provided for comet activity model")
+        sys.exit("ERROR: No extra object data catalog provided for comet activity model")
 
     if "SORCHA_SEED" in os.environ:
         cmd_args["seed"] = int(os.environ["SORCHA_SEED"])

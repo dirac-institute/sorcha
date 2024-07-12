@@ -31,8 +31,8 @@ class sorchaArguments:
     surveyname: str = ""
     """name of the survey (`rubin_sim` is only one implemented currently)"""
 
-    complex_parameters: str = ""
-    """optional, extra complex physical parameter input files"""
+    extra_object_data: str = ""
+    """optional, extra physical parameter input files"""
 
     linking: bool = True
     """Turns on or off the rejection of unlinked sources"""
@@ -76,8 +76,8 @@ class sorchaArguments:
 
         self.surveyname = args["surveyname"]
 
-        if "complex_physical_parameters" in args.keys():
-            self.complex_parameters = args["complex_physical_parameters"]
+        if "extra_object_data" in args.keys():
+            self.extra_object_data = args["extra_object_data"]
 
         # WARNING: Take care if manually setting the seed. Re-using seeds between
         # simulations may result in hard-to-detect correlations in simulation

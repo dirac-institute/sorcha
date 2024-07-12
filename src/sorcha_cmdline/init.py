@@ -72,7 +72,6 @@ def main():
     parser = argparse.ArgumentParser(
         prog="sorcha-init", description="Initialize configuration files for a new simulation."
     )
-    parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose output")
     parser.add_argument(
         "-p",
         "--path",

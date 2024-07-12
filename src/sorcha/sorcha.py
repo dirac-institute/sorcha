@@ -155,7 +155,7 @@ def runLSSTSimulation(args, configs):
     reader.add_aux_data_reader(OrbitAuxReader(args.orbinfile, configs["aux_format"]))
     reader.add_aux_data_reader(CSVDataReader(args.paramsinput, configs["aux_format"]))
     if configs["comet_activity"] is not None or configs["lc_model"] is not None:
-        reader.add_aux_data_reader(CSVDataReader(args.complex_parameters, configs["aux_format"]))
+        reader.add_aux_data_reader(CSVDataReader(args.extra_object_data, configs["aux_format"]))
 
     # In case of a large input file, the data is read in chunks. The
     # "sizeSerialChunk" parameter in PPConfig.ini assigns the chunk.

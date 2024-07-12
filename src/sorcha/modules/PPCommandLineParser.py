@@ -5,7 +5,7 @@ import glob
 from .PPConfigParser import PPFindFileOrExit, PPFindDirectoryOrExit
 
 
-def warn_or_remove_file(filepath, force_remove, pplogger):
+def warn_or_remove_file(filepath, force_remove, pplogger, exclude_remove=[]):
     """Given a path to a file(s), first determine if the file exists. If it does not
     exist, pass through.
 
@@ -21,19 +21,20 @@ def warn_or_remove_file(filepath, force_remove, pplogger):
         Whether to remove the file if it exists.
     pplogger : Logger
         Used to log the output.
+    exclude_remove: list
+        Files that shouldn't be removed (used to keep the log file)
     """
-    file_exists = glob.glob(filepath)
+    exclude_remove = set([os.path.normpath(fn) for fn in exclude_remove])
+    file_exists = set(map(os.path.normpath, glob.glob(filepath))) - exclude_remove
 
     if file_exists and force_remove:
-        pplogger.info(f"Existing file found at {filepath}. -f flag set: deleting existing file.")
-        os.remove(file_exists[0])
+        pplogger.info(f"Existing file(s) found at {file_exists}. --force flag set: deleting existing file.")
+        for fn in file_exists:
+            os.remove(fn)
     elif file_exists and not force_remove:
-        pplogger.error(
-            f"ERROR: existing file found at output location {filepath}. Set -f flag to overwrite this file."
-        )
-        sys.exit(
-            f"ERROR: existing file found at output location {filepath}. Set -f flag to overwrite this file."
-        )
+        msg = f"ERROR: files found that would be overwritten by output: {file_exists}. Set --force flag to overwrite this file."
+        pplogger.error(msg)
+        sys.exit(msg)
 
 
 def PPCommandLineParser(args):
@@ -58,47 +59,52 @@ def PPCommandLineParser(args):
 
     cmd_args_dict = {}
 
-    cmd_args_dict["paramsinput"] = PPFindFileOrExit(args.p, "-p, --params")
-    cmd_args_dict["orbinfile"] = PPFindFileOrExit(args.ob, "-ob, --orbit")
-    cmd_args_dict["configfile"] = PPFindFileOrExit(args.c, "-c, --config")
-    cmd_args_dict["outpath"] = PPFindFileOrExit(args.o, "-o, --outfile")
-    cmd_args_dict["pointing_database"] = PPFindFileOrExit(args.pd, "-pd, --pointing_database")
+    cmd_args_dict["paramsinput"] = PPFindFileOrExit(args.colors, "--colors")
+    cmd_args_dict["orbinfile"] = PPFindFileOrExit(args.orbits, "--orbits")
+    cmd_args_dict["configfile"] = PPFindFileOrExit(args.config, "-c, --config")
+    cmd_args_dict["outpath"] = PPFindFileOrExit(args.output_dir, "-o, --output-dir")
+    cmd_args_dict["pointing_database"] = PPFindFileOrExit(args.pointings, "--pointings")
 
-    if args.cp:
-        cmd_args_dict["complex_physical_parameters"] = PPFindFileOrExit(
-            args.cp, "-cp, --complex_physical_parameters"
-        )
+    if args.extra_object_data:
+        cmd_args_dict["extra_object_data"] = PPFindFileOrExit(args.extra_object_data, "--extra-object-data")
 
     # if the user didn't provide oifoutput on the CLI, this will default to None
-    cmd_args_dict["oifoutput"] = args.er
+    cmd_args_dict["oifoutput"] = args.ephem_input
 
     # if the user didn't provide output_ephemeris_file on the CLI, this will default to None
-    cmd_args_dict["output_ephemeris_file"] = args.ew
+    cmd_args_dict["output_ephemeris_file"] = args.ephem_output
 
     # if a value was provided, warn the user about overwriting if the file exists
     if cmd_args_dict["output_ephemeris_file"]:
         warn_or_remove_file(
             os.path.join(cmd_args_dict["outpath"], cmd_args_dict["output_ephemeris_file"] + ".*"),
-            args.f,
+            args.force,
             pplogger,
+            [args.log_file],
         )
 
-    cmd_args_dict["surveyname"] = args.s
-    cmd_args_dict["outfilestem"] = args.t
-    cmd_args_dict["verbose"] = args.v
-    cmd_args_dict["stats"] = args.st
+    cmd_args_dict["surveyname"] = args.survey
+    cmd_args_dict["outfilestem"] = args.prefix
+    cmd_args_dict["verbose"] = args.verbose
+    cmd_args_dict["stats"] = args.prefix + "-stats" if args.stats else None
 
     if cmd_args_dict["stats"] is not None:
         warn_or_remove_file(
-            os.path.join(cmd_args_dict["outpath"], cmd_args_dict["stats"] + ".csv"), args.f, pplogger
+            os.path.join(cmd_args_dict["outpath"], cmd_args_dict["stats"] + ".csv"),
+            args.force,
+            pplogger,
+            [args.log_file],
         )
 
-    cmd_args_dict["ar_data_path"] = args.ar  # default value for args.ar is `None`.
+    cmd_args_dict["ar_data_path"] = args.integrator_data  # default value for args.ar is `None`.
     if cmd_args_dict["ar_data_path"]:
-        PPFindDirectoryOrExit(cmd_args_dict["ar_data_path"], "-ar, --ar_data_path")
+        PPFindDirectoryOrExit(cmd_args_dict["ar_data_path"], "--integrator_data")
 
     warn_or_remove_file(
-        os.path.join(cmd_args_dict["outpath"], cmd_args_dict["outfilestem"] + ".*"), args.f, pplogger
+        os.path.join(cmd_args_dict["outpath"], cmd_args_dict["outfilestem"] + ".*"),
+        args.force,
+        pplogger,
+        [args.log_file],
     )
 
     # Log all the command line settings to INFO.
