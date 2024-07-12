@@ -26,6 +26,9 @@ def warn_or_remove_file(filepath, force_remove, pplogger, exclude_remove=[]):
     """
     exclude_remove = set([os.path.normpath(fn) for fn in exclude_remove])
     file_exists = set(map(os.path.normpath, glob.glob(filepath))) - exclude_remove
+    #    print(f"{exclude_remove=}")
+    #    print(f"{file_exists=}")
+    #    print(f"{filepath=}")
 
     if file_exists and force_remove:
         pplogger.info(f"Existing file(s) found at {file_exists}. --force flag set: deleting existing file.")

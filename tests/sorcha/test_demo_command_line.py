@@ -25,11 +25,9 @@ def setup_and_teardown_for_demo_command_line():
 
     # After running the test, delete the created files...
 
-    os.remove("testrun_e2e.csv")
-    os.remove("testrun_stats.csv")
-
-    os.remove(glob.glob("*sorcha.err")[0])
-    os.remove(glob.glob("*sorcha.log")[0])
+    os.remove("sorcha-results.csv")
+    os.remove("sorcha-results-stats.csv")
+    os.remove("sorcha-results.log")
 
     # And move back to initial working directory.
     os.chdir(initial_wd)
@@ -49,13 +47,12 @@ def test_demo_command_line(setup_and_teardown_for_demo_command_line):
     # usually the ephemeris files have already been downloaded by the
     # ephemeris end-to-end test, but we can't rely on test order for this to
     # work! if the files already exist in the default location this will do nothing.
-    os.system("sorcha init")
+    os.system("sorcha bootstrap")
 
     os.system(current_demo_command)
 
-    assert os.path.exists("testrun_e2e.csv")
+    assert os.path.exists("sorcha-results.csv")
 
-    # also check to make sure the error log is empty :)
-    error_log = glob.glob("*sorcha.err")[0]
-
-    assert os.stat(error_log).st_size == 0
+    # also check to make sure there are no errors in the log
+    for line in open("sorcha-results.log"):
+        assert " ERROR " not in line

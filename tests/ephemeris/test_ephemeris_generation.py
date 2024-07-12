@@ -55,7 +55,7 @@ def test_ephemeris_end2end(single_synthetic_pointing, tmp_path):
         "stats": None,
     }
 
-    pplogger = PPGetLogger(cmd_args_dict["outpath"])
+    pplogger = PPGetLogger(os.path.join(cmd_args_dict["outpath"], "sorcha-results.log"))
     args = sorchaArguments(cmd_args_dict)
 
     configs = PPConfigFileParser(
@@ -81,7 +81,7 @@ def test_ephemeris_end2end(single_synthetic_pointing, tmp_path):
 
     # ensure no ephemeris file is written
     files = os.listdir(tmp_path)
-    assert len(files) == 2
+    assert len(files) == 1
 
     for file in files:
         assert not re.match(r".+\.csv", file)

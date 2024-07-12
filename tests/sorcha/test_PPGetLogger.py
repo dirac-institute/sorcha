@@ -2,20 +2,18 @@ import glob
 import os
 import pytest
 import tempfile
+import re
 
 
 def test_PPGetLogger():
     from sorcha.modules.PPGetLogger import PPGetLogger
 
     with tempfile.TemporaryDirectory() as dir_name:
-        pplogger = PPGetLogger(dir_name)
+        logfn = os.path.join(dir_name, "sorcha-results.log")
+        pplogger = PPGetLogger(logfn)
 
-        # Check that the files get created.
-        errlog = glob.glob(os.path.join(dir_name, "*-sorcha.err"))
-        datalog = glob.glob(os.path.join(dir_name, "*-sorcha.log"))
-
-        assert os.path.exists(errlog[0])
-        assert os.path.exists(datalog[0])
+        # Check that the log file got created
+        assert os.path.exists(logfn)
 
         # Log some information.
         pplogger.info("Test1")
@@ -24,17 +22,10 @@ def test_PPGetLogger():
         pplogger.info("Test3")
 
         # Check that all five lines exist in the INFO file.
-        with open(datalog[0], "r") as f_info:
-            log_data = f_info.read()
-            assert "Test1" in log_data
-            assert "Test2" in log_data
-            assert "Error1" in log_data
-            assert "Test3" in log_data
+        with open(logfn, "r") as fp:
+            lines = fp.read()
 
-        # Check that only error and critical lines exist in the ERROR file.
-        with open(errlog[0], "r") as f_err:
-            log_data = f_err.read()
-            assert "Test1" not in log_data
-            assert "Test2" not in log_data
-            assert "Error1" in log_data
-            assert "Test3" not in log_data
+        assert re.search(r".*INFO[^\n]*Test1.*", lines, re.MULTILINE) is not None
+        assert re.search(r".*INFO[^\n]*Test2.*", lines, re.MULTILINE) is not None
+        assert re.search(r".*INFO[^\n]*Test3.*", lines, re.MULTILINE) is not None
+        assert re.search(r".*ERROR[^\n]*Error1.*", lines, re.MULTILINE) is not None
