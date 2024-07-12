@@ -29,7 +29,7 @@ def copy_demo_files(copy_location, force_overwrite):
 
     _ = PPFindDirectoryOrExit(copy_location, "filepath")
 
-    demo_data_root = files('sorcha.data.demo')
+    demo_data_root = files("sorcha.data.demo")
 
     demo_files = [
         "sorcha_config_demo.ini",

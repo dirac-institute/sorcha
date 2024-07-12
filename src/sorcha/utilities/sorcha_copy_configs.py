@@ -31,17 +31,17 @@ def copy_demo_configs(copy_location, which_configs, force_overwrite):
 
     _ = PPFindDirectoryOrExit(copy_location, "filepath")
 
-    config_data_root = files('sorcha.data.survey_setups')
+    config_data_root = files("sorcha.data.survey_setups")
 
     configs = {
-        'rubin_circle' : ["Rubin_circular_approximation.ini"],
-        'rubin_footprint' : ["Rubin_full_footprint.ini"],
+        "rubin_circle": ["Rubin_circular_approximation.ini"],
+        "rubin_footprint": ["Rubin_full_footprint.ini"],
     }
 
     if which_configs in configs:
         config_locations = configs[which_configs]
     elif which_configs == "all":
-        config_locations = [ fn for fns in configs.values() for fn in fns  ]
+        config_locations = [fn for fns in configs.values() for fn in fns]
     else:
         sys.exit(
             "String '{}' not recognised for 'configs' variable. Must be 'rubin_circle', 'rubin_footprint' or 'all'.".format(
