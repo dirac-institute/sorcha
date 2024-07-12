@@ -3,6 +3,7 @@ import argparse
 from pathlib import Path
 import shutil
 import sys
+from importlib.resources import files
 
 from sorcha.modules.PPConfigParser import PPFindDirectoryOrExit
 
@@ -30,16 +31,17 @@ def copy_demo_configs(copy_location, which_configs, force_overwrite):
 
     _ = PPFindDirectoryOrExit(copy_location, "filepath")
 
-    path_to_file = os.path.abspath(__file__)
+    config_data_root = files("sorcha.data.survey_setups")
 
-    path_to_surveys = os.path.join(str(Path(path_to_file).parents[3]), "survey_setups")
+    configs = {
+        "rubin_circle": ["Rubin_circular_approximation.ini"],
+        "rubin_footprint": ["Rubin_full_footprint.ini"],
+    }
 
-    if which_configs == "rubin_circle":
-        config_locations = ["Rubin_circular_approximation.ini"]
-    elif which_configs == "rubin_footprint":
-        config_locations = ["Rubin_full_footprint.ini"]
+    if which_configs in configs:
+        config_locations = configs[which_configs]
     elif which_configs == "all":
-        config_locations = ["Rubin_circular_approximation.ini", "Rubin_full_footprint.ini"]
+        config_locations = [fn for fns in configs.values() for fn in fns]
     else:
         sys.exit(
             "String '{}' not recognised for 'configs' variable. Must be 'rubin_circle', 'rubin_footprint' or 'all'.".format(
@@ -47,14 +49,13 @@ def copy_demo_configs(copy_location, which_configs, force_overwrite):
             )
         )
 
-    for config in config_locations:
-        config_path = os.path.join(path_to_surveys, config)
-
-        if not force_overwrite and os.path.isfile(os.path.join(copy_location, config)):
+    for fn in config_locations:
+        if not force_overwrite and os.path.isfile(os.path.join(copy_location, fn)):
             sys.exit(
                 "Identically named file exists at location. Re-run with -f or --force to force overwrite."
             )
 
+        config_path = config_data_root.joinpath(fn)
         shutil.copy(config_path, copy_location)
 
     print("Example configuration files {} copied to {}.".format(config_locations, copy_location))
