@@ -3,6 +3,7 @@ from dataclasses import dataclass
 import time
 from os import path, urandom
 import logging
+from typing import Tuple
 
 from sorcha.modules.PPModuleRNG import PerModuleRNG
 from sorcha.modules.PPGetLogger import PPGetLogger
@@ -27,6 +28,9 @@ class sorchaArguments:
 
     verbose: bool = False
     """logger verbosity"""
+
+    process_subset: Tuple[int, int] = (1, 1)
+    """the subset of the file to process, in form of (split, nsplits)"""
 
     surveyname: str = ""
     """name of the survey (`rubin_sim` is only one implemented currently)"""
@@ -73,6 +77,7 @@ class sorchaArguments:
         self.ar_data_file_path = args.get("ar_data_path")
         self.verbose = args["verbose"]
         self.stats = args["stats"]
+        self.process_subset = args["process_subset"]
 
         self.surveyname = args["surveyname"]
 

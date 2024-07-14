@@ -56,6 +56,14 @@ def main():
 
     advanced = parser.add_argument_group("advanced")
     advanced.add_argument(
+        "--process-subset",
+        help="Process a subset of the input objects. Specify in form of <split>/<nsplits>, where <nsplits> is the number of chunks into which"
+             " the input will be divided, and <split> is the (1-based) chunk for to be processed here. For example, writing 3/5 with a catalog"
+             " of 100 objects will process objects with (0-based) indices [40, 60).",
+        type=str,
+        default="1/1"
+    )
+    advanced.add_argument(
         "--ephem-input",
         help="Previously generated ephemeris simulation file name, required if ephemerides_type in config file is 'external'.",
         type=str,

@@ -2,6 +2,7 @@ import os
 import sys
 import logging
 import glob
+import re
 from .PPConfigParser import PPFindFileOrExit, PPFindDirectoryOrExit
 
 
@@ -68,6 +69,19 @@ def PPCommandLineParser(args):
     cmd_args_dict["outpath"] = PPFindFileOrExit(args.output_dir, "-o, --output-dir")
     cmd_args_dict["pointing_database"] = PPFindFileOrExit(args.pointings, "--pointings")
 
+    if args.process_subset:
+        m = re.match(r"^(\d+)/(\d+)$", args.process_subset)
+        if m is None:
+            sys.exit("--process-subset: the argument must be in form of <split>/<nsplits>")
+
+        split, nsplits = int(m.group(1)), int(m.group(2))
+        if nsplits <= 0:
+            sys.exit("--process-subset: the number of splits must be >= 1")
+        if split < 1 or split > nsplits:
+            sys.exit("--process-subset: the chosen splits must be between 1 and <nsplits> (inclusive).")
+
+        cmd_args_dict["process_subset"] = (split, nsplits)
+
     if args.extra_object_data:
         cmd_args_dict["extra_object_data"] = PPFindFileOrExit(args.extra_object_data, "--extra-object-data")
 
@@ -89,7 +103,7 @@ def PPCommandLineParser(args):
     cmd_args_dict["surveyname"] = args.survey
     cmd_args_dict["outfilestem"] = args.prefix
     cmd_args_dict["verbose"] = args.verbose
-    cmd_args_dict["stats"] = args.prefix + "-stats" if args.stats else None
+    cmd_args_dict["stats"] = args.prefix + ".stats" if args.stats else None
 
     if cmd_args_dict["stats"] is not None:
         warn_or_remove_file(
