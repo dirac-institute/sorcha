@@ -98,6 +98,8 @@ def test_PPWriteOutput_sql(tmp_path):
         "position_decimals": 7,
         "magnitude_decimals": 3,
         "output_format": "sqlite3",
+        "lastChunk": True,
+        "endChunk": "10",
     }
 
     expected = np.array(
@@ -121,7 +123,7 @@ def test_PPWriteOutput_sql(tmp_path):
         dtype=object,
     )
 
-    PPWriteOutput(args, configs, observations, 10, lastchunk=True)
+    PPWriteOutput(args, configs, observations)
     cnx = sqlite3.connect(os.path.join(tmp_path, "PPOutput_test_out.db"))
     cur = cnx.cursor()
     cur.execute("select * from sorcha_results")

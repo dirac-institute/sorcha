@@ -62,7 +62,7 @@ WITH_EPHEMERIS_ARGS = {
     "orbinfile": get_demo_filepath("orbits_small_random_mpcorb.csv"),
     "configfile": get_demo_filepath("config_for_ephemeris_unit_test.ini"),
     "pointing_database": get_demo_filepath("baseline_v2.0_1yr.db"),
-    "output_ephemeris_file": "sorcha_ephemeris.csv",
+    "output_ephemeris_file": "sorcha_ephemeris",
     "surveyname": "rubin_sim",
     "outfilestem": f"out_end2end_with_ephemeris_generation",
     "verbose": False,

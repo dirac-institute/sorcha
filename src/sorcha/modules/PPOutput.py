@@ -99,13 +99,17 @@ def PPOutWriteSqlite3(pp_results, outf, lastchunk=False, tablename="sorcha_resul
         cur = cnx.cursor()
         cur.execute("CREATE INDEX ObjID ON {} (ObjID)".format(tablename))
         cur.execute("CREATE INDEX fieldMJD_TAI ON {} (fieldMJD_TAI)".format(tablename))
-        cur.execute("CREATE INDEX optFilter ON {} (optFilter)".format(tablename))
+
+        # sorcha results are also indexed on filter: ephemerides are not
+        if tablename == "sorcha_results":
+            cur.execute("CREATE INDEX optFilter ON {} (optFilter)".format(tablename))
+
         cnx.commit()
 
     pplogger.info("SQL results saved in table {} in database {}.".format(tablename, outf))
 
 
-def PPWriteOutput(cmd_args, configs, observations_in, endChunk=0, verbose=False, lastchunk=False):
+def PPWriteOutput(cmd_args, configs, observations_in, verbose=False):
     """
     Writes the output in the format specified in the config file to a location
     specified by the user.
@@ -224,10 +228,10 @@ def PPWriteOutput(cmd_args, configs, observations_in, endChunk=0, verbose=False,
         outputsuffix = ".db"
         out = os.path.join(cmd_args.outpath, cmd_args.outfilestem + outputsuffix)
         verboselog("Output to sqlite3 database...")
-        observations = PPOutWriteSqlite3(observations, out, lastchunk)
+        observations = PPOutWriteSqlite3(observations, out, configs["lastChunk"])
 
     elif configs["output_format"] == "hdf5" or configs["output_format"] == "h5":
         outputsuffix = ".h5"
         out = os.path.join(cmd_args.outpath, cmd_args.outfilestem + outputsuffix)
         verboselog("Output to HDF5 binary file...")
-        observations = PPOutWriteHDF5(observations, out, str(endChunk))
+        observations = PPOutWriteHDF5(observations, out, str(configs["endChunk"]))

@@ -162,7 +162,7 @@ def runLSSTSimulation(args, configs):
     startChunk = 0
     endChunk = 0
     loopCounter = 0
-    lastChunk = False
+    configs["lastChunk"] = False  # creating a config variable for this makes it more easily accessible
 
     ii = -1
     with open(args.orbinfile) as f:
@@ -178,10 +178,11 @@ def runLSSTSimulation(args, configs):
     while endChunk < lenf:
         verboselog("Starting main Sorcha processing loop round {}".format(loopCounter))
         endChunk = startChunk + configs["size_serial_chunk"]
+        configs["endChunk"] = endChunk  # again storing this in configs for easy access later
         verboselog("Working on objects {}-{}".format(startChunk, endChunk))
 
         if endChunk >= lenf:
-            lastChunk = True
+            configs["lastChunk"] = True
 
         # Processing begins, all processing is done for chunks
         if configs["ephemerides_type"].casefold() == "external":
@@ -340,7 +341,7 @@ def runLSSTSimulation(args, configs):
 
         # write output
 
-        PPWriteOutput(args, configs, observations, endChunk, verbose=args.verbose, lastchunk=lastChunk)
+        PPWriteOutput(args, configs, observations, verbose=args.verbose)
 
         if args.stats is not None:
             stats(observations, args.stats, args.outpath)

@@ -17,6 +17,7 @@ from sorcha.ephemeris.simulation_geometry import *
 from sorcha.ephemeris.simulation_parsing import *
 from sorcha.utilities.dataUtilitiesForTests import get_data_out_filepath
 from sorcha.ephemeris.pixel_dict import PixelDict
+from sorcha.modules.PPOutput import PPOutWriteCSV, PPOutWriteSqlite3, PPOutWriteHDF5
 
 
 out_csv_path = get_data_out_filepath("ephemeris_output.csv")
@@ -223,11 +224,21 @@ def create_ephemeris(orbits_df, pointings_df, args, configs):
     # if the user has defined an output file name for the ephemeris results, write out to that file
     if ephemeris_csv_filename:
         verboselog("Writing out ephemeris results to file.")
-        write_header = True
-        # due to chunking, if the file already exists and it has contents, then we won't include the header information
-        if os.path.exists(ephemeris_csv_filename) and os.stat(ephemeris_csv_filename).st_size != 0:
-            write_header = False
-        ephemeris_df.to_csv(ephemeris_csv_filename, mode="a", index=False, header=write_header)
+
+        if configs["output_format"] == "csv":
+            verboselog("Output to CSV file...")
+            PPOutWriteCSV(ephemeris_df, ephemeris_csv_filename + ".csv")
+        elif configs["output_format"] == "sqlite3":
+            verboselog("Output to sqlite3 database...")
+            PPOutWriteSqlite3(
+                ephemeris_df,
+                ephemeris_csv_filename + ".db",
+                configs["lastChunk"],
+                tablename="sorcha_ephemeris",
+            )
+        elif configs["output_format"] == "hdf5" or configs["output_format"] == "h5":
+            verboselog("Output to HDF5 binary file...")
+            PPOutWriteHDF5(ephemeris_df, ephemeris_csv_filename + ".h5", str(configs["endChunk"]))
 
     # join the ephemeris and input orbits dataframe, take special care to make
     # sure the 'ObjID' column types match.
