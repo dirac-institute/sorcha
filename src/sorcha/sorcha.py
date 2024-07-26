@@ -343,7 +343,7 @@ def runLSSTSimulation(args, configs):
         PPWriteOutput(args, configs, observations, endChunk, verbose=args.verbose, lastchunk=lastChunk)
 
         if args.stats is not None:
-            stats(observations, args.stats, args.outpath)
+            stats(observations, args.stats, args.outpath, linking=configs["SSP_linking_on"])
 
         startChunk = startChunk + configs["size_serial_chunk"]
         loopCounter = loopCounter + 1
