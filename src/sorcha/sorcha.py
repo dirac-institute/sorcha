@@ -138,8 +138,6 @@ def runLSSTSimulation(args, configs):
     # Set up the data readers.
     ephem_type = configs["ephemerides_type"]
     ephem_primary = False
-    if ephem_type.casefold() == "external":
-        ephem_primary = True
     reader = CombinedDataReader(ephem_primary=ephem_primary, verbose=True)
 
     # TODO: Once more ephemerides_types are added this should be wrapped in a EphemerisDataReader
