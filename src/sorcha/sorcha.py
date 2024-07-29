@@ -139,7 +139,7 @@ def runLSSTSimulation(args, configs):
     ephem_type = configs["ephemerides_type"]
     ephem_primary = False
     if ephem_type.casefold() == "external":
-        ephem_primary = True
+        ephem_primary = False
     reader = CombinedDataReader(ephem_primary=ephem_primary, verbose=True)
 
     # TODO: Once more ephemerides_types are added this should be wrapped in a EphemerisDataReader
@@ -178,7 +178,6 @@ def runLSSTSimulation(args, configs):
     while endChunk < lenf:
         verboselog("Starting main Sorcha processing loop round {}".format(loopCounter))
         endChunk = startChunk + configs["size_serial_chunk"]
-        configs["endChunk"] = endChunk  # again storing this in configs for easy access later
         verboselog("Working on objects {}-{}".format(startChunk, endChunk))
 
         if endChunk >= lenf:
@@ -188,6 +187,7 @@ def runLSSTSimulation(args, configs):
         if configs["ephemerides_type"].casefold() == "external":
             verboselog("Reading in chunk of orbits and associated ephemeris from an external file")
             observations = reader.read_block(block_size=configs["size_serial_chunk"])
+            observations.to_csv("post_readin_ephem_nonprimary.csv")
         else:
             verboselog("Ingest chunk of orbits")
             orbits_df = reader.read_aux_block(block_size=configs["size_serial_chunk"])

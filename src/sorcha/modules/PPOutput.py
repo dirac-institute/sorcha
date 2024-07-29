@@ -33,7 +33,7 @@ def PPOutWriteCSV(padain, outf):
     return
 
 
-def PPOutWriteHDF5(pp_results, outf, keyin):
+def PPOutWriteHDF5(pp_results, outf, keyname="sorcha_results"):
     """
     Writes a pandas dataframe out to a HDF5 file at a location given by the user.
 
@@ -62,9 +62,11 @@ def PPOutWriteHDF5(pp_results, outf, keyin):
     # as long as the user isn't going to use PyTables to access the data this doesn't matter
     warnings.filterwarnings("ignore", category=NaturalNameWarning)
 
-    of = pp_results.to_hdf(outf, mode="a", format="table", append=True, key=keyin)
+    store = pd.HDFStore(outf)
+    store.append(keyname, pp_results, format="t", data_columns=True)
+    store.close()
 
-    return of
+    return
 
 
 def PPOutWriteSqlite3(pp_results, outf, lastchunk=False, tablename="sorcha_results"):
@@ -234,4 +236,4 @@ def PPWriteOutput(cmd_args, configs, observations_in, verbose=False):
         outputsuffix = ".h5"
         out = os.path.join(cmd_args.outpath, cmd_args.outfilestem + outputsuffix)
         verboselog("Output to HDF5 binary file...")
-        observations = PPOutWriteHDF5(observations, out, str(configs["endChunk"]))
+        observations = PPOutWriteHDF5(observations, out)

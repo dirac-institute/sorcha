@@ -238,7 +238,7 @@ def create_ephemeris(orbits_df, pointings_df, args, configs):
             )
         elif configs["output_format"] == "hdf5" or configs["output_format"] == "h5":
             verboselog("Output to HDF5 binary file...")
-            PPOutWriteHDF5(ephemeris_df, ephemeris_csv_filename + ".h5", str(configs["endChunk"]))
+            PPOutWriteHDF5(ephemeris_df, ephemeris_csv_filename + ".h5", "sorcha_ephemeris")
 
     # join the ephemeris and input orbits dataframe, take special care to make
     # sure the 'ObjID' column types match.
