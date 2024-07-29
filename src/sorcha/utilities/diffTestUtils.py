@@ -69,6 +69,30 @@ WITH_EPHEMERIS_ARGS = {
     "stats": None,
 }
 
+CHUNKED_ARGS = {
+    "paramsinput": get_demo_filepath("sspp_testset_colours.txt"),
+    "orbinfile": get_demo_filepath("sspp_testset_orbits.des"),
+    "oifoutput": get_demo_filepath("example_oif_output.txt"),
+    "configfile": get_demo_filepath("PPConfig_test_chunked.ini"),
+    "pointing_database": get_demo_filepath("baseline_v2.0_1yr.db"),
+    "surveyname": "rubin_sim",
+    "outfilestem": f"out_end2end_chunked",
+    "verbose": False,
+    "stats": None,
+}
+
+UNCHUNKED_ARGS = {
+    "paramsinput": get_demo_filepath("sspp_testset_colours.txt"),
+    "orbinfile": get_demo_filepath("sspp_testset_orbits.des"),
+    "oifoutput": get_demo_filepath("example_oif_output.txt"),
+    "configfile": get_demo_filepath("PPConfig_test_unchunked.ini"),
+    "pointing_database": get_demo_filepath("baseline_v2.0_1yr.db"),
+    "surveyname": "rubin_sim",
+    "outfilestem": f"out_end2end_unchunked",
+    "verbose": False,
+    "stats": None,
+}
+
 
 VERIFICATION_TRUTH = {
     "paramsinput": get_demo_filepath("verification_colors.txt"),
@@ -105,6 +129,10 @@ def override_seed_and_run(outpath, arg_set="baseline"):
         cmd_args_dict = BASELINE_ARGS
     elif arg_set == "with_ephemeris":
         cmd_args_dict = WITH_EPHEMERIS_ARGS
+    elif arg_set == "chunked":
+        cmd_args_dict = CHUNKED_ARGS
+    elif arg_set == "unchunked":
+        cmd_args_dict = UNCHUNKED_ARGS
     elif arg_set == "truth":
         cmd_args_dict = VERIFICATION_TRUTH
     else:

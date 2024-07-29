@@ -138,8 +138,6 @@ def runLSSTSimulation(args, configs):
     # Set up the data readers.
     ephem_type = configs["ephemerides_type"]
     ephem_primary = False
-    if ephem_type.casefold() == "external":
-        ephem_primary = False
     reader = CombinedDataReader(ephem_primary=ephem_primary, verbose=True)
 
     # TODO: Once more ephemerides_types are added this should be wrapped in a EphemerisDataReader
@@ -344,7 +342,7 @@ def runLSSTSimulation(args, configs):
         PPWriteOutput(args, configs, observations, verbose=args.verbose)
 
         if args.stats is not None:
-            stats(observations, args.stats, args.outpath)
+            stats(observations, args.stats, args.outpath, linking=configs["SSP_linking_on"])
 
         startChunk = startChunk + configs["size_serial_chunk"]
         loopCounter = loopCounter + 1
