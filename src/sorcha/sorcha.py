@@ -26,7 +26,7 @@ from sorcha.modules.PPGetLogger import PPGetLogger
 from sorcha.modules.PPCommandLineParser import PPCommandLineParser
 from sorcha.modules.PPMatchPointingToObservations import PPMatchPointingToObservations
 from sorcha.modules.PPMagnitudeLimit import PPMagnitudeLimit
-from sorcha.modules.PPOutput import PPWriteOutput
+from sorcha.modules.PPOutput import PPWriteOutput, PPIndexSQLDatabase
 from sorcha.modules.PPGetMainFilterAndColourOffsets import PPGetMainFilterAndColourOffsets
 from sorcha.modules.PPFootprintFilter import Footprint
 from sorcha.modules.PPStats import stats
@@ -178,9 +178,6 @@ def runLSSTSimulation(args, configs):
         endChunk = startChunk + configs["size_serial_chunk"]
         verboselog("Working on objects {}-{}".format(startChunk, endChunk))
 
-        if endChunk >= lenf:
-            lastChunk = True
-
         # Processing begins, all processing is done for chunks
         if configs["ephemerides_type"].casefold() == "external":
             verboselog("Reading in chunk of orbits and associated ephemeris from an external file")
@@ -202,6 +199,7 @@ def runLSSTSimulation(args, configs):
                 "WARNING: no ephemeris observations found for these objects. Skipping to next chunk..."
             )
             startChunk = startChunk + configs["size_serial_chunk"]
+            loopCounter = loopCounter + 1
             continue
 
         observations = PPMatchPointingToObservations(observations, filterpointing)
@@ -330,11 +328,14 @@ def runLSSTSimulation(args, configs):
         if len(observations.index) > 0:
             pplogger.info("Post processing completed for this chunk")
             pplogger.info("Outputting results for this chunk")
-            PPWriteOutput(args, configs, observations, endChunk, verbose=args.verbose, lastchunk=lastChunk)
+            PPWriteOutput(args, configs, observations, endChunk, verbose=args.verbose)
             if args.stats is not None:
                 stats(observations, args.stats, args.outpath, linking=configs["SSP_linking_on"])
         else:
             verboselog("No observations left in chunk. No output will be written for this chunk.")
+
+        if endChunk >= lenf and configs["output_format"] == "sqlite3":
+            PPIndexSQLDatabase(os.path.join(args.outpath, args.outfilestem + ".db"))
 
         startChunk = startChunk + configs["size_serial_chunk"]
         loopCounter = loopCounter + 1
