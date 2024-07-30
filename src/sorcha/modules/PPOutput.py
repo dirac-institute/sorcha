@@ -79,6 +79,9 @@ def PPOutWriteSqlite3(pp_results, outf, tablename="sorcha_results"):
     outf : string
         Location to which file should be written.
 
+    tablename: string
+        String of the table within the database to be indexed.
+
     Returns
     -----------
     None.
@@ -103,6 +106,13 @@ def PPIndexSQLDatabase(outf, tablename="sorcha_results"):
     -----------
     outf : string
         Location of SQLite database to be indexed.
+
+    tablename: string
+        String of the table within the database to be indexed.
+
+    Returns
+    -----------
+    None.
 
     """
 
