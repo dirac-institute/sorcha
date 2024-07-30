@@ -40,17 +40,9 @@ def PPFadingFunctionFilter(observations, fillfactor, width, module_rngs, verbose
         observations, fillFactor=fillfactor, w=width
     )
 
-    verboselog(
-        "Number of rows BEFORE applying detection probability threshold: " + str(len(observations.index))
-    )
-
     verboselog("Dropping observations below detection threshold...")
     observations = PPDropObservations(observations, module_rngs, "detection_probability")
     observations_drop = observations.drop("detection_probability", axis=1)
     observations_drop.reset_index(drop=True, inplace=True)
-
-    verboselog(
-        "Number of rows AFTER applying detection probability threshold: " + str(len(observations_drop.index))
-    )
 
     return observations_drop
