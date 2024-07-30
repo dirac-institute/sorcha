@@ -335,6 +335,7 @@ def runLSSTSimulation(args, configs):
             verboselog("No observations left in chunk. No output will be written for this chunk.")
 
         if endChunk >= lenf and configs["output_format"] == "sqlite3":
+            pplogger.info("Last chunk detected. Indexing output SQLite database...")
             PPIndexSQLDatabase(os.path.join(args.outpath, args.outfilestem + ".db"))
 
         startChunk = startChunk + configs["size_serial_chunk"]
