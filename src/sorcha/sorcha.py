@@ -334,12 +334,14 @@ def runLSSTSimulation(args, configs):
         else:
             verboselog("No observations left in chunk. No output will be written for this chunk.")
 
-        if endChunk >= lenf and configs["output_format"] == "sqlite3":
-            pplogger.info("Last chunk detected. Indexing output SQLite database...")
-            PPIndexSQLDatabase(os.path.join(args.outpath, args.outfilestem + ".db"))
-
         startChunk = startChunk + configs["size_serial_chunk"]
         loopCounter = loopCounter + 1
         # end for
+
+    if configs["output_format"] == "sqlite3" and os.path.isfile(
+        os.path.join(args.outpath, args.outfilestem + ".db")
+    ):
+        pplogger.info("Indexing output SQLite database...")
+        PPIndexSQLDatabase(os.path.join(args.outpath, args.outfilestem + ".db"))
 
     pplogger.info("Sorcha process is completed.")
