@@ -90,6 +90,8 @@ def test_PPWriteOutput_csv(tmp_path):
 
 
 def test_PPWriteOutput_sql(tmp_path):
+    from sorcha.modules.PPOutput import PPIndexSQLDatabase
+
     args.outpath = tmp_path
     args.outfilestem = "PPOutput_test_out"
 
@@ -123,7 +125,9 @@ def test_PPWriteOutput_sql(tmp_path):
         dtype=object,
     )
 
-    PPWriteOutput(args, configs, observations)
+    PPWriteOutput(args, configs, observations, 10)
+    PPIndexSQLDatabase(os.path.join(tmp_path, "PPOutput_test_out.db"))
+
     cnx = sqlite3.connect(os.path.join(tmp_path, "PPOutput_test_out.db"))
     cur = cnx.cursor()
     cur.execute("select * from sorcha_results")
