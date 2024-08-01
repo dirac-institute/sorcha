@@ -224,20 +224,7 @@ def create_ephemeris(orbits_df, pointings_df, args, configs):
     # if the user has defined an output file name for the ephemeris results, write out to that file
     if ephemeris_csv_filename:
         verboselog("Writing out ephemeris results to file.")
-
-        if configs["output_format"] == "csv":
-            verboselog("Output to CSV file...")
-            PPOutWriteCSV(ephemeris_df, ephemeris_csv_filename + ".csv")
-        elif configs["output_format"] == "sqlite3":
-            verboselog("Output to sqlite3 database...")
-            PPOutWriteSqlite3(
-                ephemeris_df,
-                ephemeris_csv_filename + ".db",
-                tablename="sorcha_ephemeris",
-            )
-        elif configs["output_format"] == "hdf5" or configs["output_format"] == "h5":
-            verboselog("Output to HDF5 binary file...")
-            PPOutWriteHDF5(ephemeris_df, ephemeris_csv_filename + ".h5", "sorcha_ephemeris")
+        write_out_ephemeris_file(ephemeris_df, ephemeris_csv_filename, args, configs)
 
     # join the ephemeris and input orbits dataframe, take special care to make
     # sure the 'ObjID' column types match.
@@ -342,3 +329,38 @@ def calculate_rates_and_geometry(pointing: pd.DataFrame, ephem_geom_params: Ephe
         dobs_sundt[2] * AU_KM / (24 * 60 * 60),
         phase_angle * 180 / np.pi,
     )
+
+
+def write_out_ephemeris_file(ephemeris_df, ephemeris_csv_filename, args, configs):
+    """Writes the ephemeris out to an external file.
+
+    Parameters
+    ----------
+    ephemeris_df : Pandas DataFrame
+        The data frame of ephemeris information to be written out.
+
+    ephemeris_csv_filename : string
+        The filepath (without extension) to write the ephemeris file to.
+
+    args: sorchaArguments object or similar
+        Command-line arguments from Sorcha.
+
+    configs: dict
+        Dictionary of configuration file arguments.
+
+    Returns
+    -------
+    None.
+    """
+
+    verboselog = args.pplogger.info if args.verbose else lambda *a, **k: None
+
+    if configs["eph_format"] == "csv":
+        verboselog("Outputting ephemeris to CSV file...")
+        PPOutWriteCSV(ephemeris_df, ephemeris_csv_filename + ".csv")
+    elif configs["eph_format"] == "whitespace":
+        verboselog("Outputting ephemeris to whitespaced CSV file...")
+        PPOutWriteCSV(ephemeris_df, ephemeris_csv_filename + ".csv", separator=" ")
+    elif configs["eph_format"] == "hdf5" or configs["output_format"] == "h5":
+        verboselog("Outputting ephemeris to HDF5 binary file...")
+        PPOutWriteHDF5(ephemeris_df, ephemeris_csv_filename + ".h5", "sorcha_ephemeris")

@@ -10,7 +10,7 @@ import warnings
 from tables import NaturalNameWarning
 
 
-def PPOutWriteCSV(padain, outf):
+def PPOutWriteCSV(padain, outf, separator=","):
     """
     Writes a pandas dataframe out to a CSV file at a location given by the user.
 
@@ -22,13 +22,18 @@ def PPOutWriteCSV(padain, outf):
     outf : string
         Location to which file should be written.
 
+    separator: string of length 1
+        String of CSV separator. Default is ','.
+
     Returns
     -----------
     None.
 
     """
 
-    padain = padain.to_csv(path_or_buf=outf, mode="a", header=not os.path.exists(outf), index=False)
+    padain = padain.to_csv(
+        path_or_buf=outf, mode="a", header=not os.path.exists(outf), sep=separator, index=False
+    )
 
     return
 
