@@ -26,7 +26,7 @@ from sorcha.modules.PPGetLogger import PPGetLogger
 from sorcha.modules.PPCommandLineParser import PPCommandLineParser
 from sorcha.modules.PPMatchPointingToObservations import PPMatchPointingToObservations
 from sorcha.modules.PPMagnitudeLimit import PPMagnitudeLimit
-from sorcha.modules.PPOutput import PPWriteOutput
+from sorcha.modules.PPOutput import PPWriteOutput, PPIndexSQLDatabase
 from sorcha.modules.PPGetMainFilterAndColourOffsets import PPGetMainFilterAndColourOffsets
 from sorcha.modules.PPFootprintFilter import Footprint
 from sorcha.modules.PPStats import stats
@@ -156,7 +156,7 @@ def runLSSTSimulation(args, configs):
         reader.add_aux_data_reader(CSVDataReader(args.complex_parameters, configs["aux_format"]))
 
     # In case of a large input file, the data is read in chunks. The
-    # "sizeSerialChunk" parameter in PPConfig.ini assigns the chunk.
+    # "sizeSerialChunk" parameter in the config file assigns the chunk.
     startChunk = 0
     endChunk = 0
     loopCounter = 0
@@ -178,9 +178,6 @@ def runLSSTSimulation(args, configs):
         endChunk = startChunk + configs["size_serial_chunk"]
         verboselog("Working on objects {}-{}".format(startChunk, endChunk))
 
-        if endChunk >= lenf:
-            lastChunk = True
-
         # Processing begins, all processing is done for chunks
         if configs["ephemerides_type"].casefold() == "external":
             verboselog("Reading in chunk of orbits and associated ephemeris from an external file")
@@ -197,11 +194,12 @@ def runLSSTSimulation(args, configs):
 
         # If the ephemeris file doesn't have any observations for the objects in the chunk
         # PPReadAllInput will return an empty dataframe. We thus log a warning.
-        if len(observations) == 0:
+        if len(observations.index) == 0:
             pplogger.info(
                 "WARNING: no ephemeris observations found for these objects. Skipping to next chunk..."
             )
             startChunk = startChunk + configs["size_serial_chunk"]
+            loopCounter = loopCounter + 1
             continue
 
         observations = PPMatchPointingToObservations(observations, filterpointing)
@@ -239,24 +237,20 @@ def runLSSTSimulation(args, configs):
         # These are the columns that should be used moving forward for filters etc.
         # Do NOT use trailedSourceMagTrue or PSFMagTrue, these are the unrandomised magnitudes.
         verboselog("Calculating astrometric and photometric uncertainties...")
-        verboselog(
-            "Number of rows BEFORE caclulating astrometric and photometric uncertainties : "
-            + str(len(observations.index))
-        )
-
         observations = PPAddUncertainties.addUncertainties(
             observations, configs, args._rngs, verbose=args.verbose
         )
-        verboselog(
-            "Number of rows AFTER caclulating astrometric and photometric uncertainties : "
-            + str(len(observations.index))
-        )
 
         if configs["randomization_on"]:
+            verboselog(
+                "Number of rows BEFORE randomizing astrometry and photometry: " + str(len(observations.index))
+            )
             observations = PPRandomizeMeasurements.randomizeAstrometryAndPhotometry(
                 observations, configs, args._rngs, verbose=args.verbose
             )
-
+            verboselog(
+                "Number of rows AFTER randomizing astrometry and photometry: " + str(len(observations.index))
+            )
         else:
             verboselog(
                 "Randomization turned off in config file. No astrometric or photometric randomization performed."
@@ -272,14 +266,15 @@ def runLSSTSimulation(args, configs):
             observations["trailedSourceMag"] = observations["trailedSourceMagTrue"].copy()
             observations["PSFMag"] = observations["PSFMagTrue"].copy()
 
-        verboselog("Applying field-of-view filters...")
-        verboselog("Number of rows BEFORE applying FOV filters: " + str(len(observations.index)))
-        observations = PPApplyFOVFilter(
-            observations, configs, args._rngs, footprint=footprint, verbose=args.verbose
-        )
-        verboselog("Number of rows AFTER applying FOV filters: " + str(len(observations.index)))
+        if configs["camera_model"] != "none" and len(observations.index) > 0:
+            verboselog("Applying field-of-view filters...")
+            verboselog("Number of rows BEFORE applying FOV filters: " + str(len(observations.index)))
+            observations = PPApplyFOVFilter(
+                observations, configs, args._rngs, footprint=footprint, verbose=args.verbose
+            )
+            verboselog("Number of rows AFTER applying FOV filters: " + str(len(observations.index)))
 
-        if configs["SNR_limit_on"]:
+        if configs["SNR_limit_on"] and len(observations.index) > 0:
             verboselog(
                 "Dropping observations with signal to noise ratio less than {}...".format(
                     configs["SNR_limit"]
@@ -289,14 +284,15 @@ def runLSSTSimulation(args, configs):
             observations = PPSNRLimit(observations, configs["SNR_limit"])
             verboselog("Number of rows AFTER applying SNR limit filter: " + str(len(observations.index)))
 
-        if configs["mag_limit_on"]:
+        if configs["mag_limit_on"] and len(observations.index) > 0:
             verboselog("Dropping detections fainter than user-defined magnitude limit... ")
             verboselog("Number of rows BEFORE applying mag limit filter: " + str(len(observations.index)))
             observations = PPMagnitudeLimit(observations, configs["mag_limit"])
             verboselog("Number of rows AFTER applying mag limit filter: " + str(len(observations.index)))
 
-        if configs["fading_function_on"]:
+        if configs["fading_function_on"] and len(observations.index) > 0:
             verboselog("Applying detection efficiency fading function...")
+            verboselog("Number of rows BEFORE applying fading function: " + str(len(observations.index)))
             observations = PPFadingFunctionFilter(
                 observations,
                 configs["fading_function_peak_efficiency"],
@@ -304,19 +300,15 @@ def runLSSTSimulation(args, configs):
                 args._rngs,
                 verbose=args.verbose,
             )
+            verboselog("Number of rows AFTER applying fading function: " + str(len(observations.index)))
 
-        if configs["bright_limit_on"]:
+        if configs["bright_limit_on"] and len(observations.index) > 0:
             verboselog("Dropping observations that are too bright...")
             verboselog("Number of rows BEFORE applying bright limit filter " + str(len(observations.index)))
             observations = PPBrightLimit(observations, configs["observing_filters"], configs["bright_limit"])
             verboselog("Number of rows AFTER applying bright limit filter " + str(len(observations.index)))
 
-        if len(observations) == 0:
-            verboselog("No observations left in chunk. Skipping to next chunk...")
-            startChunk = startChunk + configs["size_serial_chunk"]
-            continue
-
-        if configs["SSP_linking_on"]:
+        if configs["SSP_linking_on"] and len(observations.index) > 0:
             verboselog("Applying SSP linking filter...")
             verboselog("Number of rows BEFORE applying SSP linking filter: " + str(len(observations.index)))
             observations = PPLinkingFilter(
@@ -332,19 +324,24 @@ def runLSSTSimulation(args, configs):
             observations.reset_index(drop=True, inplace=True)
             verboselog("Number of rows AFTER applying SSP linking filter: " + str(len(observations.index)))
 
-        pplogger.info("Post processing completed for this chunk")
-
-        pplogger.info("Output results for this chunk")
-
-        # write output
-
-        PPWriteOutput(args, configs, observations, endChunk, verbose=args.verbose, lastchunk=lastChunk)
-
-        if args.stats is not None:
-            stats(observations, args.stats, args.outpath, linking=configs["SSP_linking_on"])
+        # write output if chunk not empty
+        if len(observations.index) > 0:
+            pplogger.info("Post processing completed for this chunk")
+            pplogger.info("Outputting results for this chunk")
+            PPWriteOutput(args, configs, observations, endChunk, verbose=args.verbose)
+            if args.stats is not None:
+                stats(observations, args.stats, args.outpath, linking=configs["SSP_linking_on"])
+        else:
+            verboselog("No observations left in chunk. No output will be written for this chunk.")
 
         startChunk = startChunk + configs["size_serial_chunk"]
         loopCounter = loopCounter + 1
         # end for
+
+    if configs["output_format"] == "sqlite3" and os.path.isfile(
+        os.path.join(args.outpath, args.outfilestem + ".db")
+    ):
+        pplogger.info("Indexing output SQLite database...")
+        PPIndexSQLDatabase(os.path.join(args.outpath, args.outfilestem + ".db"))
 
     pplogger.info("Sorcha process is completed.")
