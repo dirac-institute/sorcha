@@ -160,7 +160,6 @@ def runLSSTSimulation(args, configs):
     startChunk = 0
     endChunk = 0
     loopCounter = 0
-    configs["lastChunk"] = False  # creating a config variable for this makes it more easily accessible
 
     ii = -1
     with open(args.orbinfile) as f:
