@@ -233,7 +233,6 @@ def create_ephemeris(orbits_df, pointings_df, args, configs):
             PPOutWriteSqlite3(
                 ephemeris_df,
                 ephemeris_csv_filename + ".db",
-                configs["lastChunk"],
                 tablename="sorcha_ephemeris",
             )
         elif configs["output_format"] == "hdf5" or configs["output_format"] == "h5":
