@@ -28,8 +28,10 @@ def test_PPStats(tmp_path):
     }
     test_df = pd.DataFrame(test_dict)
 
+    configs = {"SSP_linking_on": True, "drop_unlinked": False}
+
     filename_stats = "test_stats"
-    stats(test_df, filename_stats, tmp_path)
+    stats(test_df, filename_stats, tmp_path, configs)
 
     stats_df = pd.read_csv(os.path.join(tmp_path, filename_stats + ".csv"))
 
@@ -91,8 +93,10 @@ def test_PPStats_nolinking(tmp_path):
 
     test_df = pd.DataFrame(test_dict)
 
+    configs = {"SSP_linking_on": False, "drop_unlinked": True}
+
     filename_stats = "test_stats"
-    stats(test_df, filename_stats, tmp_path, linking=False)
+    stats(test_df, filename_stats, tmp_path, configs)
 
     stats_df = pd.read_csv(os.path.join(tmp_path, filename_stats + ".csv"))
 
