@@ -3,6 +3,7 @@ import numpy as np
 
 from sorcha.utilities.dataUtilitiesForTests import get_test_filepath
 
+
 def test_PPLinkingFilter_window():
     from sorcha.modules.PPLinkingFilter import PPLinkingFilter
 
@@ -12,13 +13,14 @@ def test_PPLinkingFilter_window():
     min_tracklets = 3
     min_tracklet_window = 15
     detection_efficiency = 1
+    night_start_utc = 17.0
 
     # create object that should /not/ be linked not all tracklets are within
     # the window.
     obj_id = ["pretend_object"] * 6
     field_id = np.arange(1, 7)
-    t0 = 60000.
-    times = np.asarray([0.03, 0.06, 5.03, 5.06, min_tracklet_window + .03, min_tracklet_window + .06]) + t0
+    t0 = 60000.0
+    times = np.asarray([0.03, 0.06, 5.03, 5.06, min_tracklet_window + 0.03, min_tracklet_window + 0.06]) + t0
     ra = [142, 142.1, 143, 143.1, 144, 144.1]
     dec = [8, 8.1, 9, 9.1, 10, 10.1]
 
@@ -34,6 +36,7 @@ def test_PPLinkingFilter_window():
         min_tracklet_window,
         min_angular_separation,
         max_time_separation,
+        night_start_utc,
     )
     assert len(linked_observations) == 0
 
@@ -42,7 +45,7 @@ def test_PPLinkingFilter_window():
     observations = pd.DataFrame(
         {"ObjID": obj_id, "FieldID": field_id, "fieldMJD_TAI": times, "RA_deg": ra, "Dec_deg": dec}
     )
-    observations.loc[observations["fieldMJD_TAI"] > min_tracklet_window + t0, "fieldMJD_TAI"] -= 1.
+    observations.loc[observations["fieldMJD_TAI"] > min_tracklet_window + t0, "fieldMJD_TAI"] -= 1.0
 
     linked_observations = PPLinkingFilter(
         observations,
@@ -52,10 +55,12 @@ def test_PPLinkingFilter_window():
         min_tracklet_window,
         min_angular_separation,
         max_time_separation,
+        night_start_utc,
     )
-    observations["date_linked_MJD"] = int(observations["fieldMJD_TAI"].max()) - 1.
+    observations["date_linked_MJD"] = int(observations["fieldMJD_TAI"].max()) - 1.0
 
     pd.testing.assert_frame_equal(observations, linked_observations)
+
 
 def test_PPLinkingFilter_nlink1():
     from sorcha.modules.PPMiniDifi import linkObservations
@@ -73,12 +78,12 @@ def test_PPLinkingFilter_nlink1():
 
     obj_id = ["pretend_object"] * 8
     field_id = np.arange(1, 9)
-    t0 = 60000.
+    t0 = 60000.0
     times = np.asarray([0.03, 0.06, 5.03, 5.06, 7.03, 7.06, 16.03, 16.06]) + t0
     ra = [142, 142.1, 143, 143.1, 144, 144.1, 144, 144.1]
     dec = [8, 8.1, 9, 9.1, 10, 10.1, 10, 10.1]
     obsv = pd.DataFrame(
-        { "ssObjectId": obj_id, "diaSourceId": field_id, "midPointTai": times, "ra": ra, "decl": dec }
+        {"ssObjectId": obj_id, "diaSourceId": field_id, "midPointTai": times, "ra": ra, "decl": dec}
     )
     nameLen = obsv["ssObjectId"].str.len().max()
     obsv = obsv.to_records(
@@ -102,6 +107,7 @@ def test_PPLinkingFilter_nlink1():
     ssObjectId, discoveryObservationId, discoverySubmissionDate, discoveryChances = obj[0]
     assert discoveryChances == 4
 
+
 def test_PPLinkingFilter():
     from sorcha.modules.PPLinkingFilter import PPLinkingFilter
 
@@ -111,6 +117,7 @@ def test_PPLinkingFilter():
     min_tracklets = 3
     min_tracklet_window = 15
     detection_efficiency = 1
+    night_start_utc = 17.0
 
     # create object that should definitely be linked
     obj_id = ["pretend_object"] * 6
@@ -132,6 +139,7 @@ def test_PPLinkingFilter():
         min_tracklet_window,
         min_angular_separation,
         max_time_separation,
+        night_start_utc,
     )
 
     observations["date_linked_MJD"] = date
@@ -148,6 +156,7 @@ def test_PPLinkingFilter():
         min_tracklet_window,
         min_angular_separation,
         max_time_separation,
+        night_start_utc,
     )
     assert len(unlinked_observations_1) == 0
 
@@ -162,6 +171,7 @@ def test_PPLinkingFilter():
         min_tracklet_window,
         min_angular_separation,
         max_time_separation,
+        night_start_utc,
     )
     assert len(unlinked_observations_2) == 0
 
@@ -177,6 +187,7 @@ def test_PPLinkingFilter():
         min_tracklet_window,
         min_angular_separation,
         max_time_separation,
+        night_start_utc,
     )
     assert len(unlinked_observations_3) == 0
 
@@ -191,6 +202,7 @@ def test_PPLinkingFilter():
         min_tracklet_window,
         min_angular_separation,
         max_time_separation,
+        night_start_utc,
     )
     assert len(unlinked_observations_4) == 0
 
@@ -232,6 +244,7 @@ def test_PPLinkingFilter():
         min_tracklet_window,
         min_angular_separation,
         max_time_separation,
+        night_start_utc,
     )
 
     fraction_linked = len(long_linked_observations["ObjID"].unique()) / nobjects
@@ -244,3 +257,58 @@ def test_PPLinkingFilter():
     assert -3 < resid_sigma < 3
 
     return
+
+
+def test_PPLinkingFilter_nodrop():
+    from sorcha.modules.PPLinkingFilter import PPLinkingFilter
+
+    # testing to make sure we get the expected results when we don't drop unlinked objects
+    min_observations = 2
+    min_angular_separation = 0.5
+    max_time_separation = 0.0625
+    min_tracklets = 3
+    min_tracklet_window = 15
+    detection_efficiency = 1
+    night_start_utc = 17.0
+
+    # create object that should not be linked (see above tests)
+    obj_id = ["unlinked_object"] * 6
+    field_id = np.arange(1, 7)
+    t0 = 60000.0
+    times = np.asarray([0.03, 0.06, 5.03, 5.06, min_tracklet_window + 0.03, min_tracklet_window + 0.06]) + t0
+    ra = [142, 142.1, 143, 143.1, 144, 144.1]
+    dec = [8, 8.1, 9, 9.1, 10, 10.1]
+
+    obsv_1 = pd.DataFrame(
+        {"ObjID": obj_id, "FieldID": field_id, "fieldMJD_TAI": times, "RA_deg": ra, "Dec_deg": dec}
+    )
+
+    # and an object that should definitely be linked (see above tests)
+    obj_id = ["linked_object"] * 6
+    field_id = np.arange(7, 13)
+    times = [60000.03, 60000.06, 60005.03, 60005.06, 60008.03, 60008.06]
+    ra = [142, 142.1, 143, 143.1, 144, 144.1]
+    dec = [8, 8.1, 9, 9.1, 10, 10.1]
+
+    obsv_2 = pd.DataFrame(
+        {"ObjID": obj_id, "FieldID": field_id, "fieldMJD_TAI": times, "RA_deg": ra, "Dec_deg": dec}
+    )
+
+    obsv = pd.concat([obsv_1, obsv_2])
+
+    linked_observations = PPLinkingFilter(
+        obsv,
+        detection_efficiency,
+        min_observations,
+        min_tracklets,
+        min_tracklet_window,
+        min_angular_separation,
+        max_time_separation,
+        night_start_utc,
+        drop_unlinked=False,
+    )
+
+    assert all(linked_observations[linked_observations["ObjID"] == "linked_object"]["object_linked"])
+    assert all(~linked_observations[linked_observations["ObjID"] == "unlinked_object"]["object_linked"])
+    assert len(linked_observations[linked_observations["ObjID"] == "linked_object"]) == 6
+    assert len(linked_observations[linked_observations["ObjID"] == "unlinked_object"]) == 6

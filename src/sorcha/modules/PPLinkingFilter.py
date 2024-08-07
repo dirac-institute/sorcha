@@ -10,8 +10,9 @@ def PPLinkingFilter(
     tracklet_interval,
     minimum_separation,
     maximum_time,
+    night_start_utc,
     survey_name="rubin_sim",
-    drop_unlinked=None,
+    drop_unlinked=True,
 ):
     """
     A function which mimics the effects of the SSP linking process by looking
@@ -78,6 +79,7 @@ def PPLinkingFilter(
         window=tracklet_interval,
         nlink=min_tracklets,
         p=detection_efficiency,
+        night_start_utc_days=night_start_utc / 24.0,
     )
 
     # unpack the results and filter the observations
@@ -85,7 +87,7 @@ def PPLinkingFilter(
     obsv_found = np.isin(obsv["ssObjectId"], objs_found)
     observations["object_linked"] = obsv_found
 
-    if drop_unlinked is None:
+    if drop_unlinked:
         linked_object_observations = observations.iloc[obsv_found]
     else:
         linked_object_observations = observations

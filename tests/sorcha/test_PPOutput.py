@@ -59,6 +59,8 @@ def test_PPWriteOutput_csv(tmp_path):
         "position_decimals": 7,
         "magnitude_decimals": 3,
         "output_format": "csv",
+        "SSP_linking_on": False,
+        "drop_unlinked": True,
     }
 
     expected = np.array(
@@ -100,6 +102,8 @@ def test_PPWriteOutput_sql(tmp_path):
         "position_decimals": 7,
         "magnitude_decimals": 3,
         "output_format": "sqlite3",
+        "SSP_linking_on": False,
+        "drop_unlinked": True,
     }
 
     expected = np.array(
@@ -150,6 +154,8 @@ def test_PPWriteOutput_all(tmp_path):
         "position_decimals": None,
         "magnitude_decimals": None,
         "output_format": "csv",
+        "SSP_linking_on": False,
+        "drop_unlinked": True,
     }
 
     args.outpath = tmp_path
@@ -232,6 +238,8 @@ def test_PPWriteOutput_custom(tmp_path):
         "position_decimals": 7,
         "magnitude_decimals": 3,
         "output_format": "csv",
+        "SSP_linking_on": False,
+        "drop_unlinked": True,
     }
 
     args.outpath = tmp_path
@@ -256,3 +264,26 @@ def test_PPWriteOutput_custom(tmp_path):
         e.value.code
         == "ERROR: at least one of the columns provided in output_columns does not seem to exist. Check docs and try again."
     )
+
+
+def test_PPWriteOutput_linking_col(tmp_path):
+    args.outpath = tmp_path
+    args.outfilestem = "PPOutput_test_linking"
+
+    observations_linktest = observations.copy()
+
+    observations_linktest["object_linked"] = [True]
+
+    configs = {
+        "output_columns": "basic",
+        "position_decimals": 7,
+        "magnitude_decimals": 3,
+        "output_format": "csv",
+        "SSP_linking_on": True,
+        "drop_unlinked": False,
+    }
+
+    PPWriteOutput(args, configs, observations_linktest, 10)
+    csv_test_in = pd.read_csv(os.path.join(tmp_path, "PPOutput_test_linking.csv"))
+
+    assert "object_linked" in csv_test_in.columns
