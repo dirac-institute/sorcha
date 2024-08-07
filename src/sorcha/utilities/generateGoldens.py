@@ -5,7 +5,7 @@ import tempfile
 from shutil import copyfile
 
 from sorcha.utilities.diffTestUtils import override_seed_and_run
-from sorcha.utilities.dataUtilitiesForTests import get_demo_filepath
+from sorcha.utilities.dataUtilitiesForTests import get_test_filepath
 
 if __name__ == "__main__":  # pragma: no cover
     """
@@ -14,7 +14,7 @@ if __name__ == "__main__":  # pragma: no cover
     unit tests
     """
     # Create a goldens directory if it does not exist.
-    golden_dir = get_demo_filepath("goldens")
+    golden_dir = get_test_filepath("goldens")
     if not os.path.exists(golden_dir):
         os.mkdir(golden_dir)
 

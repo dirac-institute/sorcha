@@ -1,13 +1,13 @@
 import pytest
 
 from sorcha.utilities.sorchaArguments import sorchaArguments
-from sorcha.utilities.dataUtilitiesForTests import get_demo_filepath
+from sorcha.utilities.dataUtilitiesForTests import get_demo_filepath, get_test_filepath
 
 cmd_args_dict = {
     "paramsinput": get_demo_filepath("sspp_testset_colours.txt"),
     "orbinfile": get_demo_filepath("sspp_testset_orbits.des"),
     "oifoutput": get_demo_filepath("example_oif_output.txt"),
-    "configfile": get_demo_filepath("PPConfig_test.ini"),
+    "configfile": get_test_filepath("PPConfig_goldens_test.ini"),
     "outpath": "./tests/out",
     "surveyname": "RUBIN_SIM",
     "outfilestem": f"out_end2end",
