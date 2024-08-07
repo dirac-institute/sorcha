@@ -2,7 +2,7 @@ import numpy as np
 from numpy.testing import assert_equal, assert_almost_equal
 import pytest
 
-from sorcha.utilities.dataUtilitiesForTests import get_test_filepath, get_demo_filepath
+from sorcha.utilities.dataUtilitiesForTests import get_test_filepath
 
 
 def test_PPReadPointingDatabase():

@@ -2,7 +2,6 @@ import os
 import tempfile
 import pandas as pd
 
-from sorcha.utilities.dataUtilitiesForTests import get_demo_filepath
 from sorcha.utilities.diffTestUtils import override_seed_and_run
 
 
