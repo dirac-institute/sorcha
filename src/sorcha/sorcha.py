@@ -162,11 +162,30 @@ def runLSSTSimulation(args, configs):
     loopCounter = 0
     lastChunk = False
 
+    # Find the number of objects in the input file.  FIXME: This assumes the
+    # input file has a header, and has no empty or comment lines.
     ii = -1
     with open(args.orbinfile) as f:
         for ii, l in enumerate(f):
             pass
     lenf = ii
+
+    split, nsplits = args.process_subset
+    print(split, nsplits)
+    if nsplits > 1:
+        # calculate the [beginning, end) indices. For example
+        #   np.linspace(0, 100, 3+1, dtype=int)
+        #   --> array([  0,  33,  66, 100])
+        edges = np.linspace(0, lenf, nsplits + 1, dtype=int)
+        b, e = edges[split - 1], edges[split]
+        lenf = e - b
+
+        # fast-forward to the requested split
+        at = 0
+        while at < b:
+            bs = min(at + configs["size_serial_chunk"], b)
+            reader.read_aux_block(block_size=bs)
+            at += bs
 
     footprint = None
     if configs["camera_model"] == "footprint":
@@ -180,11 +199,12 @@ def runLSSTSimulation(args, configs):
 
         # Processing begins, all processing is done for chunks
         if configs["ephemerides_type"].casefold() == "external":
+            bs = min(endChunk, lenf) - startChunk
             verboselog("Reading in chunk of orbits and associated ephemeris from an external file")
-            observations = reader.read_block(block_size=configs["size_serial_chunk"])
+            observations = reader.read_block(block_size=bs)
         else:
-            verboselog("Ingest chunk of orbits")
-            orbits_df = reader.read_aux_block(block_size=configs["size_serial_chunk"])
+            bs = min(endChunk, lenf) - startChunk
+            orbits_df = reader.read_aux_block(block_size=bs)
             verboselog("Starting ephemeris generation")
             observations = create_ephemeris(orbits_df, filterpointing, args, configs)
             verboselog("Ephemeris generation completed")

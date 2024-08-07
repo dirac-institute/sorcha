@@ -53,6 +53,7 @@ def test_ephemeris_end2end(single_synthetic_pointing, tmp_path):
         "outfilestem": f"out_400k",
         "verbose": False,
         "stats": None,
+        "process_subset": (1, 1),
     }
 
     pplogger = PPGetLogger(cmd_args_dict["outpath"])

@@ -14,6 +14,7 @@ cmd_args_dict = {
     "verbose": False,
     "pointing_database": get_demo_filepath("baseline_v2.0_1yr.db"),
     "stats": "./test.csv",
+    "process_subset": (1, 1),
 }
 
 
