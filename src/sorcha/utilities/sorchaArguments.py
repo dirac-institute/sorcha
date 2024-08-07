@@ -87,19 +87,19 @@ class sorchaArguments:
 
     def validate_arguments(self):
         if not path.isfile(self.paramsinput):
-            raise ValueError("`paramsinput` is not a valid file path.")
+            raise ValueError("File does not exist at path supplied for -p/--params argument.")
 
         if not path.isfile(self.orbinfile):
-            raise ValueError("`orbinfile` is not a valid file path.")
+            raise ValueError("File does not exist at path supplied for -ob/--orbit argument.")
 
         if self.oifoutput and not path.isfile(self.oifoutput):
-            raise ValueError("`oifoutput` is not a valid file path.")
+            raise ValueError("File does not exist at path supplied for -er/--ephem_read argument.")
 
         if not path.isfile(self.configfile):
-            raise ValueError("`configfile` is not a valid file path.")
+            raise ValueError("File does not exist at path supplied for -c/--config argument.")
 
         if not path.isfile(self.pointing_database):
-            raise ValueError("`pointing_database` is not a valid file path.")
+            raise ValueError("File does not exist at path supplied for -pd/--pointing_database argument.")
 
         if self.ar_data_file_path and not path.isdir(self.ar_data_file_path):
-            raise ValueError("`ar_data_path` is not a valid directory.")
+            raise ValueError("Directory does not exist at path supplied for -ar/--ar_data_path argument.")

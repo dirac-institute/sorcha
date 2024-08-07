@@ -5,7 +5,7 @@ from pandas.api.types import is_numeric_dtype
 
 from sorcha.modules.PPModuleRNG import PerModuleRNG
 from sorcha.sorcha import runLSSTSimulation
-from sorcha.utilities.dataUtilitiesForTests import get_demo_filepath
+from sorcha.utilities.dataUtilitiesForTests import get_demo_filepath, get_test_filepath
 from sorcha.utilities.sorchaArguments import sorchaArguments
 from sorcha.modules.PPConfigParser import PPConfigFileParser
 
@@ -49,7 +49,7 @@ BASELINE_ARGS = {
     "paramsinput": get_demo_filepath("sspp_testset_colours.txt"),
     "orbinfile": get_demo_filepath("sspp_testset_orbits.des"),
     "oifoutput": get_demo_filepath("example_oif_output.txt"),
-    "configfile": get_demo_filepath("PPConfig_test.ini"),
+    "configfile": get_test_filepath("PPConfig_goldens_test.ini"),
     "pointing_database": get_demo_filepath("baseline_v2.0_1yr.db"),
     "surveyname": "rubin_sim",
     "outfilestem": f"out_end2end",
@@ -58,9 +58,9 @@ BASELINE_ARGS = {
 }
 
 WITH_EPHEMERIS_ARGS = {
-    "paramsinput": get_demo_filepath("params_small_random_mpcorb.csv"),
-    "orbinfile": get_demo_filepath("orbits_small_random_mpcorb.csv"),
-    "configfile": get_demo_filepath("config_for_ephemeris_unit_test.ini"),
+    "paramsinput": get_test_filepath("params_small_random_mpcorb.csv"),
+    "orbinfile": get_test_filepath("orbits_small_random_mpcorb.csv"),
+    "configfile": get_test_filepath("config_for_ephemeris_unit_test.ini"),
     "pointing_database": get_demo_filepath("baseline_v2.0_1yr.db"),
     "output_ephemeris_file": "sorcha_ephemeris.csv",
     "surveyname": "rubin_sim",
@@ -73,7 +73,7 @@ CHUNKED_ARGS = {
     "paramsinput": get_demo_filepath("sspp_testset_colours.txt"),
     "orbinfile": get_demo_filepath("sspp_testset_orbits.des"),
     "oifoutput": get_demo_filepath("example_oif_output.txt"),
-    "configfile": get_demo_filepath("PPConfig_test_chunked.ini"),
+    "configfile": get_test_filepath("PPConfig_test_chunked.ini"),
     "pointing_database": get_demo_filepath("baseline_v2.0_1yr.db"),
     "surveyname": "rubin_sim",
     "outfilestem": f"out_end2end_chunked",
@@ -85,7 +85,7 @@ UNCHUNKED_ARGS = {
     "paramsinput": get_demo_filepath("sspp_testset_colours.txt"),
     "orbinfile": get_demo_filepath("sspp_testset_orbits.des"),
     "oifoutput": get_demo_filepath("example_oif_output.txt"),
-    "configfile": get_demo_filepath("PPConfig_test_unchunked.ini"),
+    "configfile": get_test_filepath("PPConfig_test_unchunked.ini"),
     "pointing_database": get_demo_filepath("baseline_v2.0_1yr.db"),
     "surveyname": "rubin_sim",
     "outfilestem": f"out_end2end_unchunked",
@@ -95,9 +95,9 @@ UNCHUNKED_ARGS = {
 
 
 VERIFICATION_TRUTH = {
-    "paramsinput": get_demo_filepath("verification_colors.txt"),
-    "orbinfile": get_demo_filepath("verification_orbits.txt"),
-    "configfile": get_demo_filepath("verification.ini"),
+    "paramsinput": get_test_filepath("verification_colors.txt"),
+    "orbinfile": get_test_filepath("verification_orbits.txt"),
+    "configfile": get_test_filepath("verification.ini"),
     "pointing_database": get_demo_filepath("baseline_v2.0_1yr.db"),
     "output_ephemeris_file": "sorcha_ephemeris.csv",
     "surveyname": "rubin_sim",

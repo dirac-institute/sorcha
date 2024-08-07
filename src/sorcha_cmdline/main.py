@@ -46,11 +46,27 @@ def main():
     parser = argparse.ArgumentParser(
         description=description, epilog=epilog_text, formatter_class=argparse.RawDescriptionHelpFormatter
     )
-
-    parser.add_argument("verb", choices=available_verbs, help="Verb to execute")
+    parser.add_argument(
+        "--version",
+        help="Print version information",
+        dest="version",
+        action="store_true",
+    )
+    parser.add_argument("verb", nargs="?", choices=available_verbs, help="Verb to execute")
     parser.add_argument("args", nargs=argparse.REMAINDER, help="Arguments for the verb")
 
     args = parser.parse_args()
+
+    if args.version:
+        import sorcha
+
+        print(sorcha.__version__)
+        return
+
+    # Ensure a verb is provided if not just checking the version
+    if not args.verb:
+        parser.print_help()
+        sys.exit(1)
 
     # Construct the full command name
     utility = f"sorcha-{args.verb}"

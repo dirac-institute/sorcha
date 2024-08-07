@@ -9,7 +9,7 @@ from sorcha.utilities.dataUtilitiesForTests import get_test_filepath
 
 class args:
     def __init__(self, tmp_path):
-        temp_path = os.path.dirname(get_test_filepath("oiftestoutput.txt"))
+        temp_path = get_test_filepath("sql_results")
 
         args.filename = os.path.join(tmp_path, "test_res_database.db")
         args.inputs = temp_path
@@ -21,7 +21,7 @@ class args:
 def test_get_column_names():
     from sorcha.utilities.createResultsSQLDatabase import get_column_names
 
-    col_names = get_column_names(get_test_filepath("sqlresults.db"))
+    col_names = get_column_names(get_test_filepath("sql_results/sqlresults.db"))
 
     expected_colnames = [
         "ObjID",
@@ -48,7 +48,7 @@ def test_get_column_names():
 def test_create_inputs_table(tmp_path):
     from sorcha.utilities.createResultsSQLDatabase import create_inputs_table
 
-    data_path = os.path.dirname(get_test_filepath("oiftestoutput.txt"))
+    data_path = get_test_filepath("sql_results")
 
     cnx_out = sqlite3.connect(os.path.join(tmp_path, "test_inputs_table.db"))
     create_inputs_table(cnx_out, data_path, "params")
@@ -83,7 +83,7 @@ def test_create_inputs_table(tmp_path):
 def test_create_results_table(tmp_path):
     from sorcha.utilities.createResultsSQLDatabase import create_results_table
 
-    data_path = os.path.dirname(get_test_filepath("oiftestoutput.txt"))
+    data_path = get_test_filepath("sql_results")
 
     cnx_out = sqlite3.connect(os.path.join(tmp_path, "test_results_table.db"))
     create_results_table(cnx_out, get_test_filepath("baseline_10klines_2.0.db"), data_path, "sqlresults")
