@@ -249,6 +249,7 @@ def test_PPPrintConfigsToLog(tmp_path):
         "verbose": True,
         "seed": 24601,
         "stats": None,
+        "process_subset": (1, 1),
     }
 
     args = sorchaArguments(cmd_args)

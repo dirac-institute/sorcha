@@ -5,7 +5,7 @@ from sorcha.utilities.dataUtilitiesForTests import get_test_filepath
 
 
 class args:
-    def __init__(self, cp, t="testout", o="./", f=False):
+    def __init__(self, cp, t="testout", o="./", f=False, process_subset=(1 / 1)):
         self.p = get_test_filepath("testcolour.txt")
         self.ob = get_test_filepath("testorb.des")
         self.er = get_test_filepath("oiftestoutput.txt")
@@ -20,6 +20,7 @@ class args:
         self.f = f
         self.ar = None
         self.st = "test.csv"
+        self.process_subset = "1/1"
 
 
 def test_PPCommandLineParser():
@@ -41,6 +42,7 @@ def test_PPCommandLineParser():
         "ar_data_path": None,
         "output_ephemeris_file": None,
         "stats": "test.csv",
+        "process_subset": (1, 1),
     }
 
     cmd_dict_2 = PPCommandLineParser(args(get_test_filepath("testcomet.txt")))
@@ -58,6 +60,7 @@ def test_PPCommandLineParser():
         "ar_data_path": None,
         "output_ephemeris_file": None,
         "stats": "test.csv",
+        "process_subset": (1, 1),
     }
 
     with open(os.path.join(tmp_path, "dummy_file.txt"), "w") as _:

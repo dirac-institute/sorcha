@@ -55,6 +55,7 @@ BASELINE_ARGS = {
     "outfilestem": f"out_end2end",
     "verbose": False,
     "stats": None,
+    "process_subset": (1, 1),
 }
 
 WITH_EPHEMERIS_ARGS = {
@@ -67,6 +68,7 @@ WITH_EPHEMERIS_ARGS = {
     "outfilestem": f"out_end2end_with_ephemeris_generation",
     "verbose": False,
     "stats": None,
+    "process_subset": (1, 1),
 }
 
 CHUNKED_ARGS = {
@@ -79,6 +81,7 @@ CHUNKED_ARGS = {
     "outfilestem": f"out_end2end_chunked",
     "verbose": False,
     "stats": None,
+    "process_subset": (1, 1),
 }
 
 UNCHUNKED_ARGS = {
@@ -91,6 +94,7 @@ UNCHUNKED_ARGS = {
     "outfilestem": f"out_end2end_unchunked",
     "verbose": False,
     "stats": None,
+    "process_subset": (1, 1),
 }
 
 
@@ -104,6 +108,20 @@ VERIFICATION_TRUTH = {
     "outfilestem": f"verification_output",
     "verbose": False,
     "stats": None,
+    "process_subset": (1, 1),
+}
+
+PROCESS_SUBSET_ARGS = {
+    "paramsinput": get_demo_filepath("sspp_testset_colours.txt"),
+    "orbinfile": get_demo_filepath("sspp_testset_orbits.des"),
+    "oifoutput": get_demo_filepath("example_oif_output.txt"),
+    "configfile": get_demo_filepath("PPConfig_test.ini"),
+    "pointing_database": get_demo_filepath("baseline_v2.0_1yr.db"),
+    "surveyname": "rubin_sim",
+    "outfilestem": f"out_end2end_subset",
+    "verbose": False,
+    "stats": None,
+    "process_subset": (2, 10),
 }
 
 
@@ -135,6 +153,8 @@ def override_seed_and_run(outpath, arg_set="baseline"):
         cmd_args_dict = UNCHUNKED_ARGS
     elif arg_set == "truth":
         cmd_args_dict = VERIFICATION_TRUTH
+    elif arg_set == "subset":
+        cmd_args_dict = PROCESS_SUBSET_ARGS
     else:
         raise ValueError(
             f"Unknown arg set name, {arg_set}. Must be one of: 'baseline', 'with_ephemeris', 'truth'."

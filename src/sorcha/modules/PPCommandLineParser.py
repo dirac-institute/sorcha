@@ -2,6 +2,7 @@ import os
 import sys
 import logging
 import glob
+import re
 from .PPConfigParser import PPFindFileOrExit, PPFindDirectoryOrExit
 
 
@@ -63,6 +64,21 @@ def PPCommandLineParser(args):
     cmd_args_dict["configfile"] = PPFindFileOrExit(args.c, "-c, --config")
     cmd_args_dict["outpath"] = PPFindFileOrExit(args.o, "-o, --outfile")
     cmd_args_dict["pointing_database"] = PPFindFileOrExit(args.pd, "-pd, --pointing_database")
+
+    if args.process_subset:
+        m = re.match(r"^(\d+)/(\d+)$", args.process_subset)
+        if m is None:
+            sys.exit("--process-subset: the argument must be in form of <split>/<nsplits>")
+
+        split, nsplits = int(m.group(1)), int(m.group(2))
+        if nsplits <= 0:
+            pplogger.error("--process-subset: the number of splits must be >= 1")
+            sys.exit("--process-subset: the number of splits must be >= 1")
+        if split < 1 or split > nsplits:
+            pplogger.error("--process-subset: the chosen splits must be between 1 and <nsplits> (inclusive).")
+            sys.exit("--process-subset: the chosen splits must be between 1 and <nsplits> (inclusive).")
+
+        cmd_args_dict["process_subset"] = (split, nsplits)
 
     if args.cp:
         cmd_args_dict["complex_physical_parameters"] = PPFindFileOrExit(
