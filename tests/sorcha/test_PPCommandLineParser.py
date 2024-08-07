@@ -5,7 +5,7 @@ from sorcha.utilities.dataUtilitiesForTests import get_test_filepath
 
 
 class args:
-    def __init__(self, cp, t="testout", o="./", f=False, process_subset=(1 / 1)):
+    def __init__(self, cp, t="testout", o="./", f=False, process_subset=("1/1")):
         self.p = get_test_filepath("testcolour.txt")
         self.ob = get_test_filepath("testorb.des")
         self.er = get_test_filepath("oiftestoutput.txt")
@@ -20,7 +20,7 @@ class args:
         self.f = f
         self.ar = None
         self.st = "test.csv"
-        self.process_subset = "1/1"
+        self.process_subset = process_subset
 
 
 def test_PPCommandLineParser():
@@ -77,3 +77,24 @@ def test_PPCommandLineParser():
     assert not os.path.isfile(os.path.join(tmp_path, "dummy_file.txt"))
 
     return
+
+
+def test_PPCommandLineParser_subset():
+    from sorcha.modules.PPCommandLineParser import PPCommandLineParser
+
+    tmp_path = os.path.dirname(get_test_filepath("test_input_fullobs.csv"))
+
+    with pytest.raises(SystemExit) as e:
+        _ = PPCommandLineParser(args(False, process_subset="3/1"))
+
+    assert e.value.code == "--process-subset: the chosen splits must be between 1 and <nsplits> (inclusive)."
+
+    with pytest.raises(SystemExit) as e2:
+        _ = PPCommandLineParser(args(False, process_subset="-1/1"))
+
+    assert e2.value.code == "--process-subset: the argument must be in form of <split>/<nsplits>"
+
+    with pytest.raises(SystemExit) as e3:
+        _ = PPCommandLineParser(args(False, process_subset="1/0"))
+
+    assert e3.value.code == "--process-subset: the number of splits must be >= 1"
