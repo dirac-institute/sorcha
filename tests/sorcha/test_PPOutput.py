@@ -100,6 +100,8 @@ def test_PPWriteOutput_sql(tmp_path):
         "position_decimals": 7,
         "magnitude_decimals": 3,
         "output_format": "sqlite3",
+        "lastChunk": True,
+        "endChunk": "10",
     }
 
     expected = np.array(
