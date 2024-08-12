@@ -18,7 +18,7 @@ Rubin Full Footprint
 This configuration file is appropriate for running ``sorcha`` using the Rubin
 full detector footprint.
 
-.. literalinclude:: ../survey_setups/Rubin_full_footprint.ini
+.. literalinclude:: ../src/sorcha/data/survey_setups/Rubin_full_footprint.ini
    :language: text
    :linenos:
 
@@ -28,8 +28,20 @@ Rubin Circular Approximation
 This configuration file is appropriate for running ``sorcha`` using a circular 
 approximation of the Rubin detector.
 
-.. literalinclude:: ../survey_setups/Rubin_circular_approximation.ini
+.. literalinclude:: ../src/sorcha/data/survey_setups/Rubin_circular_approximation.ini
     :language: text
     :linenos:
 
+Rubin Known Object Prediction
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+This configuration file is appropriate for running ``sorcha`` using the full camera footprint but with randomization,
+fading function, vignetting, SSP linking, saturation limit and trailing losses off. This will output all detections
+which lie on the CCD with unadulterated apparent magnitudes. This could thus be used to predict when 
+and where known objects will appear in Rubin observations.
 
+.. warning::
+   As this configuration file turns off most of Sorcha's features, we strongly recommend you do not use it unless you are certain you know what you are doing.
+
+.. literalinclude:: ../src/sorcha/data/survey_setups/Rubin_known_object_prediction.ini
+    :language: text
+    :linenos:

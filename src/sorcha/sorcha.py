@@ -160,7 +160,6 @@ def runLSSTSimulation(args, configs):
     startChunk = 0
     endChunk = 0
     loopCounter = 0
-    lastChunk = False
 
     ii = -1
     with open(args.orbinfile) as f:
@@ -182,6 +181,7 @@ def runLSSTSimulation(args, configs):
         if configs["ephemerides_type"].casefold() == "external":
             verboselog("Reading in chunk of orbits and associated ephemeris from an external file")
             observations = reader.read_block(block_size=configs["size_serial_chunk"])
+            observations.to_csv("post_readin_ephem_nonprimary.csv")
         else:
             verboselog("Ingest chunk of orbits")
             orbits_df = reader.read_aux_block(block_size=configs["size_serial_chunk"])
@@ -329,7 +329,7 @@ def runLSSTSimulation(args, configs):
         if len(observations.index) > 0:
             pplogger.info("Post processing completed for this chunk")
             pplogger.info("Outputting results for this chunk")
-            PPWriteOutput(args, configs, observations, endChunk, verbose=args.verbose)
+            PPWriteOutput(args, configs, observations, verbose=args.verbose)
             if args.stats is not None:
                 stats(observations, args.stats, args.outpath, configs)
         else:
