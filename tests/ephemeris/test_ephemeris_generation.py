@@ -7,9 +7,15 @@ from sorcha.utilities.dataUtilitiesForTests import get_test_filepath, get_demo_f
 from sorcha.modules.PPConfigParser import PPConfigFileParser
 from sorcha.modules.PPGetLogger import PPGetLogger
 from sorcha.utilities.sorchaArguments import sorchaArguments
-from sorcha.ephemeris.simulation_driver import create_ephemeris
+from sorcha.ephemeris.simulation_driver import create_ephemeris, write_out_ephemeris_file
 from sorcha.modules.PPReadPointingDatabase import PPReadPointingDatabase
 from sorcha.ephemeris.simulation_setup import precompute_pointing_information
+
+
+from sorcha.readers.CombinedDataReader import CombinedDataReader
+from sorcha.readers.OIFReader import OIFDataReader
+from sorcha.readers.OrbitAuxReader import OrbitAuxReader
+from sorcha.readers.CSVReader import CSVDataReader
 
 
 @pytest.fixture
@@ -40,6 +46,65 @@ def single_synthetic_pointing():
 
     orbit_df = pd.DataFrame([data], columns=cols)
     return orbit_df
+
+
+@pytest.fixture
+def single_synthetic_ephemeris():
+    test_columns = [
+        "ObjID",
+        "FieldID",
+        "fieldMJD_TAI",
+        "fieldJD_TDB",
+        "Range_LTC_km",
+        "RangeRate_LTC_km_s",
+        "RA_deg",
+        "RARateCosDec_deg_day",
+        "Dec_deg",
+        "DecRate_deg_day",
+        "Obj_Sun_x_LTC_km",
+        "Obj_Sun_y_LTC_km",
+        "Obj_Sun_z_LTC_km",
+        "Obj_Sun_vx_LTC_km_s",
+        "Obj_Sun_vy_LTC_km_s",
+        "Obj_Sun_vz_LTC_km_s",
+        "Obs_Sun_x_km",
+        "Obs_Sun_y_km",
+        "Obs_Sun_z_km",
+        "Obs_Sun_vx_km_s",
+        "Obs_Sun_vy_km_s",
+        "Obs_Sun_vz_km_s",
+        "phase_deg",
+    ]
+
+    test_values = [
+        "2011_OB60",
+        5733,
+        60225.24582325162,
+        2460225.746195981,
+        5381399097.909393,
+        8.908414821478392,
+        1.9825876962618303,
+        -0.0191044821690265,
+        -11.895484353185031,
+        -0.0081342233832118,
+        5407508563.223875,
+        216228178.85654888,
+        -1094496739.3655145,
+        -0.4862284491111358,
+        6.195354508632129,
+        0.94651384123983,
+        144825951.4905347,
+        34052525.78312281,
+        14755265.621108454,
+        -8.095015184421166,
+        26.71219251349756,
+        11.435360510921036,
+        0.5514514639167444,
+    ]
+
+    test_ephemeris = pd.DataFrame([test_values], columns=test_columns)
+
+    return test_ephemeris
 
 
 def test_ephemeris_end2end(single_synthetic_pointing, tmp_path):
@@ -86,3 +151,93 @@ def test_ephemeris_end2end(single_synthetic_pointing, tmp_path):
 
     for file in files:
         assert not re.match(r".+\.csv", file)
+
+
+def test_ephemeris_writeread_csv(single_synthetic_ephemeris, tmp_path):
+    """Tests to ensure the ephemeris file is written out correctly AND
+    can be read back in by Sorcha. CSV version.
+    """
+
+    orb_in = get_demo_filepath("sspp_testset_orbits.des")
+    params_in = get_demo_filepath("sspp_testset_colours.txt")
+
+    class args(object):
+        verbose = False
+
+    cmd_args = args()
+
+    configs = {"eph_format": "csv"}
+
+    out_path = os.path.join(tmp_path, "test_ephem_out")
+
+    write_out_ephemeris_file(single_synthetic_ephemeris, out_path, cmd_args, configs)
+
+    reader = CombinedDataReader(ephem_primary=True, verbose=False)
+    reader.add_ephem_reader(OIFDataReader(out_path + ".csv", "csv"))
+    reader.add_aux_data_reader(OrbitAuxReader(orb_in, "whitespace"))
+    reader.add_aux_data_reader(CSVDataReader(params_in, "whitespace"))
+
+    observations = reader.read_block(1)
+
+    assert len(observations) == 1
+    assert len(observations.columns) == 37
+
+
+def test_ephemeris_writeread_whitespace(single_synthetic_ephemeris, tmp_path):
+    """Tests to ensure the ephemeris file is written out correctly AND
+    can be read back in by Sorcha. Whitespaced CSV version.
+    """
+
+    orb_in = get_demo_filepath("sspp_testset_orbits.des")
+    params_in = get_demo_filepath("sspp_testset_colours.txt")
+
+    class args(object):
+        verbose = False
+
+    cmd_args = args()
+
+    configs = {"eph_format": "whitespace"}
+
+    out_path = os.path.join(tmp_path, "test_ephem_out_whitespace")
+
+    write_out_ephemeris_file(single_synthetic_ephemeris, out_path, cmd_args, configs)
+
+    reader = CombinedDataReader(ephem_primary=True, verbose=False)
+    reader.add_ephem_reader(OIFDataReader(out_path + ".csv", "whitespace"))
+    reader.add_aux_data_reader(OrbitAuxReader(orb_in, "whitespace"))
+    reader.add_aux_data_reader(CSVDataReader(params_in, "whitespace"))
+
+    observations = reader.read_block(1)
+
+    assert len(observations) == 1
+    assert len(observations.columns) == 37
+
+
+def test_ephemeris_writeread_hdf5(single_synthetic_ephemeris, tmp_path):
+    """Tests to ensure the ephemeris file is written out correctly AND
+    can be read back in by Sorcha. HDF5 version.
+    """
+
+    orb_in = get_demo_filepath("sspp_testset_orbits.des")
+    params_in = get_demo_filepath("sspp_testset_colours.txt")
+
+    class args(object):
+        verbose = False
+
+    cmd_args = args()
+
+    configs = {"eph_format": "hdf5"}
+
+    out_path = os.path.join(tmp_path, "test_ephem_out_h5")
+
+    write_out_ephemeris_file(single_synthetic_ephemeris, out_path, cmd_args, configs)
+
+    reader = CombinedDataReader(ephem_primary=True, verbose=False)
+    reader.add_ephem_reader(OIFDataReader(out_path + ".h5", "hdf5"))
+    reader.add_aux_data_reader(OrbitAuxReader(orb_in, "whitespace"))
+    reader.add_aux_data_reader(CSVDataReader(params_in, "whitespace"))
+
+    observations = reader.read_block(1)
+
+    assert len(observations) == 1
+    assert len(observations.columns) == 37

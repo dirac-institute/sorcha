@@ -160,7 +160,6 @@ def runLSSTSimulation(args, configs):
     startChunk = 0
     endChunk = 0
     loopCounter = 0
-    lastChunk = False
 
     # Find the number of objects in the input file.  FIXME: This assumes the
     # input file has a header, and has no empty or comment lines.
@@ -198,12 +197,11 @@ def runLSSTSimulation(args, configs):
         verboselog("Working on objects {}-{}".format(startChunk, endChunk))
 
         # Processing begins, all processing is done for chunks
+        bs = min(endChunk, lenf) - startChunk
         if configs["ephemerides_type"].casefold() == "external":
-            bs = min(endChunk, lenf) - startChunk
             verboselog("Reading in chunk of orbits and associated ephemeris from an external file")
             observations = reader.read_block(block_size=bs)
         else:
-            bs = min(endChunk, lenf) - startChunk
             orbits_df = reader.read_aux_block(block_size=bs)
             verboselog("Starting ephemeris generation")
             observations = create_ephemeris(orbits_df, filterpointing, args, configs)
@@ -348,7 +346,7 @@ def runLSSTSimulation(args, configs):
         if len(observations.index) > 0:
             pplogger.info("Post processing completed for this chunk")
             pplogger.info("Outputting results for this chunk")
-            PPWriteOutput(args, configs, observations, endChunk, verbose=args.verbose)
+            PPWriteOutput(args, configs, observations, verbose=args.verbose)
             if args.stats is not None:
                 stats(observations, args.stats, args.outpath, linking=configs["SSP_linking_on"])
         else:
