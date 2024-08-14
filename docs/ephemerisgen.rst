@@ -115,7 +115,11 @@ If you want to use the same input orbits across multiple Sorcha runs, you can sa
 
 .. attention::
    Currently the Sorcha-generated ephemeris is outputted in CSV, whitespace or HDF5 file format only.
+   
 
+.. attention::
+   Users should note that output produced by reading in a previously-generated ephemeris file will be in a different order than the output produced when running the ephemeris generator within Sorcha.
+   This is simply a side-effect of how Sorcha reads in ephemeris files and does not affect the actual content of the output.
 
 
 Providing Your Own Ephemerides 
