@@ -319,7 +319,8 @@ def runLSSTSimulation(args, configs):
                 configs["SSP_track_window"],
                 configs["SSP_separation_threshold"],
                 configs["SSP_maximum_time"],
-                drop_unlinked=args.stats,
+                configs["SSP_night_start_utc"],
+                drop_unlinked=configs["drop_unlinked"],
             )
             observations.reset_index(drop=True, inplace=True)
             verboselog("Number of rows AFTER applying SSP linking filter: " + str(len(observations.index)))
@@ -330,7 +331,7 @@ def runLSSTSimulation(args, configs):
             pplogger.info("Outputting results for this chunk")
             PPWriteOutput(args, configs, observations, verbose=args.verbose)
             if args.stats is not None:
-                stats(observations, args.stats, args.outpath, linking=configs["SSP_linking_on"])
+                stats(observations, args.stats, args.outpath, configs)
         else:
             verboselog("No observations left in chunk. No output will be written for this chunk.")
 

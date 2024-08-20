@@ -590,6 +590,9 @@ def PPConfigFileParser(configfile, survey_name):
     config_dict["SSP_maximum_time"], _ = PPGetValueAndFlag(
         config, "LINKINGFILTER", "SSP_maximum_time", "float"
     )
+    config_dict["SSP_night_start_utc"], _ = PPGetValueAndFlag(
+        config, "LINKINGFILTER", "SSP_night_start_utc", "float"
+    )
 
     SSPvariables = [
         config_dict["SSP_separation_threshold"],
@@ -598,6 +601,7 @@ def PPConfigFileParser(configfile, survey_name):
         config_dict["SSP_track_window"],
         config_dict["SSP_detection_efficiency"],
         config_dict["SSP_maximum_time"],
+        config_dict["SSP_night_start_utc"],
     ]
 
     # the below if-statement explicitly checks for None so a zero triggers the correct error
@@ -626,6 +630,10 @@ def PPConfigFileParser(configfile, survey_name):
             pplogger.error("ERROR: SSP_maximum_time is negative.")
             sys.exit("ERROR: SSP_maximum_time is negative.")
 
+        if config_dict["SSP_night_start_utc"] > 24.0 or config_dict["SSP_night_start_utc"] < 0.0:
+            pplogger.error("ERROR: SSP_night_start_utc must be a valid time between 0 and 24 hours.")
+            sys.exit("ERROR: SSP_night_start_utc must be a valid time between 0 and 24 hours.")
+
         config_dict["SSP_linking_on"] = True
 
     elif not any(SSPvariables):
@@ -637,6 +645,16 @@ def PPConfigFileParser(configfile, survey_name):
         )
         sys.exit(
             "ERROR: only some SSP linking variables supplied. Supply all five required variables for SSP linking filter, or none to turn filter off."
+        )
+
+    try:
+        config_dict["drop_unlinked"] = config.getboolean("LINKINGFILTER", "drop_unlinked", fallback=True)
+    except ValueError:
+        pplogger.error(
+            "ERROR: could not parse value for drop_unlinked as a boolean. Check formatting and try again."
+        )
+        sys.exit(
+            "ERROR: could not parse value for drop_unlinked as a boolean. Check formatting and try again."
         )
 
     # SIMULATION
@@ -930,6 +948,8 @@ def PPPrintConfigsToLog(configs, cmd_args):
             "...the maximum temporal separation between subsequent observations in a tracklet in days is: "
             + str(configs["SSP_maximum_time"])
         )
+        if not configs["drop_unlinked"]:
+            pplogger.info("Unlinked objects will not be dropped.")
     else:
         pplogger.info("Solar System Processing linking filter is turned OFF.")
 

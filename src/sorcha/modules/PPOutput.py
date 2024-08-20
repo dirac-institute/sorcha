@@ -191,6 +191,11 @@ def PPWriteOutput(cmd_args, configs, observations_in, verbose=False):
                 "Obj_Sun_LTC_km",
             ]
         ]
+
+        # if linking is on and unlinked objects are NOT dropped, add the object_linked column to the output
+        if configs["SSP_linking_on"] and not configs["drop_unlinked"]:
+            observations["object_linked"] = observations_in["object_linked"].copy()
+
     elif configs["output_columns"] == "all":
         observations = observations_in.copy()
     elif len(configs["output_columns"]) > 1:  # assume a list of column names...
