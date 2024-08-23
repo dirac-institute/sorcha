@@ -134,7 +134,7 @@ def discoveryOpportunities(nights, nightHasTracklets, window, nlink, p, rng):
         #    then subtracting the shifted array -- basic integration)
         #    And then find nights where the # of tracklets >= nlink
         #
-        n0, n1 = nights.min(), nights.max()
+        n0, n1 = nights.min(), nights.max() + window
         nlen = n1 - n0 + 1
         arr = np.zeros(nlen, dtype="i8")
         arr[nights - n0] = nightHasTracklets
