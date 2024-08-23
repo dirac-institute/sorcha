@@ -62,6 +62,65 @@ def test_PPLinkingFilter_window():
     pd.testing.assert_frame_equal(observations, linked_observations)
 
 
+def test_PPLinkingFilter_discoveryChances():
+    from sorcha.modules.PPMiniDifi import linkObservations
+
+    # verify that the discoveryChances are computed correctly in case
+    # such as this:
+    #
+    # Say our discovery window is 10, and the object has tracklets
+    # at nights:
+    #
+    #    2 4 6 8
+    #
+    # This should generate the following discovery opportunities:
+    #
+    #    2 4 6
+    #    2 4 6 8
+    #      4 6 8
+    #
+    # (the last one appears because night=2 slides out of the discovery
+    # window)
+
+    min_observations = 2
+    min_angular_separation = 0.5
+    max_time_separation = 0.0625
+    min_tracklets = 3
+    min_tracklet_window = 10
+    detection_efficiency = 1
+
+    obj_id = ["pretend_object"] * 8
+    field_id = np.arange(1, 9)
+    t0 = 60000.0
+    times = np.asarray([2.03, 2.06, 4.03, 4.06, 6.03, 6.06, 8.03, 8.06]) + t0
+    ra = [142, 142.1, 143, 143.1, 144, 144.1, 144, 144.1]
+    dec = [8, 8.1, 9, 9.1, 10, 10.1, 10, 10.1]
+    obsv = pd.DataFrame(
+        {"ssObjectId": obj_id, "diaSourceId": field_id, "midPointTai": times, "ra": ra, "decl": dec}
+    )
+    nameLen = obsv["ssObjectId"].str.len().max()
+    obsv = obsv.to_records(
+        index=False,
+        column_dtypes=dict(ssObjectId=f"a{nameLen}", diaSourceId="u8", midPointTai="f8", ra="f8", decl="f8"),
+    )
+
+    # link
+    obj = linkObservations(
+        obsv,
+        seed=0,
+        objectId="ssObjectId",
+        maxdt_minutes=max_time_separation * 24 * 60,
+        minlen_arcsec=min_angular_separation,
+        window=min_tracklet_window,
+        nlink=min_tracklets,
+        p=detection_efficiency,
+    )
+    assert len(obj) == 1
+
+    ssObjectId, discoveryObservationId, discoverySubmissionDate, discoveryChances = obj[0]
+    assert discoveryChances == 3
+
+
 def test_PPLinkingFilter_nlink1():
     from sorcha.modules.PPMiniDifi import linkObservations
 
