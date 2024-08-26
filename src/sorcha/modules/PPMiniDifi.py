@@ -346,7 +346,7 @@ if __name__ == "__main__":
     obsv = np.asarray(
         df.to_records(
             index=False,
-            column_dtypes=dict(_name=f"a{nameLen}", diaSourceId="u8", midPointTai="f8", ra="f8", decl="f8"),
+            column_dtypes=dict(_name=f"S{nameLen}", diaSourceId="u8", midPointTai="f8", ra="f8", decl="f8"),
         )
     )
     del df

@@ -66,7 +66,7 @@ def PPLinkingFilter(
     nameLen = obsv["ssObjectId"].str.len().max()
     obsv = obsv.to_records(
         index=False,
-        column_dtypes=dict(ssObjectId=f"a{nameLen}", diaSourceId="u8", midPointTai="f8", ra="f8", decl="f8"),
+        column_dtypes=dict(ssObjectId=f"S{nameLen}", diaSourceId="u8", midPointTai="f8", ra="f8", decl="f8"),
     )
 
     # link
