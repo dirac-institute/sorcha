@@ -21,7 +21,7 @@ classifiers = [
 ]
 dynamic = ["version"]
 dependencies = [
-    "numpy<2.0",
+    "numpy",
     "pandas>=2.0",
     "astropy",
     "matplotlib",
@@ -68,7 +68,7 @@ dev = [
     "ipython", # Also used in building notebooks into Sphinx
     "ipykernel",
     "matplotlib", # Used in sample notebook intro_notebook.ipynb
-    "numpy<2.0", # Used in sample notebook intro_notebook.ipynb
+    "numpy", # Used in sample notebook intro_notebook.ipynb
 ]
 
 test = [
