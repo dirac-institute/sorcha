@@ -2,15 +2,16 @@
 
 Outputs
 ==================
+
+Sorcha Output
+----------------------
+
 Sorcha produces an output file describing each predicted observation the survey will record of the input simulated objects, 
 with a row for each predicted detection and a column for each parameter to be calculated. This output file can be in several formats
 set by the output_format configuration file keyword.
 
 Additionally, the output columns can be set to either "basic" or "all" settings (described below) using the output_columns configuration file keyword. 
 Alternatively, you may specify the columns you wish to be output.
-
-Optionally (with the -ew flag set), an ephemerides of all detections near the 
-field can be generated to a separate file, which could be provided back to Sorcha as an optional ephemeris file with the -er flag.
 
 The format of any output from Sorcha will look something like::
 
@@ -27,7 +28,7 @@ The format of any output from Sorcha will look something like::
    
  
 Output Formats
-----------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 The configuration file keyword output_format allows Sorcha to output files in CSV, SQLite3 or HDF5 formats.  For example::
 
    [OUTPUT]
@@ -43,7 +44,7 @@ The configuration file keyword output_format allows Sorcha to output files in CS
 
 
 Output Rounding
-----------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 By default, no rounding is performed on any of the output values. If you wish to round
 output values, this can be done separately for magnitude and position values using the following
 configuration file keywords::
@@ -54,7 +55,7 @@ configuration file keywords::
 
 
 Basic Output
-----------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 The "basic" output includes the columns most relevant to general photometry and detection purposes. This is declared
 in the configuration file like so::
 
@@ -96,12 +97,19 @@ The column names, formats, and descriptions are as follows:
 +------------------------------------+--------------+----------------------------------------------------------------------------------+
 | Obj_Sun_LTC_km                     | Float        | Object-sun light-time-corrected distance (km)                                    |
 +------------------------------------+--------------+----------------------------------------------------------------------------------+
+| object_linked                      | Boolean      | Whether the object was linked by the SSP pipeline. Optional: see note.           |
++------------------------------------+--------------+----------------------------------------------------------------------------------+
+
 
 .. note::
-   All positions, positions, and velocities are in respect to J2000.
+   All positions and velocities are in respect to J2000.
+   
+.. note::
+   The object_linked column only appears if the :ref:`linking filter<linking>` is on and the user has requested that observations of unlinked objects should not be dropped.
+
 
 All Output
-----------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 The 'all' output option includes all columns from the basic output, as well as those relevant to ephemeris generation for each 
 predicted detection, and some of the input orbital and physical parameters of each simulated object. This is declared
 in the configuration file like so::
@@ -229,7 +237,7 @@ The column names, formats, and descriptions are as follows
    All positions, positions, and velocities are in respect to J2000.
 
 Custom Output
-----------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 By setting the value of the output_columns configuration file keyword to a comma-separated list of column names, you may 
 specify your own custom output, using this page as a reference for potential column names.
 
@@ -242,3 +250,59 @@ For example, you could state this in your configuration file to get the object I
    If you are choosing to specify the column names in this way, please perform a quick test-run first to ensure your column names are correct before
    embarking on any long runs. As we allow for user-written code and add-ons to add new column names, we do not error-handle the column names until 
    late in the code, upon output.
+
+
+Additional Outputs
+----------------------
+   
+Ephemeris Output
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Optionally (with the **-ew** flag set at the command line), an ephemeris file of all detections near the 
+field can be generated to a separate file, which can then be provided back to Sorcha as an optional external ephemeris file with the **-er** flag.
+More information can be found on this functionality, including the output columns, in the :ref:`Ephemeris Generation<ephemeris_gen>` section of the documentation.
+
+The format of the outputted ephemeris file is controlled by the **eph_format** configuration keyword in the Inputs section of the configuration file::
+
+   [INPUT]
+   ephemerides_type = external
+   eph_format = csv
+
+.. attention::
+   Users should note that output produced by reading in a previously-generated ephemeris file will be in a different order than the output produced when running the ephemeris generator within Sorcha.
+   This is simply a side-effect of how Sorcha reads in ephemeris files and does not affect the actual content of the output.
+
+Statistics Output
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Sorcha can also output a statistics or "tally" file which contains an overview of the Sorcha output for each object and filter. Minimally, this
+file lists the number of observations for each object in each filter, along with the minimum, maximum and median apparent magnitude and the minimum and maximum
+phase angle. If the :ref:`linking filter<linking>` is on, this file also contains information on whether and when the object was linked by SSP.
+
+The columns in the statistics file are as follows:
+
++------------------------------------+--------------+----------------------------------------------------------------------------------------------------------+
+| Keyword                            | Format       | Description                                                                                              |
++====================================+==============+==========================================================================================================+
+| ObjID                              | String       | Unique string identifier                                                                                 |
++------------------------------------+--------------+----------------------------------------------------------------------------------------------------------+
+| optFilter                          | String       | Filter (band) (ugrizy)                                                                                   |
++------------------------------------+--------------+----------------------------------------------------------------------------------------------------------+
+| number_obs                         | Integer      | Number of observations for this object in this filter                                                    |
++------------------------------------+--------------+----------------------------------------------------------------------------------------------------------+
+| min_apparent_mag                   | Float        | Minimum calculated apparent magnitude for this object in this filter                                     |
++------------------------------------+--------------+----------------------------------------------------------------------------------------------------------+
+| max_apparent_mag                   | Float        | Maximum calculated apparent magnitude for this object in this filter                                     |
++------------------------------------+--------------+----------------------------------------------------------------------------------------------------------+
+| median_apparent_mag                | Float        | Median calculated apparent magnitude for this object in this filter                                      |
++------------------------------------+--------------+----------------------------------------------------------------------------------------------------------+
+| min_phase                          | Float        | Minimum calculated phase angle for this object in this filter (degrees)                                  |
++------------------------------------+--------------+----------------------------------------------------------------------------------------------------------+
+| min_phase                          | Float        | Maximum calculated phase angle for this object in this filter (degrees)                                  |
++------------------------------------+--------------+----------------------------------------------------------------------------------------------------------+
+| object_linked                      | Boolean      | True/False whether the object was linked by SSP (only included if linking is on)                         |
++------------------------------------+--------------+----------------------------------------------------------------------------------------------------------+
+| date_linked_MJD                    | Float        | Date the object was linked (if it was linked) in MJD (only included if linking is on)                    |
++------------------------------------+--------------+----------------------------------------------------------------------------------------------------------+
+
+.. note::
+Unless the user has specified **drop_unlinked = False** in the configuration file, the object_linked column will read TRUE for all objects. To see which objects were not linked by Sorcha, this
+variable must be set to False.

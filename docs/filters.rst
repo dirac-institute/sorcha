@@ -138,6 +138,8 @@ Vignetting is applied by default and cannot be turned off by the user in the con
   :align: center
 
 
+.. _linking:
+
 Linking 
 ---------------------------
 
@@ -149,7 +151,7 @@ Linking is performed by detecting multiple observations of an object in a single
 A number of these tracklets must then be detected in a specific time window
 to form a 'track'.
 
-To use this filter, the user must specify all six of the parameters in the configuration file.
+To use this filter, the user must specify all seven of the parameters in the configuration file.
 The defaults given below are those used by SSP and are explained in the comments::
 
     [LINKING]
@@ -175,6 +177,17 @@ The defaults given below are those used by SSP and are explained in the comments
     # Tracklets must occur in <= this number of days to constitute a
     # complete track/detection.
     SSP_track_window = 15
+    
+    # The time in UTC at which it is noon at the observatory location (in standard time).
+    # For the LSST, 12pm Chile Standard Time is 4pm UTC.
+    SSP_night_start_utc = 16.0
+
+By default, when the linking filter is on, Sorcha will drop all observations of unlinked objects. If the user wishes to retain
+these observations, this can be set in the configuration file. This will add an additional column to the output, **object_linked**, which states whether
+the observation is of a linked object or not. To enable this functionality, add the following to the configuration file::
+
+    [LINKING]
+    drop_unlinked = False
 
 
 Expert Filters
