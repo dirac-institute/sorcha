@@ -83,4 +83,4 @@ def test_demo_verification():
                 if k == "mag":
                     assert np.isclose(np.max(m), 0, atol=1e-3)  # 1 mmag - should be much better than that
                 else:
-                    assert np.isclose(np.max(m), 0, atol=0.001 / 3600)  # 5 mas - mean is 0 but std is ~1 mas
+                    assert np.isclose(np.max(m), 0, atol=0.005 / 3600)  # 5 mas - mean is 0 but std is ~1 mas
