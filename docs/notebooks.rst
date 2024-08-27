@@ -19,3 +19,4 @@ Demo Notebooks
     Lightcurve demo <notebooks/demo_Lightcurve>
     Example Bash Scripts for Multiple Runs <notebooks/demo_GenerateBashScripts>
     Example Slurm Scripts for Multiple Runs <notebooks/demo_GenerateSLURMScripts>
+    Sorcha Verification <notebooks/demo_Verification>

@@ -50,7 +50,7 @@ def test_demo_ephemeris_generation():
 
 
 def test_demo_verification():
-    """verification that should be almost identical to machine precision."""
+    """verification independently derived by Pedro - should match the results of Sorcha really really well."""
     import numpy as np
     import astropy.table as tb
 
@@ -77,10 +77,10 @@ def test_demo_verification():
             v[i].sort("fieldMJD_TAI")
             t[i].sort("observationStartMJD_TAI")
             for j, k in zip(
-                ["fieldRA_deg", "fieldDec_deg", "trailedSourceMag"], ["fieldRA_deg", "fieldDec_deg", "mag"]
+                ["RA_deg", "Dec_deg", "trailedSourceMag"], ["RA_INTERP", "DEC_INTERP", "mag"]
             ):
                 m = np.abs(np.mean(v[i][j] - t[i][k]))
                 if k == "mag":
-                    assert np.isclose(np.max(m), 0, atol=1e-3)  # 1 mmag
+                    assert np.isclose(np.max(m), 0, atol=1e-3)  # 1 mmag - should be much better than that
                 else:
-                    assert np.isclose(np.max(m), 0, atol=0.001 / 3600)  # 1 mas
+                    assert np.isclose(np.max(m), 0, atol=0.001 / 3600)  # 5 mas - mean is 0 but std is ~1 mas
