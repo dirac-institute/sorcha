@@ -59,3 +59,7 @@ demo_UncertaintiesAndRandomization
 demo_Vignetting
 - **Demonstrates:** vignettingEffects
 - **Files:** oneline_v2.0.db, footprintFilterValidationObservations.csv
+
+demo_miniDifiValidation
+- **Demonstrates:** PPLinkingFilter, PPMiniDifi
+- **Files:** midSorcha_TNOs.csv
