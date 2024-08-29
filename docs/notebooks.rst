@@ -17,6 +17,8 @@ Demo Notebooks
     Uncertainties and Randomization <notebooks/demo_UncertaintiesAndRandomization>
     Vignetting Demo <notebooks/demo_Vignetting>
     Lightcurve demo <notebooks/demo_Lightcurve>
+    miniDifi Validation <notebooks/demo_miniDifiValidation>
+    Sorcha End-to-End Verification <notebooks/demo_Verification>
     Example Bash Scripts for Multiple Runs <notebooks/demo_GenerateBashScripts>
     Example Slurm Scripts for Multiple Runs <notebooks/demo_GenerateSLURMScripts>
-    Sorcha Verification <notebooks/demo_Verification>
+
