@@ -212,11 +212,6 @@ def linkObject(obsv, seed, maxdt_minutes, minlen_arcsec, window, nlink, p, night
             discoveryChances = len(discNights)
             discoverySubmissionDate = discNights[discIdx]
 
-            # find the first observation on the discovery date
-            i, j = np.searchsorted(night, [discoverySubmissionDate, discoverySubmissionDate + 1])
-            k = i + np.argmin(mjd[i:j])
-            discoveryObservationId = diaSourceId[k]
-
             # find the first observation in the discovery window.
             # we'll (somewhat arbitrarily) define this as the "asterisk" observation.
             # in reality, we'll run precovery on linkages so the asterisk observation
