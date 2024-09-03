@@ -10,6 +10,8 @@ from sorcha.activity.base_activity import AbstractCometaryActivity
 def test_register_subclasses():
     output = register_activity_subclasses()
 
+    update_activity_subclasses()  # if sorcha-addons is installed we need to update the subclasses
+
     assert output == CA_METHODS
 
 

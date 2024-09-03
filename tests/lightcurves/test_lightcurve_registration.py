@@ -10,6 +10,8 @@ from sorcha.lightcurves.base_lightcurve import AbstractLightCurve
 def test_register_subclasses():
     output = register_lc_subclasses()
 
+    update_lc_subclasses()  # if sorcha-addons is installed we need to update the subclasses
+
     assert output == LC_METHODS
 
 
