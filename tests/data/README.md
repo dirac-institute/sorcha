@@ -177,15 +177,30 @@ Used by:
 - test_ephemeris_generation.py  
 - test_pixdict.py
 
+**PPReadOrbitFile_bad_format.csv**  
+Example orbits file with bad formatting.  
+Used by:  
+- test_OrbitAuxReader.py
+
 **PPReadOrbitFile_bad.txt**  
 Example orbits file with bad column headers.  
 Used by:  
 - test_OrbitAuxReader.py
 
-**PPReadOrbitFile_bad_format.csv**  
-Example orbits file with bad formatting.  
+**run_1/testrun_1-sorcha.log**  
+Sorcha log file for a successful run.  
 Used by:  
-- test_OrbitAuxReader.py
+- test_check_output_logs.py
+
+**run_2/testrun_2-sorcha.log**  
+Sorcha log file for an unsuccessful run.  
+Used by:  
+- test_check_output_logs.py
+
+**sorcha_logs_expected.csv**  
+Test output for check_output_logs utility.  
+Used by:  
+- test_check_output_logs.py
 
 **sql_results/orbits_test1.txt**  
 Example orbits files with standardised names.  

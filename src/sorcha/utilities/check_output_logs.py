@@ -1,4 +1,5 @@
 import os
+import sys
 import pandas as pd
 
 
@@ -64,7 +65,7 @@ def check_all_logs(log_files):
     return good_log, last_lines
 
 
-def check_output_logs(filepath, output):
+def check_output_logs(filepath, output=False):
     """Searches directories recursively for Sorcha log files, classifies them as
     belonging to successful or unsuccessful Sorcha runs, and provides this information
     to the user. This is helpful in cases where several runs of Sorcha are being
@@ -76,7 +77,7 @@ def check_output_logs(filepath, output):
     filepath : str
         Filepath of top-level directory within which to search for Sorcha log files.
     output : str or bool
-        Either the filepath/name in which to save output, or False to print output to terminal.
+        Either the filepath/name in which to save output, or False to print output to terminal. Default=False.
 
     """
 
@@ -85,8 +86,9 @@ def check_output_logs(filepath, output):
     if len(log_files) > 0:
         print(str(len(log_files)) + " Sorcha log files have been found. Investigating....\n")
     if len(log_files) == 0:
-        print("No Sorcha log files could be found in directories/subdirectories of supplied filepath.")
-        return
+        sys.exit(
+            "ERROR: no Sorcha log files could be found in directories/subdirectories of supplied filepath."
+        )
 
     good_log, last_lines = check_all_logs(log_files)
 
