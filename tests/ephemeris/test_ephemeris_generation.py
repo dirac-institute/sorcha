@@ -120,7 +120,7 @@ def test_ephemeris_end2end(single_synthetic_pointing, tmp_path):
         "stats": None,
     }
 
-    pplogger = PPGetLogger(cmd_args_dict["outpath"])
+    pplogger = PPGetLogger(cmd_args_dict["outpath"], "test_log")
     args = sorchaArguments(cmd_args_dict)
 
     configs = PPConfigFileParser(

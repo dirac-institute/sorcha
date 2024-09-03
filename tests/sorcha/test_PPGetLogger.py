@@ -8,7 +8,7 @@ def test_PPGetLogger():
     from sorcha.modules.PPGetLogger import PPGetLogger
 
     with tempfile.TemporaryDirectory() as dir_name:
-        pplogger = PPGetLogger(dir_name)
+        pplogger = PPGetLogger(dir_name, "test_log")
 
         # Check that the files get created.
         errlog = glob.glob(os.path.join(dir_name, "*-sorcha.err"))
