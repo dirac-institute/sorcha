@@ -46,13 +46,15 @@ def cmd_outputs_check_logs(args):  # pragma: no cover
         args.outpath = os.path.abspath(args.outpath)
         _ = PPFindDirectoryOrExit(os.path.dirname(args.outpath), "-o, --outpath")
 
-        if os.path.exists(args.outpath):
+        if os.path.exists(args.outpath) and not args.force:
             print(
-                "File already found at {}. Delete existing file or re-run with new output path.".format(
+                "File already found at {}. Re-run with --force argument to overwrite existing output.".format(
                     args.outpath
                 )
             )
             return
+        elif os.path.exists(args.outpath) and args.force:
+            os.remove(args.outpath)
 
         if args.outpath[-4:] != ".csv":
             args.outpath = args.outpath + ".csv"
@@ -133,6 +135,12 @@ def main():
         type=str,
         default=False,
         help="Output filepath and name to save output .csv, if desired. If not supplied, output will be printed to the terminal.",
+    )
+    outputs_create_checklog_parser.add_argument(
+        "--force",
+        default=False,
+        action="store_true",
+        help="Force overwrite existing output file. Default is False.",
     )
 
     # Parse the command-line arguments

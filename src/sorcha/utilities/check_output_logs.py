@@ -3,16 +3,49 @@ import pandas as pd
 
 
 def find_all_log_files(filepath):
+    """Looks for all Sorcha log files in the given filepath and subdirectories
+    recursively. Specifically searches for files ending *sorcha.log.
+
+    Parameters
+    -----------
+    filepath : str
+        Filepath of top-level directory within which to search for Sorcha log files.
+
+    Returns
+    -----------
+    log_files : list
+        A list of the discovered log files (absolute paths)
+
+    """
     log_files = []
 
     for dirpath, dirnames, filenames in os.walk(filepath):
-        for filename in [f for f in filenames if f.endswith(".log")]:
+        for filename in [f for f in filenames if f.endswith("sorcha.log")]:
             log_files.append(os.path.join(dirpath, filename))
 
     return log_files
 
 
 def check_all_logs(log_files):
+    """Checks the last line of all the log files supplied and checks to see
+    if the Sorcha run completed successfully, saving the last line of the log
+    in question if it did not.
+
+    Parameters
+    -----------
+    log_files : list
+        A list of filepaths pointing to Sorcha log files.
+
+    Returns
+    -----------
+    good_log : list of Booleans
+        A list of whether each log file was deemed to be successful or not
+
+    last_lines : list of str
+        A list of the last lines of unsuccessful Sorcha runs.
+
+    """
+
     good_log = []
     last_lines = []
 
@@ -32,6 +65,21 @@ def check_all_logs(log_files):
 
 
 def check_output_logs(filepath, output):
+    """Searches directories recursively for Sorcha log files, classifies them as
+    belonging to successful or unsuccessful Sorcha runs, and provides this information
+    to the user. This is helpful in cases where several runs of Sorcha are being
+    performed simultaneously (i.e. on a supercomputer). Can output either a .csv
+    file or straight to the terminal.
+
+    Parameters
+    -----------
+    filepath : str
+        Filepath of top-level directory within which to search for Sorcha log files.
+    output : str or bool
+        Either the filepath/name in which to save output, or False to print output to terminal.
+
+    """
+
     log_files = find_all_log_files(filepath)
 
     if len(log_files) > 0:
@@ -57,9 +105,11 @@ def check_output_logs(filepath, output):
             for i, row in failed_runs.iterrows():
                 print("Failed run log filename:\n\t" + row["log_filename"])
                 print("Failed run last line of log:\n\t" + row["log_lastline"])
-                print("\n\n")
+                print("\n")
 
     else:
         print("All Sorcha runs appear to have completed successfully. :)")
+        if output:
+            print("No output will be saved.")
 
     return
