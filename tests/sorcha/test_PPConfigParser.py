@@ -237,7 +237,7 @@ def test_PPPrintConfigsToLog(tmp_path):
 
     test_path = os.path.dirname(get_test_filepath("test_input_fullobs.csv"))
 
-    pplogger = PPGetLogger(tmp_path, log_format="%(name)-12s %(levelname)-8s %(message)s ")
+    pplogger = PPGetLogger(tmp_path, "test_log", log_format="%(name)-12s %(levelname)-8s %(message)s ")
 
     cmd_args = {
         "paramsinput": "testcolour.txt",

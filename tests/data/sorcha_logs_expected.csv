@@ -1,0 +1,3 @@
+Unnamed: 0,log_filename,run_successful,log_lastline
+0,/Users/stephaniemerritt/Projects/sorcha/tests/data/run_2/testrun_2-sorcha.log,False,"2024-09-03 15:13:38,536 sorcha.modules.PPCommandLineParser ERROR    ERROR: existing file found at output location ./testrun_stats.csv. Set -f flag to overwrite this file. "
+1,/Users/stephaniemerritt/Projects/sorcha/tests/data/run_1/testrun_1-sorcha.log,True, 

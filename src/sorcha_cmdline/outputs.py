@@ -30,6 +30,39 @@ def cmd_outputs_create_sqlite(args):  # pragma: no cover
 
 
 #
+# sorcha outputs check-logs
+#
+
+
+def cmd_outputs_check_logs(args):  # pragma: no cover
+    from sorcha.utilities.check_output_logs import check_output_logs
+    from sorcha.modules.PPConfigParser import PPFindDirectoryOrExit
+    import os
+
+    args.filepath = os.path.abspath(args.filepath)
+    _ = PPFindDirectoryOrExit(args.filepath, "-f, --filepath")
+
+    if args.outpath:
+        args.outpath = os.path.abspath(args.outpath)
+        _ = PPFindDirectoryOrExit(os.path.dirname(args.outpath), "-o, --outpath")
+
+        if os.path.exists(args.outpath) and not args.force:
+            print(
+                "File already found at {}. Re-run with --force argument to overwrite existing output.".format(
+                    args.outpath
+                )
+            )
+            return
+        elif os.path.exists(args.outpath) and args.force:
+            os.remove(args.outpath)
+
+        if args.outpath[-4:] != ".csv":
+            args.outpath = args.outpath + ".csv"
+
+    return check_output_logs(args.filepath, args.outpath)
+
+
+#
 # sorcha outputs
 #
 
@@ -66,7 +99,7 @@ def main():
         "--outputs",
         type=str,
         required=True,
-        help="Path location of SSPP output files/folders. Code will search subdirectories recursively.",
+        help="Path location of Sorcha output files/folders. Code will search subdirectories recursively.",
     )
     outputs_create_sqlite_parser.add_argument(
         "-s",
@@ -80,6 +113,34 @@ def main():
         default=False,
         action="store_true",
         help="Toggle whether to look for cometary activity files. Default False.",
+    )
+
+    # Add the `check-logs` subcommand
+    outputs_create_checklog_parser = subparsers.add_parser(
+        "check-logs",
+        help="Check all Sorcha log files within a directory and subdirectories for successful/unsuccessful runs.",
+    )
+    outputs_create_checklog_parser.set_defaults(func=cmd_outputs_check_logs)
+
+    outputs_create_checklog_parser.add_argument(
+        "-f",
+        "--filepath",
+        type=str,
+        required=True,
+        help="Top level directory in which to search for Sorcha log files. Code will search subdirectories recursively.",
+    )
+    outputs_create_checklog_parser.add_argument(
+        "-o",
+        "--outpath",
+        type=str,
+        default=False,
+        help="Output filepath and name to save output .csv, if desired. If not supplied, output will be printed to the terminal.",
+    )
+    outputs_create_checklog_parser.add_argument(
+        "--force",
+        default=False,
+        action="store_true",
+        help="Force overwrite existing output file. Default is False.",
     )
 
     # Parse the command-line arguments

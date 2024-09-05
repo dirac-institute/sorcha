@@ -143,7 +143,7 @@ def execute(args):
 
     # Extract the output file path now in order to set up logging.
     outpath = PPFindFileOrExit(args.o, "-o, --outfile")
-    pplogger = PPGetLogger(outpath)
+    pplogger = PPGetLogger(outpath, args.t)
     pplogger.info("Sorcha Start (Main)")
     pplogger.info(f"Command line: {' '.join(sys.argv)}")
 
