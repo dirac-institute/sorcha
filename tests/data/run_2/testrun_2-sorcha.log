@@ -1,0 +1,3 @@
+2024-09-03 15:13:38,536 root         INFO     Sorcha Start (Main) 
+2024-09-03 15:13:38,536 root         INFO     Command line: /opt/miniconda3/envs/sorcha/bin/sorcha-run -c sorcha_config_demo.ini -p sspp_testset_colours.txt -ob sspp_testset_orbits.des -pd baseline_v2.0_1yr.db -o ./ -t testrun_e2e -st testrun_stats 
+2024-09-03 15:13:38,536 sorcha.modules.PPCommandLineParser ERROR    ERROR: existing file found at output location ./testrun_stats.csv. Set -f flag to overwrite this file. 

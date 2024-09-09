@@ -171,4 +171,8 @@ checker.txt
 ephemeris_output.csv
 data/out/
 
+# do not ignore these test files!
+!testrun_1-sorcha.log
+!testrun_2-sorcha.log
+
 *~
