@@ -1,0 +1,303 @@
+2024-09-03 15:12:16,975 root         INFO     Sorcha Start (Main) 
+2024-09-03 15:12:16,976 root         INFO     Command line: /opt/miniconda3/envs/sorcha/bin/sorcha-run -c sorcha_config_demo.ini -p sspp_testset_colours.txt -ob sspp_testset_orbits.des -pd baseline_v2.0_1yr.db -o ./ -t testrun_e2e -st testrun_stats -f 
+2024-09-03 15:12:16,976 sorcha.modules.PPCommandLineParser INFO     Existing file found at ./testrun_stats.csv. -f flag set: deleting existing file. 
+2024-09-03 15:12:16,977 sorcha.modules.PPCommandLineParser INFO     Existing file found at ./testrun_e2e.*. -f flag set: deleting existing file. 
+2024-09-03 15:12:16,977 sorcha.modules.PPCommandLineParser INFO     Using commandline setting paramsinput = sspp_testset_colours.txt 
+2024-09-03 15:12:16,977 sorcha.modules.PPCommandLineParser INFO     Using commandline setting orbinfile = sspp_testset_orbits.des 
+2024-09-03 15:12:16,977 sorcha.modules.PPCommandLineParser INFO     Using commandline setting configfile = sorcha_config_demo.ini 
+2024-09-03 15:12:16,977 sorcha.modules.PPCommandLineParser INFO     Using commandline setting outpath = ./ 
+2024-09-03 15:12:16,977 sorcha.modules.PPCommandLineParser INFO     Using commandline setting pointing_database = baseline_v2.0_1yr.db 
+2024-09-03 15:12:16,977 sorcha.modules.PPCommandLineParser INFO     Using commandline setting oifoutput = None 
+2024-09-03 15:12:16,977 sorcha.modules.PPCommandLineParser INFO     Using commandline setting output_ephemeris_file = None 
+2024-09-03 15:12:16,977 sorcha.modules.PPCommandLineParser INFO     Using commandline setting surveyname = rubin_sim 
+2024-09-03 15:12:16,977 sorcha.modules.PPCommandLineParser INFO     Using commandline setting outfilestem = testrun_e2e 
+2024-09-03 15:12:16,977 sorcha.modules.PPCommandLineParser INFO     Using commandline setting verbose = True 
+2024-09-03 15:12:16,977 sorcha.modules.PPCommandLineParser INFO     Using commandline setting stats = testrun_stats 
+2024-09-03 15:12:16,977 sorcha.modules.PPCommandLineParser INFO     Using commandline setting ar_data_path = None 
+2024-09-03 15:12:16,977 root         INFO     Reading configuration file... 
+2024-09-03 15:12:16,977 sorcha.modules.PPConfigParser INFO     Copy of configuration file sorcha_config_demo.ini:
+# Sorcha Configuration File 
+
+
+[INPUT]
+
+# The simulation used for the ephemeris input.
+# ar=ASSIST+REBOUND interal ephemeris generation
+# external=providing an external input file from the command line
+# Options: "ar", "external"
+ephemerides_type = ar
+
+# Format for ephemeris simulation input file if a file is specified at the command line. 
+# This is also the format to which ephemeris files will be written out, if specified.
+# Options: csv, whitespace, hdf5
+eph_format = csv
+
+# Sorcha chunk size: how many objects should be processed at once?
+size_serial_chunk = 5000
+
+# Format for the orbit, physical parameters, and complex physical parameters input files.
+# Options: csv or whitespace
+aux_format = whitespace
+
+# SQL query for extracting data from the pointing database.
+pointing_sql_query = SELECT observationId, observationStartMJD as observationStartMJD_TAI, visitTime, visitExposureTime, filter, seeingFwhmGeom as seeingFwhmGeom_arcsec, seeingFwhmEff as seeingFwhmEff_arcsec, fiveSigmaDepth as fieldFiveSigmaDepth_mag , fieldRA as fieldRA_deg, fieldDec as fieldDec_deg, rotSkyPos as fieldRotSkyPos_deg FROM observations order by observationId
+
+
+[SIMULATION]
+# Configs for running the ASSIST+REBOUND ephemerides generator.
+
+# the field of view of our search field, in degrees
+ar_ang_fov = 2.06
+
+# the buffer zone around the field of view we want to include, in degrees
+ar_fov_buffer = 0.2
+
+# the "picket" is our imprecise discretization of time that allows us to move progress
+# our simulations forward without getting too granular when we don't have to.
+# the unit is number of days.
+ar_picket = 1
+
+# the obscode is the MPC observatory code for the provided telescope.
+ar_obs_code = X05
+
+# the order of healpix which we will use for the healpy portions of the code.
+# the nside is equivalent to 2**ar_healpix_order
+ar_healpix_order = 6
+
+
+[FILTERS]
+
+# Filters of the observations you are interested in, comma-separated.
+# Your physical parameters file must have H calculated in one of these filters
+# and colour offset columns defined relative to that filter.
+observing_filters = r,g,i,z,u,y
+
+
+[SATURATION]
+
+# Upper magnitude limit on sources that will overfill the detector pixels/have
+# counts above the non-linearity regime of the pixels where one can’t do 
+# photometry. Objects brighter than this limit (in magnitude) will be cut. 
+# Comment out for no saturation limit.
+# Two formats are accepted:
+# Single float: applies same saturation limit to observations in all filters.
+# Comma-separated list of floats: applies saturation limit per filter, in order as
+# given in observing_filters keyword.
+bright_limit = 16.0
+
+
+[PHASECURVES]
+
+# The phase function used to calculate apparent magnitude. The physical parameters input
+# file must contain the columns needed to calculate the phase function.
+# Options: HG, HG1G2, HG12, linear, none.
+phase_function = HG
+
+
+[FOV]
+
+# Choose between circular or actual camera footprint, including chip gaps.
+# Options: circle, footprint.
+camera_model = footprint
+
+# Path to camera footprint file. Uncomment to provide a path to the desired camera 
+# detector configurationn file if not using the default built-in LSSTCam detector 
+# configuration or not using the circle footprint model.
+# footprint_path= ./data/detectors_corners.csv
+
+# Fraction of detector surface area which contains CCD -- simulates chip gaps
+# for OIF output. Comment out if using camera footprint.
+# Default: 0.9.
+# fill_factor = 0.9
+
+# Radius of the circle for a circular footprint (in degrees). Float.
+# Comment out or do not include if using footprint camera model.
+# circle_radius = 1.75
+
+# The distance from the edge of a detector (in arcseconds on the focal plane)
+# at which we will not correctly extract an object.
+# footprint_edge_threshold = 0.0001
+
+
+[FADINGFUNCTION]
+
+# Detection efficiency fading function on or off. Uses the fading function as outlined in
+# Chelsey and Vereš (2017) to remove observations.
+fading_function_on = True
+
+# Width parameter for fading function. Should be greater than zero and less than 0.5.
+# Suggested value is 0.1 after Chelsey and Vereš (2017).
+fading_function_width = 0.1
+
+# Peak efficiency for the fading function, called the 'fill factor' in Chelsey and Veres (2017).
+# Suggested value is 1. Do not change this unless you are sure of what you are doing.
+fading_function_peak_efficiency = 1.
+
+
+[LINKINGFILTER]
+# Remove this section if you do not wish to run the SSP linking filter.
+
+# SSP detection efficiency. Which fraction of the observations of an object will
+# the automated solar system processing pipeline successfully link? Float.
+SSP_detection_efficiency = 0.95
+
+# Length of tracklets. How many observations of an object during one night are
+# required to produce a valid tracklet?
+SSP_number_observations = 2
+
+# Minimum separation (in arcsec) between two observations of an object required 
+# for the linking software to distinguish them as separate and therefore as a valid tracklet.
+SSP_separation_threshold = 0.5
+
+# Maximum time separation (in days) between subsequent observations in a tracklet. 
+# Default is 0.0625 days (90mins).
+SSP_maximum_time = 0.0625
+
+# Number of tracklets for detection. How many tracklets are required to classify
+# an object as detected?  
+SSP_number_tracklets = 3
+
+# The number of tracklets defined above must occur in <= this number of days to 
+# constitute a complete track/detection.
+SSP_track_window = 15
+
+# The time in UTC at which it is noon at the observatory location (in standard time).
+# For the LSST, 12pm Chile Standard Time is 4pm UTC.
+SSP_night_start_utc = 16.0
+
+
+[OUTPUT]
+
+# Output format of the output file[s]
+# Options: csv, sqlite3, hdf5
+output_format = csv
+
+# Controls which columns are in the output files.
+# Options are "basic" and "all", which returns all columns.
+output_columns = basic
+
+
+[LIGHTCURVE]
+
+# The unique name of the lightcurve model to use. Defined in the ``name_id`` method 
+# of the subclasses of AbstractLightCurve. If not none, the complex physical parameters 
+# file must be specified at the command line.lc_model = none
+lc_model = none
+
+
+[ACTIVITY]
+
+# The unique name of the actvity model to use. Defined in the ``name_id`` method
+#  of the subclasses of AbstractCometaryActivity.  If not none, a complex physical parameters 
+# file must be specified at the command line.
+comet_activity = none
+ 
+2024-09-03 15:12:16,978 root         INFO     Configuration file read. 
+2024-09-03 15:12:16,978 sorcha.utilities.sorchaArguments INFO     the base rng seed is 3523867842 
+2024-09-03 15:12:16,978 sorcha.sorcha INFO     Post-processing begun. 
+2024-09-03 15:12:16,979 sorcha.modules.PPConfigParser INFO     The config file used is located at sorcha_config_demo.ini 
+2024-09-03 15:12:16,979 sorcha.modules.PPConfigParser INFO     The physical parameters file used is located at sspp_testset_colours.txt 
+2024-09-03 15:12:16,979 sorcha.modules.PPConfigParser INFO     The orbits file used is located at sspp_testset_orbits.des 
+2024-09-03 15:12:16,979 sorcha.modules.PPConfigParser INFO     The survey selected is: rubin_sim 
+2024-09-03 15:12:16,979 sorcha.modules.PPConfigParser INFO     Format of ephemerides file is: csv 
+2024-09-03 15:12:16,979 sorcha.modules.PPConfigParser INFO     Format of auxiliary files is: whitespace 
+2024-09-03 15:12:16,979 sorcha.modules.PPConfigParser INFO     Pointing database path is: baseline_v2.0_1yr.db 
+2024-09-03 15:12:16,979 sorcha.modules.PPConfigParser INFO     Pointing database required query is: SELECT observationId, observationStartMJD as observationStartMJD_TAI, visitTime, visitExposureTime, filter, seeingFwhmGeom as seeingFwhmGeom_arcsec, seeingFwhmEff as seeingFwhmEff_arcsec, fiveSigmaDepth as fieldFiveSigmaDepth_mag , fieldRA as fieldRA_deg, fieldDec as fieldDec_deg, rotSkyPos as fieldRotSkyPos_deg FROM observations order by observationId 
+2024-09-03 15:12:16,979 sorcha.modules.PPConfigParser INFO     The number of objects processed in a single chunk is: 5000 
+2024-09-03 15:12:16,979 sorcha.modules.PPConfigParser INFO     The main filter in which H is defined is r 
+2024-09-03 15:12:16,979 sorcha.modules.PPConfigParser INFO     The filters included in the post-processing results are r g i z u y 
+2024-09-03 15:12:16,979 sorcha.modules.PPConfigParser INFO     Thus, the colour indices included in the simulation are g-r i-r z-r u-r y-r 
+2024-09-03 15:12:16,979 sorcha.modules.PPConfigParser INFO     The apparent brightness is calculated using the following phase function model: HG 
+2024-09-03 15:12:16,979 sorcha.modules.PPConfigParser INFO     Computation of trailing losses is switched ON. 
+2024-09-03 15:12:16,979 sorcha.modules.PPConfigParser INFO     Randomization of position and magnitude around uncertainties is switched ON. 
+2024-09-03 15:12:16,979 sorcha.modules.PPConfigParser INFO     Vignetting is switched ON. 
+2024-09-03 15:12:16,979 sorcha.modules.PPConfigParser INFO     Footprint is modelled after the actual camera footprint. 
+2024-09-03 15:12:16,979 sorcha.modules.PPConfigParser INFO     Loading default LSST footprint LSST_detector_corners_100123.csv 
+2024-09-03 15:12:16,979 sorcha.modules.PPConfigParser INFO     The upper saturation limit(s) is/are: 16.0 
+2024-09-03 15:12:16,979 sorcha.modules.PPConfigParser INFO     SNR limit is turned OFF. 
+2024-09-03 15:12:16,979 sorcha.modules.PPConfigParser INFO     Default SNR cut is ON. All observations with SNR < 2.0 will be removed. 
+2024-09-03 15:12:16,979 sorcha.modules.PPConfigParser INFO     Magnitude limit is turned OFF. 
+2024-09-03 15:12:16,979 sorcha.modules.PPConfigParser INFO     The detection efficiency fading function is ON. 
+2024-09-03 15:12:16,979 sorcha.modules.PPConfigParser INFO     The width parameter of the fading function has been set to: 0.1 
+2024-09-03 15:12:16,979 sorcha.modules.PPConfigParser INFO     The peak efficiency of the fading function has been set to: 1.0 
+2024-09-03 15:12:16,979 sorcha.modules.PPConfigParser INFO     Solar System Processing linking filter is turned ON. 
+2024-09-03 15:12:16,979 sorcha.modules.PPConfigParser INFO     For SSP linking... 
+2024-09-03 15:12:16,979 sorcha.modules.PPConfigParser INFO     ...the fractional detection efficiency is: 0.95 
+2024-09-03 15:12:16,979 sorcha.modules.PPConfigParser INFO     ...the minimum required number of observations in a tracklet is: 2 
+2024-09-03 15:12:16,979 sorcha.modules.PPConfigParser INFO     ...the minimum required number of tracklets to form a track is: 3 
+2024-09-03 15:12:16,979 sorcha.modules.PPConfigParser INFO     ...the maximum window of time in days of tracklets to be contained in to form a track is: 15 
+2024-09-03 15:12:16,979 sorcha.modules.PPConfigParser INFO     ...the minimum angular separation between observations in arcseconds is: 0.5 
+2024-09-03 15:12:16,979 sorcha.modules.PPConfigParser INFO     ...the maximum temporal separation between subsequent observations in a tracklet in days is: 0.0625 
+2024-09-03 15:12:16,979 sorcha.modules.PPConfigParser INFO     ASSIST+REBOUND Simulation is turned ON. 
+2024-09-03 15:12:16,979 sorcha.modules.PPConfigParser INFO     For ASSIST+REBOUND... 
+2024-09-03 15:12:16,979 sorcha.modules.PPConfigParser INFO     ...the field's angular FOV is: 2.06 
+2024-09-03 15:12:16,979 sorcha.modules.PPConfigParser INFO     ...the buffer around the FOV is: 0.2 
+2024-09-03 15:12:16,979 sorcha.modules.PPConfigParser INFO     ...the picket interval is: 1 
+2024-09-03 15:12:16,979 sorcha.modules.PPConfigParser INFO     ...the observatory code is: X05 
+2024-09-03 15:12:16,979 sorcha.modules.PPConfigParser INFO     ...the healpix order is: 6 
+2024-09-03 15:12:16,980 sorcha.modules.PPConfigParser INFO     No lightcurve model is being applied. 
+2024-09-03 15:12:16,980 sorcha.modules.PPConfigParser INFO     Output files will be saved in path: ./ with filestem testrun_e2e 
+2024-09-03 15:12:16,980 sorcha.modules.PPConfigParser INFO     Output files will be saved as format: csv 
+2024-09-03 15:12:16,980 sorcha.modules.PPConfigParser INFO     In the output, positions will be rounded to None decimal places. 
+2024-09-03 15:12:16,980 sorcha.modules.PPConfigParser INFO     In the output, magnitudes will be rounded to None decimal places. 
+2024-09-03 15:12:16,980 sorcha.modules.PPConfigParser INFO     The output columns are set to: basic 
+2024-09-03 15:12:16,980 sorcha.sorcha INFO     Reading pointing database... 
+2024-09-03 15:12:17,930 sorcha.sorcha INFO     Pre-computing pointing information for ephemeris generation 
+2024-09-03 15:12:17,937 sorcha.ephemeris.simulation_setup INFO     Calculated GM_SUN value from ASSIST ephemeris: 0.00029591220828411956 
+2024-09-03 15:12:17,937 sorcha.ephemeris.simulation_setup INFO     Calculated GM_TOTAL value from ASSIST ephemeris: 0.00029630927487993194 
+2024-09-03 15:12:30,571 sorcha.readers.CSVReader INFO     Reading line 0 of sspp_testset_orbits.des as header:
+ObjID		a		e		inc		node		argPeri		ma	  epochMJD_TDB	FORMAT
+ 
+2024-09-03 15:12:30,572 sorcha.readers.CSVReader INFO     Reading line 0 of sspp_testset_colours.txt as header:
+ObjID		H_r	GS	u-r	g-r	i-r	z-r	y-r
+ 
+2024-09-03 15:12:30,572 sorcha.sorcha INFO     Creating sensor footprint object for filtering 
+2024-09-03 15:12:30,576 sorcha.modules.PPFootprintFilter INFO     Using built-in CCD Detector file: data/LSST_detector_corners_100123.csv 
+2024-09-03 15:12:30,632 sorcha.sorcha INFO     Starting main Sorcha processing loop round 0 
+2024-09-03 15:12:30,632 sorcha.sorcha INFO     Working on objects 0-5000 
+2024-09-03 15:12:30,632 sorcha.sorcha INFO     Ingest chunk of orbits 
+2024-09-03 15:12:30,641 sorcha.sorcha INFO     Starting ephemeris generation 
+2024-09-03 15:12:30,641 sorcha.utilities.sorchaArguments INFO     Building ASSIST ephemeris object. 
+2024-09-03 15:12:30,643 sorcha.ephemeris.simulation_setup INFO     Calculated GM_SUN value from ASSIST ephemeris: 0.00029591220828411956 
+2024-09-03 15:12:30,643 sorcha.ephemeris.simulation_setup INFO     Calculated GM_TOTAL value from ASSIST ephemeris: 0.00029630927487993194 
+2024-09-03 15:12:30,643 sorcha.utilities.sorchaArguments INFO     Furnishing SPICE kernels. 
+2024-09-03 15:12:30,682 sorcha.utilities.sorchaArguments INFO     Generating ASSIST+REBOUND simulations. 
+2024-09-03 15:12:32,230 sorcha.utilities.sorchaArguments INFO     Generating ephemeris... 
+2024-09-03 15:12:49,139 sorcha.utilities.sorchaArguments INFO     Ephemeris generated. 
+2024-09-03 15:12:49,144 sorcha.utilities.sorchaArguments INFO     Joining ephemeris to orbits dataframe. 
+2024-09-03 15:12:49,149 sorcha.sorcha INFO     Ephemeris generation completed 
+2024-09-03 15:12:49,149 sorcha.sorcha INFO     Start post processing for this chunk 
+2024-09-03 15:12:49,149 sorcha.sorcha INFO     Matching pointing database information to observations on rough camera footprint 
+2024-09-03 15:12:49,157 sorcha.sorcha INFO     Calculating apparent magnitudes... 
+2024-09-03 15:12:49,157 sorcha.modules.PPCalculateApparentMagnitude INFO     Selecting and applying correct colour offset... 
+2024-09-03 15:12:49,161 sorcha.modules.PPCalculateApparentMagnitude INFO     Calculating apparent magnitude in filter... 
+2024-09-03 15:12:49,163 sorcha.sorcha INFO     Calculating trailing losses... 
+2024-09-03 15:12:49,164 sorcha.sorcha INFO     Calculating effects of vignetting on limiting magnitude... 
+2024-09-03 15:12:49,165 sorcha.sorcha INFO     Calculating astrometric and photometric uncertainties... 
+2024-09-03 15:12:49,168 sorcha.sorcha INFO     Number of rows BEFORE randomizing astrometry and photometry: 1198 
+2024-09-03 15:12:49,168 sorcha.modules.PPRandomizeMeasurements INFO     Removing all observations with SNR < 2.0... 
+2024-09-03 15:12:49,169 sorcha.modules.PPRandomizeMeasurements INFO     Randomising photometry... 
+2024-09-03 15:12:49,170 sorcha.utilities.sorchaArguments INFO     the rng seed for the sorcha.modules.PPRandomizeMeasurements module is 297415931 
+2024-09-03 15:12:49,172 sorcha.modules.PPRandomizeMeasurements INFO     Randomizing astrometry... 
+2024-09-03 15:12:49,175 sorcha.sorcha INFO     Number of rows AFTER randomizing astrometry and photometry: 1016 
+2024-09-03 15:12:49,175 sorcha.sorcha INFO     Applying field-of-view filters... 
+2024-09-03 15:12:49,175 sorcha.sorcha INFO     Number of rows BEFORE applying FOV filters: 1016 
+2024-09-03 15:12:49,175 sorcha.modules.PPApplyFOVFilter INFO     Applying sensor footprint filter... 
+2024-09-03 15:12:49,194 sorcha.sorcha INFO     Number of rows AFTER applying FOV filters: 796 
+2024-09-03 15:12:49,195 sorcha.sorcha INFO     Applying detection efficiency fading function... 
+2024-09-03 15:12:49,195 sorcha.sorcha INFO     Number of rows BEFORE applying fading function: 796 
+2024-09-03 15:12:49,195 sorcha.modules.PPFadingFunctionFilter INFO     Calculating probabilities of detections... 
+2024-09-03 15:12:49,195 sorcha.modules.PPFadingFunctionFilter INFO     Dropping observations below detection threshold... 
+2024-09-03 15:12:49,195 sorcha.utilities.sorchaArguments INFO     the rng seed for the sorcha.modules.PPDropObservations module is 360636029 
+2024-09-03 15:12:49,196 sorcha.sorcha INFO     Number of rows AFTER applying fading function: 635 
+2024-09-03 15:12:49,196 sorcha.sorcha INFO     Dropping observations that are too bright... 
+2024-09-03 15:12:49,196 sorcha.sorcha INFO     Number of rows BEFORE applying bright limit filter 635 
+2024-09-03 15:12:49,196 sorcha.sorcha INFO     Number of rows AFTER applying bright limit filter 635 
+2024-09-03 15:12:49,196 sorcha.sorcha INFO     Applying SSP linking filter... 
+2024-09-03 15:12:49,196 sorcha.sorcha INFO     Number of rows BEFORE applying SSP linking filter: 635 
+2024-09-03 15:12:49,226 sorcha.sorcha INFO     Number of rows AFTER applying SSP linking filter: 627 
+2024-09-03 15:12:49,226 sorcha.sorcha INFO     Post processing completed for this chunk 
+2024-09-03 15:12:49,226 sorcha.sorcha INFO     Outputting results for this chunk 
+2024-09-03 15:12:49,227 sorcha.modules.PPOutput INFO     Constructing output path... 
+2024-09-03 15:12:49,227 sorcha.modules.PPOutput INFO     Output to CSV file... 
+2024-09-03 15:12:49,249 sorcha.sorcha INFO     Sorcha process is completed. 

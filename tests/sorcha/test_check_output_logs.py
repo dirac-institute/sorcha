@@ -1,6 +1,7 @@
 import os
 import pytest
 import pandas as pd
+from pathlib import Path
 from sorcha.utilities.dataUtilitiesForTests import get_test_filepath
 
 
@@ -31,7 +32,17 @@ def test_check_output_logs(tmp_path):
     # check output matches
     written_output = pd.read_csv(output)
     expected_output = pd.read_csv(get_test_filepath("sorcha_logs_expected.csv"))
-    pd.testing.assert_frame_equal(written_output, expected_output)
+
+    # the function writes absolute paths: check only the last four parts of the path
+    assert Path(*Path(expected_output["log_filename"][0]).parts[-4:]) == Path(
+        *Path(written_output["log_filename"][0]).parts[-4:]
+    )
+    assert Path(*Path(expected_output["log_filename"][1]).parts[-4:]) == Path(
+        *Path(written_output["log_filename"][1]).parts[-4:]
+    )
+
+    pd.testing.assert_series_equal(written_output["run_successful"], expected_output["run_successful"])
+    pd.testing.assert_series_equal(written_output["log_lastline"], expected_output["log_lastline"])
 
     # check no output on successful run
     single_filepath = os.path.join(os.path.dirname(get_test_filepath("oiftestoutput.txt")), "run_1")

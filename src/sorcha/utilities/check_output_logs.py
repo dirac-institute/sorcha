@@ -102,7 +102,7 @@ def check_output_logs(filepath, output=False):
 
         if output:
             print("Saving results to: " + output)
-            log_results.to_csv(os.path.join(output))
+            log_results.to_csv(os.path.join(output), index=False)
         else:
             for i, row in failed_runs.iterrows():
                 print("Failed run log filename:\n\t" + row["log_filename"])

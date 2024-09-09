@@ -43,6 +43,7 @@ def execute(args):
         DATA_FILES_TO_DOWNLOAD,
         _check_for_existing_files,
         _decompress,
+        _remove_files,
         build_meta_kernel_file,
     )
     from functools import partial

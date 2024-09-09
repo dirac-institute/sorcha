@@ -35,6 +35,7 @@ dependencies = [
     "tqdm",
     "numba",
     "importlib_resources",
+    "scipy" # Needed for linear algebra in numba, do not remove!
 ]
 
 [project.scripts]
