@@ -35,6 +35,7 @@ dependencies = [
     "tqdm",
     "numba",
     "importlib_resources",
+    "scipy"
 ]
 
 [project.scripts]

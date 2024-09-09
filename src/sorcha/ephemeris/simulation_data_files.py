@@ -3,8 +3,8 @@ import pooch
 # Define variables for the file names
 
 DE440S = "de440s.bsp"
-EARTH_PREDICT = "earth_200101_990825_predict.bpc"
-EARTH_HISTORICAL = "earth_720101_230601.bpc"
+EARTH_PREDICT = "earth_200101_990827_predict.bpc"
+EARTH_HISTORICAL = "earth_620120_240827.bpc"
 EARTH_HIGH_PRECISION = "earth_latest_high_prec.bpc"
 JPL_PLANETS = "linux_p1550p2650.440"
 JPL_SMALL_BODIES = "sb441-n16.bsp"
@@ -17,8 +17,8 @@ ORIENTATION_CONSTANTS = "pck00010.pck"
 # Dictionary of filename: url
 URLS = {
     DE440S: "https://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/planets/de440s.bsp",
-    EARTH_PREDICT: "https://naif.jpl.nasa.gov/pub/naif/generic_kernels/pck/earth_200101_990825_predict.bpc",
-    EARTH_HISTORICAL: "https://naif.jpl.nasa.gov/pub/naif/generic_kernels/pck/earth_720101_230601.bpc",
+    EARTH_PREDICT: "https://naif.jpl.nasa.gov/pub/naif/generic_kernels/pck/earth_200101_990827_predict.bpc",
+    EARTH_HISTORICAL: "https://naif.jpl.nasa.gov/pub/naif/generic_kernels/pck/earth_620120_240827.bpc",
     EARTH_HIGH_PRECISION: "https://naif.jpl.nasa.gov/pub/naif/generic_kernels/pck/earth_latest_high_prec.bpc",
     JPL_PLANETS: "https://ssd.jpl.nasa.gov/ftp/eph/planets/Linux/de440/linux_p1550p2650.440",
     JPL_SMALL_BODIES: "https://ssd.jpl.nasa.gov/ftp/eph/small_bodies/asteroids_de441/sb441-n16.bsp",
