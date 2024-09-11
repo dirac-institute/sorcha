@@ -7,7 +7,7 @@ astroquery
 sorcha
 scipy
 sbpy
-sqlite3
+pysqlite3 
 matplotlib
 sphinx
 sphinx-rtd-theme
