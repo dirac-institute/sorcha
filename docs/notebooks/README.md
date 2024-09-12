@@ -40,6 +40,10 @@ demo_MagnitudeAndSNRCuts
 - **Demonstrates:** PPBrightLimit, PPMagnitudeLimit, PPSNRLimit
 - **Files:** none
 
+demo_miniDifiValidation
+- **Demonstrates:** PPLinkingFilter, PPMiniDifi
+- **Files:** midSorcha_TNOs.csv
+
 demo_PlotLSSTCamCornersFOVs
 - **Demonstrates:** What the internal Sorcha LSSTCam CCD footprint looks like with various circle FOVs that can be used within Sorcha
 - **Files:** Installed version of LSST_detector_corners_100123.csv  
@@ -56,10 +60,12 @@ demo_UncertaintiesAndRandomization
 - **Demonstrates:** PPAddUncertainty, PPRandomizeMeasurements
 - **Files:** none
 
+demo_Verification
+- **Demonstrates:** End-to-end independent calculations of apparent magnitude based on JPL Horizons predictions
+- **Files:** 2011ob60.txt, 2011ob60.txt,  demo/baseline_v2.0_1yr.db
+- 
 demo_Vignetting
 - **Demonstrates:** vignettingEffects
 - **Files:** oneline_v2.0.db, footprintFilterValidationObservations.csv
 
-demo_miniDifiValidation
-- **Demonstrates:** PPLinkingFilter, PPMiniDifi
-- **Files:** midSorcha_TNOs.csv
+
