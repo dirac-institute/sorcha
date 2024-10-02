@@ -442,21 +442,24 @@ def PPConfigFileParser(configfile, survey_name):
         config, "SATURATION", "bright_limit", "none"
     )
 
-    try:
-        bright_list = [float(e.strip()) for e in bright_limits.split(",")]
-    except ValueError:
-        pplogger.error("ERROR: could not parse brightness limits. Check formatting and try again.")
-        sys.exit("ERROR: could not parse brightness limits. Check formatting and try again.")
+    if config_dict["bright_limit_on"]:
+        try:
+            bright_list = [float(e.strip()) for e in bright_limits.split(",")]
+        except ValueError:
+            pplogger.error("ERROR: could not parse brightness limits. Check formatting and try again.")
+            sys.exit("ERROR: could not parse brightness limits. Check formatting and try again.")
 
-    if len(bright_list) == 1:
-        config_dict["bright_limit"] = bright_list[0]
-    else:
-        if len(bright_list) != len(config_dict["observing_filters"]):
-            pplogger.error(
-                "ERROR: list of saturation limits is not the same length as list of observing filters."
-            )
-            sys.exit("ERROR: list of saturation limits is not the same length as list of observing filters.")
-        config_dict["bright_limit"] = bright_list
+        if len(bright_list) == 1:
+            config_dict["bright_limit"] = bright_list[0]
+        else:
+            if len(bright_list) != len(config_dict["observing_filters"]):
+                pplogger.error(
+                    "ERROR: list of saturation limits is not the same length as list of observing filters."
+                )
+                sys.exit(
+                    "ERROR: list of saturation limits is not the same length as list of observing filters."
+                )
+            config_dict["bright_limit"] = bright_list
 
     # PHASECURVES
 
