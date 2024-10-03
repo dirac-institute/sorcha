@@ -64,6 +64,35 @@ class CombinedDataReader:
         """
         self.aux_data_readers.append(new_reader)
 
+    def check_aux_object_ids(self):
+        """Checks the ObjIDs in all of the auxiliary data readers to make sure
+        both files contain exactly the same ObjIDs.
+        """
+        pplogger = logging.getLogger(__name__)
+
+        if len(self.aux_data_readers) <= 1:
+            pplogger.error("ERROR: Only one or zero aux_data_readers set.")
+            sys.exit("ERROR: Only one or zero aux_data_readers set.")
+
+        for i in range(0, len(self.aux_data_readers)):
+            self.aux_data_readers[i]._build_id_map()
+
+            if i == 0:
+                primary_ids = self.aux_data_readers[i].obj_id_table
+                continue
+
+            if not all(item in primary_ids.values for item in self.aux_data_readers[i].obj_id_table.values):
+                pplogger.error(
+                    "ERROR: mismatched ObjIDs in auxiliary input files. IDs in {} do not match {}.".format(
+                        self.aux_data_readers[0].filename, self.aux_data_readers[i].filename
+                    )
+                )
+                sys.exit(
+                    "ERROR: mismatched ObjIDs in auxiliary input files. IDs in {} do not match {}.".format(
+                        self.aux_data_readers[0].filename, self.aux_data_readers[i].filename
+                    )
+                )
+
     def read_block(self, block_size=None, verbose=False, **kwargs):
         """Reads in a set number of rows from the input, performs
         post-processing and validation, and returns a data frame.
