@@ -190,8 +190,23 @@ def test_CombinedDataReader_IDcheck():
         reader.check_aux_object_ids()
     assert e1.value.code == "ERROR: Only one or zero aux_data_readers set."
 
+    reader.add_aux_data_reader(CSVDataReader(get_test_filepath("testcolour_jumble.txt"), "whitespace"))
+    reader.check_aux_object_ids()  # this should pass
+
+    reader.add_aux_data_reader(CSVDataReader(get_test_filepath("testcolour.txt"), "whitespace"))
+    reader.check_aux_object_ids()  # as should this
+
     reader.add_aux_data_reader(CSVDataReader(get_test_filepath("testcolour_wrong.txt"), "whitespace"))
 
     with pytest.raises(SystemExit) as e2:
+        reader.check_aux_object_ids()
+    assert e2.type == SystemExit  # can't check the error message, it's different based on aux filepaths
+
+    # regenerate the reader for the last test, otherwise we're just triggering the same error as before
+    reader = CombinedDataReader(ephem_primary=False, verbose=True)
+    reader.add_aux_data_reader(OrbitAuxReader(get_test_filepath("testorb.des"), "whitespace"))
+    reader.add_aux_data_reader(CSVDataReader(get_test_filepath("testcolour_missing.txt"), "whitespace"))
+
+    with pytest.raises(SystemExit) as e3:
         reader.check_aux_object_ids()
     assert e2.type == SystemExit  # can't check the error message, it's different based on aux filepaths

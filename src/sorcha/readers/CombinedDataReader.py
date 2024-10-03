@@ -81,7 +81,9 @@ class CombinedDataReader:
                 primary_ids = self.aux_data_readers[i].obj_id_table
                 continue
 
-            if not all(item in primary_ids.values for item in self.aux_data_readers[i].obj_id_table.values):
+            if not all(
+                item in primary_ids.values for item in self.aux_data_readers[i].obj_id_table.values
+            ) or (len(primary_ids) != len(self.aux_data_readers[i].obj_id_table)):
                 pplogger.error(
                     "ERROR: mismatched ObjIDs in auxiliary input files. IDs in {} do not match {}.".format(
                         self.aux_data_readers[0].filename, self.aux_data_readers[i].filename

@@ -273,6 +273,21 @@ Used by:
 - test_PPGetMainFilterAndColourOffsets.py  
 - test_PPJoinEphemeridesAndParameters.py  
 
+**testcolour_jumble.txt**  
+Example physical parameters file, whitespace-separated. Different order of ObjIDs from testorb.des.
+Used by:  
+- test_CombinedDataReader.py
+
+**testcolour_jumble.txt**  
+Example physical parameters file, whitespace-separated. One missing ObjID compared to testorb.des.
+Used by:  
+- test_CombinedDataReader.py
+
+**testcolour_wrong.txt**  
+Example physical parameters file, whitespace-separated. Different ObjIDs from testorb.des.
+Used by:  
+- test_CombinedDataReader.py
+
 **testcomet.txt**  
 Example cometary parameters file.  
 Used by:  
