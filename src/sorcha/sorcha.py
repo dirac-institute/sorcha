@@ -155,6 +155,9 @@ def runLSSTSimulation(args, configs):
     if configs["comet_activity"] is not None or configs["lc_model"] is not None:
         reader.add_aux_data_reader(CSVDataReader(args.complex_parameters, configs["aux_format"]))
 
+    # Check to make sure the ObjIDs in all of the aux_data_readers are a match.
+    reader.check_aux_object_ids()
+
     # In case of a large input file, the data is read in chunks. The
     # "sizeSerialChunk" parameter in the config file assigns the chunk.
     startChunk = 0

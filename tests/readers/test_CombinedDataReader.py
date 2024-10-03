@@ -175,3 +175,23 @@ def test_CombinedDataReader_fail():
             OIFDataReader(get_test_filepath("oiftestoutput.txt"), inputformat="whitespace")
         )
     assert e1.type == SystemExit
+
+
+def test_CombinedDataReader_IDcheck():
+    reader = CombinedDataReader(ephem_primary=False, verbose=True)
+
+    with pytest.raises(SystemExit) as e0:
+        reader.check_aux_object_ids()
+    assert e0.value.code == "ERROR: Only one or zero aux_data_readers set."
+
+    reader.add_aux_data_reader(OrbitAuxReader(get_test_filepath("testorb.des"), "whitespace"))
+
+    with pytest.raises(SystemExit) as e1:
+        reader.check_aux_object_ids()
+    assert e1.value.code == "ERROR: Only one or zero aux_data_readers set."
+
+    reader.add_aux_data_reader(CSVDataReader(get_test_filepath("testcolour_wrong.txt"), "whitespace"))
+
+    with pytest.raises(SystemExit) as e2:
+        reader.check_aux_object_ids()
+    assert e2.type == SystemExit  # can't check the error message, it's different based on aux filepaths
