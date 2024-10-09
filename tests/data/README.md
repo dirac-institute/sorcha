@@ -340,3 +340,8 @@ Used by:
 Test configuration file used in the validation end-to-end test.  
 Used by:  
 - test_demo_end2end.py
+
+**test_input_minidifi_observations.csv**
+Test input observations before being ran through miniDifi linking filter.
+Used by:
+- test_PPLinkingFilter.py
