@@ -317,6 +317,26 @@ def test_PPLinkingFilter():
 
     return
 
+    # check that the correct linking window has been applied 
+    inputdf = pd.read_csv(get_test_filepath('./test_input_minidifi_observations.csv'))
+
+    detection_efficiency = 0.95
+    np.random.seed(42)
+
+    try:
+        linked_observations = PPLinkingFilter(
+            inputdf,
+            detection_efficiency,
+            min_observations,
+            min_tracklets,
+            min_tracklet_window,
+            min_angular_separation,
+            max_time_separation,
+        )
+    except ValueError:
+        assert False
+    else:
+        assert len(linked_observations) != 0
 
 def test_PPLinkingFilter_nodrop():
     from sorcha.modules.PPLinkingFilter import PPLinkingFilter
