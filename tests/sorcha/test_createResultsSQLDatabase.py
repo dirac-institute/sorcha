@@ -11,11 +11,11 @@ class args:
     def __init__(self, tmp_path):
         temp_path = get_test_filepath("sql_results")
 
-        args.filename = os.path.join(tmp_path, "test_res_database.db")
+        args.output = os.path.join(tmp_path, "test_res_database.db")
         args.inputs = temp_path
-        args.outputs = temp_path
+        args.results = temp_path
         args.stem = "sqlresults"
-        args.comet = False
+        args.complex = False
 
 
 def test_get_column_names():

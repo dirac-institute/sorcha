@@ -2,8 +2,8 @@
 # (physical parameters, orbits, cometary info, etc) into one SQL database with
 # tables SSPP_results, physical_parameters, orbits, cometary_parameters (if used)
 
-# The code assumes that your physical/cometary parameters and orbits files are
-# in the same folder and begin with 'params', 'comet' and 'orbits' respectively.
+# The code assumes that your physical/complex physical parameters and orbits files are
+# in the same folder and begin with 'params', 'complex' and 'orbits' respectively.
 # It also assumes that they are whitespace-separated. Feel free to adapt for your
 # own use-case :)
 
@@ -96,7 +96,7 @@ def create_inputs_table(cnx_out, input_path, table_type):
         Filepath of directory containing input files.
 
     table_type : string
-        Type of file. Should be "orbits"/"params"/"comet".
+        Type of file. Should be "orbits"/"params"/"complex".
 
     Returns
     -----------
@@ -139,20 +139,20 @@ def create_results_database(args):
 
     """
 
-    cnx_out = sqlite3.connect(args.filename)
+    cnx_out = sqlite3.connect(args.output)
 
     if args.stem:
         stemname = args.stem
     else:
         stemname = ""
 
-    create_results_table(cnx_out, args.filename, args.outputs, stemname)
+    create_results_table(cnx_out, args.inputs, args.results, stemname)
 
     create_inputs_table(cnx_out, args.inputs, "params")
     create_inputs_table(cnx_out, args.inputs, "orbits")
 
-    if args.comet:
-        create_inputs_table(cnx_out, "comet")
+    if args.complex:
+        create_inputs_table(cnx_out, args.inputs, "complex")
 
 
 def get_column_names(filename, table_name="sorcha_results"):

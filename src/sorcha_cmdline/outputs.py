@@ -19,12 +19,12 @@ def cmd_outputs_create_sqlite(args):  # pragma: no cover
     from sorcha.modules.PPConfigParser import PPFindDirectoryOrExit
     import os
 
-    args.filename = os.path.abspath(args.filename)
+    args.output = os.path.abspath(args.output)
     args.inputs = os.path.abspath(args.inputs)
-    args.outputs = os.path.abspath(args.outputs)
+    args.results = os.path.abspath(args.results)
 
     _ = PPFindDirectoryOrExit(args.inputs, "-i, --inputs")
-    _ = PPFindDirectoryOrExit(args.outputs, "-o, --outputs")
+    _ = PPFindDirectoryOrExit(args.results, "-r, --results")
 
     return create_results_database(args)
 
@@ -69,7 +69,7 @@ def cmd_outputs_check_logs(args):  # pragma: no cover
 
 def main():
     # Create the top-level parser
-    parser = argparse.ArgumentParser(prog="sorcha-config", description="Sorcha outputs manipulation utility")
+    parser = argparse.ArgumentParser(prog="sorcha-outputs", description="Sorcha outputs manipulation utility")
     subparsers = parser.add_subparsers(
         title="commands", description="Available commands", help="Command to execute", dest="command"
     )
@@ -81,38 +81,38 @@ def main():
     outputs_create_sqlite_parser.set_defaults(func=cmd_outputs_create_sqlite)
 
     outputs_create_sqlite_parser.add_argument(
-        "-f",
-        "--filename",
+        "-o",
+        "--output",
         type=str,
         required=True,
-        help="Filepath and name where you want to save the database.",
+        help="Filepath and name where you want to save the created SQLite database.",
     )
     outputs_create_sqlite_parser.add_argument(
         "-i",
         "--inputs",
         type=str,
         required=True,
-        help="Path location of input text files (orbits, colours and config files).",
+        help="Path location of Sorcha input text files (orbits, physical parameters and config files).",
     )
     outputs_create_sqlite_parser.add_argument(
-        "-o",
-        "--outputs",
+        "-r",
+        "--results",
         type=str,
         required=True,
-        help="Path location of Sorcha output files/folders. Code will search subdirectories recursively.",
+        help="Path location of Sorcha results files/folders. Code will search subdirectories recursively.",
     )
     outputs_create_sqlite_parser.add_argument(
         "-s",
         "--stem",
         type=str,
-        help="Stem filename of outputs. Used to find output filenames. Use if you want to specify.",
+        help="Stem filename of Sorcha results files. Used to find Sorcha output filenames. Use if you want to specify.",
     )
     outputs_create_sqlite_parser.add_argument(
         "-c",
-        "--comet",
+        "--complex",
         default=False,
         action="store_true",
-        help="Toggle whether to look for cometary activity files. Default False.",
+        help="Toggle whether to look for complex physical parameters files. Default False.",
     )
 
     # Add the `check-logs` subcommand
