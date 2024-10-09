@@ -16,9 +16,9 @@ def test_find_and_check_all_log_files():
 
     good_log, last_lines = check_all_logs(test_log)
 
-    assert good_log == [False, True]
-    assert last_lines[1] == " "
-    assert len(last_lines[0]) == 171
+    assert good_log == [True, False]
+    assert last_lines[0] == " "
+    assert len(last_lines[1]) == 171
 
 
 def test_check_output_logs(tmp_path):

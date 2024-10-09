@@ -24,7 +24,7 @@ def find_all_log_files(filepath):
         for filename in [f for f in filenames if f.endswith("sorcha.log")]:
             log_files.append(os.path.join(dirpath, filename))
 
-    return log_files
+    return sorted(log_files)
 
 
 def check_all_logs(log_files):
