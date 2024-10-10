@@ -748,6 +748,16 @@ def PPConfigFileParser(configfile, survey_name):
         )
 
     try:
+        config_dict["ar_use_integrate"] = config.getboolean("EXPERT", "ar_use_integrate", fallback=False)
+    except ValueError:
+        pplogger.error(
+            "ERROR: could not parse value for ar_use_integrate as a boolean. Check formatting and try again."
+        )
+        sys.exit(
+            "ERROR: could not parse value for ar_use_integrate as a boolean. Check formatting and try again."
+        )
+
+    try:
         config_dict["trailing_losses_on"] = config.getboolean("EXPERT", "trailing_losses_on", fallback=True)
     except ValueError:
         pplogger.error(
@@ -856,6 +866,11 @@ def PPPrintConfigsToLog(configs, cmd_args):
         "The apparent brightness is calculated using the following phase function model: "
         + configs["phase_function"]
     )
+
+    if configs["ar_use_integrate"]:
+        pplogger.info("ASSIST+REBOUND integration is ON. Integrate or interpolate will NOT be used.")
+    else:
+        pplogger.info("ASSIST+REBOUND integration is OFF. Integrate or interpolate will be used.")
 
     if configs["trailing_losses_on"]:
         pplogger.info("Computation of trailing losses is switched ON.")
