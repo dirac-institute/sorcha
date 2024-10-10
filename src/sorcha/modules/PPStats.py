@@ -44,6 +44,9 @@ def stats(observations, statsfilename, outpath, configs):
         linked = group_by["object_linked"].agg("all").to_frame("object_linked")
         date_linked = group_by["date_linked_MJD"].agg("first").to_frame("date_linked_MJD")
         joined_stats = num_obs.join([mag, phase_deg, linked, date_linked])
+    elif configs["SSP_linking_on"]:
+        date_linked = group_by["date_linked_MJD"].agg("first").to_frame("date_linked_MJD")
+        joined_stats = num_obs.join([mag, phase_deg, date_linked])
     else:
         joined_stats = num_obs.join([mag, phase_deg])
 
