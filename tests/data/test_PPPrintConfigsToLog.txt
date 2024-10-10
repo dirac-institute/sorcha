@@ -14,6 +14,7 @@ sorcha.modules.PPConfigParser INFO     The main filter in which H is defined is 
 sorcha.modules.PPConfigParser INFO     The filters included in the post-processing results are r g i z 
 sorcha.modules.PPConfigParser INFO     Thus, the colour indices included in the simulation are g-r i-r z-r 
 sorcha.modules.PPConfigParser INFO     The apparent brightness is calculated using the following phase function model: HG 
+sorcha.modules.PPConfigParser INFO     ASSIST+REBOUND integration is OFF. Integrate or interpolate will be used. 
 sorcha.modules.PPConfigParser INFO     Computation of trailing losses is switched ON. 
 sorcha.modules.PPConfigParser INFO     Randomization of position and magnitude around uncertainties is switched ON. 
 sorcha.modules.PPConfigParser INFO     Vignetting is switched ON. 

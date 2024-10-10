@@ -60,8 +60,17 @@ def integrate_light_time(sim, ex, t, r_obs, lt0=0, iter=3, speed_of_light=SPEED_
         Object velocity at t-lt
     """
     lt = lt0
+    global USE_INTEGRATE
+    try:
+        USE_INTEGRATE
+    except NameError:
+        USE_INTEGRATE = False
+
     for i in range(iter):
-        ex.integrate_or_interpolate(t - lt)
+        if USE_INTEGRATE:
+            sim.integrate(t - lt)
+        else:
+            ex.integrate_or_interpolate(t - lt)
         target = np.array(sim.particles[0].xyz)
         vtarget = np.array(sim.particles[0].vxyz)
         rho = target - r_obs
