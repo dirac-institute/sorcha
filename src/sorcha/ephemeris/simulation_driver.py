@@ -112,7 +112,7 @@ def create_ephemeris(orbits_df, pointings_df, args, sconfigs):
     n_sub_intervals = 101  # configs["n_sub_intervals"]
 
     if configs["ar_use_integrate"]:
-        #set global variable to use integrate method instead of integrate_or_interpolate
+        # set global variable to use integrate method instead of integrate_or_interpolate
         global USE_INTEGRATE
         USE_INTEGRATE = True
 
