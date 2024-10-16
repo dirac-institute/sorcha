@@ -8,7 +8,6 @@ sorcha
 scipy
 sbpy
 pandas
-pysqlite3 
 matplotlib
 sphinx
 sphinx-rtd-theme
