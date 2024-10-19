@@ -19,7 +19,7 @@ rows for the current objects.
 import logging
 import pandas as pd
 import sys
-import numpy as np
+import collections
 
 
 class CombinedDataReader:
@@ -94,9 +94,8 @@ class CombinedDataReader:
                         self.aux_data_readers[0].filename, self.aux_data_readers[i].filename
                     )
                 )
-            elif not all(
-                np.sort(primary_ids["ObjID"].values)
-                == np.sort(self.aux_data_readers[i].obj_id_table["ObjID"].values)
+            elif collections.Counter(primary_ids["ObjID"].values) != collections.Counter(
+                self.aux_data_readers[i].obj_id_table["ObjID"].values
             ):
                 pplogger.error(
                     "ERROR: mismatched ObjIDs in auxiliary input files. IDs in {} do not match {}.".format(
