@@ -20,9 +20,6 @@ from sorcha.ephemeris.pixel_dict import PixelDict
 from sorcha.modules.PPOutput import PPOutWriteCSV, PPOutWriteSqlite3, PPOutWriteHDF5
 
 
-out_csv_path = get_data_out_filepath("ephemeris_output.csv")
-
-
 @dataclass
 class EphemerisGeometryParameters:
     """Data class for holding parameters related to ephemeris geometry"""
