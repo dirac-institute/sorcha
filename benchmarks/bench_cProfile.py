@@ -21,7 +21,7 @@ if __name__ == "__main__":  # pragma: no cover
     # get path to Sorcha top-level folder
     path_to_file = os.path.abspath(__file__)
     path_to_sorcha = str(Path(path_to_file).parents[1])
-    
+
     print(path_to_sorcha)
 
     cmd_args_dict = {
@@ -34,7 +34,7 @@ if __name__ == "__main__":  # pragma: no cover
         "outfilestem": os.path.join(path_to_sorcha, f"out_{args.object_type}"),
         "verbose": False,
         "surveyname": "rubin_sim",
-        "stats": None
+        "stats": None,
     }
 
     args_obj = sorchaArguments(cmd_args_dict)

@@ -44,5 +44,5 @@ autoapi_dirs = ["../src"]
 autoapi_ignore = ["*/__main__.py", "*/_version.py"]
 autoapi_add_toc_tree_entry = False
 autoapi_member_order = "bysource"
-smartquotes = False 
+smartquotes = False
 html_theme = "sphinx_rtd_theme"
