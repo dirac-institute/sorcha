@@ -47,7 +47,7 @@ def haversine_np(lon1, lat1, lon2, lat2):
 @njit(cache=True)
 def hasTracklet(mjd, ra, dec, maxdt_minutes, minlen_arcsec):
     """
-    Given a set of observations in one night, calculate it has 
+    Given a set of observations in one night, calculate it has
     at least onedetectable tracklet.
 
     Parameters
@@ -97,8 +97,8 @@ def hasTracklet(mjd, ra, dec, maxdt_minutes, minlen_arcsec):
 
 @njit(cache=True)
 def trackletsInNights(night, mjd, ra, dec, maxdt_minutes, minlen_arcsec):
-    '''
-    Calculate, for a given set of observations sorted by observation time, 
+    """
+    Calculate, for a given set of observations sorted by observation time,
     whether or not it has at least one discoverable tracklet in each night.
 
     Parameters
@@ -129,7 +129,7 @@ def trackletsInNights(night, mjd, ra, dec, maxdt_minutes, minlen_arcsec):
     hasTrk : boolean or array of booleans
         Array denoting if each night has a discoverable tracklet
 
-    '''
+    """
 
     nights = np.unique(night)
     hasTrk = np.zeros(len(nights), dtype="bool")
@@ -147,7 +147,7 @@ def trackletsInNights(night, mjd, ra, dec, maxdt_minutes, minlen_arcsec):
 
 @njit(cache=True)
 def discoveryOpportunities(nights, nightHasTracklets, window, nlink, p, rng):
-    '''
+    """
     Find all nights where a trailing window of <window> nights (including the
     current night) has at least <nlink> tracklets to constitute a discovery.
 
@@ -161,7 +161,7 @@ def discoveryOpportunities(nights, nightHasTracklets, window, nlink, p, rng):
 
     window : float
         Number of tracklets required with <= this window to complete a detection
-    
+
     nlink : float
         Number of tracklets required to form detection
 
@@ -179,7 +179,7 @@ def discoveryOpportunities(nights, nightHasTracklets, window, nlink, p, rng):
     disc : list of floats
         List of MJD dates where the object is discoverable
 
-    '''
+    """
 
     if nlink > 1:
         # algorithm: create an array of length [0 ... num_nights],
@@ -233,7 +233,7 @@ def discoveryOpportunities(nights, nightHasTracklets, window, nlink, p, rng):
 
 
 def linkObject(obsv, seed, maxdt_minutes, minlen_arcsec, window, nlink, p, night_start_utc_days):
-    '''
+    """
     For a set of observations of a single object, calculate if there are any tracklets,
     if there are enough tracklets to form a discovery window, and then report back all of
     those successful discoveries.
@@ -281,11 +281,11 @@ def linkObject(obsv, seed, maxdt_minutes, minlen_arcsec, window, nlink, p, night
 
     discoverySubmissionDate : float
         The night at which the discovery is first submitted
-    
+
     discoveryChances : float
         The number of chances for discovery of the object
 
-    '''
+    """
     discoveryObservationId = 0xFFFF_FFFF_FFFF_FFFF
     discoverySubmissionDate = np.nan
     discoveryChances = 0
@@ -344,10 +344,10 @@ def linkObservations(
     dec="decl",
     **config,
 ):
-    '''
+    """
     Ingesting a set of observations for one or more objects, determine if each object
     would be discovered by the SSP pipeline based on tracklet forming and linking.
-    
+
     Parameters
     -----------
     obsv : numpy array
@@ -397,7 +397,7 @@ def linkObservations(
             discoveryChances : float
                 The number of chances for discovery of the object
 
-    '''
+    """
 
     # create the "group by" splits for individual objects
     # See https://stackoverflow.com/a/43094244 for inspiration for this code
