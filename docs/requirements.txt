@@ -19,3 +19,4 @@ jupytext
 jupyter
 sorcha-addons
 importlib_resources
+rubin_sim
