@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 import numpy as np
 from numba import njit
 
@@ -11,8 +9,7 @@ def haversine_np(lon1, lat1, lon2, lat2):
     on the earth (specified in decimal degrees)
 
     Parameters
-    -----------------
-
+    -----------
     lon1 : float or array of floats
         longitude of point 1
 
@@ -26,12 +23,12 @@ def haversine_np(lon1, lat1, lon2, lat2):
         latitude of point 1
 
     Returns
-    ----------
+    --------
         : float or array of floats
         Great distance between the two points [Units: Decimal degrees]
 
     Notes
-    -------
+    ------
     All args must be of equal length.
 
     Because SkyCoord is slow AF.
@@ -47,34 +44,36 @@ def haversine_np(lon1, lat1, lon2, lat2):
     return np.degrees(c)
 
 
-# Construct a list of nights that have detectable tracklets
 @njit(cache=True)
 def hasTracklet(mjd, ra, dec, maxdt_minutes, minlen_arcsec):
     """
-     Given a set of observations in one night, calculate it has at least one
-     detectable tracklet.
+    Given a set of observations in one night, calculate it has 
+    at least onedetectable tracklet.
 
     Parameters
-    -------------
-    mjd : numpy array of floats
-        Modified Julian date time [Units: days]
+    -----------
+    mjd : float or array of floats
+        Modified Julian date time
 
-     ra : numpy array of floats
-         Object's RA at given mjd  [Units: degrees]
+    ra : float or array of floats
+        Object's RA at given mjd  [Units: degrees]
 
-     dec : numpy array of floats
-             Object's dec at given mjd  [Units: degrees]
+    dec : float or array of floats
+        Object's dec at given mjd  [Units: degrees]
 
-     maxdt_mintes: float
+    maxdt_minutes: float
+        Maximum allowable time between observations [Units: minutes]
 
-     minlen_arcsec : float
+    minlen_arcsec : float
+        Minimum allowable distance separation between observations [Units: arcsec]
 
-     Returns
-     ---------
-     : boolean
-         True if tracklet can be made else False
+    Returns
+    --------
+        : boolean
+        True if tracklet can be made else False
+
     """
-    ## a tracklet must be longer than some minimum separation (1arcsec)
+    ## a tracklet must be longer than some minimum separation (0.5arcsec)
     ## and shorter than some maximum time (90 minutes). We find
     ## tracklets by taking all observations in a night and computing
     ## all of theirs pairwise distances, then selecting on that.
@@ -98,13 +97,39 @@ def hasTracklet(mjd, ra, dec, maxdt_minutes, minlen_arcsec):
 
 @njit(cache=True)
 def trackletsInNights(night, mjd, ra, dec, maxdt_minutes, minlen_arcsec):
-    # given a table of observations SORTED BY OBSERVATION TIME (!)
-    # of a single object, compute for each night whether it has
-    # at least one discoverable tracklet.
-    #
-    # Returns: (nights, hasTrk), two ndarrays where the first is a
-    #          list of unique nights, and hasTrk is a bool array
-    #          denoting if it has or has not a discoverable tracklet.
+    '''
+    Calculate, for a given set of observations sorted by observation time, 
+    whether or not it has at least one discoverable tracklet in each night.
+
+    Parameters
+    -----------
+    night : float or array of floats
+        Array of the integer night corresponding to each observation
+
+    mjd : float or array of floats
+        Modified Julian date time
+
+    ra : float or array of floats
+        Object's RA at given mjd  [Units: degrees]
+
+    dec : float or array of floats
+        Object's dec at given mjd  [Units: degrees]
+
+    maxdt_minutes: float
+        Maximum allowable time between observations [Units: minutes]
+
+    minlen_arcsec : float
+        Minimum allowable distance separation between observations [Units: arcsec]
+
+    Returns
+    --------
+    nights : float or array of floats
+        Numpy array of the unique nights in the set of observations
+
+    hasTrk : boolean or array of booleans
+        Array denoting if each night has a discoverable tracklet
+
+    '''
 
     nights = np.unique(night)
     hasTrk = np.zeros(len(nights), dtype="bool")
@@ -122,10 +147,41 @@ def trackletsInNights(night, mjd, ra, dec, maxdt_minutes, minlen_arcsec):
 
 @njit(cache=True)
 def discoveryOpportunities(nights, nightHasTracklets, window, nlink, p, rng):
+    '''
+    Find all nights where a trailing window of <window> nights (including the
+    current night) has at least <nlink> tracklets to constitute a discovery.
+
+    Parameters
+    -----------
+    nights : float or array of floats
+        Array of the integer night corresponding to each observation
+
+    nightHasTracklets : list of booleans
+        List of nights that have tracklets within them
+
+    window : float
+        Number of tracklets required with <= this window to complete a detection
+    
+    nlink : float
+        Number of tracklets required to form detection
+
+    p : float
+        SSP detection efficiency, or what fraction of objects are successfuly linked
+
+    rng : numpy RNG generator object
+        PGC64 generator object to determine which objects to drop
+
+    Returns
+    --------
+    discIdx : float
+        The index of where in the observation array the object is reported as discovered
+
+    disc : list of floats
+        List of MJD dates where the object is discoverable
+
+    '''
+
     if nlink > 1:
-        # Find all nights where a trailing window of <window> nights
-        # (including the current night) has at least <nlink> tracklets.
-        #
         # algorithm: create an array of length [0 ... num_nights],
         #    representing the nights where there are tracklets.
         #    populate it with the tracklets (1 for each night where)
@@ -173,12 +229,63 @@ def discoveryOpportunities(nights, nightHasTracklets, window, nlink, p, rng):
     discN = (rng.uniform(size=len(disc)) < p).nonzero()[0]
     discIdx = discN[0] if len(discN) else -1
 
-    # returns: the list of distinct discovery opportunities, and the
-    # index of the discovery opportunity where the object was found.
     return discIdx, disc
 
 
 def linkObject(obsv, seed, maxdt_minutes, minlen_arcsec, window, nlink, p, night_start_utc_days):
+    '''
+    For a set of observations of a single object, calculate if there are any tracklets,
+    if there are enough tracklets to form a discovery window, and then report back all of
+    those successful discoveries.
+
+    Parameters
+    -----------
+    obsv : numpy array
+        Array of observations for one object, of the format:
+        ssObjectId : str
+            Unique ID for the Solar System object
+        diaSourceId : float
+            Unique ID for the observation
+        midPointTai : float
+            Time for the observation midpoint (MJD)
+        ra : float
+            RA of the object (J2000)
+        decl : float
+            Declination of the object (J2000)
+
+    seed : float
+        Initial seed per object to keep observations deterministic for multithreading
+
+    maxdt_minutes : float
+        Maximum allowable time between observations [Units: minutes]
+
+    minlen_arcsec : float
+        Minimum allowable distance separation between observations [Units: arcsec]
+
+    window : float
+        Number of tracklets required with <= this window to complete a detection
+
+    nlink : float
+        Number of tracklets required to form detection
+
+    p : float
+        SSP detection efficiency, or what fraction of objects are successfuly linked
+
+    night_start_utc_days : float
+        The UTC time of local noon at the observatory
+
+    Returns
+    --------
+    discoveryObservationId : float
+        The ID of the observation that triggered the successful linking
+
+    discoverySubmissionDate : float
+        The night at which the discovery is first submitted
+    
+    discoveryChances : float
+        The number of chances for discovery of the object
+
+    '''
     discoveryObservationId = 0xFFFF_FFFF_FFFF_FFFF
     discoverySubmissionDate = np.nan
     discoveryChances = 0
@@ -237,42 +344,66 @@ def linkObservations(
     dec="decl",
     **config,
 ):
-    # expects a ndarray of observations, with the following columns:
-    #
-    #  - objectId: a unique ID of the solar system object
-    #  - sourceId: a unique ID of the observation
-    #  - mjdTime:  time of the observation (midpoint), MJD, UTC
-    #  - ra:       R.A. of the observation (J2000)
-    #  - dec:      Declination of the observation (J2000)
-    #
-    # The names of these columns can be overridden with optional arguments
-    #
-    # output: an ndarray with one row per /detected/ object, containing the
-    #         following columns:
-    #
-    #  - ssObjectId:              the objectId of this object
-    #  - discoveryObservationId:  the sourceId of the observation that triggered a succesful linkage
-    #  - discoverySubmissionDate: the submission date of the
-    #  - discoveryChances:        the number of discovery chances for this objects
-    #
+    '''
+    Ingesting a set of observations for one or more objects, determine if each object
+    would be discovered by the SSP pipeline based on tracklet forming and linking.
+    
+    Parameters
+    -----------
+    obsv : numpy array
+        Array of observations for each object, of the format:
+        ssObjectId : str
+            Unique ID for the Solar System object
+        diaSourceId : float
+            Unique ID for the observation
+        midPointTai : float
+            Time for the observation midpoint (MJD)
+        ra : float
+            RA of the object (J2000)
+        decl : float
+            Declination of the object (J2000)
 
-    # update the default configuration
-    _cfg, config = config, default_config.copy()
-    config.update(_cfg)
+    seed : float
+        Initial seed per object to keep observations deterministic for multithreading
 
-    # group-by
-    import time
+    objectId : string
+        Column name for object ID's in observations dataframe
 
-    start = time.perf_counter()
+    sourceId : string
+        Column name for observation ID's in observations dataframe
+
+    mjdTime : string
+        Column name for MJD's in observations dataframe
+
+    ra : string
+        Column name for object RA's in observations dataframe
+
+    dec : string
+        Column name for object Dec's in observations dataframe
+
+    **config
+        Dictionary containing configuration file variables
+
+    Returns
+    --------
+    obj : numpy array
+        Array with one row per detected object, of the format:
+            ssObjectId : str
+                Unique ID for the Solar System object
+            discoveryObservationId : float
+                Unique ID for the observation
+            discoverySubmissionDate : float
+                The night at which the discovery is first submitted
+            discoveryChances : float
+                The number of chances for discovery of the object
+
+    '''
+
     # create the "group by" splits for individual objects
     # See https://stackoverflow.com/a/43094244 for inspiration for this code
     i = np.argsort(obsv[objectId], kind="stable")
     ssObjects, idx = np.unique(obsv[objectId][i], return_index=True)
     splits = np.split(i, idx[1:])
-    ##    print(f"{len(ssObjects)=}")
-
-    end = time.perf_counter()
-    ##    print(f"Group-by time: {end-start:.3f} seconds")
 
     # "link"
     # pre-initialize output columns
@@ -297,83 +428,4 @@ def linkObservations(
 
         obj[k] = (ssObjects[k], *linkObject(thisObsv, seed, **config))
 
-    ##    print(obj["discoveryObservationId"])
-
-    end = time.perf_counter()
-    ##    print(f"Total linking time: {end-start:.3f} seconds")
-
     return obj
-
-
-###########################################################
-
-default_config = dict(
-    night_start_utc_days=17.0 / 24.0,  # this corresponds to 5pm UTC, or 2pm Chile time.
-    maxdt_minutes=90,
-    minlen_arcsec=1.0,
-    window=14,
-    nlink=3,
-    p=0.95,
-)
-
-if __name__ == "__main__":
-    import pandas as pd
-
-    def load_test_dataset(fn="test_obsv.csv", ncopies=1):
-        df = pd.read_csv(fn)
-
-        # replicate
-        dfs = []
-        for i in range(ncopies):
-            df2 = df.copy()
-            if i != 0:
-                df2["_name"] += f"_{i}"
-            dfs += [df2]
-        df = pd.concat(dfs)
-        return df
-
-    ncopies = 100
-    df = load_test_dataset(ncopies=ncopies)
-
-    # convert to (an efficiently packed) ndarray that linkObservations expects
-    print(df[-10:])
-    nameLen = df["_name"].str.len().max()
-    obsv = np.asarray(
-        df.to_records(
-            index=False,
-            column_dtypes=dict(_name=f"S{nameLen}", diaSourceId="u8", midPointTai="f8", ra="f8", decl="f8"),
-        )
-    )
-    del df
-    print(f"{obsv.dtype=}\n{len(obsv)=}")
-
-    # go!
-    obj = linkObservations(obsv, seed=0, objectId="_name")
-
-    # print some nice results
-    print("Found:", (~np.isnan(obj["discoverySubmissionDate"])).sum())
-    objsample = pd.DataFrame(obj[::ncopies][:10])
-    print(objsample)
-
-    # filter out the observations of objects that weren't found
-    import time
-
-    start = time.perf_counter()
-    found = obj["ssObjectId"][~np.isnan(obj["discoverySubmissionDate"])]
-    obsv_found = obsv[np.isin(obsv["_name"], found)]
-    end = time.perf_counter()
-    print(f"Observation filtering time: {end-start:.3f} seconds")
-    print(
-        pd.DataFrame(obsv_found[np.isin(obsv_found["_name"], objsample["ssObjectId"])])
-        .groupby("_name")
-        .count()
-    )
-
-    # basic sanity checks
-    obsv_missed = obsv[~np.isin(obsv["_name"], found)]
-    print(f"{len(obsv_found)=}")
-    print(f"{len(obsv_missed)=}")
-    assert len(obsv_found) + len(obsv_missed) == len(obsv)
-
-    # done
-    print("done.")
