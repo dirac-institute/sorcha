@@ -6,6 +6,7 @@ Demo Notebooks
 
     LSST Camera Footprint and Various Other Sorcha Related Fields-of-View <notebooks/demo_PlotLSSTCamCornersFOVs>
     Apparent Magnitude Validation <notebooks/demo_ApparentMagnitudeValidation>
+    Calculate LSST Colours <notebooks/demo_CalculateLSSTColours>
     Circle Footprint Filter <notebooks/demo_CircleFootprint>
     LSST Camera Footprint Filter <notebooks/demo_FootprintFilter>
     Coordinate Transformation Example <notebooks/demo_CoordinateTransformations.ipynb>
