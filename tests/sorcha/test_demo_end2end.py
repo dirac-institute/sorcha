@@ -76,9 +76,7 @@ def test_demo_verification():
         for i in v:
             v[i].sort("fieldMJD_TAI")
             t[i].sort("observationStartMJD_TAI")
-            for j, k in zip(
-                ["RA_deg", "Dec_deg", "trailedSourceMag"], ["RA_INTERP", "DEC_INTERP", "mag"]
-            ):
+            for j, k in zip(["RA_deg", "Dec_deg", "trailedSourceMag"], ["RA_INTERP", "DEC_INTERP", "mag"]):
                 m = np.abs(np.mean(v[i][j] - t[i][k]))
                 if k == "mag":
                     assert np.isclose(np.max(m), 0, atol=1e-3)  # 1 mmag - should be much better than that
