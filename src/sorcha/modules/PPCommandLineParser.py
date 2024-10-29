@@ -69,8 +69,8 @@ def PPCommandLineParser(args):
             args.cp, "-cp, --complex_physical_parameters"
         )
 
-    # if the user didn't provide oifoutput on the CLI, this will default to None
-    cmd_args_dict["oifoutput"] = args.er
+    # if the user didn't provide an ephemeris input file on the CLI, this will default to None
+    cmd_args_dict["input_ephemeris_file"] = args.er
 
     # if the user didn't provide output_ephemeris_file on the CLI, this will default to None
     cmd_args_dict["output_ephemeris_file"] = args.ew

@@ -52,7 +52,7 @@ def calcDetectionProbability(mag, limmag, fillFactor=1.0, w=0.1):
 
 
 def PPDetectionProbability(
-    oif_df,
+    eph_df,
     trailing_losses=False,
     trailing_loss_name="dmagDetect",
     magnitude_name="PSFMag",
@@ -68,25 +68,25 @@ def PPDetectionProbability(
 
     Parameters
     -----------
-    oif_df : Pandas dataframe
+    eph_df : Pandas dataframe
         Dataframe of observations.
 
     trailing_losses : Boolean, optional
         Are trailing losses being applied?, Default = False
 
     trailing_loss_name : string, optional
-        oif_df column name for trailing losses, Default = dmagDetect
+        eph_df column name for trailing losses, Default = dmagDetect
 
     magnitude_name : string, optional
-        oif_df column name for observation limiting magnitude
+        eph_df column name for observation limiting magnitude
         Default = PSFMag
 
     limiting_magnitude_name : string, optional
-        oif_df column used for observation limiting magnitude.
+        eph_df column used for observation limiting magnitude.
         Default = fiveSigmaDepth_mag
 
     field ID : string, optional
-        oif_df column name for observation field_id
+        eph_df column name for observation field_id
         Default = FieldID
 
     fillFactor : float, optional
@@ -104,12 +104,12 @@ def PPDetectionProbability(
 
     if not trailing_losses:
         return calcDetectionProbability(
-            oif_df[magnitude_name], oif_df[limiting_magnitude_name], fillFactor, w
+            eph_df[magnitude_name], eph_df[limiting_magnitude_name], fillFactor, w
         )
     elif trailing_losses:
         return calcDetectionProbability(
-            oif_df[magnitude_name] + oif_df[trailing_loss_name],
-            oif_df[limiting_magnitude_name],
+            eph_df[magnitude_name] + eph_df[trailing_loss_name],
+            eph_df[limiting_magnitude_name],
             fillFactor,
             w,
         )

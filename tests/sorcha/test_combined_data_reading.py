@@ -5,7 +5,7 @@ from sorcha.modules.PPMatchPointingToObservations import PPMatchPointingToObserv
 from sorcha.modules.PPReadPointingDatabase import PPReadPointingDatabase
 from sorcha.readers.CombinedDataReader import CombinedDataReader
 from sorcha.readers.CSVReader import CSVDataReader
-from sorcha.readers.OIFReader import OIFDataReader
+from sorcha.readers.EphemerisReader import EphemerisDataReader
 from sorcha.readers.OrbitAuxReader import OrbitAuxReader
 from sorcha.utilities.dataUtilitiesForTests import get_test_filepath
 
@@ -14,7 +14,7 @@ def test_PPReadAllInput():
     cmd_args = {
         "paramsinput": get_test_filepath("PPReadAllInput_params.txt"),
         "orbinfile": get_test_filepath("PPReadAllInput_orbits.des"),
-        "oifoutput": get_test_filepath("PPReadAllInput_oif.txt"),
+        "input_ephemeris_file": get_test_filepath("PPReadAllInput_ephem.txt"),
         "configfile": get_test_filepath("test_PPConfig.ini"),
         "pointing_database": get_test_filepath("baseline_10klines_2.0.db"),
         "outpath": "./",
@@ -38,7 +38,7 @@ def test_PPReadAllInput():
     )
 
     reader = CombinedDataReader(verbose=True)
-    reader.add_ephem_reader(OIFDataReader(cmd_args["oifoutput"], configs["eph_format"]))
+    reader.add_ephem_reader(EphemerisDataReader(cmd_args["input_ephemeris_file"], configs["eph_format"]))
     reader.add_aux_data_reader(CSVDataReader(cmd_args["paramsinput"], configs["aux_format"]))
     reader.add_aux_data_reader(OrbitAuxReader(cmd_args["orbinfile"], configs["aux_format"]))
 

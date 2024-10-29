@@ -9,19 +9,19 @@ from sorcha.utilities.dataUtilitiesForTests import get_test_filepath
 
 
 @pytest.mark.parametrize("use_cache", [True, False])
-def test_CSVDataReader_oif(use_cache):
-    """Test that we can read in the OIF data from a CSV.
+def test_CSVDataReader_ephem(use_cache):
+    """Test that we can read in the ephemeris data from a CSV.
 
     This test does not perform any transformations, filtering, or validation of the data.
     It just loads it directly from a CSV.
     """
-    csv_reader = CSVDataReader(get_test_filepath("oiftestoutput.csv"), "csv", cache_table=use_cache)
+    csv_reader = CSVDataReader(get_test_filepath("ephemtestoutput.csv"), "csv", cache_table=use_cache)
     assert csv_reader.header_row == 0
-    assert csv_reader.get_reader_info() == "CSVDataReader:" + get_test_filepath("oiftestoutput.csv")
+    assert csv_reader.get_reader_info() == "CSVDataReader:" + get_test_filepath("ephemtestoutput.csv")
 
     # Read in all 9 rows.
-    oif_data = csv_reader.read_rows()
-    assert len(oif_data) == 9
+    ephem_data = csv_reader.read_rows()
+    assert len(ephem_data) == 9
 
     expected_first_row = np.array(
         [
@@ -50,7 +50,7 @@ def test_CSVDataReader_oif(use_cache):
         ],
         dtype="object",
     )
-    assert_equal(expected_first_row, oif_data.iloc[0].values)
+    assert_equal(expected_first_row, ephem_data.iloc[0].values)
 
     column_headings = np.array(
         [
@@ -79,23 +79,23 @@ def test_CSVDataReader_oif(use_cache):
         ],
         dtype=object,
     )
-    assert_equal(column_headings, oif_data.columns.values)
+    assert_equal(column_headings, ephem_data.columns.values)
 
     # Read in rows 3, 4, 5, 6 + the header
-    oif_data = csv_reader.read_rows(3, 4)
-    assert len(oif_data) == 4
-    assert_equal(column_headings, oif_data.columns.values)
-    assert_equal("S000021", oif_data.iloc[0].values[0])
+    ephem_data = csv_reader.read_rows(3, 4)
+    assert len(ephem_data) == 4
+    assert_equal(column_headings, ephem_data.columns.values)
+    assert_equal("S000021", ephem_data.iloc[0].values[0])
 
 
-def test_CSVDataReader_oif_header():
-    """Test that we can read in the OIF data from a CSV when the header is NOT at row 0."""
-    csv_reader = CSVDataReader(get_test_filepath("oiftestoutput_comment.csv"), "csv")
+def test_CSVDataReader_ephemeris_header():
+    """Test that we can read in the ephemeris data from a CSV when the header is NOT at row 0."""
+    csv_reader = CSVDataReader(get_test_filepath("ephemtestoutput_comment.csv"), "csv")
     assert csv_reader.header_row == 2
 
     # Read in all 9 rows.
-    oif_data = csv_reader.read_rows()
-    assert len(oif_data) == 9
+    ephem_data = csv_reader.read_rows()
+    assert len(ephem_data) == 9
 
     expected_first_row = np.array(
         [
@@ -124,7 +124,7 @@ def test_CSVDataReader_oif_header():
         ],
         dtype="object",
     )
-    assert_equal(expected_first_row, oif_data.iloc[0].values)
+    assert_equal(expected_first_row, ephem_data.iloc[0].values)
 
     column_headings = np.array(
         [
@@ -153,35 +153,35 @@ def test_CSVDataReader_oif_header():
         ],
         dtype=object,
     )
-    assert_equal(column_headings, oif_data.columns.values)
+    assert_equal(column_headings, ephem_data.columns.values)
 
     # Read in rows 3, 4, 5, 6 + the header
-    oif_data = csv_reader.read_rows(3, 4)
-    assert len(oif_data) == 4
-    assert_equal(column_headings, oif_data.columns.values)
-    assert_equal("S000021", oif_data.iloc[0].values[0])
+    ephem_data = csv_reader.read_rows(3, 4)
+    assert len(ephem_data) == 4
+    assert_equal(column_headings, ephem_data.columns.values)
+    assert_equal("S000021", ephem_data.iloc[0].values[0])
 
     # Everything still works if we manually provide the header line.
-    csv_reader2 = CSVDataReader(get_test_filepath("oiftestoutput_comment.csv"), "csv", header=2)
-    oif_data2 = csv_reader2.read_rows()
-    assert len(oif_data2) == 9
+    csv_reader2 = CSVDataReader(get_test_filepath("ephemtestoutput_comment.csv"), "csv", header=2)
+    ephem_data2 = csv_reader2.read_rows()
+    assert len(ephem_data2) == 9
 
     # Check that we fail if we provide the wrong header line number (skip the true header)
     with pytest.raises(SystemExit) as e1:
-        _ = CSVDataReader(get_test_filepath("oiftestoutput_comment.csv"), "csv", header=4)
+        _ = CSVDataReader(get_test_filepath("ephemtestoutput_comment.csv"), "csv", header=4)
     assert e1.type == SystemExit
 
     with pytest.raises(SystemExit) as e1:
-        _ = CSVDataReader(get_test_filepath("oiftestoutput_comment.csv"), "csv", header=1)
+        _ = CSVDataReader(get_test_filepath("ephemtestoutput_comment.csv"), "csv", header=1)
     assert e1.type == SystemExit
 
 
 @pytest.mark.parametrize("use_cache", [True, False])
-def test_CSVDataReader_specific_oif(use_cache):
-    """Test that we can read in the OIF data for specific object IDs only."""
-    csv_reader = CSVDataReader(get_test_filepath("oiftestoutput.csv"), "csv", cache_table=use_cache)
-    oif_data = csv_reader.read_objects(["S000015", "S000044"])
-    assert len(oif_data) == 5
+def test_CSVDataReader_specific_ephem(use_cache):
+    """Test that we can read in the ephemeris data for specific object IDs only."""
+    csv_reader = CSVDataReader(get_test_filepath("ephemtestoutput.csv"), "csv", cache_table=use_cache)
+    ephem_data = csv_reader.read_objects(["S000015", "S000044"])
+    assert len(ephem_data) == 5
 
     # Check that we correctly loaded the header information.
     column_headings = np.array(
@@ -211,7 +211,7 @@ def test_CSVDataReader_specific_oif(use_cache):
         ],
         dtype=object,
     )
-    assert_equal(column_headings, oif_data.columns.values)
+    assert_equal(column_headings, ephem_data.columns.values)
 
     # Check that the first row matches.
     expected_first_row = np.array(
@@ -241,18 +241,18 @@ def test_CSVDataReader_specific_oif(use_cache):
         ],
         dtype="object",
     )
-    assert_equal(expected_first_row, oif_data.iloc[0].values)
+    assert_equal(expected_first_row, ephem_data.iloc[0].values)
 
     # Check that the remaining rows have the correct IDs.
-    assert_equal(oif_data.iloc[1].values[0], "S000015")
-    assert_equal(oif_data.iloc[2].values[0], "S000044")
-    assert_equal(oif_data.iloc[3].values[0], "S000044")
-    assert_equal(oif_data.iloc[4].values[0], "S000044")
+    assert_equal(ephem_data.iloc[1].values[0], "S000015")
+    assert_equal(ephem_data.iloc[2].values[0], "S000044")
+    assert_equal(ephem_data.iloc[3].values[0], "S000044")
+    assert_equal(ephem_data.iloc[4].values[0], "S000044")
 
     # Read different object IDs.
-    oif_data2 = csv_reader.read_objects(["S000021"])
-    assert len(oif_data2) == 1
-    assert_equal(oif_data2.iloc[0].values[0], "S000021")
+    ephem_data2 = csv_reader.read_objects(["S000021"])
+    assert len(ephem_data2) == 1
+    assert_equal(ephem_data2.iloc[0].values[0], "S000021")
 
 
 def test_CSVDataReader_orbits():

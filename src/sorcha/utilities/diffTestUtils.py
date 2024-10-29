@@ -48,7 +48,7 @@ def compare_result_files(test_output, golden_output):
 BASELINE_ARGS = {
     "paramsinput": get_demo_filepath("sspp_testset_colours.txt"),
     "orbinfile": get_demo_filepath("sspp_testset_orbits.des"),
-    "oifoutput": get_demo_filepath("example_oif_output.txt"),
+    "input_ephemeris_file": get_demo_filepath("example_ephem_output.txt"),
     "configfile": get_test_filepath("PPConfig_goldens_test.ini"),
     "pointing_database": get_demo_filepath("baseline_v2.0_1yr.db"),
     "surveyname": "rubin_sim",
@@ -72,7 +72,7 @@ WITH_EPHEMERIS_ARGS = {
 CHUNKED_ARGS = {
     "paramsinput": get_demo_filepath("sspp_testset_colours.txt"),
     "orbinfile": get_demo_filepath("sspp_testset_orbits.des"),
-    "oifoutput": get_demo_filepath("example_oif_output.txt"),
+    "input_ephemeris_file": get_demo_filepath("example_ephem_output.txt"),
     "configfile": get_test_filepath("PPConfig_test_chunked.ini"),
     "pointing_database": get_demo_filepath("baseline_v2.0_1yr.db"),
     "surveyname": "rubin_sim",
@@ -84,7 +84,7 @@ CHUNKED_ARGS = {
 UNCHUNKED_ARGS = {
     "paramsinput": get_demo_filepath("sspp_testset_colours.txt"),
     "orbinfile": get_demo_filepath("sspp_testset_orbits.des"),
-    "oifoutput": get_demo_filepath("example_oif_output.txt"),
+    "input_ephemeris_file": get_demo_filepath("example_ephem_output.txt"),
     "configfile": get_test_filepath("PPConfig_test_unchunked.ini"),
     "pointing_database": get_demo_filepath("baseline_v2.0_1yr.db"),
     "surveyname": "rubin_sim",

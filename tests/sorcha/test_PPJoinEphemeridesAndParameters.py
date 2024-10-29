@@ -4,14 +4,14 @@ from numpy.testing import assert_equal
 
 def test_PPJoinEphemeridesAndParameters():
     from sorcha.modules.PPJoinEphemeridesAndParameters import PPJoinEphemeridesAndParameters
-    from sorcha.readers.OIFReader import read_full_oif_table
+    from sorcha.readers.EphemerisReader import read_full_ephemeris_table
     from sorcha.readers.CSVReader import CSVDataReader
 
-    oif_file = read_full_oif_table(get_test_filepath("oiftestoutput.txt"), "whitespace")
+    ephem_file = read_full_ephemeris_table(get_test_filepath("ephemtestoutput.txt"), "whitespace")
     param_reader = CSVDataReader(get_test_filepath("testcolour.txt"), "whitespace")
     params_file = param_reader.read_rows(0, 5)
 
-    joined_df = PPJoinEphemeridesAndParameters(oif_file, params_file)
+    joined_df = PPJoinEphemeridesAndParameters(ephem_file, params_file)
 
     first_row = [
         "S00000t",

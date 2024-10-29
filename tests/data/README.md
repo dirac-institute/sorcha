@@ -48,28 +48,28 @@ Example MPC-style observatory codes files.
 Used by:  
 - test_simulation_parsing.py
 
-**oiftestoutput_comment.csv**  
+**ephemtestoutput_comment.csv**  
 Example ephemeris output in .csv format when the columns are not the start of row 0 but later in the file after a header.  
 Used by:  
 - tests/readers/test_CSVReader.py
 
-**oiftestoutput.csv**  
+**ephemtestoutput.csv**  
 Example ephemeris output in .csv format.  
 Used by:  
 - test_CSVReader.py  
-- test_OIFReader.py
+- test_EphemerisReader.py
 
-**oiftestoutput.h5**  
+**ephemtestoutput.h5**  
 Example ephemeris output, in HDF5 format.  
 Used by:  
-- test_OIFReader.py  
+- test_EphemerisReader.py  
 - tests/readers/test_HDF5Reader.py
 
-**oiftestoutput.txt**  
+**ephemtestoutput.txt**  
 Example ephemeris output, whitespace-separated.  
 Used by:  
 - test_CombinedDataReader.py  
-- test_OIFReader.py  
+- test_EphemerisReader.py  
 - test_PPCommandLineParser.py  
 - test_PPCheckInputObjectIDs.py  
 - test_PPJoinEphemeridesAndOrbits.py  
@@ -155,8 +155,8 @@ Configuration file used to check chunked vs. unchunked Sorcha output.
 Used by:  
 - test_demo_chunking.py
 
-**PPReadAllInput_oif.txt**  
-Example OIF output, compatible with pointing database.  
+**PPReadAllInput_ephem.txt**  
+Example ephemeris output, compatible with pointing database.  
 Used by:  
 - test_combined_data_reading.py
 - test_CombinedDataReader.py
@@ -266,7 +266,7 @@ Used by:
 - test_createResultsSQLDatabase.py  
 - test_CSVReader.py  
 - test_HDF5Reader.py  
-- test_OIFReader.py  
+- test_EphemerisReader.py  
 - test_PPCheckInputObjectIDs.py  
 - test_PPCommandLineParser.py  
 - test_PPConfigParser.py  

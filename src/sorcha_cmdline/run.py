@@ -153,7 +153,7 @@ def execute(args):
     configs = PPConfigFileParser(cmd_args["configfile"], cmd_args["surveyname"])
     pplogger.info("Configuration file read.")
 
-    if configs["ephemerides_type"] == "external" and cmd_args["oifoutput"] is None:
+    if configs["ephemerides_type"] == "external" and cmd_args["input_ephemeris_file"] is None:
         pplogger.error("ERROR: A+R simulation not enabled and no ephemerides file provided")
         sys.exit("ERROR: A+R simulation not enabled and no ephemerides file provided")
 

@@ -7,8 +7,8 @@ from sorcha.readers.HDF5Reader import HDF5DataReader
 from sorcha.readers.ObjectDataReader import ObjectDataReader
 
 
-class OIFDataReader(ObjectDataReader):
-    """A class to read in ephemeris from a OIF file.
+class EphemerisDataReader(ObjectDataReader):
+    """A class to read in ephemeris from an external ephemeris file.
 
     Instead of subclassing the various readers (CSV, HDF5, etc.) individually, this class instantiates
     one of those classes in an internal ``reader`` attribute. As such all reading, validation, etc. is
@@ -42,10 +42,10 @@ class OIFDataReader(ObjectDataReader):
             self.reader = HDF5DataReader(filename, **kwargs)
         else:
             pplogger.error(
-                f"ERROR: OIFDataReader: unknown format for ephemeris simulation results ({inputformat})."
+                f"ERROR: EphemerisDataReader: unknown format for ephemeris simulation results ({inputformat})."
             )
             sys.exit(
-                f"ERROR: OIFDataReader: unknown format for ephemeris simulation results ({inputformat})."
+                f"ERROR: EphemerisDataReader: unknown format for ephemeris simulation results ({inputformat})."
             )
 
     def get_reader_info(self):
@@ -57,7 +57,7 @@ class OIFDataReader(ObjectDataReader):
         : string
             The reader information.
         """
-        return f"OIFDataReader|{self.reader.get_reader_info()}"
+        return f"EphemerisDataReader|{self.reader.get_reader_info()}"
 
     def _read_rows_internal(self, block_start=0, block_size=None, **kwargs):
         """Reads in a set number of rows from the input.
@@ -138,7 +138,7 @@ class OIFDataReader(ObjectDataReader):
         input_table = input_table.rename(columns=lambda x: x.strip())
         input_table = input_table.drop(["V", "V(H=0)"], axis=1, errors="ignore")
 
-        oif_cols = [
+        ephem_cols = [
             "ObjID",
             "FieldID",
             "fieldMJD_TAI",
@@ -165,23 +165,23 @@ class OIFDataReader(ObjectDataReader):
 
         optional_cols = ["fieldJD_TDB"]
 
-        if not set(input_table.columns.values) == set(oif_cols):
+        if not set(input_table.columns.values) == set(ephem_cols):
             for column in input_table.columns.values:
-                if column not in oif_cols and column not in optional_cols:
+                if column not in ephem_cols and column not in optional_cols:
                     pplogger = logging.getLogger(__name__)
                     pplogger.error(
-                        "ERROR: OIFDataReader: column headings do not match expected OIF column headings. Check format of file."
+                        "ERROR: EphemerisDataReader: column headings do not match expected ephemeris column headings. Check format of file."
                     )
                     sys.exit(
-                        "ERROR: OIFDataReader: column headings do not match expected OIF column headings. Check format of file."
+                        "ERROR: EphemerisDataReader: column headings do not match expected ephemeris column headings. Check format of file."
                     )
 
         # Return only the columns of interest.
-        return input_table[oif_cols]
+        return input_table[ephem_cols]
 
 
-def read_full_oif_table(filename, inputformat):
-    """A helper function for testing that reads and returns an entire OIF table.
+def read_full_ephemeris_table(filename, inputformat):
+    """A helper function for testing that reads and returns an entire ephemeris table.
 
     Parameters
     -----------
@@ -197,6 +197,6 @@ def read_full_oif_table(filename, inputformat):
         dataframe of the object data.
 
     """
-    reader = OIFDataReader(filename, inputformat)
+    reader = EphemerisDataReader(filename, inputformat)
     res_df = reader.read_rows()
     return res_df

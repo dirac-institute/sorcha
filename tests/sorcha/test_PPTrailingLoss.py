@@ -13,7 +13,7 @@ def test_calcTrailingLoss():
 def test_PPTrailingLoss():
     from sorcha.modules.PPTrailingLoss import PPTrailingLoss
 
-    testoifdf = pd.DataFrame(
+    testephemdf = pd.DataFrame(
         {
             "FieldID": np.arange(0, 10),
             "RARateCosDec_deg_day": [
@@ -67,13 +67,15 @@ def test_PPTrailingLoss():
         }
     )
 
-    testoifdf["visitExposureTime"] = 30.0
+    testephemdf["visitExposureTime"] = 30.0
     # add cos dec term
-    testoifdf["RARateCosDec_deg_day"] *= np.cos(testoifdf["Dec_deg"] * np.pi / 180.0)
+    testephemdf["RARateCosDec_deg_day"] *= np.cos(testephemdf["Dec_deg"] * np.pi / 180.0)
 
-    np.testing.assert_array_almost_equal(0.25893924959480374, PPTrailingLoss(oif_df=testoifdf)[5], decimal=14)
+    np.testing.assert_array_almost_equal(
+        0.25893924959480374, PPTrailingLoss(eph_df=testephemdf)[5], decimal=14
+    )
 
     # Check that we give an error for an unknown model.
     with pytest.raises(SystemExit) as err:
-        PPTrailingLoss(oif_df=testoifdf, model="FAKE")
+        PPTrailingLoss(eph_df=testephemdf, model="FAKE")
     assert err.value.args[0] == "PPTrailingLoss.calcTrailingLoss: model unknown."

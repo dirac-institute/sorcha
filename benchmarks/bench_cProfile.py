@@ -27,7 +27,7 @@ if __name__ == "__main__":  # pragma: no cover
     cmd_args_dict = {
         "paramsinput": os.path.join(path_to_sorcha, f"demo/{args.object_type}_sample_1000_physical.csv"),
         "orbinfile": os.path.join(path_to_sorcha, f"demo/{args.object_type}_sample_1000_orbit.csv"),
-        "oifoutput": os.path.join(path_to_sorcha, f"demo/{args.object_type}_sample_1000_eph.csv"),
+        "input_ephemeris_file": os.path.join(path_to_sorcha, f"demo/{args.object_type}_sample_1000_eph.csv"),
         "configfile": os.path.join(path_to_sorcha, "benchmarks/test_bench_config.ini"),
         "pointing_database": os.path.join(path_to_sorcha, "demo/baseline_v2.0_1yr.db"),
         "outpath": os.path.join(path_to_sorcha, "tests/out"),

@@ -16,8 +16,8 @@ class sorchaArguments:
     """path to file with input objects"""
     orbinfile: str = ""
     """path to file with input object orbits"""
-    oifoutput: str = ""
-    """path the OIF output file"""
+    input_ephemeris_file: str = ""
+    """path the ephemeris input file"""
     configfile: str = ""
     """path to the config.ini file"""
     outpath: str = ""
@@ -64,7 +64,7 @@ class sorchaArguments:
 
         self.paramsinput = args["paramsinput"]
         self.orbinfile = args["orbinfile"]
-        self.oifoutput = args.get("oifoutput")
+        self.input_ephemeris_file = args.get("input_ephemeris_file")
         self.configfile = args["configfile"]
         self.outpath = args["outpath"]
         self.outfilestem = args["outfilestem"]
@@ -92,7 +92,7 @@ class sorchaArguments:
         if not path.isfile(self.orbinfile):
             raise ValueError("File does not exist at path supplied for -ob/--orbit argument.")
 
-        if self.oifoutput and not path.isfile(self.oifoutput):
+        if self.input_ephemeris_file and not path.isfile(self.input_ephemeris_file):
             raise ValueError("File does not exist at path supplied for -er/--ephem_read argument.")
 
         if not path.isfile(self.configfile):

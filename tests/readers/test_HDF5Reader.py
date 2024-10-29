@@ -8,11 +8,11 @@ from sorcha.utilities.dataUtilitiesForTests import get_test_filepath
 
 @pytest.mark.parametrize("use_cache", [True, False])
 def test_HDF5DataReader_read_rows(use_cache):
-    """Test that we can read in the OIF data from an HDF5 file."""
-    reader = HDF5DataReader(get_test_filepath("oiftestoutput.h5"), cache_table=use_cache)
-    oif_data = reader.read_rows()
-    assert len(oif_data) == 9
-    assert reader.get_reader_info() == "HDF5DataReader:" + get_test_filepath("oiftestoutput.h5")
+    """Test that we can read in the ephemeris data from an HDF5 file."""
+    reader = HDF5DataReader(get_test_filepath("ephemtestoutput.h5"), cache_table=use_cache)
+    ephem_data = reader.read_rows()
+    assert len(ephem_data) == 9
+    assert reader.get_reader_info() == "HDF5DataReader:" + get_test_filepath("ephemtestoutput.h5")
 
     expected_first_row = np.array(
         [
@@ -41,7 +41,7 @@ def test_HDF5DataReader_read_rows(use_cache):
         ],
         dtype="object",
     )
-    assert_equal(expected_first_row, oif_data.iloc[0].values)
+    assert_equal(expected_first_row, ephem_data.iloc[0].values)
 
     column_headings = np.array(
         [
@@ -70,21 +70,21 @@ def test_HDF5DataReader_read_rows(use_cache):
         ],
         dtype=object,
     )
-    assert_equal(column_headings, oif_data.columns.values)
+    assert_equal(column_headings, ephem_data.columns.values)
 
     # Read in rows 3, 4, 5, 6 + the header
-    oif_data = reader.read_rows(3, 4)
-    assert len(oif_data) == 4
-    assert_equal(column_headings, oif_data.columns.values)
-    assert_equal("S000021", oif_data.iloc[0].values[0])
+    ephem_data = reader.read_rows(3, 4)
+    assert len(ephem_data) == 4
+    assert_equal(column_headings, ephem_data.columns.values)
+    assert_equal("S000021", ephem_data.iloc[0].values[0])
 
 
 @pytest.mark.parametrize("use_cache", [True, False])
 def test_HDF5DataReader_read_objects(use_cache):
-    """Test that we can read in the OIF data for specific object IDs only."""
-    reader = HDF5DataReader(get_test_filepath("oiftestoutput.h5"), cache_table=use_cache)
-    oif_data = reader.read_objects(["S000015", "S000044"])
-    assert len(oif_data) == 5
+    """Test that we can read in the ephemeris data for specific object IDs only."""
+    reader = HDF5DataReader(get_test_filepath("ephemtestoutput.h5"), cache_table=use_cache)
+    ephem_data = reader.read_objects(["S000015", "S000044"])
+    assert len(ephem_data) == 5
 
     # Check that we correctly loaded the header information.
     column_headings = np.array(
@@ -114,7 +114,7 @@ def test_HDF5DataReader_read_objects(use_cache):
         ],
         dtype=object,
     )
-    assert_equal(column_headings, oif_data.columns.values)
+    assert_equal(column_headings, ephem_data.columns.values)
 
     # Check that the first row matches.
     expected_first_row = np.array(
@@ -144,18 +144,18 @@ def test_HDF5DataReader_read_objects(use_cache):
         ],
         dtype="object",
     )
-    assert_equal(expected_first_row, oif_data.iloc[0].values)
+    assert_equal(expected_first_row, ephem_data.iloc[0].values)
 
     # Check that the remaining rows have the correct IDs.
-    assert_equal(oif_data.iloc[1].values[0], "S000015")
-    assert_equal(oif_data.iloc[2].values[0], "S000044")
-    assert_equal(oif_data.iloc[3].values[0], "S000044")
-    assert_equal(oif_data.iloc[4].values[0], "S000044")
+    assert_equal(ephem_data.iloc[1].values[0], "S000015")
+    assert_equal(ephem_data.iloc[2].values[0], "S000044")
+    assert_equal(ephem_data.iloc[3].values[0], "S000044")
+    assert_equal(ephem_data.iloc[4].values[0], "S000044")
 
     # Read different object IDs.
-    oif_data2 = reader.read_objects(["S000021"])
-    assert len(oif_data2) == 1
-    assert_equal(oif_data2.iloc[0].values[0], "S000021")
+    ephem_data2 = reader.read_objects(["S000021"])
+    assert len(ephem_data2) == 1
+    assert_equal(ephem_data2.iloc[0].values[0], "S000021")
 
 
 def test_bad_format():

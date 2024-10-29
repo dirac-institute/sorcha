@@ -4,14 +4,14 @@ from numpy.testing import assert_array_equal
 
 def test_PPJoinEphemeridesAndOrbits():
     from sorcha.modules.PPJoinEphemeridesAndOrbits import PPJoinEphemeridesAndOrbits
-    from sorcha.readers.OIFReader import read_full_oif_table
+    from sorcha.readers.EphemerisReader import read_full_ephemeris_table
     from sorcha.readers.OrbitAuxReader import OrbitAuxReader
 
-    oif_file = read_full_oif_table(get_test_filepath("oiftestoutput.txt"), "whitespace")
+    ephem_file = read_full_ephemeris_table(get_test_filepath("ephemtestoutput.txt"), "whitespace")
     orbit_reader = OrbitAuxReader(get_test_filepath("testorb.des"), "whitespace")
     orbit_file = orbit_reader.read_rows(0, 5)
 
-    joined_df = PPJoinEphemeridesAndOrbits(oif_file, orbit_file)
+    joined_df = PPJoinEphemeridesAndOrbits(ephem_file, orbit_file)
 
     first_row = [
         379,
