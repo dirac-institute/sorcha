@@ -9,7 +9,7 @@ def test_find_and_check_all_log_files():
     from sorcha.utilities.check_output_logs import find_all_log_files
     from sorcha.utilities.check_output_logs import check_all_logs
 
-    filepath = os.path.dirname(get_test_filepath("oiftestoutput.txt"))
+    filepath = os.path.dirname(get_test_filepath("ephemtestoutput.txt"))
 
     test_log = find_all_log_files(filepath)
     assert len(test_log) == 2
@@ -24,7 +24,7 @@ def test_find_and_check_all_log_files():
 def test_check_output_logs(tmp_path):
     from sorcha.utilities.check_output_logs import check_output_logs
 
-    filepath = os.path.dirname(get_test_filepath("oiftestoutput.txt"))
+    filepath = os.path.dirname(get_test_filepath("ephemtestoutput.txt"))
 
     output = os.path.join(tmp_path, "sorcha_logs.csv")
     check_output_logs(filepath, output)
@@ -45,7 +45,7 @@ def test_check_output_logs(tmp_path):
     pd.testing.assert_series_equal(written_output["log_lastline"], expected_output["log_lastline"])
 
     # check no output on successful run
-    single_filepath = os.path.join(os.path.dirname(get_test_filepath("oiftestoutput.txt")), "run_1")
+    single_filepath = os.path.join(os.path.dirname(get_test_filepath("ephemtestoutput.txt")), "run_1")
     successful_output = os.path.join(tmp_path, "successful_sorcha_logs.csv")
     successful_run = check_output_logs(single_filepath, successful_output)
 

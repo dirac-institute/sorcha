@@ -3,7 +3,7 @@
 ## General Demo Files:
 
 **baseline_v2.0_1yr.db** - example pointing database (do NOT use for science)  
-**example_oif_output.txt** - example ephemeris input/output  
+**example_ephem_output.txt** - example ephemeris input/output  
 **sorcha_config_demo.ini** - example configuration file  
 **sspp_testset_colours.txt** - example parameters input  
 **sspp_testset_orbits.des** - example orbits input  

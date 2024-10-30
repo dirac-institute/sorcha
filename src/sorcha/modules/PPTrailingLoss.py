@@ -104,7 +104,7 @@ def calcTrailingLoss(
 
 
 def PPTrailingLoss(
-    oif_df,
+    eph_df,
     model="circularPSF",
     dra_cosdec_name="RARateCosDec_deg_day",
     ddec_name="DecRate_deg_day",
@@ -117,7 +117,7 @@ def PPTrailingLoss(
 
     Parameters
     -------------
-    oif_df : pandas dataframe
+    eph_df : pandas dataframe
         Dataframe of observations for which to calculate trailing losses.
 
     model : string, optional
@@ -125,20 +125,20 @@ def PPTrailingLoss(
         calcTrailingLoss for details. Default = "circularPSF"
 
     dra_name : string, optional
-        "oif_df" column name for object RA rate. Default = "RARateCosDec_deg_day"
+        "eph_df" column name for object RA rate. Default = "RARateCosDec_deg_day"
         Assumes cos(dec) normalization has already been applied
 
     ddec_name : string, optional
-        "oif_df" column name for object dec rate. Default = "DecRate_deg_day"
+        "eph_df" column name for object dec rate. Default = "DecRate_deg_day"
 
     dec_name : string, default
-            "oif_df" column name for object declination. Default = "Dec_deg"
+            "eph_df" column name for object declination. Default = "Dec_deg"
 
     seeing_name_survey : string, optional
-        "oif_df" column name for seeing. Default = "seeingFwhmEff_arcsec"
+        "eph_df" column name for seeing. Default = "seeingFwhmEff_arcsec"
 
     visit_time_name : string, optional
-        "oif_df" column name for exposure length. Default = "visitExposureTime"
+        "eph_df" column name for exposure length. Default = "visitExposureTime"
 
     Returns
     -----------
@@ -147,14 +147,14 @@ def PPTrailingLoss(
 
     Notes
     --------
-    Assumes 'oif_df" has RA and Dec stored in deg/dayrates and the seeing in arcseconds
+    Assumes 'eph_df" has RA and Dec stored in deg/dayrates and the seeing in arcseconds
     """
 
     dmag = calcTrailingLoss(
-        oif_df[dra_cosdec_name],
-        oif_df[ddec_name],
-        oif_df[seeing_name_survey],
-        texp=oif_df[visit_time_name],
+        eph_df[dra_cosdec_name],
+        eph_df[ddec_name],
+        eph_df[seeing_name_survey],
+        texp=eph_df[visit_time_name],
         model=model,
     )
 

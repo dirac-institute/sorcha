@@ -7,10 +7,10 @@ cos = np.cos
 
 
 def vignettingEffects(
-    oifdf,
-    raNameOIF="RA_deg",
-    decNameOIF="Dec_deg",
-    fieldNameOIF="FieldID",
+    df,
+    raName="RA_deg",
+    decName="Dec_deg",
+    fieldName="FieldID",
     raNameSurvey="fieldRA_deg",
     decNameSurvey="fieldDec_deg",
 ):
@@ -20,37 +20,35 @@ def vignettingEffects(
 
     Parameters
     -----------
-    oif_df : pandas dataframe
+    df : pandas dataframe
         dataframe of observations.
 
-    raNameOIF : string, optional
-        'oif_df' column name of object RA. Default = "RA_deg"
+    raName : string, optional
+        'df' column name of object RA. Default = "RA_deg"
 
-    decNameOIF : string, optional
-        'oif_df' column name of object declination. Default = "Dec_deg"
+    decName : string, optional
+        'df' column name of object declination. Default = "Dec_deg"
 
-    fieldNameOIF : string, optional
-        'oif_df' column name for observation pointing field ID. Default = "FieldID"
+    fieldName : string, optional
+        'df' column name for observation pointing field ID. Default = "FieldID"
 
     raNameSurvey : string, optional
-         'oif_df' column name for observation pointing RA. Default = "fieldRA_deg"
+         'df' column name for observation pointing RA. Default = "fieldRA_deg"
 
      decNameSurvey : string, optional
-         'oif_df' column name for observation pointing declination. Default = "fieldDec_deg"
+         'df' column name for observation pointing declination. Default = "fieldDec_deg"
 
     Returns
     -----------
      : list of floats
          Five sigma limiting magnitude at object location adjusted for vignetting for each
-         row in 'oif_df' dataframe.
+         row in 'df' dataframe.
 
     """
 
-    dmagVignet = calcVignettingLosses(
-        oifdf[raNameOIF], oifdf[decNameOIF], oifdf[raNameSurvey], oifdf[decNameSurvey]
-    )
+    dmagVignet = calcVignettingLosses(df[raName], df[decName], df[raNameSurvey], df[decNameSurvey])
 
-    return oifdf["fieldFiveSigmaDepth_mag"] - dmagVignet
+    return df["fieldFiveSigmaDepth_mag"] - dmagVignet
 
 
 def calcVignettingLosses(ra, dec, fieldra, fielddec):

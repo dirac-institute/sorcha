@@ -6,7 +6,7 @@ from sorcha.utilities.dataUtilitiesForTests import get_demo_filepath, get_test_f
 cmd_args_dict = {
     "paramsinput": get_demo_filepath("sspp_testset_colours.txt"),
     "orbinfile": get_demo_filepath("sspp_testset_orbits.des"),
-    "oifoutput": get_demo_filepath("example_oif_output.txt"),
+    "input_ephemeris_file": get_demo_filepath("example_ephem_output.txt"),
     "configfile": get_test_filepath("PPConfig_goldens_test.ini"),
     "outpath": "./tests/out",
     "surveyname": "RUBIN_SIM",
@@ -44,11 +44,11 @@ def test_validate_arguments():
     args.orbinfile = get_demo_filepath("sspp_testset_orbits.des")
 
     with pytest.raises(ValueError):
-        args.oifoutput = get_demo_filepath("example_oif_output.txtttttt")
+        args.input_ephemeris_file = get_demo_filepath("example_ephem_output.txtttttt")
 
         args.validate_arguments()
 
-    args.oifoutput = get_demo_filepath("example_oif_output.txt")
+    args.input_ephemeris_file = get_demo_filepath("example_ephem_output.txt")
 
     with pytest.raises(ValueError):
         args.configfile = get_demo_filepath("NOPE.txt")

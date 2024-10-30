@@ -3,17 +3,17 @@ import pytest
 from numpy.testing import assert_equal
 from pandas.testing import assert_frame_equal
 
-from sorcha.readers.OIFReader import OIFDataReader
+from sorcha.readers.EphemerisReader import EphemerisDataReader
 from sorcha.utilities.dataUtilitiesForTests import get_test_filepath
 
 
-def test_OIFDataReader():
-    """Test that we can read in the OIF data from multiple formats."""
-    reader_ws = OIFDataReader(get_test_filepath("oiftestoutput.txt"), inputformat="whitespace")
-    oif_file = reader_ws.read_rows()
-    assert len(oif_file) == 9
-    assert reader_ws.get_reader_info() == "OIFDataReader|CSVDataReader:" + get_test_filepath(
-        "oiftestoutput.txt"
+def test_EphemerisDataReader():
+    """Test that we can read in the ephemeris data from multiple formats."""
+    reader_ws = EphemerisDataReader(get_test_filepath("ephemtestoutput.txt"), inputformat="whitespace")
+    ephem_file = reader_ws.read_rows()
+    assert len(ephem_file) == 9
+    assert reader_ws.get_reader_info() == "EphemerisDataReader|CSVDataReader:" + get_test_filepath(
+        "ephemtestoutput.txt"
     )
 
     expected_first_row = np.array(
@@ -43,7 +43,7 @@ def test_OIFDataReader():
         ],
         dtype="object",
     )
-    assert_equal(expected_first_row, oif_file.iloc[0].values)
+    assert_equal(expected_first_row, ephem_file.iloc[0].values)
 
     column_headings = np.array(
         [
@@ -72,49 +72,49 @@ def test_OIFDataReader():
         ],
         dtype=object,
     )
-    assert_equal(column_headings, oif_file.columns.values)
+    assert_equal(column_headings, ephem_file.columns.values)
 
     # Check we get the same results with the HDF5 data
-    reader_h5 = OIFDataReader(get_test_filepath("oiftestoutput.h5"), inputformat="hdf5")
-    oif_hdf5 = reader_h5.read_rows()
-    assert_frame_equal(oif_file, oif_hdf5)
-    assert reader_h5.get_reader_info() == "OIFDataReader|HDF5DataReader:" + get_test_filepath(
-        "oiftestoutput.h5"
+    reader_h5 = EphemerisDataReader(get_test_filepath("ephemtestoutput.h5"), inputformat="hdf5")
+    ephem_hdf5 = reader_h5.read_rows()
+    assert_frame_equal(ephem_file, ephem_hdf5)
+    assert reader_h5.get_reader_info() == "EphemerisDataReader|HDF5DataReader:" + get_test_filepath(
+        "ephemtestoutput.h5"
     )
 
     # Check we get the same results with the CSV data
-    reader_csv = OIFDataReader(get_test_filepath("oiftestoutput.csv"), inputformat="csv")
-    oif_csv = reader_csv.read_rows()
-    assert_frame_equal(oif_file, oif_csv)
-    assert reader_csv.get_reader_info() == "OIFDataReader|CSVDataReader:" + get_test_filepath(
-        "oiftestoutput.csv"
+    reader_csv = EphemerisDataReader(get_test_filepath("ephemtestoutput.csv"), inputformat="csv")
+    ephem_csv = reader_csv.read_rows()
+    assert_frame_equal(ephem_file, ephem_csv)
+    assert reader_csv.get_reader_info() == "EphemerisDataReader|CSVDataReader:" + get_test_filepath(
+        "ephemtestoutput.csv"
     )
 
 
-def test_OIFDataReader_wrong_data():
-    """Test that we fail if we read an OIF data with the wrong type of data"""
+def test_EphemerisDataReader_wrong_data():
+    """Test that we fail if we read an ephem data with the wrong type of data"""
     with pytest.raises(SystemExit) as e:
-        reader_ws2 = OIFDataReader(get_test_filepath("testcolour.txt"), inputformat="whitespace")
+        reader_ws2 = EphemerisDataReader(get_test_filepath("testcolour.txt"), inputformat="whitespace")
         _ = reader_ws2.read_rows()
     assert e.type == SystemExit
     assert (
         e.value.code
-        == "ERROR: OIFDataReader: column headings do not match expected OIF column headings. Check format of file."
+        == "ERROR: EphemerisDataReader: column headings do not match expected ephemeris column headings. Check format of file."
     )
 
 
-def test_OIFDataReader_wrong_format():
-    """Test that we fail if we read an OIF data with the wrong type of data"""
+def test_EphemerisDataReader_wrong_format():
+    """Test that we fail if we read an ephemeris file with the wrong type of data"""
     # Check an invalid file type.
     with pytest.raises(SystemExit) as e:
-        _ = OIFDataReader(get_test_filepath("testcolour.txt"), inputformat="invalid")
+        _ = EphemerisDataReader(get_test_filepath("testcolour.txt"), inputformat="invalid")
     assert e.type == SystemExit
 
     # Check mismatched file types.
     with pytest.raises(SystemExit) as e:
-        _ = OIFDataReader(get_test_filepath("oiftestoutput.txt"), inputformat="csv")
+        _ = EphemerisDataReader(get_test_filepath("ephemtestoutput.txt"), inputformat="csv")
     assert e.type == SystemExit
 
     with pytest.raises(SystemExit) as e:
-        _ = OIFDataReader(get_test_filepath("oiftestoutput.csv"), inputformat="whitespace")
+        _ = EphemerisDataReader(get_test_filepath("ephemtestoutput.csv"), inputformat="whitespace")
     assert e.type == SystemExit

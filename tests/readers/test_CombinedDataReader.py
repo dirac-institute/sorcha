@@ -3,14 +3,14 @@ from numpy.testing import assert_equal
 
 from sorcha.readers.CombinedDataReader import CombinedDataReader
 from sorcha.readers.CSVReader import CSVDataReader
-from sorcha.readers.OIFReader import OIFDataReader
+from sorcha.readers.EphemerisReader import EphemerisDataReader
 from sorcha.readers.OrbitAuxReader import OrbitAuxReader
 from sorcha.utilities.dataUtilitiesForTests import get_test_filepath
 
 
 def test_CombinedDataReader():
     reader = CombinedDataReader()
-    reader.add_ephem_reader(OIFDataReader(get_test_filepath("PPReadAllInput_oif.txt"), "csv"))
+    reader.add_ephem_reader(EphemerisDataReader(get_test_filepath("PPReadAllInput_ephem.txt"), "csv"))
     reader.add_aux_data_reader(OrbitAuxReader(get_test_filepath("PPReadAllInput_orbits.des"), "whitespace"))
     reader.add_aux_data_reader(CSVDataReader(get_test_filepath("PPReadAllInput_params.txt"), "whitespace"))
 
@@ -81,7 +81,7 @@ def test_CombinedDataReader():
 def test_CombinedDataReader_ephem():
     """Read with ephemeris as the primary key."""
     reader = CombinedDataReader(ephem_primary=True)
-    reader.add_ephem_reader(OIFDataReader(get_test_filepath("PPReadAllInput_oif.txt"), "csv"))
+    reader.add_ephem_reader(EphemerisDataReader(get_test_filepath("PPReadAllInput_ephem.txt"), "csv"))
     reader.add_aux_data_reader(OrbitAuxReader(get_test_filepath("PPReadAllInput_orbits.des"), "whitespace"))
     reader.add_aux_data_reader(CSVDataReader(get_test_filepath("PPReadAllInput_params.txt"), "whitespace"))
 
@@ -147,7 +147,7 @@ def test_CombinedDataReader_ephem():
 
     # We fail if we try to set the ephem reader a second time.
     with pytest.raises(SystemExit) as err:
-        reader.add_ephem_reader(OIFDataReader(get_test_filepath("PPReadAllInput_oif.txt"), "csv"))
+        reader.add_ephem_reader(EphemerisDataReader(get_test_filepath("PPReadAllInput_ephem.txt"), "csv"))
     assert err.type == SystemExit
 
 
@@ -162,17 +162,17 @@ def test_CombinedDataReader_fail():
 
     # No aux data readers
     reader2 = CombinedDataReader()
-    reader2.add_ephem_reader(OIFDataReader(get_test_filepath("PPReadAllInput_oif.txt"), "csv"))
+    reader2.add_ephem_reader(EphemerisDataReader(get_test_filepath("PPReadAllInput_ephem.txt"), "csv"))
     with pytest.raises(SystemExit) as e1:
         _ = reader2.read_block(10)
     assert e1.type == SystemExit
 
     # Cannot set the ephemeris reader more than once.
     reader3 = CombinedDataReader()
-    reader3.add_ephem_reader(OIFDataReader(get_test_filepath("PPReadAllInput_oif.txt"), "csv"))
+    reader3.add_ephem_reader(EphemerisDataReader(get_test_filepath("PPReadAllInput_ephem.txt"), "csv"))
     with pytest.raises(SystemExit) as e1:
         reader3.add_ephem_reader(
-            OIFDataReader(get_test_filepath("oiftestoutput.txt"), inputformat="whitespace")
+            EphemerisDataReader(get_test_filepath("ephemtestoutput.txt"), inputformat="whitespace")
         )
     assert e1.type == SystemExit
 

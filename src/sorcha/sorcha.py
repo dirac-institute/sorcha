@@ -32,9 +32,8 @@ from sorcha.modules.PPFootprintFilter import Footprint
 from sorcha.modules.PPStats import stats
 
 from sorcha.readers.CombinedDataReader import CombinedDataReader
-from sorcha.readers.DatabaseReader import DatabaseReader
 from sorcha.readers.CSVReader import CSVDataReader
-from sorcha.readers.OIFReader import OIFDataReader
+from sorcha.readers.EphemerisReader import EphemerisDataReader
 from sorcha.readers.OrbitAuxReader import OrbitAuxReader
 
 from sorcha.activity.activity_registration import update_activity_subclasses
@@ -148,7 +147,7 @@ def runLSSTSimulation(args, configs):
         pplogger.error(f"PPReadAllInput: Unsupported value for ephemerides_type {ephem_type}")
         sys.exit(f"PPReadAllInput: Unsupported value for ephemerides_type {ephem_type}")
     if ephem_type.casefold() == "external":
-        reader.add_ephem_reader(OIFDataReader(args.oifoutput, configs["eph_format"]))
+        reader.add_ephem_reader(EphemerisDataReader(args.input_ephemeris_file, configs["eph_format"]))
 
     reader.add_aux_data_reader(OrbitAuxReader(args.orbinfile, configs["aux_format"]))
     reader.add_aux_data_reader(CSVDataReader(args.paramsinput, configs["aux_format"]))
