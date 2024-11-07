@@ -138,6 +138,8 @@ def execute(args):
         PPConfigFileParser,
         runLSSTSimulation,
         sorchaArguments,
+        update_activity_subclasses,
+        update_lc_subclasses,
     )
     import sys, os
 
@@ -146,6 +148,10 @@ def execute(args):
     pplogger = PPGetLogger(outpath, args.t)
     pplogger.info("Sorcha Start (Main)")
     pplogger.info(f"Command line: {' '.join(sys.argv)}")
+
+    # update add-on subclasses before we parse the config file!
+    update_lc_subclasses()
+    update_activity_subclasses()
 
     # Extract and validate the remaining arguments.
     cmd_args = PPCommandLineParser(args)
