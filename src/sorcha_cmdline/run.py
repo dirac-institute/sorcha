@@ -138,7 +138,7 @@ def execute(args):
         PPConfigFileParser,
         runLSSTSimulation,
         sorchaArguments,
-        sorchaConfigs
+        sorchaConfigs,
     )
     import sys, os
 

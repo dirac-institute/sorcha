@@ -8,10 +8,12 @@ from sorcha.activity.activity_registration import CA_METHODS
 
 
 @dataclass
-class inputConfigs():
+class inputConfigs:
     """Data class for holding INPUTS section configuration file keys and validating them."""
 
-    ephemerides_type: str = ""  # make sure any defaults are "falsy" so we know when one hasn't populated properly
+    ephemerides_type: str = (
+        ""  # make sure any defaults are "falsy" so we know when one hasn't populated properly
+    )
     """Simulation used for ephemeris input."""
 
     eph_format: str = ""
@@ -25,14 +27,14 @@ class inputConfigs():
 
     pointing_sql_query: str = ""
     """SQL query for extracting data from pointing database."""
-    
+
     def __post_init__(self):
         """Automagically validates the input configs after initialisation."""
         self._validate_input_configs()
-    
+
     def _validate_input_configs(self):
 
-        # make sure all the mandatory keys have been populated.        
+        # make sure all the mandatory keys have been populated.
         check_key_exists(self.ephemerides_type, "ephemerides_type")
         check_key_exists(self.eph_format, "eph_format")
         check_key_exists(self.size_serial_chunk, "size_serial_chunk")
@@ -47,17 +49,19 @@ class inputConfigs():
 
 
 @dataclass
-class sorchaConfigs():
+class sorchaConfigs:
     """Dataclass which stores configuration file keywords in dataclasses."""
 
-    inputs: inputConfigs = None  # setting empty defaults because we won't have these ready when we initialise the sorchaConfigs object
+    inputs: inputConfigs = (
+        None  # setting empty defaults because we won't have these ready when we initialise the sorchaConfigs object
+    )
     """inputConfigs dataclass which stores the keywords from the INPUT section of the config file."""
-    
-    #simulation: simulationConfigs = None
+
+    # simulation: simulationConfigs = None
 
     pplogger: None = None
     """The Python logger instance"""
-    
+
     survey_name: str = ""
     """The name of the survey."""
 
@@ -68,15 +72,19 @@ class sorchaConfigs():
         self.pplogger = logging.getLogger(__name__)
         self.survey_name = survey_name
 
-        if config_file_location: # if a location to a config file is supplied...
+        if config_file_location:  # if a location to a config file is supplied...
             config_object = configparser.ConfigParser()  # create a ConfigParser object
-            config_object.read(config_file_location)     # and read the whole config file into it
-            self._read_configs_from_object(config_object) # now we call a function that populates the class attributes
+            config_object.read(config_file_location)  # and read the whole config file into it
+            self._read_configs_from_object(
+                config_object
+            )  # now we call a function that populates the class attributes
 
     def _read_configs_from_object(self, config_object):
 
         # do INPUTS section first
-        inputs_dict = dict(config_object["INPUT"]) # gets just the INPUTS section of the config file as a dictionary
+        inputs_dict = dict(
+            config_object["INPUT"]
+        )  # gets just the INPUTS section of the config file as a dictionary
         self.inputs = inputConfigs(**inputs_dict)
 
         # SIMULATION would be next...
@@ -84,9 +92,8 @@ class sorchaConfigs():
         # self.simulation = simulationConfigs(**simulation_dict)
 
 
-
-
 ## below are the utility functions used to help validate the keywords, add more as needed
+
 
 def check_key_exists(value, key_name):
     # checks to make sure that whatever is in "value" evaluates as truthy, i.e. it isn't the default and we
