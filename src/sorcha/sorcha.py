@@ -40,7 +40,7 @@ from sorcha.readers.OrbitAuxReader import OrbitAuxReader
 from sorcha.activity.activity_registration import update_activity_subclasses
 from sorcha.lightcurves.lightcurve_registration import update_lc_subclasses
 
-from sorcha.utilities.sorchaArguments import sorchaArguments
+from sorcha.utilities.sorchaArguments import sorchaArguments, sorchaConfigs
 from sorcha.utilities.citation_text import cite_sorcha
 
 

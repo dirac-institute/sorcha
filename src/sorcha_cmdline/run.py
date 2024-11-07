@@ -138,6 +138,7 @@ def execute(args):
         PPConfigFileParser,
         runLSSTSimulation,
         sorchaArguments,
+        sorchaConfigs
     )
     import sys, os
 
@@ -151,6 +152,7 @@ def execute(args):
     cmd_args = PPCommandLineParser(args)
     pplogger.info("Reading configuration file...")
     configs = PPConfigFileParser(cmd_args["configfile"], cmd_args["surveyname"])
+    sconfigs = sorchaConfigs(cmd_args["configfile"], cmd_args["surveyname"])
     pplogger.info("Configuration file read.")
 
     if configs["ephemerides_type"] == "external" and cmd_args["oifoutput"] is None:
