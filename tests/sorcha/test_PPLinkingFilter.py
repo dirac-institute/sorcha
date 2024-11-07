@@ -114,6 +114,7 @@ def test_PPLinkingFilter_discoveryChances():
         window=min_tracklet_window,
         nlink=min_tracklets,
         p=detection_efficiency,
+        night_start_utc_days=17.0 / 24.0,
     )
     assert len(obj) == 1
 
@@ -160,6 +161,7 @@ def test_PPLinkingFilter_nlink1():
         window=min_tracklet_window,
         nlink=min_tracklets,
         p=detection_efficiency,
+        night_start_utc_days=17.0 / 24.0,
     )
     assert len(obj) == 1
 

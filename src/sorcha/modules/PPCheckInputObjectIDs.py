@@ -32,12 +32,12 @@ def PPCheckInputObjectIDs(orbin, colin, poiin):
 
     pplogger = logging.getLogger(__name__)
 
-    oif_objects = pd.unique(poiin["ObjID"]).astype(str)
+    eph_objects = pd.unique(poiin["ObjID"]).astype(str)
     orb_objects = pd.unique(orbin["ObjID"]).astype(str)
     col_objects = pd.unique(colin["ObjID"]).astype(str)
 
     if set(col_objects) == set(orb_objects):
-        if set(oif_objects).issubset(orb_objects):
+        if set(eph_objects).issubset(orb_objects):
             return
         else:
             pplogger.error("ERROR: PPCheckInputObjectIDs: input pointing and orbit files do not match.")

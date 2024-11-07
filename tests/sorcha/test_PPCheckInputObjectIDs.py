@@ -4,7 +4,7 @@ from sorcha.utilities.dataUtilitiesForTests import get_test_filepath
 def test_PPCheckInputObjectIDs():
     from sorcha.modules.PPCheckInputObjectIDs import PPCheckInputObjectIDs
     from sorcha.readers.CSVReader import CSVDataReader
-    from sorcha.readers.OIFReader import read_full_oif_table
+    from sorcha.readers.EphemerisReader import read_full_ephemeris_table
     from sorcha.readers.OrbitAuxReader import OrbitAuxReader
 
     compval = 1
@@ -15,7 +15,7 @@ def test_PPCheckInputObjectIDs():
     param_reader = CSVDataReader(get_test_filepath("testcolour.txt"), "whitespace")
     padacl = param_reader.read_rows(0, 10)
 
-    padapo = read_full_oif_table(get_test_filepath("oiftestoutput.txt"), "whitespace")
+    padapo = read_full_ephemeris_table(get_test_filepath("ephemtestoutput.txt"), "whitespace")
 
     print(padaor)
     print(padacl)

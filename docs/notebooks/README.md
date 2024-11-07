@@ -4,6 +4,10 @@ demo_ApparentMagnitudeValidation
 - **Demonstrates:** PPCalculateApparentMagnitudeInFilter
 - **Files:** none
 
+demo_CalculateLSSTColours
+- **Demonstrates:** How to generate LSST bandpass colours from an existing reflectance spectrum
+- **Files:** 2002PN34_highres.spec
+
 demo_CircleFootprint
 - **Demonstrates:** PPCircleFootprint
 - **Files:** footprintFilterValidationObservations.csv, oneline_v2.0.db

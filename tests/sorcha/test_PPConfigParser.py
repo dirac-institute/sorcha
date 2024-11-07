@@ -242,7 +242,7 @@ def test_PPPrintConfigsToLog(tmp_path):
     cmd_args = {
         "paramsinput": "testcolour.txt",
         "orbinfile": "testorb.des",
-        "oifoutput": "oiftestoutput.txt",
+        "input_ephemeris_file": "ephemtestoutput.txt",
         "configfile": "test_PPConfig.ini",
         "pointing_database": "./baseline_10klines_2.0.db",
         "outpath": "./",

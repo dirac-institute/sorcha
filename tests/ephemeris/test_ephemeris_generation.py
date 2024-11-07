@@ -13,7 +13,7 @@ from sorcha.ephemeris.simulation_setup import precompute_pointing_information
 
 
 from sorcha.readers.CombinedDataReader import CombinedDataReader
-from sorcha.readers.OIFReader import OIFDataReader
+from sorcha.readers.EphemerisReader import EphemerisDataReader
 from sorcha.readers.OrbitAuxReader import OrbitAuxReader
 from sorcha.readers.CSVReader import CSVDataReader
 
@@ -172,7 +172,7 @@ def test_ephemeris_writeread_csv(single_synthetic_ephemeris, tmp_path):
     write_out_ephemeris_file(single_synthetic_ephemeris, out_path, cmd_args, configs)
 
     reader = CombinedDataReader(ephem_primary=True, verbose=False)
-    reader.add_ephem_reader(OIFDataReader(out_path + ".csv", "csv"))
+    reader.add_ephem_reader(EphemerisDataReader(out_path + ".csv", "csv"))
     reader.add_aux_data_reader(OrbitAuxReader(orb_in, "whitespace"))
     reader.add_aux_data_reader(CSVDataReader(params_in, "whitespace"))
 
@@ -202,7 +202,7 @@ def test_ephemeris_writeread_whitespace(single_synthetic_ephemeris, tmp_path):
     write_out_ephemeris_file(single_synthetic_ephemeris, out_path, cmd_args, configs)
 
     reader = CombinedDataReader(ephem_primary=True, verbose=False)
-    reader.add_ephem_reader(OIFDataReader(out_path + ".csv", "whitespace"))
+    reader.add_ephem_reader(EphemerisDataReader(out_path + ".csv", "whitespace"))
     reader.add_aux_data_reader(OrbitAuxReader(orb_in, "whitespace"))
     reader.add_aux_data_reader(CSVDataReader(params_in, "whitespace"))
 
@@ -232,7 +232,7 @@ def test_ephemeris_writeread_hdf5(single_synthetic_ephemeris, tmp_path):
     write_out_ephemeris_file(single_synthetic_ephemeris, out_path, cmd_args, configs)
 
     reader = CombinedDataReader(ephem_primary=True, verbose=False)
-    reader.add_ephem_reader(OIFDataReader(out_path + ".h5", "hdf5"))
+    reader.add_ephem_reader(EphemerisDataReader(out_path + ".h5", "hdf5"))
     reader.add_aux_data_reader(OrbitAuxReader(orb_in, "whitespace"))
     reader.add_aux_data_reader(CSVDataReader(params_in, "whitespace"))
 

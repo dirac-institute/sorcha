@@ -8,7 +8,7 @@ class args:
     def __init__(self, cp, t="testout", o="./", f=False):
         self.p = get_test_filepath("testcolour.txt")
         self.ob = get_test_filepath("testorb.des")
-        self.er = get_test_filepath("oiftestoutput.txt")
+        self.er = get_test_filepath("ephemtestoutput.txt")
         self.ew = None
         self.c = get_test_filepath("test_PPConfig.ini")
         self.pd = get_test_filepath("baseline_10klines_2.0.db")
@@ -31,7 +31,7 @@ def test_PPCommandLineParser():
     expected_1 = {
         "paramsinput": get_test_filepath("testcolour.txt"),
         "orbinfile": get_test_filepath("testorb.des"),
-        "oifoutput": get_test_filepath("oiftestoutput.txt"),
+        "input_ephemeris_file": get_test_filepath("ephemtestoutput.txt"),
         "configfile": get_test_filepath("test_PPConfig.ini"),
         "pointing_database": get_test_filepath("baseline_10klines_2.0.db"),
         "outpath": "./",
@@ -47,7 +47,7 @@ def test_PPCommandLineParser():
     expected_2 = {
         "paramsinput": get_test_filepath("testcolour.txt"),
         "orbinfile": get_test_filepath("testorb.des"),
-        "oifoutput": get_test_filepath("oiftestoutput.txt"),
+        "input_ephemeris_file": get_test_filepath("ephemtestoutput.txt"),
         "configfile": get_test_filepath("test_PPConfig.ini"),
         "pointing_database": get_test_filepath("baseline_10klines_2.0.db"),
         "outpath": "./",

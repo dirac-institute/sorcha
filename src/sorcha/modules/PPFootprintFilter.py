@@ -637,7 +637,7 @@ class Footprint:
         Returns
         ----------
         detected : array
-            Indices of rows in oifDF which fall on the sensor(s).
+            Indices of rows in field_df which fall on the sensor(s).
 
         detectorID : array
             Index corresponding to a detector in self.detectors for each entry in detected.
