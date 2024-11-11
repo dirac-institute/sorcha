@@ -100,9 +100,6 @@ def runLSSTSimulation(args, configs):
     pplogger = logging.getLogger(__name__)
     pplogger.info("Post-processing begun.")
 
-    update_lc_subclasses()
-    update_activity_subclasses()
-
     try:
         args.validate_arguments()
     except Exception as err:
