@@ -71,9 +71,6 @@ Used by:
 - test_CombinedDataReader.py  
 - test_EphemerisReader.py  
 - test_PPCommandLineParser.py  
-- test_PPCheckInputObjectIDs.py  
-- test_PPJoinEphemeridesAndOrbits.py  
-- test_PPJoinEphemeridesAndParameters.py  
 
 **orbit_test_files/orbit_bcart.csv**  
 Barycentric cartesian orbit format test input file.  
@@ -267,11 +264,9 @@ Used by:
 - test_CSVReader.py  
 - test_HDF5Reader.py  
 - test_EphemerisReader.py  
-- test_PPCheckInputObjectIDs.py  
 - test_PPCommandLineParser.py  
 - test_PPConfigParser.py  
 - test_PPGetMainFilterAndColourOffsets.py  
-- test_PPJoinEphemeridesAndParameters.py  
 
 **testcolour_jumble.txt**  
 Example physical parameters file, whitespace-separated. Different order of ObjIDs from testorb.des.
@@ -321,10 +316,8 @@ Used by:
 - test_createResultsSQLDatabase.py
 - test_CSVReader.py
 - test_OrbitAuxReader.py 
-- test_PPCheckInputObjectIDs.py
 - test_PPCommandLineParser.py
 - test_PPConfigParser.py
-- test_PPJoinEphemeridesAndOrbits.py
 
 **verification_colors.txt**
 Test physical parameters file used in the validation end-to-end test.  
