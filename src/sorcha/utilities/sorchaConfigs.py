@@ -81,7 +81,6 @@ class simulationConfigs:
         self.ar_ang_fov = cast_as_float(self.ar_ang_fov,"ar_ang_fov")
         self.ar_fov_buffer = cast_as_float(self.ar_fov_buffer,"ar_fov_buffer")
         self.ar_picket = cast_as_int(self.ar_picket, "ar_picket")
-        self.ar_obs_code = cast_as_str(self.ar_obs_code,"ar_obs_code")
         self.ar_healpix_order = cast_as_int(self.ar_healpix_order,"ar_healpix_order")
 
      
@@ -137,7 +136,7 @@ class saturationConfigs:
     bright_limit: float = 0
     """ Upper magnitude limit on sources that will overfill the detector pixels/have counts above the non-linearity regime of the pixels where one can’t do photometry. Objects brighter than this limit (in magnitude) will be cut. """
 
-    observing_filters: list = 0
+    _observing_filters: list = 0
     """Filters of the observations you are interested in, comma-separated."""
 
     def __post_init__(self):
@@ -145,7 +144,7 @@ class saturationConfigs:
         self._validate_saturation_configs()
 
     def _validate_saturation_configs(self):
-        check_key_exists(self.observing_filters,"observing_filters")
+        check_key_exists(self._observing_filters,"_observing_filters")
         if self.bright_limit:
             self.bright_limit_on = True
         
@@ -155,7 +154,7 @@ class saturationConfigs:
             except ValueError:
                 logging.error("ERROR: could not parse brightness limits. Check formatting and try again.")
                 sys.exit("ERROR: could not parse brightness limits. Check formatting and try again.")
-            if len(self.bright_limit) != 1 and len(self.bright_limit) != len(self.observing_filters):
+            if len(self.bright_limit) != 1 and len(self.bright_limit) != len(self._observing_filters):
                     logging.error(
                             "ERROR: list of saturation limits is not the same length as list of observing filters."
                         )
@@ -222,8 +221,8 @@ class fovConfigs:
         if self.footprint_path:
              PPFindFileOrExit(self.footprint_path,"footprint_path")
         elif self.survey_name.lower() not in ["lsst","rubin_sim"]:
-            logging.error("a default detector footprint is currently only provided for LSST; please provide your own footprint file.")
-            sys.exit("a default detector footprint is currently only provided for LSST; please provide your own footprint file.")
+            logging.error("ERROR: a default detector footprint is currently only provided for LSST; please provide your own footprint file.")
+            sys.exit("ERROR: a default detector footprint is currently only provided for LSST; please provide your own footprint file.")
 
         check_key_exists(self.footprint_edge_threshold,"footprint_edge_threshold")
         self.footprint_edge_threshold = cast_as_float(self.footprint_edge_threshold,"footprint_edge_threshold")
@@ -280,7 +279,7 @@ class fadingfunctionConfigs:
             check_key_exists(self.fading_function_width, "fading_function_width")
             check_key_exists(self.fading_function_peak_efficiency, "fading_function_peak_efficiency")
             self.fading_function_width = cast_as_float(self.fading_function_width,"fading_function_width")
-            self.fading_function_peak_efficiency = cast_as_float(self.fading_function_peak_efficiency,"fading_function_efficiency")
+            self.fading_function_peak_efficiency = cast_as_float(self.fading_function_peak_efficiency,"fading_function_peak_efficiency")
             
             #boundary conditions for both width and peak efficency
             if self.fading_function_width <= 0.0 or self.fading_function_width > 0.5:
@@ -309,86 +308,98 @@ class fadingfunctionConfigs:
 class linkingfilterConfigs:
     """Data class for holding LINKINGFILTER section configuration file keys and validating them."""
 
-    SSP_linking_on: bool = False
-    """checks to see if model should run SSP linking filter"""
+    ssp_linking_on: bool = False
+    """checks to see if model should run ssp linking filter"""
 
     drop_unlinked: bool = True
 
-    SSP_detection_efficiency: float = 0
-    """SSP detection efficiency. Which fraction of the observations of an object will the automated solar system processing pipeline successfully link? Float."""
+    ssp_detection_efficiency: float = 0
+    """ssp detection efficiency. Which fraction of the observations of an object will the automated solar system processing pipeline successfully link? Float."""
 
-    SSP_number_observations: int = 0
+    ssp_number_observations: int = 0
     """Length of tracklets. How many observations of an object during one night are required to produce a valid tracklet?"""
-    SSP_separation_threshold: float = 0
+    
+    ssp_separation_threshold: float = 0
     """Minimum separation (in arcsec) between two observations of an object required for the linking software to distinguish them as separate and therefore as a valid tracklet."""
 
-    SSP_maximum_time: float = 0
+    ssp_maximum_time: float = 0
     """Maximum time separation (in days) between subsequent observations in a tracklet. Default is 0.0625 days (90mins)."""
    
-    SSP_number_tracklets: int = 0
+    ssp_number_tracklets: int = 0
     """Number of tracklets for detection. How many tracklets are required to classify an object as detected?  """
 
-    SSP_track_window: int = 0
+    ssp_track_window: int = 0
     """The number of tracklets defined above must occur in <= this number of days to constitute a complete track/detection."""
 
-    SSP_night_start_utc: float = 0
+    ssp_night_start_utc: float = 0
     """The time in UTC at which it is noon at the observatory location (in standard time). For the LSST, 12pm Chile Standard Time is 4pm UTC."""
 
     def __post_init__(self):
-        self._validate_linkingfilter_configs
+        self._validate_linkingfilter_configs()
 
     def _validate_linkingfilter_configs(self):
         
-        SSPvariables = [
-            self.SSP_separation_threshold,
-            self.SSP_number_observations,
-            self.SSP_number_tracklets,
-            self.SSP_track_window,
-            self.SSP_detection_efficiency,
-            self.SSP_maximum_time,
-            self.SSP_night_start_utc
+        self.ssp_detection_efficiency = cast_as_float(self.ssp_detection_efficiency,"ssp_detection_efficiency")
+        self.ssp_number_observations = cast_as_int(self.ssp_number_observations,"ssp_number_observations")
+        self.ssp_separation_threshold = cast_as_float(self.ssp_separation_threshold,"ssp_separation_threshold")
+        self.ssp_maximum_time = cast_as_float(self.ssp_maximum_time,"ssp_maximum_time")
+        self.ssp_number_tracklets = cast_as_int(self.ssp_number_tracklets,"ssp_number_tracklets")
+        self.ssp_track_window = cast_as_int(self.ssp_track_window,"ssp_track_window")
+        self.ssp_night_start_utc = cast_as_float(self.ssp_night_start_utc,"ssp_night_start_utc")
+
+
+        sspvariables = [
+            self.ssp_separation_threshold,
+            self.ssp_number_observations,
+            self.ssp_number_tracklets,
+            self.ssp_track_window,
+            self.ssp_detection_efficiency,
+            self.ssp_maximum_time,
+            self.ssp_night_start_utc
         ]
+
         # the below if-statement explicitly checks for None so a zero triggers the correct error
-        if all(v is not None for v in SSPvariables):
-            if self.SSP_number_observations < 1:
-                logging.error("ERROR: SSP_number_observations is zero or negative.")
-                sys.exit("ERROR: SSP_number_observations is zero or negative.")
+        if all(v != 0 for v in sspvariables):
+            if self.ssp_number_observations < 1:
+                logging.error("ERROR: ssp_number_observations is zero or negative.")
+                sys.exit("ERROR: ssp_number_observations is zero or negative.")
 
-            if self.SSP_number_tracklets < 1:
-                logging.error("ERROR: SSP_number_tracklets is zero or less.")
-                sys.exit("ERROR: SSP_number_tracklets is zero or less.")
+            if self.ssp_number_tracklets < 1:
+                logging.error("ERROR: ssp_number_tracklets is zero or less.")
+                sys.exit("ERROR: ssp_number_tracklets is zero or less.")
 
-            if self.SSP_track_window <= 0.0:
-                logging.error("ERROR: SSP_track_window is negative.")
-                sys.exit("ERROR: SSP_track_window is negative.")
+            if self.ssp_track_window <= 0.0:
+                logging.error("ERROR: ssp_track_window is negative.")
+                sys.exit("ERROR: ssp_track_window is negative.")
 
-            if self.SSP_detection_efficiency > 1.0 or self.SSP_detection_efficiency > 1.0:
-                logging.error("ERROR: SSP_detection_efficiency out of bounds (should be between 0 and 1).")
-                sys.exit("ERROR: SSP_detection_efficiency out of bounds (should be between 0 and 1).")
+            if self.ssp_detection_efficiency > 1.0 or self.ssp_detection_efficiency < 0:
+                logging.error("ERROR: ssp_detection_efficiency out of bounds (should be between 0 and 1).")
+                sys.exit("ERROR: ssp_detection_efficiency out of bounds (should be between 0 and 1).")
 
-            if self.SSP_separation_threshold <= 0.0:
-                logging.error("ERROR: SSP_separation_threshold is zero or negative.")
-                sys.exit("ERROR: SSP_separation_threshold is zero or negative.")
+            if self.ssp_separation_threshold <= 0.0:
+                logging.error("ERROR: ssp_separation_threshold is zero or negative.")
+                sys.exit("ERROR: ssp_separation_threshold is zero or negative.")
 
-            if self.SSP_maximum_time < 0:
-                logging.error("ERROR: SSP_maximum_time is negative.")
-                sys.exit("ERROR: SSP_maximum_time is negative.")
+            if self.ssp_maximum_time < 0:
+                logging.error("ERROR: ssp_maximum_time is negative.")
+                sys.exit("ERROR: ssp_maximum_time is negative.")
 
-            if self.SSP_night_start_utc > 24.0 or self.SSP_night_start_utc < 0.0:
-                logging.error("ERROR: SSP_night_start_utc must be a valid time between 0 and 24 hours.")
-                sys.exit("ERROR: SSP_night_start_utc must be a valid time between 0 and 24 hours.")
+            if self.ssp_night_start_utc > 24.0 or self.ssp_night_start_utc < 0.0:
+                logging.error("ERROR: ssp_night_start_utc must be a valid time between 0 and 24 hours.")
+                sys.exit("ERROR: ssp_night_start_utc must be a valid time between 0 and 24 hours.")
 
-            self.SSP_linking_on = True
-        elif not any(SSPvariables):
-            self.SSP_linking_on = False
+            self.ssp_linking_on = True
+        elif not any(sspvariables):
+            self.ssp_linking_on = False
         else: 
             logging.error(
-            "ERROR: only some SSP linking variables supplied. Supply all five required variables for SSP linking filter, or none to turn filter off."
+            "ERROR: only some ssp linking variables supplied. Supply all five required variables for ssp linking filter, or none to turn filter off."
             )
-        sys.exit(
-            "ERROR: only some SSP linking variables supplied. Supply all five required variables for SSP linking filter, or none to turn filter off."
+            sys.exit(
+            "ERROR: only some ssp linking variables supplied. Supply all five required variables for ssp linking filter, or none to turn filter off."
             )
         self.drop_unlinked = cast_as_bool(self.drop_unlinked,"drop_unlinked")
+
 
 @dataclass
 class outputConfigs:
@@ -429,6 +440,7 @@ class outputConfigs:
         else:
             check_value_in_list(self.output_columns, ["basic", "all"], "output_columns")
         self._validate_decimals()
+
     def _validate_decimals(self):
         self.position_decimals = cast_as_float(self.position_decimals,"position_decimals")
         self.magnitude_decimals = cast_as_float(self.magnitude_decimals,"magnitude_decimals")
@@ -447,7 +459,7 @@ class lightcurveConfigs:
     """The unique name of the lightcurve model to use. Defined in the ``name_id`` method of the subclasses of AbstractLightCurve. If not none, the complex physical parameters file must be specified at the command line.lc_model = none"""
 
     def __post_init__(self):
-        self._validate_lightcurve_configs(self)
+        self._validate_lightcurve_configs()
 
     def _validate_lightcurve_configs(self):
         self.lc_model = None if self.lc_model == "none" else self.lc_model
@@ -463,7 +475,7 @@ class activityConfigs:
     """The unique name of the actvity model to use. Defined in the ``name_id`` method of the subclasses of AbstractCometaryActivity.  If not none, a complex physical parameters file must be specified at the command line."""
     
     def __post_init__(self):
-        self._validate_activity_configs(self)
+        self._validate_activity_configs()
 
     def _validate_activity_configs(self):
         self.comet_activity = None if self.comet_activity == "none" else self.comet_activity
@@ -492,7 +504,7 @@ class expertConfigs:
     vignetting_on: bool = True
 
     def __post_init__(self):
-        self._validate_expert_configs
+        self._validate_expert_configs()
         
     def _validate_expert_configs(self):
 
@@ -553,7 +565,7 @@ class sorchaConfigs:
     output: outputConfigs = None
     """outputConfigs dataclass which stores the keywords from the OUTPUT section of the config file."""
     
-    lightcure: lightcurveConfigs = None
+    lightcurve: lightcurveConfigs = None
     """lightcurveConfigs dataclass which stores the keywords from the LIGHTCURVE section of the config file."""
    
     activity: activityConfigs = None
@@ -581,7 +593,6 @@ class sorchaConfigs:
             self._read_configs_from_object(
                 config_object
             )  # now we call a function that populates the class attributes
-
     def _read_configs_from_object(self, config_object):
         """function that populates the class attributes"""
 
@@ -594,7 +605,7 @@ class sorchaConfigs:
         filter_dict = {**config_object["FILTERS"], "survey_name": self.survey_name} 
         self.filters = filtersConfigs(**filter_dict)
 
-        saturation_dict= {**config_object["SATURATION"], "observing_filters":self.filters.observing_filters}
+        saturation_dict= {**config_object["SATURATION"], "_observing_filters":self.filters.observing_filters}
         self.saturation = saturationConfigs(**saturation_dict)
 
         phasecurve_dict = dict(config_object["PHASECURVES"])
@@ -613,13 +624,16 @@ class sorchaConfigs:
         self.output = outputConfigs(**output_dict)
 
         lightcurve_dict = dict(config_object["LIGHTCURVE"])
-        self.lightcure = lightcurveConfigs(**lightcurve_dict)
+        self.lightcurve = lightcurveConfigs(**lightcurve_dict)
 
         activity_dict = dict(config_object["ACTIVITY"])
         self.activity = activityConfigs(**activity_dict)
 
-        expert_dict = dict(config_object["EXPERT"])
-        self.expert = expertConfigs(**expert_dict)
+        if config_object.has_section("EXPERT"):
+            expert_dict = dict(config_object["EXPERT"])
+            self.expert = expertConfigs(**expert_dict)
+        else:
+            self.expert = expertConfigs()
 
 ## below are the utility functions used to help validate the keywords, add more as needed
 
