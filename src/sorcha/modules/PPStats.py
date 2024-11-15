@@ -3,7 +3,7 @@ import pandas as pd
 import os
 
 
-def stats(observations, statsfilename, outpath, configs):
+def stats(observations, statsfilename, outpath, sconfigs):
     """
     Write a summary statistics file including whether each object was linked
     or not within miniDifi, their number of observations, min/max phase angles,
@@ -17,6 +17,9 @@ def stats(observations, statsfilename, outpath, configs):
 
     statsfilename : string
         Stem filename to write summary stats file to
+    
+    sconfigs: dataclass
+        Dataclass of configuration file arguments.
 
     Returns
     -------
@@ -40,11 +43,11 @@ def stats(observations, statsfilename, outpath, configs):
     )
     num_obs = group_by.agg("size").to_frame("number_obs")
 
-    if configs["SSP_linking_on"] and not configs["drop_unlinked"]:
+    if sconfigs.linkingfilter.ssp_linking_on and not sconfigs.linkingfilter.drop_unlinked:
         linked = group_by["object_linked"].agg("all").to_frame("object_linked")
         date_linked = group_by["date_linked_MJD"].agg("first").to_frame("date_linked_MJD")
         joined_stats = num_obs.join([mag, phase_deg, linked, date_linked])
-    elif configs["SSP_linking_on"]:
+    elif sconfigs.linkingfilter.ssp_linking_on:
         date_linked = group_by["date_linked_MJD"].agg("first").to_frame("date_linked_MJD")
         joined_stats = num_obs.join([mag, phase_deg, date_linked])
     else:

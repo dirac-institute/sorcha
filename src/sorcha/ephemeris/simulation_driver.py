@@ -47,7 +47,7 @@ def get_vec(row, vecname):
     return np.asarray([row[f"{vecname}_x"], row[f"{vecname}_y"], row[f"{vecname}_z"]])
 
 
-def create_ephemeris(orbits_df, pointings_df, args, configs):
+def create_ephemeris(orbits_df, pointings_df, args, sconfigs):
     """Generate a set of observations given a collection of orbits
     and set of pointings.
 
@@ -59,7 +59,8 @@ def create_ephemeris(orbits_df, pointings_df, args, configs):
         The dataframe containing the collection of telescope/camera pointings.
     args :
         Various arguments necessary for the calculation
-    configs : dictionary
+    sconfigs: 
+        Dataclass of configuration file arguments.
         Various configuration parameters necessary for the calculation
         ang_fov : float
             The angular size (deg) of the field of view
@@ -103,11 +104,11 @@ def create_ephemeris(orbits_df, pointings_df, args, configs):
     """
     verboselog = args.pplogger.info if args.verbose else lambda *a, **k: None
 
-    ang_fov = configs["ar_ang_fov"]
-    buffer = configs["ar_fov_buffer"]
-    picket_interval = configs["ar_picket"]
-    obsCode = configs["ar_obs_code"]
-    nside = 2 ** configs["ar_healpix_order"]
+    ang_fov = sconfigs.simulation.ar_ang_fov
+    buffer = sconfigs.simulation.ar_fov_buffer
+    picket_interval = sconfigs.simulation.ar_picket
+    obsCode = sconfigs.simulation.ar_obs_code
+    nside = 2 ** sconfigs.simulation.ar_healpix_order
     n_sub_intervals = 101  # configs["n_sub_intervals"]
 
     ephemeris_csv_filename = None
@@ -221,7 +222,7 @@ def create_ephemeris(orbits_df, pointings_df, args, configs):
     # if the user has defined an output file name for the ephemeris results, write out to that file
     if ephemeris_csv_filename:
         verboselog("Writing out ephemeris results to file.")
-        write_out_ephemeris_file(ephemeris_df, ephemeris_csv_filename, args, configs)
+        write_out_ephemeris_file(ephemeris_df, ephemeris_csv_filename, args, sconfigs)
 
     # join the ephemeris and input orbits dataframe, take special care to make
     # sure the 'ObjID' column types match.
@@ -328,7 +329,7 @@ def calculate_rates_and_geometry(pointing: pd.DataFrame, ephem_geom_params: Ephe
     )
 
 
-def write_out_ephemeris_file(ephemeris_df, ephemeris_csv_filename, args, configs):
+def write_out_ephemeris_file(ephemeris_df, ephemeris_csv_filename, args, sconfigs):
     """Writes the ephemeris out to an external file.
 
     Parameters
@@ -342,8 +343,8 @@ def write_out_ephemeris_file(ephemeris_df, ephemeris_csv_filename, args, configs
     args: sorchaArguments object or similar
         Command-line arguments from Sorcha.
 
-    configs: dict
-        Dictionary of configuration file arguments.
+    sconfigs: dataclass
+        Dataclass of configuration file arguments.
 
     Returns
     -------
@@ -352,12 +353,12 @@ def write_out_ephemeris_file(ephemeris_df, ephemeris_csv_filename, args, configs
 
     verboselog = args.pplogger.info if args.verbose else lambda *a, **k: None
 
-    if configs["eph_format"] == "csv":
+    if sconfigs.inputs.eph_format == "csv":
         verboselog("Outputting ephemeris to CSV file...")
         PPOutWriteCSV(ephemeris_df, ephemeris_csv_filename + ".csv")
-    elif configs["eph_format"] == "whitespace":
+    elif sconfigs.inputs.eph_format == "whitespace":
         verboselog("Outputting ephemeris to whitespaced CSV file...")
         PPOutWriteCSV(ephemeris_df, ephemeris_csv_filename + ".csv", separator=" ")
-    elif configs["eph_format"] == "hdf5" or configs["output_format"] == "h5":
+    elif sconfigs.inputs.eph_format == "hdf5" or sconfigs.output.output_format == "h5":
         verboselog("Outputting ephemeris to HDF5 binary file...")
         PPOutWriteHDF5(ephemeris_df, ephemeris_csv_filename + ".h5", "sorcha_ephemeris")

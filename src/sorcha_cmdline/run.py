@@ -151,22 +151,21 @@ def execute(args):
     # Extract and validate the remaining arguments.
     cmd_args = PPCommandLineParser(args)
     pplogger.info("Reading configuration file...")
-    configs = PPConfigFileParser(cmd_args["configfile"], cmd_args["surveyname"])
+    # configs = PPConfigFileParser(cmd_args["configfile"], cmd_args["surveyname"])
     sconfigs = sorchaConfigs(cmd_args["configfile"], cmd_args["surveyname"])
     pplogger.info("Configuration file read.")
 
-    if configs["ephemerides_type"] == "external" and cmd_args["input_ephemeris_file"] is None:
+    if sconfigs.inputs.ephemerides_type == "external" and cmd_args["input_ephemeris_file"] is None:
         pplogger.error("ERROR: A+R simulation not enabled and no ephemerides file provided")
         sys.exit("ERROR: A+R simulation not enabled and no ephemerides file provided")
 
-    if configs["lc_model"] and cmd_args["complex_physical_parameters"] is None:
+    if sconfigs.lightcurve.lc_model and cmd_args["complex_physical_parameters"] is None:
         pplogger.error("ERROR: No complex physical parameter file provided for light curve model")
         sys.exit("ERROR: No complex physical parameter file provided for light curve model")
 
-    if configs["comet_activity"] and cmd_args["complex_physical_parameters"] is None:
+    if sconfigs.activity.comet_activity and cmd_args["complex_physical_parameters"] is None:
         pplogger.error("ERROR: No complex physical parameter file provided for comet activity model")
         sys.exit("ERROR: No complex physical parameter file provided for comet activity model")
-
     if "SORCHA_SEED" in os.environ:
         cmd_args["seed"] = int(os.environ["SORCHA_SEED"])
         pplogger.info(f"Random seed overridden via environmental variable, SORCHA_SEED={cmd_args['seed']}")
@@ -182,7 +181,7 @@ def execute(args):
         except Exception as err:
             pplogger.error(err)
             sys.exit(err)
-        runLSSTSimulation(args, configs)
+        runLSSTSimulation(args, sconfigs)
     elif cmd_args["surveyname"] in ["LSST", "lsst"]:
         pplogger.error(
             "ERROR: The LSST has not started yet Current allowed surveys are: {}".format(

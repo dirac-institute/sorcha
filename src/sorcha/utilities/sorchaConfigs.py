@@ -94,6 +94,12 @@ class filtersConfigs:
     survey_name : str =""
     """survey name to be used for checking filters are correct"""
 
+    mainfilter: str = ""
+    """main filter chosen in physical parameter file"""
+
+    othercolours: str = ""
+    """other filters given alongside main filter"""
+
     def __post_init__(self):
         """Automatically validates the filters configs after initialisation."""
         self._validate_filters_configs()
@@ -154,7 +160,9 @@ class saturationConfigs:
             except ValueError:
                 logging.error("ERROR: could not parse brightness limits. Check formatting and try again.")
                 sys.exit("ERROR: could not parse brightness limits. Check formatting and try again.")
-            if len(self.bright_limit) != 1 and len(self.bright_limit) != len(self._observing_filters):
+            if len(self.bright_limit) == 1:
+                self.bright_limit = cast_as_float(self.bright_limit[0],"bright_limit")
+            elif len(self.bright_limit) != 1 and len(self.bright_limit) != len(self._observing_filters):
                     logging.error(
                             "ERROR: list of saturation limits is not the same length as list of observing filters."
                         )
@@ -309,7 +317,7 @@ class linkingfilterConfigs:
     """Data class for holding LINKINGFILTER section configuration file keys and validating them."""
 
     ssp_linking_on: bool = False
-    """checks to see if model should run ssp linking filter"""
+    """flag to see if model should run ssp linking filter"""
 
     drop_unlinked: bool = True
 
@@ -488,20 +496,28 @@ class expertConfigs:
     """Data class for holding expert section configuration file keys and validating them."""
 
     SNR_limit: float = 0
+    """Drops observations with signal to noise ratio less than limit given"""
 
     SNR_limit_on: bool = False
+    """flag for when an SNR limit is given"""
 
     mag_limit: float = 0
+    """Drops observations with magnitude less than limit given"""
 
     mag_limit_on: bool = False
+    """flag for when a magnitude limit is given"""
 
     trailing_losses_on: bool = True
+    """flag fir trailing losses"""
 
     default_SNR_cut: bool = True
+    """flag fir default SNR"""
     
     randomization_on: bool = True
+    """flag for randomizing astrometry and photometry"""
 
     vignetting_on: bool = True
+    """flag for calculating effects of vignetting on limiting magnitude"""
 
     def __post_init__(self):
         self._validate_expert_configs()
@@ -588,6 +604,10 @@ class sorchaConfigs:
         self.survey_name = survey_name
 
         if config_file_location:  # if a location to a config file is supplied...
+             # Save a raw copy of the configuration to the logs as a backup.
+            with open(config_file_location, "r") as file:
+                logging.info(f"Copy of configuration file {config_file_location}:\n{file.read()}")
+
             config_object = configparser.ConfigParser()  # create a ConfigParser object
             config_object.read(config_file_location)  # and read the whole config file into it
             self._read_configs_from_object(
