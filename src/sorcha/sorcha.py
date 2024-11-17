@@ -40,7 +40,7 @@ from sorcha.activity.activity_registration import update_activity_subclasses
 from sorcha.lightcurves.lightcurve_registration import update_lc_subclasses
 
 from sorcha.utilities.sorchaArguments import sorchaArguments
-from sorcha.utilities.sorchaConfigs import sorchaConfigs
+from sorcha.utilities.sorchaConfigs import sorchaConfigs, PrintConfigsToLog
 from sorcha.utilities.citation_text import cite_sorcha
 
 
@@ -120,7 +120,7 @@ def runLSSTSimulation(args, sconfigs):
         args.paramsinput, sconfigs.filters.observing_filters, sconfigs.inputs.aux_format
     )
 
-    #PPPrintConfigsToLog(configs, args) do we need this?
+    PrintConfigsToLog(sconfigs, args) 
 
     # End of config parsing
 

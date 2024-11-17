@@ -64,6 +64,9 @@ class simulationConfigs:
     ar_healpix_order: int = 0
     """the order of healpix which we will use for the healpy portions of the code."""
 
+    _ephemerides_type: str = ("")
+    """Simulation used for ephemeris input."""
+
     def __post_init__(self):
         """Automagically validates the simulation configs after initialisation."""
         self._validate_simulation_configs()
@@ -71,17 +74,18 @@ class simulationConfigs:
     def _validate_simulation_configs(self):
 
         # make sure all the mandatory keys have been populated.
-        check_key_exists(self.ar_ang_fov, "ar_ang_fov")
-        check_key_exists(self.ar_fov_buffer, "ar_fov_buffer")
-        check_key_exists(self.ar_picket, "ar_picket")
-        check_key_exists(self.ar_obs_code, "ar_obs_code")
-        check_key_exists(self.ar_healpix_order, "ar_healpix_order")
+        if self._ephemerides_type == "ar":
+            check_key_exists(self.ar_ang_fov, "ar_ang_fov")
+            check_key_exists(self.ar_fov_buffer, "ar_fov_buffer")
+            check_key_exists(self.ar_picket, "ar_picket")
+            check_key_exists(self.ar_obs_code, "ar_obs_code")
+            check_key_exists(self.ar_healpix_order, "ar_healpix_order")
 
-        # some additional checks to make sure they all make sense!
-        self.ar_ang_fov = cast_as_float(self.ar_ang_fov,"ar_ang_fov")
-        self.ar_fov_buffer = cast_as_float(self.ar_fov_buffer,"ar_fov_buffer")
-        self.ar_picket = cast_as_int(self.ar_picket, "ar_picket")
-        self.ar_healpix_order = cast_as_int(self.ar_healpix_order,"ar_healpix_order")
+            # some additional checks to make sure they all make sense!
+            self.ar_ang_fov = cast_as_float(self.ar_ang_fov,"ar_ang_fov")
+            self.ar_fov_buffer = cast_as_float(self.ar_fov_buffer,"ar_fov_buffer")
+            self.ar_picket = cast_as_int(self.ar_picket, "ar_picket")
+            self.ar_healpix_order = cast_as_int(self.ar_healpix_order,"ar_healpix_order")
 
      
 @dataclass
@@ -107,7 +111,6 @@ class filtersConfigs:
     def _validate_filters_configs(self):
         
         check_key_exists(self.observing_filters,"observing_filters")
-        self.observing_filters = cast_as_str(self.observing_filters,"obsering_filters")
         check_key_exists(self.survey_name,"survey_name")
         self.observing_filters= [e.strip() for e in self.observing_filters.split(",")]
         self._check_for_correct_filters()
@@ -619,7 +622,7 @@ class sorchaConfigs:
         inputs_dict = dict(config_object["INPUT"])
         self.inputs = inputConfigs(**inputs_dict)
 
-        simulation_dict = dict(config_object["SIMULATION"])
+        simulation_dict = {**config_object["SIMULATION"], "_ephemerides_type": self.inputs.ephemerides_type}
         self.simulation = simulationConfigs(**simulation_dict)
 
         filter_dict = {**config_object["FILTERS"], "survey_name": self.survey_name} 
@@ -659,8 +662,21 @@ class sorchaConfigs:
 
 
 def check_key_exists(value, key_name):
-    # checks to make sure that whatever is in "value" evaluates as truthy, i.e. it isn't the default and we
-    # populated this key successfully.
+    """
+    Checks to confirm that a mandatory config file value is present and has been read into the dataclass as truthy. Returns an error if value is falsy
+
+    Parameters
+    -----------
+    value : value of the config file value
+
+    key_name : string
+        The key being checked.
+
+    Returns
+    ----------
+    None.
+
+    """
 
     if not value:
         logging.error(
@@ -672,6 +688,24 @@ def check_key_exists(value, key_name):
 
 
 def check_key_doesnt_exist(value, key_name,reason):
+    """
+    Checks to confirm that a config file value is not present and has been read into the dataclass as falsy. Returns an error if value is truthy
+
+    Parameters
+    -----------
+    value : value of the config file value
+
+    key_name : string
+        The key being checked.
+
+    reason : string
+        reason given in the error message on why this value shouldn't be in the config file
+
+    Returns
+    ----------
+    None.
+    """
+
     #checks to make sure value doesn't exist 
     if value:
         logging.error(
@@ -684,6 +718,20 @@ def check_key_doesnt_exist(value, key_name,reason):
 
 def cast_as_int(value, key):
     # replaces PPGetIntOrExit: checks to make sure the value can be cast as an integer.
+    """
+    Checks to see if value can be cast as an interger.
+
+    Parameters
+    -----------
+    value : value of the config file value
+
+    key : string
+        The key being checked.
+    Returns
+    ----------
+    value as an integer
+
+    """
 
     try:
         int(value)
@@ -693,17 +741,23 @@ def cast_as_int(value, key):
 
     return int(value)
 
-def cast_as_str(value, key):
-   
-    try:
-        str(value)
-    except ValueError:
-        logging.error(f"ERROR: expected a str for config parameter {key}. Check value in config file.")
-        sys.exit(f"ERROR: expected a str for config parameter {key}. Check value in config file.")
 
-    return str(value)
 def cast_as_float(value, key):
     # replaces PPGetFloatOrExit: checks to make sure the value can be cast as a float.
+    """
+    Checks to see if value can be cast as a float.
+
+    Parameters
+    -----------
+    value : value of the config file value
+
+    key : string
+        The key being checked.
+    Returns
+    ----------
+    value as a float
+
+    """
 
     try:
         float(value)
@@ -715,6 +769,19 @@ def cast_as_float(value, key):
 
 def cast_as_bool(value, key):
     # replaces PPGetBoolOrExit: checks to make sure the value can be cast as a bool.
+    """
+    Checks to see if value can be cast as a boolen.
+
+    Parameters
+    -----------
+    value : value of the config file value
+
+    key : string
+        The key being checked.
+    Returns
+    ----------
+    value as a boolen
+    """
 
     str_value = str(value).strip()
     
@@ -729,6 +796,23 @@ def cast_as_bool(value, key):
 
 def check_value_in_list(value, valuelist, key):
     # PPConfigParser often checks to see if a config variable is in a list of permissible variables, so this abstracts it out.
+    """
+    Checks to see if a config variable is in a list of permissible variables.
+
+    Parameters
+    -----------
+    value : value of the config file value
+
+    valuelist: list
+        list of permissible values for value
+
+    key : string
+        The key being checked.
+    Returns
+    ----------
+    None.
+
+    """
 
     if value not in valuelist:
         logging.error(
@@ -765,3 +849,191 @@ def PPFindFileOrExit(arg_fn, argname):
     else:
         pplogger.error("ERROR: filename {} supplied for {} argument does not exist.".format(arg_fn, argname))
         sys.exit("ERROR: filename {} supplied for {} argument does not exist.".format(arg_fn, argname))
+
+
+def PrintConfigsToLog(sconfigs, cmd_args):
+    """
+    Prints all the values from the config file and command line to the log.
+
+    Parameters
+    -----------
+    sconfigs : dataclass
+        Dataclass of config file variables.
+
+    cmd_args : dictionary
+        Dictionary of command line arguments.
+
+    Returns
+    ----------
+    None.
+
+    """
+    pplogger = logging.getLogger(__name__)
+
+    pplogger.info("The config file used is located at " + cmd_args.configfile)
+    pplogger.info("The physical parameters file used is located at " + cmd_args.paramsinput)
+    pplogger.info("The orbits file used is located at " + cmd_args.orbinfile)
+    if cmd_args.input_ephemeris_file:
+        pplogger.info("The ephemerides file used is located at " + cmd_args.input_ephemeris_file)
+    if cmd_args.output_ephemeris_file:
+        pplogger.info("The output ephemerides file is located " + cmd_args.output_ephemeris_file)
+    pplogger.info("The survey selected is: " + cmd_args.surveyname)
+
+    if sconfigs.activity.comet_activity == "comet":
+        pplogger.info("Cometary activity set to: " + str(sconfigs.activity.comet_activity))
+    elif sconfigs.activity.comet_activity == "none":
+        pplogger.info("No cometary activity selected.")
+
+    pplogger.info("Format of ephemerides file is: " + sconfigs.inputs.eph_format)
+    pplogger.info("Format of auxiliary files is: " + sconfigs.inputs.aux_format)
+
+    pplogger.info("Pointing database path is: " + cmd_args.pointing_database)
+    pplogger.info("Pointing database required query is: " + sconfigs.inputs.pointing_sql_query)
+
+    pplogger.info(
+        "The number of objects processed in a single chunk is: " + str(sconfigs.inputs.size_serial_chunk)
+    )
+    pplogger.info("The main filter in which H is defined is " + sconfigs.filters.mainfilter)
+    rescs = " ".join(str(f) for f in sconfigs.filters.observing_filters)
+    pplogger.info("The filters included in the post-processing results are " + rescs)
+
+    if sconfigs.filters.othercolours:
+        othcs = " ".join(str(e) for e in sconfigs.filters.othercolours)
+        pplogger.info("Thus, the colour indices included in the simulation are " + othcs)
+
+    pplogger.info(
+        "The apparent brightness is calculated using the following phase function model: "
+        + sconfigs.phasecurve.phase_function
+    )
+
+    if sconfigs.expert.trailing_losses_on:
+        pplogger.info("Computation of trailing losses is switched ON.")
+    else:
+        pplogger.info("Computation of trailing losses is switched OFF.")
+
+    if sconfigs.expert.randomization_on:
+        pplogger.info("Randomization of position and magnitude around uncertainties is switched ON.")
+    else:
+        pplogger.info("Randomization of position and magnitude around uncertainties is switched OFF.")
+
+    if sconfigs.expert.vignetting_on:
+        pplogger.info("Vignetting is switched ON.")
+    else:
+        pplogger.info("Vignetting is switched OFF.")
+
+    if sconfigs.fov.camera_model == "footprint":
+        pplogger.info("Footprint is modelled after the actual camera footprint.")
+        if sconfigs.fov.footprint_path:
+            pplogger.info("Loading camera footprint from " + sconfigs.fov.footprint_path)
+        else:
+            pplogger.info("Loading default LSST footprint LSST_detector_corners_100123.csv")
+    elif sconfigs.fov.camera_model == "circle":
+        pplogger.info("Footprint is circular.")
+        if sconfigs.fov.fill_factor:
+            pplogger.info(
+                "The code will approximate chip gaps using filling factor: " + str(sconfigs.fov.fill_factor)
+            )
+        elif sconfigs.fov.circle_radius:
+            pplogger.info(
+                "A circular footprint will be applied with radius: " + str(sconfigs.fov.circle_radius)
+            )
+    else:
+        pplogger.info("Camera footprint is turned OFF.")
+
+    if sconfigs.saturation.bright_limit_on:
+        pplogger.info("The upper saturation limit(s) is/are: " + str(sconfigs.saturation.bright_limit))
+    else:
+        pplogger.info("Saturation limit is turned OFF.")
+
+    if sconfigs.expert.SNR_limit_on:
+        pplogger.info("The lower SNR limit is: " + str(sconfigs.expert.SNR_limit))
+    else:
+        pplogger.info("SNR limit is turned OFF.")
+
+    if sconfigs.expert.default_SNR_cut:
+        pplogger.info("Default SNR cut is ON. All observations with SNR < 2.0 will be removed.")
+
+    if sconfigs.expert.mag_limit_on:
+        pplogger.info("The magnitude limit is: " + str(sconfigs.expert.mag_limit))
+    else:
+        pplogger.info("Magnitude limit is turned OFF.")
+
+    if sconfigs.fadingfunction.fading_function_on:
+        pplogger.info("The detection efficiency fading function is ON.")
+        pplogger.info(
+            "The width parameter of the fading function has been set to: "
+            + str(sconfigs.fadingfunction.fading_function_width)
+        )
+        pplogger.info(
+            "The peak efficiency of the fading function has been set to: "
+            + str(sconfigs.fadingfunction.fading_function_peak_efficiency)
+        )
+    else:
+        pplogger.info("The detection efficiency fading function is OFF.")
+
+    if sconfigs.linkingfilter.ssp_linking_on:
+        pplogger.info("Solar System Processing linking filter is turned ON.")
+        pplogger.info("For SSP linking...")
+        pplogger.info(
+            "...the fractional detection efficiency is: " + str(sconfigs.linkingfilter.ssp_detection_efficiency)
+        )
+        pplogger.info(
+            "...the minimum required number of observations in a tracklet is: "
+            + str(sconfigs.linkingfilter.ssp_number_observations)
+        )
+        pplogger.info(
+            "...the minimum required number of tracklets to form a track is: "
+            + str(sconfigs.linkingfilter.ssp_number_tracklets)
+        )
+        pplogger.info(
+            "...the maximum window of time in days of tracklets to be contained in to form a track is: "
+            + str(sconfigs.linkingfilter.ssp_track_window)
+        )
+        pplogger.info(
+            "...the minimum angular separation between observations in arcseconds is: "
+            + str(sconfigs.linkingfilter.ssp_separation_threshold)
+        )
+        pplogger.info(
+            "...the maximum temporal separation between subsequent observations in a tracklet in days is: "
+            + str(sconfigs.linkingfilter.ssp_maximum_time)
+        )
+        if not sconfigs.linkingfilter.drop_unlinked:
+            pplogger.info("Unlinked objects will not be dropped.")
+    else:
+        pplogger.info("Solar System Processing linking filter is turned OFF.")
+
+    if sconfigs.inputs.ephemerides_type == "ar":
+        pplogger.info("ASSIST+REBOUND Simulation is turned ON.")
+        pplogger.info("For ASSIST+REBOUND...")
+        pplogger.info("...the field's angular FOV is: " + str(sconfigs.simulation.ar_ang_fov))
+        pplogger.info("...the buffer around the FOV is: " + str(sconfigs.simulation.ar_fov_buffer))
+        pplogger.info("...the picket interval is: " + str(sconfigs.simulation.ar_picket))
+        pplogger.info("...the observatory code is: " + str(sconfigs.simulation.ar_obs_code))
+        pplogger.info("...the healpix order is: " + str(sconfigs.simulation.ar_healpix_order))
+    else:
+        pplogger.info("ASSIST+REBOUND Simulation is turned OFF.")
+
+    if sconfigs.lightcurve.lc_model:
+        pplogger.info("A lightcurve model is being applied.")
+        pplogger.info("The lightcurve model is: " + sconfigs.lightcurve.lc_model)
+    else:
+        pplogger.info("No lightcurve model is being applied.")
+
+    pplogger.info(
+        "Output files will be saved in path: " + cmd_args.outpath + " with filestem " + cmd_args.outfilestem
+    )
+    pplogger.info("Output files will be saved as format: " + sconfigs.output.output_format)
+    pplogger.info(
+        "In the output, positions will be rounded to "
+        + str(sconfigs.output.position_decimals)
+        + " decimal places."
+    )
+    pplogger.info(
+        "In the output, magnitudes will be rounded to "
+        + str(sconfigs.output.magnitude_decimals)
+        + " decimal places."
+    )
+    if isinstance(sconfigs.output.output_columns, list):
+        pplogger.info("The output columns are set to: " + " ".join(sconfigs.output.output_columns))
+    else:
+        pplogger.info("The output columns are set to: " + sconfigs.output.output_columns)
