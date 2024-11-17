@@ -14,6 +14,7 @@ correct_inputs = {
     "pointing_sql_query": "SELECT observationId, observationStartMJD as observationStartMJD_TAI, visitTime, visitExposureTime, filter, seeingFwhmGeom as seeingFwhmGeom_arcsec, seeingFwhmEff as seeingFwhmEff_arcsec, fiveSigmaDepth as fieldFiveSigmaDepth_mag , fieldRA as fieldRA_deg, fieldDec as fieldDec_deg, rotSkyPos as fieldRotSkyPos_deg FROM observations order by observationId",
 }
 correct_simulation= {
+    "_ephemerides_type": "ar",
     "ar_ang_fov" : 2.06,
     "ar_fov_buffer" : 0.2,
     "ar_picket" : 1,
@@ -28,13 +29,14 @@ correct_filters_read= {
 }
 correct_filters= {
     "observing_filters" : ['r','g','i','z','u','y'],
-    "survey_name" : "rubin_sim"
-
+    "survey_name" : "rubin_sim", 
+    'mainfilter': '', 
+    'othercolours': ''
 }
 
 correct_saturation= {
     "bright_limit_on" : True,
-    "bright_limit" : [16.0],
+    "bright_limit" : 16.0,
     "_observing_filters" : ['r','g','i','z','u','y']
 }
 correct_saturation_read= {
@@ -237,6 +239,25 @@ def test_simulationConfigs_mandatory(key_name):
     assert (
         error_text.value.code
         == f"ERROR: No value found for required key {key_name} in config file. Please check the file and try again."
+    )
+@pytest.mark.parametrize(
+    "key_name", ["ar_ang_fov" , "ar_fov_buffer", "ar_picket", "ar_obs_code", "ar_healpix_order"])
+def test_simulationConfigs_notrequired(key_name):
+    # this loops through the mandatory keys and makes sure the code fails correctly when each is missing
+
+    simulation_configs = correct_simulation.copy()
+
+    for name in simulation_configs:
+        if key_name != name and name != "_ephemerides_type":
+            simulation_configs[name] = 0
+    simulation_configs["_ephemerides_type"] = "external"
+
+    with pytest.raises(SystemExit) as error_text:
+        test_configs = simulationConfigs(**simulation_configs)
+
+    assert (
+        error_text.value.code
+        == f"ERROR: {key_name} supplied in config file but ephemerides type is external"
     )
 
 #filters config test

@@ -86,6 +86,12 @@ class simulationConfigs:
             self.ar_fov_buffer = cast_as_float(self.ar_fov_buffer,"ar_fov_buffer")
             self.ar_picket = cast_as_int(self.ar_picket, "ar_picket")
             self.ar_healpix_order = cast_as_int(self.ar_healpix_order,"ar_healpix_order")
+        elif self._ephemerides_type == "external":
+            check_key_doesnt_exist(self.ar_ang_fov, "ar_ang_fov","but ephemerides type is external")
+            check_key_doesnt_exist(self.ar_fov_buffer, "ar_fov_buffer","but ephemerides type is external")
+            check_key_doesnt_exist(self.ar_picket, "ar_picket","but ephemerides type is external")
+            check_key_doesnt_exist(self.ar_obs_code, "ar_obs_code","but ephemerides type is external")
+            check_key_doesnt_exist(self.ar_healpix_order, "ar_healpix_order","but ephemerides type is external")
 
      
 @dataclass
