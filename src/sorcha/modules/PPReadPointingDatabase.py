@@ -32,13 +32,16 @@ def PPReadPointingDatabase(bsdbname, observing_filters, dbquery, surveyname):
 
     try:
         df = pd.read_sql_query(dbquery, con)
-    except Exception:
+    except pd.errors.DatabaseError:
         pplogger.error(
             "ERROR: PPReadPointingDatabase: SQL query on pointing database failed. Check that the query is correct in the config file."
         )
         sys.exit(
             "ERROR: PPReadPointingDatabase: SQL query on pointing database failed. Check that the query is correct in the config file."
         )
+    except Exception as e:  # pragma: no cover
+        pplogger.error(f"ERROR: PPReadPointingDatabase: error reading from pointing database: {e}")
+        sys.exit(f"ERROR: PPReadPointingDatabase: error reading from pointing database: {e}")
 
     df["observationId_"] = df["observationId"]
     df = df.rename(columns={"observationId": "FieldID"})
