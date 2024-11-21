@@ -104,6 +104,7 @@ correct_expert = {
     'randomization_on': True, 
     'vignetting_on': True
 }
+##################################################################################################################################
 
 #SORCHA Configs test
 
@@ -126,6 +127,7 @@ def test_sorchaConfigs():
     assert correct_activity == test_configs.activity.__dict__
     assert correct_expert == test_configs.expert.__dict__
 
+##################################################################################################################################
 #Inputs section test
 
 def test_inputConfigs():
@@ -190,6 +192,7 @@ def test_inputConfigs_inlist(key_name, expected_list):
         == f"ERROR: value definitely_fake_bad_key for config parameter {key_name} not recognised. Expecting one of: {expected_list}."
     )
 
+##################################################################################################################################
 #simulation configs test
 
 @pytest.mark.parametrize(
@@ -260,6 +263,7 @@ def test_simulationConfigs_notrequired(key_name):
         == f"ERROR: {key_name} supplied in config file but ephemerides type is external"
     )
 
+##################################################################################################################################
 #filters config test
 
 def test_filtersConfigs_check_filters():
@@ -290,6 +294,7 @@ def test_filtersConfigs_mandatory(key_name):
         == f"ERROR: No value found for required key {key_name} in config file. Please check the file and try again."
     )
 
+##################################################################################################################################
 #saturation configs test
 
 def test_saturationConfigs():
@@ -340,6 +345,7 @@ def test_saturationConfigs_mandatory(key_name):
         == f"ERROR: No value found for required key {key_name} in config file. Please check the file and try again."
     )   
 
+##################################################################################################################################
 #phasecurve configs tests
 
 @pytest.mark.parametrize(
@@ -381,6 +387,7 @@ def test_phasecurveConfigs_inlist(key_name, expected_list):
         == f"ERROR: value definitely_fake_bad_key for config parameter {key_name} not recognised. Expecting one of: {expected_list}."
     )
 
+##################################################################################################################################
 #fov configs test
 
 def test_fovConfigs_inlist():
@@ -411,7 +418,7 @@ def test_fovConfigs_surveyname():
 @pytest.mark.parametrize(
     "key_name", ["fill_factor","circle_radius", "footprint_edge_threshold"])
 
-def test_fovConfigs_camera_footprint(key_name):
+def test_fovConfigs_camera_footprint_mandatory_and_notrequired(key_name):
     
     fov_configs=correct_fov_read.copy()
     #check keys exist
@@ -454,7 +461,17 @@ def test_fovConfigs_bounds(key_name):
         with pytest.raises(SystemExit) as error_text:
             test_configs = fovConfigs(**fov_configs)
         assert (error_text.value.code == "ERROR: circle_radius is negative.")
- 
+
+def test_fovConfigs_camera_circle_notrequired():
+    fov_configs=correct_fov_read.copy()
+    fov_configs["camera_model"] = "circle"
+    fov_configs["fill_factor"] = 0.5
+    with pytest.raises(SystemExit) as error_text:
+            test_configs = fovConfigs(**fov_configs)
+    assert (error_text.value.code == f'ERROR: footprint_edge_threshold supplied in config file but camera model is not "footprint".')
+
+
+##################################################################################################################################
 #fadingfunction config tests
 
 @pytest.mark.parametrize(
@@ -539,6 +556,7 @@ def test_fadingfunction_outofbounds(key_name):
         error_text.value.code
         == "ERROR: fading_function_peak_efficiency out of bounds. Must be between 0 and 1.")
 
+##################################################################################################################################
 #linkingfilter tests
 
 
@@ -639,6 +657,7 @@ def test_linkingfilter_bool():
 
     assert error_text.value.code == f"ERROR: expected a bool for config parameter drop_unlinked. Check value in config file."
 
+##################################################################################################################################
 #output config tests
 
 @pytest.mark.parametrize(
@@ -667,8 +686,8 @@ def test_outputConfigs_mandatory(key_name):
     ],
 )
 def test_outputConfigs_inlist(key_name, expected_list):
-    # this loops through the inputs keys that need to have one of several set values and makes sure the correct error message triggers when they're not
-
+   
+   
     output_configs = correct_output.copy()
 
     output_configs[key_name] = "definitely_fake_bad_key"
@@ -719,6 +738,7 @@ def test_outputConfigs_decimel_check(key_name):
         error_text.value.code
         == "ERROR: decimal places config variables cannot be negative.")
 
+##################################################################################################################################
 #lightcurve config test
 
 def test_lightcurve_config():
@@ -732,7 +752,7 @@ def test_lightcurve_config():
             test_configs = lightcurveConfigs(**lightcurve_configs)
     assert error_text.value.code == f"The requested light curve model, 'what_model', is not registered. Available lightcurve options are: {list(LC_METHODS.keys())}"
 
-
+##################################################################################################################################
 #activity config test
 
 def test_activity_config():
@@ -746,7 +766,7 @@ def test_activity_config():
             test_configs = activityConfigs(**activity_configs)
     assert error_text.value.code == f"The requested comet activity model, 'nothing', is not registered. Available comet activity models are: {list(CA_METHODS.keys())}"
 
-
+##################################################################################################################################
 #expert config test
 
 @pytest.mark.parametrize(
