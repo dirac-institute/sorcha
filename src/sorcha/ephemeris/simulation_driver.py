@@ -59,7 +59,7 @@ def create_ephemeris(orbits_df, pointings_df, args, sconfigs):
         The dataframe containing the collection of telescope/camera pointings.
     args :
         Various arguments necessary for the calculation
-    sconfigs: 
+    sconfigs:
         Dataclass of configuration file arguments.
         Various configuration parameters necessary for the calculation
         ang_fov : float
@@ -108,7 +108,7 @@ def create_ephemeris(orbits_df, pointings_df, args, sconfigs):
     buffer = sconfigs.simulation.ar_fov_buffer
     picket_interval = sconfigs.simulation.ar_picket
     obsCode = sconfigs.simulation.ar_obs_code
-    nside = 2 ** sconfigs.simulation.ar_healpix_order
+    nside = 2**sconfigs.simulation.ar_healpix_order
     n_sub_intervals = 101  # configs["n_sub_intervals"]
 
     ephemeris_csv_filename = None

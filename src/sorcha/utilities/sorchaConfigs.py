@@ -11,7 +11,7 @@ from sorcha.activity.activity_registration import CA_METHODS
 class inputConfigs:
     """Data class for holding INPUTS section configuration file keys and validating them."""
 
-    ephemerides_type: str = ("")
+    ephemerides_type: str = ""
     """Simulation used for ephemeris input."""
 
     eph_format: str = ""
@@ -45,26 +45,27 @@ class inputConfigs:
         check_value_in_list(self.aux_format, ["comma", "whitespace", "csv"], "aux_format")
         self.size_serial_chunk = cast_as_int(self.size_serial_chunk, "size_serial_chunk")
 
+
 @dataclass
 class simulationConfigs:
     """Data class for holding SIMULATION section configuration file keys and validating them"""
-    
+
     ar_ang_fov: float = 0.0
     """the field of view of our search field, in degrees"""
 
     ar_fov_buffer: float = 0.0
     """the buffer zone around the field of view we want to include, in degrees"""
-    
+
     ar_picket: float = 0.0
     """imprecise discretization of time that allows us to move progress our simulations forward without getting too granular when we don't have to. the unit is number of days."""
 
-    ar_obs_code: str = "" 
+    ar_obs_code: str = ""
     """the obscode is the MPC observatory code for the provided telescope."""
 
     ar_healpix_order: int = 0
     """the order of healpix which we will use for the healpy portions of the code."""
 
-    _ephemerides_type: str = ("")
+    _ephemerides_type: str = ""
     """Simulation used for ephemeris input."""
 
     def __post_init__(self):
@@ -82,26 +83,28 @@ class simulationConfigs:
             check_key_exists(self.ar_healpix_order, "ar_healpix_order")
 
             # some additional checks to make sure they all make sense!
-            self.ar_ang_fov = cast_as_float(self.ar_ang_fov,"ar_ang_fov")
-            self.ar_fov_buffer = cast_as_float(self.ar_fov_buffer,"ar_fov_buffer")
+            self.ar_ang_fov = cast_as_float(self.ar_ang_fov, "ar_ang_fov")
+            self.ar_fov_buffer = cast_as_float(self.ar_fov_buffer, "ar_fov_buffer")
             self.ar_picket = cast_as_int(self.ar_picket, "ar_picket")
-            self.ar_healpix_order = cast_as_int(self.ar_healpix_order,"ar_healpix_order")
+            self.ar_healpix_order = cast_as_int(self.ar_healpix_order, "ar_healpix_order")
         elif self._ephemerides_type == "external":
-            check_key_doesnt_exist(self.ar_ang_fov, "ar_ang_fov","but ephemerides type is external")
-            check_key_doesnt_exist(self.ar_fov_buffer, "ar_fov_buffer","but ephemerides type is external")
-            check_key_doesnt_exist(self.ar_picket, "ar_picket","but ephemerides type is external")
-            check_key_doesnt_exist(self.ar_obs_code, "ar_obs_code","but ephemerides type is external")
-            check_key_doesnt_exist(self.ar_healpix_order, "ar_healpix_order","but ephemerides type is external")
+            check_key_doesnt_exist(self.ar_ang_fov, "ar_ang_fov", "but ephemerides type is external")
+            check_key_doesnt_exist(self.ar_fov_buffer, "ar_fov_buffer", "but ephemerides type is external")
+            check_key_doesnt_exist(self.ar_picket, "ar_picket", "but ephemerides type is external")
+            check_key_doesnt_exist(self.ar_obs_code, "ar_obs_code", "but ephemerides type is external")
+            check_key_doesnt_exist(
+                self.ar_healpix_order, "ar_healpix_order", "but ephemerides type is external"
+            )
 
-     
+
 @dataclass
 class filtersConfigs:
     """Data class for holding FILTERS section configuration file keys and validating them"""
-   
+
     observing_filters: str = ""
     """Filters of the observations you are interested in, comma-separated."""
 
-    survey_name : str =""
+    survey_name: str = ""
     """survey name to be used for checking filters are correct"""
 
     mainfilter: str = ""
@@ -115,15 +118,15 @@ class filtersConfigs:
         self._validate_filters_configs()
 
     def _validate_filters_configs(self):
-        
-        check_key_exists(self.observing_filters,"observing_filters")
-        check_key_exists(self.survey_name,"survey_name")
-        self.observing_filters= [e.strip() for e in self.observing_filters.split(",")]
+
+        check_key_exists(self.observing_filters, "observing_filters")
+        check_key_exists(self.survey_name, "survey_name")
+        self.observing_filters = [e.strip() for e in self.observing_filters.split(",")]
         self._check_for_correct_filters()
 
     def _check_for_correct_filters(self):
 
-        if self.survey_name in ["rubin_sim", "RUBIN_SIM","LSST","lsst"]:
+        if self.survey_name in ["rubin_sim", "RUBIN_SIM", "LSST", "lsst"]:
             lsst_filters = ["u", "g", "r", "i", "z", "y"]
             filters_ok = all(elem in lsst_filters for elem in self.observing_filters)
 
@@ -142,10 +145,11 @@ class filtersConfigs:
                     )
                 )
 
+
 @dataclass
 class saturationConfigs:
     """Data class for holding SATURATION section configuration file keys and validating them"""
-    
+
     bright_limit_on: bool = False
 
     bright_limit: float = 0
@@ -159,10 +163,10 @@ class saturationConfigs:
         self._validate_saturation_configs()
 
     def _validate_saturation_configs(self):
-        check_key_exists(self._observing_filters,"_observing_filters")
+        check_key_exists(self._observing_filters, "_observing_filters")
         if self.bright_limit:
             self.bright_limit_on = True
-        
+
         if self.bright_limit_on:
             try:
                 self.bright_limit = [float(e.strip()) for e in self.bright_limit.split(",")]
@@ -170,22 +174,23 @@ class saturationConfigs:
                 logging.error("ERROR: could not parse brightness limits. Check formatting and try again.")
                 sys.exit("ERROR: could not parse brightness limits. Check formatting and try again.")
             if len(self.bright_limit) == 1:
-                self.bright_limit = cast_as_float(self.bright_limit[0],"bright_limit")
+                self.bright_limit = cast_as_float(self.bright_limit[0], "bright_limit")
             elif len(self.bright_limit) != 1 and len(self.bright_limit) != len(self._observing_filters):
-                    logging.error(
-                            "ERROR: list of saturation limits is not the same length as list of observing filters."
-                        )
-                    sys.exit(
-                            "ERROR: list of saturation limits is not the same length as list of observing filters."
-                        )
-                    
+                logging.error(
+                    "ERROR: list of saturation limits is not the same length as list of observing filters."
+                )
+                sys.exit(
+                    "ERROR: list of saturation limits is not the same length as list of observing filters."
+                )
+
+
 @dataclass
 class phasecurvesConfigs:
     """Data class for holding PHASECURVES section configuration file keys and validating them"""
-    
+
     phase_function: str = ""
     """The phase function used to calculate apparent magnitude. The physical parameters input"""
-    
+
     def __post_init__(self):
         """Automatically validates the phasecurve configs after initialisation."""
         self._validate_phasecurve_configs()
@@ -195,7 +200,8 @@ class phasecurvesConfigs:
         # make sure all the mandatory keys have been populated.
         check_key_exists(self.phase_function, "phase_function")
 
-        check_value_in_list(self.phase_function, ["HG","HG1G2","HG12","linear","none"], "phase_function")
+        check_value_in_list(self.phase_function, ["HG", "HG1G2", "HG12", "linear", "none"], "phase_function")
+
 
 @dataclass
 class fovConfigs:
@@ -221,40 +227,46 @@ class fovConfigs:
 
     def __post_init__(self):
         self._validate_fov_configs()
-    
+
     def _validate_fov_configs(self):
 
-        check_key_exists(self.camera_model,"camera_model")
-        check_value_in_list(self.camera_model,["circle", "footprint"],"camera_model")
+        check_key_exists(self.camera_model, "camera_model")
+        check_value_in_list(self.camera_model, ["circle", "footprint"], "camera_model")
 
         if self.camera_model == "footprint":
             self._camera_footprint()
-        
+
         elif self.camera_model == "circle":
             self._camera_circle()
 
     def _camera_footprint(self):
 
         if self.footprint_path:
-             PPFindFileOrExit(self.footprint_path,"footprint_path")
-        elif self.survey_name.lower() not in ["lsst","rubin_sim"]:
-            logging.error("ERROR: a default detector footprint is currently only provided for LSST; please provide your own footprint file.")
-            sys.exit("ERROR: a default detector footprint is currently only provided for LSST; please provide your own footprint file.")
+            PPFindFileOrExit(self.footprint_path, "footprint_path")
+        elif self.survey_name.lower() not in ["lsst", "rubin_sim"]:
+            logging.error(
+                "ERROR: a default detector footprint is currently only provided for LSST; please provide your own footprint file."
+            )
+            sys.exit(
+                "ERROR: a default detector footprint is currently only provided for LSST; please provide your own footprint file."
+            )
 
-        check_key_exists(self.footprint_edge_threshold,"footprint_edge_threshold")
-        self.footprint_edge_threshold = cast_as_float(self.footprint_edge_threshold,"footprint_edge_threshold")
-        check_key_doesnt_exist(self.fill_factor,"fill_factor",'but camera model is not "circle".')
-        check_key_doesnt_exist(self.circle_radius,"circle_radius",'but camera model is not "circle".')
-    
+        check_key_exists(self.footprint_edge_threshold, "footprint_edge_threshold")
+        self.footprint_edge_threshold = cast_as_float(
+            self.footprint_edge_threshold, "footprint_edge_threshold"
+        )
+        check_key_doesnt_exist(self.fill_factor, "fill_factor", 'but camera model is not "circle".')
+        check_key_doesnt_exist(self.circle_radius, "circle_radius", 'but camera model is not "circle".')
+
     def _camera_circle(self):
 
         if self.fill_factor:
-            self.fill_factor = cast_as_float(self.fill_factor,"fill_factor")
+            self.fill_factor = cast_as_float(self.fill_factor, "fill_factor")
             if self.fill_factor < 0.0 or self.fill_factor > 1.0:
                 logging.error("ERROR: fill_factor out of bounds. Must be between 0 and 1.")
                 sys.exit("ERROR: fill_factor out of bounds. Must be between 0 and 1.")
         elif self.circle_radius:
-            self.circle_radius = cast_as_float(self.circle_radius,"circle_radius")
+            self.circle_radius = cast_as_float(self.circle_radius, "circle_radius")
             if self.circle_radius < 0.0:
                 logging.error("ERROR: circle_radius is negative.")
                 sys.exit("ERROR: circle_radius is negative.")
@@ -265,12 +277,15 @@ class fovConfigs:
             sys.exit(
                 'ERROR: either "fill_factor" or "circle_radius" must be specified for circular footprint.'
             )
-        check_key_doesnt_exist(self.footprint_edge_threshold,"footprint_edge_threshold",'but camera model is not "footprint".')
+        check_key_doesnt_exist(
+            self.footprint_edge_threshold, "footprint_edge_threshold", 'but camera model is not "footprint".'
+        )
+
 
 @dataclass
 class fadingfunctionConfigs:
     """Data class for holding FADINGFUNCTION section configuration file keys and validating them"""
-    
+
     fading_function_on: bool = False
     """Detection efficiency fading function on or off."""
 
@@ -288,19 +303,21 @@ class fadingfunctionConfigs:
 
         # make sure all the mandatory keys have been populated.
         check_key_exists(self.fading_function_on, "fading_function_on")
-        self.fading_function_on = cast_as_bool(self.fading_function_on,"fading_function_on")
-        
+        self.fading_function_on = cast_as_bool(self.fading_function_on, "fading_function_on")
+
         if self.fading_function_on == True:
 
-            #when fading_function_on = true, fading_function_width and fading_function_peak_efficiency now mandatory
+            # when fading_function_on = true, fading_function_width and fading_function_peak_efficiency now mandatory
             check_key_exists(self.fading_function_width, "fading_function_width")
             check_key_exists(self.fading_function_peak_efficiency, "fading_function_peak_efficiency")
-            self.fading_function_width = cast_as_float(self.fading_function_width,"fading_function_width")
-            self.fading_function_peak_efficiency = cast_as_float(self.fading_function_peak_efficiency,"fading_function_peak_efficiency")
-            
-            #boundary conditions for both width and peak efficency
+            self.fading_function_width = cast_as_float(self.fading_function_width, "fading_function_width")
+            self.fading_function_peak_efficiency = cast_as_float(
+                self.fading_function_peak_efficiency, "fading_function_peak_efficiency"
+            )
+
+            # boundary conditions for both width and peak efficency
             if self.fading_function_width <= 0.0 or self.fading_function_width > 0.5:
-                
+
                 logging.error(
                     "ERROR: fading_function_width out of bounds. Must be greater than zero and less than 0.5."
                 )
@@ -311,15 +328,20 @@ class fadingfunctionConfigs:
             if self.fading_function_peak_efficiency < 0.0 or self.fading_function_peak_efficiency > 1.0:
                 logging.error(
                     "ERROR: fading_function_peak_efficiency out of bounds. Must be between 0 and 1."
-                    )
-                sys.exit(
-                    "ERROR: fading_function_peak_efficiency out of bounds. Must be between 0 and 1."
-                    )
-        
+                )
+                sys.exit("ERROR: fading_function_peak_efficiency out of bounds. Must be between 0 and 1.")
+
         elif self.fading_function_on == False:
-            #making sure these aren't populated when self.fading_function_on = False
-            check_key_doesnt_exist(self.fading_function_width,"fading_function_width","but fading_function_on is False.")
-            check_key_doesnt_exist(self.fading_function_peak_efficiency,"fading_function_peak_efficiency","but fading_function_on is False.")
+            # making sure these aren't populated when self.fading_function_on = False
+            check_key_doesnt_exist(
+                self.fading_function_width, "fading_function_width", "but fading_function_on is False."
+            )
+            check_key_doesnt_exist(
+                self.fading_function_peak_efficiency,
+                "fading_function_peak_efficiency",
+                "but fading_function_on is False.",
+            )
+
 
 @dataclass
 class linkingfilterConfigs:
@@ -335,13 +357,13 @@ class linkingfilterConfigs:
 
     ssp_number_observations: int = 0
     """Length of tracklets. How many observations of an object during one night are required to produce a valid tracklet?"""
-    
+
     ssp_separation_threshold: float = 0
     """Minimum separation (in arcsec) between two observations of an object required for the linking software to distinguish them as separate and therefore as a valid tracklet."""
 
     ssp_maximum_time: float = 0
     """Maximum time separation (in days) between subsequent observations in a tracklet. Default is 0.0625 days (90mins)."""
-   
+
     ssp_number_tracklets: int = 0
     """Number of tracklets for detection. How many tracklets are required to classify an object as detected?  """
 
@@ -355,15 +377,18 @@ class linkingfilterConfigs:
         self._validate_linkingfilter_configs()
 
     def _validate_linkingfilter_configs(self):
-        
-        self.ssp_detection_efficiency = cast_as_float(self.ssp_detection_efficiency,"ssp_detection_efficiency")
-        self.ssp_number_observations = cast_as_int(self.ssp_number_observations,"ssp_number_observations")
-        self.ssp_separation_threshold = cast_as_float(self.ssp_separation_threshold,"ssp_separation_threshold")
-        self.ssp_maximum_time = cast_as_float(self.ssp_maximum_time,"ssp_maximum_time")
-        self.ssp_number_tracklets = cast_as_int(self.ssp_number_tracklets,"ssp_number_tracklets")
-        self.ssp_track_window = cast_as_int(self.ssp_track_window,"ssp_track_window")
-        self.ssp_night_start_utc = cast_as_float(self.ssp_night_start_utc,"ssp_night_start_utc")
 
+        self.ssp_detection_efficiency = cast_as_float(
+            self.ssp_detection_efficiency, "ssp_detection_efficiency"
+        )
+        self.ssp_number_observations = cast_as_int(self.ssp_number_observations, "ssp_number_observations")
+        self.ssp_separation_threshold = cast_as_float(
+            self.ssp_separation_threshold, "ssp_separation_threshold"
+        )
+        self.ssp_maximum_time = cast_as_float(self.ssp_maximum_time, "ssp_maximum_time")
+        self.ssp_number_tracklets = cast_as_int(self.ssp_number_tracklets, "ssp_number_tracklets")
+        self.ssp_track_window = cast_as_int(self.ssp_track_window, "ssp_track_window")
+        self.ssp_night_start_utc = cast_as_float(self.ssp_night_start_utc, "ssp_night_start_utc")
 
         sspvariables = [
             self.ssp_separation_threshold,
@@ -372,7 +397,7 @@ class linkingfilterConfigs:
             self.ssp_track_window,
             self.ssp_detection_efficiency,
             self.ssp_maximum_time,
-            self.ssp_night_start_utc
+            self.ssp_night_start_utc,
         ]
 
         # the below if-statement explicitly checks for None so a zero triggers the correct error
@@ -408,14 +433,14 @@ class linkingfilterConfigs:
             self.ssp_linking_on = True
         elif not any(sspvariables):
             self.ssp_linking_on = False
-        else: 
+        else:
             logging.error(
-            "ERROR: only some ssp linking variables supplied. Supply all five required variables for ssp linking filter, or none to turn filter off."
+                "ERROR: only some ssp linking variables supplied. Supply all five required variables for ssp linking filter, or none to turn filter off."
             )
             sys.exit(
-            "ERROR: only some ssp linking variables supplied. Supply all five required variables for ssp linking filter, or none to turn filter off."
+                "ERROR: only some ssp linking variables supplied. Supply all five required variables for ssp linking filter, or none to turn filter off."
             )
-        self.drop_unlinked = cast_as_bool(self.drop_unlinked,"drop_unlinked")
+        self.drop_unlinked = cast_as_bool(self.drop_unlinked, "drop_unlinked")
 
 
 @dataclass
@@ -444,30 +469,26 @@ class outputConfigs:
         check_key_exists(self.output_format, "output_format")
         check_key_exists(self.output_columns, "output_columns")
 
-
         # some additional checks to make sure they all make sense!
-        check_value_in_list(self.output_format, ["csv", "sqlite3","hdf5"], "output_format")
+        check_value_in_list(self.output_format, ["csv", "sqlite3", "hdf5"], "output_format")
 
-        if (
-        "," in self.output_columns
-        ):  # assume list of column names: turn into a list and strip whitespace
-            self.output_columns = [
-            colname.strip(" ") for colname in self.output_columns.split(",")
-        ]
+        if "," in self.output_columns:  # assume list of column names: turn into a list and strip whitespace
+            self.output_columns = [colname.strip(" ") for colname in self.output_columns.split(",")]
         else:
             check_value_in_list(self.output_columns, ["basic", "all"], "output_columns")
         self._validate_decimals()
 
     def _validate_decimals(self):
-        self.position_decimals = cast_as_float(self.position_decimals,"position_decimals")
-        self.magnitude_decimals = cast_as_float(self.magnitude_decimals,"magnitude_decimals")
+        self.position_decimals = cast_as_float(self.position_decimals, "position_decimals")
+        self.magnitude_decimals = cast_as_float(self.magnitude_decimals, "magnitude_decimals")
         if self.position_decimals and self.position_decimals < 0:
             logging.error("ERROR: decimal places config variables cannot be negative.")
             sys.exit("ERROR: decimal places config variables cannot be negative.")
         if self.magnitude_decimals and self.magnitude_decimals < 0:
             logging.error("ERROR: decimal places config variables cannot be negative.")
             sys.exit("ERROR: decimal places config variables cannot be negative.")
-        
+
+
 @dataclass
 class lightcurveConfigs:
     """Data class for holding LIGHTCURVE section configuration file keys and validating them."""
@@ -481,8 +502,13 @@ class lightcurveConfigs:
     def _validate_lightcurve_configs(self):
         self.lc_model = None if self.lc_model == "none" else self.lc_model
         if self.lc_model and self.lc_model not in LC_METHODS:
-            logging.error(f"The requested light curve model, '{self.lc_model}', is not registered. Available lightcurve options are: {list(LC_METHODS.keys())}")
-            sys.exit(f"The requested light curve model, '{self.lc_model}', is not registered. Available lightcurve options are: {list(LC_METHODS.keys())}")
+            logging.error(
+                f"The requested light curve model, '{self.lc_model}', is not registered. Available lightcurve options are: {list(LC_METHODS.keys())}"
+            )
+            sys.exit(
+                f"The requested light curve model, '{self.lc_model}', is not registered. Available lightcurve options are: {list(LC_METHODS.keys())}"
+            )
+
 
 @dataclass
 class activityConfigs:
@@ -490,15 +516,20 @@ class activityConfigs:
 
     comet_activity: str = ""
     """The unique name of the actvity model to use. Defined in the ``name_id`` method of the subclasses of AbstractCometaryActivity.  If not none, a complex physical parameters file must be specified at the command line."""
-    
+
     def __post_init__(self):
         self._validate_activity_configs()
 
     def _validate_activity_configs(self):
         self.comet_activity = None if self.comet_activity == "none" else self.comet_activity
         if self.comet_activity and self.comet_activity not in CA_METHODS:
-            logging.error(f"The requested comet activity model, '{self.comet_activity}', is not registered. Available comet activity models are: {list(CA_METHODS.keys())}")
-            sys.exit(f"The requested comet activity model, '{self.comet_activity}', is not registered. Available comet activity models are: {list(CA_METHODS.keys())}")
+            logging.error(
+                f"The requested comet activity model, '{self.comet_activity}', is not registered. Available comet activity models are: {list(CA_METHODS.keys())}"
+            )
+            sys.exit(
+                f"The requested comet activity model, '{self.comet_activity}', is not registered. Available comet activity models are: {list(CA_METHODS.keys())}"
+            )
+
 
 @dataclass
 class expertConfigs:
@@ -521,7 +552,7 @@ class expertConfigs:
 
     default_SNR_cut: bool = True
     """flag fir default SNR"""
-    
+
     randomization_on: bool = True
     """flag for randomizing astrometry and photometry"""
 
@@ -530,12 +561,12 @@ class expertConfigs:
 
     def __post_init__(self):
         self._validate_expert_configs()
-        
+
     def _validate_expert_configs(self):
 
         if self.SNR_limit:
             self.SNR_limit_on = True
-        
+
         if self.mag_limit:
             self.mag_limit_on = True
 
@@ -553,12 +584,14 @@ class expertConfigs:
             )
             sys.exit(
                 "ERROR: SNR limit and magnitude limit are mutually exclusive. Please delete one or both from config file."
-            )  
+            )
 
-        self.trailing_losses_on = cast_as_bool(self.trailing_losses_on,"trailing_losses_on")
-        self.default_SNR_cut = cast_as_bool(self.default_SNR_cut,"default_SNR_cut")
-        self.randomization_on = cast_as_bool(self.randomization_on,"randomization_on")
-        self.vignetting_on  = cast_as_bool(self.vignetting_on,"vignetting_on")  
+        self.trailing_losses_on = cast_as_bool(self.trailing_losses_on, "trailing_losses_on")
+        self.default_SNR_cut = cast_as_bool(self.default_SNR_cut, "default_SNR_cut")
+        self.randomization_on = cast_as_bool(self.randomization_on, "randomization_on")
+        self.vignetting_on = cast_as_bool(self.vignetting_on, "vignetting_on")
+
+
 @dataclass
 class sorchaConfigs:
     """Dataclass which stores configuration file keywords in dataclasses."""
@@ -581,7 +614,7 @@ class sorchaConfigs:
     fov: fovConfigs = None
     """fovConfigs dataclass which stores the keywords from the FOV section of the config file."""
 
-    fadingfunction: fadingfunctionConfigs = None 
+    fadingfunction: fadingfunctionConfigs = None
     """fadingfunctionConfigs dataclass which stores the keywords from the FADINGFUNCTION section of the config file."""
 
     linkingfilter: linkingfilterConfigs = None
@@ -589,16 +622,16 @@ class sorchaConfigs:
 
     output: outputConfigs = None
     """outputConfigs dataclass which stores the keywords from the OUTPUT section of the config file."""
-    
+
     lightcurve: lightcurveConfigs = None
     """lightcurveConfigs dataclass which stores the keywords from the LIGHTCURVE section of the config file."""
-   
+
     activity: activityConfigs = None
     """activityConfigs dataclass which stores the keywords from the ACTIVITY section of the config file."""
-   
+
     expert: expertConfigs = None
     """expertConfigs dataclass which stores the keywords from the EXPERT section of the config file."""
-   
+
     pplogger: None = None
     """The Python logger instance"""
 
@@ -613,7 +646,7 @@ class sorchaConfigs:
         self.survey_name = survey_name
 
         if config_file_location:  # if a location to a config file is supplied...
-             # Save a raw copy of the configuration to the logs as a backup.
+            # Save a raw copy of the configuration to the logs as a backup.
             with open(config_file_location, "r") as file:
                 logging.info(f"Copy of configuration file {config_file_location}:\n{file.read()}")
 
@@ -622,27 +655,28 @@ class sorchaConfigs:
             self._read_configs_from_object(
                 config_object
             )  # now we call a function that populates the class attributes
+
     def _read_configs_from_object(self, config_object):
         """function that populates the class attributes"""
 
-        #list of sections and corresponding config file
+        # list of sections and corresponding config file
         section_list = {
-            "INPUT" : inputConfigs,
-            "SIMULATION" : simulationConfigs,
-            "FILTERS" : filtersConfigs,
-            "SATURATION" : saturationConfigs,
-            "PHASECURVES" : phasecurvesConfigs,
-            "FOV" : fovConfigs,
-            "FADINGFUNCTION" : fadingfunctionConfigs,
-            "LINKINGFILTER" : linkingfilterConfigs,
-            "OUTPUT" : outputConfigs,
-            "LIGHTCURVE" : lightcurveConfigs,
-            "ACTIVITY" : activityConfigs,
-            "EXPERT" : expertConfigs
+            "INPUT": inputConfigs,
+            "SIMULATION": simulationConfigs,
+            "FILTERS": filtersConfigs,
+            "SATURATION": saturationConfigs,
+            "PHASECURVES": phasecurvesConfigs,
+            "FOV": fovConfigs,
+            "FADINGFUNCTION": fadingfunctionConfigs,
+            "LINKINGFILTER": linkingfilterConfigs,
+            "OUTPUT": outputConfigs,
+            "LIGHTCURVE": lightcurveConfigs,
+            "ACTIVITY": activityConfigs,
+            "EXPERT": expertConfigs,
         }
-        #general function that reads in config file sections into there config dataclasses
-        for section , config_section in section_list.items():
-            if config_object.has_section(section): 
+        # general function that reads in config file sections into there config dataclasses
+        for section, config_section in section_list.items():
+            if config_object.has_section(section):
                 extra_args = {}
                 if section == "SIMULATION":
                     extra_args["_ephemerides_type"] = self.input.ephemerides_type
@@ -652,14 +686,13 @@ class sorchaConfigs:
                     extra_args["_observing_filters"] = self.filters.observing_filters
                 elif section == "FOV":
                     extra_args["survey_name"] = self.survey_name
-                section_dict =  dict(config_object[section])
+                section_dict = dict(config_object[section])
                 config_instance = config_section(**section_dict, **extra_args)
-                
-            else:
-                config_instance = config_section() #if section not in config file take default values
-            section_key = section.lower()
-            setattr(self, section_key, config_instance)    
 
+            else:
+                config_instance = config_section()  # if section not in config file take default values
+            section_key = section.lower()
+            setattr(self, section_key, config_instance)
 
 
 ## below are the utility functions used to help validate the keywords, add more as needed
@@ -692,7 +725,7 @@ def check_key_exists(value, key_name):
         )
 
 
-def check_key_doesnt_exist(value, key_name,reason):
+def check_key_doesnt_exist(value, key_name, reason):
     """
     Checks to confirm that a config file value is not present and has been read into the dataclass as falsy. Returns an error if value is truthy
 
@@ -712,14 +745,10 @@ def check_key_doesnt_exist(value, key_name,reason):
     None.
     """
 
-    #checks to make sure value doesn't exist 
+    # checks to make sure value doesn't exist
     if value:
-        logging.error(
-            f"ERROR: {key_name} supplied in config file {reason}"
-        )
-        sys.exit(
-            f"ERROR: {key_name} supplied in config file {reason}"
-        )
+        logging.error(f"ERROR: {key_name} supplied in config file {reason}")
+        sys.exit(f"ERROR: {key_name} supplied in config file {reason}")
 
 
 def cast_as_int(value, key):
@@ -775,6 +804,7 @@ def cast_as_float(value, key):
 
     return float(value)
 
+
 def cast_as_bool(value, key):
     # replaces PPGetBoolOrExit: checks to make sure the value can be cast as a bool.
     """
@@ -793,10 +823,10 @@ def cast_as_bool(value, key):
     """
 
     str_value = str(value).strip()
-    
-    if str_value in ['true', '1', 'yes', 'y','True']:
+
+    if str_value in ["true", "1", "yes", "y", "True"]:
         return True
-    elif str_value in ['false', '0', 'no', 'n','False']:
+    elif str_value in ["false", "0", "no", "n", "False"]:
         return False
     else:
         logging.error(f"ERROR: expected a bool for config parameter {key}. Check value in config file.")
@@ -985,7 +1015,8 @@ def PrintConfigsToLog(sconfigs, cmd_args):
         pplogger.info("Solar System Processing linking filter is turned ON.")
         pplogger.info("For SSP linking...")
         pplogger.info(
-            "...the fractional detection efficiency is: " + str(sconfigs.linkingfilter.ssp_detection_efficiency)
+            "...the fractional detection efficiency is: "
+            + str(sconfigs.linkingfilter.ssp_detection_efficiency)
         )
         pplogger.info(
             "...the minimum required number of observations in a tracklet is: "

@@ -17,7 +17,7 @@ def stats(observations, statsfilename, outpath, sconfigs):
 
     statsfilename : string
         Stem filename to write summary stats file to
-    
+
     sconfigs: dataclass
         Dataclass of configuration file arguments.
 

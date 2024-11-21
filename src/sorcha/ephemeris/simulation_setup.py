@@ -205,7 +205,7 @@ def precompute_pointing_information(pointings_df, args, sconfigs):
     partial_get_hp_neighbors = partial(
         get_hp_neighbors,
         search_radius=sconfigs.simulation.ar_ang_fov + sconfigs.simulation.ar_fov_buffer,
-        nside=2 ** sconfigs.simulation.ar_healpix_order,
+        nside=2**sconfigs.simulation.ar_healpix_order,
         nested=True,
     )
 

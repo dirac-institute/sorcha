@@ -120,14 +120,17 @@ def runLSSTSimulation(args, sconfigs):
         args.paramsinput, sconfigs.filters.observing_filters, sconfigs.input.aux_format
     )
 
-    PrintConfigsToLog(sconfigs, args) 
+    PrintConfigsToLog(sconfigs, args)
 
     # End of config parsing
 
     verboselog("Reading pointing database...")
 
     filterpointing = PPReadPointingDatabase(
-        args.pointing_database, sconfigs.filters.observing_filters, sconfigs.input.pointing_sql_query, args.surveyname
+        args.pointing_database,
+        sconfigs.filters.observing_filters,
+        sconfigs.input.pointing_sql_query,
+        args.surveyname,
     )
 
     # if we are going to compute the ephemerides, then we should pre-compute all
@@ -310,7 +313,9 @@ def runLSSTSimulation(args, sconfigs):
         if sconfigs.saturation.bright_limit_on and len(observations.index) > 0:
             verboselog("Dropping observations that are too bright...")
             verboselog("Number of rows BEFORE applying bright limit filter " + str(len(observations.index)))
-            observations = PPBrightLimit(observations, sconfigs.filters.observing_filters, sconfigs.saturation.bright_limit)
+            observations = PPBrightLimit(
+                observations, sconfigs.filters.observing_filters, sconfigs.saturation.bright_limit
+            )
             verboselog("Number of rows AFTER applying bright limit filter " + str(len(observations.index)))
 
         if sconfigs.linkingfilter.ssp_linking_on and len(observations.index) > 0:
