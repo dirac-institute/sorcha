@@ -35,8 +35,8 @@ def main():
     )
     required.add_argument(
         "-p",
-        "--params",
-        help="Physical parameters file name",
+        "--physical-parameters",
+        help="Catalog of object physical parameters",
         type=str,
         dest="p",
         required=True,
@@ -80,7 +80,7 @@ def main():
     optional.add_argument(
         "--cp",
         "--complex-physical-parameters",
-        help="Complex physical parameters file name",
+        help="Catalog of object complex physical parameters",
         type=str,
         dest="cp",
     )
@@ -101,7 +101,7 @@ def main():
     optional.add_argument(
         "-v",
         "--verbose",
-        help="Verbosity. Default currently true; include to turn off verbosity.",
+        help="Print additional information to log while running",
         dest="v",
         default=True,
         action="store_false",
