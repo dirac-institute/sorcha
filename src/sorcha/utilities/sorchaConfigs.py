@@ -563,7 +563,7 @@ class expertConfigs:
 class sorchaConfigs:
     """Dataclass which stores configuration file keywords in dataclasses."""
 
-    inputs: inputConfigs = None
+    input: inputConfigs = None
     """inputConfigs dataclass which stores the keywords from the INPUT section of the config file."""
 
     simulation: simulationConfigs = None
@@ -575,7 +575,7 @@ class sorchaConfigs:
     saturation: saturationConfigs = None
     """saturationConfigs dataclass which stores the keywords from the SATURATION section of the config file."""
 
-    phasecurve: phasecurvesConfigs = None
+    phasecurves: phasecurvesConfigs = None
     """phasecurveConfigs dataclass which stores the keywords from the PHASECURVES section of the config file."""
 
     fov: fovConfigs = None
@@ -625,44 +625,42 @@ class sorchaConfigs:
     def _read_configs_from_object(self, config_object):
         """function that populates the class attributes"""
 
-        inputs_dict = dict(config_object["INPUT"])
-        self.inputs = inputConfigs(**inputs_dict)
+        #list of sections and corresponding config file
+        section_list = {
+            "INPUT" : inputConfigs,
+            "SIMULATION" : simulationConfigs,
+            "FILTERS" : filtersConfigs,
+            "SATURATION" : saturationConfigs,
+            "PHASECURVES" : phasecurvesConfigs,
+            "FOV" : fovConfigs,
+            "FADINGFUNCTION" : fadingfunctionConfigs,
+            "LINKINGFILTER" : linkingfilterConfigs,
+            "OUTPUT" : outputConfigs,
+            "LIGHTCURVE" : lightcurveConfigs,
+            "ACTIVITY" : activityConfigs,
+            "EXPERT" : expertConfigs
+        }
+        #general function that reads in config file sections into there config dataclasses
+        for section , config_section in section_list.items():
+            if config_object.has_section(section): 
+                extra_args = {}
+                if section == "SIMULATION":
+                    extra_args["_ephemerides_type"] = self.input.ephemerides_type
+                elif section == "FILTERS":
+                    extra_args["survey_name"] = self.survey_name
+                elif section == "SATURATION":
+                    extra_args["_observing_filters"] = self.filters.observing_filters
+                elif section == "FOV":
+                    extra_args["survey_name"] = self.survey_name
+                section_dict =  dict(config_object[section])
+                config_instance = config_section(**section_dict, **extra_args)
+                
+            else:
+                config_instance = config_section() #if section not in config file take default values
+            section_key = section.lower()
+            setattr(self, section_key, config_instance)    
 
-        simulation_dict = {**config_object["SIMULATION"], "_ephemerides_type": self.inputs.ephemerides_type}
-        self.simulation = simulationConfigs(**simulation_dict)
 
-        filter_dict = {**config_object["FILTERS"], "survey_name": self.survey_name} 
-        self.filters = filtersConfigs(**filter_dict)
-
-        saturation_dict= {**config_object["SATURATION"], "_observing_filters":self.filters.observing_filters}
-        self.saturation = saturationConfigs(**saturation_dict)
-
-        phasecurve_dict = dict(config_object["PHASECURVES"])
-        self.phasecurve = phasecurvesConfigs(**phasecurve_dict)
-
-        fov_dict = {**config_object["FOV"], "survey_name": self.survey_name}
-        self.fov = fovConfigs(**fov_dict)
-
-        fadingfunction_dict = dict(config_object["FADINGFUNCTION"])
-        self.fadingfunction = fadingfunctionConfigs(**fadingfunction_dict)
-
-        linkingfilter_dict = dict(config_object["LINKINGFILTER"])
-        self.linkingfilter = linkingfilterConfigs(**linkingfilter_dict)
-
-        output_dict = dict(config_object["OUTPUT"])
-        self.output = outputConfigs(**output_dict)
-
-        lightcurve_dict = dict(config_object["LIGHTCURVE"])
-        self.lightcurve = lightcurveConfigs(**lightcurve_dict)
-
-        activity_dict = dict(config_object["ACTIVITY"])
-        self.activity = activityConfigs(**activity_dict)
-
-        if config_object.has_section("EXPERT"):
-            expert_dict = dict(config_object["EXPERT"])
-            self.expert = expertConfigs(**expert_dict)
-        else:
-            self.expert = expertConfigs()
 
 ## below are the utility functions used to help validate the keywords, add more as needed
 
@@ -673,7 +671,8 @@ def check_key_exists(value, key_name):
 
     Parameters
     -----------
-    value : value of the config file value
+    value : object attribute
+        value of the config file attribute
 
     key_name : string
         The key being checked.
@@ -699,7 +698,8 @@ def check_key_doesnt_exist(value, key_name,reason):
 
     Parameters
     -----------
-    value : value of the config file value
+    value : object attribute
+        value of the config file attribute
 
     key_name : string
         The key being checked.
@@ -729,7 +729,8 @@ def cast_as_int(value, key):
 
     Parameters
     -----------
-    value : value of the config file value
+    value : object attribute
+        value of the config file attribute
 
     key : string
         The key being checked.
@@ -755,7 +756,8 @@ def cast_as_float(value, key):
 
     Parameters
     -----------
-    value : value of the config file value
+    value : object attribute
+        value of the config file attribute
 
     key : string
         The key being checked.
@@ -780,7 +782,8 @@ def cast_as_bool(value, key):
 
     Parameters
     -----------
-    value : value of the config file value
+    value : object attribute
+        value of the config file attribute
 
     key : string
         The key being checked.
@@ -807,10 +810,11 @@ def check_value_in_list(value, valuelist, key):
 
     Parameters
     -----------
-    value : value of the config file value
+    value : object attribute
+        value of the config file value
 
     valuelist: list
-        list of permissible values for value
+        list of permissible values for attribute
 
     key : string
         The key being checked.
@@ -890,14 +894,14 @@ def PrintConfigsToLog(sconfigs, cmd_args):
     elif sconfigs.activity.comet_activity == "none":
         pplogger.info("No cometary activity selected.")
 
-    pplogger.info("Format of ephemerides file is: " + sconfigs.inputs.eph_format)
-    pplogger.info("Format of auxiliary files is: " + sconfigs.inputs.aux_format)
+    pplogger.info("Format of ephemerides file is: " + sconfigs.input.eph_format)
+    pplogger.info("Format of auxiliary files is: " + sconfigs.input.aux_format)
 
     pplogger.info("Pointing database path is: " + cmd_args.pointing_database)
-    pplogger.info("Pointing database required query is: " + sconfigs.inputs.pointing_sql_query)
+    pplogger.info("Pointing database required query is: " + sconfigs.input.pointing_sql_query)
 
     pplogger.info(
-        "The number of objects processed in a single chunk is: " + str(sconfigs.inputs.size_serial_chunk)
+        "The number of objects processed in a single chunk is: " + str(sconfigs.input.size_serial_chunk)
     )
     pplogger.info("The main filter in which H is defined is " + sconfigs.filters.mainfilter)
     rescs = " ".join(str(f) for f in sconfigs.filters.observing_filters)
@@ -909,7 +913,7 @@ def PrintConfigsToLog(sconfigs, cmd_args):
 
     pplogger.info(
         "The apparent brightness is calculated using the following phase function model: "
-        + sconfigs.phasecurve.phase_function
+        + sconfigs.phasecurves.phase_function
     )
 
     if sconfigs.expert.trailing_losses_on:
@@ -1008,7 +1012,7 @@ def PrintConfigsToLog(sconfigs, cmd_args):
     else:
         pplogger.info("Solar System Processing linking filter is turned OFF.")
 
-    if sconfigs.inputs.ephemerides_type == "ar":
+    if sconfigs.input.ephemerides_type == "ar":
         pplogger.info("ASSIST+REBOUND Simulation is turned ON.")
         pplogger.info("For ASSIST+REBOUND...")
         pplogger.info("...the field's angular FOV is: " + str(sconfigs.simulation.ar_ang_fov))

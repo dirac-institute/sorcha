@@ -109,16 +109,19 @@ correct_expert = {
 #SORCHA Configs test
 
 def test_sorchaConfigs():
+    """
+    tests that sorchaConfigs reads in config file correctly
+    """
     # general test to make sure, overall, everything works. checks just one file: sorcha_config_demo.ini
 
     config_file_location = get_demo_filepath("sorcha_config_demo.ini")
     test_configs = sorchaConfigs(config_file_location,'rubin_sim')
     # check each section to make sure you get what you expect
-    assert correct_inputs == test_configs.inputs.__dict__
+    assert correct_inputs == test_configs.input.__dict__
     assert correct_simulation == test_configs.simulation.__dict__
     assert correct_filters == test_configs.filters.__dict__
     assert correct_saturation == test_configs.saturation.__dict__
-    assert correct_phasecurve == test_configs.phasecurve.__dict__
+    assert correct_phasecurve == test_configs.phasecurves.__dict__
     assert correct_fov == test_configs.fov.__dict__
     assert correct_fadingfunction == test_configs.fadingfunction.__dict__
     assert correct_linkingfilter == test_configs.linkingfilter.__dict__
@@ -128,9 +131,13 @@ def test_sorchaConfigs():
     assert correct_expert == test_configs.expert.__dict__
 
 ##################################################################################################################################
+
 #Inputs section test
 
-def test_inputConfigs():
+def test_inputConfigs_int():
+    """
+    tests that wrong inputs for inputConfigs int attributes is caught correctly
+    """
 
     input_configs = correct_inputs.copy()
     # make sure everything populated correctly
@@ -154,7 +161,9 @@ def test_inputConfigs():
     "key_name", ["ephemerides_type", "eph_format", "size_serial_chunk", "aux_format", "pointing_sql_query"]
 )
 def test_inputConfigs_mandatory(key_name):
-    # this loops through the mandatory keys and makes sure the code fails correctly when each is missing
+    """
+    this loops through the mandatory keys and makes sure the code fails correctly when each is missing
+    """
 
     input_configs = correct_inputs.copy()
 
@@ -178,7 +187,9 @@ def test_inputConfigs_mandatory(key_name):
     ],
 )
 def test_inputConfigs_inlist(key_name, expected_list):
-    # this loops through the inputs keys that need to have one of several set values and makes sure the correct error message triggers when they're not
+    """
+    this loops through the keys that need to have one of several set values and makes sure the correct error message triggers when they're not
+    """
 
     input_configs = correct_inputs.copy()
 
@@ -193,12 +204,16 @@ def test_inputConfigs_inlist(key_name, expected_list):
     )
 
 ##################################################################################################################################
+
 #simulation configs test
 
 @pytest.mark.parametrize(
     "key_name", ["ar_ang_fov" , "ar_fov_buffer"])
 
 def test_simulationConfigs_float(key_name):
+    """
+    Tests that wrong inputs for simulationConfigs float attributes is caught correctly
+    """
 
     simulation_configs=correct_simulation.copy()
     test_configs= simulationConfigs(**simulation_configs)
@@ -215,6 +230,9 @@ def test_simulationConfigs_float(key_name):
     "key_name", ["ar_picket",  "ar_healpix_order"])
 
 def test_simulationConfigs_int(key_name):
+    """
+    Tests that wrong inputs for simulationConfigs int attributes is caught correctly
+    """
 
     simulation_configs=correct_simulation.copy()
     test_configs= simulationConfigs(**simulation_configs)
@@ -230,7 +248,9 @@ def test_simulationConfigs_int(key_name):
 @pytest.mark.parametrize(
     "key_name", ["ar_ang_fov" , "ar_fov_buffer", "ar_picket", "ar_obs_code", "ar_healpix_order"])
 def test_simulationConfigs_mandatory(key_name):
-    # this loops through the mandatory keys and makes sure the code fails correctly when each is missing
+    """
+    This loops through the mandatory keys and makes sure the code fails correctly when each is missing
+    """
 
     simulation_configs = correct_simulation.copy()
 
@@ -246,7 +266,9 @@ def test_simulationConfigs_mandatory(key_name):
 @pytest.mark.parametrize(
     "key_name", ["ar_ang_fov" , "ar_fov_buffer", "ar_picket", "ar_obs_code", "ar_healpix_order"])
 def test_simulationConfigs_notrequired(key_name):
-    # this loops through the mandatory keys and makes sure the code fails correctly when each is missing
+    """
+    This loops through the not required keys and makes sure the code fails correctly when they're truthy
+    """
 
     simulation_configs = correct_simulation.copy()
 
@@ -264,9 +286,13 @@ def test_simulationConfigs_notrequired(key_name):
     )
 
 ##################################################################################################################################
+
 #filters config test
 
 def test_filtersConfigs_check_filters():
+    """
+    Makes sure that when filters are not recognised for survey that error message shows
+    """
 
     filters_configs=correct_filters_read.copy()
 
@@ -281,7 +307,9 @@ def test_filtersConfigs_check_filters():
 @pytest.mark.parametrize(
     "key_name", ["observing_filters","survey_name"] )
 def test_filtersConfigs_mandatory(key_name):
-    # this loops through the mandatory keys and makes sure the code fails correctly when each is missing
+    """
+    this loops through the mandatory keys and makes sure the code fails correctly when each is missing
+    """
 
     filter_configs = correct_filters_read.copy()
     del filter_configs[key_name]
@@ -298,6 +326,10 @@ def test_filtersConfigs_mandatory(key_name):
 #saturation configs test
 
 def test_saturationConfigs():
+    """
+    Tests that error occurs when list of saturation limits is not the same length as list of observing filters.
+    Also tests that error occurs when brightness limits can't be parsed.
+    """
 
     saturation_configs = correct_saturation_read.copy()
 
@@ -317,11 +349,11 @@ def test_saturationConfigs():
     )
     saturation_configs["bright_limit"]="10;2"
     
-    # we're telling pytest that we expect this command to fail with a SystemExit
+
     with pytest.raises(SystemExit) as error_text:
         test_configs = saturationConfigs(**saturation_configs)
 
-    # and this checks that the error message is what we expect.
+
     assert (
         error_text.value.code
         == "ERROR: could not parse brightness limits. Check formatting and try again."
@@ -331,7 +363,9 @@ def test_saturationConfigs():
 @pytest.mark.parametrize(
 "key_name", ["_observing_filters"])
 def test_saturationConfigs_mandatory(key_name):
-    # this loops through the mandatory keys and makes sure the code fails correctly when each is missing
+    """
+    this loops through the mandatory keys and makes sure the code fails correctly when each is missing
+    """
 
     saturation_configs = correct_saturation_read.copy()
 
@@ -346,12 +380,15 @@ def test_saturationConfigs_mandatory(key_name):
     )   
 
 ##################################################################################################################################
+
 #phasecurve configs tests
 
 @pytest.mark.parametrize(
     "key_name", ["phase_function"] )
 def test_phasecurveConfigs_mandatory(key_name):
-    # this loops through the mandatory keys and makes sure the code fails correctly when each is missing
+    """
+    this loops through the mandatory keys and makes sure the code fails correctly when each is missing
+    """
 
     phasecurves_configs = correct_phasecurve.copy()
 
@@ -372,7 +409,9 @@ def test_phasecurveConfigs_mandatory(key_name):
     ],
 )
 def test_phasecurveConfigs_inlist(key_name, expected_list):
-    # this loops through the inputs keys that need to have one of several set values and makes sure the correct error message triggers when they're not
+    """
+    this loops through the keys that need to have one of several set values and makes sure the correct error message triggers when they're not
+    """
 
     phasecurve_configs = correct_phasecurve.copy()
 
@@ -388,9 +427,13 @@ def test_phasecurveConfigs_inlist(key_name, expected_list):
     )
 
 ##################################################################################################################################
+
 #fov configs test
 
 def test_fovConfigs_inlist():
+    """
+    this loops through the keys that need to have one of several set values and makes sure the correct error message triggers when they're not
+    """
 
     fov_configs=correct_fov_read.copy()
 
@@ -403,6 +446,9 @@ def test_fovConfigs_inlist():
     assert (error_text.value.code == "ERROR: value fake_model for config parameter camera_model not recognised. Expecting one of: ['circle', 'footprint'].")
 
 def test_fovConfigs_surveyname():
+    """
+    Tests that error occurs when survey is not one provided with a default detector.
+    """
 
     fov_configs=correct_fov_read.copy()
 
@@ -419,7 +465,10 @@ def test_fovConfigs_surveyname():
     "key_name", ["fill_factor","circle_radius", "footprint_edge_threshold"])
 
 def test_fovConfigs_camera_footprint_mandatory_and_notrequired(key_name):
-    
+    """
+    this loops through the mandatory keys and keys that shouldn't exist and makes sure the code fails correctly when each is missing
+    """
+
     fov_configs=correct_fov_read.copy()
     #check keys exist
     if key_name == "footprint_edge_threshold":
@@ -437,6 +486,10 @@ def test_fovConfigs_camera_footprint_mandatory_and_notrequired(key_name):
         assert (error_text.value.code == f"ERROR: {key_name} supplied in config file {reason}")
 
 def test_fovConfigs_circle_mandatory():
+    """
+    Makes sure the code fails when either "fill_factor" or "circle_radius" is missing
+    """
+
     fov_configs=correct_fov_read.copy()
     fov_configs["camera_model"] = "circle"
 
@@ -448,7 +501,10 @@ def test_fovConfigs_circle_mandatory():
 @pytest.mark.parametrize(
     "key_name", ["fill_factor","circle_radius"])
 def test_fovConfigs_bounds(key_name):
-    
+    """
+    Tests that values in fovConfigs are creating error messages when out of bounds
+    """
+
     fov_configs=correct_fov_read.copy()
     fov_configs["camera_model"] = "circle"
     fov_configs[key_name] = -0.1
@@ -463,6 +519,10 @@ def test_fovConfigs_bounds(key_name):
         assert (error_text.value.code == "ERROR: circle_radius is negative.")
 
 def test_fovConfigs_camera_circle_notrequired():
+    """
+    This loops through the not required keys and makes sure the code fails correctly when they're truthy
+    """
+
     fov_configs=correct_fov_read.copy()
     fov_configs["camera_model"] = "circle"
     fov_configs["fill_factor"] = 0.5
@@ -472,6 +532,7 @@ def test_fovConfigs_camera_circle_notrequired():
 
 
 ##################################################################################################################################
+
 #fadingfunction config tests
 
 @pytest.mark.parametrize(
@@ -479,6 +540,9 @@ def test_fovConfigs_camera_circle_notrequired():
 
 
 def test_fadingfunctionConfig_on_float(key_name):
+    """
+    Tests that wrong inputs for fadingfunctionConfig float attributes is caught correctly
+    """
 
     fadingfunction_configs=correct_fadingfunction.copy()
     test_configs= fadingfunctionConfigs(**fadingfunction_configs)
@@ -493,6 +557,9 @@ def test_fadingfunctionConfig_on_float(key_name):
    
 
 def test_fadingfunctionConfig_bool():
+    """
+    Tests that wrong inputs for fadingfunctionConfig bool attributes is caught correctly
+    """
 
     fadingfunction_configs=correct_fadingfunction.copy()
     test_configs= fadingfunctionConfigs(**fadingfunction_configs)
@@ -507,7 +574,9 @@ def test_fadingfunctionConfig_bool():
 @pytest.mark.parametrize(
     "key_name", ["fading_function_on","fading_function_width","fading_function_peak_efficiency"] )
 def test_fadingfunction_mandatory(key_name):
-    # this loops through the mandatory keys and makes sure the code fails correctly when each is missing
+    """
+    this loops through the mandatory keys and keys that shouldn't exist and makes sure the code fails correctly when each is missing
+    """
 
     fadingfunction_configs = correct_fadingfunction.copy()
 
@@ -524,6 +593,10 @@ def test_fadingfunction_mandatory(key_name):
 @pytest.mark.parametrize(
     "key_name", ["fading_function_width","fading_function_peak_efficiency"] )
 def test_fadingfunction_notrequired(key_name):
+    """
+    This loops through the not required keys and makes sure the code fails correctly when they're truthy
+    """
+
 # tests that "fading_function_width" and "fading_function_peak_efficiency" are not called when "fading_function_on" is false
     fadingfunction_configs = correct_fadingfunction.copy()
     fadingfunction_configs["fading_function_on"]= "False"
@@ -540,6 +613,10 @@ def test_fadingfunction_notrequired(key_name):
 @pytest.mark.parametrize(
     "key_name", ["fading_function_width","fading_function_peak_efficiency"] )
 def test_fadingfunction_outofbounds(key_name):
+    """
+    Tests that values in fadingfunctionConfigs are creating error messages when out of bounds
+    """
+
     fadingfunction_configs = correct_fadingfunction.copy()
     fadingfunction_configs[key_name]=10
     if key_name =="fading_function_width":
@@ -557,13 +634,17 @@ def test_fadingfunction_outofbounds(key_name):
         == "ERROR: fading_function_peak_efficiency out of bounds. Must be between 0 and 1.")
 
 ##################################################################################################################################
+
 #linkingfilter tests
 
 
 @pytest.mark.parametrize(
     "key_name", ["ssp_detection_efficiency" , "ssp_separation_threshold","ssp_maximum_time","ssp_night_start_utc" ])
 
-def test_linking_filter_float(key_name):
+def test_linkingfilterConfigs_float(key_name):
+    """
+    Tests that wrong inputs for linkingfilterConfigs float attributes is caught correctly
+    """
 
     linkingfilter_configs=correct_linkingfilter.copy()
     test_configs= linkingfilterConfigs(**linkingfilter_configs)
@@ -580,6 +661,9 @@ def test_linking_filter_float(key_name):
     "key_name", ["ssp_number_observations" , "ssp_number_tracklets","ssp_track_window"])
 
 def test_linking_filter_int(key_name):
+    """
+    Tests that wrong inputs for linkingfilterConfigs int attributes is caught correctly
+    """
 
     linkingfilter_configs=correct_linkingfilter.copy()
     test_configs= linkingfilterConfigs(**linkingfilter_configs)
@@ -598,6 +682,9 @@ def test_linking_filter_int(key_name):
 
 
 def test_linkingfilter_bounds(key_name):
+    """
+    Tests that values in linkingfilterConfigs are creating error messages when out of bounds
+    """
 
     linkingfilter_configs=correct_linkingfilter.copy()
 
@@ -634,7 +721,9 @@ def test_linkingfilter_bounds(key_name):
     
 
 def test_linkingfilter_only_some_sspvar():
-
+    """
+    Males sure error message shows when only some SSP variables are provided
+    """
     linkingfilter_configs=correct_linkingfilter.copy()
 
     
@@ -646,6 +735,9 @@ def test_linkingfilter_only_some_sspvar():
     assert error_text.value.code == "ERROR: only some ssp linking variables supplied. Supply all five required variables for ssp linking filter, or none to turn filter off."
     
 def test_linkingfilter_bool():
+    """
+    Tests that wrong inputs for linkingfilterConfigs bool attributes is caught correctly
+    """
 
     linkingfilter_configs=correct_linkingfilter.copy()
 
@@ -658,13 +750,16 @@ def test_linkingfilter_bool():
     assert error_text.value.code == f"ERROR: expected a bool for config parameter drop_unlinked. Check value in config file."
 
 ##################################################################################################################################
+
 #output config tests
 
 @pytest.mark.parametrize(
     "key_name", ["output_format", "output_columns"]
 )
 def test_outputConfigs_mandatory(key_name):
-    # this loops through the mandatory keys and makes sure the code fails correctly when each is missing
+    """
+    this loops through the mandatory keys and keys that shouldn't exist and makes sure the code fails correctly when each is missing
+    """
 
     output_configs = correct_output.copy()
 
@@ -686,7 +781,9 @@ def test_outputConfigs_mandatory(key_name):
     ],
 )
 def test_outputConfigs_inlist(key_name, expected_list):
-   
+    """
+    this loops through the keys that need to have one of several set values and makes sure the correct error message triggers when they're not
+    """   
    
     output_configs = correct_output.copy()
 
@@ -704,7 +801,9 @@ def test_outputConfigs_inlist(key_name, expected_list):
     "key_name", ["position_decimals", "magnitude_decimals"]
 )
 def test_outputConfigs_decimel_check(key_name):
-    
+    """
+    Checks that if deciamels are not float or are negative it is caught correctly
+    """
     correct_output = {
     "output_format" : "csv",
     "output_columns" : "basic",
@@ -739,9 +838,13 @@ def test_outputConfigs_decimel_check(key_name):
         == "ERROR: decimal places config variables cannot be negative.")
 
 ##################################################################################################################################
+
 #lightcurve config test
 
 def test_lightcurve_config():
+    """
+    makes sure that if lightcurve model provided is not registered an error occurs 
+    """
 
     lightcurve_configs=correct_lc_model.copy()
 
@@ -753,9 +856,13 @@ def test_lightcurve_config():
     assert error_text.value.code == f"The requested light curve model, 'what_model', is not registered. Available lightcurve options are: {list(LC_METHODS.keys())}"
 
 ##################################################################################################################################
+
 #activity config test
 
 def test_activity_config():
+    """
+    makes sure that if comet activity model provided is not registered an error occurs 
+    """
 
     activity_configs=correct_activity.copy()
 
@@ -767,12 +874,16 @@ def test_activity_config():
     assert error_text.value.code == f"The requested comet activity model, 'nothing', is not registered. Available comet activity models are: {list(CA_METHODS.keys())}"
 
 ##################################################################################################################################
+
 #expert config test
 
 @pytest.mark.parametrize(
     "key_name, error_name", [("SNR_limit", "SNR"), ("mag_limit","magnitude")]
 )
 def test_expert_config_bounds(key_name,error_name):
+    """
+    Tests that values in expertConfigs are creating error messages when out of bounds
+    """
 
     expect_configs = correct_expert.copy()
     expect_configs[key_name] = -5
@@ -782,6 +893,9 @@ def test_expert_config_bounds(key_name,error_name):
     assert error_text.value.code == f"ERROR: {error_name} limit is negative."
 
 def test_expert_config_exclusive():
+    """
+    Makes sure that when both SNR limit and magnitude limit are specified that an error occurs
+    """
 
     expect_configs = correct_expert.copy()
     expect_configs["mag_limit"] = 5
@@ -794,7 +908,10 @@ def test_expert_config_exclusive():
 @pytest.mark.parametrize(
     "key_name", ["trailing_losses_on", "default_SNR_cut","randomization_on","vignetting_on"]
 )
-def test_expert_config_bool(key_name):
+def test_expertConfig_bool(key_name):
+    """
+    Tests that wrong inputs for expertConfigs bool attributes is caught correctly
+    """
 
     expect_configs = correct_expert.copy()
     expect_configs[key_name] = "fake"

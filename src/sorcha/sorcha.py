@@ -117,7 +117,7 @@ def runLSSTSimulation(args, sconfigs):
     verboselog = pplogger.info if args.verbose else lambda *a, **k: None
 
     sconfigs.filters.mainfilter, sconfigs.filters.othercolours = PPGetMainFilterAndColourOffsets(
-        args.paramsinput, sconfigs.filters.observing_filters, sconfigs.inputs.aux_format
+        args.paramsinput, sconfigs.filters.observing_filters, sconfigs.input.aux_format
     )
 
     PrintConfigsToLog(sconfigs, args) 
@@ -127,18 +127,18 @@ def runLSSTSimulation(args, sconfigs):
     verboselog("Reading pointing database...")
 
     filterpointing = PPReadPointingDatabase(
-        args.pointing_database, sconfigs.filters.observing_filters, sconfigs.inputs.pointing_sql_query, args.surveyname
+        args.pointing_database, sconfigs.filters.observing_filters, sconfigs.input.pointing_sql_query, args.surveyname
     )
 
     # if we are going to compute the ephemerides, then we should pre-compute all
     # of the needed values derived from the pointing information.
 
-    if sconfigs.inputs.ephemerides_type.casefold() != "external":
+    if sconfigs.input.ephemerides_type.casefold() != "external":
         verboselog("Pre-computing pointing information for ephemeris generation")
         filterpointing = precompute_pointing_information(filterpointing, args, sconfigs)
 
     # Set up the data readers.
-    ephem_type = sconfigs.inputs.ephemerides_type
+    ephem_type = sconfigs.input.ephemerides_type
     ephem_primary = False
     reader = CombinedDataReader(ephem_primary=ephem_primary, verbose=True)
 
@@ -150,12 +150,12 @@ def runLSSTSimulation(args, sconfigs):
         pplogger.error(f"PPReadAllInput: Unsupported value for ephemerides_type {ephem_type}")
         sys.exit(f"PPReadAllInput: Unsupported value for ephemerides_type {ephem_type}")
     if ephem_type.casefold() == "external":
-        reader.add_ephem_reader(EphemerisDataReader(args.input_ephemeris_file, sconfigs.inputs.eph_format))
+        reader.add_ephem_reader(EphemerisDataReader(args.input_ephemeris_file, sconfigs.input.eph_format))
 
-    reader.add_aux_data_reader(OrbitAuxReader(args.orbinfile, sconfigs.inputs.aux_format))
-    reader.add_aux_data_reader(CSVDataReader(args.paramsinput, sconfigs.inputs.aux_format))
+    reader.add_aux_data_reader(OrbitAuxReader(args.orbinfile, sconfigs.input.aux_format))
+    reader.add_aux_data_reader(CSVDataReader(args.paramsinput, sconfigs.input.aux_format))
     if sconfigs.activity.comet_activity is not None or sconfigs.lightcurve.lc_model is not None:
-        reader.add_aux_data_reader(CSVDataReader(args.complex_parameters, sconfigs.inputs.aux_format))
+        reader.add_aux_data_reader(CSVDataReader(args.complex_parameters, sconfigs.input.aux_format))
 
     # Check to make sure the ObjIDs in all of the aux_data_readers are a match.
     reader.check_aux_object_ids()
@@ -179,17 +179,17 @@ def runLSSTSimulation(args, sconfigs):
 
     while endChunk < lenf:
         verboselog("Starting main Sorcha processing loop round {}".format(loopCounter))
-        endChunk = startChunk + sconfigs.inputs.size_serial_chunk
+        endChunk = startChunk + sconfigs.input.size_serial_chunk
         verboselog("Working on objects {}-{}".format(startChunk, endChunk))
 
         # Processing begins, all processing is done for chunks
-        if sconfigs.inputs.ephemerides_type.casefold() == "external":
+        if sconfigs.input.ephemerides_type.casefold() == "external":
             verboselog("Reading in chunk of orbits and associated ephemeris from an external file")
-            observations = reader.read_block(block_size=sconfigs.inputs.size_serial_chunk)
+            observations = reader.read_block(block_size=sconfigs.input.size_serial_chunk)
             observations.to_csv("post_readin_ephem_nonprimary.csv")
         else:
             verboselog("Ingest chunk of orbits")
-            orbits_df = reader.read_aux_block(block_size=sconfigs.inputs.size_serial_chunk)
+            orbits_df = reader.read_aux_block(block_size=sconfigs.input.size_serial_chunk)
             verboselog("Starting ephemeris generation")
             observations = create_ephemeris(orbits_df, filterpointing, args, sconfigs)
             verboselog("Ephemeris generation completed")
@@ -203,7 +203,7 @@ def runLSSTSimulation(args, sconfigs):
             pplogger.info(
                 "WARNING: no ephemeris observations found for these objects. Skipping to next chunk..."
             )
-            startChunk = startChunk + sconfigs.inputs.size_serial_chunk
+            startChunk = startChunk + sconfigs.input.size_serial_chunk
             loopCounter = loopCounter + 1
             continue
 
@@ -212,7 +212,7 @@ def runLSSTSimulation(args, sconfigs):
         verboselog("Calculating apparent magnitudes...")
         observations = PPCalculateApparentMagnitude(
             observations,
-            sconfigs.phasecurve.phase_function,
+            sconfigs.phasecurves.phase_function,
             sconfigs.filters.mainfilter,
             sconfigs.filters.othercolours,
             sconfigs.filters.observing_filters,
@@ -340,7 +340,7 @@ def runLSSTSimulation(args, sconfigs):
         else:
             verboselog("No observations left in chunk. No output will be written for this chunk.")
 
-        startChunk = startChunk + sconfigs.inputs.size_serial_chunk
+        startChunk = startChunk + sconfigs.input.size_serial_chunk
         loopCounter = loopCounter + 1
         # end for
 

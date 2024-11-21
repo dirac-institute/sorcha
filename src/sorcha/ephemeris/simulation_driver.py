@@ -353,12 +353,12 @@ def write_out_ephemeris_file(ephemeris_df, ephemeris_csv_filename, args, sconfig
 
     verboselog = args.pplogger.info if args.verbose else lambda *a, **k: None
 
-    if sconfigs.inputs.eph_format == "csv":
+    if sconfigs.input.eph_format == "csv":
         verboselog("Outputting ephemeris to CSV file...")
         PPOutWriteCSV(ephemeris_df, ephemeris_csv_filename + ".csv")
-    elif sconfigs.inputs.eph_format == "whitespace":
+    elif sconfigs.input.eph_format == "whitespace":
         verboselog("Outputting ephemeris to whitespaced CSV file...")
         PPOutWriteCSV(ephemeris_df, ephemeris_csv_filename + ".csv", separator=" ")
-    elif sconfigs.inputs.eph_format == "hdf5" or sconfigs.output.output_format == "h5":
+    elif sconfigs.input.eph_format == "hdf5" or sconfigs.output.output_format == "h5":
         verboselog("Outputting ephemeris to HDF5 binary file...")
         PPOutWriteHDF5(ephemeris_df, ephemeris_csv_filename + ".h5", "sorcha_ephemeris")

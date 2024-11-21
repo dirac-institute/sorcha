@@ -155,7 +155,7 @@ def execute(args):
     sconfigs = sorchaConfigs(cmd_args["configfile"], cmd_args["surveyname"])
     pplogger.info("Configuration file read.")
 
-    if sconfigs.inputs.ephemerides_type == "external" and cmd_args["input_ephemeris_file"] is None:
+    if sconfigs.input.ephemerides_type == "external" and cmd_args["input_ephemeris_file"] is None:
         pplogger.error("ERROR: A+R simulation not enabled and no ephemerides file provided")
         sys.exit("ERROR: A+R simulation not enabled and no ephemerides file provided")
 
