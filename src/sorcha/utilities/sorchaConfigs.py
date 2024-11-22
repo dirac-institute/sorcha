@@ -88,6 +88,7 @@ class simulationConfigs:
             self.ar_picket = cast_as_int(self.ar_picket, "ar_picket")
             self.ar_healpix_order = cast_as_int(self.ar_healpix_order, "ar_healpix_order")
         elif self._ephemerides_type == "external":
+            # makes sure when these are not needed that they are not populated
             check_key_doesnt_exist(self.ar_ang_fov, "ar_ang_fov", "but ephemerides type is external")
             check_key_doesnt_exist(self.ar_fov_buffer, "ar_fov_buffer", "but ephemerides type is external")
             check_key_doesnt_exist(self.ar_picket, "ar_picket", "but ephemerides type is external")
@@ -119,12 +120,14 @@ class filtersConfigs:
 
     def _validate_filters_configs(self):
 
+        # checks mandatory keys are populated
         check_key_exists(self.observing_filters, "observing_filters")
         check_key_exists(self.survey_name, "survey_name")
         self.observing_filters = [e.strip() for e in self.observing_filters.split(",")]
         self._check_for_correct_filters()
 
     def _check_for_correct_filters(self):
+        """makes sure the filters selected are used by the chosen survey"""
 
         if self.survey_name in ["rubin_sim", "RUBIN_SIM", "LSST", "lsst"]:
             lsst_filters = ["u", "g", "r", "i", "z", "y"]
@@ -174,6 +177,7 @@ class saturationConfigs:
                 logging.error("ERROR: could not parse brightness limits. Check formatting and try again.")
                 sys.exit("ERROR: could not parse brightness limits. Check formatting and try again.")
             if len(self.bright_limit) == 1:
+                # when only one value is given that value is saved as a float instead of in a list
                 self.bright_limit = cast_as_float(self.bright_limit[0], "bright_limit")
             elif len(self.bright_limit) != 1 and len(self.bright_limit) != len(self._observing_filters):
                 logging.error(
@@ -240,7 +244,7 @@ class fovConfigs:
             self._camera_circle()
 
     def _camera_footprint(self):
-
+        """runs checks for when camera model footprint is chosen"""
         if self.footprint_path:
             PPFindFileOrExit(self.footprint_path, "footprint_path")
         elif self.survey_name.lower() not in ["lsst", "rubin_sim"]:
@@ -259,7 +263,7 @@ class fovConfigs:
         check_key_doesnt_exist(self.circle_radius, "circle_radius", 'but camera model is not "circle".')
 
     def _camera_circle(self):
-
+        """runs checks for when camera model circle is chosen"""
         if self.fill_factor:
             self.fill_factor = cast_as_float(self.fill_factor, "fill_factor")
             if self.fill_factor < 0.0 or self.fill_factor > 1.0:
@@ -351,6 +355,7 @@ class linkingfilterConfigs:
     """flag to see if model should run ssp linking filter"""
 
     drop_unlinked: bool = True
+    """Decides if unlinked objects will be dropped."""
 
     ssp_detection_efficiency: float = 0
     """ssp detection efficiency. Which fraction of the observations of an object will the automated solar system processing pipeline successfully link? Float."""
@@ -548,10 +553,10 @@ class expertConfigs:
     """flag for when a magnitude limit is given"""
 
     trailing_losses_on: bool = True
-    """flag fir trailing losses"""
+    """flag for trailing losses"""
 
     default_SNR_cut: bool = True
-    """flag fir default SNR"""
+    """flag for default SNR"""
 
     randomization_on: bool = True
     """flag for randomizing astrometry and photometry"""
