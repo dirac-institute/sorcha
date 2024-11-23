@@ -26,24 +26,24 @@ def main():
         required=True,
     )
     required.add_argument(
-        "-ob",
-        "--orbit",
-        help="Orbit file name",
+        "--ob",
+        "--orbits",
+        help="Orbit catalog file name",
         type=str,
         dest="ob",
         required=True,
     )
     required.add_argument(
         "-p",
-        "--params",
-        help="Physical parameters file name",
+        "--physical-parameters",
+        help="Catalog of object physical parameters",
         type=str,
         dest="p",
         required=True,
     )
     required.add_argument(
-        "-pd",
-        "--pointing_database",
+        "--pd",
+        "--pointing-db",
         help="Survey pointing information",
         type=str,
         dest="pd",
@@ -52,8 +52,8 @@ def main():
 
     optional = parser.add_argument_group("Optional arguments")
     optional.add_argument(
-        "-er",
-        "--ephem_read",
+        "--er",
+        "--ephem-read",
         help="Previously generated ephemeris simulation file name, required if ephemerides_type in config file is 'external'.",
         type=str,
         dest="er",
@@ -61,8 +61,8 @@ def main():
         default=None,
     )
     optional.add_argument(
-        "-ew",
-        "--ephem_write",
+        "--ew",
+        "--ephem-write",
         help="Output file name for newly generated ephemeris simulation, required if ephemerides_type in config file is not 'external'.",
         type=str,
         dest="ew",
@@ -70,17 +70,17 @@ def main():
         default=None,
     )
     optional.add_argument(
-        "-ar",
-        "--ar_data_path",
+        "--ar",
+        "--ar-data-path",
         help="Directory path where Assist+Rebound data files where stored when running bootstrap_sorcha_data_files from the command line.",
         type=str,
         dest="ar",
         required=False,
     )
     optional.add_argument(
-        "-cp",
-        "--complex_physical_parameters",
-        help="Complex physical parameters file name",
+        "--cp",
+        "--complex-physical-parameters",
+        help="Catalog of object complex physical parameters",
         type=str,
         dest="cp",
     )
@@ -101,14 +101,14 @@ def main():
     optional.add_argument(
         "-v",
         "--verbose",
-        help="Verbosity. Default currently true; include to turn off verbosity.",
+        help="Print additional information to log while running",
         dest="v",
         default=True,
         action="store_false",
     )
 
     optional.add_argument(
-        "-st",
+        "--st",
         "--stats",
         help="Output summary statistics table to this stem filename.",
         type=str,
