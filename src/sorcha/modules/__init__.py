@@ -3,14 +3,11 @@ from . import PPBrightLimit
 from . import PPCalculateApparentMagnitude
 from . import PPCalculateApparentMagnitudeInFilter
 from . import PPCalculateSimpleCometaryMagnitude
-from . import PPCheckInputObjectIDs
 from . import PPDetectionProbability
 from . import PPDropObservations
 from . import PPDetectionEfficiency
 from . import PPLinkingFilter
 from . import PPFootprintFilter
-from . import PPJoinEphemeridesAndParameters
-from . import PPJoinEphemeridesAndOrbits
 from . import PPReadPointingDatabase
 from . import PPMatchPointingToObservations
 from . import PPOutput

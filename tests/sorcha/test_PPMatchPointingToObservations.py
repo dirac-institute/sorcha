@@ -7,8 +7,6 @@ from sorcha.utilities.dataUtilitiesForTests import get_test_filepath
 
 def test_PPMatchPointingToObservations():
     from sorcha.modules.PPMatchPointingToObservations import PPMatchPointingToObservations
-    from sorcha.modules.PPJoinEphemeridesAndParameters import PPJoinEphemeridesAndParameters
-    from sorcha.modules.PPJoinEphemeridesAndOrbits import PPJoinEphemeridesAndOrbits
     from sorcha.modules.PPReadPointingDatabase import PPReadPointingDatabase
 
     # note that the test orbit, parameters and ephemeris files already in /tests/data/
@@ -69,8 +67,8 @@ def test_PPMatchPointingToObservations():
         }
     )
 
-    joined_df = PPJoinEphemeridesAndParameters(test_ephem, test_params)
-    joined_df_2 = PPJoinEphemeridesAndOrbits(joined_df, test_orb)
+    joined_df = test_ephem.join(test_params.set_index("ObjID"), on="ObjID")
+    joined_df_2 = joined_df.join(test_orb.set_index("ObjID"), on="ObjID")
 
     dbq = "SELECT observationId, observationStartMJD as observationStartMJD_TAI, visitTime, visitExposureTime, filter, seeingFwhmGeom as seeingFwhmGeom_arcsec, seeingFwhmEff as seeingFwhmEff_arcsec, fiveSigmaDepth as fieldFiveSigmaDepth_mag , fieldRA as fieldRA_deg, fieldDec as fieldDec_deg, rotSkyPos as fieldRotSkyPos_deg FROM observations order by observationId"
 

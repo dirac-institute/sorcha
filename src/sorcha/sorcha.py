@@ -103,9 +103,6 @@ def runLSSTSimulation(args, sconfigs):
     pplogger = logging.getLogger(__name__)
     pplogger.info("Post-processing begun.")
 
-    update_lc_subclasses()
-    update_activity_subclasses()
-
     try:
         args.validate_arguments()
     except Exception as err:
@@ -164,16 +161,13 @@ def runLSSTSimulation(args, sconfigs):
     reader.check_aux_object_ids()
 
     # In case of a large input file, the data is read in chunks. The
-    # "sizeSerialChunk" parameter in the config file assigns the chunk.
+    # "size_serial_chunk" parameter in the config file assigns the chunk size.
     startChunk = 0
     endChunk = 0
     loopCounter = 0
 
-    ii = -1
-    with open(args.orbinfile) as f:
-        for ii, l in enumerate(f):
-            pass
-    lenf = ii
+    # Get number of objects in total.
+    lenf = len(reader.aux_data_readers[0].obj_id_table)
 
     footprint = None
     if sconfigs.fov.camera_model == "footprint":

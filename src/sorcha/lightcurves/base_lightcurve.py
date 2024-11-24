@@ -32,7 +32,7 @@ class AbstractLightCurve(ABC):
         df : Pandas dataframe
             The ``observations`` dataframe provided by ``Sorcha``.
         """
-        raise (NotImplementedError, "Must be implemented by the subclass")
+        raise NotImplementedError("Must be implemented by the subclass")
 
     def _validate_column_names(self, df: pd.DataFrame) -> None:
         """Private method that checks that the provided pandas dataframe contains
@@ -47,7 +47,7 @@ class AbstractLightCurve(ABC):
             if colname not in df.columns:
                 err_msg = f"Input dataframe is missing column %{colname}"
                 self._log_error_message(error_msg=err_msg)
-                raise (ValueError, err_msg)
+                raise ValueError(err_msg)
 
     def _log_exception(self, exception: Exception) -> None:
         """Log an error message from an exception to the error log file
@@ -73,4 +73,4 @@ class AbstractLightCurve(ABC):
     @abstractmethod
     def name_id() -> str:
         """This method will return the unique name of the LightCurve Model"""
-        raise (NotImplementedError, "Must be implemented as a static method by the subclass")
+        raise NotImplementedError("Must be implemented as a static method by the subclass")
