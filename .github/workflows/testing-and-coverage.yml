@@ -27,9 +27,8 @@ jobs:
     - name: Install hdf5 on mac
       if: ${{startsWith( matrix.os, 'macos' ) }}
       run:  |
-        brew install pkgconf
-        brew link --overwrite pkgconf
-        brew install hdf5
+        python -m pip install --upgrade pip
+        pip install h5py
     - name: Install dependencies 
       run: |
         python -m pip install --upgrade pip
