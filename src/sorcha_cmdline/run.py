@@ -141,7 +141,6 @@ def execute(args):
         sorchaConfigs,
         update_activity_subclasses,
         update_lc_subclasses,
-        
     )
     import sys, os
 

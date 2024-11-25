@@ -682,6 +682,8 @@ class sorchaConfigs:
             "ACTIVITY": activityConfigs,
             "EXPERT": expertConfigs,
         }
+        # when adding new sections in config file this general function needs the name of the section in uppercase
+        # to be the same as the attributes defined above in lowercase e.g. section INPUT has attribute input
         # general function that reads in config file sections into there config dataclasses
         for section, config_section in section_list.items():
             if config_object.has_section(section):
