@@ -463,7 +463,7 @@ def test_fovConfigs_inlist():
         test_configs = fovConfigs(**fov_configs)
     assert (
         error_text.value.code
-        == "ERROR: value fake_model for config parameter camera_model not recognised. Expecting one of: ['circle', 'footprint']."
+        == "ERROR: value fake_model for config parameter camera_model not recognised. Expecting one of: ['circle', 'footprint', 'none']."
     )
 
 

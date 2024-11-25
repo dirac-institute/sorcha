@@ -8,7 +8,7 @@ from sorcha.sorcha import runLSSTSimulation
 from sorcha.utilities.dataUtilitiesForTests import get_demo_filepath, get_test_filepath
 from sorcha.utilities.sorchaArguments import sorchaArguments
 from sorcha.modules.PPConfigParser import PPConfigFileParser
-
+from sorcha.utilities.sorchaConfigs import sorchaConfigs
 
 def compare_result_files(test_output, golden_output):
     """Compare the results in test_output to those in golden_output.
@@ -147,6 +147,6 @@ def override_seed_and_run(outpath, arg_set="baseline"):
     # Override the random number generator seed.
     # WARNING: This is only acceptable in a test and should never be used for
     # science results.
-    configs = PPConfigFileParser(args.configfile, args.surveyname)
+    configs = sorchaConfigs(args.configfile, args.surveyname)
     args._rngs = PerModuleRNG(2023)
     runLSSTSimulation(args, configs)

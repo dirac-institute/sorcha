@@ -2,6 +2,7 @@ from dataclasses import dataclass
 import configparser
 import logging
 import sys
+import os
 import numpy as np
 from sorcha.lightcurves.lightcurve_registration import LC_METHODS
 from sorcha.activity.activity_registration import CA_METHODS
@@ -235,7 +236,7 @@ class fovConfigs:
     def _validate_fov_configs(self):
 
         check_key_exists(self.camera_model, "camera_model")
-        check_value_in_list(self.camera_model, ["circle", "footprint"], "camera_model")
+        check_value_in_list(self.camera_model, ["circle", "footprint","none"], "camera_model")
 
         if self.camera_model == "footprint":
             self._camera_footprint()
@@ -269,12 +270,14 @@ class fovConfigs:
             if self.fill_factor < 0.0 or self.fill_factor > 1.0:
                 logging.error("ERROR: fill_factor out of bounds. Must be between 0 and 1.")
                 sys.exit("ERROR: fill_factor out of bounds. Must be between 0 and 1.")
-        elif self.circle_radius:
+        
+        if self.circle_radius:
             self.circle_radius = cast_as_float(self.circle_radius, "circle_radius")
             if self.circle_radius < 0.0:
                 logging.error("ERROR: circle_radius is negative.")
                 sys.exit("ERROR: circle_radius is negative.")
-        elif not self.fill_factor and not self.circle_radius:
+        
+        if not self.fill_factor and not self.circle_radius:
             logging.error(
                 'ERROR: either "fill_factor" or "circle_radius" must be specified for circular footprint.'
             )
