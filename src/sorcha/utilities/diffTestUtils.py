@@ -10,6 +10,7 @@ from sorcha.utilities.sorchaArguments import sorchaArguments
 from sorcha.modules.PPConfigParser import PPConfigFileParser
 from sorcha.utilities.sorchaConfigs import sorchaConfigs
 
+
 def compare_result_files(test_output, golden_output):
     """Compare the results in test_output to those in golden_output.
 
