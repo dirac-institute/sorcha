@@ -1097,7 +1097,7 @@ def cast_as_bool_or_set_default(value, key, default):
 
     # replaces PPGetBoolOrExit: checks to make sure the value can be cast as a bool.
     """
-    Checks to see if value can be cast as a boolen and if not gives default bool.
+    Checks to see if value can be cast as a boolen and if not set (equals None) gives default bool.
 
     Parameters
     -----------
