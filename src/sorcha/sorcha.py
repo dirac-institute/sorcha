@@ -177,7 +177,6 @@ def runLSSTSimulation(args, configs):
         if configs["ephemerides_type"].casefold() == "external":
             verboselog("Reading in chunk of orbits and associated ephemeris from an external file")
             observations = reader.read_block(block_size=configs["size_serial_chunk"])
-            observations.to_csv("post_readin_ephem_nonprimary.csv")
         else:
             verboselog("Ingest chunk of orbits")
             orbits_df = reader.read_aux_block(block_size=configs["size_serial_chunk"])
