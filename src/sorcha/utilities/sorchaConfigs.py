@@ -32,7 +32,17 @@ class inputConfigs:
         self._validate_input_configs()
 
     def _validate_input_configs(self):
+        """
+        Validates the input config attributes after initialisation.
 
+        Parameters
+        -----------
+        None.
+
+        Returns
+        ----------
+        None
+        """
         # make sure all the mandatory keys have been populated.
         check_key_exists(self.ephemerides_type, "ephemerides_type")
         check_key_exists(self.eph_format, "eph_format")
@@ -74,7 +84,17 @@ class simulationConfigs:
         self._validate_simulation_configs()
 
     def _validate_simulation_configs(self):
+        """
+        Validates the simulation config attributes after initialisation.
 
+        Parameters
+        -----------
+        None.
+
+        Returns
+        ----------
+        None
+        """
         # make sure all the mandatory keys have been populated.
         if self._ephemerides_type == "ar":
             check_key_exists(self.ar_ang_fov, "ar_ang_fov")
@@ -116,11 +136,21 @@ class filtersConfigs:
     """other filters given alongside main filter"""
 
     def __post_init__(self):
-        """Automatically validates the filters configs after initialisation."""
+        """Automagically validates the filters configs after initialisation."""
         self._validate_filters_configs()
 
     def _validate_filters_configs(self):
+        """
+        Validates the filters config attributes after initialisation.
 
+        Parameters
+        -----------
+        None.
+
+        Returns
+        ----------
+        None
+        """
         # checks mandatory keys are populated
         check_key_exists(self.observing_filters, "observing_filters")
         check_key_exists(self.survey_name, "survey_name")
@@ -128,7 +158,17 @@ class filtersConfigs:
         self._check_for_correct_filters()
 
     def _check_for_correct_filters(self):
-        """makes sure the filters selected are used by the chosen survey"""
+        """
+        Checks the filters selected are used by the chosen survey.
+
+        Parameters
+        -----------
+        None.
+
+        Returns
+        ----------
+        None
+        """
 
         if self.survey_name in ["rubin_sim", "RUBIN_SIM", "LSST", "lsst"]:
             lsst_filters = ["u", "g", "r", "i", "z", "y"]
@@ -163,10 +203,21 @@ class saturationConfigs:
     """Filters of the observations you are interested in, comma-separated."""
 
     def __post_init__(self):
-        """Automatically validates the filters configs after initialisation."""
+        """Automagically validates the saturation configs after initialisation."""
         self._validate_saturation_configs()
 
     def _validate_saturation_configs(self):
+        """
+        Validates the saturation config attributes after initialisation.
+
+        Parameters
+        -----------
+        None.
+
+        Returns
+        ----------
+        None
+        """
         check_key_exists(self._observing_filters, "_observing_filters")
         if self.bright_limit:
             self.bright_limit_on = True
@@ -197,11 +248,21 @@ class phasecurvesConfigs:
     """The phase function used to calculate apparent magnitude. The physical parameters input"""
 
     def __post_init__(self):
-        """Automatically validates the phasecurve configs after initialisation."""
+        """Automagically validates the phasecurve configs after initialisation."""
         self._validate_phasecurve_configs()
 
     def _validate_phasecurve_configs(self):
+        """
+        Validates the phasecurve config attributes after initialisation.
 
+        Parameters
+        -----------
+        None.
+
+        Returns
+        ----------
+        None
+        """
         # make sure all the mandatory keys have been populated.
         check_key_exists(self.phase_function, "phase_function")
 
@@ -231,10 +292,21 @@ class fovConfigs:
     """name of survey"""
 
     def __post_init__(self):
+        """Automagically validates the fov configs after initialisation."""
         self._validate_fov_configs()
 
     def _validate_fov_configs(self):
+        """
+        Validates the fov config attributes after initialisation.
 
+        Parameters
+        -----------
+        None.
+
+        Returns
+        ----------
+        None
+        """
         check_key_exists(self.camera_model, "camera_model")
         check_value_in_list(self.camera_model, ["circle", "footprint", "none"], "camera_model")
 
@@ -245,7 +317,17 @@ class fovConfigs:
             self._camera_circle()
 
     def _camera_footprint(self):
-        """runs checks for when camera model footprint is chosen"""
+        """
+        Validates the fov config attributes for a footprint camera model.
+
+        Parameters
+        -----------
+        None.
+
+        Returns
+        ----------
+        None
+        """
         if self.footprint_path:
             PPFindFileOrExit(self.footprint_path, "footprint_path")
         elif self.survey_name.lower() not in ["lsst", "rubin_sim"]:
@@ -263,7 +345,17 @@ class fovConfigs:
         check_key_doesnt_exist(self.circle_radius, "circle_radius", 'but camera model is not "circle".')
 
     def _camera_circle(self):
-        """runs checks for when camera model circle is chosen"""
+        """
+        Validates the fov config attributes for a circle camera model.
+
+        Parameters
+        -----------
+        None.
+
+        Returns
+        ----------
+        None
+        """
         if self.fill_factor:
             self.fill_factor = cast_as_float(self.fill_factor, "fill_factor")
             if self.fill_factor < 0.0 or self.fill_factor > 1.0:
@@ -306,6 +398,17 @@ class fadingfunctionConfigs:
         self._validate_fadingfunction_configs()
 
     def _validate_fadingfunction_configs(self):
+        """
+        Validates the fadindfunction config attributes after initialisation.
+
+        Parameters
+        -----------
+        None.
+
+        Returns
+        ----------
+        None
+        """
 
         # make sure all the mandatory keys have been populated.
         check_key_exists(self.fading_function_on, "fading_function_on")
@@ -381,9 +484,21 @@ class linkingfilterConfigs:
     """The time in UTC at which it is noon at the observatory location (in standard time). For the LSST, 12pm Chile Standard Time is 4pm UTC."""
 
     def __post_init__(self):
+        """Automagically validates the linking filter configs after initialisation."""
         self._validate_linkingfilter_configs()
 
     def _validate_linkingfilter_configs(self):
+        """
+        Validates the linkingfilter config attributes after initialisation.
+
+        Parameters
+        -----------
+        None.
+
+        Returns
+        ----------
+        None
+        """
 
         self.ssp_detection_efficiency = cast_as_float(
             self.ssp_detection_efficiency, "ssp_detection_efficiency"
@@ -467,11 +582,21 @@ class outputConfigs:
     """magnitude decimal places"""
 
     def __post_init__(self):
-        """Automagically validates the input configs after initialisation."""
+        """Automagically validates the output configs after initialisation."""
         self._validate_output_configs()
 
     def _validate_output_configs(self):
+        """
+        Validates the output config attributes after initialisation.
 
+        Parameters
+        -----------
+        None.
+
+        Returns
+        ----------
+        None
+        """
         # make sure all the mandatory keys have been populated.
         check_key_exists(self.output_format, "output_format")
         check_key_exists(self.output_columns, "output_columns")
@@ -486,6 +611,17 @@ class outputConfigs:
         self._validate_decimals()
 
     def _validate_decimals(self):
+        """
+        Validates the decimal output config attributes after initialisation.
+
+        Parameters
+        -----------
+        None.
+
+        Returns
+        ----------
+        None
+        """
         self.position_decimals = cast_as_float(self.position_decimals, "position_decimals")
         self.magnitude_decimals = cast_as_float(self.magnitude_decimals, "magnitude_decimals")
         if self.position_decimals and self.position_decimals < 0:
@@ -504,9 +640,21 @@ class lightcurveConfigs:
     """The unique name of the lightcurve model to use. Defined in the ``name_id`` method of the subclasses of AbstractLightCurve. If not none, the complex physical parameters file must be specified at the command line.lc_model = none"""
 
     def __post_init__(self):
+        """Automagically validates the lightcurve configs after initialisation."""
         self._validate_lightcurve_configs()
 
     def _validate_lightcurve_configs(self):
+        """
+        Validates the lightcurve config attributes after initialisation.
+
+        Parameters
+        -----------
+        None.
+
+        Returns
+        ----------
+        None
+        """
         self.lc_model = None if self.lc_model == "none" else self.lc_model
         if self.lc_model and self.lc_model not in LC_METHODS:
             logging.error(
@@ -525,9 +673,21 @@ class activityConfigs:
     """The unique name of the actvity model to use. Defined in the ``name_id`` method of the subclasses of AbstractCometaryActivity.  If not none, a complex physical parameters file must be specified at the command line."""
 
     def __post_init__(self):
+        """Automagically validates the activity configs after initialisation."""
         self._validate_activity_configs()
 
     def _validate_activity_configs(self):
+        """
+        Validates the activity config attributes after initialisation.
+
+        Parameters
+        -----------
+        None.
+
+        Returns
+        ----------
+        None
+        """
         self.comet_activity = None if self.comet_activity == "none" else self.comet_activity
         if self.comet_activity and self.comet_activity not in CA_METHODS:
             logging.error(
@@ -567,10 +727,21 @@ class expertConfigs:
     """flag for calculating effects of vignetting on limiting magnitude"""
 
     def __post_init__(self):
+        """Automagically validates the expert configs after initialisation."""
         self._validate_expert_configs()
 
     def _validate_expert_configs(self):
+        """
+        Validates the expert config attributes after initialisation.
 
+        Parameters
+        -----------
+        None.
+
+        Returns
+        ----------
+        None
+        """
         if self.SNR_limit:
             self.SNR_limit_on = True
 
@@ -664,7 +835,19 @@ class sorchaConfigs:
             )  # now we call a function that populates the class attributes
 
     def _read_configs_from_object(self, config_object):
-        """function that populates the class attributes"""
+        """
+        function that populates the class attributes
+
+        Parameters
+        -----------
+        config_object: ConfigParser object
+            ConfigParser object that has the config file read into it
+
+        Returns
+        ----------
+        None
+
+        """
 
         # list of sections and corresponding config file
         section_list = {
