@@ -40,8 +40,8 @@ correct_filters_read = {"observing_filters": "r,g,i,z,u,y", "survey_name": "rubi
 correct_filters = {
     "observing_filters": ["r", "g", "i", "z", "u", "y"],
     "survey_name": "rubin_sim",
-    "mainfilter": "",
-    "othercolours": "",
+    "mainfilter": None,
+    "othercolours": None,
 }
 
 correct_saturation = {
@@ -73,9 +73,9 @@ correct_linkingfilter = {
 
 correct_fov = {
     "camera_model": "footprint",
-    "footprint_path": "",
-    "fill_factor": "",
-    "circle_radius": 0,
+    "footprint_path": None,
+    "fill_factor": None,
+    "circle_radius": None,
     "footprint_edge_threshold": 2.0,
     "survey_name": "rubin_sim",
 }
@@ -85,8 +85,8 @@ correct_fov_read = {"camera_model": "footprint", "footprint_edge_threshold": 2.0
 correct_output = {
     "output_format": "csv",
     "output_columns": "basic",
-    "position_decimals": 0.0,
-    "magnitude_decimals": 0.0,
+    "position_decimals": None,
+    "magnitude_decimals": None,
 }
 
 correct_lc_model = {"lc_model": None}
@@ -94,9 +94,9 @@ correct_lc_model = {"lc_model": None}
 correct_activity = {"comet_activity": None}
 
 correct_expert = {
-    "SNR_limit": 0,
+    "SNR_limit": None,
     "SNR_limit_on": False,
-    "mag_limit": 0,
+    "mag_limit": None,
     "mag_limit_on": False,
     "trailing_losses_on": True,
     "default_SNR_cut": True,
@@ -119,6 +119,8 @@ def test_sorchaConfigs():
     # check each section to make sure you get what you expect
     assert correct_inputs == test_configs.input.__dict__
     assert correct_simulation == test_configs.simulation.__dict__
+    print(correct_filters)
+    print(test_configs.filters.__dict__)
     assert correct_filters == test_configs.filters.__dict__
     assert correct_saturation == test_configs.saturation.__dict__
     assert correct_phasecurve == test_configs.phasecurves.__dict__
@@ -287,7 +289,7 @@ def test_simulationConfigs_notrequired(key_name):
 
     for name in simulation_configs:
         if key_name != name and name != "_ephemerides_type":
-            simulation_configs[name] = 0
+            simulation_configs[name] = None
     simulation_configs["_ephemerides_type"] = "external"
 
     with pytest.raises(SystemExit) as error_text:
@@ -493,7 +495,7 @@ def test_fovConfigs_camera_footprint_notrequired(key_name):
     """
 
     fov_configs = correct_fov_read.copy()
-    
+
     # check these dont exist
     if key_name == "fill_factor" or key_name == "circle_raidus":
         fov_configs[key_name] = 0.5
@@ -629,8 +631,8 @@ def test_fadingfunction_notrequired(key_name):
     # tests that "fading_function_width" and "fading_function_peak_efficiency" are not called when "fading_function_on" is false
     fadingfunction_configs = correct_fadingfunction.copy()
     fadingfunction_configs["fading_function_on"] = "False"
-    fadingfunction_configs["fading_function_width"] = 0
-    fadingfunction_configs["fading_function_peak_efficiency"] = 0
+    fadingfunction_configs["fading_function_width"] = None
+    fadingfunction_configs["fading_function_peak_efficiency"] = None
     fadingfunction_configs[key_name] = 0.5
     with pytest.raises(SystemExit) as error_text:
         test_configs = fadingfunctionConfigs(**fadingfunction_configs)
@@ -775,7 +777,7 @@ def test_linkingfilter_only_some_sspvar():
     """
     linkingfilter_configs = correct_linkingfilter.copy()
 
-    del linkingfilter_configs["ssp_separation_threshold"]
+    linkingfilter_configs["ssp_separation_threshold"] = None
 
     with pytest.raises(SystemExit) as error_text:
         test_configs = linkingfilterConfigs(**linkingfilter_configs)

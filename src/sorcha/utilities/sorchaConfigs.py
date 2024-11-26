@@ -12,19 +12,19 @@ from sorcha.activity.activity_registration import CA_METHODS
 class inputConfigs:
     """Data class for holding INPUTS section configuration file keys and validating them."""
 
-    ephemerides_type: str = ""
+    ephemerides_type: str = None
     """Simulation used for ephemeris input."""
 
-    eph_format: str = ""
+    eph_format: str = None
     """Format for ephemeris simulation input file."""
 
-    size_serial_chunk: int = 0
+    size_serial_chunk: int = None
     """Sorcha chunk size."""
 
-    aux_format: str = ""
+    aux_format: str = None
     """Format for the auxiliary input files."""
 
-    pointing_sql_query: str = ""
+    pointing_sql_query: str = None
     """SQL query for extracting data from pointing database."""
 
     def __post_init__(self):
@@ -61,22 +61,22 @@ class inputConfigs:
 class simulationConfigs:
     """Data class for holding SIMULATION section configuration file keys and validating them"""
 
-    ar_ang_fov: float = 0.0
+    ar_ang_fov: float = None
     """the field of view of our search field, in degrees"""
 
-    ar_fov_buffer: float = 0.0
+    ar_fov_buffer: float = None
     """the buffer zone around the field of view we want to include, in degrees"""
 
-    ar_picket: float = 0.0
+    ar_picket: float = None
     """imprecise discretization of time that allows us to move progress our simulations forward without getting too granular when we don't have to. the unit is number of days."""
 
-    ar_obs_code: str = ""
+    ar_obs_code: str = None
     """the obscode is the MPC observatory code for the provided telescope."""
 
-    ar_healpix_order: int = 0
+    ar_healpix_order: int = None
     """the order of healpix which we will use for the healpy portions of the code."""
 
-    _ephemerides_type: str = ""
+    _ephemerides_type: str = None
     """Simulation used for ephemeris input."""
 
     def __post_init__(self):
@@ -96,6 +96,8 @@ class simulationConfigs:
         None
         """
         # make sure all the mandatory keys have been populated.
+        check_key_exists(self._ephemerides_type, "_ephemerides_type")
+        check_value_in_list(self._ephemerides_type, ["ar", "external"], "_ephemerides_type")
         if self._ephemerides_type == "ar":
             check_key_exists(self.ar_ang_fov, "ar_ang_fov")
             check_key_exists(self.ar_fov_buffer, "ar_fov_buffer")
@@ -123,16 +125,16 @@ class simulationConfigs:
 class filtersConfigs:
     """Data class for holding FILTERS section configuration file keys and validating them"""
 
-    observing_filters: str = ""
+    observing_filters: str = None
     """Filters of the observations you are interested in, comma-separated."""
 
-    survey_name: str = ""
+    survey_name: str = None
     """survey name to be used for checking filters are correct"""
 
-    mainfilter: str = ""
+    mainfilter: str = None
     """main filter chosen in physical parameter file"""
 
-    othercolours: str = ""
+    othercolours: str = None
     """other filters given alongside main filter"""
 
     def __post_init__(self):
@@ -194,12 +196,12 @@ class filtersConfigs:
 class saturationConfigs:
     """Data class for holding SATURATION section configuration file keys and validating them"""
 
-    bright_limit_on: bool = False
+    bright_limit_on: bool = None
 
-    bright_limit: float = 0
+    bright_limit: float = None
     """ Upper magnitude limit on sources that will overfill the detector pixels/have counts above the non-linearity regime of the pixels where one can’t do photometry. Objects brighter than this limit (in magnitude) will be cut. """
 
-    _observing_filters: list = 0
+    _observing_filters: list = None
     """Filters of the observations you are interested in, comma-separated."""
 
     def __post_init__(self):
@@ -219,7 +221,7 @@ class saturationConfigs:
         None
         """
         check_key_exists(self._observing_filters, "_observing_filters")
-        if self.bright_limit:
+        if self.bright_limit is not None:
             self.bright_limit_on = True
 
         if self.bright_limit_on:
@@ -244,7 +246,7 @@ class saturationConfigs:
 class phasecurvesConfigs:
     """Data class for holding PHASECURVES section configuration file keys and validating them"""
 
-    phase_function: str = ""
+    phase_function: str = None
     """The phase function used to calculate apparent magnitude. The physical parameters input"""
 
     def __post_init__(self):
@@ -273,22 +275,22 @@ class phasecurvesConfigs:
 class fovConfigs:
     """Data class for holding FOV section configuration file keys and validating them"""
 
-    camera_model: str = ""
+    camera_model: str = None
     """Choose between circular or actual camera footprint, including chip gaps."""
 
-    footprint_path: str = ""
+    footprint_path: str = None
     """Path to camera footprint file. Uncomment to provide a path to the desired camera detector configuration file if not using the default built-in LSSTCam detector configuration for the actual camera footprint."""
 
-    fill_factor: str = ""
+    fill_factor: str = None
     """Fraction of detector surface area which contains CCD -- simulates chip gaps for OIF output. Comment out if using camera footprint."""
 
-    circle_radius: float = 0
+    circle_radius: float = None
     """Radius of the circle for a circular footprint (in degrees). Float. Comment out or do not include if using footprint camera model."""
 
-    footprint_edge_threshold: float = 0
+    footprint_edge_threshold: float = None
     """The distance from the edge of a detector (in arcseconds on the focal plane) at which we will not correctly extract an object. By default this is 10px or 2 arcseconds. Comment out or do not include if not using footprint camera model."""
 
-    survey_name: str = ""
+    survey_name: str = None
     """name of survey"""
 
     def __post_init__(self):
@@ -328,7 +330,7 @@ class fovConfigs:
         ----------
         None
         """
-        if self.footprint_path:
+        if self.footprint_path is not None:
             PPFindFileOrExit(self.footprint_path, "footprint_path")
         elif self.survey_name.lower() not in ["lsst", "rubin_sim"]:
             logging.error(
@@ -337,10 +339,10 @@ class fovConfigs:
             sys.exit(
                 "ERROR: a default detector footprint is currently only provided for LSST; please provide your own footprint file."
             )
-
-        self.footprint_edge_threshold = cast_as_float(
-            self.footprint_edge_threshold, "footprint_edge_threshold"
-        )
+        if self.footprint_edge_threshold is not None:
+            self.footprint_edge_threshold = cast_as_float(
+                self.footprint_edge_threshold, "footprint_edge_threshold"
+            )
         check_key_doesnt_exist(self.fill_factor, "fill_factor", 'but camera model is not "circle".')
         check_key_doesnt_exist(self.circle_radius, "circle_radius", 'but camera model is not "circle".')
 
@@ -356,19 +358,19 @@ class fovConfigs:
         ----------
         None
         """
-        if self.fill_factor:
+        if self.fill_factor is not None:
             self.fill_factor = cast_as_float(self.fill_factor, "fill_factor")
             if self.fill_factor < 0.0 or self.fill_factor > 1.0:
                 logging.error("ERROR: fill_factor out of bounds. Must be between 0 and 1.")
                 sys.exit("ERROR: fill_factor out of bounds. Must be between 0 and 1.")
 
-        if self.circle_radius:
+        if self.circle_radius is not None:
             self.circle_radius = cast_as_float(self.circle_radius, "circle_radius")
             if self.circle_radius < 0.0:
                 logging.error("ERROR: circle_radius is negative.")
                 sys.exit("ERROR: circle_radius is negative.")
 
-        if not self.fill_factor and not self.circle_radius:
+        if self.fill_factor is None and self.circle_radius is None:
             logging.error(
                 'ERROR: either "fill_factor" or "circle_radius" must be specified for circular footprint.'
             )
@@ -384,13 +386,13 @@ class fovConfigs:
 class fadingfunctionConfigs:
     """Data class for holding FADINGFUNCTION section configuration file keys and validating them"""
 
-    fading_function_on: bool = False
+    fading_function_on: bool = None
     """Detection efficiency fading function on or off."""
 
-    fading_function_width: float = 0
+    fading_function_width: float = None
     """Width parameter for fading function. Should be greater than zero and less than 0.5."""
 
-    fading_function_peak_efficiency: float = 0
+    fading_function_peak_efficiency: float = None
     """Peak efficiency for the fading function, called the 'fill factor' in Chelsey and Veres (2017)."""
 
     def __post_init__(self):
@@ -456,31 +458,31 @@ class fadingfunctionConfigs:
 class linkingfilterConfigs:
     """Data class for holding LINKINGFILTER section configuration file keys and validating them."""
 
-    ssp_linking_on: bool = False
+    ssp_linking_on: bool = None
     """flag to see if model should run ssp linking filter"""
 
-    drop_unlinked: bool = True
+    drop_unlinked: bool = None
     """Decides if unlinked objects will be dropped."""
 
-    ssp_detection_efficiency: float = 0
+    ssp_detection_efficiency: float = None
     """ssp detection efficiency. Which fraction of the observations of an object will the automated solar system processing pipeline successfully link? Float."""
 
-    ssp_number_observations: int = 0
+    ssp_number_observations: int = None
     """Length of tracklets. How many observations of an object during one night are required to produce a valid tracklet?"""
 
-    ssp_separation_threshold: float = 0
+    ssp_separation_threshold: float = None
     """Minimum separation (in arcsec) between two observations of an object required for the linking software to distinguish them as separate and therefore as a valid tracklet."""
 
-    ssp_maximum_time: float = 0
+    ssp_maximum_time: float = None
     """Maximum time separation (in days) between subsequent observations in a tracklet. Default is 0.0625 days (90mins)."""
 
-    ssp_number_tracklets: int = 0
+    ssp_number_tracklets: int = None
     """Number of tracklets for detection. How many tracklets are required to classify an object as detected?  """
 
-    ssp_track_window: int = 0
+    ssp_track_window: int = None
     """The number of tracklets defined above must occur in <= this number of days to constitute a complete track/detection."""
 
-    ssp_night_start_utc: float = 0
+    ssp_night_start_utc: float = None
     """The time in UTC at which it is noon at the observatory location (in standard time). For the LSST, 12pm Chile Standard Time is 4pm UTC."""
 
     def __post_init__(self):
@@ -500,18 +502,6 @@ class linkingfilterConfigs:
         None
         """
 
-        self.ssp_detection_efficiency = cast_as_float(
-            self.ssp_detection_efficiency, "ssp_detection_efficiency"
-        )
-        self.ssp_number_observations = cast_as_int(self.ssp_number_observations, "ssp_number_observations")
-        self.ssp_separation_threshold = cast_as_float(
-            self.ssp_separation_threshold, "ssp_separation_threshold"
-        )
-        self.ssp_maximum_time = cast_as_float(self.ssp_maximum_time, "ssp_maximum_time")
-        self.ssp_number_tracklets = cast_as_int(self.ssp_number_tracklets, "ssp_number_tracklets")
-        self.ssp_track_window = cast_as_int(self.ssp_track_window, "ssp_track_window")
-        self.ssp_night_start_utc = cast_as_float(self.ssp_night_start_utc, "ssp_night_start_utc")
-
         sspvariables = [
             self.ssp_separation_threshold,
             self.ssp_number_observations,
@@ -523,7 +513,21 @@ class linkingfilterConfigs:
         ]
 
         # the below if-statement explicitly checks for None so a zero triggers the correct error
-        if all(v != 0 for v in sspvariables):
+        if all(v != None for v in sspvariables):
+
+            self.ssp_detection_efficiency = cast_as_float(
+                self.ssp_detection_efficiency, "ssp_detection_efficiency"
+            )
+            self.ssp_number_observations = cast_as_int(
+                self.ssp_number_observations, "ssp_number_observations"
+            )
+            self.ssp_separation_threshold = cast_as_float(
+                self.ssp_separation_threshold, "ssp_separation_threshold"
+            )
+            self.ssp_maximum_time = cast_as_float(self.ssp_maximum_time, "ssp_maximum_time")
+            self.ssp_number_tracklets = cast_as_int(self.ssp_number_tracklets, "ssp_number_tracklets")
+            self.ssp_track_window = cast_as_int(self.ssp_track_window, "ssp_track_window")
+            self.ssp_night_start_utc = cast_as_float(self.ssp_night_start_utc, "ssp_night_start_utc")
             if self.ssp_number_observations < 1:
                 logging.error("ERROR: ssp_number_observations is zero or negative.")
                 sys.exit("ERROR: ssp_number_observations is zero or negative.")
@@ -553,7 +557,7 @@ class linkingfilterConfigs:
                 sys.exit("ERROR: ssp_night_start_utc must be a valid time between 0 and 24 hours.")
 
             self.ssp_linking_on = True
-        elif not any(sspvariables):
+        elif all(v == None for v in sspvariables):
             self.ssp_linking_on = False
         else:
             logging.error(
@@ -562,23 +566,23 @@ class linkingfilterConfigs:
             sys.exit(
                 "ERROR: only some ssp linking variables supplied. Supply all five required variables for ssp linking filter, or none to turn filter off."
             )
-        self.drop_unlinked = cast_as_bool(self.drop_unlinked, "drop_unlinked")
+        self.drop_unlinked = cast_as_bool_or_set_default(self.drop_unlinked, "drop_unlinked", True)
 
 
 @dataclass
 class outputConfigs:
     """Data class for holding OUTPUT section configuration file keys and validating them."""
 
-    output_format: str = ""
+    output_format: str = None
     """Output format of the output file[s]"""
 
-    output_columns: str = ""
+    output_columns: str = None
     """Controls which columns are in the output files."""
 
-    position_decimals: float = 0
+    position_decimals: float = None
     """position decimal places"""
 
-    magnitude_decimals: float = 0
+    magnitude_decimals: float = None
     """magnitude decimal places"""
 
     def __post_init__(self):
@@ -622,12 +626,14 @@ class outputConfigs:
         ----------
         None
         """
-        self.position_decimals = cast_as_float(self.position_decimals, "position_decimals")
-        self.magnitude_decimals = cast_as_float(self.magnitude_decimals, "magnitude_decimals")
-        if self.position_decimals and self.position_decimals < 0:
+        if self.position_decimals is not None:
+            self.position_decimals = cast_as_float(self.position_decimals, "position_decimals")
+        if self.magnitude_decimals is not None:
+            self.magnitude_decimals = cast_as_float(self.magnitude_decimals, "magnitude_decimals")
+        if self.position_decimals is not None and self.position_decimals < 0:
             logging.error("ERROR: decimal places config variables cannot be negative.")
             sys.exit("ERROR: decimal places config variables cannot be negative.")
-        if self.magnitude_decimals and self.magnitude_decimals < 0:
+        if self.magnitude_decimals is not None and self.magnitude_decimals < 0:
             logging.error("ERROR: decimal places config variables cannot be negative.")
             sys.exit("ERROR: decimal places config variables cannot be negative.")
 
@@ -636,7 +642,7 @@ class outputConfigs:
 class lightcurveConfigs:
     """Data class for holding LIGHTCURVE section configuration file keys and validating them."""
 
-    lc_model: str = ""
+    lc_model: str = None
     """The unique name of the lightcurve model to use. Defined in the ``name_id`` method of the subclasses of AbstractLightCurve. If not none, the complex physical parameters file must be specified at the command line.lc_model = none"""
 
     def __post_init__(self):
@@ -656,7 +662,7 @@ class lightcurveConfigs:
         None
         """
         self.lc_model = None if self.lc_model == "none" else self.lc_model
-        if self.lc_model and self.lc_model not in LC_METHODS:
+        if self.lc_model is not None and self.lc_model not in LC_METHODS:
             logging.error(
                 f"The requested light curve model, '{self.lc_model}', is not registered. Available lightcurve options are: {list(LC_METHODS.keys())}"
             )
@@ -669,7 +675,7 @@ class lightcurveConfigs:
 class activityConfigs:
     """Data class for holding Activity section configuration file keys and validating them."""
 
-    comet_activity: str = ""
+    comet_activity: str = None
     """The unique name of the actvity model to use. Defined in the ``name_id`` method of the subclasses of AbstractCometaryActivity.  If not none, a complex physical parameters file must be specified at the command line."""
 
     def __post_init__(self):
@@ -689,7 +695,7 @@ class activityConfigs:
         None
         """
         self.comet_activity = None if self.comet_activity == "none" else self.comet_activity
-        if self.comet_activity and self.comet_activity not in CA_METHODS:
+        if self.comet_activity is not None and self.comet_activity not in CA_METHODS:
             logging.error(
                 f"The requested comet activity model, '{self.comet_activity}', is not registered. Available comet activity models are: {list(CA_METHODS.keys())}"
             )
@@ -702,28 +708,28 @@ class activityConfigs:
 class expertConfigs:
     """Data class for holding expert section configuration file keys and validating them."""
 
-    SNR_limit: float = 0
+    SNR_limit: float = None
     """Drops observations with signal to noise ratio less than limit given"""
 
-    SNR_limit_on: bool = False
+    SNR_limit_on: bool = None
     """flag for when an SNR limit is given"""
 
-    mag_limit: float = 0
+    mag_limit: float = None
     """Drops observations with magnitude less than limit given"""
 
-    mag_limit_on: bool = False
+    mag_limit_on: bool = None
     """flag for when a magnitude limit is given"""
 
-    trailing_losses_on: bool = True
+    trailing_losses_on: bool = None
     """flag for trailing losses"""
 
-    default_SNR_cut: bool = True
+    default_SNR_cut: bool = None
     """flag for default SNR"""
 
-    randomization_on: bool = True
+    randomization_on: bool = None
     """flag for randomizing astrometry and photometry"""
 
-    vignetting_on: bool = True
+    vignetting_on: bool = None
     """flag for calculating effects of vignetting on limiting magnitude"""
 
     def __post_init__(self):
@@ -742,19 +748,21 @@ class expertConfigs:
         ----------
         None
         """
-        if self.SNR_limit:
+        if self.SNR_limit is not None:
             self.SNR_limit_on = True
+            if self.SNR_limit < 0:
+                logging.error("ERROR: SNR limit is negative.")
+                sys.exit("ERROR: SNR limit is negative.")
+        else:
+            self.SNR_limit_on = False
 
-        if self.mag_limit:
+        if self.mag_limit is not None:
             self.mag_limit_on = True
-
-        if self.SNR_limit < 0:
-            logging.error("ERROR: SNR limit is negative.")
-            sys.exit("ERROR: SNR limit is negative.")
-
-        if self.mag_limit < 0:
-            logging.error("ERROR: magnitude limit is negative.")
-            sys.exit("ERROR: magnitude limit is negative.")
+            if self.mag_limit < 0:
+                logging.error("ERROR: magnitude limit is negative.")
+                sys.exit("ERROR: magnitude limit is negative.")
+        else:
+            self.mag_limit_on = False
 
         if self.mag_limit_on and self.SNR_limit_on:
             logging.error(
@@ -764,10 +772,12 @@ class expertConfigs:
                 "ERROR: SNR limit and magnitude limit are mutually exclusive. Please delete one or both from config file."
             )
 
-        self.trailing_losses_on = cast_as_bool(self.trailing_losses_on, "trailing_losses_on")
-        self.default_SNR_cut = cast_as_bool(self.default_SNR_cut, "default_SNR_cut")
-        self.randomization_on = cast_as_bool(self.randomization_on, "randomization_on")
-        self.vignetting_on = cast_as_bool(self.vignetting_on, "vignetting_on")
+        self.trailing_losses_on = cast_as_bool_or_set_default(
+            self.trailing_losses_on, "trailing_losses_on", True
+        )
+        self.default_SNR_cut = cast_as_bool_or_set_default(self.default_SNR_cut, "default_SNR_cut", True)
+        self.randomization_on = cast_as_bool_or_set_default(self.randomization_on, "randomization_on", True)
+        self.vignetting_on = cast_as_bool_or_set_default(self.vignetting_on, "vignetting_on", True)
 
 
 @dataclass
@@ -908,7 +918,7 @@ def check_key_exists(value, key_name):
 
     """
 
-    if not value:
+    if value is None:
         logging.error(
             f"ERROR: No value found for required key {key_name} in config file. Please check the file and try again."
         )
@@ -938,7 +948,7 @@ def check_key_doesnt_exist(value, key_name, reason):
     """
 
     # checks to make sure value doesn't exist
-    if value:
+    if value is not None:
         logging.error(f"ERROR: {key_name} supplied in config file {reason}")
         sys.exit(f"ERROR: {key_name} supplied in config file {reason}")
 
@@ -1081,6 +1091,43 @@ def PPFindFileOrExit(arg_fn, argname):
     else:
         pplogger.error("ERROR: filename {} supplied for {} argument does not exist.".format(arg_fn, argname))
         sys.exit("ERROR: filename {} supplied for {} argument does not exist.".format(arg_fn, argname))
+
+
+def cast_as_bool_or_set_default(value, key, default):
+
+    # replaces PPGetBoolOrExit: checks to make sure the value can be cast as a bool.
+    """
+    Checks to see if value can be cast as a boolen and if not gives default bool.
+
+    Parameters
+    -----------
+    value : object attribute
+        value of the config file attribute
+
+    key : string
+        The key being checked.
+
+    default : bool
+        default bool if value is None
+
+    Returns
+    ----------
+    value as a boolen
+    """
+
+    if value is not None:
+
+        str_value = str(value).strip()
+
+        if str_value in ["true", "1", "yes", "y", "True"]:
+            return True
+        elif str_value in ["false", "0", "no", "n", "False"]:
+            return False
+        else:
+            logging.error(f"ERROR: expected a bool for config parameter {key}. Check value in config file.")
+            sys.exit(f"ERROR: expected a bool for config parameter {key}. Check value in config file.")
+    elif value is None:
+        return default
 
 
 def PrintConfigsToLog(sconfigs, cmd_args):
