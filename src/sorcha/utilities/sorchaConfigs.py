@@ -256,7 +256,6 @@ class fovConfigs:
                 "ERROR: a default detector footprint is currently only provided for LSST; please provide your own footprint file."
             )
 
-        check_key_exists(self.footprint_edge_threshold, "footprint_edge_threshold")
         self.footprint_edge_threshold = cast_as_float(
             self.footprint_edge_threshold, "footprint_edge_threshold"
         )

@@ -486,23 +486,14 @@ def test_fovConfigs_surveyname():
     )
 
 
-@pytest.mark.parametrize("key_name", ["fill_factor", "circle_radius", "footprint_edge_threshold"])
-def test_fovConfigs_camera_footprint_mandatory_and_notrequired(key_name):
+@pytest.mark.parametrize("key_name", ["fill_factor", "circle_radius"])
+def test_fovConfigs_camera_footprint_notrequired(key_name):
     """
     this loops through the mandatory keys and keys that shouldn't exist and makes sure the code fails correctly when each is missing
     """
 
     fov_configs = correct_fov_read.copy()
-    # check keys exist
-    if key_name == "footprint_edge_threshold":
-
-        del fov_configs[key_name]
-        with pytest.raises(SystemExit) as error_text:
-            test_configs = fovConfigs(**fov_configs)
-        assert (
-            error_text.value.code
-            == f"ERROR: No value found for required key {key_name} in config file. Please check the file and try again."
-        )
+    
     # check these dont exist
     if key_name == "fill_factor" or key_name == "circle_raidus":
         fov_configs[key_name] = 0.5
