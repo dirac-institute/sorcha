@@ -8,7 +8,7 @@ from sorcha_cmdline.sorchaargparse import SorchaArgparse
 
 def main():  # pragma: no cover
     # parse the input arguments
-    parser = SorchaArgparse(argparse.ArgumentParser(prog="sorcha bootstrap"
+    parser = SorchaArgparse(argparse.ArgumentParser(prog="sorcha bootstrap", 
         description="Fetch the NAIF high precision EOP kernel file store its checksum."
     ))
    
