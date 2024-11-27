@@ -3,13 +3,15 @@
 #
 import argparse
 import pooch
+from sorcha_cmdline.sorchaargparse import SorchaArgparse
 
 
 def main():  # pragma: no cover
     # parse the input arguments
-    parser = argparse.ArgumentParser(
+    parser = SorchaArgparse(argparse.ArgumentParser(
         description="Fetch the NAIF high precision EOP kernel file store its checksum."
-    )
+    ))
+   
     parser.add_argument(
         "--cache",
         type=str,
