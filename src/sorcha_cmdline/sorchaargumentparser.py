@@ -19,7 +19,8 @@ class SorchaArgumentParser(ArgumentParser):
         super().__init__(*args, **kwargs)
 
     def print_usage(self, file=None):
-        """Print a brief description of how the ArgumentParser should be invoked on the command line. If file is None, sys.stdout is assumed.
+        """Print a brief description of how the ArgumentParser should be invoked 
+        on the command line. If file is None, sys.stdout is assumed.
 
 
         Parameters
