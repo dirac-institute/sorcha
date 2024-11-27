@@ -2,14 +2,14 @@
 # The `sorcha run` subcommand implementation
 #
 import argparse
-import sys
-
-
+from sorcha_cmdline.sorchaargparse import SorchaArgparse
+     
+        
 def main():
-    parser = argparse.ArgumentParser(
+    parser = SorchaArgparse(argparse.ArgumentParser(
         formatter_class=argparse.ArgumentDefaultsHelpFormatter, description="Run a simulation."
-    )
-
+    ))
+    
     required = parser.add_argument_group("Required arguments")
     required.add_argument(
         "-c",
@@ -118,15 +118,6 @@ def main():
         default=None,
     )
 
-    # outputting an extra error message to the prompt if no arguments are included.
-    # we found from beta testing that a user unfamilar with linux/unix may not
-    # know the -h flag is what they need to get help
-
-    if len(sys.argv) == 1:
-        print(
-            "\n\nError: No command line arguments provided!!! \nUse the -h flag to see descriptions of the required and optional arguments needed to run Sorcha \n",
-            file=sys.stderr,
-        )
 
     args = parser.parse_args()
 
