@@ -11,8 +11,7 @@ class SorchaArgparse(argparse.ArgumentParser):
         # argparse usage or errors print on the terminal. This replacement
         # gets around this so all the usage calls match what the user should
         # be inputting on the command line
-        self.prog=self.prog.replace('-', ' ')
-       
+        self.prog = self.prog.replace("-", " ")
 
     def print_usage(self, file=None):
         super().print_usage(file)
