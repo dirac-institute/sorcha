@@ -3,13 +3,17 @@
 #
 import argparse
 from sorcha_cmdline.sorchaargparse import SorchaArgparse
-     
-        
+
+
 def main():
-    parser = SorchaArgparse(argparse.ArgumentParser(prog='sorcha run',
-        formatter_class=argparse.ArgumentDefaultsHelpFormatter, description="Run a simulation."
-    ))
-    
+    parser = SorchaArgparse(
+        argparse.ArgumentParser(
+            prog="sorcha run",
+            formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+            description="Run a simulation.",
+        )
+    )
+
     required = parser.add_argument_group("Required arguments")
     required.add_argument(
         "-c",
@@ -117,7 +121,6 @@ def main():
         dest="st",
         default=None,
     )
-
 
     args = parser.parse_args()
 

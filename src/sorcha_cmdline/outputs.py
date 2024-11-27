@@ -70,7 +70,9 @@ def cmd_outputs_check_logs(args):  # pragma: no cover
 
 def main():
     # Create the top-level parser
-    parser = SorchaArgparse(argparse.ArgumentParser(prog="sorcha outputs", description="Sorcha outputs manipulation utility"))
+    parser = SorchaArgparse(
+        argparse.ArgumentParser(prog="sorcha outputs", description="Sorcha outputs manipulation utility")
+    )
     subparsers = parser.add_subparsers(
         title="commands", description="Available commands", help="Command to execute", dest="command"
     )
