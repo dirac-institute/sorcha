@@ -4,7 +4,7 @@ from numpy.testing import assert_equal, assert_almost_equal
 
 from sorcha.modules.PPModuleRNG import PerModuleRNG
 from sorcha.utilities.dataUtilitiesForTests import get_test_filepath
-
+from sorcha.utilities.sorchaConfigs import sorchaConfigs, fovConfigs
 
 def test_PPSimpleSensorArea():
     from sorcha.modules.PPApplyFOVFilter import PPSimpleSensorArea
@@ -58,7 +58,8 @@ def test_PPApplyFOVFilters():
         "fill_factor": None,
         "footprint_edge_threshold": None,
     }
-
+    configs = fovConfigs(**configs)
+    setattr(configs, "fov", configs)
     new_obs = PPApplyFOVFilter(observations, configs, rng)
     expected = [897478, 897521, 901987, 902035, 907363, 907416, 907470]
 
@@ -70,6 +71,8 @@ def test_PPApplyFOVFilters():
         "circle_radius": None,
         "footprint_edge_threshold": None,
     }
+    configs = fovConfigs(**configs)
+    setattr(configs, "fov", configs)
 
     new_obs = PPApplyFOVFilter(observations, configs, rng)
     expected = [894816, 894838, 897478, 897521, 901987, 902035, 907363, 907416, 907470, 909426]
@@ -79,9 +82,11 @@ def test_PPApplyFOVFilters():
     configs = {
         "camera_model": "footprint",
         "footprint_path": get_test_filepath("detectors_corners.csv"),
-        "footprint_edge_threshold": None,
+        "footprint_edge_threshold": 2,
     }
-    footprint = Footprint(configs["footprint_path"])
+    configs = fovConfigs(**configs)
+    setattr(configs, "fov", configs)
+    footprint = Footprint(configs.fov.footprint_path)
     new_obs = PPApplyFOVFilter(observations, configs, rng, footprint=footprint)
 
     expected_ids = [
@@ -96,9 +101,10 @@ def test_PPApplyFOVFilters():
         130.0,
         130.0,
     ]
-
     assert set(new_obs["detectorID"].values) == set(expected_ids)
-
+    
     configs = {"camera_model": "none"}
+    configs = fovConfigs(**configs)
+    setattr(configs, "fov", configs)
     new_obs = PPApplyFOVFilter(observations, configs, rng)
     assert len(new_obs) == 10

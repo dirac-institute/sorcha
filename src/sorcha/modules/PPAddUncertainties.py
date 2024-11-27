@@ -61,7 +61,7 @@ def degSin(x):
     return np.sin(x * np.pi / 180.0)
 
 
-def addUncertainties(detDF, configs, module_rngs, verbose=True):
+def addUncertainties(detDF, sconfigs, module_rngs, verbose=True):
     """
     Generates astrometric and photometric uncertainties, and SNR. Uses uncertainties
     to randomize the photometry. Accounts for trailing losses.
@@ -80,8 +80,8 @@ def addUncertainties(detDF, configs, module_rngs, verbose=True):
     detDF : Pandas dataframe)
         Dataframe of observations.
 
-    configs : dictionary
-        dictionary of configurations from config file.
+    sconfigs: dataclass
+        Dataclass of configuration file arguments.
 
     module_rngs : PerModuleRNG
         A collection of random number generators (per module).
@@ -100,11 +100,11 @@ def addUncertainties(detDF, configs, module_rngs, verbose=True):
     verboselog = pplogger.info if verbose else lambda *a, **k: None
 
     detDF["astrometricSigma_deg"], detDF["trailedSourceMagSigma"], detDF["SNR"] = uncertainties(
-        detDF, configs, filterMagName="trailedSourceMagTrue"
+        detDF, sconfigs, filterMagName="trailedSourceMagTrue"
     )
 
-    if configs.get("trailing_losses_on", False):
-        _, detDF["PSFMagSigma"], detDF["SNR"] = uncertainties(detDF, configs, filterMagName="PSFMagTrue")
+    if sconfigs.expert.trailing_losses_on:
+        _, detDF["PSFMagSigma"], detDF["SNR"] = uncertainties(detDF, sconfigs, filterMagName="PSFMagTrue")
     else:
         detDF["PSFMagSigma"] = detDF["trailedSourceMagSigma"]
 
@@ -113,7 +113,7 @@ def addUncertainties(detDF, configs, module_rngs, verbose=True):
 
 def uncertainties(
     detDF,
-    configs,
+    sconfigs,
     limMagName="fiveSigmaDepth_mag",
     seeingName="seeingFwhmGeom_arcsec",
     filterMagName="trailedSourceMagTrue",
@@ -130,8 +130,8 @@ def uncertainties(
     detDF : Pandas dataframe
         dataframe containing observations.
 
-    configs : dictionary
-        dictionary of configurations from config file.
+    sconfigs: dataclass
+        Dataclass of configuration file arguments.
 
     limMagName : string, optional
         pandas dataframe column name of the limiting magnitude.
@@ -173,7 +173,7 @@ def uncertainties(
         signal-to-noise ratio.
     """
 
-    if configs.get("trailing_losses_on", False):
+    if sconfigs.expert.trailing_losses_on:
         dMag = PPTrailingLoss.calcTrailingLoss(
             detDF[dra_name],
             detDF[ddec_name],

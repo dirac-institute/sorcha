@@ -5,7 +5,7 @@ from astropy.coordinates import SkyCoord
 from sorcha.modules.PPModuleRNG import PerModuleRNG
 
 
-def PPApplyFOVFilter(observations, configs, module_rngs, footprint=None, verbose=False):
+def PPApplyFOVFilter(observations, sconfigs, module_rngs, footprint=None, verbose=False):
     """
     Wrapper function for PPFootprintFilter and PPFilterDetectionEfficiency that checks to see
     whether a camera footprint filter should be applied or if a simple fraction of the
@@ -22,8 +22,8 @@ def PPApplyFOVFilter(observations, configs, module_rngs, footprint=None, verbose
     observations: Pandas dataframe
     dataframe of observations.
 
-    configs : dictionary
-        dictionary of variables from config file.
+    sconfigs: dataclass
+        Dataclass of configuration file arguments.
 
     module_rngs : PerModuleRNG
         A collection of random number generators (per module).
@@ -45,10 +45,10 @@ def PPApplyFOVFilter(observations, configs, module_rngs, footprint=None, verbose
     pplogger = logging.getLogger(__name__)
     verboselog = pplogger.info if verbose else lambda *a, **k: None
 
-    if configs["camera_model"] == "footprint":
+    if sconfigs.fov.camera_model == "footprint":
         verboselog("Applying sensor footprint filter...")
         onSensor, detectorIDs = footprint.applyFootprint(
-            observations, edge_thresh=configs["footprint_edge_threshold"]
+            observations, edge_thresh=sconfigs.fov.footprint_edge_threshold
         )
 
         observations = observations.iloc[onSensor].copy()
@@ -56,14 +56,14 @@ def PPApplyFOVFilter(observations, configs, module_rngs, footprint=None, verbose
 
         observations = observations.sort_index()
 
-    if configs["camera_model"] == "circle":
+    if sconfigs.fov.camera_model == "circle":
         verboselog("FOV is circular...")
-        if configs["circle_radius"]:
+        if sconfigs.fov.circle_radius:
             verboselog("Circle radius is set. Applying circular footprint filter...")
-            observations = PPCircleFootprint(observations, configs["circle_radius"])
-        if configs["fill_factor"]:
+            observations = PPCircleFootprint(observations, sconfigs.fov.circle_radius)
+        if sconfigs.fov.fill_factor:
             verboselog("Fill factor is set. Removing random observations to mimic chip gaps.")
-            observations = PPSimpleSensorArea(observations, module_rngs, configs["fill_factor"])
+            observations = PPSimpleSensorArea(observations, module_rngs, sconfigs.fov.fill_factor)
 
     return observations
 

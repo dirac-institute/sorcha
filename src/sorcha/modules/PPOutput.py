@@ -132,7 +132,7 @@ def PPIndexSQLDatabase(outf, tablename="sorcha_results"):
     cnx.commit()
 
 
-def PPWriteOutput(cmd_args, configs, observations_in, verbose=False):
+def PPWriteOutput(cmd_args, sconfigs, observations_in, verbose=False):
     """
     Writes the output in the format specified in the config file to a location
     specified by the user.
@@ -142,8 +142,8 @@ def PPWriteOutput(cmd_args, configs, observations_in, verbose=False):
     cmd_args : dictionary
         Dictonary of command line arguments.
 
-    configs : Dictionary
-        Dictionary of config file arguments.
+    sconfigs: dataclass
+        Dataclass of configuration file arguments.
 
     observations_in : Pandas dataframe
         Dataframe of output.
@@ -171,7 +171,7 @@ def PPWriteOutput(cmd_args, configs, observations_in, verbose=False):
         + observations_in["Obj_Sun_z_LTC_km"].values ** 2
     )
 
-    if configs["output_columns"] == "basic":
+    if sconfigs.output.output_columns == "basic":
         observations = observations_in.copy()[
             [
                 "ObjID",
@@ -193,14 +193,14 @@ def PPWriteOutput(cmd_args, configs, observations_in, verbose=False):
         ]
 
         # if linking is on and unlinked objects are NOT dropped, add the object_linked column to the output
-        if configs["SSP_linking_on"] and not configs["drop_unlinked"]:
+        if sconfigs.linkingfilter.ssp_linking_on and not sconfigs.linkingfilter.drop_unlinked:
             observations["object_linked"] = observations_in["object_linked"].copy()
 
-    elif configs["output_columns"] == "all":
+    elif sconfigs.output.output_columns == "all":
         observations = observations_in.copy()
-    elif len(configs["output_columns"]) > 1:  # assume a list of column names...
+    elif len(sconfigs.output.output_columns) > 1:  # assume a list of column names...
         try:
-            observations = observations_in.copy()[configs["output_columns"]]
+            observations = observations_in.copy()[sconfigs.output.output_columns]
         except KeyError:
             pplogger.error(
                 "ERROR: at least one of the columns provided in output_columns does not seem to exist. Check docs and try again."
@@ -209,7 +209,7 @@ def PPWriteOutput(cmd_args, configs, observations_in, verbose=False):
                 "ERROR: at least one of the columns provided in output_columns does not seem to exist. Check docs and try again."
             )
 
-    if configs["position_decimals"]:
+    if sconfigs.output.position_decimals:
         for position_col in [
             "fieldRA_deg",
             "fieldDec_deg",
@@ -221,12 +221,12 @@ def PPWriteOutput(cmd_args, configs, observations_in, verbose=False):
         ]:
             try:  # depending on type of output selected, some of these columns may not exist.
                 observations[position_col] = observations[position_col].round(
-                    decimals=configs["position_decimals"]
+                    decimals=sconfigs.output.position_decimals
                 )
             except KeyError:
                 continue
 
-    if configs["magnitude_decimals"]:
+    if sconfigs.output.magnitude_decimals:
         for magnitude_col in [
             "PSFMag",
             "trailedSourceMag",
@@ -239,26 +239,26 @@ def PPWriteOutput(cmd_args, configs, observations_in, verbose=False):
         ]:
             try:  # depending on type of output selected, some of these columns may not exist.
                 observations[magnitude_col] = observations[magnitude_col].round(
-                    decimals=configs["magnitude_decimals"]
+                    decimals=sconfigs.output.magnitude_decimals
                 )
             except KeyError:
                 continue
 
     verboselog("Constructing output path...")
 
-    if configs["output_format"] == "csv":
+    if sconfigs.output.output_format == "csv":
         outputsuffix = ".csv"
         out = os.path.join(cmd_args.outpath, cmd_args.outfilestem + outputsuffix)
         verboselog("Output to CSV file...")
         observations = PPOutWriteCSV(observations, out)
 
-    elif configs["output_format"] == "sqlite3":
+    elif sconfigs.output.output_format == "sqlite3":
         outputsuffix = ".db"
         out = os.path.join(cmd_args.outpath, cmd_args.outfilestem + outputsuffix)
         verboselog("Output to sqlite3 database...")
         observations = PPOutWriteSqlite3(observations, out)
 
-    elif configs["output_format"] == "hdf5" or configs["output_format"] == "h5":
+    elif sconfigs.output.output_format == "hdf5" or sconfigs.output.output_format == "h5":
         outputsuffix = ".h5"
         out = os.path.join(cmd_args.outpath, cmd_args.outfilestem + outputsuffix)
         verboselog("Output to HDF5 binary file...")
