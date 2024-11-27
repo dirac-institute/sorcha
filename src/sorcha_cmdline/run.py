@@ -6,7 +6,7 @@ from sorcha_cmdline.sorchaargparse import SorchaArgparse
      
         
 def main():
-    parser = SorchaArgparse(argparse.ArgumentParser(
+    parser = SorchaArgparse(argparse.ArgumentParser(prog=s"sorcha run"
         formatter_class=argparse.ArgumentDefaultsHelpFormatter, description="Run a simulation."
     ))
     
