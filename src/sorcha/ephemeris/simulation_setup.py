@@ -163,7 +163,7 @@ def generate_simulations(ephem, gm_sun, gm_total, orbits_df, args):
     return sim_dict
 
 
-def precompute_pointing_information(pointings_df, args, configs):
+def precompute_pointing_information(pointings_df, args, sconfigs):
     """This function is meant to be run once to prime the pointings dataframe
     with additional information that Assist & Rebound needs for it's work.
 
@@ -173,8 +173,8 @@ def precompute_pointing_information(pointings_df, args, configs):
         Contains the telescope pointing database.
     args : dictionary
         Command line arguments needed for initialization.
-    configs : dictionary
-        Configuration settings.
+    sconfigs: dataclass
+        Dataclass of configuration file arguments.
 
     Returns
     --------
@@ -184,7 +184,7 @@ def precompute_pointing_information(pointings_df, args, configs):
     ephem, _, _ = create_assist_ephemeris(args)
 
     furnish_spiceypy(args)
-    obsCode = configs["ar_obs_code"]
+    obsCode = sconfigs.simulation.ar_obs_code
     observatories = Observatory(args)
 
     # vectorize the calculation to get x,y,z vector from ra/dec
@@ -204,8 +204,8 @@ def precompute_pointing_information(pointings_df, args, configs):
     # create a partial function since most params don't change, and it makes the lambda easier to read
     partial_get_hp_neighbors = partial(
         get_hp_neighbors,
-        search_radius=configs["ar_ang_fov"] + configs["ar_fov_buffer"],
-        nside=2 ** configs["ar_healpix_order"],
+        search_radius=sconfigs.simulation.ar_ang_fov + sconfigs.simulation.ar_fov_buffer,
+        nside=2**sconfigs.simulation.ar_healpix_order,
         nested=True,
     )
 

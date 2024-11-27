@@ -5,10 +5,10 @@ import numpy as np
 import pytest
 from numpy.testing import assert_equal
 
-from sorcha.utilities.dataUtilitiesForTests import get_test_filepath
+from sorcha.utilities.dataUtilitiesForTests import get_test_filepath, get_demo_filepath
 from sorcha.utilities.sorchaArguments import sorchaArguments
 from sorcha.modules.PPOutput import PPWriteOutput
-
+from sorcha.utilities.sorchaConfigs import outputConfigs, linkingfilterConfigs, sorchaConfigs
 
 # some global variables used by tests
 observations = pd.read_csv(get_test_filepath("test_input_fullobs.csv"), nrows=1)
@@ -53,15 +53,13 @@ def test_PPOutWriteHDF5(tmp_path):
 def test_PPWriteOutput_csv(tmp_path):
     args.outpath = tmp_path
     args.outfilestem = "PPOutput_test_out"
+    config_file_location = get_demo_filepath("sorcha_config_demo.ini")
+    configs = sorchaConfigs(config_file_location,"rubin_sim")
+    configs.output.magnitude_decimals = 3
+    configs.output.position_decimals = 7
+    configs.linkingfilter.ssp_linking_on = False
+    configs.linkingfilter.drop_unlinked = True
 
-    configs = {
-        "output_columns": "basic",
-        "position_decimals": 7,
-        "magnitude_decimals": 3,
-        "output_format": "csv",
-        "SSP_linking_on": False,
-        "drop_unlinked": True,
-    }
 
     expected = np.array(
         [
@@ -96,15 +94,15 @@ def test_PPWriteOutput_sql(tmp_path):
 
     args.outpath = tmp_path
     args.outfilestem = "PPOutput_test_out"
+    config_file_location = get_demo_filepath("sorcha_config_demo.ini")
+    configs = sorchaConfigs(config_file_location,"rubin_sim")
+    configs.output.magnitude_decimals = 3
+    configs.output.position_decimals = 7
+    configs.linkingfilter.ssp_linking_on = False
+    configs.linkingfilter.drop_unlinked = True
+    configs.output.output_format = "sqlite3"
 
-    configs = {
-        "output_columns": "basic",
-        "position_decimals": 7,
-        "magnitude_decimals": 3,
-        "output_format": "sqlite3",
-        "SSP_linking_on": False,
-        "drop_unlinked": True,
-    }
+
 
     expected = np.array(
         [
@@ -148,15 +146,11 @@ def test_PPWriteOutput_sql(tmp_path):
 
 def test_PPWriteOutput_all(tmp_path):
     # additional test to ensure that "all" output option and no rounding works
-
-    configs = {
-        "output_columns": "all",
-        "position_decimals": None,
-        "magnitude_decimals": None,
-        "output_format": "csv",
-        "SSP_linking_on": False,
-        "drop_unlinked": True,
-    }
+    config_file_location = get_demo_filepath("sorcha_config_demo.ini")
+    configs = sorchaConfigs(config_file_location,"rubin_sim")
+    configs.linkingfilter.ssp_linking_on = False
+    configs.linkingfilter.drop_unlinked = True
+    configs.output.output_columns = "all"
 
     args.outpath = tmp_path
     args.outfilestem = "PPOutput_test_all"
@@ -233,14 +227,20 @@ def test_PPWriteOutput_all(tmp_path):
 
 
 def test_PPWriteOutput_custom(tmp_path):
-    configs = {
-        "output_columns": ["ObjID", "fieldMJD_TAI"],
+
+    config_file_location = get_demo_filepath("sorcha_config_demo.ini")
+    configs = sorchaConfigs(config_file_location,"rubin_sim")
+    configs.output.magnitude_decimals = 3
+    configs.output.position_decimals = 7
+    configs.linkingfilter.ssp_linking_on = False
+    configs.linkingfilter.drop_unlinked = True
+    out_dict = { 
+        "output_format": "csv",
+        "output_columns": "ObjID , fieldMJD_TAI",
         "position_decimals": 7,
         "magnitude_decimals": 3,
-        "output_format": "csv",
-        "SSP_linking_on": False,
-        "drop_unlinked": True,
     }
+    configs.output = outputConfigs(**out_dict)
 
     args.outpath = tmp_path
     args.outfilestem = "PPOutput_test_multi"
@@ -255,7 +255,19 @@ def test_PPWriteOutput_custom(tmp_path):
 
     # and now we test the error message
 
-    configs["output_columns"] = ["ObjID", "fieldMJD_TAI", "dummy_column"]
+    configs = sorchaConfigs(config_file_location,"rubin_sim")
+    configs.output.magnitude_decimals = 3
+    configs.output.position_decimals = 7
+    configs.linkingfilter.ssp_linking_on = False
+    configs.linkingfilter.drop_unlinked = True
+    out_dict = { 
+        "output_format": "csv",
+        "output_columns": "ObjID , fieldMJD_TAI, dummy_column",
+        "position_decimals": 7,
+        "magnitude_decimals": 3,
+    }
+    configs.output = outputConfigs(**out_dict)
+    
 
     with pytest.raises(SystemExit) as e:
         PPWriteOutput(args, configs, observations, 10)
@@ -274,16 +286,14 @@ def test_PPWriteOutput_linking_col(tmp_path):
 
     observations_linktest["object_linked"] = [True]
 
-    configs = {
-        "output_columns": "basic",
-        "position_decimals": 7,
-        "magnitude_decimals": 3,
-        "output_format": "csv",
-        "SSP_linking_on": True,
-        "drop_unlinked": False,
-    }
+    config_file_location = get_demo_filepath("sorcha_config_demo.ini")
+    configs = sorchaConfigs(config_file_location,"rubin_sim")
+    configs.output.magnitude_decimals = 3
+    configs.output.position_decimals = 7
+    configs.linkingfilter.ssp_linking_on = True
+    configs.linkingfilter.drop_unlinked = False
+    
 
     PPWriteOutput(args, configs, observations_linktest, 10)
     csv_test_in = pd.read_csv(os.path.join(tmp_path, "PPOutput_test_linking.csv"))
-
     assert "object_linked" in csv_test_in.columns
