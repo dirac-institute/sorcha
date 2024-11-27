@@ -1,5 +1,4 @@
-import argparse
-from sorcha_cmdline.sorchaargparse import SorchaArgparse
+from sorcha_cmdline.sorchaargumentparser import SorchaArgumentParser
 
 #
 # sorcha outputs create-sqlite
@@ -70,7 +69,7 @@ def cmd_outputs_check_logs(args):  # pragma: no cover
 
 def main():
     # Create the top-level parser
-    parser = SorchaArgparse(argparse.ArgumentParser(description="Sorcha outputs manipulation utility"))
+    parser = SorchaArgumentParser(prog="sorcha outputs", description="Sorcha outputs manipulation utility")
     subparsers = parser.add_subparsers(
         title="commands", description="Available commands", help="Command to execute", dest="command"
     )

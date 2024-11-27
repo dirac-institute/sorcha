@@ -2,16 +2,17 @@
 # The `sorcha run` subcommand implementation
 #
 import argparse
-from sorcha_cmdline.sorchaargparse import SorchaArgparse
+from sorcha_cmdline.sorchaargumentparser import SorchaArgumentParser
 
 
 def main():
-    parser = SorchaArgparse(
-        argparse.ArgumentParser(
-            formatter_class=argparse.ArgumentDefaultsHelpFormatter,
-            description="Run a simulation.",
-        )
+    parser = SorchaArgumentParser(
+        prog="sorcha run",
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+        description="Run a simulation.",
     )
+
+    # parser = SorchaArgparse(parser)
 
     required = parser.add_argument_group("Required arguments")
     required.add_argument(

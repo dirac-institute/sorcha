@@ -1,17 +1,15 @@
 #
 # The `sorcha run` subcommand implementation
 #
-import argparse
 import pooch
-from sorcha_cmdline.sorchaargparse import SorchaArgparse
+from sorcha_cmdline.sorchaargumentparser import SorchaArgumentParser
 
 
 def main():  # pragma: no cover
     # parse the input arguments
-    parser = SorchaArgparse(
-        argparse.ArgumentParser(
-            description="Fetch the NAIF high precision EOP kernel file store its checksum.",
-        )
+    parser = SorchaArgumentParser(
+        prog="sorcha bootstrap",
+        description="Fetch the NAIF high precision EOP kernel file store its checksum.",
     )
 
     parser.add_argument(
