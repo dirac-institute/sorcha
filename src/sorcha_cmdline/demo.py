@@ -49,10 +49,9 @@ def cmd_demo_howto(args):  # pragma: no cover
 def main():
     # Create the top-level parser
     parser = SorchaArgparse(
-        argparse.ArgumentParser(prog="sorcha demo", description="Prepare and explain how to run sorcha demos")
+        argparse.ArgumentParser(description="Prepare and explain how to run sorcha demos")
     )
     subparsers = parser.add_subparsers(
-        prog="sorcha demo",
         title="commands",
         description="Available commands",
         help="Command to execute",

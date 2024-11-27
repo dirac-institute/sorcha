@@ -10,7 +10,6 @@ def main():  # pragma: no cover
     # parse the input arguments
     parser = SorchaArgparse(
         argparse.ArgumentParser(
-            prog="sorcha bootstrap",
             description="Fetch the NAIF high precision EOP kernel file store its checksum.",
         )
     )
