@@ -850,50 +850,36 @@ class auxililaryConfigs:
         """
         self._set_default()
         for data_filename, default_filename in self.DATA_FILENAME_defaults.items():
-            # default filename:
-            if getattr(self, data_filename) is None:
+
+            file_attr = getattr(self, data_filename)
+            # sets default filename
+            if file_attr is None:
                 setattr(self, data_filename, default_filename)
-                if data_filename != "META_KERNEL" and data_filename != "OBSERVATORY_CODES":
-                    # default URL
-                    if getattr(self, data_filename + "_URL") is None:
-                        if data_filename != "OBSERVATORY_CODES_COMPRESSED":
-                            setattr(
-                                self,
-                                (data_filename + "_URL"),
-                                self.URLS_defaults[data_filename] + default_filename,
-                            )
-                        else:
-                            setattr(self, data_filename + "_URL", self.URLS_defaults[data_filename])
+                file_attr = getattr(self, data_filename)
 
-                    # new URL
-                    elif getattr(self, data_filename + "_URL") is not None:
-                        setattr(
-                            self,
-                            data_filename + "_URL",
-                            getattr(self, data_filename + "_URL") + getattr(self, data_filename),
-                        )
-            # new filename:
-            elif getattr(self, data_filename) is not None and (
-                data_filename != "META_KERNEL" and data_filename != "OBSERVATORY_CODES"
-            ):
-                # default URL
-                if getattr(self, data_filename + "_URL") is None:
-                    if data_filename != "OBSERVATORY_CODES_COMPRESSED":
-                        setattr(
-                            self,
-                            (data_filename + "_URL"),
-                            self.URLS_defaults[data_filename] + getattr(self, data_filename),
-                        )
-                    else:
-                        setattr(self, data_filename + "_URL", self.URLS_defaults[data_filename])
+            # skips these two as they have no URL attribute
+            if data_filename == "META_KERNEL" or data_filename == "OBSERVATORY_CODES":
+                continue
 
-                # new URL
-                elif getattr(self, data_filename + "_URL") is not None:
+            url_attr = data_filename + "_URL"
+            # for default URL
+            if getattr(self, url_attr) is None:
+                # OBSERVATORY_CODES_COMPRESSED does not need the filename appended I think
+                if data_filename != "OBSERVATORY_CODES_COMPRESSED":
                     setattr(
                         self,
-                        (data_filename + "_URL"),
-                        getattr(self, data_filename + "_URL") + getattr(self, data_filename),
+                        url_attr,
+                        self.URLS_defaults[data_filename] + file_attr,
                     )
+                else:
+                    setattr(self, url_attr, self.URLS_defaults[data_filename])
+            # for new URL
+            else:
+                setattr(
+                    self,
+                    url_attr,
+                    getattr(self, url_attr) + file_attr,
+                )
 
     def _set_default(self):
         """
