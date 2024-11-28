@@ -781,6 +781,199 @@ class expertConfigs:
 
 
 @dataclass
+class auxililaryConfigs:
+    DE440S: str = None
+    """filename of DE440S"""
+    DE440S_URL: str = None
+    """url for De4440S"""
+
+    EARTH_PREDICT: str = None
+    """filename of EARTH_PREDICT"""
+    EARTH_PREDICT_URL: str = None
+    """url for EARTH_PREDICT"""
+
+    EARTH_HISTORICAL: str = None
+    """filename of EARTH_HISTOICAL"""
+    EARTH_HISTORICAL_URL: str = None
+    """url for EARTH_HISTORICAL"""
+
+    EARTH_HIGH_PRECISION: str = None
+    """filename of EARTH_HIGH_PRECISION"""
+    EARTH_HIGH_PRECISION_URL: str = None
+    """url of EARTH_HIGH_PRECISION"""
+
+    JPL_PLANETS: str = None
+    """filename of JPL_PLANETS"""
+    JPL_PLANETS_URL: str = None
+    """url of JPL_PLANETS"""
+
+    JPL_SMALL_BODIES: str = None
+    """filename of JPL_SMALL_BODIES"""
+    JPL_SMALL_BODIES_URL: str = None
+    """url of JPL_SMALL_BODIES"""
+
+    LEAP_SECONDS: str = None
+    """filename of LEAP_SECONDS"""
+    LEAP_SECONDS_URL: str = None
+    """url of LEAP_SECONDS"""
+
+    META_KERNEL: str = None
+    """filename of META_KERNAL"""
+
+    OBSERVATORY_CODES: str = None
+    """filename of OBSERVATORY_CODES"""
+
+    OBSERVATORY_CODES_COMPRESSED: str = None
+    """filename of OBSERVATORY_CODES_COMPRESSED"""
+    OBSERVATORY_CODES_COMPRESSED_URL: str = None
+    """url of OBSERVATORY_CODES_COMPRESSED"""
+
+    ORIENTATION_CONSTANTS: str = None
+    """filename of OBSERVATORY_CONSTANTS"""
+    ORIENTATION_CONSTANTS_URL: str = None
+    """url of OBSERVATORY_CONSTANTS"""
+
+    DATA_FILE_LIST: list = None
+    """Convenience list of all the file names"""
+
+    URLS: dict = None
+    """Dictionary of filename: url"""
+
+    def __post_init__(self):
+        """Automagically validates the auxiliary configs after initialisation."""
+        self._create_URL()
+        # self._validate_auxiliary_configs()
+
+    def _create_URL(self):
+        """
+        This method takes the filename and url from either the config file or the list of default values.
+        """
+        self._set_default()
+        for data_filename, default_filename in self.DATA_FILENAME_defaults.items():
+            # default filename:
+            if getattr(self, data_filename) is None:
+                setattr(self, data_filename, default_filename)
+                if data_filename != "META_KERNEL" and data_filename != "OBSERVATORY_CODES":
+                    # default URL
+                    if getattr(self, data_filename + "_URL") is None:
+                        if data_filename != "OBSERVATORY_CODES_COMPRESSED":
+                            setattr(
+                                self,
+                                (data_filename + "_URL"),
+                                self.URLS_defaults[data_filename] + default_filename,
+                            )
+                        else:
+                            setattr(self, data_filename + "_URL", self.URLS_defaults[data_filename])
+
+                    # new URL
+                    elif getattr(self, data_filename + "_URL") is not None:
+                        setattr(
+                            self,
+                            data_filename + "_URL",
+                            getattr(self, data_filename + "_URL") + getattr(self, data_filename),
+                        )
+            # new filename:
+            elif getattr(self, data_filename) is not None and (
+                data_filename != "META_KERNEL" and data_filename != "OBSERVATORY_CODES"
+            ):
+                # default URL
+                if getattr(self, data_filename + "_URL") is None:
+                    if data_filename != "OBSERVATORY_CODES_COMPRESSED":
+                        setattr(
+                            self,
+                            (data_filename + "_URL"),
+                            self.URLS_defaults[data_filename] + getattr(self, data_filename),
+                        )
+                    else:
+                        setattr(self, data_filename + "_URL", self.URLS_defaults[data_filename])
+
+                # new URL
+                elif getattr(self, data_filename + "_URL") is not None:
+                    setattr(
+                        self,
+                        (data_filename + "_URL"),
+                        getattr(self, data_filename + "_URL") + getattr(self, data_filename),
+                    )
+
+    def _set_default(self):
+        """
+        creates an attribute list of the default values that this version of sorcha uses.
+
+        Parameters
+        -----------
+        None.
+
+        Returns
+        ----------
+        None
+        """
+        self.DATA_FILENAME_defaults = {
+            "DE440S": "de440s.bsp",
+            "EARTH_PREDICT": "earth_200101_990827_predict.bpc",
+            "EARTH_HISTORICAL": "earth_620120_240827.bpc",
+            "EARTH_HIGH_PRECISION": "earth_latest_high_prec.bpc",
+            "JPL_PLANETS": "linux_p1550p2650.440",
+            "JPL_SMALL_BODIES": "sb441-n16.bsp",
+            "LEAP_SECONDS": "naif0012.tls",
+            "META_KERNEL": "meta_kernel.txt",
+            "OBSERVATORY_CODES": "ObsCodes.json",
+            "OBSERVATORY_CODES_COMPRESSED": "ObsCodes.json.gz",
+            "ORIENTATION_CONSTANTS": "pck00010.pck",
+        }
+
+        self.URLS_defaults = {
+            "DE440S": "https://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/planets/",
+            "EARTH_PREDICT": "https://naif.jpl.nasa.gov/pub/naif/generic_kernels/pck/",
+            "EARTH_HISTORICAL": "https://naif.jpl.nasa.gov/pub/naif/generic_kernels/pck/",
+            "EARTH_HIGH_PRECISION": "https://naif.jpl.nasa.gov/pub/naif/generic_kernels/pck/",
+            "JPL_PLANETS": "https://ssd.jpl.nasa.gov/ftp/eph/planets/Linux/de440/",
+            "JPL_SMALL_BODIES": "https://ssd.jpl.nasa.gov/ftp/eph/small_bodies/asteroids_de441/",
+            "LEAP_SECONDS": "https://naif.jpl.nasa.gov/pub/naif/generic_kernels/lsk/",
+            "OBSERVATORY_CODES_COMPRESSED": "https://minorplanetcenter.net/Extended_Files/obscodes_extended.json.gz",
+            "ORIENTATION_CONSTANTS": "https://naif.jpl.nasa.gov/pub/naif/generic_kernels/pck/",
+        }
+
+    def _validate_auxiliary_configs(self):
+        """
+        Validates the auxililary config attributes after initialisation.
+
+        Parameters
+        -----------
+        None.
+
+        Returns
+        ----------
+        None
+        """
+
+        self.URLS = {
+            self.DE440S: self.DE440S_URL,
+            self.EARTH_PREDICT: self.EARTH_PREDICT_URL,
+            self.EARTH_HISTORICAL: self.EARTH_HISTORICAL_URL,
+            self.EARTH_HIGH_PRECISION: self.EARTH_HIGH_PRECISION_URL,
+            self.JPL_PLANETS: self.JPL_PLANETS_URL,
+            self.JPL_SMALL_BODIES: self.JPL_SMALL_BODIES_URL,
+            self.LEAP_SECONDS: self.LEAP_SECONDS_URL,
+            self.OBSERVATORY_CODES_COMPRESSED: self.OBSERVATORY_CODES_COMPRESSED_URL,
+            self.ORIENTATION_CONSTANTS: self.ORIENTATION_CONSTANTS_URL,
+        }
+
+        self.DATA_FILE_LIST = [
+            self.DE440S,
+            self.EARTH_PREDICT,
+            self.EARTH_HISTORICAL,
+            self.EARTH_HIGH_PRECISION,
+            self.JPL_PLANETS,
+            self.JPL_SMALL_BODIES,
+            self.LEAP_SECONDS,
+            self.META_KERNEL,
+            self.OBSERVATORY_CODES,
+            self.OBSERVATORY_CODES_COMPRESSED,
+            self.ORIENTATION_CONSTANTS,
+        ]
+
+
+@dataclass
 class sorchaConfigs:
     """Dataclass which stores configuration file keywords in dataclasses."""
 
@@ -819,6 +1012,9 @@ class sorchaConfigs:
 
     expert: expertConfigs = None
     """expertConfigs dataclass which stores the keywords from the EXPERT section of the config file."""
+
+    auxililary: auxililaryConfigs = None
+    """auxililaryConfigs dataclass which stores the keywords from the AUXILILARY section of the config file."""
 
     pplogger: None = None
     """The Python logger instance"""
@@ -873,6 +1069,7 @@ class sorchaConfigs:
             "LIGHTCURVE": lightcurveConfigs,
             "ACTIVITY": activityConfigs,
             "EXPERT": expertConfigs,
+            "AUXILILARY": auxililaryConfigs,
         }
         # when adding new sections in config file this general function needs the name of the section in uppercase
         # to be the same as the attributes defined above in lowercase e.g. section INPUT has attribute input
