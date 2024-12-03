@@ -781,7 +781,7 @@ class expertConfigs:
 
 
 @dataclass
-class auxililaryConfigs:
+class auxiliaryConfigs:
     de440s: str = "de440s.bsp"
     """filename of de440s"""
     de440s_url: str = "https://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/planets/de440s.bsp"
@@ -853,8 +853,40 @@ class auxililaryConfigs:
     _ordered_kernel_files: list = None
     """list of kernels ordered from least to most precise - used to assemble meta_kernel file"""
 
-    REGISTRY: list = None
+    registry: list = None
     """Default Pooch registry to define which files will be tracked and retrievable"""
+
+    @property
+    def default_url(self):
+        """returns a dictionary of the default urls used in this version of sorcha"""
+        return {
+            "de440s": self.__class__.de440s_url,
+            "earth_predict": self.__class__.earth_predict_url,
+            "earth_historical": self.__class__.earth_historical_url,
+            "earth_high_precision": self.__class__.earth_high_precision_url,
+            "jpl_planets": self.__class__.jpl_planets_url,
+            "jpl_small_bodies": self.__class__.jpl_small_bodies_url,
+            "leap_seconds": self.__class__.leap_seconds_url,
+            "observatory_codes_compressed": self.__class__.observatory_codes_compressed_url,
+            "orientation_constants": self.__class__.orientation_constants_url,
+        }
+
+    @property
+    def default_filenames(self):
+        """returns a dictionary of the default filenames used in this version"""
+        return {
+            "de440s": self.__class__.de440s,
+            "earth_predict": self.__class__.earth_predict,
+            "earth_historical": self.__class__.earth_historical,
+            "earth_high_precision": self.__class__.earth_high_precision,
+            "jpl_planets": self.__class__.jpl_planets,
+            "jpl_small_bodies": self.__class__.jpl_small_bodies,
+            "leap_seconds": self.__class__.leap_seconds,
+            "meta_kernel": self.__class__.meta_kernel,
+            "observatory_codes": self.__class__.observatory_codes,
+            "observatory_codes_compressed": self.__class__.observatory_codes_compressed,
+            "orientation_constants": self.__class__.orientation_constants,
+        }
 
     def __post_init__(self):
         """Automagically validates the auxiliary configs after initialisation."""
@@ -865,7 +897,14 @@ class auxililaryConfigs:
         """
         validates the auxililary config attributes after initialisation.
         """
-        
+        for file in self.default_filenames:
+            if file != "meta_kernel" and file != "observatory_codes":
+                if self.default_filenames[file] == getattr(self, file) and getattr(self,file+"_url") != self.default_url[file]:
+                    
+                    print("error")
+
+                elif self.default_filenames[file] != getattr(self, file) and getattr(self,file+"_url") == self.default_url[file]:
+                    setattr(self,file+"_url", None)
     def _create_lists_auxiliary_configs(self):
         """
         creates lists of the auxililary config attributes after initialisation.
@@ -926,7 +965,7 @@ class auxililaryConfigs:
             self.earth_high_precision,
         ]
 
-        self.REGISTRY = {data_file: None for data_file in self.data_file_list}
+        self.registry = {data_file: None for data_file in self.data_file_list}
 
 
 @dataclass
@@ -969,8 +1008,8 @@ class sorchaConfigs:
     expert: expertConfigs = None
     """expertConfigs dataclass which stores the keywords from the EXPERT section of the config file."""
 
-    auxililary: auxililaryConfigs = None
-    """auxililaryConfigs dataclass which stores the keywords from the AUXILILARY section of the config file."""
+    auxiliary: auxiliaryConfigs = None
+    """auxiliaryConfigs dataclass which stores the keywords from the AUXILILARY section of the config file."""
 
     pplogger: None = None
     """The Python logger instance"""
@@ -1025,7 +1064,7 @@ class sorchaConfigs:
             "LIGHTCURVE": lightcurveConfigs,
             "ACTIVITY": activityConfigs,
             "EXPERT": expertConfigs,
-            "AUXILILARY": auxililaryConfigs,
+            "AUXILIARY": auxiliaryConfigs,
         }
         # when adding new sections in config file this general function needs the name of the section in uppercase
         # to be the same as the attributes defined above in lowercase e.g. section INPUT has attribute input

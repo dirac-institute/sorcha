@@ -17,7 +17,7 @@ from sorcha.utilities.sorchaConfigs import (
     lightcurveConfigs,
     activityConfigs,
     expertConfigs,
-    auxililaryConfigs,
+    auxiliaryConfigs,
 )
 
 # these are the results we expect from sorcha_config_demo.ini
@@ -155,11 +155,11 @@ def test_sorchaConfigs():
     assert correct_lc_model == test_configs.lightcurve.__dict__
     assert correct_activity == test_configs.activity.__dict__
     assert correct_expert == test_configs.expert.__dict__
-    assert correct_auxciliary_URLs == test_configs.auxililary.__dict__["URLS"]
-    assert correct_auxciliary_filenames == test_configs.auxililary.__dict__["DATA_FILE_LIST"]
+    assert correct_auxciliary_URLs == test_configs.auxiliary.__dict__["urls"]
+    assert correct_auxciliary_filenames == test_configs.auxiliary.__dict__["data_file_list"]
 
 
-
+test_sorchaConfigs()
 ##################################################################################################################################
 
 # Inputs section test
