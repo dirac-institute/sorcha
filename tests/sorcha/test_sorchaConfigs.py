@@ -17,6 +17,7 @@ from sorcha.utilities.sorchaConfigs import (
     lightcurveConfigs,
     activityConfigs,
     expertConfigs,
+    auxililaryConfigs,
 )
 
 # these are the results we expect from sorcha_config_demo.ini
@@ -103,6 +104,31 @@ correct_expert = {
     "randomization_on": True,
     "vignetting_on": True,
 }
+
+correct_auxciliary_URLs = {
+    "de440s.bsp": "https://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/planets/de440s.bsp",
+    "earth_200101_990827_predict.bpc": "https://naif.jpl.nasa.gov/pub/naif/generic_kernels/pck/earth_200101_990827_predict.bpc",
+    "earth_620120_240827.bpc": "https://naif.jpl.nasa.gov/pub/naif/generic_kernels/pck/earth_620120_240827.bpc",
+    "earth_latest_high_prec.bpc": "https://naif.jpl.nasa.gov/pub/naif/generic_kernels/pck/earth_latest_high_prec.bpc",
+    "linux_p1550p2650.440": "https://ssd.jpl.nasa.gov/ftp/eph/planets/Linux/de440/linux_p1550p2650.440",
+    "sb441-n16.bsp": "https://ssd.jpl.nasa.gov/ftp/eph/small_bodies/asteroids_de441/sb441-n16.bsp",
+    "naif0012.tls": "https://naif.jpl.nasa.gov/pub/naif/generic_kernels/lsk/naif0012.tls",
+    "ObsCodes.json.gz": "https://minorplanetcenter.net/Extended_Files/obscodes_extended.json.gz",
+    "pck00010.pck": "https://naif.jpl.nasa.gov/pub/naif/generic_kernels/pck/pck00010.tpc",
+    }
+correct_auxciliary_filenames = [
+    "de440s.bsp",
+    "earth_200101_990827_predict.bpc",
+    "earth_620120_240827.bpc",
+    "earth_latest_high_prec.bpc",
+    "linux_p1550p2650.440",
+    "sb441-n16.bsp",
+    "naif0012.tls",
+    "meta_kernel.txt",
+    "ObsCodes.json",
+    "ObsCodes.json.gz",
+    "pck00010.pck",
+]
 ##################################################################################################################################
 
 # SORCHA Configs test
@@ -119,8 +145,6 @@ def test_sorchaConfigs():
     # check each section to make sure you get what you expect
     assert correct_inputs == test_configs.input.__dict__
     assert correct_simulation == test_configs.simulation.__dict__
-    print(correct_filters)
-    print(test_configs.filters.__dict__)
     assert correct_filters == test_configs.filters.__dict__
     assert correct_saturation == test_configs.saturation.__dict__
     assert correct_phasecurve == test_configs.phasecurves.__dict__
@@ -131,6 +155,9 @@ def test_sorchaConfigs():
     assert correct_lc_model == test_configs.lightcurve.__dict__
     assert correct_activity == test_configs.activity.__dict__
     assert correct_expert == test_configs.expert.__dict__
+    assert correct_auxciliary_URLs == test_configs.auxililary.__dict__["URLS"]
+    assert correct_auxciliary_filenames == test_configs.auxililary.__dict__["DATA_FILE_LIST"]
+
 
 
 ##################################################################################################################################

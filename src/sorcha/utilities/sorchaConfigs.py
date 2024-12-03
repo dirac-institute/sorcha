@@ -782,146 +782,93 @@ class expertConfigs:
 
 @dataclass
 class auxililaryConfigs:
-    DE440S: str = None
-    """filename of DE440S"""
-    DE440S_URL: str = None
-    """url for De4440S"""
+    de440s: str = "de440s.bsp"
+    """filename of de440s"""
+    de440s_url: str = "https://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/planets/de440s.bsp"
+    """url for de4440s"""
 
-    EARTH_PREDICT: str = None
-    """filename of EARTH_PREDICT"""
-    EARTH_PREDICT_URL: str = None
-    """url for EARTH_PREDICT"""
+    earth_predict: str = "earth_200101_990827_predict.bpc"
+    """filename of earth_predict"""
+    earth_predict_url: str = (
+        "https://naif.jpl.nasa.gov/pub/naif/generic_kernels/pck/earth_200101_990827_predict.bpc"
+    )
+    """url for earth_predict"""
 
-    EARTH_HISTORICAL: str = None
-    """filename of EARTH_HISTOICAL"""
-    EARTH_HISTORICAL_URL: str = None
-    """url for EARTH_HISTORICAL"""
+    earth_historical: str = "earth_620120_240827.bpc"
+    """filename of earth_histoical"""
+    earth_historical_url: str = (
+        "https://naif.jpl.nasa.gov/pub/naif/generic_kernels/pck/earth_620120_240827.bpc"
+    )
+    """url for earth_historical"""
 
-    EARTH_HIGH_PRECISION: str = None
-    """filename of EARTH_HIGH_PRECISION"""
-    EARTH_HIGH_PRECISION_URL: str = None
-    """url of EARTH_HIGH_PRECISION"""
+    earth_high_precision: str = "earth_latest_high_prec.bpc"
+    """filename of earth_high_precision"""
+    earth_high_precision_url: str = (
+        "https://naif.jpl.nasa.gov/pub/naif/generic_kernels/pck/earth_latest_high_prec.bpc"
+    )
+    """url of earth_high_precision"""
 
-    JPL_PLANETS: str = None
-    """filename of JPL_PLANETS"""
-    JPL_PLANETS_URL: str = None
-    """url of JPL_PLANETS"""
+    jpl_planets: str = "linux_p1550p2650.440"
+    """filename of jpl_planets"""
+    jpl_planets_url: str = "https://ssd.jpl.nasa.gov/ftp/eph/planets/Linux/de440/linux_p1550p2650.440"
+    """url of jpl_planets"""
 
-    JPL_SMALL_BODIES: str = None
-    """filename of JPL_SMALL_BODIES"""
-    JPL_SMALL_BODIES_URL: str = None
-    """url of JPL_SMALL_BODIES"""
+    jpl_small_bodies: str = "sb441-n16.bsp"
+    """filename of jpl_small_bodies"""
+    jpl_small_bodies_url: str = "https://ssd.jpl.nasa.gov/ftp/eph/small_bodies/asteroids_de441/sb441-n16.bsp"
+    """url of jpl_small_bodies"""
 
-    LEAP_SECONDS: str = None
-    """filename of LEAP_SECONDS"""
-    LEAP_SECONDS_URL: str = None
-    """url of LEAP_SECONDS"""
+    leap_seconds: str = "naif0012.tls"
+    """filename of leap_seconds"""
+    leap_seconds_url: str = "https://naif.jpl.nasa.gov/pub/naif/generic_kernels/lsk/naif0012.tls"
+    """url of leap_seconds"""
 
-    META_KERNEL: str = None
-    """filename of META_KERNAL"""
+    meta_kernel: str = "meta_kernel.txt"
+    """filename of meta_kernal"""
 
-    OBSERVATORY_CODES: str = None
-    """filename of OBSERVATORY_CODES"""
+    observatory_codes: str = "ObsCodes.json"
+    """filename of observatory_codes"""
 
-    OBSERVATORY_CODES_COMPRESSED: str = None
-    """filename of OBSERVATORY_CODES_COMPRESSED"""
-    OBSERVATORY_CODES_COMPRESSED_URL: str = None
-    """url of OBSERVATORY_CODES_COMPRESSED"""
+    observatory_codes_compressed: str = "ObsCodes.json.gz"
+    """filename of observatory_codes_compressed"""
+    observatory_codes_compressed_url: str = (
+        "https://minorplanetcenter.net/Extended_Files/obscodes_extended.json.gz"
+    )
+    """url of observatory_codes_compressed"""
 
-    ORIENTATION_CONSTANTS: str = None
-    """filename of OBSERVATORY_CONSTANTS"""
-    ORIENTATION_CONSTANTS_URL: str = None
-    """url of OBSERVATORY_CONSTANTS"""
+    orientation_constants: str = "pck00010.pck"
+    """filename of observatory_constants"""
+    orientation_constants_url: str = "https://naif.jpl.nasa.gov/pub/naif/generic_kernels/pck/pck00010.tpc"
+    """url of observatory_constants"""
 
-    DATA_FILE_LIST: list = None
-    """Convenience list of all the file names"""
+    data_file_list: list = None
+    """convenience list of all the file names"""
 
-    URLS: dict = None
-    """Dictionary of filename: url"""
+    urls: dict = None
+    """dictionary of filename: url"""
+
+    _data_files_to_download: list = None
+    """list of files that need to be downloaded"""
+
+    _ordered_kernel_files: list = None
+    """list of kernels ordered from least to most precise - used to assemble meta_kernel file"""
+
+    REGISTRY: list = None
+    """Default Pooch registry to define which files will be tracked and retrievable"""
 
     def __post_init__(self):
         """Automagically validates the auxiliary configs after initialisation."""
-        self._create_URL()
-        # self._validate_auxiliary_configs()
-
-    def _create_URL(self):
-        """
-        This method takes the filename and url from either the config file or the list of default values.
-        """
-        self._set_default()
-        for data_filename, default_filename in self.DATA_FILENAME_defaults.items():
-
-            file_attr = getattr(self, data_filename)
-            # sets default filename
-            if file_attr is None:
-                setattr(self, data_filename, default_filename)
-                file_attr = getattr(self, data_filename)
-
-            # skips these two as they have no URL attribute
-            if data_filename == "META_KERNEL" or data_filename == "OBSERVATORY_CODES":
-                continue
-
-            url_attr = data_filename + "_URL"
-            # for default URL
-            if getattr(self, url_attr) is None:
-                # OBSERVATORY_CODES_COMPRESSED does not need the filename appended I think
-                if data_filename != "OBSERVATORY_CODES_COMPRESSED":
-                    setattr(
-                        self,
-                        url_attr,
-                        self.URLS_defaults[data_filename] + file_attr,
-                    )
-                else:
-                    setattr(self, url_attr, self.URLS_defaults[data_filename])
-            # for new URL
-            else:
-                setattr(
-                    self,
-                    url_attr,
-                    getattr(self, url_attr) + file_attr,
-                )
-
-    def _set_default(self):
-        """
-        creates an attribute list of the default values that this version of sorcha uses.
-
-        Parameters
-        -----------
-        None.
-
-        Returns
-        ----------
-        None
-        """
-        self.DATA_FILENAME_defaults = {
-            "DE440S": "de440s.bsp",
-            "EARTH_PREDICT": "earth_200101_990827_predict.bpc",
-            "EARTH_HISTORICAL": "earth_620120_240827.bpc",
-            "EARTH_HIGH_PRECISION": "earth_latest_high_prec.bpc",
-            "JPL_PLANETS": "linux_p1550p2650.440",
-            "JPL_SMALL_BODIES": "sb441-n16.bsp",
-            "LEAP_SECONDS": "naif0012.tls",
-            "META_KERNEL": "meta_kernel.txt",
-            "OBSERVATORY_CODES": "ObsCodes.json",
-            "OBSERVATORY_CODES_COMPRESSED": "ObsCodes.json.gz",
-            "ORIENTATION_CONSTANTS": "pck00010.pck",
-        }
-
-        self.URLS_defaults = {
-            "DE440S": "https://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/planets/",
-            "EARTH_PREDICT": "https://naif.jpl.nasa.gov/pub/naif/generic_kernels/pck/",
-            "EARTH_HISTORICAL": "https://naif.jpl.nasa.gov/pub/naif/generic_kernels/pck/",
-            "EARTH_HIGH_PRECISION": "https://naif.jpl.nasa.gov/pub/naif/generic_kernels/pck/",
-            "JPL_PLANETS": "https://ssd.jpl.nasa.gov/ftp/eph/planets/Linux/de440/",
-            "JPL_SMALL_BODIES": "https://ssd.jpl.nasa.gov/ftp/eph/small_bodies/asteroids_de441/",
-            "LEAP_SECONDS": "https://naif.jpl.nasa.gov/pub/naif/generic_kernels/lsk/",
-            "OBSERVATORY_CODES_COMPRESSED": "https://minorplanetcenter.net/Extended_Files/obscodes_extended.json.gz",
-            "ORIENTATION_CONSTANTS": "https://naif.jpl.nasa.gov/pub/naif/generic_kernels/pck/",
-        }
+        self._create_lists_auxiliary_configs()
+        self._validate_auxiliary_configs()
 
     def _validate_auxiliary_configs(self):
         """
-        Validates the auxililary config attributes after initialisation.
+        validates the auxililary config attributes after initialisation.
+        """
+        
+    def _create_lists_auxiliary_configs(self):
+        """
+        creates lists of the auxililary config attributes after initialisation.
 
         Parameters
         -----------
@@ -932,31 +879,54 @@ class auxililaryConfigs:
         None
         """
 
-        self.URLS = {
-            self.DE440S: self.DE440S_URL,
-            self.EARTH_PREDICT: self.EARTH_PREDICT_URL,
-            self.EARTH_HISTORICAL: self.EARTH_HISTORICAL_URL,
-            self.EARTH_HIGH_PRECISION: self.EARTH_HIGH_PRECISION_URL,
-            self.JPL_PLANETS: self.JPL_PLANETS_URL,
-            self.JPL_SMALL_BODIES: self.JPL_SMALL_BODIES_URL,
-            self.LEAP_SECONDS: self.LEAP_SECONDS_URL,
-            self.OBSERVATORY_CODES_COMPRESSED: self.OBSERVATORY_CODES_COMPRESSED_URL,
-            self.ORIENTATION_CONSTANTS: self.ORIENTATION_CONSTANTS_URL,
+        self.urls = {
+            self.de440s: self.de440s_url,
+            self.earth_predict: self.earth_predict_url,
+            self.earth_historical: self.earth_historical_url,
+            self.earth_high_precision: self.earth_high_precision_url,
+            self.jpl_planets: self.jpl_planets_url,
+            self.jpl_small_bodies: self.jpl_small_bodies_url,
+            self.leap_seconds: self.leap_seconds_url,
+            self.observatory_codes_compressed: self.observatory_codes_compressed_url,
+            self.orientation_constants: self.orientation_constants_url,
         }
 
-        self.DATA_FILE_LIST = [
-            self.DE440S,
-            self.EARTH_PREDICT,
-            self.EARTH_HISTORICAL,
-            self.EARTH_HIGH_PRECISION,
-            self.JPL_PLANETS,
-            self.JPL_SMALL_BODIES,
-            self.LEAP_SECONDS,
-            self.META_KERNEL,
-            self.OBSERVATORY_CODES,
-            self.OBSERVATORY_CODES_COMPRESSED,
-            self.ORIENTATION_CONSTANTS,
+        self.data_file_list = [
+            self.de440s,
+            self.earth_predict,
+            self.earth_historical,
+            self.earth_high_precision,
+            self.jpl_planets,
+            self.jpl_small_bodies,
+            self.leap_seconds,
+            self.meta_kernel,
+            self.observatory_codes,
+            self.observatory_codes_compressed,
+            self.orientation_constants,
         ]
+
+        self._data_files_to_download = [
+            self.de440s,
+            self.earth_predict,
+            self.earth_historical,
+            self.earth_high_precision,
+            self.jpl_planets,
+            self.jpl_small_bodies,
+            self.leap_seconds,
+            self.observatory_codes_compressed,
+            self.orientation_constants,
+        ]
+
+        self._ordered_kernel_files = [
+            self.leap_seconds,
+            self.earth_historical,
+            self.earth_predict,
+            self.orientation_constants,
+            self.de440s,
+            self.earth_high_precision,
+        ]
+
+        self.REGISTRY = {data_file: None for data_file in self.data_file_list}
 
 
 @dataclass
@@ -1343,7 +1313,7 @@ def PrintConfigsToLog(sconfigs, cmd_args):
 
     if sconfigs.activity.comet_activity == "comet":
         pplogger.info("Cometary activity set to: " + str(sconfigs.activity.comet_activity))
-    elif sconfigs.activity.comet_activity == "none":
+    elif sconfigs.activity.comet_activity == None:
         pplogger.info("No cometary activity selected.")
 
     pplogger.info("Format of ephemerides file is: " + sconfigs.input.eph_format)
