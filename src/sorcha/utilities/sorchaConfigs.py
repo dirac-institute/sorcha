@@ -899,12 +899,19 @@ class auxiliaryConfigs:
         """
         for file in self.default_filenames:
             if file != "meta_kernel" and file != "observatory_codes":
-                if self.default_filenames[file] == getattr(self, file) and getattr(self,file+"_url") != self.default_url[file]:
-                    
-                    print("error")
+                if (
+                    self.default_filenames[file] == getattr(self, file)
+                    and getattr(self, file + "_url") != self.default_url[file]
+                ):
+                    logging.error(f"ERROR: url for {file} given but filename for {file} not given")
+                    sys.exit(f"ERROR: url for {file} given but filename for {file} not given")
 
-                elif self.default_filenames[file] != getattr(self, file) and getattr(self,file+"_url") == self.default_url[file]:
-                    setattr(self,file+"_url", None)
+                elif (
+                    self.default_filenames[file] != getattr(self, file)
+                    and getattr(self, file + "_url") == self.default_url[file]
+                ):
+                    setattr(self, file + "_url", None)
+
     def _create_lists_auxiliary_configs(self):
         """
         creates lists of the auxililary config attributes after initialisation.

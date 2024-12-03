@@ -115,7 +115,7 @@ correct_auxciliary_URLs = {
     "naif0012.tls": "https://naif.jpl.nasa.gov/pub/naif/generic_kernels/lsk/naif0012.tls",
     "ObsCodes.json.gz": "https://minorplanetcenter.net/Extended_Files/obscodes_extended.json.gz",
     "pck00010.pck": "https://naif.jpl.nasa.gov/pub/naif/generic_kernels/pck/pck00010.tpc",
-    }
+}
 correct_auxciliary_filenames = [
     "de440s.bsp",
     "earth_200101_990827_predict.bpc",
@@ -159,7 +159,6 @@ def test_sorchaConfigs():
     assert correct_auxciliary_filenames == test_configs.auxiliary.__dict__["data_file_list"]
 
 
-test_sorchaConfigs()
 ##################################################################################################################################
 
 # Inputs section test
@@ -1013,3 +1012,47 @@ def test_expertConfig_bool(key_name):
         error_text.value.code
         == f"ERROR: expected a bool for config parameter {key_name}. Check value in config file."
     )
+
+
+##################################################################################################################################
+
+# auxiliary config test
+
+
+@pytest.mark.parametrize(
+    "file",
+    [
+        "de440s",
+        "earth_predict",
+        "earth_historical",
+        "jpl_planets",
+        "leap_seconds",
+        "observatory_codes_compressed",
+        "orientation_constants",
+    ],
+)
+def test_auxiliary_config_url_given_filename_not(file):
+
+    aux_configs = {file + "_url": "new_url"}
+    with pytest.raises(SystemExit) as error_text:
+        test_configs = auxiliaryConfigs(**aux_configs)
+    assert error_text.value.code == f"ERROR: url for {file} given but filename for {file} not given"
+
+
+@pytest.mark.parametrize(
+    "file",
+    [
+        "de440s",
+        "earth_predict",
+        "earth_historical",
+        "jpl_planets",
+        "leap_seconds",
+        "observatory_codes_compressed",
+        "orientation_constants",
+    ],
+)
+def test_auxiliary_config_making_url_none(file):
+    aux_configs = {file: "new_filename"}
+
+    test_configs = auxiliaryConfigs(**aux_configs)
+    assert getattr(test_configs, file + "_url") == None
