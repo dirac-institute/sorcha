@@ -25,7 +25,7 @@ import pooch
 """
 
 
-def build_meta_kernel_file(sconfigs,retriever: pooch.Pooch) -> None:
+def build_meta_kernel_file(sconfigs, retriever: pooch.Pooch) -> None:
     """Builds a specific text file that will be fed into `spiceypy` that defines
     the list of spice kernel to load, as well as the order to load them.
 

@@ -1,7 +1,6 @@
 import pooch
 
 
-
 def make_retriever(sconfigs, directory_path: str = None) -> pooch.Pooch:
     """Helper function that will create a Pooch object to track and retrieve files.
 

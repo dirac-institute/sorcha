@@ -48,16 +48,16 @@ def execute(args):
     import concurrent.futures
     from sorcha.utilities.sorchaConfigs import sorchaConfigs, auxiliaryConfigs
 
-    #default file names and urls (stored in auxiliaryConfigs)
+    # default file names and urls (stored in auxiliaryConfigs)
     default_files = sorchaConfigs()
     default_files.auxiliary = auxiliaryConfigs()
     # create the Pooch retriever that tracks and retrieves the requested files
-    retriever = make_retriever(default_files,args.cache)
+    retriever = make_retriever(default_files, args.cache)
 
     # determine if we should attempt to download or create any files.
     found_all_files = False
     if args.force:
-        _remove_files(default_files,retriever)
+        _remove_files(default_files, retriever)
     else:
         print("Checking cache for existing files.")
         found_all_files = _check_for_existing_files(retriever, default_files.auxiliary.data_file_list)
@@ -71,7 +71,7 @@ def execute(args):
             executor.map(fetch_partial, default_files.auxiliary.data_files_to_download)
 
         # build the meta_kernel.txt file
-        build_meta_kernel_file(default_files,retriever)
+        build_meta_kernel_file(default_files, retriever)
 
         print("Checking cache after attempting to download and create files.")
         _check_for_existing_files(retriever, default_files.auxiliary.data_file_list)

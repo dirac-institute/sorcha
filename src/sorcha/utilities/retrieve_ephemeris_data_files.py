@@ -35,7 +35,7 @@ def _decompress(fname, action, pup):  # pragma: no cover
         pooch.Decompress(method="auto", name=os.path.splitext(fname)[0]).__call__(fname, action, pup)
 
 
-def _remove_files(sconfigs,retriever: pooch.Pooch) -> None:  # pragma: no cover
+def _remove_files(sconfigs, retriever: pooch.Pooch) -> None:  # pragma: no cover
     """Utility to remove all the files tracked by the pooch retriever. This includes
     the decompressed ObservatoryCodes.json file as well as the META_KERNEL file
     that are created after downloading the files in the DATA_FILES_TO_DOWNLOAD

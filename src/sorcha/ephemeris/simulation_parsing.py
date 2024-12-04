@@ -126,7 +126,8 @@ def parse_orbit_row(row, epochJD_TDB, ephem, sun_dict, gm_sun, gm_total):
 
 
 default = sorchaConfigs()
-default.auxiliary = auxiliaryConfigs() #using the default observatory_codes in the auxiliaryConfigs class
+default.auxiliary = auxiliaryConfigs()  # using the default observatory_codes in the auxiliaryConfigs class
+
 
 class Observatory:
     """
@@ -158,7 +159,8 @@ class Observatory:
             # if the file is not local, download, and decompress it, then return the path.
             else:
                 obs_file_path = retriever.fetch(
-                    sconfigs.auxiliary.observatory_codes_compressed, processor=Decompress(name=sconfigs.auxiliary.observatory_codes)
+                    sconfigs.auxiliary.observatory_codes_compressed,
+                    processor=Decompress(name=sconfigs.auxiliary.observatory_codes),
                 )
 
         else:
