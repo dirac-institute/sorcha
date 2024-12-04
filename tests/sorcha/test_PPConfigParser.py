@@ -77,6 +77,7 @@ def test_PPConfigFileParser(setup_and_teardown_for_PPConfigFileParser):
         "lc_model": None,
         "randomization_on": True,
         "vignetting_on": True,
+        "ar_use_integrate": False,
     }
 
     assert configs == test_configs
@@ -300,6 +301,7 @@ def test_PPPrintConfigsToLog(tmp_path):
         "lc_model": None,
         "randomization_on": True,
         "vignetting_on": True,
+        "ar_use_integrate": False,
     }
 
     PPPrintConfigsToLog(configs, args)
