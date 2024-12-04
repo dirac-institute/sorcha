@@ -5,7 +5,7 @@ import spiceypy as spice
 from pooch import Decompress
 
 from sorcha.ephemeris.simulation_constants import RADIUS_EARTH_KM
-from sorcha.ephemeris.simulation_geometry import ecliptic_to_equatorial
+from sorcha.ephemeris.simulation_geometry import ecliptic_to_equatorial, equatorial_to_ecliptic
 from sorcha.ephemeris.simulation_data_files import (
     OBSERVATORY_CODES,
     OBSERVATORY_CODES_COMPRESSED,
@@ -158,9 +158,12 @@ def get_perihelion_row(row, epochJD_TDB, ephem, ssb_dict, gm_sun, gm_total):
     orbit_format = row["FORMAT"]
 
     if epochJD_TDB not in ssb_dict:
-        ssb_dict[epochJD_TDB] = ephem.get_particle("SSB", epochJD_TDB - ephem.jd_ref)
+        ssb_dict[epochJD_TDB] = ephem.get_particle("Sun", epochJD_TDB - ephem.jd_ref)
     ssb = ssb_dict[epochJD_TDB]
-    print(ssb)
+    
+    ssb_pos = -equatorial_to_ecliptic([ssb.x, ssb.y, ssb.z])
+    ssb_vel = -equatorial_to_ecliptic([ssb.vx, ssb.vy, ssb.vz])
+
     if orbit_format not in ["COM"]:
         if orbit_format == "CART":
             q, e, inc, node, argPeri, Tp = universal_keplerian(
@@ -181,12 +184,12 @@ def get_perihelion_row(row, epochJD_TDB, ephem, ssb_dict, gm_sun, gm_total):
         elif orbit_format == "BCART":  # convert to helio here
             q, e, inc, node, argPeri, Tp = universal_keplerian(
                 gm_total,
-                row["x"] - ssb.x,
-                row["y"] - ssb.y,
-                row["z"] - ssb.z,
-                row["xdot"] - ssb.vx,
-                row["ydot"] - ssb.vy,
-                row["zdot"] - ssb.vz,
+                row["x"] + ssb_pos[0],
+                row["y"] + ssb_pos[1],
+                row["z"] + ssb_pos[2],
+                row["xdot"] + ssb_vel[0],
+                row["ydot"] + ssb_vel[1],
+                row["zdot"] + ssb_vel[2],
                 epochJD_TDB,
             )
             inc *= 180/np.pi 
@@ -200,7 +203,9 @@ def get_perihelion_row(row, epochJD_TDB, ephem, ssb_dict, gm_sun, gm_total):
             node = row["node"]
             argPeri = row["argPeri"]
             M = row["ma"] * np.pi/180
-            Tp = epochJD_TDB - (M/(2*np.pi)) * np.sqrt(row["a"] ** 3 / gm_sun) - 2400000.5 # jd to mjd
+            if M > np.pi:
+                M -= 2*np.pi
+            Tp = epochJD_TDB - M* np.sqrt(row["a"] ** 3 / gm_sun) - 2400000.5 # jd to mjd
 
         elif orbit_format == "BKEP":
             # need to first go to BCART
@@ -218,12 +223,12 @@ def get_perihelion_row(row, epochJD_TDB, ephem, ssb_dict, gm_sun, gm_total):
             # now go to helio
             q, e, inc, node, argPeri, Tp = universal_keplerian(
                 gm_sun,
-                ecx - ssb.x,
-                ecy - ssb.y,
-                ecz - ssb.z,
-                dx - ssb.vx,
-                dy - ssb.vy,
-                dz - ssb.vz,
+                ecx + ssb_pos[0],
+                ecy + ssb_pos[1],
+                ecz + ssb_pos[2],
+                dx + ssb_vel[0],
+                dy + ssb_vel[1],
+                dz + ssb_vel[2],
                 epochJD_TDB,
             )
             inc *= 180/np.pi 
@@ -240,19 +245,19 @@ def get_perihelion_row(row, epochJD_TDB, ephem, ssb_dict, gm_sun, gm_total):
                 row["inc"] * np.pi / 180.0,
                 row["node"] * np.pi / 180.0,
                 row["argPeri"] * np.pi / 180.0,
-                row["t_p_MJD_TDB"],
+                row["t_p_MJD_TDB"] + 2400000.5,
                 epochJD_TDB,
             )
 
             # now go to helio
             q, e, inc, node, argPeri, Tp = universal_keplerian(
                 gm_sun,
-                ecx - ssb.x,
-                ecy - ssb.y,
-                ecz - ssb.z,
-                dx - ssb.vx,
-                dy - ssb.vy,
-                dz - ssb.vz,
+                ecx + ssb_pos[0],
+                ecy + ssb_pos[1],
+                ecz + ssb_pos[2],
+                dx + ssb_vel[0],
+                dy + ssb_vel[1],
+                dz + ssb_vel[2],
                 epochJD_TDB,
             )
             inc *= 180/np.pi 

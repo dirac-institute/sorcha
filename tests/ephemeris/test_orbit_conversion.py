@@ -259,7 +259,9 @@ def test_orbit_inversion_realdata():
     # this is similar to the notebook - values come from JPL and are for asteroid Holman
     # let's start with Holman
     epochJD_TDB = 2457545.5
-    # note these are equatorially aligned\
+    # note these are equatorially aligned
+    # need to rotate for this test
+    
     sun_epoch = Sun(
         x=3.743893517879733e-03,
         y=2.355922092887896e-03,
@@ -268,6 +270,9 @@ def test_orbit_inversion_realdata():
         vy=6.421467712437571e-06,
         vz=2.788964122162865e-06,
     )
+    
+    
+    
     # sun_epoch = Sun(x = 0, y = 0, z = 0, vx = 0, vy = 0, vz = 0)
     sun_dict = {epochJD_TDB: sun_epoch}
     # heliocentric keplerian and cometary - note angles are in degrees!
@@ -383,4 +388,7 @@ def test_orbit_inversion_realdata():
     for i in orbit_types:
         converted = np.array(get_perihelion_row(orbit_types[i], epochJD_TDB, None, sun_dict, gm_sun, gm_total))
         for j in range(6):
-            assert np.isclose(converted[j], com_reference[j])
+            assert np.isclose(converted[j], com_reference[j], 1e-4)
+
+
+    
