@@ -141,6 +141,8 @@ class Observatory:
         ----------
             args : dictionary or `sorchaArguments` object
                 dictionary of command-line arguments.
+            sconfigs: dataclass
+                Dataclass of configuration file arguments.
             oc_file : str
                 Path for the file with observatory codes
         """

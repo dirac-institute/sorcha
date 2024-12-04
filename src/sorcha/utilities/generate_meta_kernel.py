@@ -33,7 +33,8 @@ def build_meta_kernel_file(sconfigs,retriever: pooch.Pooch) -> None:
     ----------
     retriever : pooch
         Pooch object that maintains the registry of files to download
-
+    sconfigs: dataclass
+        Dataclass of configuration file arguments.
     Returns
     ---------
     None

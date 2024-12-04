@@ -47,7 +47,8 @@ def execute(args):
     from functools import partial
     import concurrent.futures
     from sorcha.utilities.sorchaConfigs import sorchaConfigs, auxiliaryConfigs
-    #default files that are downloaded (stored in auxiliaryConfigs)
+
+    #default file names and urls (stored in auxiliaryConfigs)
     default_files = sorchaConfigs()
     default_files.auxiliary = auxiliaryConfigs()
     # create the Pooch retriever that tracks and retrieves the requested files
