@@ -33,6 +33,18 @@ class AbstractCometaryActivity(ABC):
             The ``observations`` dataframe provided by ``Sorcha``.
         """
         raise NotImplementedError("Must be implemented by the subclass")
+   
+    @abstractmethod
+    def maxBrightness(self, df: pd.DataFrame) -> np.array:
+        """User implemented calculation based on the input provided by the
+        pandas dataframe ``df``.
+
+        Parameters
+        ----------
+        df : Pandas dataframe
+            The ``observations`` dataframe provided by ``Sorcha``.
+        """
+        raise NotImplementedError("Must be implemented by the subclass")
 
     def _validate_column_names(self, df: pd.DataFrame) -> None:
         """Private method that checks that the provided pandas dataframe contains

@@ -128,7 +128,7 @@ def test_orbit_conversion_realdata():
         vz=2.788964122162865e-06,
     )
     # sun_epoch = Sun(x = 0, y = 0, z = 0, vx = 0, vy = 0, vz = 0)
-    sun_dict = {epochJD_TDB: sun_epoch}
+    sun_dict = {}
     # heliocentric keplerian and cometary - note angles are in degrees!
     e_helio = 1.273098035049758e-01
     q_helio = 2.719440725596252e00
@@ -241,3 +241,146 @@ def test_orbit_conversion_realdata():
         converted = np.array(parse_orbit_row(orbit_types[i], epochJD_TDB, None, sun_dict, gm_sun, gm_total))
         for j in range(6):
             assert np.isclose(converted[j], vec_bary[j])
+
+def test_orbit_inversion_realdata():
+    from sorcha.ephemeris.simulation_parsing import get_perihelion_row
+    from collections import namedtuple
+
+    # constants
+
+    # values from the spice kernel - dec 13 2023
+    gm_sun = 2.9591220828559115e-04
+    gm_total = 2.9630927487993194e-04
+
+    # this is a hack where we are hardcoding the Sun positions at the time (computed using JPL)
+    # note that this needs to be a namedtuple due to the way `parse_orbit_row` expects the input
+    Sun = namedtuple("Sun", "x y z vx vy vz")
+
+    # this is similar to the notebook - values come from JPL and are for asteroid Holman
+    # let's start with Holman
+    epochJD_TDB = 2457545.5
+    # note these are equatorially aligned\
+    sun_epoch = Sun(
+        x=3.743893517879733e-03,
+        y=2.355922092887896e-03,
+        z=8.440770737482685e-04,
+        vx=-7.096646739414067e-07,
+        vy=6.421467712437571e-06,
+        vz=2.788964122162865e-06,
+    )
+    # sun_epoch = Sun(x = 0, y = 0, z = 0, vx = 0, vy = 0, vz = 0)
+    sun_dict = {epochJD_TDB: sun_epoch}
+    # heliocentric keplerian and cometary - note angles are in degrees!
+    e_helio = 1.273098035049758e-01
+    q_helio = 2.719440725596252e00
+    inc_helio = 2.363582123773087e00
+    lan_helio = 1.203869311659506e02
+    aop_helio = 5.506308037812056e01
+    Tp_helio = 2457934.552658705506
+    M_helio = 2.902919054404318e02
+    a_helio = 3.116158215731438e00
+    
+    com_reference = np.array([q_helio, e_helio, inc_helio, lan_helio, aop_helio, Tp_helio - 2400000.5])
+    
+    # heliocentric cartesian (ecliptic)
+    X_helio = -7.569545429706993e-02
+    Y_helio = 3.024083648650882e00
+    Z_helio = -6.044399403284755e-02
+    VX_helio = -9.914117209213893e-03
+    VY_helio = -1.485136186100886e-03
+    VZ_helio = 3.840061650310168e-04
+    # barycentric keplerian and cometary
+    e_bary = 1.277080918842867e-01
+    q_bary = 2.718601009368714e00
+    inc_bary = 2.364051308275402e00
+    lan_bary = 1.203686955102486e02
+    aop_bary = 5.537099088407054e01
+    Tp_bary = 2457936.050825081766
+    M_bary = 2.899920485236385e02
+    a_bary = 3.116618398124679e00
+    # barycentric cartesian (ecliptic!)
+    X_bary = -7.195156074800051e-02
+    Y_bary = 3.026580919478138e00
+    Z_bary = -6.060670045129734e-02
+    VX_bary = -9.914826873812788e-03
+    VY_bary = -1.478135218486216e-03
+    VZ_bary = 3.840106764287660e-04
+
+    # barycentric cartesian (equatorial) - these are the reference values for comparison
+    x_bary_eq = -7.195156074800051e-02
+    y_bary_eq = 2.800941663957977e00
+    z_bary_eq = 1.148299189842545e00
+    vx_bary_eq = -9.914826873812788e-03
+    vy_bary_eq = -1.508913222991139e-03
+    vz_bary_eq = -2.356455160257992e-04
+    # let's not import pandas - we can use simple dictionaries here
+
+    # COM - note Tp needs to be in MJD for input
+    COM_elements = {
+        "q": q_helio,
+        "e": e_helio,
+        "inc": inc_helio,
+        "node": lan_helio,
+        "argPeri": aop_helio,
+        "t_p_MJD_TDB": Tp_helio - 2400000.5,
+        "FORMAT": "COM",
+    }
+    KEP_elements = {
+        "a": a_helio,
+        "e": e_helio,
+        "inc": inc_helio,
+        "node": lan_helio,
+        "argPeri": aop_helio,
+        "ma": M_helio,
+        "FORMAT": "KEP",
+    }
+    CART_elements = {
+        "x": X_helio,
+        "y": Y_helio,
+        "z": Z_helio,
+        "xdot": VX_helio,
+        "ydot": VY_helio,
+        "zdot": VZ_helio,
+        "FORMAT": "CART",
+    }
+
+    BCOM_elements = {
+        "q": q_bary,
+        "e": e_bary,
+        "inc": inc_bary,
+        "node": lan_bary,
+        "argPeri": aop_bary,
+        "t_p_MJD_TDB": Tp_bary - 2400000.5,
+        "FORMAT": "BCOM",
+    }
+    BKEP_elements = {
+        "a": a_bary,
+        "e": e_bary,
+        "inc": inc_bary,
+        "node": lan_bary,
+        "argPeri": aop_bary,
+        "ma": M_bary,
+        "FORMAT": "BKEP",
+    }
+    BCART_elements = {
+        "x": X_bary,
+        "y": Y_bary,
+        "z": Z_bary,
+        "xdot": VX_bary,
+        "ydot": VY_bary,
+        "zdot": VZ_bary,
+        "FORMAT": "BCART",
+    }
+
+    orbit_types = {
+        "COM": COM_elements,
+        "KEP": KEP_elements,
+        "CART": CART_elements,
+        "BCOM": BCOM_elements,
+        "BKEP": BKEP_elements,
+        "BCART": BCART_elements,
+    }
+    for i in orbit_types:
+        converted = np.array(get_perihelion_row(orbit_types[i], epochJD_TDB, None, sun_dict, gm_sun, gm_total))
+        for j in range(6):
+            assert np.isclose(converted[j], com_reference[j])

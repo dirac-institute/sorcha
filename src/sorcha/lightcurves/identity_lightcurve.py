@@ -54,3 +54,6 @@ class IdentityLightCurve(AbstractLightCurve):
             Unique identifier for this light curve calculator
         """
         return "identity"
+
+    def maxBrightness(self, df : pd.DataFrame) -> float:
+        return 0
