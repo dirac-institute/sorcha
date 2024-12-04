@@ -847,10 +847,10 @@ class auxiliaryConfigs:
     urls: dict = None
     """dictionary of filename: url"""
 
-    _data_files_to_download: list = None
+    data_files_to_download: list = None
     """list of files that need to be downloaded"""
 
-    _ordered_kernel_files: list = None
+    ordered_kernel_files: list = None
     """list of kernels ordered from least to most precise - used to assemble meta_kernel file"""
 
     registry: list = None
@@ -951,7 +951,7 @@ class auxiliaryConfigs:
             self.orientation_constants,
         ]
 
-        self._data_files_to_download = [
+        self.data_files_to_download = [
             self.de440s,
             self.earth_predict,
             self.earth_historical,
@@ -963,7 +963,7 @@ class auxiliaryConfigs:
             self.orientation_constants,
         ]
 
-        self._ordered_kernel_files = [
+        self.ordered_kernel_files = [
             self.leap_seconds,
             self.earth_historical,
             self.earth_predict,
