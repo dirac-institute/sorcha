@@ -1,4 +1,4 @@
-import argparse
+from sorcha_cmdline.sorchaargumentparser import SorchaArgumentParser
 
 #
 # sorcha demo prepare
@@ -47,11 +47,14 @@ def cmd_demo_howto(args):  # pragma: no cover
 
 def main():
     # Create the top-level parser
-    parser = argparse.ArgumentParser(
-        prog="sorcha-demo", description="Prepare and explain how to run sorcha demos"
+    parser = SorchaArgumentParser(
+        prog="sorcha demo", description="Prepare and explain how to run sorcha demos"
     )
     subparsers = parser.add_subparsers(
-        title="commands", description="Available commands", help="Command to execute", dest="command"
+        title="commands",
+        description="Available commands",
+        help="Command to execute",
+        dest="command",
     )
 
     # Add the `prepare` subcommand
