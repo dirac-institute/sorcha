@@ -4,11 +4,7 @@ import os
 import pooch
 
 from functools import partial
-from sorcha.ephemeris.simulation_data_files import (
-    make_retriever,
-    DATA_FILES_TO_DOWNLOAD,
-    DATA_FILE_LIST,
-)
+from sorcha.ephemeris.simulation_data_files import make_retriever
 from sorcha.utilities.generate_meta_kernel import build_meta_kernel_file
 
 
