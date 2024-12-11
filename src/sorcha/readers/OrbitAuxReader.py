@@ -116,7 +116,7 @@ class OrbitAuxReader(CSVDataReader):
                     )
                 ):
                     pplogger.warning(
-                        f"Warning: Object {input_table['ObjID'][i]} argPeri, node and ma not in same bounds (either [0 360] or [-180 180] )"
+                        f"Warning: Object {input_table['ObjID'][i]} argPeri, node and ma not in same bounds (either [0 360] or [-180 180])"
                     )
 
                 # checks all objects before a system exit
@@ -190,8 +190,8 @@ class OrbitAuxReader(CSVDataReader):
                 except ValueError:
                     continue
             if error_raised:
-                sys.exit("Errors found for cometary elements of objects (check log for more details)")
-                
+                sys.exit("Error: Errors found for cometary elements of objects (check log for more details)")
+
         elif orb_format in ["CART", "BCART"]:
             if not all(column in input_table.columns for column in cartesian_elements):
                 pplogger.error("ERROR: PPReadOrbitFile: Must provide all cartesian coordinate values.")

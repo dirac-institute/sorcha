@@ -306,3 +306,24 @@ def test_orbit_reader_wrong_delim():
 
     with pytest.raises(SystemExit) as err:
         _ = OrbitAuxReader(get_test_filepath("testorb.des"), "csv")
+
+def test_orbit_sanity_check_kep():
+    """If an orbit parameter is undefined, raise an exception"""
+
+    #for keplerian
+    with pytest.raises(SystemExit) as err:
+        _ = OrbitAuxReader(get_test_filepath("orbit_test_files/orbit_sanity_check_kep.des"),"whitespace")
+        _.read_rows()
+    assert err.value.code == "Error: Errors found for keplerian elements of objects (check log for more details)"
+
+
+def test_orbit_sanity_check_com():
+    """If an orbit parameter is undefined, raise an exception"""
+
+    #for comentary
+    with pytest.raises(SystemExit) as err:
+        _ = OrbitAuxReader(get_test_filepath("orbit_test_files/orbit_sanity_check_com.csv"),"csv")
+        _.read_rows()
+    assert err.value.code == "Error: Errors found for cometary elements of objects (check log for more details)"
+
+
