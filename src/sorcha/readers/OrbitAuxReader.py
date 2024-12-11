@@ -92,6 +92,69 @@ class OrbitAuxReader(CSVDataReader):
             if not all(column in input_table.columns for column in keplerian_elements):
                 pplogger.error("ERROR: PPReadOrbitFile: Must provide all keplerian orbital elements.")
                 sys.exit("ERROR: PPReadOrbitFile: Must provide all keplerian orbital elements.")
+
+            error_raised = False
+            for i in range(len(input_table["ObjID"])):
+
+                # checking inc
+                if 0 > input_table["inc"][i] or input_table["inc"][i] > 180:
+                    pplogger.warning(
+                        f"Warning: Object {input_table['ObjID'][i]}. inc < 0 or inc > 180. rotations are defined but will be silly -- orbit will probably be mirrored"
+                    )
+
+                # checking argPeri, node and ma are in same bounds
+                if not (
+                    (
+                        0 <= input_table["argPeri"][i] <= 360
+                        and 0 <= input_table["node"][i] <= 360
+                        and 0 <= input_table["ma"][i] <= 360
+                    )
+                    or (
+                        -180 <= input_table["argPeri"][i] <= 180
+                        and -180 <= input_table["node"][i] <= 180
+                        and -180 <= input_table["ma"][i] <= 180
+                    )
+                ):
+                    pplogger.warning(
+                        f"Warning: Object {input_table['ObjID'][i]} argPeri, node and ma not in same bounds (either [0 360] or [-180 180] )"
+                    )
+
+                # checks all objects before a system exit
+                try:
+                    if input_table["e"][i] > 1 and input_table["a"][i] > 0:
+                        error_raised = True
+                        pplogger.error(
+                            f"ERROR: Object {input_table['ObjID'][i]}. Unbound orbit (e > 1) with positive a is undefined"
+                        )
+                        raise ValueError(
+                            f"ERROR: Object {input_table['ObjID'][i]}. Unbound orbit (e > 1) with positive a is undefined"
+                        )
+                    elif input_table["e"][i] < 1 and input_table["a"][i] < 0:
+                        error_raised = True
+                        pplogger.error(
+                            f"ERROR: Object {input_table['ObjID'][i]}. Bound orbit (e < 1) is undefined with negative a"
+                        )
+                        raise ValueError(
+                            f"ERROR: Object {input_table['ObjID'][i]}. Bound orbit (e < 1) is undefined with negative a"
+                        )
+                    elif input_table["e"][i] == 1:
+                        error_raised = True
+                        pplogger.error(
+                            f"ERROR: Object {input_table['ObjID'][i]}. Parabolic orbit (e == 1) is undefined in Keplerian elemnets"
+                        )
+                        raise ValueError(
+                            f"ERROR: Object {input_table['ObjID'][i]}. Parabolic orbit (e == 1) is undefined in Keplerian elemnets"
+                        )
+                    elif input_table["e"][i] < 0:
+                        error_raised = True
+                        pplogger.error(f"ERROR: Object {input_table['ObjID'][i]}. e < 0 is undefined")
+                        raise ValueError(f"ERROR: Object {input_table['ObjID'][i]}. e < 0 is undefined")
+                except ValueError:
+                    continue
+
+            if error_raised:
+                sys.exit("Error: Errors found for keplerian elements of objects (check log for more details)")
+
         elif orb_format in ["COM", "BCOM"]:
             if not all(column in input_table.columns for column in cometary_elements):
                 pplogger.error("ERROR: PPReadOrbitFile: Must provide all cometary orbital elements.")
@@ -100,6 +163,35 @@ class OrbitAuxReader(CSVDataReader):
                 pplogger.warning(
                     "WARNING: At least one t_p_MJD_TDB is above 2400000.5 - make sure your t_p are MJD and not in JD"
                 )
+
+            error_raised = False
+            for i in range(len(input_table["ObjID"])):
+
+                if input_table["q"][i] == 0:
+                    pplogger.warning(
+                        f"Warning: Object {input_table['ObjID'][i]}. q==0 is technically correct but weird"
+                    )
+
+                # checking inc
+                if 0 > input_table["inc"][i] or input_table["inc"][i] > 180:
+                    pplogger.warning(
+                        f"Warning: Object {input_table['ObjID'][i]}. inc < 0 or inc > 180. rotations are defined but will be silly -- orbit will probably be mirrored"
+                    )
+
+                try:
+                    if input_table["q"][i] < 0:
+                        error_raised = True
+                        pplogger.error(f"ERROR: Object {input_table['ObjID'][i]}. q < 0 is undefined")
+
+                    if input_table["e"][i] < 0:
+                        error_raised = True
+                        pplogger.error(f"ERROR: e < 0 is undefined for object {input_table['ObjID'][i]}")
+
+                except ValueError:
+                    continue
+            if error_raised:
+                sys.exit("Errors found for cometary elements of objects (check log for more details)")
+                
         elif orb_format in ["CART", "BCART"]:
             if not all(column in input_table.columns for column in cartesian_elements):
                 pplogger.error("ERROR: PPReadOrbitFile: Must provide all cartesian coordinate values.")
