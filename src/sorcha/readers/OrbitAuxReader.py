@@ -99,7 +99,7 @@ class OrbitAuxReader(CSVDataReader):
                 # checking inc
                 if 0 > input_table["inc"][i] or input_table["inc"][i] > 180:
                     pplogger.warning(
-                        f"Warning: Object {input_table['ObjID'][i]}. inc < 0 or inc > 180. rotations are defined but will be silly -- orbit will probably be mirrored"
+                        f"Warning: Object {input_table['ObjID'][i]}. Inclination (inc) is outside valid range (0 180 degrees). This may cause the orbits to be mirrored affecting orbital calculations."
                     )
 
                 # checking argPeri, node and ma are in same bounds
@@ -116,44 +116,43 @@ class OrbitAuxReader(CSVDataReader):
                     )
                 ):
                     pplogger.warning(
-                        f"Warning: Object {input_table['ObjID'][i]} argPeri, node and ma not in same bounds (either [0 360] or [-180 180])"
+                        f"Warning: Object {input_table['ObjID'][i]}. Perihelion (argPeri), Longitude of Ascending Node (node) and Mean Anonmaly (ma) are not in same bounds (either [0 360] or [-180 180]). This may lead to incorrect orbital calculations."
                     )
 
                 # checks all objects before a system exit
                 try:
-                    if input_table["e"][i] > 1 and input_table["a"][i] > 0:
-                        error_raised = True
-                        pplogger.error(
-                            f"ERROR: Object {input_table['ObjID'][i]}. Unbound orbit (e > 1) with positive a is undefined"
-                        )
-                        raise ValueError(
-                            f"ERROR: Object {input_table['ObjID'][i]}. Unbound orbit (e > 1) with positive a is undefined"
-                        )
-                    elif input_table["e"][i] < 1 and input_table["a"][i] < 0:
-                        error_raised = True
-                        pplogger.error(
-                            f"ERROR: Object {input_table['ObjID'][i]}. Bound orbit (e < 1) is undefined with negative a"
-                        )
-                        raise ValueError(
-                            f"ERROR: Object {input_table['ObjID'][i]}. Bound orbit (e < 1) is undefined with negative a"
-                        )
-                    elif input_table["e"][i] == 1:
-                        error_raised = True
-                        pplogger.error(
-                            f"ERROR: Object {input_table['ObjID'][i]}. Parabolic orbit (e == 1) is undefined in Keplerian elemnets"
-                        )
+                    if input_table["e"][i] == 1:
                         raise ValueError(
                             f"ERROR: Object {input_table['ObjID'][i]}. Parabolic orbit (e == 1) is undefined in Keplerian elemnets"
                         )
                     elif input_table["e"][i] < 0:
-                        error_raised = True
-                        pplogger.error(f"ERROR: Object {input_table['ObjID'][i]}. e < 0 is undefined")
-                        raise ValueError(f"ERROR: Object {input_table['ObjID'][i]}. e < 0 is undefined")
-                except ValueError:
+                        raise ValueError(
+                            f"ERROR: Object {input_table['ObjID'][i]}. Eccentricity (e) cannot be less than 0."
+                        )
+                    elif input_table["e"][i] > 1:
+                        if input_table["a"][i] >= 0:
+                            raise ValueError(
+                                f"ERROR: Object {input_table['ObjID'][i]}. Hyperbolic orbit (e > 1) with positive or zero semi-major axis (a >= 0) is physically impossible"
+                            )
+                        elif input_table["a"][i] < 0:
+                            raise ValueError(
+                                f"ERROR: Object {input_table['ObjID'][i]}. Hyperbolic orbit (e > 1) with negative semi-major axis (a < 0) is undefined"
+                            )
+                    elif input_table["e"][i] < 1 and input_table["a"][i] < 0:
+                        raise ValueError(
+                            f"ERROR: Object {input_table['ObjID'][i]}. Bound orbit (e < 1) with negative semi-major axis (a < 0) is not physical"
+                        )
+
+                except ValueError as error_message:
+                    error_raised = True
+                    pplogger.error(str(error_message))
                     continue
 
             if error_raised:
-                sys.exit("Error: Errors found for keplerian elements of objects (check log for more details)")
+                pplogger.error("ERROR: Invalid Keplerian elements detected for one or more objects.")
+                sys.exit(
+                    "ERROR: Invalid Keplerian elements detected for one or more objects (check log for information)"
+                )
 
         elif orb_format in ["COM", "BCOM"]:
             if not all(column in input_table.columns for column in cometary_elements):
@@ -169,28 +168,26 @@ class OrbitAuxReader(CSVDataReader):
 
                 if input_table["q"][i] == 0:
                     pplogger.warning(
-                        f"Warning: Object {input_table['ObjID'][i]}. q==0 is technically correct but weird"
+                        f"Warning: Object {input_table['ObjID'][i]}. q==0 is technically correct but suggests a collisional path with an object instead of an orbital path"
                     )
 
                 # checking inc
                 if 0 > input_table["inc"][i] or input_table["inc"][i] > 180:
                     pplogger.warning(
-                        f"Warning: Object {input_table['ObjID'][i]}. inc < 0 or inc > 180. rotations are defined but will be silly -- orbit will probably be mirrored"
+                        f"Warning: Object {input_table['ObjID'][i]}. Inclination (inc) is outside valid range (0 180 degrees). This may cause the orbits to be mirrored affecting orbital orientation."
                     )
-
                 try:
                     if input_table["q"][i] < 0:
-                        error_raised = True
-                        pplogger.error(f"ERROR: Object {input_table['ObjID'][i]}. q < 0 is undefined")
+                        raise ValueError(f"ERROR: Object {input_table['ObjID'][i]}. q < 0 is undefined")
 
-                    if input_table["e"][i] < 0:
-                        error_raised = True
-                        pplogger.error(f"ERROR: e < 0 is undefined for object {input_table['ObjID'][i]}")
-
-                except ValueError:
+                    elif input_table["e"][i] < 0:
+                        raise ValueError(f"ERROR: Object {input_table['ObjID'][i]}. e < 0 is undefined)")
+                except ValueError as error_message:
+                    error_raised = True
+                    pplogger.error(str(error_message))
                     continue
             if error_raised:
-                sys.exit("Error: Errors found for cometary elements of objects (check log for more details)")
+                sys.exit("ERROR: Invalid cometary elements detected for one or more objects (check log for information)")
 
         elif orb_format in ["CART", "BCART"]:
             if not all(column in input_table.columns for column in cartesian_elements):
