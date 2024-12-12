@@ -7,10 +7,6 @@ from .simulation_constants import (
     create_ecl_to_eq_rotation_matrix,
 )
 from .simulation_data_files import (
-    DATA_FILE_LIST,
-    JPL_PLANETS,
-    JPL_SMALL_BODIES,
-    DE440S,
     make_retriever,
 )
 from .simulation_geometry import (
