@@ -31,5 +31,5 @@ Optional arguments:
                         Default False. (default: False)
   -s S, --survey S      Survey to simulate (default: rubin_sim)
   -t T, --stem T        Output file name stem. (default: SSPPOutput)
-  -v, --verbose         Verbosity. Default currently true; include to turn off
+  -l, --log-level         Verbosity. Default currently true; include to turn off
                         verbosity. (default: True)

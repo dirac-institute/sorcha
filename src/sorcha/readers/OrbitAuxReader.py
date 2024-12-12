@@ -130,13 +130,9 @@ class OrbitAuxReader(CSVDataReader):
                             f"ERROR: Object {input_table['ObjID'][i]}. Eccentricity (e) cannot be less than 0."
                         )
                     elif input_table["e"][i] > 1:
-                        if input_table["a"][i] >= 0:
-                            raise ValueError(
-                                f"ERROR: Object {input_table['ObjID'][i]}. Hyperbolic orbit (e > 1) with positive or zero semi-major axis (a >= 0) is physically impossible"
-                            )
-                        elif input_table["a"][i] < 0:
-                            raise ValueError(
-                                f"ERROR: Object {input_table['ObjID'][i]}. Hyperbolic orbit (e > 1) with negative semi-major axis (a < 0) is undefined"
+                        
+                        raise ValueError(
+                                f"ERROR: Object {input_table['ObjID'][i]}. Hyperbolic orbit (e > 1) is not supported for Keplerian elements"
                             )
                     elif input_table["e"][i] < 1 and input_table["a"][i] < 0:
                         raise ValueError(

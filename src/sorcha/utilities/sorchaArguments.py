@@ -71,7 +71,7 @@ class sorchaArguments:
         self.pointing_database = args["pointing_database"]
         self.output_ephemeris_file = args.get("output_ephemeris_file")
         self.ar_data_file_path = args.get("ar_data_path")
-        self.verbose = args["verbose"]
+        self.verbose = args["log-level"]
         self.stats = args["stats"]
 
         self.surveyname = args["surveyname"]

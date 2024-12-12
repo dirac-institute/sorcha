@@ -105,10 +105,10 @@ def main():
         "-t", "--stem", help="Output file name stem.", type=str, dest="t", default="SSPPOutput"
     )
     optional.add_argument(
-        "-v",
-        "--verbose",
+        "-l",
+        "--log-level",
         help="Print additional information to log while running",
-        dest="v",
+        dest="l",
         default=True,
         action="store_false",
     )
