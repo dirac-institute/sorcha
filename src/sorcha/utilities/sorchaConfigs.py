@@ -1016,7 +1016,7 @@ class sorchaConfigs:
     """expertConfigs dataclass which stores the keywords from the EXPERT section of the config file."""
 
     auxiliary: auxiliaryConfigs = None
-    """auxiliaryConfigs dataclass which stores the keywords from the AUXILILARY section of the config file."""
+    """auxiliaryConfigs dataclass which stores the keywords from the AUXILIARY section of the config file."""
 
     pplogger: None = None
     """The Python logger instance"""
