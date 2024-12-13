@@ -1,7 +1,7 @@
 import pooch
 
 
-def make_retriever(sconfigs, directory_path: str = None) -> pooch.Pooch:
+def make_retriever(auxconfigs, directory_path: str = None) -> pooch.Pooch:
     """Helper function that will create a Pooch object to track and retrieve files.
 
     Parameters
@@ -11,8 +11,8 @@ def make_retriever(sconfigs, directory_path: str = None) -> pooch.Pooch:
     registry : dictionary, optional
         A dictionary of file names to SHA hashes. Generally we'll not use SHA=None
         because the files we're tracking change frequently. Default = REGISTRY
-    sconfigs: dataclass
-        Dataclass of configuration file arguments.
+    auxconfigs: dataclass
+        Dataclass of auxiliary configuration file arguments.
     Returns
     -------
     : pooch
@@ -25,7 +25,7 @@ def make_retriever(sconfigs, directory_path: str = None) -> pooch.Pooch:
     return pooch.create(
         path=dir_path,
         base_url="",
-        urls=sconfigs.auxiliary.urls,
-        registry=sconfigs.auxiliary.registry,
+        urls=auxconfigs.urls,
+        registry=auxconfigs.registry,
         retry_if_failed=25,
     )

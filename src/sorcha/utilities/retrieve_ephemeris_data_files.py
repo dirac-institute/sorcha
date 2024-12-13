@@ -31,7 +31,7 @@ def _decompress(fname, action, pup):  # pragma: no cover
         pooch.Decompress(method="auto", name=os.path.splitext(fname)[0]).__call__(fname, action, pup)
 
 
-def _remove_files(sconfigs, retriever: pooch.Pooch) -> None:  # pragma: no cover
+def _remove_files(auxconfigs, retriever: pooch.Pooch) -> None:  # pragma: no cover
     """Utility to remove all the files tracked by the pooch retriever. This includes
     the decompressed ObservatoryCodes.json file as well as the META_KERNEL file
     that are created after downloading the files in the DATA_FILES_TO_DOWNLOAD
@@ -41,11 +41,11 @@ def _remove_files(sconfigs, retriever: pooch.Pooch) -> None:  # pragma: no cover
     ------------
     retriever : pooch
         Pooch object that maintains the registry of files to download.
-    sconfigs: dataclass
-        Dataclass of configuration file arguments.
+    auxconfigs: dataclass
+        Dataclass of auxiliary configuration file arguments.
     """
 
-    for file_name in sconfigs.auxiliary.data_file_list:
+    for file_name in auxconfigs.data_file_list:
         file_path = retriever.fetch(file_name)
         print(f"Deleting file: {file_path}")
         os.remove(file_path)

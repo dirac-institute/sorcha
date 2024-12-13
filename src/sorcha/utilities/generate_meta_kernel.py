@@ -25,7 +25,7 @@ import pooch
 """
 
 
-def build_meta_kernel_file(sconfigs, retriever: pooch.Pooch) -> None:
+def build_meta_kernel_file(auxconfigs, retriever: pooch.Pooch) -> None:
     """Builds a specific text file that will be fed into `spiceypy` that defines
     the list of spice kernel to load, as well as the order to load them.
 
@@ -33,14 +33,14 @@ def build_meta_kernel_file(sconfigs, retriever: pooch.Pooch) -> None:
     ----------
     retriever : pooch
         Pooch object that maintains the registry of files to download
-    sconfigs: dataclass
-        Dataclass of configuration file arguments.
+    auxconfigs: dataclass
+        Dataclass of auxiliary configuration file arguments.
     Returns
     ---------
     None
     """
     # build meta_kernel file path
-    meta_kernel_file_path = os.path.join(retriever.abspath, sconfigs.auxiliary.meta_kernel)
+    meta_kernel_file_path = os.path.join(retriever.abspath, auxconfigs.meta_kernel)
 
     # build a meta_kernel.txt file
     with open(meta_kernel_file_path, "w") as meta_file:
@@ -48,7 +48,7 @@ def build_meta_kernel_file(sconfigs, retriever: pooch.Pooch) -> None:
         meta_file.write(f"PATH_VALUES = ('{retriever.abspath}')\n\n")
         meta_file.write("PATH_SYMBOLS = ('A')\n\n")
         meta_file.write("KERNELS_TO_LOAD=(\n")
-        for file_name in sconfigs.auxiliary.ordered_kernel_files:
+        for file_name in auxconfigs.ordered_kernel_files:
             shortened_file_name = _build_file_name(retriever.abspath, retriever.fetch(file_name))
             meta_file.write(f"    '{shortened_file_name}',\n")
         meta_file.write(")\n\n")

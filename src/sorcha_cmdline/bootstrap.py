@@ -48,11 +48,11 @@ def execute(args):
     )
     from functools import partial
     import concurrent.futures
-    from sorcha.utilities.sorchaConfigs import sorchaConfigs, auxiliaryConfigs
+    from sorcha.utilities.sorchaConfigs import auxiliaryConfigs
 
     # default file names and urls (stored in auxiliaryConfigs)
-    default_files = sorchaConfigs()
-    default_files.auxiliary = auxiliaryConfigs()
+
+    default_files = auxiliaryConfigs()
     # create the Pooch retriever that tracks and retrieves the requested files
     retriever = make_retriever(default_files, args.cache)
 
@@ -62,7 +62,7 @@ def execute(args):
         _remove_files(default_files, retriever)
     else:
         print("Checking cache for existing files.")
-        found_all_files = _check_for_existing_files(retriever, default_files.auxiliary.data_file_list)
+        found_all_files = _check_for_existing_files(retriever, default_files.data_file_list)
 
     if not found_all_files:
         # create a partial function of `Pooch.fetch` including the `_decompress` method
@@ -70,13 +70,13 @@ def execute(args):
 
         # download the data files in parallel
         with concurrent.futures.ThreadPoolExecutor() as executor:
-            executor.map(fetch_partial, default_files.auxiliary.data_files_to_download)
+            executor.map(fetch_partial, default_files.data_files_to_download)
 
         # build the meta_kernel.txt file
         build_meta_kernel_file(default_files, retriever)
 
         print("Checking cache after attempting to download and create files.")
-        _check_for_existing_files(retriever, default_files.auxiliary.data_file_list)
+        _check_for_existing_files(retriever, default_files.data_file_list)
 
 
 if __name__ == "__main__":

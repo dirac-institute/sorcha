@@ -43,7 +43,7 @@ def create_assist_ephemeris(args, sconfigs) -> tuple:
     """
     pplogger = logging.getLogger(__name__)
 
-    retriever = make_retriever(sconfigs, args.ar_data_file_path)
+    retriever = make_retriever(sconfigs.auxiliary, args.ar_data_file_path)
     planets_file_path = retriever.fetch(sconfigs.auxiliary.jpl_planets)
     small_bodies_file_path = retriever.fetch(sconfigs.auxiliary.jpl_small_bodies)
     ephem = Ephem(planets_path=planets_file_path, asteroids_path=small_bodies_file_path)
@@ -69,14 +69,14 @@ def furnish_spiceypy(args, sconfigs):
 
     pplogger = logging.getLogger(__name__)
 
-    retriever = make_retriever(sconfigs, args.ar_data_file_path)
+    retriever = make_retriever(sconfigs.auxiliary, args.ar_data_file_path)
 
     for kernel_file in sconfigs.auxiliary.ordered_kernel_files:
         retriever.fetch(kernel_file)
 
     # check if the META_KERNEL file exists. If it doesn't exist, create it.
     if not os.path.exists(os.path.join(retriever.abspath, sconfigs.auxiliary.meta_kernel)):
-        build_meta_kernel_file(sconfigs, retriever)
+        build_meta_kernel_file(sconfigs.auxiliary, retriever)
 
     # try to get the META_KERNEL file. If it's not there, error out.
     try:

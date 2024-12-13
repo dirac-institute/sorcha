@@ -3,7 +3,6 @@ import os
 import numpy as np
 import spiceypy as spice
 from pooch import Decompress
-from sorcha.utilities.sorchaConfigs import sorchaConfigs, auxiliaryConfigs
 from sorcha.ephemeris.simulation_constants import RADIUS_EARTH_KM
 from sorcha.ephemeris.simulation_geometry import ecliptic_to_equatorial
 from sorcha.ephemeris.simulation_data_files import make_retriever
@@ -125,16 +124,12 @@ def parse_orbit_row(row, epochJD_TDB, ephem, sun_dict, gm_sun, gm_total):
     return tuple(np.concatenate([equatorial_coords, equatorial_velocities]))
 
 
-default = sorchaConfigs()
-default.auxiliary = auxiliaryConfigs()  # using the default observatory_codes in the auxiliaryConfigs class
-
-
 class Observatory:
     """
     Class containing various utility tools related to the calculation of the observatory position
     """
 
-    def __init__(self, args, sconfigs, oc_file=default.auxiliary.observatory_codes):
+    def __init__(self, args, sconfigs, oc_file=None):
         """
         Initialization method
 
@@ -149,8 +144,8 @@ class Observatory:
         """
         self.observatoryPositionCache = {}  # previously calculated positions to speed up the process
 
-        if oc_file == sconfigs.auxiliary.observatory_codes:
-            retriever = make_retriever(sconfigs, args.ar_data_file_path)
+        if oc_file == None:
+            retriever = make_retriever(sconfigs.auxiliary, args.ar_data_file_path)
 
             # is the file available locally, if so, return the full path
             if os.path.isfile(os.path.join(retriever.abspath, sconfigs.auxiliary.observatory_codes)):
