@@ -97,7 +97,7 @@ class OrbitAuxReader(CSVDataReader):
             for i in range(len(input_table["ObjID"])):
 
                 # checking inc
-                if 0 > input_table["inc"][i] or input_table["inc"][i] > 180:
+                if not (0 <= input_table["inc"][i] <= 180):
                     pplogger.warning(
                         f"Warning: Object {input_table['ObjID'][i]}. Inclination (inc) is outside valid range (0 180 degrees). This may cause the orbits to be mirrored affecting orbital calculations."
                     )
@@ -116,14 +116,14 @@ class OrbitAuxReader(CSVDataReader):
                     )
                 ):
                     pplogger.warning(
-                        f"Warning: Object {input_table['ObjID'][i]}. Perihelion (argPeri), Longitude of Ascending Node (node) and Mean Anonmaly (ma) are not in same bounds (either [0 360] or [-180 180]). This may lead to incorrect orbital calculations."
+                        f"Warning: Object {input_table['ObjID'][i]}. Argument of Perihelion (argPeri), Longitude of Ascending Node (node) and Mean Anonmaly (ma) are not in same bounds (either [0 360] or [-180 180]). This may lead to incorrect orbital calculations."
                     )
 
                 # checks all objects before a system exit
                 try:
                     if input_table["e"][i] == 1:
                         raise ValueError(
-                            f"ERROR: Object {input_table['ObjID'][i]}. Parabolic orbit (e == 1) is undefined in Keplerian elemnets"
+                            f"ERROR: Object {input_table['ObjID'][i]}. Parabolic orbit (e == 1) is undefined in Keplerian elements"
                         )
                     elif input_table["e"][i] < 0:
                         raise ValueError(
@@ -174,10 +174,10 @@ class OrbitAuxReader(CSVDataReader):
                     )
                 try:
                     if input_table["q"][i] < 0:
-                        raise ValueError(f"ERROR: Object {input_table['ObjID'][i]}. q < 0 is undefined")
+                        raise ValueError(f"ERROR: Object {input_table['ObjID'][i]}. Perihelion distance (q) cannot be less than 0")
 
                     elif input_table["e"][i] < 0:
-                        raise ValueError(f"ERROR: Object {input_table['ObjID'][i]}. e < 0 is undefined)")
+                        raise ValueError(f"ERROR: Object {input_table['ObjID'][i]}. Eccentricity (e) cannot be less than 0.")
                 except ValueError as error_message:
                     error_raised = True
                     pplogger.error(str(error_message))
