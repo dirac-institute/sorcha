@@ -186,7 +186,7 @@ def precompute_pointing_information(pointings_df, args, sconfigs):
 
     furnish_spiceypy(args, sconfigs)
     obsCode = sconfigs.simulation.ar_obs_code
-    observatories = Observatory(args, sconfigs)
+    observatories = Observatory(args, sconfigs.auxiliary)
 
     # vectorize the calculation to get x,y,z vector from ra/dec
     vectors = ra_dec2vec(

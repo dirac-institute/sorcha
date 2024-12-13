@@ -129,7 +129,7 @@ class Observatory:
     Class containing various utility tools related to the calculation of the observatory position
     """
 
-    def __init__(self, args, sconfigs, oc_file=None):
+    def __init__(self, args, auxconfigs, oc_file=None):
         """
         Initialization method
 
@@ -137,7 +137,7 @@ class Observatory:
         ----------
             args : dictionary or `sorchaArguments` object
                 dictionary of command-line arguments.
-            sconfigs: dataclass
+            auxconfigs: dataclass
                 Dataclass of configuration file arguments.
             oc_file : str
                 Path for the file with observatory codes
@@ -145,17 +145,17 @@ class Observatory:
         self.observatoryPositionCache = {}  # previously calculated positions to speed up the process
 
         if oc_file == None:
-            retriever = make_retriever(sconfigs.auxiliary, args.ar_data_file_path)
+            retriever = make_retriever(auxconfigs, args.ar_data_file_path)
 
             # is the file available locally, if so, return the full path
-            if os.path.isfile(os.path.join(retriever.abspath, sconfigs.auxiliary.observatory_codes)):
-                obs_file_path = retriever.fetch(sconfigs.auxiliary.observatory_codes)
+            if os.path.isfile(os.path.join(retriever.abspath, auxconfigs.observatory_codes)):
+                obs_file_path = retriever.fetch(auxconfigs.observatory_codes)
 
             # if the file is not local, download, and decompress it, then return the path.
             else:
                 obs_file_path = retriever.fetch(
-                    sconfigs.auxiliary.observatory_codes_compressed,
-                    processor=Decompress(name=sconfigs.auxiliary.observatory_codes),
+                    auxconfigs.observatory_codes_compressed,
+                    processor=Decompress(name=auxconfigs.observatory_codes),
                 )
 
         else:

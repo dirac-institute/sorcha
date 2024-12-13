@@ -84,7 +84,7 @@ def test_pixeldict(tmp_path):
     furnish_spiceypy(args,configs)
 
     sim_dict = generate_simulations(ephem, gm_sun, gm_total, orbits_df, args)
-    observatory = Observatory(sconfigs=configs,args=None, oc_file=get_test_filepath("ObsCodes_test.json"))
+    observatory = Observatory(auxconfigs=configs.auxiliary,args=None, oc_file=get_test_filepath("ObsCodes_test.json"))
 
     pixdict = PixelDict(54800.0 + 2400000.5, sim_dict, ephem, "Z20", observatory, picket_interval=1, nside=32)
 

@@ -5,9 +5,8 @@ from sorcha.utilities.dataUtilitiesForTests import get_test_filepath
 from sorcha.utilities.sorchaConfigs import sorchaConfigs, auxiliaryConfigs
 
 def test_observatory_compared_to_original():
-    sconfigs = sorchaConfigs()
-    sconfigs.auxiliary = auxiliaryConfigs()
-    observatory = sp.Observatory(sconfigs=sconfigs,args=None, oc_file=get_test_filepath("ObsCodes_test.json"))
+    auxconfigs = auxiliaryConfigs()
+    observatory = sp.Observatory(auxconfigs=auxconfigs,args=None, oc_file=get_test_filepath("ObsCodes_test.json"))
     obs = observatory.ObservatoryXYZ
 
     # Reference tuples were taken from Matt Holman's original notebook
@@ -19,9 +18,8 @@ def test_observatory_compared_to_original():
 
 
 def test_observatory_for_moving_observatories():
-    sconfigs = sorchaConfigs()
-    sconfigs.auxiliary = auxiliaryConfigs()
-    observatory = sp.Observatory(sconfigs=sconfigs,args=None, oc_file=get_test_filepath("ObsCodes_test.json"))
+    auxconfigs = auxiliaryConfigs()
+    observatory = sp.Observatory(auxconfigs=auxconfigs,args=None, oc_file=get_test_filepath("ObsCodes_test.json"))
     obs = observatory.ObservatoryXYZ
 
     assert obs["250"] == (None, None, None)
