@@ -80,8 +80,8 @@ def test_pixeldict(tmp_path):
     filterpointing = precompute_pointing_information(filterpointing, args, configs)
     args = sorchaArguments(cmd_args_dict)
 
-    ephem, gm_sun, gm_total = create_assist_ephemeris(args,configs)
-    furnish_spiceypy(args,configs)
+    ephem, gm_sun, gm_total = create_assist_ephemeris(args,configs.auxiliary)
+    furnish_spiceypy(args,configs.auxiliary)
 
     sim_dict = generate_simulations(ephem, gm_sun, gm_total, orbits_df, args)
     observatory = Observatory(auxconfigs=configs.auxiliary,args=None, oc_file=get_test_filepath("ObsCodes_test.json"))

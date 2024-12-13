@@ -50,7 +50,8 @@ def execute(args):
     import concurrent.futures
     from sorcha.utilities.sorchaConfigs import auxiliaryConfigs
 
-    # default file names and urls (stored in auxiliaryConfigs)
+    # Bootstrap will always take the default filenames and urls (stored in auxiliaryConfigs) for the current version of sorcha.
+    # A user can download new files by running sorcha and specifying in the config file under the section [AUXILIARY] a new filename and url.
 
     default_files = auxiliaryConfigs()
     # create the Pooch retriever that tracks and retrieves the requested files
