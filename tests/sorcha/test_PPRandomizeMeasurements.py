@@ -4,7 +4,7 @@ from numpy.testing import assert_almost_equal
 
 from sorcha.modules.PPModuleRNG import PerModuleRNG
 from sorcha.utilities.dataUtilitiesForTests import get_test_filepath
-
+from sorcha.utilities.sorchaConfigs import expertConfigs
 
 def test_randomizePhotometry():
     from sorcha.modules.PPRandomizeMeasurements import randomizePhotometry
@@ -112,7 +112,8 @@ def test_randomizeAstrometryAndPhotometry():
     observations = pd.DataFrame(data_in, index=[0])
 
     configs = {"default_SNR_cut": True, "trailing_losses_on": True}
-
+    configs = expertConfigs(**configs)
+    setattr(configs,"expert",configs)
     obs_out = randomizeAstrometryAndPhotometry(observations, configs, PerModuleRNG(2021))
 
     assert_almost_equal(obs_out["trailedSourceMag"][0], 19.663194, decimal=6)
@@ -123,7 +124,7 @@ def test_randomizeAstrometryAndPhotometry():
     assert obs_out["RATrue_deg"][0] == data_in["RA_deg"]
     assert obs_out["DecTrue_deg"][0] == data_in["Dec_deg"]
 
-    configs["trailing_losses_on"] = False
+    configs.expert.trailing_losses_on = False
 
     obs_out_noloss = randomizeAstrometryAndPhotometry(observations, configs, PerModuleRNG(2021))
     assert obs_out_noloss["PSFMag"][0] == obs_out_noloss["trailedSourceMag"][0]

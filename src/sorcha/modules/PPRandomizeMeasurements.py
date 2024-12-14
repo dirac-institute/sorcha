@@ -31,7 +31,7 @@ pd.options.mode.copy_on_write = True
 logger = logging.getLogger(__name__)
 
 
-def randomizeAstrometryAndPhotometry(observations, configs, module_rngs, verbose=False):
+def randomizeAstrometryAndPhotometry(observations, sconfigs, module_rngs, verbose=False):
     """
     Wrapper function to perform randomisation of astrometry and photometry around
     their uncertainties. Calls randomizePhotometry() and randomizeAstrometry().
@@ -47,8 +47,8 @@ def randomizeAstrometryAndPhotometry(observations, configs, module_rngs, verbose
     observations : pandas dataframe
        Dataframe containing observations.
 
-    configs : dict
-       Dictionary of config file variables.
+    sconfigs: dataclass
+        Dataclass of configuration file arguments.
 
     module_rngs : PerModuleRNG
        A collection of random number generators (per module).
@@ -70,7 +70,7 @@ def randomizeAstrometryAndPhotometry(observations, configs, module_rngs, verbose
     # default SNR cut can be disabled in the config file under EXPERT
     # at low SNR, high photometric sigma causes randomisation to sometimes
     # grossly inflate/decrease magnitudes.
-    if configs.get("default_SNR_cut", False):
+    if sconfigs.expert.default_SNR_cut:
         verboselog("Removing all observations with SNR < 2.0...")
         observations = PPSNRLimit(observations.copy(), 2.0)
 
@@ -79,7 +79,7 @@ def randomizeAstrometryAndPhotometry(observations, configs, module_rngs, verbose
         observations, module_rngs, magName="trailedSourceMagTrue", sigName="trailedSourceMagSigma"
     )
 
-    if configs.get("trailing_losses_on", False):
+    if sconfigs.expert.trailing_losses_on:
         observations["PSFMag"] = randomizePhotometry(
             observations, module_rngs, magName="PSFMagTrue", sigName="PSFMagSigma"
         )

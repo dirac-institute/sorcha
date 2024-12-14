@@ -11,11 +11,12 @@ from sorcha.ephemeris.simulation_setup import (
     generate_simulations,
     furnish_spiceypy,
 )
+
 from sorcha.ephemeris.pixel_dict import PixelDict
 from sorcha.ephemeris.simulation_parsing import Observatory
 from sorcha.ephemeris.simulation_geometry import ecliptic_to_equatorial, vec2ra_dec
 from sorcha.ephemeris.simulation_constants import SPEED_OF_LIGHT, AU_KM
-
+from sorcha.utilities.sorchaConfigs import sorchaConfigs
 
 def test_pixeldict(tmp_path):
     # this test function will test out a bunch of different things inside
@@ -66,14 +67,14 @@ def test_pixeldict(tmp_path):
 
     args = sorchaArguments(cmd_args_dict)
 
-    configs = PPConfigFileParser(
+    configs = sorchaConfigs(
         args.configfile,
         args.surveyname,
     )
-    configs["seed"] = 24601
+    #configs["seed"] = 24601
 
     filterpointing = PPReadPointingDatabase(
-        args.pointing_database, configs["observing_filters"], configs["pointing_sql_query"], "rubin_sim"
+        args.pointing_database, configs.filters.observing_filters, configs.input.pointing_sql_query, "rubin_sim"
     )
 
     filterpointing = precompute_pointing_information(filterpointing, args, configs)

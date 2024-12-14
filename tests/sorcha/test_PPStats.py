@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 from numpy.testing import assert_equal
 import pytest
-
+from sorcha.utilities.sorchaConfigs import linkingfilterConfigs
 from sorcha.modules.PPStats import stats
 
 
@@ -28,8 +28,11 @@ def test_PPStats(tmp_path):
     }
     test_df = pd.DataFrame(test_dict)
 
-    configs = {"SSP_linking_on": True, "drop_unlinked": False}
-
+    
+    configs = linkingfilterConfigs()
+    configs.ssp_linking_on = True
+    configs.drop_unlinked = False
+    setattr(configs,"linkingfilter",configs)
     filename_stats = "test_stats"
     stats(test_df, filename_stats, tmp_path, configs)
 
@@ -94,6 +97,8 @@ def test_PPStats_nolinking(tmp_path):
     test_df = pd.DataFrame(test_dict)
 
     configs = {"SSP_linking_on": False, "drop_unlinked": True}
+    configs = linkingfilterConfigs()
+    setattr(configs,"linkingfilter",configs)
 
     filename_stats = "test_stats"
     stats(test_df, filename_stats, tmp_path, configs)
@@ -145,7 +150,11 @@ def test_PPStats_justlinking(tmp_path):
     }
     test_df = pd.DataFrame(test_dict)
 
-    configs = {"SSP_linking_on": True, "drop_unlinked": True}
+
+    configs = linkingfilterConfigs()
+    configs.ssp_linking_on = True
+    configs.drop_unlinked = True
+    setattr(configs,"linkingfilter",configs)
 
     filename_stats = "test_stats"
     stats(test_df, filename_stats, tmp_path, configs)

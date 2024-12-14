@@ -2,12 +2,18 @@
 # The `sorcha run` subcommand implementation
 #
 import argparse
+from sorcha_cmdline.sorchaargumentparser import SorchaArgumentParser
 
 
 def main():
-    parser = argparse.ArgumentParser(
-        formatter_class=argparse.ArgumentDefaultsHelpFormatter, description="Run a simulation."
+    parser = SorchaArgumentParser(
+        prog="sorcha run",
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+        description="Run a simulation.",
     )
+
+    # parser = SorchaArgparse(parser)
+
     required = parser.add_argument_group("Required arguments")
     required.add_argument(
         "-c",
@@ -26,24 +32,24 @@ def main():
         required=True,
     )
     required.add_argument(
-        "-ob",
-        "--orbit",
-        help="Orbit file name",
+        "--ob",
+        "--orbits",
+        help="Orbit catalog file name",
         type=str,
         dest="ob",
         required=True,
     )
     required.add_argument(
         "-p",
-        "--params",
-        help="Physical parameters file name",
+        "--physical-parameters",
+        help="Catalog of object physical parameters",
         type=str,
         dest="p",
         required=True,
     )
     required.add_argument(
-        "-pd",
-        "--pointing_database",
+        "--pd",
+        "--pointing-db",
         help="Survey pointing information",
         type=str,
         dest="pd",
@@ -52,8 +58,8 @@ def main():
 
     optional = parser.add_argument_group("Optional arguments")
     optional.add_argument(
-        "-er",
-        "--ephem_read",
+        "--er",
+        "--ephem-read",
         help="Previously generated ephemeris simulation file name, required if ephemerides_type in config file is 'external'.",
         type=str,
         dest="er",
@@ -61,8 +67,8 @@ def main():
         default=None,
     )
     optional.add_argument(
-        "-ew",
-        "--ephem_write",
+        "--ew",
+        "--ephem-write",
         help="Output file name for newly generated ephemeris simulation, required if ephemerides_type in config file is not 'external'.",
         type=str,
         dest="ew",
@@ -70,17 +76,17 @@ def main():
         default=None,
     )
     optional.add_argument(
-        "-ar",
-        "--ar_data_path",
+        "--ar",
+        "--ar-data-path",
         help="Directory path where Assist+Rebound data files where stored when running bootstrap_sorcha_data_files from the command line.",
         type=str,
         dest="ar",
         required=False,
     )
     optional.add_argument(
-        "-cp",
-        "--complex_physical_parameters",
-        help="Complex physical parameters file name",
+        "--cp",
+        "--complex-physical-parameters",
+        help="Catalog of object complex physical parameters",
         type=str,
         dest="cp",
     )
@@ -101,14 +107,14 @@ def main():
     optional.add_argument(
         "-v",
         "--verbose",
-        help="Verbosity. Default currently true; include to turn off verbosity.",
+        help="Print additional information to log while running",
         dest="v",
         default=True,
         action="store_false",
     )
 
     optional.add_argument(
-        "-st",
+        "--st",
         "--stats",
         help="Output summary statistics table to this stem filename.",
         type=str,
@@ -138,6 +144,7 @@ def execute(args):
         PPConfigFileParser,
         runLSSTSimulation,
         sorchaArguments,
+        sorchaConfigs,
         update_activity_subclasses,
         update_lc_subclasses,
     )
@@ -156,21 +163,21 @@ def execute(args):
     # Extract and validate the remaining arguments.
     cmd_args = PPCommandLineParser(args)
     pplogger.info("Reading configuration file...")
-    configs = PPConfigFileParser(cmd_args["configfile"], cmd_args["surveyname"])
+    # configs = PPConfigFileParser(cmd_args["configfile"], cmd_args["surveyname"])
+    sconfigs = sorchaConfigs(cmd_args["configfile"], cmd_args["surveyname"])
     pplogger.info("Configuration file read.")
 
-    if configs["ephemerides_type"] == "external" and cmd_args["input_ephemeris_file"] is None:
+    if sconfigs.input.ephemerides_type == "external" and cmd_args["input_ephemeris_file"] is None:
         pplogger.error("ERROR: A+R simulation not enabled and no ephemerides file provided")
         sys.exit("ERROR: A+R simulation not enabled and no ephemerides file provided")
 
-    if configs["lc_model"] and cmd_args["complex_physical_parameters"] is None:
+    if sconfigs.lightcurve.lc_model and cmd_args["complex_physical_parameters"] is None:
         pplogger.error("ERROR: No complex physical parameter file provided for light curve model")
         sys.exit("ERROR: No complex physical parameter file provided for light curve model")
 
-    if configs["comet_activity"] and cmd_args["complex_physical_parameters"] is None:
+    if sconfigs.activity.comet_activity and cmd_args["complex_physical_parameters"] is None:
         pplogger.error("ERROR: No complex physical parameter file provided for comet activity model")
         sys.exit("ERROR: No complex physical parameter file provided for comet activity model")
-
     if "SORCHA_SEED" in os.environ:
         cmd_args["seed"] = int(os.environ["SORCHA_SEED"])
         pplogger.info(f"Random seed overridden via environmental variable, SORCHA_SEED={cmd_args['seed']}")
@@ -186,7 +193,7 @@ def execute(args):
         except Exception as err:
             pplogger.error(err)
             sys.exit(err)
-        runLSSTSimulation(args, configs)
+        runLSSTSimulation(args, sconfigs)
     elif cmd_args["surveyname"] in ["LSST", "lsst"]:
         pplogger.error(
             "ERROR: The LSST has not started yet Current allowed surveys are: {}".format(

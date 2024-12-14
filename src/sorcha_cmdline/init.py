@@ -1,4 +1,4 @@
-import argparse
+from sorcha_cmdline.sorchaargumentparser import SorchaArgumentParser
 import sys
 
 #
@@ -72,8 +72,8 @@ def execute(args):  # pragma: no cover
 
 def main():
     # Create the top-level parser
-    parser = argparse.ArgumentParser(
-        prog="sorcha-init", description="Initialize configuration files for a new simulation."
+    parser = SorchaArgumentParser(
+        prog="sorcha init", description="Initialize configuration files for a new simulation."
     )
     parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose output")
     parser.add_argument(
