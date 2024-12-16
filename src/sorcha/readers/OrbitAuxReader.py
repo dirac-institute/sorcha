@@ -99,7 +99,7 @@ class OrbitAuxReader(CSVDataReader):
                 # checking inc
                 if not (0 <= input_table["inc"][i] <= 180):
                     pplogger.warning(
-                        f"Warning: Object {input_table['ObjID'][i]}. Inclination (inc) is outside the valid range (0 180 degrees), which may cause the orbits to be mirrored affecting orbital calculations."
+                        f"WARNING: Object {input_table['ObjID'][i]}. Inclination (inc) is outside the valid range (0 180 degrees), which may cause the orbits to be mirrored affecting orbital calculations."
                     )
 
                 # checking argPeri, node and ma are in same bounds
@@ -116,7 +116,7 @@ class OrbitAuxReader(CSVDataReader):
                     )
                 ):
                     pplogger.warning(
-                        f"Warning: Object {input_table['ObjID'][i]}. The argument of Perihelion (argPeri), the Longitude of the Ascending Node (node), and the Mean Anomaly (ma) are not in the same bounds (either [0 360] or [-180 180] degrees), which may lead to incorrect orbital calculations."
+                        f"WARNING: Object {input_table['ObjID'][i]}. The argument of Perihelion (argPeri), the Longitude of the Ascending Node (node), and the Mean Anomaly (ma) are not in the same bounds (either [0 360] or [-180 180] degrees), which may lead to incorrect orbital calculations."
                     )
 
                 # checks all objects before a system exit
@@ -164,13 +164,13 @@ class OrbitAuxReader(CSVDataReader):
 
                 if input_table["q"][i] == 0:
                     pplogger.warning(
-                        f"Warning: Object {input_table['ObjID'][i]}. q==0 is technically correct but suggests a collisional path with an object instead of an orbital path."
+                        f"WARNING: Object {input_table['ObjID'][i]}. q==0 is technically correct but suggests a collisional path with an object instead of an orbital path."
                     )
 
                 # checking inc
                 if 0 > input_table["inc"][i] or input_table["inc"][i] > 180:
                     pplogger.warning(
-                        f"Warning: Object {input_table['ObjID'][i]}. Inclination (inc) is outside the valid range (0 180 degrees), which may cause the orbits to be mirrored affecting orbital orientation."
+                        f"WARNING: Object {input_table['ObjID'][i]}. Inclination (inc) is outside the valid range (0 180 degrees), which may cause the orbits to be mirrored affecting orbital orientation."
                     )
                 try:
                     if input_table["q"][i] < 0:
