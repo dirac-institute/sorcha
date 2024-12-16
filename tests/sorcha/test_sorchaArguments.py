@@ -11,7 +11,7 @@ cmd_args_dict = {
     "outpath": "./tests/out",
     "surveyname": "RUBIN_SIM",
     "outfilestem": f"out_end2end",
-    "verbose": False,
+    "log-level": False,
     "pointing_database": get_demo_filepath("baseline_v2.0_1yr.db"),
     "stats": "./test.csv",
 }

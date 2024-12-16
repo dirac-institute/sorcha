@@ -130,10 +130,10 @@ class OrbitAuxReader(CSVDataReader):
                             f"ERROR: Object {input_table['ObjID'][i]}. Eccentricity (e) cannot be less than 0."
                         )
                     elif input_table["e"][i] > 1:
-                        
+
                         raise ValueError(
-                                f"ERROR: Object {input_table['ObjID'][i]}. Hyperbolic orbit (e > 1) is not supported for Keplerian elements"
-                            )
+                            f"ERROR: Object {input_table['ObjID'][i]}. Hyperbolic orbit (e > 1) is not supported for Keplerian elements"
+                        )
                     elif input_table["e"][i] < 1 and input_table["a"][i] < 0:
                         raise ValueError(
                             f"ERROR: Object {input_table['ObjID'][i]}. Bound orbit (e < 1) with negative semi-major axis (a < 0) is not physical"
@@ -174,16 +174,22 @@ class OrbitAuxReader(CSVDataReader):
                     )
                 try:
                     if input_table["q"][i] < 0:
-                        raise ValueError(f"ERROR: Object {input_table['ObjID'][i]}. Perihelion distance (q) cannot be less than 0")
+                        raise ValueError(
+                            f"ERROR: Object {input_table['ObjID'][i]}. Perihelion distance (q) cannot be less than 0"
+                        )
 
                     elif input_table["e"][i] < 0:
-                        raise ValueError(f"ERROR: Object {input_table['ObjID'][i]}. Eccentricity (e) cannot be less than 0.")
+                        raise ValueError(
+                            f"ERROR: Object {input_table['ObjID'][i]}. Eccentricity (e) cannot be less than 0."
+                        )
                 except ValueError as error_message:
                     error_raised = True
                     pplogger.error(str(error_message))
                     continue
             if error_raised:
-                sys.exit("ERROR: Invalid cometary elements detected for one or more objects (check log for information)")
+                sys.exit(
+                    "ERROR: Invalid cometary elements detected for one or more objects (check log for information)"
+                )
 
         elif orb_format in ["CART", "BCART"]:
             if not all(column in input_table.columns for column in cartesian_elements):

@@ -116,7 +116,7 @@ def test_ephemeris_end2end(single_synthetic_pointing, tmp_path):
         "outpath": tmp_path,
         "surveyname": "rubin_sim",
         "outfilestem": f"out_400k",
-        "verbose": False,
+        "log-level": False,
         "stats": None,
     }
 
