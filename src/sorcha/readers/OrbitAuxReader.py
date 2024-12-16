@@ -99,7 +99,7 @@ class OrbitAuxReader(CSVDataReader):
                 # checking inc
                 if not (0 <= input_table["inc"][i] <= 180):
                     pplogger.warning(
-                        f"Warning: Object {input_table['ObjID'][i]}. Inclination (inc) is outside valid range (0 180 degrees). This may cause the orbits to be mirrored affecting orbital calculations."
+                        f"Warning: Object {input_table['ObjID'][i]}. Inclination (inc) is outside the valid range (0 180 degrees), which may cause the orbits to be mirrored affecting orbital calculations."
                     )
 
                 # checking argPeri, node and ma are in same bounds
@@ -116,14 +116,14 @@ class OrbitAuxReader(CSVDataReader):
                     )
                 ):
                     pplogger.warning(
-                        f"Warning: Object {input_table['ObjID'][i]}. Argument of Perihelion (argPeri), Longitude of Ascending Node (node) and Mean Anonmaly (ma) are not in same bounds (either [0 360] or [-180 180]). This may lead to incorrect orbital calculations."
+                        f"Warning: Object {input_table['ObjID'][i]}. The argument of Perihelion (argPeri), the Longitude of the Ascending Node (node), and the Mean Anomaly (ma) are not in the same bounds (either [0 360] or [-180 180] degrees), which may lead to incorrect orbital calculations."
                     )
 
                 # checks all objects before a system exit
                 try:
                     if input_table["e"][i] == 1:
                         raise ValueError(
-                            f"ERROR: Object {input_table['ObjID'][i]}. Parabolic orbit (e == 1) is undefined in Keplerian elements"
+                            f"ERROR: Object {input_table['ObjID'][i]}. Parabolic orbit (e == 1) is undefined in Keplerian elements."
                         )
                     elif input_table["e"][i] < 0:
                         raise ValueError(
@@ -132,11 +132,11 @@ class OrbitAuxReader(CSVDataReader):
                     elif input_table["e"][i] > 1:
 
                         raise ValueError(
-                            f"ERROR: Object {input_table['ObjID'][i]}. Hyperbolic orbit (e > 1) is not supported for Keplerian elements"
+                            f"ERROR: Object {input_table['ObjID'][i]}. Hyperbolic orbit (e > 1) is not supported for Keplerian elements."
                         )
                     elif input_table["e"][i] < 1 and input_table["a"][i] < 0:
                         raise ValueError(
-                            f"ERROR: Object {input_table['ObjID'][i]}. Bound orbit (e < 1) with negative semi-major axis (a < 0) is not physical"
+                            f"ERROR: Object {input_table['ObjID'][i]}. Bound orbit (e < 1) with negative semi-major axis (a < 0) is not physical."
                         )
 
                 except ValueError as error_message:
@@ -164,18 +164,18 @@ class OrbitAuxReader(CSVDataReader):
 
                 if input_table["q"][i] == 0:
                     pplogger.warning(
-                        f"Warning: Object {input_table['ObjID'][i]}. q==0 is technically correct but suggests a collisional path with an object instead of an orbital path"
+                        f"Warning: Object {input_table['ObjID'][i]}. q==0 is technically correct but suggests a collisional path with an object instead of an orbital path."
                     )
 
                 # checking inc
                 if 0 > input_table["inc"][i] or input_table["inc"][i] > 180:
                     pplogger.warning(
-                        f"Warning: Object {input_table['ObjID'][i]}. Inclination (inc) is outside valid range (0 180 degrees). This may cause the orbits to be mirrored affecting orbital orientation."
+                        f"Warning: Object {input_table['ObjID'][i]}. Inclination (inc) is outside the valid range (0 180 degrees), which may cause the orbits to be mirrored affecting orbital orientation."
                     )
                 try:
                     if input_table["q"][i] < 0:
                         raise ValueError(
-                            f"ERROR: Object {input_table['ObjID'][i]}. Perihelion distance (q) cannot be less than 0"
+                            f"ERROR: Object {input_table['ObjID'][i]}. Perihelion distance (q) cannot be less than 0."
                         )
 
                     elif input_table["e"][i] < 0:
@@ -187,6 +187,7 @@ class OrbitAuxReader(CSVDataReader):
                     pplogger.error(str(error_message))
                     continue
             if error_raised:
+                pplogger.error("ERROR: Invalid cometary elements detected for one or more objects")
                 sys.exit(
                     "ERROR: Invalid cometary elements detected for one or more objects (check log for information)"
                 )
