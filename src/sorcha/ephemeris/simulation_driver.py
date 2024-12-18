@@ -102,7 +102,7 @@ def create_ephemeris(orbits_df, pointings_df, args, sconfigs):
     computed.  Details for those that actually do land within the field
     of view are passed along.
     """
-    verboselog = args.pplogger.info if args.verbose else lambda *a, **k: None
+    verboselog = args.pplogger.info if args.loglevel else lambda *a, **k: None
 
     ang_fov = sconfigs.simulation.ar_ang_fov
     buffer = sconfigs.simulation.ar_fov_buffer
@@ -351,7 +351,7 @@ def write_out_ephemeris_file(ephemeris_df, ephemeris_csv_filename, args, sconfig
     None.
     """
 
-    verboselog = args.pplogger.info if args.verbose else lambda *a, **k: None
+    verboselog = args.pplogger.info if args.loglevel else lambda *a, **k: None
 
     if sconfigs.input.eph_format == "csv":
         verboselog("Outputting ephemeris to CSV file...")

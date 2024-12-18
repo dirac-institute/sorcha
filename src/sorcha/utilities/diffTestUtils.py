@@ -54,7 +54,7 @@ BASELINE_ARGS = {
     "pointing_database": get_demo_filepath("baseline_v2.0_1yr.db"),
     "surveyname": "rubin_sim",
     "outfilestem": f"out_end2end",
-    "verbose": False,
+    "loglevel": False,
     "stats": None,
 }
 
@@ -66,7 +66,7 @@ WITH_EPHEMERIS_ARGS = {
     "output_ephemeris_file": "sorcha_ephemeris",
     "surveyname": "rubin_sim",
     "outfilestem": f"out_end2end_with_ephemeris_generation",
-    "verbose": False,
+    "loglevel": False,
     "stats": None,
 }
 
@@ -78,7 +78,7 @@ CHUNKED_ARGS = {
     "pointing_database": get_demo_filepath("baseline_v2.0_1yr.db"),
     "surveyname": "rubin_sim",
     "outfilestem": f"out_end2end_chunked",
-    "verbose": False,
+    "loglevel": False,
     "stats": None,
 }
 
@@ -90,7 +90,7 @@ UNCHUNKED_ARGS = {
     "pointing_database": get_demo_filepath("baseline_v2.0_1yr.db"),
     "surveyname": "rubin_sim",
     "outfilestem": f"out_end2end_unchunked",
-    "verbose": False,
+    "loglevel": False,
     "stats": None,
 }
 
@@ -103,7 +103,7 @@ VERIFICATION_TRUTH = {
     "output_ephemeris_file": "sorcha_ephemeris.csv",
     "surveyname": "rubin_sim",
     "outfilestem": f"verification_output",
-    "verbose": False,
+    "loglevel": False,
     "stats": None,
 }
 

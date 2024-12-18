@@ -248,7 +248,7 @@ def test_PPPrintConfigsToLog(tmp_path):
         "outpath": "./",
         "surveyname": "rubin_sim",
         "outfilestem": "testout",
-        "verbose": True,
+        "loglevel": True,
         "seed": 24601,
         "stats": None,
     }

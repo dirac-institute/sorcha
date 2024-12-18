@@ -16,7 +16,7 @@ class args:
         self.cp = cp
         self.s = "rubin_sim"
         self.t = t
-        self.v = True
+        self.l = True
         self.f = f
         self.ar = None
         self.st = "test.csv"
@@ -37,7 +37,7 @@ def test_PPCommandLineParser():
         "outpath": "./",
         "surveyname": "rubin_sim",
         "outfilestem": "testout",
-        "verbose": True,
+        "loglevel": True,
         "ar_data_path": None,
         "output_ephemeris_file": None,
         "stats": "test.csv",
@@ -54,7 +54,7 @@ def test_PPCommandLineParser():
         "complex_physical_parameters": get_test_filepath("testcomet.txt"),
         "surveyname": "rubin_sim",
         "outfilestem": "testout",
-        "verbose": True,
+        "loglevel": True,
         "ar_data_path": None,
         "output_ephemeris_file": None,
         "stats": "test.csv",

@@ -92,6 +92,64 @@ class OrbitAuxReader(CSVDataReader):
             if not all(column in input_table.columns for column in keplerian_elements):
                 pplogger.error("ERROR: PPReadOrbitFile: Must provide all keplerian orbital elements.")
                 sys.exit("ERROR: PPReadOrbitFile: Must provide all keplerian orbital elements.")
+
+            filtered_df = input_table.loc[(input_table["inc"] < 0) | (input_table["inc"] > 180), ["ObjID"]]
+            if not filtered_df.empty:
+                pplogger.warning(
+                    f"WARNING: For Object(s) {', '.join(filtered_df['ObjID'].astype(str))}. Inclination (inc) is outside the valid range (0 180 degrees), which may cause the orbits to be mirrored affecting orbital calculations."
+                )
+            filtered_df = input_table.loc[
+                ~(
+                    (
+                        (input_table["argPeri"] >= 0)
+                        & (input_table["argPeri"] <= 360)
+                        & (input_table["node"] >= 0)
+                        & (input_table["node"] <= 360)
+                        & (input_table["ma"] >= 0)
+                        & (input_table["ma"] <= 360)
+                    )
+                    | (
+                        (input_table["argPeri"] >= -180)
+                        & (input_table["argPeri"] <= 180)
+                        & (input_table["node"] >= -180)
+                        & (input_table["node"] <= 180)
+                        & (input_table["ma"] >= -180)
+                        & (input_table["ma"] <= 180)
+                    )
+                ),
+                ["ObjID"],
+            ]
+            if not filtered_df.empty:
+                pplogger.warning(
+                    f"WARNING: For Object(s) {', '.join(filtered_df['ObjID'].astype(str))}. The argument of Perihelion (argPeri), the Longitude of the Ascending Node (node), and the Mean Anomaly (ma) are not in the same bounds (either [0 360] or [-180 180] degrees), which may lead to incorrect orbital calculations."
+                )
+            error_raised = False
+            # checks all objects before a system exit
+            filtered_df = input_table.loc[(input_table["e"] >= 1), ["ObjID"]]
+            if not filtered_df.empty:
+                error_raised = True
+                pplogger.error(
+                    f"ERROR: For Object(s) {', '.join(filtered_df['ObjID'].astype(str))}. Parabolic orbit (e == 1) and Hyperbolic orbit (e > 1) are not supported for Keplerian elements."
+                )
+            filtered_df = input_table.loc[(input_table["e"] < 0), ["ObjID"]]
+            if not filtered_df.empty:
+                error_raised = True
+                pplogger.error(
+                    f"ERROR: For Object(s) {', '.join(filtered_df['ObjID'].astype(str))}. Eccentricity (e) cannot be less than 0."
+                )
+            filtered_df = input_table.loc[(input_table["e"] < 1) & (input_table["a"] < 0), ["ObjID"]]
+            if not filtered_df.empty:
+                error_raised = True
+                pplogger.error(
+                    f"ERROR: For Object(s) {', '.join(filtered_df['ObjID'].astype(str))}. Bound orbit (e < 1) with negative semi-major axis (a < 0) is not physical."
+                )
+
+            if error_raised:
+                pplogger.error("ERROR: Invalid Keplerian elements detected for one or more objects.")
+                sys.exit(
+                    "ERROR: Invalid Keplerian elements detected for one or more objects (check log for information)"
+                )
+
         elif orb_format in ["COM", "BCOM"]:
             if not all(column in input_table.columns for column in cometary_elements):
                 pplogger.error("ERROR: PPReadOrbitFile: Must provide all cometary orbital elements.")
@@ -100,6 +158,38 @@ class OrbitAuxReader(CSVDataReader):
                 pplogger.warning(
                     "WARNING: At least one t_p_MJD_TDB is above 2400000.5 - make sure your t_p are MJD and not in JD"
                 )
+
+            error_raised = False
+            filtered_df = input_table.loc[(input_table["q"] == 0), ["ObjID"]]
+            if not filtered_df.empty:
+                pplogger.warning(
+                    f"WARNING: For Object(s) {', '.join(filtered_df['ObjID'].astype(str))}. q==0 is technically correct but suggests a collisional path with an object instead of an orbital path."
+                )
+
+            filtered_df = input_table.loc[(input_table["inc"] < 0) | (input_table["inc"] > 180), ["ObjID"]]
+            if not filtered_df.empty:
+                pplogger.warning(
+                    f"WARNING: For Object(s) {', '.join(filtered_df['ObjID'].astype(str))}. Inclination (inc) is outside the valid range (0 180 degrees), which may cause the orbits to be mirrored affecting orbital calculations."
+                )
+            filtered_df = input_table.loc[(input_table["q"] < 0), ["ObjID"]]
+            if not filtered_df.empty:
+                error_raised = True
+                pplogger.error(
+                    f"ERROR: For Object(s) {', '.join(filtered_df['ObjID'].astype(str))}. Perihelion distance (q) cannot be less than 0."
+                )
+            filtered_df = input_table.loc[(input_table["e"] < 0), ["ObjID"]]
+            if not filtered_df.empty:
+                error_raised = True
+                pplogger.error(
+                    f"ERROR: For Object(s) {', '.join(filtered_df['ObjID'].astype(str))}. Eccentricity (e) cannot be less than 0."
+                )
+
+            if error_raised:
+                pplogger.error("ERROR: Invalid cometary elements detected for one or more objects")
+                sys.exit(
+                    "ERROR: Invalid cometary elements detected for one or more objects (check log for information)"
+                )
+
         elif orb_format in ["CART", "BCART"]:
             if not all(column in input_table.columns for column in cartesian_elements):
                 pplogger.error("ERROR: PPReadOrbitFile: Must provide all cartesian coordinate values.")

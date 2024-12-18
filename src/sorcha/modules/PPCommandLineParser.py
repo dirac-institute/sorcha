@@ -85,7 +85,7 @@ def PPCommandLineParser(args):
 
     cmd_args_dict["surveyname"] = args.s
     cmd_args_dict["outfilestem"] = args.t
-    cmd_args_dict["verbose"] = args.v
+    cmd_args_dict["loglevel"] = args.l
     cmd_args_dict["stats"] = args.st
 
     if cmd_args_dict["stats"] is not None:
