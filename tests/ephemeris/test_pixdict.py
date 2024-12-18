@@ -61,7 +61,7 @@ def test_pixeldict(tmp_path):
         "deleteTemporaryEphemerisDatabase": False,
         "surveyname": "rubin_sim",
         "outfilestem": f"out_400k",
-        "log-level": False,
+        "loglevel": False,
         "stats": None,
     }
 

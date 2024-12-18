@@ -116,7 +116,7 @@ def test_ephemeris_end2end(single_synthetic_pointing, tmp_path):
         "outpath": tmp_path,
         "surveyname": "rubin_sim",
         "outfilestem": f"out_400k",
-        "log-level": False,
+        "loglevel": False,
         "stats": None,
     }
 
@@ -161,7 +161,7 @@ def test_ephemeris_writeread_csv(single_synthetic_ephemeris, tmp_path):
     params_in = get_demo_filepath("sspp_testset_colours.txt")
 
     class args(object):
-        verbose = False
+        loglevel = False
 
     cmd_args = args()
 
@@ -199,7 +199,7 @@ def test_ephemeris_writeread_whitespace(single_synthetic_ephemeris, tmp_path):
     params_in = get_demo_filepath("sspp_testset_colours.txt")
 
     class args(object):
-        verbose = False
+        loglevel = False
 
     cmd_args = args()
 
@@ -237,7 +237,7 @@ def test_ephemeris_writeread_hdf5(single_synthetic_ephemeris, tmp_path):
     params_in = get_demo_filepath("sspp_testset_colours.txt")
 
     class args(object):
-        verbose = False
+        loglevel = False
 
     cmd_args = args()
 
