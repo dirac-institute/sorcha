@@ -80,11 +80,11 @@ def test_pixeldict(tmp_path):
     filterpointing = precompute_pointing_information(filterpointing, args, configs)
     args = sorchaArguments(cmd_args_dict)
 
-    ephem, gm_sun, gm_total = create_assist_ephemeris(args)
-    furnish_spiceypy(args)
+    ephem, gm_sun, gm_total = create_assist_ephemeris(args,configs.auxiliary)
+    furnish_spiceypy(args,configs.auxiliary)
 
     sim_dict = generate_simulations(ephem, gm_sun, gm_total, orbits_df, args)
-    observatory = Observatory(args=None, oc_file=get_test_filepath("ObsCodes_test.json"))
+    observatory = Observatory(auxconfigs=configs.auxiliary,args=None, oc_file=get_test_filepath("ObsCodes_test.json"))
 
     pixdict = PixelDict(54800.0 + 2400000.5, sim_dict, ephem, "Z20", observatory, picket_interval=1, nside=32)
 

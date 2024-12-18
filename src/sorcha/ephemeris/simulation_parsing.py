@@ -3,14 +3,9 @@ import os
 import numpy as np
 import spiceypy as spice
 from pooch import Decompress
-
 from sorcha.ephemeris.simulation_constants import RADIUS_EARTH_KM
 from sorcha.ephemeris.simulation_geometry import ecliptic_to_equatorial
-from sorcha.ephemeris.simulation_data_files import (
-    OBSERVATORY_CODES,
-    OBSERVATORY_CODES_COMPRESSED,
-    make_retriever,
-)
+from sorcha.ephemeris.simulation_data_files import make_retriever
 from sorcha.ephemeris.orbit_conversion_utilities import universal_cartesian
 
 
@@ -134,7 +129,7 @@ class Observatory:
     Class containing various utility tools related to the calculation of the observatory position
     """
 
-    def __init__(self, args, oc_file=OBSERVATORY_CODES):
+    def __init__(self, args, auxconfigs, oc_file=None):
         """
         Initialization method
 
@@ -142,22 +137,25 @@ class Observatory:
         ----------
             args : dictionary or `sorchaArguments` object
                 dictionary of command-line arguments.
+            auxconfigs: dataclass
+                Dataclass of configuration file arguments.
             oc_file : str
                 Path for the file with observatory codes
         """
         self.observatoryPositionCache = {}  # previously calculated positions to speed up the process
 
-        if oc_file == OBSERVATORY_CODES:
-            retriever = make_retriever(args.ar_data_file_path)
+        if oc_file == None:
+            retriever = make_retriever(auxconfigs, args.ar_data_file_path)
 
             # is the file available locally, if so, return the full path
-            if os.path.isfile(os.path.join(retriever.abspath, OBSERVATORY_CODES)):
-                obs_file_path = retriever.fetch(OBSERVATORY_CODES)
+            if os.path.isfile(os.path.join(retriever.abspath, auxconfigs.observatory_codes)):
+                obs_file_path = retriever.fetch(auxconfigs.observatory_codes)
 
             # if the file is not local, download, and decompress it, then return the path.
             else:
                 obs_file_path = retriever.fetch(
-                    OBSERVATORY_CODES_COMPRESSED, processor=Decompress(name=OBSERVATORY_CODES)
+                    auxconfigs.observatory_codes_compressed,
+                    processor=Decompress(name=auxconfigs.observatory_codes),
                 )
 
         else:

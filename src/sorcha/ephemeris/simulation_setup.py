@@ -11,13 +11,7 @@ import os
 import numpy as np
 
 from sorcha.ephemeris.simulation_constants import *
-from sorcha.ephemeris.simulation_data_files import (
-    make_retriever,
-    JPL_PLANETS,
-    JPL_SMALL_BODIES,
-    META_KERNEL,
-    ORDERED_KERNEL_FILES,
-)
+from sorcha.ephemeris.simulation_data_files import make_retriever
 
 from sorcha.ephemeris.simulation_geometry import (
     barycentricObservatoryRates,
@@ -32,9 +26,12 @@ from sorcha.ephemeris.simulation_parsing import (
 from sorcha.utilities.generate_meta_kernel import build_meta_kernel_file
 
 
-def create_assist_ephemeris(args) -> tuple:
+def create_assist_ephemeris(args, auxconfigs) -> tuple:
     """Build the ASSIST ephemeris object
-
+    Parameter
+    ---------
+    auxconfigs: dataclass
+        Dataclass of auxiliary configuration file arguments.
     Returns
     ---------
     Ephem : ASSIST ephemeris obejct
@@ -46,9 +43,9 @@ def create_assist_ephemeris(args) -> tuple:
     """
     pplogger = logging.getLogger(__name__)
 
-    retriever = make_retriever(args.ar_data_file_path)
-    planets_file_path = retriever.fetch(JPL_PLANETS)
-    small_bodies_file_path = retriever.fetch(JPL_SMALL_BODIES)
+    retriever = make_retriever(auxconfigs, args.ar_data_file_path)
+    planets_file_path = retriever.fetch(auxconfigs.jpl_planets)
+    small_bodies_file_path = retriever.fetch(auxconfigs.jpl_small_bodies)
     ephem = Ephem(planets_path=planets_file_path, asteroids_path=small_bodies_file_path)
     gm_sun = ephem.get_particle("Sun", 0).m
     gm_total = sum(sorted([ephem.get_particle(i, 0).m for i in range(27)]))
@@ -59,27 +56,31 @@ def create_assist_ephemeris(args) -> tuple:
     return ephem, gm_sun, gm_total
 
 
-def furnish_spiceypy(args):
+def furnish_spiceypy(args, auxconfigs):
     """
     Builds the SPICE kernel, downloading the required files if needed
+    Parameters
+    -----------
+    auxconfigs: dataclass
+        Dataclass of auxiliary configuration file arguments.
     """
     # The goal here would be to download the spice kernel files (if needed)
     # Then call spice.furnish(<filename>) on each of those files.
 
     pplogger = logging.getLogger(__name__)
 
-    retriever = make_retriever(args.ar_data_file_path)
+    retriever = make_retriever(auxconfigs, args.ar_data_file_path)
 
-    for kernel_file in ORDERED_KERNEL_FILES:
+    for kernel_file in auxconfigs.ordered_kernel_files:
         retriever.fetch(kernel_file)
 
     # check if the META_KERNEL file exists. If it doesn't exist, create it.
-    if not os.path.exists(os.path.join(retriever.abspath, META_KERNEL)):
-        build_meta_kernel_file(retriever)
+    if not os.path.exists(os.path.join(retriever.abspath, auxconfigs.meta_kernel)):
+        build_meta_kernel_file(auxconfigs, retriever)
 
     # try to get the META_KERNEL file. If it's not there, error out.
     try:
-        meta_kernel = retriever.fetch(META_KERNEL)
+        meta_kernel = retriever.fetch(auxconfigs.meta_kernel)
     except ValueError:
         pplogger.error(
             "ERROR: furnish_spiceypy: Must create meta_kernel.txt by running `bootstrap_sorcha_data_files` on the command line."
@@ -181,11 +182,11 @@ def precompute_pointing_information(pointings_df, args, sconfigs):
     pointings_df : pandas dataframe
         The original dataframe with several additional columns of precomputed values.
     """
-    ephem, _, _ = create_assist_ephemeris(args)
+    ephem, _, _ = create_assist_ephemeris(args, sconfigs.auxiliary)
 
-    furnish_spiceypy(args)
+    furnish_spiceypy(args, sconfigs.auxiliary)
     obsCode = sconfigs.simulation.ar_obs_code
-    observatories = Observatory(args)
+    observatories = Observatory(args, sconfigs.auxiliary)
 
     # vectorize the calculation to get x,y,z vector from ra/dec
     vectors = ra_dec2vec(

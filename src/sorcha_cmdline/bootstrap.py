@@ -41,8 +41,6 @@ def execute(args):
     #
     from sorcha.utilities.retrieve_ephemeris_data_files import (
         make_retriever,
-        DATA_FILE_LIST,
-        DATA_FILES_TO_DOWNLOAD,
         _check_for_existing_files,
         _decompress,
         _remove_files,
@@ -50,17 +48,22 @@ def execute(args):
     )
     from functools import partial
     import concurrent.futures
+    from sorcha.utilities.sorchaConfigs import auxiliaryConfigs
 
+    # Bootstrap will always take the default filenames and urls (stored in auxiliaryConfigs) for the current version of sorcha.
+    # A user can download new files by running sorcha and specifying in the config file under the section [AUXILIARY] a new filename and url.
+
+    default_files = auxiliaryConfigs()
     # create the Pooch retriever that tracks and retrieves the requested files
-    retriever = make_retriever(args.cache)
+    retriever = make_retriever(default_files, args.cache)
 
     # determine if we should attempt to download or create any files.
     found_all_files = False
     if args.force:
-        _remove_files(retriever)
+        _remove_files(default_files, retriever)
     else:
         print("Checking cache for existing files.")
-        found_all_files = _check_for_existing_files(retriever, DATA_FILE_LIST)
+        found_all_files = _check_for_existing_files(retriever, default_files.data_file_list)
 
     if not found_all_files:
         # create a partial function of `Pooch.fetch` including the `_decompress` method
@@ -68,13 +71,13 @@ def execute(args):
 
         # download the data files in parallel
         with concurrent.futures.ThreadPoolExecutor() as executor:
-            executor.map(fetch_partial, DATA_FILES_TO_DOWNLOAD)
+            executor.map(fetch_partial, default_files.data_files_to_download)
 
         # build the meta_kernel.txt file
-        build_meta_kernel_file(retriever)
+        build_meta_kernel_file(default_files, retriever)
 
         print("Checking cache after attempting to download and create files.")
-        _check_for_existing_files(retriever, DATA_FILE_LIST)
+        _check_for_existing_files(retriever, default_files.data_file_list)
 
 
 if __name__ == "__main__":
