@@ -125,23 +125,17 @@ class OrbitAuxReader(CSVDataReader):
                 )
             error_raised = False
             # checks all objects before a system exit
-            filtered_df = input_table.loc[(input_table["e"] == 1), ["ObjID"]]
+            filtered_df = input_table.loc[(input_table["e"] >= 1), ["ObjID"]]
             if not filtered_df.empty:
                 error_raised = True
                 pplogger.error(
-                    f"ERROR: For Object(s) {', '.join(filtered_df['ObjID'].astype(str))}. Parabolic orbit (e == 1) is undefined in Keplerian elements."
+                    f"ERROR: For Object(s) {', '.join(filtered_df['ObjID'].astype(str))}. Parabolic orbit (e == 1) and Hyperbolic orbit (e > 1) are not supported for Keplerian elements."
                 )
             filtered_df = input_table.loc[(input_table["e"] < 0), ["ObjID"]]
             if not filtered_df.empty:
                 error_raised = True
                 pplogger.error(
                     f"ERROR: For Object(s) {', '.join(filtered_df['ObjID'].astype(str))}. Eccentricity (e) cannot be less than 0."
-                )
-            filtered_df = input_table.loc[(input_table["e"] > 1), ["ObjID"]]
-            if not filtered_df.empty:
-                error_raised = True
-                pplogger.error(
-                    f"ERROR: For Object(s) {', '.join(filtered_df['ObjID'].astype(str))}. Hyperbolic orbit (e > 1) is not supported for Keplerian elements."
                 )
             filtered_df = input_table.loc[(input_table["e"] < 1) & (input_table["a"] < 0), ["ObjID"]]
             if not filtered_df.empty:
