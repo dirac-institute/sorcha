@@ -111,7 +111,7 @@ def runLSSTSimulation(args, sconfigs):
 
     # if verbosity flagged, the verboselog function will log the message specified
     # if not, verboselog does absolutely nothing
-    verboselog = pplogger.info if args.verbose else lambda *a, **k: None
+    verboselog = pplogger.info if args.loglevel else lambda *a, **k: None
 
     sconfigs.filters.mainfilter, sconfigs.filters.othercolours = PPGetMainFilterAndColourOffsets(
         args.paramsinput, sconfigs.filters.observing_filters, sconfigs.input.aux_format
@@ -214,7 +214,7 @@ def runLSSTSimulation(args, sconfigs):
             sconfigs.filters.observing_filters,
             sconfigs.activity.comet_activity,
             lightcurve_choice=sconfigs.lightcurve.lc_model,
-            verbose=args.verbose,
+            verbose=args.loglevel,
         )
 
         if sconfigs.expert.trailing_losses_on:
@@ -239,7 +239,7 @@ def runLSSTSimulation(args, sconfigs):
         # Do NOT use trailedSourceMagTrue or PSFMagTrue, these are the unrandomised magnitudes.
         verboselog("Calculating astrometric and photometric uncertainties...")
         observations = PPAddUncertainties.addUncertainties(
-            observations, sconfigs, args._rngs, verbose=args.verbose
+            observations, sconfigs, args._rngs, verbose=args.loglevel
         )
 
         if sconfigs.expert.randomization_on:
@@ -247,7 +247,7 @@ def runLSSTSimulation(args, sconfigs):
                 "Number of rows BEFORE randomizing astrometry and photometry: " + str(len(observations.index))
             )
             observations = PPRandomizeMeasurements.randomizeAstrometryAndPhotometry(
-                observations, sconfigs, args._rngs, verbose=args.verbose
+                observations, sconfigs, args._rngs, verbose=args.loglevel
             )
             verboselog(
                 "Number of rows AFTER randomizing astrometry and photometry: " + str(len(observations.index))
@@ -271,7 +271,7 @@ def runLSSTSimulation(args, sconfigs):
             verboselog("Applying field-of-view filters...")
             verboselog("Number of rows BEFORE applying FOV filters: " + str(len(observations.index)))
             observations = PPApplyFOVFilter(
-                observations, sconfigs, args._rngs, footprint=footprint, verbose=args.verbose
+                observations, sconfigs, args._rngs, footprint=footprint, verbose=args.loglevel
             )
             verboselog("Number of rows AFTER applying FOV filters: " + str(len(observations.index)))
 
@@ -299,7 +299,7 @@ def runLSSTSimulation(args, sconfigs):
                 sconfigs.fadingfunction.fading_function_peak_efficiency,
                 sconfigs.fadingfunction.fading_function_width,
                 args._rngs,
-                verbose=args.verbose,
+                verbose=args.loglevel,
             )
             verboselog("Number of rows AFTER applying fading function: " + str(len(observations.index)))
 
@@ -332,7 +332,7 @@ def runLSSTSimulation(args, sconfigs):
         if len(observations.index) > 0:
             pplogger.info("Post processing completed for this chunk")
             pplogger.info("Outputting results for this chunk")
-            PPWriteOutput(args, sconfigs, observations, verbose=args.verbose)
+            PPWriteOutput(args, sconfigs, observations, verbose=args.loglevel)
             if args.stats is not None:
                 stats(observations, args.stats, args.outpath, sconfigs)
         else:

@@ -166,7 +166,7 @@ class OrbitAuxReader(CSVDataReader):
                 )
 
             error_raised = False
-            filtered_df = input_table.loc[(input_table["q"] == 1), ["ObjID"]]
+            filtered_df = input_table.loc[(input_table["q"] == 0), ["ObjID"]]
             if not filtered_df.empty:
                 pplogger.warning(
                     f"WARNING: For Object(s) {', '.join(filtered_df['ObjID'].astype(str))}. q==0 is technically correct but suggests a collisional path with an object instead of an orbital path."
