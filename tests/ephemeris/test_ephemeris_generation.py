@@ -2,6 +2,7 @@ import pandas as pd
 import pytest
 import os
 import re
+from numpy.testing import assert_almost_equal
 
 from sorcha.utilities.dataUtilitiesForTests import get_test_filepath, get_demo_filepath
 from sorcha.modules.PPConfigParser import PPConfigFileParser
@@ -150,6 +151,23 @@ def test_ephemeris_end2end(single_synthetic_pointing, tmp_path):
 
     for file in files:
         assert not re.match(r".+\.csv", file)
+
+    configs["ar_use_integrate"] = True
+
+    observations_integrate = create_ephemeris(
+        single_synthetic_pointing,
+        filterpointing,
+        args,
+        configs,
+    )
+
+    assert len(observations_integrate) == 10
+
+    assert_almost_equal(
+        observations_integrate["fieldMJD_TAI"].values, observations["fieldMJD_TAI"].values, decimal=6
+    )
+    assert_almost_equal(observations_integrate["RA_deg"].values, observations["RA_deg"].values, decimal=6)
+    assert_almost_equal(observations_integrate["Dec_deg"].values, observations["Dec_deg"].values, decimal=6)
 
 
 def test_ephemeris_writeread_csv(single_synthetic_ephemeris, tmp_path):
