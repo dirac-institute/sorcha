@@ -1,11 +1,13 @@
-from dataclasses import dataclass
 import configparser
 import logging
-import sys
 import os
+import sys
+from dataclasses import dataclass
+
 import numpy as np
-from sorcha.lightcurves.lightcurve_registration import LC_METHODS
+
 from sorcha.activity.activity_registration import CA_METHODS
+from sorcha.lightcurves.lightcurve_registration import LC_METHODS
 
 
 @dataclass
@@ -732,6 +734,9 @@ class expertConfigs:
     vignetting_on: bool = None
     """flag for calculating effects of vignetting on limiting magnitude"""
 
+    ar_use_integrate: bool = None
+    """flag for using the integrate method instead of integrate_or_interpolate"""
+
     def __post_init__(self):
         """Automagically validates the expert configs after initialisation."""
         self._validate_expert_configs()
@@ -778,6 +783,7 @@ class expertConfigs:
         self.default_SNR_cut = cast_as_bool_or_set_default(self.default_SNR_cut, "default_SNR_cut", True)
         self.randomization_on = cast_as_bool_or_set_default(self.randomization_on, "randomization_on", True)
         self.vignetting_on = cast_as_bool_or_set_default(self.vignetting_on, "vignetting_on", True)
+        self.ar_use_integrate = cast_as_bool_or_set_default(self.ar_use_integrate, "ar_use_integrate", False)
 
 
 @dataclass
