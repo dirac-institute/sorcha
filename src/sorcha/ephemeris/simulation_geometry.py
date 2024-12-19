@@ -1,11 +1,10 @@
 import healpy as hp
 import numpy as np
-from sorcha.ephemeris.simulation_constants import (
-    RADIUS_EARTH_KM,
-    SPEED_OF_LIGHT,
-    ECL_TO_EQ_ROTATION_MATRIX,
-)
 import spiceypy as spice
+
+from sorcha.ephemeris.simulation_constants import (ECL_TO_EQ_ROTATION_MATRIX,
+                                                   RADIUS_EARTH_KM,
+                                                   SPEED_OF_LIGHT)
 
 
 def ecliptic_to_equatorial(v, rot_mat=ECL_TO_EQ_ROTATION_MATRIX):
@@ -26,7 +25,7 @@ def ecliptic_to_equatorial(v, rot_mat=ECL_TO_EQ_ROTATION_MATRIX):
     return np.dot(v, rot_mat)
 
 
-def integrate_light_time(sim, ex, t, r_obs, lt0=0, iter=3, speed_of_light=SPEED_OF_LIGHT):
+def integrate_light_time(sim, ex, t, r_obs, lt0=0, iter=3, speed_of_light=SPEED_OF_LIGHT, use_integrate=False):
     """
     Performs the light travel time correction between object and observatory iteratively for the object at a given reference time
 
@@ -60,8 +59,12 @@ def integrate_light_time(sim, ex, t, r_obs, lt0=0, iter=3, speed_of_light=SPEED_
         Object velocity at t-lt
     """
     lt = lt0
+
     for i in range(iter):
-        ex.integrate_or_interpolate(t - lt)
+        if use_integrate:
+            sim.integrate(t - lt)
+        else:
+            ex.integrate_or_interpolate(t - lt)
         target = np.array(sim.particles[0].xyz)
         vtarget = np.array(sim.particles[0].vxyz)
         rho = target - r_obs
