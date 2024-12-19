@@ -1,23 +1,22 @@
-from dataclasses import dataclass
 from collections import defaultdict
 from csv import writer
+from dataclasses import dataclass
 from io import StringIO
 
 import numpy as np
 import pandas as pd
 import spiceypy as spice
 
-from sorcha.ephemeris.simulation_setup import (
-    create_assist_ephemeris,
-    furnish_spiceypy,
-    generate_simulations,
-)
+from sorcha.ephemeris.pixel_dict import PixelDict
 from sorcha.ephemeris.simulation_constants import *
 from sorcha.ephemeris.simulation_geometry import *
 from sorcha.ephemeris.simulation_parsing import *
+from sorcha.ephemeris.simulation_setup import (create_assist_ephemeris,
+                                               furnish_spiceypy,
+                                               generate_simulations)
+from sorcha.modules.PPOutput import (PPOutWriteCSV, PPOutWriteHDF5,
+                                     PPOutWriteSqlite3)
 from sorcha.utilities.dataUtilitiesForTests import get_data_out_filepath
-from sorcha.ephemeris.pixel_dict import PixelDict
-from sorcha.modules.PPOutput import PPOutWriteCSV, PPOutWriteSqlite3, PPOutWriteHDF5
 
 
 @dataclass
@@ -111,7 +110,7 @@ def create_ephemeris(orbits_df, pointings_df, args, sconfigs):
     nside = 2**sconfigs.simulation.ar_healpix_order
     n_sub_intervals = 101  # configs["n_sub_intervals"]
 
-    if configs["ar_use_integrate"]:
+    if sconfigs.expert.ar_use_integrate:
         # set global variable to use integrate method instead of integrate_or_interpolate
         global USE_INTEGRATE
         USE_INTEGRATE = True
