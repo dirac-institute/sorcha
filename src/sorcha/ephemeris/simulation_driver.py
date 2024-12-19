@@ -110,11 +110,6 @@ def create_ephemeris(orbits_df, pointings_df, args, sconfigs):
     nside = 2**sconfigs.simulation.ar_healpix_order
     n_sub_intervals = 101  # configs["n_sub_intervals"]
 
-    if sconfigs.expert.ar_use_integrate:
-        # set global variable to use integrate method instead of integrate_or_interpolate
-        global USE_INTEGRATE
-        USE_INTEGRATE = True
-
     ephemeris_csv_filename = None
     if args.output_ephemeris_file and args.outpath:
         ephemeris_csv_filename = os.path.join(args.outpath, args.output_ephemeris_file)
@@ -179,6 +174,7 @@ def create_ephemeris(orbits_df, pointings_df, args, sconfigs):
         picket_interval,
         nside,
         n_sub_intervals=n_sub_intervals,
+        use_integrate=sconfigs.expert.ar_use_integrate,
     )
     for _, pointing in pointings_df.iterrows():
         mjd_tai = float(pointing["observationMidpointMJD_TAI"])
@@ -210,7 +206,7 @@ def create_ephemeris(orbits_df, pointings_df, args, sconfigs):
                     _,
                     ephem_geom_params.r_ast,
                     ephem_geom_params.v_ast,
-                ) = integrate_light_time(sim, ex, pointing["fieldJD_TDB"] - ephem.jd_ref, r_obs, lt0=0.01)
+                ) = integrate_light_time(sim, ex, pointing["fieldJD_TDB"] - ephem.jd_ref, r_obs, lt0=0.01, use_integrate=sconfigs.expert.ar_use_integrate)
                 ephem_geom_params.rho_hat = ephem_geom_params.rho / ephem_geom_params.rho_mag
 
                 ang_from_center = 180 / np.pi * np.arccos(np.dot(ephem_geom_params.rho_hat, visit_vector))

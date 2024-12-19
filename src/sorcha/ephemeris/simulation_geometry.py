@@ -25,7 +25,7 @@ def ecliptic_to_equatorial(v, rot_mat=ECL_TO_EQ_ROTATION_MATRIX):
     return np.dot(v, rot_mat)
 
 
-def integrate_light_time(sim, ex, t, r_obs, lt0=0, iter=3, speed_of_light=SPEED_OF_LIGHT):
+def integrate_light_time(sim, ex, t, r_obs, lt0=0, iter=3, speed_of_light=SPEED_OF_LIGHT, use_integrate=False):
     """
     Performs the light travel time correction between object and observatory iteratively for the object at a given reference time
 
@@ -59,16 +59,9 @@ def integrate_light_time(sim, ex, t, r_obs, lt0=0, iter=3, speed_of_light=SPEED_
         Object velocity at t-lt
     """
     lt = lt0
-    global USE_INTEGRATE
-    try:
-        USE_INTEGRATE
-    except NameError:
-        USE_INTEGRATE = False
-
-    print("USE_INTEGRATE: ", USE_INTEGRATE)
 
     for i in range(iter):
-        if USE_INTEGRATE:
+        if use_integrate:
             sim.integrate(t - lt)
         else:
             ex.integrate_or_interpolate(t - lt)
