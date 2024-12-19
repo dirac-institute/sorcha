@@ -783,6 +783,7 @@ class expertConfigs:
         self.default_SNR_cut = cast_as_bool_or_set_default(self.default_SNR_cut, "default_SNR_cut", True)
         self.randomization_on = cast_as_bool_or_set_default(self.randomization_on, "randomization_on", True)
         self.vignetting_on = cast_as_bool_or_set_default(self.vignetting_on, "vignetting_on", True)
+        self.ar_use_integrate = cast_as_bool_or_set_default(self.ar_use_integrate, "ar_use_integrate", False)
 
 
 @dataclass
