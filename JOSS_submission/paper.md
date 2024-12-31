@@ -1,125 +1,35 @@
 ---
-title: ‘Sorcha: A Solar System Survey Simulator for the Legacy Survey of Space and Time'
+title: 'cogsworth: A Gala of COSMIC proportions combining binary stellar evolution and galactic dynamics'
 tags:
   - Python
   - astronomy
-  - solar system
+  - binary stellar evolution
+  - galactic dynamics
 authors:
-  - name: Stephanie R. Merritt
-    orcid: 0000-0001-5930-2829
-    affiliation: “1”
-    corresponding: true
-  - name: Grigori Fedorets
-    orcid:0000-0002-8418-4809
-    affiliation: “1,2,3”
-  - name: Megan E. Schwamb
-    orcid: 0000-0003-4365-1455
-    affiliation: “1”
-  - name: Samuel Cornwall
-    orcid: 0000-0002-0672-5104
-    affiliation: “4”
-  - name: Pedro H. Bernardinelli
-    orcid: 0000-0003-0743-9422
-    affiliation: “5”
-  - name: Mario Jurić
-    orcid: 0000-0003-1996-9252
-    affiliation: “5”
-  - name: Matthew J.Holman
-    orcid: 0000-0002-1139-4880
-    affiliation: “6”
-  - name: Jacob A. Kurlander
-    orcid: 0000-0002-1139-4880
-    affiliation: “5”
-  - name: Jacob A. Kurlander
-    orcid: 0009-0005-5452-0671
-    affiliation: “5”
-  - name: Siegfried Eggl
-    orcid: 0000-0002-1398-6302
-    affiliation: “4,7,8,9”
-  - name: Drew Oldag
-    orcid: 0000-0001-6984-8411
-    affiliation: “5,10”
-  - name: Maxine West
-    orcid: 0009-0003-3171-3118
-    affiliation: “5,10”
-  - name: Jeremy Kubica
-    orcid: 0009-0009-2281-7031
-    affiliation: “11,10”
-  - name: Joseph Murtagh
-    orcid: 0000-0001-9505-1131
-    affiliation: “1”
-  - name: R. Lynne Jones
-    orcid: 0000-0001-5916-0031
-    affiliation: “12,13”
-  - name: Peter Yoachim
-    orcid: 0000-0003-2874-6464
-    affiliation: “5”
-- name: Ryan R. Lyttle
-    orcid: 0009-0007-8602-2954
-    affiliation: “1”
-- name: Michael S. P. Kelley
-    orcid: 0000-0002-6702-7676
-    affiliation: “14”
-- name: Joachim Moeyens
-    orcid: 0000-0001-5820-3925
-    affiliation: “15,5”
-- name: Kathleen Kiker
-    affiliation: “15”
-- name: Shantanu P. Naidu
-    orcid: 0000-0003-4439-7014
-    affiliation: “16”
-- name: Colin Snodgrass
-    orcid: 0000-0001-9328-2905
-    affiliation: “17”
-- name: Shannon M. Matthews
-    orcid: 0000-0001-8633-9141
-    affiliation: “1”
-- name: Colin Orion Chandler
-    orcid: 0000-0001-7335-1715
-    affiliation: “5,10”
+  - name: Tom Wagg
+    orcid: 0000-0001-6147-5761
+    affiliation: "1, 2"
+  - name: Katelyn Breivik
+    orcid: 0000-0001-5228-6598
+    affiliation: "3"
+  - name: Mathieu Renzo
+    orcid: 0000-0002-6718-9472
+    affiliation: "4"
+  - name: Adrian M. Price-Whelan
+    orcid: 0000-0003-0872-7098
+    affiliation: "2"
 affiliations:
- - name: Astrophysics Research Centre, School of Mathematics and Physics, Queen’s University Belfast, Belfast BT7 1NN, UK
+ - name: Department of Astronomy, University of Washington, Seattle, WA, 98195, USA
    index: 1
- - name: Finnish Centre for Astronomy with ESO, University of Turku, FI-20014 Turku, Finland
+ - name: Center for Computational Astrophysics, Flatiron Institute, 162 Fifth Ave, New York, NY, 10010, USA
    index: 2
- - name: Department of Physics, University of Helsinki, P.O. Box 64, 00014
-Helsinki, Finland
+ - name: McWilliams Center for Cosmology and Astrophysics, Department of Physics, Carnegie Mellon University, Pittsburgh, PA 15213, USA
    index: 3
- - name: Department of Aerospace Engineering, Grainger College of Engineering, University of Illinois at Urbana-Champaign,Urbana, IL 61801, USA
+ - name: University of Arizona, Department of Astronomy \& Steward Observatory, 933 N. Cherry Ave., Tucson, AZ 85721, USA
    index: 4
- - name: DiRAC Institute and the Department of Astronomy, University of Washington, 3910 15th Ave NE, Seattle, WA 98195, USA
-   index: 5
- - name: Center for Astrophysics | Harvard & Smithsonian, 60 Garden St., MS 51, Cambridge, MA 02138, USA
-   index: 6
- - name: Department of Astronomy, University of Illinois at Urbana-Champaign, Urbana, IL 61801, USA
-   index: 7
- - name: National Center for Supercomputing Applications, University of Illinois at Urbana-Champaign, Urbana, IL 61801, USA
-   index: 8
- - name: IMCCE, Paris Observatory, 77 Avenue Denfert-Rochereau, 75014 Paris, France
-   index: 9
- - name: LSST Interdisciplinary Network for Collaboration and Computing Frameworks, 933 N. Cherry Avenue, Tucson AZ 8572
-   index: 10
- - name: McWilliams Center for Cosmology, Department of Physics, Carnegie Mellon University, Pittsburgh, PA 15213, USA
-   index: 11
- - name: Rubin Observatory, 950 N. Cherry Ave., Tucson, AZ 85719, USA
-   index: 12
- - name: Aston Carter, Suite 150, 4321 Still Creek Drive, Burnaby, BC V5C6S, Canada
-   index: 13
- - name: Department of Astronomy, University of Maryland, College Park, MD 20742-0001, USA
-   index: 14
- - name: Asteroid Institute, 20 Sunnyside Ave., Suite 427, Mill Valley, CA 94941, USA
-   index: 15
- - name: Jet Propulsion Laboratory, California Institute of Technology, Pasadena, CA, USA
-   index: 16
- - name: Institute for Astronomy, University of Edinburgh, Royal Observatory, Edinburgh, EH9 3HJ, UK
-   index: 17
-date: 15 January 2025
+date: 06 September 2024
 bibliography: paper.bib
 
-# Optional fields if submitting to a AAS journal too, see this blog post:
-# https://blog.joss.theoj.org/2018/12/a-new-collaboration-with-aas-publishing
-aas-doi: 10.3847/xxxxx <- update this with the DOI from AAS once you know it.
-aas-journal: Astrophysical Journal 
 
 # Summary
 
