@@ -15,6 +15,9 @@ authors:
   - name: Megan E. Schwamb
     orcid: 0000-0003-4365-1455
     affiliation: "1"
+  - name: Samuel Cornwall
+    orcid: 0000-0002-0672-5104
+    affiliation: "4"
 affiliations:
  - name: Astrophysics Research Centre, School of Mathematics and Physics, Queen’s University Belfast, Belfast BT7 1NN, UK
    index: 1
