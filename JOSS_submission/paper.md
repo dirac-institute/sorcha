@@ -11,7 +11,7 @@ authors:
     corresponding: true
   - name: Grigori Fedorets
     orcid: 0000-0003-4365-1455
-    affiliation: "1"
+    affiliation: "1,2,3"
   - name: Megan E. Schwamb
     orcid: 0000-0003-4365-1455
     affiliation: "1"
