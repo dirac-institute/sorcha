@@ -21,7 +21,7 @@ authors:
   - name: Pedro H. Bernardinelli
     orcid: 0000-0003-0743-9422
     affiliation: "5"
-  - name: Mario Juric
+  - name: Mario Jurić
     orcid: 0000-0003-1996-9252
     affiliation: "5"
   - name: Matthew J.Holman
@@ -79,15 +79,42 @@ authors:
     orcid: 0000-0001-7335-1715
     affiliation: "5,10"
 affiliations:
- - name: Department of Astronomy, University of Washington, Seattle, WA, 98195, USA
+ - name: Astrophysics Research Centre, School of Mathematics and Physics, Queen’s University Belfast, Belfast BT7 1NN, UK
    index: 1
- - name: Center for Computational Astrophysics, Flatiron Institute, 162 Fifth Ave, New York, NY, 10010, USA
+ - name: Finnish Centre for Astronomy with ESO, University of Turku, FI-20014 Turku, Finland
    index: 2
- - name: McWilliams Center for Cosmology and Astrophysics, Department of Physics, Carnegie Mellon University, Pittsburgh, PA 15213, USA
+ - name: Department of Physics, University of Helsinki, P.O. Box 64, 00014
+Helsinki, Finland
    index: 3
- - name: University of Arizona, Department of Astronomy \& Steward Observatory, 933 N. Cherry Ave., Tucson, AZ 85721, USA
+ - name: Department of Aerospace Engineering, Grainger College of Engineering, University of Illinois at Urbana-Champaign,Urbana, IL 61801, USA
    index: 4
-date: 06 September 2024
+ - name: DiRAC Institute and the Department of Astronomy, University of Washington, 3910 15th Ave NE, Seattle, WA 98195, USA
+   index: 5
+ - name: Center for Astrophysics | Harvard & Smithsonian, 60 Garden St., MS 51, Cambridge, MA 02138, USA
+   index: 6
+ - name: Department of Astronomy, University of Illinois at Urbana-Champaign, Urbana, IL 61801, USA
+   index: 7
+ - name: National Center for Supercomputing Applications, University of Illinois at Urbana-Champaign, Urbana, IL 61801, USA
+   index: 8
+ - name: IMCCE, Paris Observatory, 77 Avenue Denfert-Rochereau, 75014 Paris, France
+   index: 9
+ - name: LSST Interdisciplinary Network for Collaboration and Computing Frameworks, 933 N. Cherry Avenue, Tucson AZ 8572
+   index: 10
+ - name: McWilliams Center for Cosmology, Department of Physics, Carnegie Mellon University, Pittsburgh, PA 15213, USA
+   index: 11
+ - name: Rubin Observatory, 950 N. Cherry Ave., Tucson, AZ 85719, USA
+   index: 12
+ - name: Aston Carter, Suite 150, 4321 Still Creek Drive, Burnaby, BC V5C6S, Canada
+   index: 13
+ - name: Department of Astronomy, University of Maryland, College Park, MD 20742-0001, USA
+   index: 14
+ - name: Asteroid Institute, 20 Sunnyside Ave., Suite 427, Mill Valley, CA 94941, USA
+   index: 15
+ - name: Jet Propulsion Laboratory, California Institute of Technology, Pasadena, CA, USA
+   index: 16
+ - name: Institute for Astronomy, University of Edinburgh, Royal Observatory, Edinburgh, EH9 3HJ, UK
+   index: 17
+date: 15 January 2025
 bibliography: paper.bib
 
 # Optional fields if submitting to a AAS journal too, see this blog post:
