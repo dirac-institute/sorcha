@@ -36,6 +36,15 @@ authors:
   - name: Drew Oldag
     orcid:  0000-0001-6984-8411
     affiliation: "5,10"
+  - name: Maxine West
+    orcid: 0009-0003-3171-3118
+    affiliation: "5,10"
+  - name: Jeremy Kubica
+    orcid: 0009-0009-2281-7031
+    affiliation: "11,10"
+  - name: Joseph Murtagh
+    orcid: 0000-0001-9505-1131
+    affiliation: "1"
 affiliations:
  - name: Astrophysics Research Centre, School of Mathematics and Physics, Queen’s University Belfast, Belfast BT7 1NN, UK
    index: 1
