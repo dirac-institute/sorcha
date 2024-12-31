@@ -21,7 +21,7 @@ authors:
   - name: Pedro H. Bernardinelli
     orcid: 0000-0003-0743-9422
     affiliation: "5"
-  - name: Mario Jurić
+  - name: Mario Juric
     orcid: 0000-0003-1996-9252
     affiliation: "5"
   - name: Matthew J.Holman
