@@ -18,7 +18,7 @@ authors:
   - name: Samuel Cornwall
     orcid: 0000-0002-0672-5104
     affiliation: "4"
-     - name: Pedro H. Bernardinelli
+ - name: Pedro H. Bernardinelli
     orcid: 0000-0003-0743-9422
     affiliation: "5"
   - name: Mario Jurić
