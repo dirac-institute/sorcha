@@ -45,6 +45,15 @@ authors:
   - name: Joseph Murtagh
     orcid: 0000-0001-9505-1131
     affiliation: "1"
+  - name:  R. Lynne Jones
+    orcid: 0000-0001-5916-0031
+    affiliation: "12,13"
+  - name: Peter Yoachim
+    orcid: 0000-0003-2874-6464
+    affiliation: "5"
+  - name: Ryan R. Lyttle
+    orcid:  0009-0007-8602-2954
+    affiliation: "1"
 affiliations:
  - name: Astrophysics Research Centre, School of Mathematics and Physics, Queen’s University Belfast, Belfast BT7 1NN, UK
    index: 1
