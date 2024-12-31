@@ -9,6 +9,9 @@ authors:
     orcid: 0000-0001-5930-2829
     affiliation: "1"
     corresponding: true
+  - name: Grigori Fedorets
+    orcid: 0000-0002-8418-4809
+    affiliation: "1,2,3"
 affiliations:
  - name: Department of Astronomy, University of Washington, Seattle, WA, 98195, USA
    index: 1
