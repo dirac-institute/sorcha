@@ -63,6 +63,18 @@ authors:
   - name: Kathleen Kiker
     orcid: 
     affiliation: "15"
+  - name: Shantanu P. Naidu
+    orcid: 0000-0003-4439-7014
+    affiliation: "16"
+  - name: Colin Snodgrass
+    orcid: 0000-0001-9328-2905
+    affiliation: "17"
+  - name: Shannon M. Matthews
+    orcid: 0000-0001-8633-9141
+    affiliation: "1"
+  - name: Colin Orion Chandler
+    orcid: 0000-0001-7335-1715
+    affiliation: "5,10"
 affiliations:
  - name: Astrophysics Research Centre, School of Mathematics and Physics, Queen’s University Belfast, Belfast BT7 1NN, UK
    index: 1
