@@ -24,6 +24,9 @@ authors:
   - name: Mario Jurić
     orcid:  0000-0003-1996-9252
     affiliation: "5"
+  - name: Matthew J.Holman
+    orcid:  0000-0002-1139-4880
+    affiliation: "6"
 affiliations:
  - name: Astrophysics Research Centre, School of Mathematics and Physics, Queen’s University Belfast, Belfast BT7 1NN, UK
    index: 1
