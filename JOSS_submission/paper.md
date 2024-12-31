@@ -27,7 +27,7 @@ Helsinki, Finland
    index: 4
  - name: DiRAC Institute and the Department of Astronomy, University of Washington, 3910 15th Ave NE, Seattle, WA 98195, USA
    index: 5
- - name: Center for Astrophysics | Harvard & Smithsonian, 60 Garden St., MS 51, Cambridge, MA 02138, USA
+ - name: Center for Astrophysics Harvard & Smithsonian, 60 Garden St., MS 51, Cambridge, MA 02138, USA
    index: 6
  - name: Department of Astronomy, University of Illinois at Urbana-Champaign, Urbana, IL 61801, USA
    index: 7
