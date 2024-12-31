@@ -393,7 +393,7 @@ class fadingfunctionConfigs:
     """Width parameter for fading function. Should be greater than zero and less than 0.5."""
 
     fading_function_peak_efficiency: float = None
-    """Peak efficiency for the fading function, called the 'fill factor' in Chelsey and Veres (2017)."""
+    """Peak efficiency for the fading function, called the 'fill factor' in Chesley and Veres (2017)."""
 
     def __post_init__(self):
         """Automagically validates the fading function configs after initialisation."""
