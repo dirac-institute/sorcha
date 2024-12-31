@@ -27,6 +27,9 @@ authors:
   - name: Matthew J.Holman
     orcid:  0000-0002-1139-4880
     affiliation: "6"
+  - name: Jacob A. Kurlander
+    orcid:  0009-0005-5452-0671
+    affiliation: "5"
 affiliations:
  - name: Astrophysics Research Centre, School of Mathematics and Physics, Queen’s University Belfast, Belfast BT7 1NN, UK
    index: 1
