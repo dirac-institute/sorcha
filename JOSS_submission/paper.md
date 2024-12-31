@@ -54,6 +54,15 @@ authors:
   - name: Ryan R. Lyttle
     orcid:  0009-0007-8602-2954
     affiliation: "1"
+  - name: Michael S. P. Kelley
+    orcid:  0000-0002-6702-7676
+    affiliation: "14"
+  - name: Joachim Moeyens
+    orcid: 0000-0001-5820-3925
+    affiliation: "15,5"
+  - name: Kathleen Kiker
+    orcid: 
+    affiliation: "15"
 affiliations:
  - name: Astrophysics Research Centre, School of Mathematics and Physics, Queen’s University Belfast, Belfast BT7 1NN, UK
    index: 1
