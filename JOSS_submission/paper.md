@@ -12,7 +12,7 @@ authors:
   - name: Grigori Fedorets
     orcid: 0000-0002-8418-4809
     affiliation: "1,2,3"
-      - name: Megan E. Schwamb
+  - name: Megan E. Schwamb
     orcid: 0000-0003-4365-1455
     affiliation: "1"
   - name: Samuel Cornwall
