@@ -22,8 +22,8 @@ authors:
     orcid:  0000-0003-0743-9422
     affiliation: "5"
   - name: Mario Jurić
-    orcid:  0000-0003-0743-9422
-    affiliation: "5
+    orcid:  0000-0003-1996-9252
+    affiliation: "5"
 affiliations:
  - name: Astrophysics Research Centre, School of Mathematics and Physics, Queen’s University Belfast, Belfast BT7 1NN, UK
    index: 1
