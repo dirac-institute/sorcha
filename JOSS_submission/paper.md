@@ -28,8 +28,14 @@ authors:
     orcid:  0000-0002-1139-4880
     affiliation: "6"
   - name: Jacob A. Kurlander
-    orcid:  0009-0005-5452-0671
+    orcid: 0009-0005-5452-0671
     affiliation: "5"
+  - name: Siegfried Eggl
+    orcid:  0000-0002-1398-6302
+    affiliation: "4,7,8,9"
+  - name: Drew Oldag
+    orcid:  0000-0001-6984-8411
+    affiliation: "5,10"
 affiliations:
  - name: Astrophysics Research Centre, School of Mathematics and Physics, Queen’s University Belfast, Belfast BT7 1NN, UK
    index: 1
