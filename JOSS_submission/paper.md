@@ -5,7 +5,6 @@ tags:
   - astronomy
   - solar system
 authors:
-authors:
   - name: Stephanie R. Merritt
     orcid: 0000-0001-5930-2829
     affiliation: “1”
