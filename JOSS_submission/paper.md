@@ -1,10 +1,9 @@
 ---
-title: 'cogsworth: A Gala of COSMIC proportions combining binary stellar evolution and galactic dynamics'
+title: 'Sorcha: A Solar System Survey Simulator for the Legacy Survey of Space and Time'
 tags:
   - Python
   - astronomy
-  - binary stellar evolution
-  - galactic dynamics
+  - solar system
 authors:
   - name: Tom Wagg
     orcid: 0000-0001-6147-5761
