@@ -17,8 +17,7 @@ affiliations:
    index: 1
  - name: Finnish Centre for Astronomy with ESO, University of Turku, FI-20014 Turku, Finland
    index: 2
- - name: Department of Physics, University of Helsinki, P.O. Box 64, 00014
-Helsinki, Finland
+ - name: Department of Physics, University of Helsinki, P.O. Box 64, 00014 Helsinki, Finland
    index: 3
  - name: Department of Aerospace Engineering, Grainger College of Engineering, University of Illinois at Urbana-Champaign,Urbana, IL 61801, USA
    index: 4
