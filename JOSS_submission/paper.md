@@ -11,14 +11,14 @@ authors:
     corresponding: true
    - name: Grigori Fedorets
     orcid: 0000-0002-8418-4809
-    affiliation: “1,2,3”
+    affiliation: "1,2,3"
   - name: Megan E. Schwamb
     orcid: 0000-0003-4365-1455
-    affiliation: “1”
+    affiliation: "1"
 affiliations:
  - name: Astrophysics Research Centre, School of Mathematics and Physics, Queen’s University Belfast, Belfast BT7 1NN, UK
    index: 1
- - name: Finnish Centre for Astronomy with ESO, University of Turku, FI20014 Turku, Finland
+ - name: Finnish Centre for Astronomy with ESO, University of Turku, FI-20014 Turku, Finland
    index: 2
  - name: Department of Physics, University of Helsinki, P.O. Box 64, 00014 Helsinki, Finland
    index: 3
