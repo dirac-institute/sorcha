@@ -18,6 +18,9 @@ authors:
   - name: Samuel Cornwall
     orcid: 0000-0002-0672-5104
     affiliation: "4"
+  - name: Samuel Cornwall
+    orcid: 0000-0002-0672-5104
+    affiliation: "5"
 affiliations:
  - name: Astrophysics Research Centre, School of Mathematics and Physics, Queen’s University Belfast, Belfast BT7 1NN, UK
    index: 1
