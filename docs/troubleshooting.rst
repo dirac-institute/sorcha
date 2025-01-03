@@ -54,6 +54,9 @@ ERROR: Unable to find ObjID column headings (OrbitAuxReader:....)
 --------------------------------------------------------------------
 Check your input files and ensure that they have ObjID column as the first column. 
 
+in PPOutWriteSqlite3: sqlite3.OperationalError: index ObjID already existssqlite3.OperationalError: index ObjID already exists
+---------------------------------------------------------------------------------------------------------------------------------------------
+This happens if you are outputting as sql databases and you have dueling sorcha processes running in the same directory with the same output file names running on the same input files  using  the -f flag to force overwriting of output files. One way to check this is to only allow for one sorcha run to be output to a directory and see if you've got two log files that are actively being written to/were created. Note if you're using CSV, text file, or pytables format you won't get this error when you hit this race condition.
 
 
 

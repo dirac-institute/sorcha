@@ -24,14 +24,6 @@ demo_FootprintFilter
 - **Demonstrates:** PPFootprintFilter
 - **Files:** detector_corners.csv, footprintFilterValidationObservations.csv, oneline_v2.0.db
 
-demo_GenerateBashScripts
-- **Demonstrates:** Generation of shell scripts for multiple runs of Sorcha
-- **Files:** example_file_structure.png
-
-demo_GenerateSLURMScripts
-- **Demonstrates:** Generation of SLURM scripts for multiple runs of Sorcha
-- **Files:** example_file_structure.png
-
 demo_Lightcurve
 - **Demonstrates:**  lightcurve_registration (LC_METHODS, update_lc_subclasses), AbstractLightCurve class
 - **Files:** none

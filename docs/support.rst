@@ -28,7 +28,7 @@ Contributing to the  Documentation
 
 We are very happy to receive feedback on the online documentation through the `project's GitHub repository <https://github.com/dirac-institute/sorcha/issues>`_. Beyond pointing out typos and small changes through issues, we welcome pull requests on the `sphinx <https://www.sphinx-doc.org/en/master/#user-guides>`_ documentation used here on the readthedocs.
 
-You will need to install the development version of Sorcha from a clone of the Sorcha repository. See the our  :ref:`dev_mode` instructions for further details. 
+You will need to install the development version of Sorcha from a clone of the Sorcha repository as well as the `sorcha-addons package <https://github.com/dirac-institute/sorcha-addons>`_. See the our  :ref:`dev_mode` instructions for further details. 
 
 
 If you move to the docs directory (cd sorcha/docs/), edit the .rst files, and run::
