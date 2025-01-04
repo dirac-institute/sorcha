@@ -1,9 +1,14 @@
+.. _citethecode:
+
 Citing the Software
 ==========================
 
+``sorcha`` is described provided in joint Astromical Journal/JOSS software papers: Merritt et al. (submitted) and Holman et al.(submitted). We also ask that you reference in your software citations and acknowledgements the other packages that ``sorcha`` is built upon (see below). 
+
+
 Built-In Citation Function
 ----------------------------
-If you use Sorcha in your research, please do include a citation in your published papers for sorcha and the software packages and resources that sorcha is based on. The simplest way to find this information is to use our built-in citation function. In an interactive Python session or a Jupyter notebook::
+If you use ``sorcha`` in your research, please do include a citation in your published papers for ``sorcha`` and the software packages and resources that sorcha is based on. The simplest way to find this information is to use our built-in citation function. In an interactive Python session or a Jupyter notebook::
 
    import sorcha
    sorcha.cite()
@@ -12,9 +17,7 @@ If you use Sorcha in your research, please do include a citation in your publish
 Additional Citation Details
 ----------------------------
 
-The main overview of Sorcha is provided in our AAS journal software papers and JOSS paper. (in prep)
-
-Please also cite the software and ancillary data files that helps power Sorcha:
+ Please also cite the software and ancillary data files that helps power ``sorcha``:
 
 * assist https://assist.readthedocs.io/en/latest/
 * astropy https://www.astropy.org/acknowledging.html
