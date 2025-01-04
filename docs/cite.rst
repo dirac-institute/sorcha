@@ -5,6 +5,10 @@ Citing the Software
 
 ``sorcha`` is described provided in joint Astromical Journal/JOSS software papers: Merritt et al. (submitted) and Holman et al.(submitted). We also ask that you reference in your software citations and acknowledgements the other packages that ``sorcha`` is built upon (see below). 
 
+.. tip::
+  *  Beyond citing the relevant papers, make sure to include details about your configuration for ``sorcha`` (e.g. which footprint filter you're using), details about your input population (e.g. orbital, H, color, and phase curve distribution), and information about the pointing database used. 
+
+.. _citefunc:
 
 Built-In Citation Function
 ----------------------------
@@ -17,7 +21,7 @@ If you use ``sorcha`` in your research, please do include a citation in your pub
 Additional Citation Details
 ----------------------------
 
- Please also cite the software and ancillary data files that helps power ``sorcha``:
+Please also cite the software and ancillary data files that helps power ``sorcha``. Our :ref:`citation function<citefunc>` described above will give the full details or you can manually find the acknowledgement information for each package:
 
 * assist https://assist.readthedocs.io/en/latest/
 * astropy https://www.astropy.org/acknowledging.html
@@ -38,5 +42,5 @@ Additional Citation Details
 * tqdm https://tqdm.github.io/
 
 .. note::
-   The same information is available from our built-in citation function.
+   The same information is available from our :ref:`built-on citation function<citefunc>`.
 

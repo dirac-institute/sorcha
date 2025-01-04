@@ -54,11 +54,12 @@ works, tutorials, and demonstration notebooks that show how each of the various 
    gettingstarted
    hpc
    whatsorchadoesnotdo
-   notebooks
+   cite
    troubleshooting
    support
+   uninstall 
+   advanced
+   notebooks   
    release
    contributors   
    acknowledgements
-   cite
-   uninstall 

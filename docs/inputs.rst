@@ -210,7 +210,7 @@ We have implemented several phase curve parameterizations that can be specified 
 | G, G1&G2, G12, S | Phase curve parameter(s) for all filters (either G12, G1 & G2, or β) (optional)  |
 +------------------+----------------------------------------------------------------------------------+
 
-** note::
+.. note::
   The Phase curve parameters(s) column will not be present if the phase curve function/calculation is set to None in the configuration file
 
 .. note::
