@@ -4,12 +4,12 @@ Installation
 =================
 
 .. note::
-   Sorcha is both conda/mamba and pip installable. We recommend installing via conda/mamba. 
+   ``sorcha`` is both conda/mamba and pip installable. We recommend installing via conda/mamba. 
 
 Requirements
 -----------------------------
 
-Sorcha has the following requirements that will be automatically installed  using pip or conda when you install the sorcha package:
+``sorcha`` has the following requirements that will be automatically installed  using pip or conda when you install the sorcha package:
 
 * python 3.10 or later
 * assist
@@ -29,7 +29,7 @@ Sorcha has the following requirements that will be automatically installed  usin
 * tqdm
 
 .. tip::
-   We also recommend installing h5py in your conda/mamba environment to ensure that the proper HD5 libraries are installed. 
+   We also recommend installing h5py in your conda/mamba environment to ensure that the proper HDF5 libraries are installed. 
 
 
 
@@ -47,7 +47,7 @@ If using mamba::
    mamba create -n sorcha -c conda-forge assist numpy numba pandas scipy astropy matplotlib sbpy pytables spiceypy healpy rebound pooch tqdm h5py importlib_resources python=3.10
 
 .. tip::
-   We recommend using python version 3.10 or higher with Sorcha. The conda command uses python 3.10.
+   We recommend using python version 3.10 or higher with  ``sorcha``. The conda command uses python 3.10.
 
 **Step 2** Activate your conda/mamba environment
 
@@ -62,7 +62,7 @@ On mamba::
 Installing Sorcha
 ----------------------
 
-Unless you're editing the source code, you can use the version of Sorcha published on conda-forge. 
+Unless you're editing the source code, you can use the version of  ``sorcha`` published on conda-forge. 
 
 If using conda::
 
@@ -72,7 +72,7 @@ If using mamba::
 
    mamba install -c conda-forge sorcha
 
-You can install sorcha via from pypi using pip, but installation via  conda/mamba is recommended. 
+You can install ``sorcha`` via from pypi using pip, but installation via  conda/mamba is recommended. 
 
 If using pip::
 
@@ -83,7 +83,7 @@ If using pip::
 Downloading Required Supplemental Files
 ----------------------------------------
 
-To run Sorcha's built in :ref:`ephemeris generator<ephemeris_gen>`, you will need to download the auxiliary files required by  assist and rebound for performing the N-body integrations. 
+To run ``sorcha``'s built in :ref:`ephemeris generator<ephemeris_gen>`, you will need to download the auxiliary files required by  assist and rebound for performing the N-body integrations. 
   
 To install the necessary `SPICE (Spacecraft, Planet, Instrument, C-matrix, Events) <https://naif.jpl.nasa.gov/naif/spiceconcept.html>`_ auxiliary files and other required data files for ephemeris generation (774 MB total in size)::
 
@@ -100,7 +100,7 @@ To install the necessary `SPICE (Spacecraft, Planet, Instrument, C-matrix, Event
 Testing Your Sorcha Installation
 ----------------------------------
 
-You can check that the Sorcha installation was successful, by obtaining the demo input files and running the demo command. 
+You can check that the  ``sorcha`` installation was successful, by obtaining the demo input files and running the demo command. 
 
 The demo input files and configuration file are installed with the socha package. You can run the following command on the command line to copy the files to the current directory (or a different location)::
 
@@ -109,7 +109,7 @@ The demo input files and configuration file are installed with the socha package
 .. note::
    The optional -p flag allows you to specify a specific location to copy the demo input files. If the files already exist, the  -f flag can be used to force a fresh copy of the files to be generated. .
 
-You can find the command to run the sorcha demo on the command line in two ways. First on the command line::
+You can find the command to run the ``sorcha`` demo on the command line in two ways. First on the command line::
 
    sorcha demo howto
 
@@ -140,25 +140,25 @@ The output will appear in a csv file (testrun_e2e.csv) in your current directory
 Installing Sorcha in Development Mode
 ---------------------------------------------------------------------
 
-**This is the installation method for adding/edit Sorcha's codebase or for working on/updating Sorcha's documentation.**
+**This is the installation method for adding/edit sorcha's codebase or for working on/updating sorcha's documentation.**
 
-**Step 1** Create a directory to contain the Sorcha repos::
+**Step 1** Create a directory to contain the ``sorcha`` repos::
 
    mkdir sorcha
 
-**Step 2** Navigate to the directory you want to store the Sorcha source code in::
+**Step 2** Navigate to the directory you want to store the ``sorcha`` source code in::
 
    cd sorcha
   
-**Step 3** Download the Sorcha source code via::
+**Step 3** Download the ``sorcha`` source code via::
 
    git clone https://github.com/dirac-institute/sorcha.git
 
-**Step 4** Navigate to the sorcha repository directory::
+**Step 4** Navigate to the  ``sorcha`` repository directory::
 
    cd sorcha
   
-**Step 5** Install an editable (in-place) development version of Sorcha. This will allow you to run the code from the source directory.
+**Step 5** Install an editable (in-place) development version of ``sorcha``. This will allow you to run the code from the source directory.
 
 If you just want the source code installed so edits in the source code are automatically installed::
 
@@ -168,6 +168,6 @@ If you are going to be editing documentation or significantly modifying unit tes
 
    pip install -e '.[dev]'
 
-**Step 6 (Optional unless working on documentation):** You will also install the pandoc package (either via conda/pip or `direct download <https://pandoc.org/installing.html>`_ .
+**Step 6 (Optional unless working on documentation):** You will need to install the pandoc package (either via conda/pip or `direct download <https://pandoc.org/installing.html>`_ and a version of the `sorcha-addons package <https://github.com/dirac-institute/sorcha-addons>`_. 
 
 
