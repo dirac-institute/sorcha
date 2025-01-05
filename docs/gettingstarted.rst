@@ -61,9 +61,9 @@ Running Sorcha
 
 We now have all the required input files. If you downloaded the Sorcha repository, start by moving into the sorcha directory or make a demo directory called **demo** and move/copy all the input files into there. For this example run, we assume that you have downloaded the required ephemeris generator's auxiliary files to ./ar_files. Check the :ref:`installation` instructions for further details. 
 
-Next, let's take a look at the command line arguments for sorcha. On the command line, typing::
+Next, let's take a look at the command line arguments for the ``sorcha run``. On the command line, typing::
 
-   sorcha --help 
+   sorcha run --help 
 
 will produce
 
