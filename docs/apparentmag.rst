@@ -47,11 +47,6 @@ Applying Photometric and Astrometric Uncerainties
 Trailing Losses
 -----------------
 
-.. warning::
-    We **very strongly recommend** that the user never turn this off, but we provide
-    this option for debugging or for speed increases when the user is absolutely sure
-    they are only supplying slow-moving objects.
-
 If the observed object is fast-moving, the signal will form a trail, reducing the measured magnitude.
 This filter will recalculate the PSF magnitude of the observations, adjusting for trailing losses.
 
@@ -59,9 +54,4 @@ This filter will recalculate the PSF magnitude of the observations, adjusting fo
   :width: 400
   :alt: Sky image showing a short trailing source circled in red.
   :align: center
-
-The trailing losses filter is on by default, but it can be turned off by including the option in the configuration file::
-
-    [EXPERT]
-    trailing_losses_on = False
 

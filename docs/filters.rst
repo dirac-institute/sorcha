@@ -130,8 +130,6 @@ This filter applies a model of this from a built-in function tailored specifical
 `Araujo-Hauck et al. 2016 <https://ui.adsabs.harvard.edu/abs/2016SPIE.9906E..0LA/abstract>`_, with further
 discussion and below figure from `Veres and Chesley 2017 <https://ui.adsabs.harvard.edu/abs/2017arXiv170506209C/abstract>`_.) 
 
-Vignetting is applied by default and cannot be turned off by the user in the config file.
-
 .. image:: images/vignetting.jpg
   :width: 500
   :alt: Plot of the LSST camera footprint in Dec vs. RA, showing shaded dimming due to vignetting.
