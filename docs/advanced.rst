@@ -8,9 +8,16 @@ Advanced User Features
 Setting the Random Number Generator Seed
 ---------------------------------------------
 
-``sorcha`` is described provided in 
+.. warning::
+   For most science cases, you **DO NOT** want to set the same seed for each ``sorcha`` run, but if you need reproducability then you do want to see the seed as an environment variable before running ``sorcha`` 
 
-    
+The value used to seed the random number generator can be specified via the **SORCHA_SEED** environmental variable. This allows for ``sorcha``  to be fully reproducibly run with (if using a bash shell or Z-shell)::
+
+   export SORCHA_SEED=42
+
+.. tip::
+   If you're trying to reproduce a crash or a certain behavior in ``sorcha``, you can find the value that you need to set the random seed to in the log file.  
+   
 SNR/Apparent Magnitude Filters
 -------------------------------------
 
