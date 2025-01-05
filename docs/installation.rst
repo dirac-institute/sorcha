@@ -11,7 +11,7 @@ Requirements
 
 ``sorcha`` has the following requirements that will be automatically installed  using pip or conda when you install the sorcha package:
 
-* python 3.10 or later
+* python 3.11 or later
 * assist
 * astropy
 * healpy
@@ -40,14 +40,14 @@ Setup Your Conda Environment
 
 If using conda::
 
-   conda create -n sorcha -c conda-forge assist numpy numba pandas scipy astropy matplotlib sbpy pytables spiceypy healpy rebound pooch tqdm h5py importlib_resources python=3.10 
+   conda create -n sorcha -c conda-forge assist numpy numba pandas scipy astropy matplotlib sbpy pytables spiceypy healpy rebound pooch tqdm h5py importlib_resources python=3.11 
 
 If using mamba::
 
-   mamba create -n sorcha -c conda-forge assist numpy numba pandas scipy astropy matplotlib sbpy pytables spiceypy healpy rebound pooch tqdm h5py importlib_resources python=3.10
+   mamba create -n sorcha -c conda-forge assist numpy numba pandas scipy astropy matplotlib sbpy pytables spiceypy healpy rebound pooch tqdm h5py importlib_resources python=3.11
 
 .. tip::
-   We recommend using python version 3.10 or higher with  ``sorcha``. The conda command uses python 3.10.
+   We recommend using python version 3.11 or higher with  ``sorcha``. The conda/mamba install command uses python 3.11.
 
 **Step 2** Activate your conda/mamba environment
 

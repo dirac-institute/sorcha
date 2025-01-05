@@ -46,10 +46,10 @@ works, tutorials, and demonstration notebooks that show how each of the various 
    overview
    installation
    inputs
+   configfiles
    ephemerisgen
    apparentmag 
    filters
-   configfiles
    outputs
    gettingstarted
    hpc

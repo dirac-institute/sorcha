@@ -26,13 +26,17 @@ Design Philosophy
 ----------------------
 ``sorcha``  has been designed in a modular way with each filter written as its own function, This makes it easy to add new filters in the future if required by users. We note for dealing with rotational light curve and activity effects, we have set up  ``sorcha`` such that the user can provide their own custom classes/functions and import them into ``sorcha`` to use. Further details can be found on the :ref:`addons` page. ``sorcha`` has been designed with LSST in mind, but many of the filters already developed will be applicable to other Solar System surveys. If you are interested in incorporating your survey into ``sorcha`` do reach out.  
 
-.. warning::
-  For a wide variety of use cases, the user should be able to use ``sorcha`` straight out of the box. We have designed the software such that it should be straightforward to add in additional filters or rotational light curve/activity classes. As with any open-source package, **once the user has made modifications to the code, it is the responsibility of the user to confirm these changes provide an accurate result**. 
-   
-   
 .. note::
    Contributions are very welcome. If there is a feature or functionality not yet available in ``sorcha``, we encourage you to propose the feature as an issue in the `main github repository <https://github.com/dirac-institute/survey_simulator_post_processing/issues>`_ or share your code with the new enhancements. Further details can be found on our :ref:`reporting` page.
       
 Using Sorcha in Your Science
 --------------------------------
-We made ``sorcha`` to be a tool for the small body planetary astronomer community. If  ``sorcha``  enabled your science, please make sure to give the proper credit in your talks and papers by citing the relevant ``sorcha`` papers and the python packages that the software is built upon. Further details can be found :ref:`here<citethecode>`.
+We made ``sorcha`` to be a tool for the small body planetary astronomer community. For a wide variety of use cases, the user should be able to use ``sorcha`` straight out of the box.
+
+.. note::
+    If  ``sorcha``  enabled your science, please make sure to give the proper credit in your talks and papers by citing the relevant ``sorcha`` papers and the python packages that the software is built upon. Further details can be found :ref:`here<citethecode>`.
+
+.. warning::
+  We have designed ``sorcha`` such that it should be straightforward to add in additional filters or rotational light curve/activity classes. As with any open-source package, **once the user has made modifications to the code, it is the responsibility of the user to confirm these changes provide an accurate result**.
+
+
