@@ -119,6 +119,9 @@ If you want to use the same input orbits across multiple ``sorcha`` runs, you ca
 .. attention::
    Currently the ``sorcha``-generated ephemeris is outputted in CSV, whitespace or HDF5 file format only.
 
+.. tip::
+   Compared to the other outputs from ``sorcha``, the ephemeris output files are typicaly very large in size.  The output will be slow to read in to ``sorcha``, but for some use cases reading in the ephemeris as a file  can be faster than ephemeris generation on the fly. We recommend only outuputting the contents of the ephemeris stage if you need it to speed up future simulations. If possible, use the HDF5 file format to help with disk I/O  speeds. 
+
 
 Providing Your Own Ephemerides 
 ---------------------------------

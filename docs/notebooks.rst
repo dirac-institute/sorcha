@@ -1,6 +1,8 @@
 Demo Notebooks
 ========================================================================================
 
+Below we provide jupyter notebooks that demonstrate and validate various functions and components of ``sorcha``.
+
 .. toctree::
     :maxdepth: 1
 
