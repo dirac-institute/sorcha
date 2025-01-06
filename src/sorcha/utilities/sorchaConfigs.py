@@ -782,6 +782,8 @@ class expertConfigs:
 
 @dataclass
 class auxiliaryConfigs:
+    """Data class for holding auxiliary section configuration file keys and validating them."""
+
     de440s: str = "de440s.bsp"
     """filename of de440s"""
     de440s_url: str = "https://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/planets/de440s.bsp"
@@ -1018,6 +1020,7 @@ class sorchaConfigs:
     auxiliary: auxiliaryConfigs = None
     """auxiliaryConfigs dataclass which stores the keywords from the AUXILIARY section of the config file."""
 
+    # When adding a new config dataclass or new dataclass config parameters remember to add these to the function PrintConfigsToLog below.
     pplogger: None = None
     """The Python logger instance"""
 
@@ -1405,6 +1408,14 @@ def PrintConfigsToLog(sconfigs, cmd_args):
             pplogger.info("Loading camera footprint from " + sconfigs.fov.footprint_path)
         else:
             pplogger.info("Loading default LSST footprint LSST_detector_corners_100123.csv")
+        if sconfigs.fov.footprint_edge_threshold:
+            pplogger.info(
+                "The footprint edge threshold is "
+                + str(sconfigs.fov.footprint_edge_threshold)
+                + " arcseconds"
+            )
+        else:
+            pplogger.info("Default footprint edge threshold used (10px or 2 arcseconds).")
     elif sconfigs.fov.camera_model == "circle":
         pplogger.info("Footprint is circular.")
         if sconfigs.fov.fill_factor:
@@ -1476,11 +1487,37 @@ def PrintConfigsToLog(sconfigs, cmd_args):
             "...the maximum temporal separation between subsequent observations in a tracklet in days is: "
             + str(sconfigs.linkingfilter.ssp_maximum_time)
         )
+        pplogger.info(
+            "...the time in UTC at which it is noon at the observatory location (in standard time) is "
+            + str(sconfigs.linkingfilter.ssp_night_start_utc)
+        )
         if not sconfigs.linkingfilter.drop_unlinked:
             pplogger.info("Unlinked objects will not be dropped.")
     else:
         pplogger.info("Solar System Processing linking filter is turned OFF.")
-
+    pplogger.info("The auxiliary files used for emphemris generation...")
+    pplogger.info("...the leap second file is: " + str(sconfigs.auxiliary.leap_seconds))
+    pplogger.info(
+        "...the historical Earth orientation specification file is: "
+        + str(sconfigs.auxiliary.earth_historical)
+    )
+    pplogger.info(
+        "...the prediction of the Earth's future orientation file is: "
+        + str(sconfigs.auxiliary.earth_predict)
+    )
+    pplogger.info(
+        "...the orientation information and physical constants for other bodies file is: "
+        + str(sconfigs.auxiliary.orientation_constants)
+    )
+    pplogger.info("...the Earth's position for ephemerides file is: " + str(sconfigs.auxiliary.de440s))
+    pplogger.info(
+        "...the regularly updated specification of the Earth's orientation file is: "
+        + str(sconfigs.auxiliary.earth_high_precision)
+    )
+    pplogger.info(
+        "...the observatory position information and Minor Planet Center (MPC) observatory codes file is: "
+        + str(sconfigs.auxiliary.observatory_codes_compressed)
+    )
     if sconfigs.input.ephemerides_type == "ar":
         pplogger.info("ASSIST+REBOUND Simulation is turned ON.")
         pplogger.info("For ASSIST+REBOUND...")

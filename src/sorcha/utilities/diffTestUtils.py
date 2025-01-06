@@ -7,7 +7,6 @@ from sorcha.modules.PPModuleRNG import PerModuleRNG
 from sorcha.sorcha import runLSSTSimulation
 from sorcha.utilities.dataUtilitiesForTests import get_demo_filepath, get_test_filepath
 from sorcha.utilities.sorchaArguments import sorchaArguments
-from sorcha.modules.PPConfigParser import PPConfigFileParser
 from sorcha.utilities.sorchaConfigs import sorchaConfigs
 
 

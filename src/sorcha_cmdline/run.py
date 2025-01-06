@@ -12,8 +12,6 @@ def main():
         description="Run a simulation.",
     )
 
-    # parser = SorchaArgparse(parser)
-
     required = parser.add_argument_group("Required arguments")
     required.add_argument(
         "-c",
@@ -141,7 +139,6 @@ def execute(args):
         PPFindFileOrExit,
         PPGetLogger,
         PPCommandLineParser,
-        PPConfigFileParser,
         runLSSTSimulation,
         sorchaArguments,
         sorchaConfigs,
@@ -163,7 +160,6 @@ def execute(args):
     # Extract and validate the remaining arguments.
     cmd_args = PPCommandLineParser(args)
     pplogger.info("Reading configuration file...")
-    # configs = PPConfigFileParser(cmd_args["configfile"], cmd_args["surveyname"])
     sconfigs = sorchaConfigs(cmd_args["configfile"], cmd_args["surveyname"])
     pplogger.info("Configuration file read.")
 
