@@ -21,5 +21,6 @@ Below we provide Jupyter notebooks that demonstrate and validate various functio
     Uncertainties and Randomization <notebooks/demo_UncertaintiesAndRandomization>
     Vignetting Demo <notebooks/demo_Vignetting>
     Lightcurve demo <notebooks/demo_Lightcurve>
+    Cometary Activity demo <notebooks/demo_Cometary_Activity> 
     miniDifi Validation <notebooks/demo_miniDifiValidation>
     Sorcha End-to-End Verification <notebooks/demo_Verification>
