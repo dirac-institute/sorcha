@@ -1550,16 +1550,22 @@ def PrintConfigsToLog(sconfigs, cmd_args):
         "Output files will be saved in path: " + cmd_args.outpath + " with filestem " + cmd_args.outfilestem
     )
     pplogger.info("Output files will be saved as format: " + sconfigs.output.output_format)
-    pplogger.info(
-        "In the output, positions will be rounded to "
-        + str(sconfigs.output.position_decimals)
-        + " decimal places."
-    )
-    pplogger.info(
-        "In the output, magnitudes will be rounded to "
-        + str(sconfigs.output.magnitude_decimals)
-        + " decimal places."
-    )
+    if sconfigs.output.position_decimals:
+        pplogger.info(
+            "In the output, positions will be rounded to "
+            + str(sconfigs.output.position_decimals)
+            + " decimal places."
+        )
+    else:
+        pplogger.info("In the output, positions will not be rounded")
+    if sconfigs.output.magnitude_decimals:
+        pplogger.info(
+            "In the output, magnitudes will be rounded to "
+            + str(sconfigs.output.magnitude_decimals)
+            + " decimal places."
+        )
+    else:
+        pplogger.info("In the output, magnitudes will not be rounded")
     if isinstance(sconfigs.output.output_columns, list):
         pplogger.info("The output columns are set to: " + " ".join(sconfigs.output.output_columns))
     else:
