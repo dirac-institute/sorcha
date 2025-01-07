@@ -213,7 +213,10 @@ sorcha.utilities.sorchaConfigs INFO     ...the prediction of the Earth's future 
 sorcha.utilities.sorchaConfigs INFO     ...the orientation information and physical constants for other bodies file is: pck00010.pck 
 sorcha.utilities.sorchaConfigs INFO     ...the Earth's position for ephemerides file is: de440s.bsp 
 sorcha.utilities.sorchaConfigs INFO     ...the regularly updated specification of the Earth's orientation file is: earth_latest_high_prec.bpc 
-sorcha.utilities.sorchaConfigs INFO     ...the observatory position information and Minor Planet Center (MPC) observatory codes file is: ObsCodes.json.gz 
+sorcha.utilities.sorchaConfigs INFO     ...the observatory position information and Minor Planet Center (MPC) observatory codes file is: ObsCodes.json and compressed file is: ObsCodes.json.gz 
+sorcha.utilities.sorchaConfigs INFO     ...the ephemerides for solar-system planets from JPL's Horizon system file is: linux_p1550p2650.440 
+sorcha.utilities.sorchaConfigs INFO     ...the ephemerides for solar-system small bodies from JPL's Horizon system file is: sb441-n16.bsp 
+sorcha.utilities.sorchaConfigs INFO     ...the meta kernal file is : meta_kernel.txt 
 sorcha.utilities.sorchaConfigs INFO     ASSIST+REBOUND Simulation is turned ON. 
 sorcha.utilities.sorchaConfigs INFO     For ASSIST+REBOUND... 
 sorcha.utilities.sorchaConfigs INFO     ...the field's angular FOV is: 1.8 

@@ -1516,8 +1516,19 @@ def PrintConfigsToLog(sconfigs, cmd_args):
     )
     pplogger.info(
         "...the observatory position information and Minor Planet Center (MPC) observatory codes file is: "
+        + str(sconfigs.auxiliary.observatory_codes)
+        + " and compressed file is: "
         + str(sconfigs.auxiliary.observatory_codes_compressed)
     )
+    pplogger.info(
+        "...the ephemerides for solar-system planets from JPL's Horizon system file is: "
+        + str(sconfigs.auxiliary.jpl_planets)
+    )
+    pplogger.info(
+        "...the ephemerides for solar-system small bodies from JPL's Horizon system file is: "
+        + str(sconfigs.auxiliary.jpl_small_bodies)
+    )
+    pplogger.info("...the meta kernal file is : " + str(sconfigs.auxiliary.meta_kernel))
     if sconfigs.input.ephemerides_type == "ar":
         pplogger.info("ASSIST+REBOUND Simulation is turned ON.")
         pplogger.info("For ASSIST+REBOUND...")
