@@ -1,7 +1,7 @@
 Demo Notebooks
 ========================================================================================
 
-Below we provide jupyter notebooks that demonstrate and validate various functions and components of ``sorcha``.
+Below we provide Jupyter notebooks that demonstrate and validate various functions and components of ``sorcha``.
 
 .. toctree::
     :maxdepth: 1
@@ -13,6 +13,7 @@ Below we provide jupyter notebooks that demonstrate and validate various functio
     LSST Camera Footprint Filter <notebooks/demo_FootprintFilter>
     Coordinate Transformation Example <notebooks/demo_CoordinateTransformations.ipynb>
     Detection Efficiency Validation <notebooks/demo_DetectionEfficiencyValidation>
+    Estimating Colors in LSST Filters From Optical/NIR Spectra <notebooks/demo_CalculateLSSTColours.ipynb>
     SSP Linking Filter <notebooks/demo_LinkingFilter>
     Magnitude and SNR Cuts <notebooks/demo_MagnitudeAndSNRCuts>
     Trailing Losses Validation <notebooks/demo_TrailingLossesValidation>
