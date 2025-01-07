@@ -216,6 +216,8 @@ We have implemented several phase curve parameterizations that can be specified 
 .. note::
   In the config file you can decide which filters you want to have ``sorcha`` run on and specify which filter is the main filter that the absolute magnitude is defined for. You only need to provide colors for those filters specified in the config file.
 
+.. tip::
+  We have an `example Jupyter notebook <notebooks/demo_CalculateLSSTColours.ipynb>`_  demonstrating how to take a representative optical/NIR spectra of your input population and using the `rubin_sim <https://github.com/lsst/rubin_sim>`_  package to estimate the expected colors in the LSST filter bandpasses.  
 .. _pointing:
 
 Survey Pointing Database
