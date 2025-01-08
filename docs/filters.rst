@@ -3,7 +3,7 @@
 Sorcha's Filter Options
 ========================================
 
-Below are the user-controlled filters applied by Sorcha with the relevant configuration
+Below are the user-controlled filters applied by ``Sorcha`` with the relevant configuration
 file parameters and suggested/example values.
 
 .. tip::
@@ -17,7 +17,7 @@ The saturation limit filter removes all detections that are brighter than the sa
 of the survey. `Ivezić et al. (2019) <https://ui.adsabs.harvard.edu/abs/2019ApJ...873..111I/abstract>`_
 estimate that the saturation limit for the LSST will be ~16 in the r filter. 
 
-Sorcha includes functionality to specify either a single saturation limit, or a saturation limit in each filter.
+``Sorcha`` includes functionality to specify either a single saturation limit, or a saturation limit in each filter.
 For the latter, limits must be given in a comma-separated list in the same order as the filters supplied 
 for the observing_filters config file variable.
 
@@ -35,7 +35,7 @@ Fading Function/Detection Efficiency
 ------------------------------------
 
 This filter serves to remove observations of objects which are faint beyond the survey's capability
-to detect them. Sorcha uses the fading function formulation of `Veres and Chesley (2017) <https://ui.adsabs.harvard.edu/abs/2017arXiv170506209C/abstract>`_:
+to detect them. ``Sorcha`` uses the fading function formulation of `Veres and Chesley (2017) <https://ui.adsabs.harvard.edu/abs/2017arXiv170506209C/abstract>`_:
 see the below plot. This fading function is parameterised by the fading function width and peak efficiency. 
 The default values are modelled on those from the aforementioned paper.
 
@@ -106,7 +106,7 @@ To include this filter, the following options should be set in the configuration
     footprint_path = ./data/detectors_corners.csv
 
 .. tip::
-    Sorcha comes with a representation of the LSSTCam footprint already installed. If you do not include the **footprint_path** in the configuration file, then Sorcha assumes you're using its internal LSSTCam footprint. 
+    ``Sorcha`` comes with a representation of the LSSTCam footprint already installed. If you do not include the **footprint_path** in the configuration file, then ``Sorcha`` assumes you're using its internal LSSTCam footprint. 
 
 .. warning::
     Note that :ref:`ASSIST+REBOUND ephemeris generator<ephemeris_gen>` uses a circular radius for its search area. To get accurate results, the ASSIST+REBOUND radius must be set to be larger than the circle_radius. For simmulating the LSST, we rcommend setting **ar_ang_fov = 2.06** and **ar_fov_buffer = 0.2**.  
@@ -119,7 +119,7 @@ Additionally, the camera footprint  model can account for the losses at the edge
     footprint_edge_threshold = 0.0001
 
 .. tip::
-    Sorcha comes with a representation of the LSSTCam footprint already installed. If you do not include the **footprint_path** in the configuration file, then Sorcha assumes you're using its internal LSSTCam footprint.
+    ``Sorcha`` comes with a representation of the LSSTCam footprint already installed. If you do not include the **footprint_path** in the configuration file, then ``Sorcha`` assumes you're using its internal LSSTCam footprint.
 
 
 Vignetting
@@ -180,7 +180,7 @@ The defaults given below are those used by SSP and are explained in the comments
     # For the LSST, 12pm Chile Standard Time is 4pm UTC.
     SSP_night_start_utc = 16.0
 
-By default, when the linking filter is on, Sorcha will drop all observations of unlinked objects. If the user wishes to retain
+By default, when the linking filter is on, ``Sorcha`` will drop all observations of unlinked objects. If the user wishes to retain
 these observations, this can be set in the configuration file. This will add an additional column to the output, **object_linked**, which states whether
 the observation is of a linked object or not. To enable this functionality, add the following to the configuration file::
 

@@ -3,7 +3,7 @@
 Inputs
 ==========
 
-``sorcha`` requires two input files describing the synthetic solar system objects to simulate -- one for the orbital parameters and one for the physical parameters -- as well as survey pointing database. Optionally, the user can provide a pre-generated ephemeris with the positions of each object near the survey pointings and a complex physical parameter file for rotational light curves and cometary activity. Each of these files are described within this section and example files are shown.
+``Sorcha`` requires two input files describing the synthetic solar system objects to simulate -- one for the orbital parameters and one for the physical parameters -- as well as survey pointing database. Optionally, the user can provide a pre-generated ephemeris with the positions of each object near the survey pointings and a complex physical parameter file for rotational light curves and cometary activity. Each of these files are described within this section and example files are shown.
 
 
 .. image:: images/survey_simulator_flow_chart.png
@@ -15,7 +15,7 @@ Inputs
   Each synthetic planetesimal has its own unique object identifier set by the user and must have entries in the orbits and physical parameters files, as well as the cometary activity file, if used.
 
 .. warning::
-  ``sorcha`` does not check whether or not a planetesimal ID has been repeated in another row of the input files. **It is up to the user to ensure their input files include only unique IDs**.
+  ``Sorcha`` does not check whether or not a planetesimal ID has been repeated in another row of the input files. **It is up to the user to ensure their input files include only unique IDs**.
 
 .. _orbits:
 
@@ -26,7 +26,7 @@ Orbit File
 This is a file which contains the orbital information of a set of synthetic objects.
 
 .. tip::
-  *  ``sorcha`` is designed to handle heliocentric **Cometary (COM), Keplerian (KEP), and Cartesian (CART)** orbits, as well as their barycentric equivalents: **Barycentric Cometary (BCOM), Keplerian (BKEP) and Cartesian (BCART)**
+  *  ``Sorcha`` is designed to handle heliocentric **Cometary (COM), Keplerian (KEP), and Cartesian (CART)** orbits, as well as their barycentric equivalents: **Barycentric Cometary (BCOM), Keplerian (BKEP) and Cartesian (BCART)**
   *  The orbit file **must** have a consistent format (i.e. Cometary or Keplerian or Cartesian) throughout
   *  The first column must be ObjID, but the ordering of the remaining columns does not matter as long as the required columns exist and have entries
   *  The first row in the orbit file **must** be a header listing the column names
@@ -39,10 +39,10 @@ This is a file which contains the orbital information of a set of synthetic obje
   The orbit epoch is expected to be given in **TDB (Barycentric Dynamical Time)**
 
 .. tip::
-  If using ``sorcha``'s internal :ref:`ephemeris generator<ephemeris_gen>` (which is the default mode), **we recommend calculating/creating your input orbits with epochs close in time to the start of the first survey observation**. This will minimize the n-body integrations required to set up the ephemeris generation.
+  If using ``Sorcha``'s internal :ref:`ephemeris generator<ephemeris_gen>` (which is the default mode), **we recommend calculating/creating your input orbits with epochs close in time to the start of the first survey observation**. This will minimize the n-body integrations required to set up the ephemeris generation.
 
 .. tip::
-  Be careful about the way your input elements are defined! Using heliocentric elements as barycentric (or vice-versa) will lead to wrong outputs. Similarly, if using Cartesian elements, be careful about the orientation of the coordinate system! ``sorcha`` assumes that Cartesian elements are Ecliptic-oriented.
+  Be careful about the way your input elements are defined! Using heliocentric elements as barycentric (or vice-versa) will lead to wrong outputs. Similarly, if using Cartesian elements, be careful about the orientation of the coordinate system! ``Sorcha`` assumes that Cartesian elements are Ecliptic-oriented.
 
 .. note::
   For readability we show examples of whitespace-separated files below. We show only the heliocentric versions of these inputs, as the barycentric column requirements are identical, changing only the `FORMAT` designation
@@ -167,9 +167,9 @@ The input file for the physical parameters includes information about the object
   *  The **correct capitalization of column names** is required
   *  The physical parameters file can be either **whitespace-separated** or **comma-separated values (CSV)**
   *  Each simulated object **must** have a unique string identifier
-  *  You  **must use the same phase curve prescription for all simulated objects**. If you want to use different phase curve prescriptions for different synthetic populations, you will need to run them in separate input files to ``sorcha``
+  *  You  **must use the same phase curve prescription for all simulated objects**. If you want to use different phase curve prescriptions for different synthetic populations, you will need to run them in separate input files to ``Sorcha``
   *  If the  phase curve function is set to NONE in the configuration value then no phase curve parameter values are required in the physical parameters files.
-  *  In the config file you can decide which filters you want have ``sorcha`` run on and specify which filter is the main filter that the absolute magnitude is defined for. You only need to provide colors for those filters specified in the config file.
+  *  In the config file you can decide which filters you want have ``Sorcha`` run on and specify which filter is the main filter that the absolute magnitude is defined for. You only need to provide colors for those filters specified in the config file.
 
 .. note::
   For readability we show examples of whitespace-separated files below.
@@ -196,7 +196,7 @@ An example of the physical parameters file where a HG prescription is specified 
 
 Rubin Observatory will survey the sky in six broadband (optical filters), *u, g, r, i, z,* and *y* . In the physical parameters file, you will specify the object's absolute magnitude in the main filter (as specified in the config file. usually this is g or r band) and then provide the synthetic planetesimal's color in other filters relative to the main filter.
 
-We have implemented several phase curve parameterizations that can be specified in the config file and then inputted through the physical parameters. **You can either specify one set of phase curve parameters for all filters or specify values for each filter examined by ``sorcha``.** We are using the  `sbpy <https://sbpy.org/>`_  phase function utilities. The supported options are: `HG <https://sbpy.readthedocs.io/en/latest/api/sbpy.photometry.HG.html#sbpy.photometry.HG>`_, `HG1G2 <https://sbpy.readthedocs.io/en/latest/api/sbpy.photometry.HG1G2.html#sbpy.photometry.HG1G2>`_, `HG12 <https://sbpy.readthedocs.io/en/latest/api/sbpy.photometry.HG12.html#sbpy.photometry.HG12>`_, `linear <https://sbpy.readthedocs.io/en/latest/api/sbpy.photometry.LinearPhaseFunc.html#sbpy.photometry.LinearPhaseFunc>`_ (specified by S in the header of the physical parameters file), and none (if no columns for phase curve are included in the physical parameters file then the synthetic object is considered to have a flat phase curve). Note that the HG12 model is the `Penttilä et al. (2016) <https://www.sciencedirect.com/science/article/abs/pii/S0032063315002408>`_ modified model, and not the original (IAU adopted) `Muinonen et al. (2010) <https://www.sciencedirect.com/science/article/abs/pii/S001910351000151X>`_ model.
+We have implemented several phase curve parameterizations that can be specified in the config file and then inputted through the physical parameters. **You can either specify one set of phase curve parameters for all filters or specify values for each filter examined by ``Sorcha``.** We are using the  `sbpy <https://sbpy.org/>`_  phase function utilities. The supported options are: `HG <https://sbpy.readthedocs.io/en/latest/api/sbpy.photometry.HG.html#sbpy.photometry.HG>`_, `HG1G2 <https://sbpy.readthedocs.io/en/latest/api/sbpy.photometry.HG1G2.html#sbpy.photometry.HG1G2>`_, `HG12 <https://sbpy.readthedocs.io/en/latest/api/sbpy.photometry.HG12.html#sbpy.photometry.HG12>`_, `linear <https://sbpy.readthedocs.io/en/latest/api/sbpy.photometry.LinearPhaseFunc.html#sbpy.photometry.LinearPhaseFunc>`_ (specified by S in the header of the physical parameters file), and none (if no columns for phase curve are included in the physical parameters file then the synthetic object is considered to have a flat phase curve). Note that the HG12 model is the `Penttilä et al. (2016) <https://www.sciencedirect.com/science/article/abs/pii/S0032063315002408>`_ modified model, and not the original (IAU adopted) `Muinonen et al. (2010) <https://www.sciencedirect.com/science/article/abs/pii/S001910351000151X>`_ model.
 
 +------------------+----------------------------------------------------------------------------------+
 | Keyword          | Description                                                                      |
@@ -214,19 +214,20 @@ We have implemented several phase curve parameterizations that can be specified 
   The Phase curve parameters(s) column will not be present if the phase curve function/calculation is set to None in the configuration file
 
 .. note::
-  In the config file you can decide which filters you want to have ``sorcha`` run on and specify which filter is the main filter that the absolute magnitude is defined for. You only need to provide colors for those filters specified in the config file.
+  In the config file you can decide which filters you want to have ``Sorcha`` run on and specify which filter is the main filter that the absolute magnitude is defined for. You only need to provide colors for those filters specified in the config file.
 
-.. tip::
+.. seealso::
   We have an `example Jupyter notebook <notebooks/demo_CalculateLSSTColours.ipynb>`_  demonstrating how to take a representative optical/NIR spectra of your input population and using the `rubin_sim <https://github.com/lsst/rubin_sim>`_  package to estimate the expected colors in the LSST filter bandpasses.  
+
 .. _pointing:
 
 Survey Pointing Database
 ------------------------
 
 .. note::
-  Currently ``sorcha`` is set up to run with the LSST cadence simulations pointing databases.
+  Currently ``Sorcha`` is set up to run with the LSST cadence simulations pointing databases.
 
-This database contains information about the LSST pointing history and observing conditions.  We use observation mid-point time, right ascension, declination, rotation angle of the camera, 5-sigma limiting magnitude, filter, and seeing information in ``sorcha`` to determine if a synthetic Solar System object is observable.
+This database contains information about the LSST pointing history and observing conditions.  We use observation mid-point time, right ascension, declination, rotation angle of the camera, 5-sigma limiting magnitude, filter, and seeing information in ``Sorcha`` to determine if a synthetic Solar System object is observable.
 
 What we call the LSST pointing database (currently simulated since Rubin Observatory hasn’t started operations) is generated through the Rubin Observatory scheduler (since 2021 referred to as `rubin_sim <https://github.com/lsst/rubin_sim>`_ and previously known as OpSim). This software is currently under active development and is being used to run many simulated iterations of LSST scenarios, showing what the cadence would look like with differing survey strategies. A description of an early version of this Python software can be found in `Delgado et al.(2014) <https://ui.adsabs.harvard.edu/abs/2014SPIE.9150E..15D>`_. The output of rubin_sim is a SQLlite database containing the pointing history and associated metadata of the simulated observation history of LSST.
 
@@ -252,7 +253,7 @@ The latest version of rubin_sim cadence simulations can be found at https://s3df
 Setting Up the Correct LSST Pointing Database Query
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-``sorcha``'s **ppsqldbquery** config file parameter contains the SQL query for obtaining this information from the pointing database.
+``Sorcha``'s **ppsqldbquery** config file parameter contains the SQL query for obtaining this information from the pointing database.
 
 From rubin_sim v2.0 simulations onward use the query::
   SELECT observationId, observationStartMJD as observationStartMJD_TAI, visitTime, visitExposureTime, filter, seeingFwhmGeom as seeingFwhmGeom_arcsec, seeingFwhmEff as seeingFwhmEff_arcsec, fiveSigmaDepth as fieldFiveSigmaDepth_mag , fieldRA as fieldRA_deg, fieldDec as fieldDec_deg, rotSkyPos as fieldRotSkyPos_deg FROM observations order by observationId
@@ -268,7 +269,7 @@ For past rubin_sim/OpSim simulations pre-v2.0 use the query::
 Complex Physical Parameters File (Optional)
 ---------------------------------------------------
 
-The complex physical parameters file is only needed if you're going to include your own rotational light curve class or cometary activity class to augment the calculated apparent magnitudes. ``sorcha`` is set up such that any values required for this such as (light curve amplitude and period per simulated object) are included in a file, separate from the physical parameters file, that we refer to as the complex physical parameters file.  What columns are required in the complex physical parameters file depends on the classes you are using.
+The complex physical parameters file is only needed if you're going to include your own rotational light curve class or cometary activity class to augment the calculated apparent magnitudes. ``Sorcha`` is set up such that any values required for this such as (light curve amplitude and period per simulated object) are included in a file, separate from the physical parameters file, that we refer to as the complex physical parameters file.  What columns are required in the complex physical parameters file depends on the classes you are using.
 
 .. tip::
   *  The first column must be ObjID, but the ordering of the remaining columns does not matter as long as the required columns exist and have entries
@@ -283,7 +284,7 @@ Ephemeris File (Optional)
 -----------------------------------------
 
 .. note::
-  ``sorcha`` has an :ref:`ephemeris_gen` that we recommend using by default, but as an alternative ``sorcha`` can read in an external file containing calculated ephemeris values for each simulated object within a reasonable search radius of a given survey field pointing and observation times as specified in the survey pointing database. This could be the output from a previous ``sorcha`` run or  provided from your own separate ephemeris generation method,
+  ``Sorcha`` has an :ref:`ephemeris_gen` that we recommend using by default, but as an alternative ``Sorcha`` can read in an external file containing calculated ephemeris values for each simulated object within a reasonable search radius of a given survey field pointing and observation times as specified in the survey pointing database. This could be the output from a previous ``Sorcha`` run or  provided from your own separate ephemeris generation method,
 
 
 .. tip::
@@ -364,7 +365,7 @@ If you are going to simulate the full camera architecture including CCD location
 The camera footprint file is a comma-separated text file with three columns describing the detector shapes, with the header “detector,x,y”. The first column indicates which detector a point belongs to, and should be an integer. Second and third columns specify where on the focal plane the corners are. Values are unitless, equal to tan( ra ), tan( dec ), where ra and dec are the vertical and horizontal angles of the points from the center of the sphere tangent to origin in the focal plane. Ordering does not matter, as the constructor sorts the points automatically.
 
 .. tip::
-``sorcha`` comes with a representation of the LSSTCam architecture already installed. Further details of how to use this built-in default file can be found in the description of the :ref:`Full Camera Footprint Filter<full_camera_footprint>`.
+``Sorcha`` comes with a representation of the LSSTCam architecture already installed. Further details of how to use this built-in default file can be found in the description of the :ref:`Full Camera Footprint Filter<full_camera_footprint>`.
 
 An example of an (optional) camera footprint file:
 

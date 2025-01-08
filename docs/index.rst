@@ -10,13 +10,16 @@
 
 =========================================================================
 
+.. tip::
+    We strongly recommend all new users read the ``Sorcha`` documentation before beginning any science-quality simulations.
+
 What is Sorcha?
 =========================================================================
 
-Sorcha (pronounced "surk-ha") is an open-source Solar System survey simulator written in Python. 
-Sorcha means light or brightness in Irish and Scots Gaelic. Sorcha estimates the brightness of
+``Sorcha`` (pronounced "surk-ha") is an open-source Solar System survey simulator written in Python. 
+``Sorcha`` means light or brightness in Irish and Scots Gaelic. Sorcha estimates the brightness of
 simulated Solar System small bodies and determines which ones the survey could detect in
-each of the survey's observations  based on user set criteria. Sorcha has been designed 
+each of the survey's observations  based on user set criteria. ``Sorcha`` has been designed 
 with the `Vera C. Rubin Observatory Legacy Survey of Space and Time (LSST) <https://www.lsst.org>`_ 
 in mind. The software has a modular design, and our code  can be adapted to be 
 used with any survey.   
@@ -30,13 +33,14 @@ used with any survey.
 Welcome to Sorcha's documentation!
 =========================================================================
 
-This documentation site contains an installation guide, an overview of how Sorcha
-works, tutorials, and demonstration notebooks that show how each of the various key filters within Sorcha work.
+This documentation site contains an installation guide, an overview of how ``Sorcha``
+works, tutorials, and demonstration notebooks that show how each of the various components within ``Sorcha`` work and can be customized.
 
 .. seealso::
    A summary paper (currently in prep) provides a more detailed account
    of the software and Sorcha’s design methodology.
-   This documentation focuses on installation and examples of how to use Sorcha for LSST simulation.
+   This documentation focuses on installation and examples of how to use ``Sorcha`` for LSST simulation.
+
 
 .. toctree::
    :hidden:

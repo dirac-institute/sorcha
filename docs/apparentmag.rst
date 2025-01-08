@@ -6,7 +6,7 @@ Apparent Magnitude Calculations
 Trailed Source Magnitude and PSF (Point Spread Function) Magnitude
 ---------------------------------------------------------------------
 
-Sorcha calculates two apparent magnitudes that we will refer to as the **trailed source magnitude** and the **PSF magnitude**. 
+``Sorcha`` calculates two apparent magnitudes that we will refer to as the **trailed source magnitude** and the **PSF magnitude**. 
 
 
 
@@ -22,9 +22,9 @@ Phase Curves
 
 Incorporating Rotational Light Curves and Activity
 ------------------------------------------------------------
-Sorcha has the ability user provided functions though python classes that augment/change the apparent brightness calculations for the synthetic Solar System objects. Any values required as input for these calculations, must be provided in the separate :ref:`CPP` file as input. 
+``Sorcha`` has the ability user provided functions though python classes that augment/change the apparent brightness calculations for the synthetic Solar System objects. Any values required as input for these calculations, must be provided in the separate :ref:`CPP` file as input. 
 
-We have base example classes that the user can take and modify to whatever your need is. Within the Sorcha :ref:`configs`, the user would then specify when class would use and provide the required :ref:`CPP` file on the command line.  We also have 2 pre-made example classes that can augment the calculated apparent magnitude of each synthetic object, One for handling cometary activity as a function of heliocentric distance and one that applies rotational light curves to the synthetic objects. In both cases, any derived class must inherit from the corresponding base class and follow its API, to ensure that sorcha knows how to find and use your class.
+We have base example classes that the user can take and modify to whatever your need is. Within the ``Sorcha`` :ref:`configs`, the user would then specify when class would use and provide the required :ref:`CPP` file on the command line.  We also have 2 pre-made example classes that can augment the calculated apparent magnitude of each synthetic object, One for handling cometary activity as a function of heliocentric distance and one that applies rotational light curves to the synthetic objects. In both cases, any derived class must inherit from the corresponding base class and follow its API, to ensure that sorcha knows how to find and use your class.
 
 Cometary Activity or Simulating Other Active Objects
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

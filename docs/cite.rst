@@ -3,16 +3,16 @@
 Citing the Software
 ==========================
 
-``sorcha`` is described provided in joint Astromical Journal/JOSS software papers: Merritt et al. (submitted) and Holman et al.(submitted). We also ask that you reference in your software citations and acknowledgements the other packages that ``sorcha`` is built upon (see below). 
+``Sorcha`` is described provided in joint Astromical Journal/JOSS software papers: Merritt et al. (submitted) and Holman et al.(submitted). We also ask that you reference in your software citations and acknowledgements the other packages that ``Sorcha`` is built upon (see below). 
 
 .. tip::
-  *  Beyond citing the relevant papers, make sure to include details about your configuration for ``sorcha`` (e.g. which footprint filter you're using), details about your input population (e.g. orbital, H, color, and phase curve distribution), and information about the pointing database used. 
+  *  Beyond citing the relevant papers, make sure to include details about your configuration for ``Sorcha`` (e.g. which footprint filter you're using), details about your input population (e.g. orbital, H, color, and phase curve distribution), and information about the pointing database used. 
 
 .. _citefunc:
 
 Built-In Citation Function
 ----------------------------
-If you use ``sorcha`` in your research, please do include a citation in your published papers for ``sorcha`` and the software packages and resources that sorcha is based on. The simplest way to find this information is to use our built-in citation function. In an interactive Python session or a Jupyter notebook::
+If you use ``Sorcha`` in your research, please do include a citation in your published papers for ``Sorcha`` and the software packages and resources that ``Sorcha'' is based on. The simplest way to find this information is to use our built-in citation function. In an interactive Python session or a Jupyter notebook::
 
    import sorcha
    sorcha.cite()
@@ -21,7 +21,7 @@ If you use ``sorcha`` in your research, please do include a citation in your pub
 Additional Citation Details
 ----------------------------
 
-Please also cite the software and ancillary data files that helps power ``sorcha``. Our :ref:`citation function<citefunc>` described above will give the full details or you can manually find the acknowledgement information for each package:
+Please also cite the software and ancillary data files that helps power ``Sorcha``. Our :ref:`citation function<citefunc>` described above will give the full details or you can manually find the acknowledgement information for each package:
 
 * assist https://assist.readthedocs.io/en/latest/
 * astropy https://www.astropy.org/acknowledging.html

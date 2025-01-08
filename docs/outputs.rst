@@ -6,14 +6,14 @@ Outputs
 Sorcha Output
 ----------------------
 
-Sorcha produces an output file describing each predicted observation the survey will record of the input simulated objects, 
+``Sorcha`` produces an output file describing each predicted observation the survey will record of the input simulated objects, 
 with a row for each predicted detection and a column for each parameter to be calculated. This output file can be in several formats
 set by the output_format configuration file keyword.
 
 Additionally, the output columns can be set to either "basic" or "all" settings (described below) using the output_columns configuration file keyword. 
 Alternatively, you may specify the columns you wish to be output.
 
-The format of any output from Sorcha will look something like::
+The format of any output from ``Sorcha`` will look something like::
 
    ObjID,fieldMJD_TAI,fieldRA_deg,fieldDec_deg,RA_deg,Dec_deg,astrometricSigma_deg,optFilter,PSFMag,trailedSourceMag,PSFMagSigma,trailedSourceMagSigma,fiveSigmaDepth_mag,fiveSigmaDepthAtSource
    S1000000a,61769.320619,163.87542090842982,-18.84327137012991,164.03771300000017,-17.58257500000004,2.9880927198448093e-06,r,19.667095021023798,19.655534004675797,0.006775654132479691,0.006755926588113991,23.86356436464961,23.839403736057715
@@ -29,7 +29,7 @@ The format of any output from Sorcha will look something like::
  
 Output Formats
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-The configuration file keyword output_format allows Sorcha to output files in CSV, SQLite3 or HDF5 formats.  For example::
+The configuration file keyword output_format allows ``Sorcha`` to output files in CSV, SQLite3 or HDF5 formats.  For example::
 
    [OUTPUT]
    # The options: csv, sqlite3, hdf5
@@ -258,7 +258,7 @@ Additional Outputs
 Ephemeris Output
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Optionally (with the **-ew** flag set at the command line), an ephemeris file of all detections near the 
-field can be generated to a separate file, which can then be provided back to Sorcha as an optional external ephemeris file with the **-er** flag.
+field can be generated to a separate file, which can then be provided back to ``Sorcha`` as an optional external ephemeris file with the **-er** flag.
 More information can be found on this functionality, including the output columns, in the :ref:`Ephemeris Generation<ephemeris_gen>` section of the documentation.
 
 The format of the outputted ephemeris file is controlled by the **eph_format** configuration keyword in the Inputs section of the configuration file::
@@ -268,12 +268,12 @@ The format of the outputted ephemeris file is controlled by the **eph_format** c
    eph_format = csv
 
 .. attention::
-   Users should note that output produced by reading in a previously-generated ephemeris file will be in a different order than the output produced when running the ephemeris generator within Sorcha.
-   This is simply a side-effect of how Sorcha reads in ephemeris files and does not affect the actual content of the output.
+   Users should note that output produced by reading in a previously-generated ephemeris file will be in a different order than the output produced when running the ephemeris generator within ``Sorcha``.
+   This is simply a side-effect of how 	``Sorcha`` reads in ephemeris files and does not affect the actual content of the output.
 
 Statistics Output
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Sorcha can also output a statistics or "tally" file which contains an overview of the Sorcha output for each object and filter. Minimally, this
+``Sorcha`` can also output a statistics or "tally" file which contains an overview of the ``Sorcha`` output for each object and filter. Minimally, this
 file lists the number of observations for each object in each filter, along with the minimum, maximum and median apparent magnitude and the minimum and maximum
 phase angle. If the :ref:`linking filter<linking>` is on, this file also contains information on whether and when the object was linked by SSP.
 
@@ -304,5 +304,5 @@ The columns in the statistics file are as follows:
 +------------------------------------+--------------+----------------------------------------------------------------------------------------------------------+
 
 .. note::
-Unless the user has specified **drop_unlinked = False** in the configuration file, the object_linked column will read TRUE for all objects. To see which objects were not linked by Sorcha, this
+Unless the user has specified **drop_unlinked = False** in the configuration file, the object_linked column will read TRUE for all objects. To see which objects were not linked by ``Sorcha``, this
 variable must be set to False.

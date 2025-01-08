@@ -3,20 +3,20 @@ Advanced User Features
 ==========================
 
 .. warning::
-   **If you're new to sorcha, turn away from this section NOW! (we're only partially kidding)** This section provides information about features for advanced users of ``sorcha``. Changing or adjusting the parameters described in this section may produce unintended results. **With great power comes great responsibility. Be very careful in applying the knowledge below.** Most users will not need to touch these parameters within ``sorcha``.
+   **If you're new to sorcha, turn away from this section NOW! (we're only partially kidding)** This section provides information about features for advanced users of ``Sorcha``. Changing or adjusting the parameters described in this section may produce unintended results. **With great power comes great responsibility. Be very careful in applying the knowledge below.** Most users will not need to touch these parameters within ``Sorcha``.
 
 Setting the Random Number Generator Seed
 ---------------------------------------------
 
 .. warning::
-   For most science cases, you **DO NOT** want to set the same seed for each ``sorcha`` run, but if you need reproducability then you do want to see the seed as an environment variable before running ``sorcha`` 
+   For most science cases, you **DO NOT** want to set the same seed for each ``Sorcha`` run, but if you need reproducability then you do want to see the seed as an environment variable before running ``Sorcha`` 
 
-The value used to seed the random number generator can be specified via the **SORCHA_SEED** environmental variable. This allows for ``sorcha``  to be fully reproducibly run with (if using a bash shell or Z-shell)::
+The value used to seed the random number generator can be specified via the **SORCHA_SEED** environmental variable. This allows for ``Sorcha``  to be fully reproducibly run with (if using a bash shell or Z-shell)::
 
    export SORCHA_SEED=52
 
 .. tip::
-   If you're trying to reproduce a crash or a certain behavior in ``sorcha``, you can find the value that you need to set the random seed to in the log file.  
+   If you're trying to reproduce a crash or a certain behavior in ``Sorcha``, you can find the value that you need to set the random seed to in the log file.  
   
 
 Expert User Config File Options
@@ -68,7 +68,7 @@ In rare instances you may need to skip the footprint filter off. This can be don
     camera_model = none
 
 .. note::
-    If you're using ``sorcha``'s bult-in :ref:`ephemeris generator<ephemeris_gen>`, the generator will apply a circular search region around each filed pointing when associating potential input population detections with the survey observations. 
+    If you're using ``Sorcha``'s bult-in :ref:`ephemeris generator<ephemeris_gen>`, the generator will apply a circular search region around each filed pointing when associating potential input population detections with the survey observations. 
 
 
 SNR/Apparent Magnitude Filters
@@ -99,7 +99,7 @@ To implement the magnitude limit, include the following in the :ref:`configs`::
 Specifying Alernative Versions of the Auxiliaryy Files Used in the Ephemeris Generator 
 -----------------------------------------------------------------------------------------
 
-For backwards compability and to enable new version of the files to be run as well, users can override the default filenames and download locations of the :ref:`auxiliary files<auxfiles>` used by ``sorcha``'s bult-in :ref:`ephemeris generator<ephemeris_gen>`.  These :ref:`configs`:: variables are added to a new auxiliary ( [AUXILIARY]) section::
+For backwards compability and to enable new version of the files to be run as well, users can override the default filenames and download locations of the :ref:`auxiliary files<auxfiles>` used by ``Sorcha``'s bult-in :ref:`ephemeris generator<ephemeris_gen>`.  These :ref:`configs`:: variables are added to a new auxiliary ( [AUXILIARY]) section::
 
 
     [AUXILIARY]
@@ -141,12 +141,12 @@ For backwards compability and to enable new version of the files to be run as we
    If you make changes to the filenames or the download urls, you'll likely need to first remove meta_kernel.txt  from the auxiliary cache (the directory these files are stored in) or specify a different filename name for meta_kernel file in the config file so that it can be rebuilt with the appropriate names.  
 
 .. note:: 
-   ``sorcha`` checks if the :ref:`auxiliary files<auxfiles>` exist in the cache directory first before attempting to download any missing files and copies them over into the default filenames. 
+   ``Sorcha`` checks if the :ref:`auxiliary files<auxfiles>` exist in the cache directory first before attempting to download any missing files and copies them over into the default filenames. 
    
 Advanced Output Options
 -----------------------------------
 
-We recommend that you do not change the decimal place precision and instead leave ``sorcha`` to output the full value 
+We recommend that you do not change the decimal place precision and instead leave ``Sorcha`` to output the full value 
 to machine precision, but there may be reasons why you need to reduce the size of the output. 
 
 In the [OUTPUT] section of the :ref:`configs`, you can set the decimal precision for the astrometry outputs::
