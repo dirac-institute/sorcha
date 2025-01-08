@@ -3,7 +3,7 @@
 Configuration File
 =====================
 
-``Sorcha`` uses a configuration file to set the majority of the various required and optional parameters and well as providing the ability to turn on and off various calculations and filters applied to the simulated small body population. Details about the various settings and options available in the configuration files are described in the  :ref:`inputs`, :ref:`filters`, :ref:`ephemeris_gen`, and :ref:`output` pages. 
+``Sorcha`` uses a configuration file to set the majority of the various required and optional parameters as well as providing the ability to turn on and off various calculations and filters applied to the input small body population. Details about the various settings and options available in the configuration files are described in the  :ref:`inputs`, :ref:`filters`, :ref:`ephemeris_gen`, and :ref:`output` pages. 
 
 .. _example_configs:
 

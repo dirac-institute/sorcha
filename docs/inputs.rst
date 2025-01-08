@@ -278,6 +278,9 @@ The complex physical parameters file is only needed if you're going to include y
   *  The complex physical parameters file can be either **whitespace-separated** or **comma-separated values (CSV)**
   *  Each simulated object **must** have a unique string identifier
 
+.. seealso::
+   Further details about how to use ``sorcha addons`` to apply cometary activity and lightcurve effects can be found :ref:`here<addons>`.
+
 .. _ephemf:
 
 Ephemeris File (Optional)
