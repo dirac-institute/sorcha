@@ -8,13 +8,13 @@ import glob
 from sorcha.utilities.dataUtilitiesForTests import get_test_filepath
 from sorcha.utilities.sorchaArguments import sorchaArguments
 
-def test_PPFindFileOrExit():
-    from sorcha.modules.PPConfigParser import PPFindFileOrExit
+def test_FindFileOrExit():
+    from sorcha.utilities.Find_File_or_Directory import FindFileOrExit
 
-    test_file = PPFindFileOrExit(get_test_filepath("test_PPConfig.ini"), "config file")
+    test_file = FindFileOrExit(get_test_filepath("test_PPConfig.ini"), "config file")
 
     with pytest.raises(SystemExit) as e:
-        PPFindFileOrExit("totally_fake_file.txt", "test")
+        FindFileOrExit("totally_fake_file.txt", "test")
 
     assert test_file == get_test_filepath("test_PPConfig.ini")
     assert e.type == SystemExit
@@ -22,13 +22,13 @@ def test_PPFindFileOrExit():
 
     return
 
-def test_PPFindDirectoryOrExit():
-    from sorcha.modules.PPConfigParser import PPFindDirectoryOrExit
+def test_FindDirectoryOrExit():
+    from sorcha.utilities.Find_File_or_Directory import FindDirectoryOrExit
 
-    test_dir = PPFindDirectoryOrExit("./", "test")
+    test_dir = FindDirectoryOrExit("./", "test")
 
     with pytest.raises(SystemExit) as e:
-        PPFindDirectoryOrExit("./fake_dir/", "test")
+        FindDirectoryOrExit("./fake_dir/", "test")
 
     assert test_dir == "./"
     assert e.type == SystemExit

@@ -16,15 +16,15 @@ def cmd_outputs_create_sqlite(args):  # pragma: no cover
     #       is poor user experience.
     #
     from sorcha.utilities.createResultsSQLDatabase import create_results_database
-    from sorcha.modules.PPConfigParser import PPFindDirectoryOrExit
+    from sorcha.utilities.Find_File_or_Directory import FindDirectoryOrExit
     import os
 
     args.output = os.path.abspath(args.output)
     args.inputs = os.path.abspath(args.inputs)
     args.results = os.path.abspath(args.results)
 
-    _ = PPFindDirectoryOrExit(args.inputs, "-i, --inputs")
-    _ = PPFindDirectoryOrExit(args.results, "-r, --results")
+    _ = FindDirectoryOrExit(args.inputs, "-i, --inputs")
+    _ = FindDirectoryOrExit(args.results, "-r, --results")
 
     return create_results_database(args)
 
@@ -36,15 +36,15 @@ def cmd_outputs_create_sqlite(args):  # pragma: no cover
 
 def cmd_outputs_check_logs(args):  # pragma: no cover
     from sorcha.utilities.check_output_logs import check_output_logs
-    from sorcha.modules.PPConfigParser import PPFindDirectoryOrExit
+    from sorcha.utilities.Find_File_or_Directory import FindDirectoryOrExit
     import os
 
     args.filepath = os.path.abspath(args.filepath)
-    _ = PPFindDirectoryOrExit(args.filepath, "-f, --filepath")
+    _ = FindDirectoryOrExit(args.filepath, "-f, --filepath")
 
     if args.outpath:
         args.outpath = os.path.abspath(args.outpath)
-        _ = PPFindDirectoryOrExit(os.path.dirname(args.outpath), "-o, --outpath")
+        _ = FindDirectoryOrExit(os.path.dirname(args.outpath), "-o, --outpath")
 
         if os.path.exists(args.outpath) and not args.force:
             print(

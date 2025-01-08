@@ -5,7 +5,7 @@ import shutil
 import sys
 from importlib.resources import files
 
-from sorcha.modules.PPConfigParser import PPFindDirectoryOrExit
+from sorcha.utilities.Find_File_or_Directory import FindDirectoryOrExit
 
 
 def copy_demo_configs(copy_location, which_configs, force_overwrite):
@@ -29,7 +29,7 @@ def copy_demo_configs(copy_location, which_configs, force_overwrite):
 
     """
 
-    _ = PPFindDirectoryOrExit(copy_location, "filepath")
+    _ = FindDirectoryOrExit(copy_location, "filepath")
 
     config_data_root = files("sorcha.data.survey_setups")
 

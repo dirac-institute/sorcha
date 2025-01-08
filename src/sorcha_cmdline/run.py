@@ -136,7 +136,7 @@ def execute(args):
     #       is poor user experience.
     #
     from sorcha.sorcha import (
-        PPFindFileOrExit,
+        FindFileOrExit,
         PPGetLogger,
         PPCommandLineParser,
         runLSSTSimulation,
@@ -148,7 +148,7 @@ def execute(args):
     import sys, os
 
     # Extract the output file path now in order to set up logging.
-    outpath = PPFindFileOrExit(args.o, "-o, --outfile")
+    outpath = FindFileOrExit(args.o, "-o, --outfile")
     pplogger = PPGetLogger(outpath, args.t)
     pplogger.info("Sorcha Start (Main)")
     pplogger.info(f"Command line: {' '.join(sys.argv)}")

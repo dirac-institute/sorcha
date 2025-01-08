@@ -3,7 +3,7 @@ import os
 import sys
 
 
-def PPFindFileOrExit(arg_fn, argname):
+def FindFileOrExit(arg_fn, argname):
     """Checks to see if a file given by a filename exists. If it doesn't,
     this fails gracefully and exits to the command line.
 
@@ -31,7 +31,7 @@ def PPFindFileOrExit(arg_fn, argname):
         sys.exit("ERROR: filename {} supplied for {} argument does not exist.".format(arg_fn, argname))
 
 
-def PPFindDirectoryOrExit(arg_fn, argname):
+def FindDirectoryOrExit(arg_fn, argname):
     """Checks to see if a directory given by a filepath exists. If it doesn't,
     this fails gracefully and exits to the command line.
 

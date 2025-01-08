@@ -20,7 +20,7 @@ from sorcha.modules.PPSNRLimit import PPSNRLimit
 from sorcha.modules import PPAddUncertainties, PPRandomizeMeasurements
 from sorcha.modules import PPVignetting
 from sorcha.modules.PPFadingFunctionFilter import PPFadingFunctionFilter
-from sorcha.modules.PPConfigParser import PPFindFileOrExit
+from sorcha.utilities.Find_File_or_Directory import FindFileOrExit
 
 from sorcha.modules.PPGetLogger import PPGetLogger
 from sorcha.modules.PPCommandLineParser import PPCommandLineParser

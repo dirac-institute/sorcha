@@ -331,7 +331,7 @@ class fovConfigs:
         None
         """
         if self.footprint_path is not None:
-            PPFindFileOrExit(self.footprint_path, "footprint_path")
+            FindFileOrExit(self.footprint_path, "footprint_path")
         elif self.survey_name.lower() not in ["lsst", "rubin_sim"]:
             logging.error(
                 "ERROR: a default detector footprint is currently only provided for LSST; please provide your own footprint file."
@@ -1267,7 +1267,7 @@ def check_value_in_list(value, valuelist, key):
         )
 
 
-def PPFindFileOrExit(arg_fn, argname):
+def FindFileOrExit(arg_fn, argname):
     """Checks to see if a file given by a filename exists. If it doesn't,
     this fails gracefully and exits to the command line.
 
