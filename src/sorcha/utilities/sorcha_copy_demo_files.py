@@ -5,7 +5,7 @@ import shutil
 import sys
 from importlib.resources import files
 
-from sorcha.modules.PPConfigParser import PPFindDirectoryOrExit
+from sorcha.utilities.fileAccessUtils import FindDirectoryOrExit
 from sorcha.utilities.sorcha_demo_command import print_demo_command
 
 
@@ -27,7 +27,7 @@ def copy_demo_files(copy_location, force_overwrite):
 
     """
 
-    _ = PPFindDirectoryOrExit(copy_location, "filepath")
+    _ = FindDirectoryOrExit(copy_location, "filepath")
 
     demo_data_root = files("sorcha.data.demo")
 

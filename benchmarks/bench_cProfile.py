@@ -8,7 +8,7 @@ from pathlib import Path
 
 from pstats import SortKey
 from sorcha.sorcha import runLSSTSimulation  # noqa: F401
-from sorcha.modules.PPConfigParser import PPConfigFileParser
+from sorcha.utilities.sorchaConfigs import sorchaConfigs
 from sorcha.utilities.sorchaArguments import sorchaArguments
 import argparse
 
@@ -39,7 +39,7 @@ if __name__ == "__main__":  # pragma: no cover
 
     args_obj = sorchaArguments(cmd_args_dict)
 
-    configs = PPConfigFileParser(os.path.join(path_to_sorcha, "benchmarks/test_bench_config.ini"), "LSST")
+    configs = sorchaConfigs(os.path.join(path_to_sorcha, "benchmarks/test_bench_config.ini"), "LSST")
 
     cProfile.run("runLSSTSimulation(args_obj, configs)", os.path.join(path_to_sorcha, "tests/out/restats"))
 

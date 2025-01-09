@@ -12,8 +12,6 @@ def main():
         description="Run a simulation.",
     )
 
-    # parser = SorchaArgparse(parser)
-
     required = parser.add_argument_group("Required arguments")
     required.add_argument(
         "-c",
@@ -138,10 +136,9 @@ def execute(args):
     #       is poor user experience.
     #
     from sorcha.sorcha import (
-        PPFindFileOrExit,
+        FindFileOrExit,
         PPGetLogger,
         PPCommandLineParser,
-        PPConfigFileParser,
         runLSSTSimulation,
         sorchaArguments,
         sorchaConfigs,
@@ -151,7 +148,7 @@ def execute(args):
     import sys, os
 
     # Extract the output file path now in order to set up logging.
-    outpath = PPFindFileOrExit(args.o, "-o, --outfile")
+    outpath = FindFileOrExit(args.o, "-o, --outfile")
     pplogger = PPGetLogger(outpath, args.t)
     pplogger.info("Sorcha Start (Main)")
     pplogger.info(f"Command line: {' '.join(sys.argv)}")
@@ -163,7 +160,6 @@ def execute(args):
     # Extract and validate the remaining arguments.
     cmd_args = PPCommandLineParser(args)
     pplogger.info("Reading configuration file...")
-    # configs = PPConfigFileParser(cmd_args["configfile"], cmd_args["surveyname"])
     sconfigs = sorchaConfigs(cmd_args["configfile"], cmd_args["surveyname"])
     pplogger.info("Configuration file read.")
 

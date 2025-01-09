@@ -4,7 +4,6 @@ import os
 import re
 
 from sorcha.utilities.dataUtilitiesForTests import get_test_filepath, get_demo_filepath
-from sorcha.modules.PPConfigParser import PPConfigFileParser
 from sorcha.modules.PPGetLogger import PPGetLogger
 from sorcha.utilities.sorchaArguments import sorchaArguments
 from sorcha.ephemeris.simulation_driver import create_ephemeris, write_out_ephemeris_file

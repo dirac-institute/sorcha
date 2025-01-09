@@ -6,6 +6,7 @@ import os
 import numpy as np
 from sorcha.lightcurves.lightcurve_registration import LC_METHODS
 from sorcha.activity.activity_registration import CA_METHODS
+from sorcha.utilities.fileAccessUtils import FindFileOrExit
 
 
 @dataclass
@@ -331,7 +332,7 @@ class fovConfigs:
         None
         """
         if self.footprint_path is not None:
-            PPFindFileOrExit(self.footprint_path, "footprint_path")
+            FindFileOrExit(self.footprint_path, "footprint_path")
         elif self.survey_name.lower() not in ["lsst", "rubin_sim"]:
             logging.error(
                 "ERROR: a default detector footprint is currently only provided for LSST; please provide your own footprint file."
@@ -782,6 +783,8 @@ class expertConfigs:
 
 @dataclass
 class auxiliaryConfigs:
+    """Data class for holding auxiliary section configuration file keys and validating them."""
+
     de440s: str = "de440s.bsp"
     """filename of de440s"""
     de440s_url: str = "https://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/planets/de440s.bsp"
@@ -1018,6 +1021,7 @@ class sorchaConfigs:
     auxiliary: auxiliaryConfigs = None
     """auxiliaryConfigs dataclass which stores the keywords from the AUXILIARY section of the config file."""
 
+    # When adding a new config dataclass or new dataclass config parameters remember to add these to the function PrintConfigsToLog below.
     pplogger: None = None
     """The Python logger instance"""
 
@@ -1264,34 +1268,6 @@ def check_value_in_list(value, valuelist, key):
         )
 
 
-def PPFindFileOrExit(arg_fn, argname):
-    """Checks to see if a file given by a filename exists. If it doesn't,
-    this fails gracefully and exits to the command line.
-
-    Parameters
-    -----------
-    arg_fn : string
-        The filepath/name of the file to be checked.
-
-    argname : string
-        The name of the argument being checked. Used for error message.
-
-    Returns
-    ----------
-    arg_fn : string
-        The filepath/name of the file to be checked.
-
-    """
-
-    pplogger = logging.getLogger(__name__)
-
-    if os.path.exists(arg_fn):
-        return arg_fn
-    else:
-        pplogger.error("ERROR: filename {} supplied for {} argument does not exist.".format(arg_fn, argname))
-        sys.exit("ERROR: filename {} supplied for {} argument does not exist.".format(arg_fn, argname))
-
-
 def cast_as_bool_or_set_default(value, key, default):
 
     # replaces PPGetBoolOrExit: checks to make sure the value can be cast as a bool.
@@ -1405,6 +1381,14 @@ def PrintConfigsToLog(sconfigs, cmd_args):
             pplogger.info("Loading camera footprint from " + sconfigs.fov.footprint_path)
         else:
             pplogger.info("Loading default LSST footprint LSST_detector_corners_100123.csv")
+        if sconfigs.fov.footprint_edge_threshold:
+            pplogger.info(
+                "The footprint edge threshold is "
+                + str(sconfigs.fov.footprint_edge_threshold)
+                + " arcseconds"
+            )
+        else:
+            pplogger.info("Default footprint edge threshold used (10px or 2 arcseconds).")
     elif sconfigs.fov.camera_model == "circle":
         pplogger.info("Footprint is circular.")
         if sconfigs.fov.fill_factor:
@@ -1476,11 +1460,48 @@ def PrintConfigsToLog(sconfigs, cmd_args):
             "...the maximum temporal separation between subsequent observations in a tracklet in days is: "
             + str(sconfigs.linkingfilter.ssp_maximum_time)
         )
+        pplogger.info(
+            "...the time in UTC at which it is noon at the observatory location (in standard time) is "
+            + str(sconfigs.linkingfilter.ssp_night_start_utc)
+        )
         if not sconfigs.linkingfilter.drop_unlinked:
             pplogger.info("Unlinked objects will not be dropped.")
     else:
         pplogger.info("Solar System Processing linking filter is turned OFF.")
-
+    pplogger.info("The auxiliary files used for emphemris generation...")
+    pplogger.info("...the leap second file is: " + str(sconfigs.auxiliary.leap_seconds))
+    pplogger.info(
+        "...the historical Earth orientation specification file is: "
+        + str(sconfigs.auxiliary.earth_historical)
+    )
+    pplogger.info(
+        "...the prediction of the Earth's future orientation file is: "
+        + str(sconfigs.auxiliary.earth_predict)
+    )
+    pplogger.info(
+        "...the orientation information and physical constants for other bodies file is: "
+        + str(sconfigs.auxiliary.orientation_constants)
+    )
+    pplogger.info("...the Earth's position for ephemerides file is: " + str(sconfigs.auxiliary.de440s))
+    pplogger.info(
+        "...the regularly updated specification of the Earth's orientation file is: "
+        + str(sconfigs.auxiliary.earth_high_precision)
+    )
+    pplogger.info(
+        "...the observatory position information and Minor Planet Center (MPC) observatory codes file is: "
+        + str(sconfigs.auxiliary.observatory_codes)
+        + " and compressed file is: "
+        + str(sconfigs.auxiliary.observatory_codes_compressed)
+    )
+    pplogger.info(
+        "...the ephemerides for solar-system planets from JPL's Horizon system file is: "
+        + str(sconfigs.auxiliary.jpl_planets)
+    )
+    pplogger.info(
+        "...the ephemerides for solar-system small bodies from JPL's Horizon system file is: "
+        + str(sconfigs.auxiliary.jpl_small_bodies)
+    )
+    pplogger.info("...the meta kernal file is : " + str(sconfigs.auxiliary.meta_kernel))
     if sconfigs.input.ephemerides_type == "ar":
         pplogger.info("ASSIST+REBOUND Simulation is turned ON.")
         pplogger.info("For ASSIST+REBOUND...")
@@ -1502,16 +1523,22 @@ def PrintConfigsToLog(sconfigs, cmd_args):
         "Output files will be saved in path: " + cmd_args.outpath + " with filestem " + cmd_args.outfilestem
     )
     pplogger.info("Output files will be saved as format: " + sconfigs.output.output_format)
-    pplogger.info(
-        "In the output, positions will be rounded to "
-        + str(sconfigs.output.position_decimals)
-        + " decimal places."
-    )
-    pplogger.info(
-        "In the output, magnitudes will be rounded to "
-        + str(sconfigs.output.magnitude_decimals)
-        + " decimal places."
-    )
+    if sconfigs.output.position_decimals:
+        pplogger.info(
+            "In the output, positions will be rounded to "
+            + str(sconfigs.output.position_decimals)
+            + " decimal places."
+        )
+    else:
+        pplogger.info("In the output, positions will not be rounded")
+    if sconfigs.output.magnitude_decimals:
+        pplogger.info(
+            "In the output, magnitudes will be rounded to "
+            + str(sconfigs.output.magnitude_decimals)
+            + " decimal places."
+        )
+    else:
+        pplogger.info("In the output, magnitudes will not be rounded")
     if isinstance(sconfigs.output.output_columns, list):
         pplogger.info("The output columns are set to: " + " ".join(sconfigs.output.output_columns))
     else:

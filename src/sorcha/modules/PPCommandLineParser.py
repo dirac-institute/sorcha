@@ -2,7 +2,7 @@ import os
 import sys
 import logging
 import glob
-from .PPConfigParser import PPFindFileOrExit, PPFindDirectoryOrExit
+from sorcha.utilities.fileAccessUtils import FindFileOrExit, FindDirectoryOrExit
 
 
 def warn_or_remove_file(filepath, force_remove, pplogger):
@@ -58,14 +58,14 @@ def PPCommandLineParser(args):
 
     cmd_args_dict = {}
 
-    cmd_args_dict["paramsinput"] = PPFindFileOrExit(args.p, "-p, --params")
-    cmd_args_dict["orbinfile"] = PPFindFileOrExit(args.ob, "-ob, --orbit")
-    cmd_args_dict["configfile"] = PPFindFileOrExit(args.c, "-c, --config")
-    cmd_args_dict["outpath"] = PPFindFileOrExit(args.o, "-o, --outfile")
-    cmd_args_dict["pointing_database"] = PPFindFileOrExit(args.pd, "-pd, --pointing_database")
+    cmd_args_dict["paramsinput"] = FindFileOrExit(args.p, "-p, --params")
+    cmd_args_dict["orbinfile"] = FindFileOrExit(args.ob, "-ob, --orbit")
+    cmd_args_dict["configfile"] = FindFileOrExit(args.c, "-c, --config")
+    cmd_args_dict["outpath"] = FindFileOrExit(args.o, "-o, --outfile")
+    cmd_args_dict["pointing_database"] = FindFileOrExit(args.pd, "-pd, --pointing_database")
 
     if args.cp:
-        cmd_args_dict["complex_physical_parameters"] = PPFindFileOrExit(
+        cmd_args_dict["complex_physical_parameters"] = FindFileOrExit(
             args.cp, "-cp, --complex_physical_parameters"
         )
 
@@ -95,7 +95,7 @@ def PPCommandLineParser(args):
 
     cmd_args_dict["ar_data_path"] = args.ar  # default value for args.ar is `None`.
     if cmd_args_dict["ar_data_path"]:
-        PPFindDirectoryOrExit(cmd_args_dict["ar_data_path"], "-ar, --ar_data_path")
+        FindDirectoryOrExit(cmd_args_dict["ar_data_path"], "-ar, --ar_data_path")
 
     warn_or_remove_file(
         os.path.join(cmd_args_dict["outpath"], cmd_args_dict["outfilestem"] + ".*"), args.f, pplogger
