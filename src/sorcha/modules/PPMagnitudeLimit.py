@@ -12,7 +12,7 @@ def PPMagnitudeLimit(observations, mag_limit, colname="trailedSourceMag"):
         Limit for apparent magnitude cut.
 
     colname : string, optional
-        Column name to apply the magnitude cut.
+        Column thats used to apply the magnitude cut.
         Default = "TrailedSourceMag"
     Returns
     -----------
