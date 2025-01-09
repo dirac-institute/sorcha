@@ -750,7 +750,7 @@ class expertConfigs:
         None
         """
         if self.snr_limit is not None:
-            self.snr_limit = cast_as_float(self.snr_limit, "SNR_limit")
+            self.snr_limit = cast_as_float(self.snr_limit, "snr_limit")
             self.snr_limit_on = True
             if self.snr_limit < 0:
                 logging.error("ERROR: SNR limit is negative.")
