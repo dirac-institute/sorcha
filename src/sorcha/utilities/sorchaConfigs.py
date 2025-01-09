@@ -580,10 +580,10 @@ class outputConfigs:
     output_columns: str = None
     """Controls which columns are in the output files."""
 
-    position_decimals: float = None
+    position_decimals: int = None
     """position decimal places"""
 
-    magnitude_decimals: float = None
+    magnitude_decimals: int = None
     """magnitude decimal places"""
 
     def __post_init__(self):
@@ -628,9 +628,9 @@ class outputConfigs:
         None
         """
         if self.position_decimals is not None:
-            self.position_decimals = cast_as_float(self.position_decimals, "position_decimals")
+            self.position_decimals = cast_as_int(self.position_decimals, "position_decimals")
         if self.magnitude_decimals is not None:
-            self.magnitude_decimals = cast_as_float(self.magnitude_decimals, "magnitude_decimals")
+            self.magnitude_decimals = cast_as_int(self.magnitude_decimals, "magnitude_decimals")
         if self.position_decimals is not None and self.position_decimals < 0:
             logging.error("ERROR: decimal places config variables cannot be negative.")
             sys.exit("ERROR: decimal places config variables cannot be negative.")

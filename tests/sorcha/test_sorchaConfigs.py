@@ -883,7 +883,7 @@ def test_outputConfigs_inlist(key_name, expected_list):
 @pytest.mark.parametrize("key_name", ["position_decimals", "magnitude_decimals"])
 def test_outputConfigs_decimel_check(key_name):
     """
-    Checks that if deciamels are not float or are negative it is caught correctly
+    Checks that if deciamels are not int or are negative it is caught correctly
     """
     correct_output = {
         "output_format": "csv",
@@ -900,7 +900,7 @@ def test_outputConfigs_decimel_check(key_name):
         test_configs = outputConfigs(**output_configs)
     assert (
         error_text.value.code
-        == f"ERROR: expected a float for config parameter {key_name}. Check value in config file."
+        == f"ERROR: expected an int for config parameter {key_name}. Check value in config file."
     )
     correct_output = {
         "output_format": "csv",
