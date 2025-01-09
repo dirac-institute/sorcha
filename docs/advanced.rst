@@ -97,7 +97,7 @@ To implement the magnitude limit (remove detections of objects fainter than 22 m
     Only one of these filters may be implemented at once.
 
 
-Specifying Alernative Versions of the Auxiliaryy Files Used in the Ephemeris Generator 
+Specifying Alernative Versions of the Auxiliary Files Used in the Ephemeris Generator 
 -----------------------------------------------------------------------------------------
 
 For backwards compability and to enable new version of the files to be run as well, users can override the default filenames and download locations of the :ref:`auxiliary files<auxfiles>` used by ``Sorcha``'s bult-in :ref:`ephemeris generator<ephemeris_gen>`.  These :ref:`configs`:: variables are added to a new auxiliary ([AUXILIARY]) section::
@@ -147,8 +147,27 @@ For backwards compability and to enable new version of the files to be run as we
 Advanced Output Options
 -----------------------------------
 
-We recommend that you do not change the decimal place precision and instead leave ``Sorcha`` to output the full value 
-to machine precision, but there may be reasons why you need to reduce the size of the output. 
+Custom Outputs 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+By setting the value of the output_columns configuration file keyword to a comma-separated list of column names, you may
+specify your own custom output, using this page as a reference for potential column names.
+
+For example, you could state this in your configuration file to get the object ID, position and magnitude only::
+
+    [OUTPUT]
+    output_columns = ObjID,RA_deg,Dec_deg,trailedSourceMag
+
+.. warning::
+   If you are choosing to specify the column names in this way, please perform a quick test-run first to ensure your column names are correct before
+   embarking on any long runs. As we allow for user-written code and add-ons to add new column names, we do not error-handle the column names until
+   late in the code, upon output.
+
+
+Specifying the Decimal Precision for the Photometric and Astromeitc Values 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+By default, no rounding is performed on any of the output values. We recommend that you do not change the decimal place precision  and instead leave ``Sorcha`` to output the full value to machine precision, but there may be reasons why you need to reduce the size of the output.
 
 In the [OUTPUT] section of the :ref:`configs`, you can set the decimal precision for the astrometry outputs::
 
