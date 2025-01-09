@@ -44,6 +44,9 @@ This is a file which contains the orbital information of a set of synthetic obje
 .. tip::
   Be careful about the way your input elements are defined! Using heliocentric elements as barycentric (or vice-versa) will lead to wrong outputs. Similarly, if using Cartesian elements, be careful about the orientation of the coordinate system! ``Sorcha`` assumes that Cartesian elements are Ecliptic-oriented.
 
+.. attention::
+   Use the **--ob** flag on the command line to specify the orbit file  that ``Sorcha`` should use.
+
 .. note::
   For readability we show examples of whitespace-separated files below. We show only the heliocentric versions of these inputs, as the barycentric column requirements are identical, changing only the `FORMAT` designation
 
@@ -62,7 +65,7 @@ Example Orbit File in Cometary Format
    S1000003a COM 2.10917 0.13219 1.46615 266.54621 232.24412 54212.16304 54800.00000 
    S1000004a COM 2.17676 0.19949 12.92422 162.14580 192.22312 51895.46586 54800.00000
 
-Cometaryn Orbit Format Required Columns
+Cometary Orbit Format Required Columns
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 +-------------+----------------------------------------------------------------------------------+
@@ -269,6 +272,10 @@ Required Physical Parameters File Columns and Format
 .. note::
   In the :ref:`configuration file<configs>` you can decide which filters you want to have ``Sorcha`` run on and specify which filter is the main filter that the absolute magnitude is defined for. You only need to provide colors for those filters specified in the :ref:`configuration file<configs>`.
 
+
+.. attention::
+   Use the **--p** flag on the command line to specify the pointing database that ``Sorcha`` should use.
+
 .. seealso::
   We have an `example Jupyter notebook <notebooks/demo_CalculateLSSTColours.ipynb>`_  demonstrating how to take a representative optical/NIR spectra of your input population and using the `rubin_sim <https://github.com/lsst/rubin_sim>`_  package to estimate the expected colors in the LSST filter bandpasses.  
 
@@ -329,6 +336,9 @@ The complex physical parameters file is only needed if you're going to include y
    Further details about how to use ``sorcha addons`` to apply cometary activity and lightcurve effects can be found :ref:`here<addons>`.
 
 
+.. attention::
+   Use the **--cp** flag on the command line to specify the pointing database that ``Sorcha`` should use.
+
 Complex Parameters File Configuration Parameters
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -348,7 +358,6 @@ Complex Parameters File Configuration Parameters
    aux_format = csv
 
 
-
 .. _pointing:
 
 Survey Pointing Database
@@ -366,6 +375,12 @@ What we call the LSST pointing database (currently simulated since Rubin Observa
 
 .. warning::
   The pointing databases times are expected to be TAI (Temps Atomique International; French for International Atomic Time),
+
+
+.. attention::
+   Use the **--pd** flag on the command line to specify the pointing database that ``Sorcha`` should use.
+
+
 
 The latest version of rubin_sim cadence simulations can be found at https://s3df.slac.stanford.edu/data/rubin/sim-data/. An example rubin_sim simulation visualized on sky is shown in the plot below of the number of on-sky visits over the 10-year simulated baseline v3.2 survey (image credit: Lynne Jones):
 
@@ -475,7 +490,7 @@ Ephemeris File (Optional)
   *  The ephemeris file can be either **whitespace-separated** or **comma-separated values(CSV)**
   *  Each simulated object **must** have a unique string identifier
 
-.. hint::
+.. attention::
    Use the **--er** flag on the command line to specify the external ephemeris file that ``Sorcha`` should use.
 
 

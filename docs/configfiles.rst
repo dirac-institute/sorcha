@@ -9,6 +9,10 @@ Configuration File
 The configuration file is using the Windowst INI file format. The configuration file is formatted into distinct sections with headers. The headers are enclosed in squarebrackets ([]). Below each header are the asosciated configuration variable key pair (e.g. configvariablename = value). Any lines started with '#' are considered comments and ignored when parsing the cofiguration file. 
 
 The presence or absence of various variables in the configuration file will turn on/off or inializie diifferent functions and features witin``Sorcha``. 
+
+
+.. attention::
+   Use the **-c** flag on the command line to specify the configuration file  that ``Sorcha`` should use.
  
 .. _example_configs:
 

@@ -108,7 +108,7 @@ A number of auxiliary files available from the `Minor Planet Center <https://www
 Saving the Output From the Ephemeris Generator
 ------------------------------------------------
 
-If you want to use the same input orbits across multiple ``Sorcha`` runs, you can save time by outputting the output from the ephemeris generation stage using the command line flag **-ew** in combination with a stem filename (do not include the file extension). Then in subsequent runs you will need to use the **--er** flag to on the command line to specify the input ephemeris file to read in. You will also need to remove :ref:`the ephemeris generation parameters<tuneem>` from the configuration file and add the following::
+If you want to use the same input orbits across multiple ``Sorcha`` runs, you can save time by outputting the output from the ephemeris generation stage using the command line flag **--ew** in combination with a stem filename (do not include the file extension). Then in subsequent runs you will need to use the **--er** flag to on the command line to specify the input ephemeris file to read in. You will also need to remove :ref:`the ephemeris generation parameters<tuneem>` from the configuration file and add the following::
 
    [INPUT]
    ephemerides_type = external
