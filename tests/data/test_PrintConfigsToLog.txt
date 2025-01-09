@@ -227,6 +227,6 @@ sorcha.utilities.sorchaConfigs INFO     ...the healpix order is: 6
 sorcha.utilities.sorchaConfigs INFO     No lightcurve model is being applied. 
 sorcha.utilities.sorchaConfigs INFO     Output files will be saved in path: ./ with filestem testout 
 sorcha.utilities.sorchaConfigs INFO     Output files will be saved as format: csv 
-sorcha.utilities.sorchaConfigs INFO     In the output, positions will be rounded to 7.0 decimal places. 
-sorcha.utilities.sorchaConfigs INFO     In the output, magnitudes will be rounded to 3.0 decimal places. 
+sorcha.utilities.sorchaConfigs INFO     In the output, positions will be rounded to 7 decimal places. 
+sorcha.utilities.sorchaConfigs INFO     In the output, magnitudes will be rounded to 3 decimal places. 
 sorcha.utilities.sorchaConfigs INFO     The output columns are set to: basic 
