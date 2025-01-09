@@ -49,8 +49,8 @@ works, tutorials, and demonstration notebooks that show how each of the various 
 
    overview
    installation
-   inputs
    configfiles
+   inputs
    ephemerisgen
    apparentmag 
    filters

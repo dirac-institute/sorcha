@@ -20,4 +20,4 @@ Here is a short summary of the key effects not accounted for in ``Sorcha'':
    We do have methods for  users to easily develop their own functions for adjusting the apparent 
    magnitude of the simulated objects  due to cometary activity, rotational light curves, cometary 
    outbursts, etc. We have some basic functionality already built for simple sinusoidal rotational 
-   light curves and cometary activity. Further details can be found  :ref:`here<addon>`  
+   light curves and cometary activity. Further details can be found  :ref:`here<addons>`.

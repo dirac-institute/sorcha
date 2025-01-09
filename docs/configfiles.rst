@@ -5,12 +5,17 @@ Configuration File
 
 ``Sorcha`` uses a configuration file to set the majority of the various required and optional parameters as well as providing the ability to turn on and off various calculations and filters applied to the input small body population. Details about the various settings and options available in the configuration files are described in the  :ref:`inputs`, :ref:`filters`, :ref:`ephemeris_gen`, and :ref:`output` pages. 
 
+
+The configuration file is using the Windowst INI file format. The configuration file is formatted into distinct sections with headers. The headers are enclosed in squarebrackets ([]). Below each header are the asosciated configuration variable key pair (e.g. configvariablename = value). Any lines started with '#' are considered comments and ignored when parsing the cofiguration file. 
+
+The presence or absence of various variables in the configuration file will turn on/off or inializie diifferent functions and features witin``Sorcha``. 
+ 
 .. _example_configs:
 
 Example Configuration Files
 ------------------------------------
 
-We provide example configuration files  appropriate for setting up ``Sorcha`` to simulate what the LSST would discover. These example config files come installed with ``Sorcha`` and can be copied over to your working directory by typing on the command line::
+We provide below example configuration files  appropriate for setting up ``Sorcha`` to simulate what the LSST would discover. These example config files come installed with ``Sorcha`` and can be copied over to your working directory by typing on the command line::
 
     sorcha init 
 

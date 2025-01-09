@@ -80,14 +80,15 @@ SNR/Apparent Magnitude Filters
 These two mutually-exclusive filters serve to cut observations of faint objects.
 The user may either implement the SNR limit, to remove all observations of objects
 below a user-defined SNR threshold; or the magnitude limit, to remove all observations
-of objects above a user-defined magnitude.
+of objects above a user-defined **trailed source magniitude** magnitude. 
+**These filters are applied before the detection efficiency (fading function) is applied in** ``Sorcha``. 
 
-To implement the SNR limit, include the following in the config file::
+The SNR filter which will remove syntheitc observations that are less than a user-supplied  SNR limit, To implelment the SNR limit (in this example to keep synthetic observations of input objects with a SNR > =2) include the following in the config file::
 
     [EXPERT]
     SNR_limit = 2.0
 
-To implement the magnitude limit, include the following in the :ref:`configs`::
+To implement the magnitude limit (remove detections of objects fainter than 22 mag in all survey observing bands), include the following in the :ref:`configs`::
     
     [EXPERT]
     magnitude_limit = 22.0
@@ -99,7 +100,7 @@ To implement the magnitude limit, include the following in the :ref:`configs`::
 Specifying Alernative Versions of the Auxiliaryy Files Used in the Ephemeris Generator 
 -----------------------------------------------------------------------------------------
 
-For backwards compability and to enable new version of the files to be run as well, users can override the default filenames and download locations of the :ref:`auxiliary files<auxfiles>` used by ``Sorcha``'s bult-in :ref:`ephemeris generator<ephemeris_gen>`.  These :ref:`configs`:: variables are added to a new auxiliary ( [AUXILIARY]) section::
+For backwards compability and to enable new version of the files to be run as well, users can override the default filenames and download locations of the :ref:`auxiliary files<auxfiles>` used by ``Sorcha``'s bult-in :ref:`ephemeris generator<ephemeris_gen>`.  These :ref:`configs`:: variables are added to a new auxiliary ([AUXILIARY]) section::
 
 
     [AUXILIARY]

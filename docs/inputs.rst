@@ -49,7 +49,11 @@ This is a file which contains the orbital information of a set of synthetic obje
 
 Cometary Orbit Format
 ~~~~~~~~~~~~~~~~~~~~~~~
-An example of an orbit file in Cometary format::
+
+Example Orbit File in Cometary Format
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code-block::
 
    ObjID FORMAT q e inc node argPeri t_p_MJD_TDB epochMJD_TDB
    S1000000a COM 3.01822 0.05208 22.56035 211.00286 335.42134 51575.94061 54800.00000
@@ -57,6 +61,9 @@ An example of an orbit file in Cometary format::
    S1000002a COM 2.80523 0.07777 1.24945 112.52284 139.86858 54468.71747 54800.00000
    S1000003a COM 2.10917 0.13219 1.46615 266.54621 232.24412 54212.16304 54800.00000 
    S1000004a COM 2.17676 0.19949 12.92422 162.14580 192.22312 51895.46586 54800.00000
+
+Cometaryn Orbit Format Required Columns
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 +-------------+----------------------------------------------------------------------------------+
 | Keyword     | Description                                                                      |
@@ -82,7 +89,11 @@ An example of an orbit file in Cometary format::
 
 Keplerian Orbit Format
 ~~~~~~~~~~~~~~~~~~~~~~~~
-An example of an orbit file in Keplerian format::
+
+Example Orbit File in Keplerian Format
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code-block::
 
    ObjID FORMAT a e inc node argPeri ma epochMJD_TDB 
    t1 KEP 47.9877 0.0585 11.3584 148.4661 140.4756 308.3244 53157.00 
@@ -92,6 +103,8 @@ An example of an orbit file in Keplerian format::
    t5 KEP 47.9356 0.2912 4.3621 306.0908 217.8116 18.7043 53157.00  
    t6 KEP 47.9786 0.2730 2.2425 147.9340 166.6578 327.8996 53157.00  
 
+Keplerian Orbit Format Required Columns
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 +-------------+----------------------------------------------------------------------------------+
 | Keyword     | Description                                                                      |
 +=============+==================================================================================+
@@ -116,7 +129,11 @@ An example of an orbit file in Keplerian format::
 
 Cartesian Orbit Format
 ~~~~~~~~~~~~~~~~~~~~~~~
-An example of an orbit file, in Cartesian format::
+
+Example Orbit File in Cartesian format
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code-block::
 
    ObjID FORMAT x y z xdot ydot zdot epochMJD_TDB
    STC001TFa CART  36.701800449281706  -8.770729364470023 -0.6261488665458296  0.0007155581026554  0.0026593939322716  7.344098975957749e-06   54466.0  36.54594860110992   0.04317
@@ -128,6 +145,9 @@ An example of an orbit file, in Cartesian format::
    STC001TLa CART  33.603411395500856  18.87464811210368  -0.6359802780512743 -0.0012855812467388  0.0025081701870071 -2.1885697562103903e-05  54466.0  39.93776165518987   0.05171
    STC001TMa CART -35.205151144286006 -21.59643017634877  -6.399036148167812   0.0012861312376887 -0.0023168284708868 -0.0001863582741122      54466.0  41.6549967769547    0.05369
    STC001TNa CART -33.79882997522472  -16.266135214977684 -5.221001391031022   0.0013485808895118 -0.0024033901851641 -0.0001051222283375      54466.0  36.890329257623286  0.06274
+
+Cartesian Orbit Format Required Columns
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 +-------------+----------------------------------------------------------------------------------+
 | Keyword     | Description                                                                      |
@@ -154,6 +174,25 @@ An example of an orbit file, in Cartesian format::
 .. note::
    All positions and velocities are in respect to J2000
 
+Orbit File Configuration Parameters
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+``Sorcha`` is initialized for the format of the input orbit file through the :ref:`configuration file<configs>` INPUT sections:
+
+.. code-block::
+
+   [INPUT]
+
+   # Sorcha chunk size: how many objects should be processed at once?
+
+   size_serial_chunk = 20000
+
+   # Format for the orbit, physical parameters, and complex physical parameters input files.
+   # Options: csv or whitespace
+
+   aux_format = csv
+
+
 .. _physical:
 
 Physical Parameters File
@@ -169,13 +208,19 @@ The input file for the physical parameters includes information about the object
   *  Each simulated object **must** have a unique string identifier
   *  You  **must use the same phase curve prescription for all simulated objects**. If you want to use different phase curve prescriptions for different synthetic populations, you will need to run them in separate input files to ``Sorcha``
   *  If the  phase curve function is set to NONE in the configuration value then no phase curve parameter values are required in the physical parameters files.
-  *  In the config file you can decide which filters you want have ``Sorcha`` run on and specify which filter is the main filter that the absolute magnitude is defined for. You only need to provide colors for those filters specified in the config file.
+  *  In the :ref:`configuration file<configs>` you can decide which filters you want have ``Sorcha`` run on and specify which filter is the main filter that the absolute magnitude is defined for. You only need to provide colors for those filters specified in the :ref:`configuration file<configs>`.
+
+We have implemented several phase curve parameterizations that can be specified in the :ref:`configuration file<configs>` and then inputted through the physical parameters. **You can either specify one set of phase curve parameters for all filters or specify values for each filter examined by** ``Sorcha``. We are using the  `sbpy <https://sbpy.org/>`_  phase function utilities. The supported options are: `HG <https://sbpy.readthedocs.io/en/latest/api/sbpy.photometry.HG.html#sbpy.photometry.HG>`_, `HG1G2 <https://sbpy.readthedocs.io/en/latest/api/sbpy.photometry.HG1G2.html#sbpy.photometry.HG1G2>`_, `HG12 <https://sbpy.readthedocs.io/en/latest/api/sbpy.photometry.HG12.html#sbpy.photometry.HG12>`_, `linear <https://sbpy.readthedocs.io/en/latest/api/sbpy.photometry.LinearPhaseFunc.html#sbpy.photometry.LinearPhaseFunc>`_ (specified by S in the header of the physical parameters file), and none (if no columns for phase curve are included in the physical parameters file then the synthetic object is considered to have a flat phase curve). Note that the HG12 model is the `Penttilä et al. (2016) <https://www.sciencedirect.com/science/article/abs/pii/S0032063315002408>`_ modified model, and not the original (IAU adopted) `Muinonen et al. (2010) <https://www.sciencedirect.com/science/article/abs/pii/S001910351000151X>`_ model.
+
+
+
+Example Pphysical Parameters File (single linear slope phase curve parameter for all filters)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. note::
   For readability we show examples of whitespace-separated files below.
 
-An example of the physical parameters file where a single linear slope phase curve parameter is used for all filters::
-
+.. code-block::
 
    ObjID H u-r g-r i-r z-r y-r GS 
    St500000a 5.63 2.55 0.92 -0.38 -0.59 -0.70 0.15
@@ -185,7 +230,13 @@ An example of the physical parameters file where a single linear slope phase cur
    St500004a 10.2 1.90 0.58 -0.21 -0.30 -0.39 0.15
 
 
-An example of the physical parameters file where a HG prescription is specified for each filter::
+Example Physical Parameters File (a HG value is specified for each filter)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. note::
+  For readability we show examples of whitespace-separated files below.
+
+.. code-block::
 
    ObjID H u-r g-r i-r z-r y-r Gr Gu Gg Gi Gz Gy
    St500000a 5.63 2.55 0.92 -0.38 -0.59 -0.70 0.15 0.17 0.14 0.19 0.18 0.20
@@ -194,9 +245,11 @@ An example of the physical parameters file where a HG prescription is specified 
    St500003a 6.67 1.72 0.48 -0.11 -0.12 -0.12 0.15 0.16 0.12 0.20 0.15 0.19
    St500004a 10.2 1.90 0.58 -0.21 -0.30 -0.39 0.15 0.15 0.16 0.15 0.14 0.16
 
-Rubin Observatory will survey the sky in six broadband (optical filters), *u, g, r, i, z,* and *y* . In the physical parameters file, you will specify the object's absolute magnitude in the main filter (as specified in the config file. usually this is g or r band) and then provide the synthetic planetesimal's color in other filters relative to the main filter.
+Rubin Observatory will survey the sky in six broadband (optical filters), *u, g, r, i, z,* and *y* . In the physical parameters file, you will specify the object's absolute magnitude in the main filter (as specified in the :ref:`configuration file<configs>` (sually this is g or r band) and then provide the synthetic planetesimal's color in other filters relative to the main filter.
 
-We have implemented several phase curve parameterizations that can be specified in the config file and then inputted through the physical parameters. **You can either specify one set of phase curve parameters for all filters or specify values for each filter examined by ``Sorcha``.** We are using the  `sbpy <https://sbpy.org/>`_  phase function utilities. The supported options are: `HG <https://sbpy.readthedocs.io/en/latest/api/sbpy.photometry.HG.html#sbpy.photometry.HG>`_, `HG1G2 <https://sbpy.readthedocs.io/en/latest/api/sbpy.photometry.HG1G2.html#sbpy.photometry.HG1G2>`_, `HG12 <https://sbpy.readthedocs.io/en/latest/api/sbpy.photometry.HG12.html#sbpy.photometry.HG12>`_, `linear <https://sbpy.readthedocs.io/en/latest/api/sbpy.photometry.LinearPhaseFunc.html#sbpy.photometry.LinearPhaseFunc>`_ (specified by S in the header of the physical parameters file), and none (if no columns for phase curve are included in the physical parameters file then the synthetic object is considered to have a flat phase curve). Note that the HG12 model is the `Penttilä et al. (2016) <https://www.sciencedirect.com/science/article/abs/pii/S0032063315002408>`_ modified model, and not the original (IAU adopted) `Muinonen et al. (2010) <https://www.sciencedirect.com/science/article/abs/pii/S001910351000151X>`_ model.
+
+Required Physical Parameters File Columns and Format
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 +------------------+----------------------------------------------------------------------------------+
 | Keyword          | Description                                                                      |
@@ -211,13 +264,90 @@ We have implemented several phase curve parameterizations that can be specified 
 +------------------+----------------------------------------------------------------------------------+
 
 .. note::
-  The Phase curve parameters(s) column will not be present if the phase curve function/calculation is set to None in the configuration file
+  The Phase curve parameters(s) column will not be present if the phase curve function/calculation is set to None in the :ref:`configuration file<configs>'.
 
 .. note::
-  In the config file you can decide which filters you want to have ``Sorcha`` run on and specify which filter is the main filter that the absolute magnitude is defined for. You only need to provide colors for those filters specified in the config file.
+  In the :ref:`configuration file<configs>` you can decide which filters you want to have ``Sorcha`` run on and specify which filter is the main filter that the absolute magnitude is defined for. You only need to provide colors for those filters specified in the :ref:`configuration file<configs>`.
 
 .. seealso::
   We have an `example Jupyter notebook <notebooks/demo_CalculateLSSTColours.ipynb>`_  demonstrating how to take a representative optical/NIR spectra of your input population and using the `rubin_sim <https://github.com/lsst/rubin_sim>`_  package to estimate the expected colors in the LSST filter bandpasses.  
+
+
+Physical Parameters  File Configuration Parameters
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+``Sorcha`` is initialized for the format of the input physical parameters file through the :ref:`configuration file<configs>` INPUT, FILTERS. and PHASECURVES sections:
+
+.. code-block::
+
+   [INPUT]
+
+   # Sorcha chunk size: how many objects should be processed at once?
+
+   size_serial_chunk = 20000
+
+   # Format for the orbit, physical parameters, and complex physical parameters input files.
+   # Options: csv or whitespace
+
+   aux_format = csv
+
+   [FILTERS]
+
+   # Filters of the observations you are interested in, comma-separated.
+   # Your physical parameters file must have H calculated in one of these filters
+   # and colour offset columns defined relative to that filter.
+
+   observing_filters = r,g,i,z,u,y
+
+   [PHASECURVES]   
+
+   # The phase function used to calculate apparent magnitude. The physical parameters input
+   # file must contain the columns needed to calculate the phase function.
+   # Options: HG, HG1G2, HG12, linear, none.
+
+   phase_function = linear
+
+.. note::
+  In the :ref:`configuration file<configs>` you can decide which filters you want to have ``Sorcha`` run on and specify which filter is the main filter that the absolute magnitude is defined for. You only need to provide colors for those filters specified in the :ref:`configuration file<configs>`.
+
+
+.. _CPP:
+
+Complex Physical Parameters File (Optional)
+---------------------------------------------------
+
+The complex physical parameters file is only needed if you're going to include your own rotational light curve class or cometary activity class to augment the calculated apparent magnitudes. ``Sorcha`` is set up such that any values required for this such as (light curve amplitude and period per simulated object) are included in a file, separate from the physical parameters file, that we refer to as the complex physical parameters file.  What columns are required in the complex physical parameters file depends on the classes you are using.
+
+.. tip::
+  *  The first column must be ObjID, but the ordering of the remaining columns does not matter as long as the required columns exist and have entries
+  *  The first row in the complex  physical parameters file **must** list  the column names
+  *  The **correct capitalization of column names** is required
+  *  The complex physical parameters file can be either **whitespace-separated** or **comma-separated values (CSV)**
+  *  Each simulated object **must** have a unique string identifier
+
+.. seealso::
+   Further details about how to use ``sorcha addons`` to apply cometary activity and lightcurve effects can be found :ref:`here<addons>`.
+
+
+Complex Parameters File Configuration Parameters
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+``Sorcha`` is initialized for the format of the complex physical parameters file through the :ref:`configuration file<configs>` INPUT sections:
+
+.. code-block::
+
+   [INPUT]
+
+   # Sorcha chunk size: how many objects should be processed at once?
+
+   size_serial_chunk = 20000
+
+   # Format for the orbit, physical parameters, and complex physical parameters input files.
+   # Options: csv or whitespace
+
+   aux_format = csv
+
+
 
 .. _pointing:
 
@@ -250,12 +380,14 @@ The latest version of rubin_sim cadence simulations can be found at https://s3df
 
 .. _database_query:
 
+
 Setting Up the Correct LSST Pointing Database Query
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-``Sorcha``'s **ppsqldbquery** config file parameter contains the SQL query for obtaining this information from the pointing database.
+``Sorcha``'s **ppsqldbquery** :ref:`configuration file<configs>` parameter contains the SQL query for obtaining this information from the pointing database.
 
 From rubin_sim v2.0 simulations onward use the query::
+
   SELECT observationId, observationStartMJD as observationStartMJD_TAI, visitTime, visitExposureTime, filter, seeingFwhmGeom as seeingFwhmGeom_arcsec, seeingFwhmEff as seeingFwhmEff_arcsec, fiveSigmaDepth as fieldFiveSigmaDepth_mag , fieldRA as fieldRA_deg, fieldDec as fieldDec_deg, rotSkyPos as fieldRotSkyPos_deg FROM observations order by observationId
 
 For past rubin_sim/OpSim simulations pre-v2.0 use the query::
@@ -264,22 +396,68 @@ For past rubin_sim/OpSim simulations pre-v2.0 use the query::
 
 
 
-.. _CPP:
+Survey Pointing Database Configuration Parameters
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Complex Physical Parameters File (Optional)
----------------------------------------------------
+The survey pointing database query is set in the :ref:`configuration file<configs>` INPUT section:
 
-The complex physical parameters file is only needed if you're going to include your own rotational light curve class or cometary activity class to augment the calculated apparent magnitudes. ``Sorcha`` is set up such that any values required for this such as (light curve amplitude and period per simulated object) are included in a file, separate from the physical parameters file, that we refer to as the complex physical parameters file.  What columns are required in the complex physical parameters file depends on the classes you are using.
+
+.. code-block::
+
+   [INPUT]
+
+   # SQL query for extracting data from the pointing database.
+
+   pointing_sql_query = SELECT observationId, observationStartMJD as observationStartMJD_TAI, visitTime, visitExposureTime, filter, seeingFwhmGeom as seeingFwhmGeom_arcsec, seeingFwhmEff as seeingFwhmEff_arcsec, fiveSigmaDepth as fieldFiveSigmaDepth_mag , fieldRA as fieldRA_deg, fieldDec as fieldDec_deg, rotSkyPos as fieldRotSkyPos_deg FROM observations order by observationId
+
+
+
+Camera Footprint File (Optional)
+-----------------------------------------
+
+.. attention::
+    The camera footprint file is only required if you are using the camera footprint 
+
+If you are going to simulate the full camera architecture including CCD locations and chip gaps in the camera focal plane, you will need to provide a file that describes the layout of detectors on the camera focal plane. 
+
+The camera footprint file is a comma-separated values (CSV) file with three columns describing the detector shapes, with the header “detector,x,y”. The first column indicates which detector a point belongs to, and should be an integer. Second and third columns specify where on the focal plane the corners are. Values are unitless, equal to tan( ra ), tan( dec ), where ra and dec are the vertical and horizontal angles of the points from the center of the sphere tangent to origin in the focal plane. Ordering does not matter, as the constructor sorts the points automatically.
 
 .. tip::
-  *  The first column must be ObjID, but the ordering of the remaining columns does not matter as long as the required columns exist and have entries
-  *  The first row in the complex  physical parameters file **must** list  the column names
-  *  The **correct capitalization of column names** is required
-  *  The complex physical parameters file can be either **whitespace-separated** or **comma-separated values (CSV)**
-  *  Each simulated object **must** have a unique string identifier
+    ``Sorcha`` comes with a representation of the LSSTCam architecture already installed. Further details of how to use this built-in default file can be found in the description of the :ref:`Full Camera Footprint Filter<full_camera_footprint>`.
 
-.. seealso::
-   Further details about how to use ``sorcha addons`` to apply cometary activity and lightcurve effects can be found :ref:`here<addons>`.
+Example Camera Footprint File
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. literalinclude:: ../src/sorcha/modules/data/LSST_detector_corners_100123.csv 
+    :language: text
+    :lines: 1-20
+
+Camera Footprint File Configuration Parameters
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+You can set whether you're using a camera footprint file and the location of the file in the :ref:`configuration file<configs>` FOV section:
+
+.. code-block::
+
+   [FOV]
+
+   # Choose between circular or actual camera footprint, including chip gaps.
+   # Options: circle, footprint.
+   
+   camera_model = footprint
+
+
+   # Path to camera footprint file. Uncomment to provide a path to the desired camera 
+   # detector configuration file if not using the default built-in LSSTCam detector 
+   # configuration for the actual camera footprint.
+
+   footprint_path= ./data/detectors_corners.csv
+
+.. note::
+   If camera_model is set to footprint and footprint_path config variable is not set, ``Sorcha`` will automatically read in its installed LSSTCam detector footprint file. 
+
+.. tip::
+   If using the cicle camera module, foot_print needs to be removed or commented out of the :ref:`configuration file<configs>` . 
+
 
 .. _ephemf:
 
@@ -297,14 +475,22 @@ Ephemeris File (Optional)
   *  The ephemeris file can be either **whitespace-separated** or **comma-separated values(CSV)**
   *  Each simulated object **must** have a unique string identifier
 
+.. hint::
+   Use the **--er** flag on the command line to specify the external ephemeris file that ``Sorcha`` should use.
+
+
+Example Ephemeris File
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 .. note::
   For readability we show an example of a whitespace-separated file below.
-
-An example of an (optional) ephemeris file:
 
 .. literalinclude:: ../docs/example_files/assist_rebound.csv
     :language: text
     :lines: 1-20
+
+Required Ephemeris File Columns and Format
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 +--------------------------+----------------------------------------------------------------------------------+
 | Keyword                  | Description                                                                      |
@@ -341,7 +527,7 @@ An example of an (optional) ephemeris file:
 +--------------------------+----------------------------------------------------------------------------------+
 | Obs-Sun(J2000x)(km)      |  Cartesian X-component of observer's heliocentric distance (km)                  |
 +--------------------------+----------------------------------------------------------------------------------+
-| Obs-Sun(J2000y)(km)      |  Cartesian Y-component of the observer's heliocentric distance (km)              |             
+| Obs-Sun(J2000y)(km)      |  Cartesian Y-component of the observer's heliocentric distance (km)              |
 +--------------------------+----------------------------------------------------------------------------------+
 | Obs-Sun(J2000z)(km)      |  Cartesian Z-component of the observer's heliocentric distance (km)              |
 +--------------------------+----------------------------------------------------------------------------------+
@@ -355,23 +541,29 @@ An example of an (optional) ephemeris file:
 +--------------------------+----------------------------------------------------------------------------------+
 
 .. note::
-   All positions and velocities are in respect to J2000 
+   All positions and velocities are in respect to J2000
 
-Camera Footprint File (Optional)
------------------------------------------
 
-.. attention::
-    The camera footprint file is only required if you are using the camera footprint 
+Ephemeris File Configuration Parameters 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-If you are going to simulate the full camera architecture including CCD locations and chip gaps in the camera focal plane, you will need to provide a file that describes the layout of detectors on the camera focal plane. 
+``Sorcha`` is initialized to use an external ephemeris file through the :ref:`configuration file<configs>` INPUT section:
 
-The camera footprint file is a comma-separated text file with three columns describing the detector shapes, with the header “detector,x,y”. The first column indicates which detector a point belongs to, and should be an integer. Second and third columns specify where on the focal plane the corners are. Values are unitless, equal to tan( ra ), tan( dec ), where ra and dec are the vertical and horizontal angles of the points from the center of the sphere tangent to origin in the focal plane. Ordering does not matter, as the constructor sorts the points automatically.
+.. code-block::
 
-.. tip::
-``Sorcha`` comes with a representation of the LSSTCam architecture already installed. Further details of how to use this built-in default file can be found in the description of the :ref:`Full Camera Footprint Filter<full_camera_footprint>`.
+   [INPUT]
 
-An example of an (optional) camera footprint file:
 
-.. literalinclude:: ../src/sorcha/modules/data/LSST_detector_corners_100123.csv 
-    :language: text
-    :lines: 1-20
+   # The simulation used for the ephemeris input. 
+   # ar=ASSIST+REBOUND interal ephemeris generation 
+   # external=providing an external input file from the command line
+   # Options: "ar", "external"
+
+   ephemerides_type = external
+
+
+   # Format for ephemeris simulation input file if a file is specified at the command line. 
+   # This is also the format to which ephemeris files will be written out, if specified.
+   # Options: csv, whitespace, hdf5
+
+   eph_format = csv

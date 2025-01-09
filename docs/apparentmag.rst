@@ -79,3 +79,29 @@ This filter will recalculate the PSF magnitude of the observations, adjusting fo
   :alt: Sky image showing a short trailing source circled in red.
   :align: center
 
+
+
+Accounting for Saturation (Saturation/Bright Filter) 
+------------------------------------------------------------
+
+The saturation limit filter removes all detections that are brighter than the saturation limit
+of the survey. `Ivezić et al. (2019) <https://ui.adsabs.harvard.edu/abs/2019ApJ...873..111I/abstract>`_
+estimate that the saturation limit for the LSST will be ~16 in the r filter. 
+
+``Sorcha`` includes functionality to specify either a single saturation limit, or a saturation limit in each filter.
+For the latter, limits must be given in a comma-separated list in the same order as the filters supplied 
+for the observing_filters config file variable.
+
+To include this filter, the configuration file should contain::
+
+    [SATURATION]
+    bright_limit = 16.0
+
+Or::
+
+    [SATURATION]
+    bright_limit = 16.0, 16.1, 16.2
+
+
+.. note::
+  The saturation filter is only applied if the :ref:`configuration file<configs>` has a SATURATION section. 
