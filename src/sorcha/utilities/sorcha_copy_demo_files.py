@@ -5,7 +5,7 @@ import shutil
 import sys
 from importlib.resources import files
 
-from sorcha.utilities.Find_File_or_Directory import FindDirectoryOrExit
+from sorcha.utilities.fileAccessUtils import FindDirectoryOrExit
 from sorcha.utilities.sorcha_demo_command import print_demo_command
 
 

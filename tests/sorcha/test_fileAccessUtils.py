@@ -9,7 +9,7 @@ from sorcha.utilities.dataUtilitiesForTests import get_test_filepath
 from sorcha.utilities.sorchaArguments import sorchaArguments
 
 def test_FindFileOrExit():
-    from sorcha.utilities.Find_File_or_Directory import FindFileOrExit
+    from sorcha.utilities.fileAccessUtils import FindFileOrExit
 
     test_file = FindFileOrExit(get_test_filepath("test_PPConfig.ini"), "config file")
 
@@ -23,7 +23,7 @@ def test_FindFileOrExit():
     return
 
 def test_FindDirectoryOrExit():
-    from sorcha.utilities.Find_File_or_Directory import FindDirectoryOrExit
+    from sorcha.utilities.fileAccessUtils import FindDirectoryOrExit
 
     test_dir = FindDirectoryOrExit("./", "test")
 

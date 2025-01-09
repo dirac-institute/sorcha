@@ -16,7 +16,7 @@ def cmd_outputs_create_sqlite(args):  # pragma: no cover
     #       is poor user experience.
     #
     from sorcha.utilities.createResultsSQLDatabase import create_results_database
-    from sorcha.utilities.Find_File_or_Directory import FindDirectoryOrExit
+    from sorcha.utilities.fileAccessUtils import FindDirectoryOrExit
     import os
 
     args.output = os.path.abspath(args.output)
@@ -36,7 +36,7 @@ def cmd_outputs_create_sqlite(args):  # pragma: no cover
 
 def cmd_outputs_check_logs(args):  # pragma: no cover
     from sorcha.utilities.check_output_logs import check_output_logs
-    from sorcha.utilities.Find_File_or_Directory import FindDirectoryOrExit
+    from sorcha.utilities.fileAccessUtils import FindDirectoryOrExit
     import os
 
     args.filepath = os.path.abspath(args.filepath)

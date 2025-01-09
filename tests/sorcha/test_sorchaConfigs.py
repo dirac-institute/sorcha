@@ -1093,7 +1093,7 @@ def test_PrintConfigsToLog(tmp_path):
 
     datalog = glob.glob(os.path.join(tmp_path, "*-sorcha.log"))
     #when updating PrintConfigsToLog text file test_PPPrintConfigsToLog.txt needs to be updated too.
-    testfile = open(os.path.join(test_path, "test_PPPrintConfigsToLog.txt"), mode="r")
+    testfile = open(os.path.join(test_path, "test_PrintConfigsToLog.txt"), mode="r")
     newfile = open(datalog[0], mode="r")
     alltest = testfile.readlines()
     allnew = newfile.readlines()

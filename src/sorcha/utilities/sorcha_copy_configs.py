@@ -5,7 +5,7 @@ import shutil
 import sys
 from importlib.resources import files
 
-from sorcha.utilities.Find_File_or_Directory import FindDirectoryOrExit
+from sorcha.utilities.fileAccessUtils import FindDirectoryOrExit
 
 
 def copy_demo_configs(copy_location, which_configs, force_overwrite):

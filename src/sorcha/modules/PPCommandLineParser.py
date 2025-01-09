@@ -2,7 +2,7 @@ import os
 import sys
 import logging
 import glob
-from ..utilities.Find_File_or_Directory import FindFileOrExit, FindDirectoryOrExit
+from sorcha.utilities.fileAccessUtils import FindFileOrExit, FindDirectoryOrExit
 
 
 def warn_or_remove_file(filepath, force_remove, pplogger):
