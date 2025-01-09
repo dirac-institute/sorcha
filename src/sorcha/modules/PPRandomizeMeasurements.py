@@ -70,7 +70,7 @@ def randomizeAstrometryAndPhotometry(observations, sconfigs, module_rngs, verbos
     # default SNR cut can be disabled in the config file under EXPERT
     # at low SNR, high photometric sigma causes randomisation to sometimes
     # grossly inflate/decrease magnitudes.
-    if sconfigs.expert.default_SNR_cut:
+    if sconfigs.expert.default_snr_cut:
         verboselog("Removing all observations with SNR < 2.0...")
         observations = PPSNRLimit(observations.copy(), 2.0)
 
