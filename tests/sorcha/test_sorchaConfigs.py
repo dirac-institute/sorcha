@@ -963,6 +963,19 @@ def test_activity_config():
 
 # expert config test
 
+@pytest.mark.parametrize("key_name", ["SNR_limit", "mag_limit"])
+def test_expert_config_float(key_name):
+    """
+    tests that wrong inputs for expertConfigs float attributes is caught correctly
+    """
+
+    expect_configs = correct_expert.copy()
+    expect_configs[key_name] = "str"
+    with pytest.raises(SystemExit) as error_text:
+        test_configs = expertConfigs(**expect_configs)
+
+    assert error_text.value.code == f"ERROR: expected a float for config parameter {key_name}. Check value in config file."
+
 
 @pytest.mark.parametrize("key_name, error_name", [("SNR_limit", "SNR"), ("mag_limit", "magnitude")])
 def test_expert_config_bounds(key_name, error_name):

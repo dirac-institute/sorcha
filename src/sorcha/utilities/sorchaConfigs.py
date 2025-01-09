@@ -750,6 +750,7 @@ class expertConfigs:
         None
         """
         if self.SNR_limit is not None:
+            self.SNR_limit = cast_as_float(self.SNR_limit, "SNR_limit")
             self.SNR_limit_on = True
             if self.SNR_limit < 0:
                 logging.error("ERROR: SNR limit is negative.")
@@ -758,6 +759,7 @@ class expertConfigs:
             self.SNR_limit_on = False
 
         if self.mag_limit is not None:
+            self.mag_limit = cast_as_float(self.mag_limit, "mag_limit")
             self.mag_limit_on = True
             if self.mag_limit < 0:
                 logging.error("ERROR: magnitude limit is negative.")
