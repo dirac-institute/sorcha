@@ -1,8 +1,10 @@
 import numpy as np
+import os
 import pandas as pd
 import pytest
 from numpy.testing import assert_equal
 from pandas.testing import assert_frame_equal
+import tempfile
 
 from sorcha.readers.CSVReader import CSVDataReader
 from sorcha.utilities.dataUtilitiesForTests import get_test_filepath
@@ -392,3 +394,25 @@ def test_CSVDataReader_delims():
     with pytest.raises(SystemExit) as e2:
         _ = CSVDataReader(get_test_filepath("testcolour.txt"), "")
     assert e2.type == SystemExit
+
+
+def test_CSVDataReader_blank_lines():
+    """Test that we fail if the input file has blank lines."""
+    with tempfile.TemporaryDirectory() as dir_name:
+        file_name = os.path.join(dir_name, "test.csv")
+        with open(file_name, 'w') as output:
+            output.write("ObjID,b,c\n")
+            output.write("0,1,2\n")
+            output.write("1,2,3\n")
+
+        # The checks pass.
+        reader = CSVDataReader(file_name, sep="csv", full_checks=False)
+        with open(file_name, 'a') as output:
+             output.write("\n")  # add a blank line
+        
+        # The code now fails by default.
+        with pytest.raises(SystemExit):
+            _ = CSVDataReader(file_name, sep="csv")
+        
+        # Checking can be turned off.
+        reader = CSVDataReader(file_name, sep="csv", full_checks=False)

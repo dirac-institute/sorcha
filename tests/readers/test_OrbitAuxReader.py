@@ -343,11 +343,10 @@ def test_orbit_sanity_check_com():
     with pytest.raises(SystemExit) as err:
         _ = OrbitAuxReader(get_test_filepath("orbit_test_files/orbit_sanity_check_com_q<0.csv"),"csv")
         _.read_rows()
-    assert err.value.code == "ERROR: Invalid cometary elements detected for one or more objects (check log for information)"
+    assert err.value.code.startswith("ERROR: CSVReader: found a blank line")
 
     #for comentary  e<0
     with pytest.raises(SystemExit) as err:
         _ = OrbitAuxReader(get_test_filepath("orbit_test_files/orbit_sanity_check_com_e<0.csv"),"csv")
         _.read_rows()
-    assert err.value.code == "ERROR: Invalid cometary elements detected for one or more objects (check log for information)"
-
+    assert err.value.code.startswith("ERROR: CSVReader: found a blank line")

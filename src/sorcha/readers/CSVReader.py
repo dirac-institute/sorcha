@@ -12,7 +12,7 @@ class CSVDataReader(ObjectDataReader):
     Requires that the file's first column is ObjID.
     """
 
-    def __init__(self, filename, sep="csv", header=-1, **kwargs):
+    def __init__(self, filename, sep="csv", header=-1, full_checks=True, **kwargs):
         """A class for reading the object data from a CSV file.
 
         Parameters
@@ -28,6 +28,11 @@ class CSVDataReader(ObjectDataReader):
             The row number of the header. If not provided, does an automatic search.
             Default = -1
 
+        full_checks : bool, optional
+            Scan the file pre-validating the format. This may be expensive for
+            larger files.
+            Default = True
+
         **kwargs: dictionary, optional
             Extra arguments
         """
@@ -40,7 +45,10 @@ class CSVDataReader(ObjectDataReader):
             sys.exit(f"ERROR: Unrecognized delimiter ({sep})")
         self.sep = sep
 
+        # To pre-validation and collect the header information.
         self.header_row = self._find_and_validate_header_line(header)
+        if full_checks:
+            self._prevalidate_csv(self.header_row)
 
         # A table holding just the object ID for each row. Only populated
         # if we try to read data for specific object IDs.
@@ -130,6 +138,29 @@ class CSVDataReader(ObjectDataReader):
             )
             pplogger.error(error_str)
             sys.exit(error_str)
+
+    def _prevalidate_csv(self, header):
+        """Perform a pre-validation of the CSV file, such as checking
+        for blank lines.
+
+        Parameters
+        ----------
+        header : integer
+            The row number of the header.
+        """
+        pplogger = logging.getLogger(__name__)
+
+        with open(self.filename) as fh:
+            for i, line in enumerate(fh):
+                if i >= header:
+                    # Check for blank lines. We do this explicitly because pandas read_csv()
+                    # has problems when skipping lines and finding blank lines at the end.
+                    if len(line) == 0 or line.isspace():
+                        error_str = (
+                            f"ERROR: CSVReader: found a blank line on line {i} " f" of {self.filename}."
+                        )
+                        pplogger.error(error_str)
+                        sys.exit(error_str)
 
     def _read_rows_internal(self, block_start=0, block_size=None, **kwargs):
         """Reads in a set number of rows from the input.
