@@ -80,6 +80,8 @@ def create_ephemeris(orbits_df, pointings_df, args, sconfigs):
         nside : integer
             The nside value used for the HEALPIx calculations.  Must be a
             power of 2 (1, 2, 4, ...)  nside=64 is current default.
+        n_sub_intervals: int
+            Number of sub-intervals for the Lagrange interpolation (default: 101)
 
     Returns
     -------
@@ -109,7 +111,7 @@ def create_ephemeris(orbits_df, pointings_df, args, sconfigs):
     picket_interval = sconfigs.simulation.ar_picket
     obsCode = sconfigs.simulation.ar_obs_code
     nside = 2**sconfigs.simulation.ar_healpix_order
-    n_sub_intervals = 101  # configs["n_sub_intervals"]
+    n_sub_intervals = sconfigs.simulation.n_sub_intervals
 
     ephemeris_csv_filename = None
     if args.output_ephemeris_file and args.outpath:
