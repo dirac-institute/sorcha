@@ -77,7 +77,7 @@ class simulationConfigs:
     ar_healpix_order: int = None
     """the order of healpix which we will use for the healpy portions of the code."""
 
-    n_sub_intervals: int = None
+    ar_n_sub_intervals: int = 101
     """Number of sub-intervals for the Lagrange ephemerides interpolation (default: 101)"""
 
     _ephemerides_type: str = None
@@ -114,7 +114,7 @@ class simulationConfigs:
             self.ar_fov_buffer = cast_as_float(self.ar_fov_buffer, "ar_fov_buffer")
             self.ar_picket = cast_as_int(self.ar_picket, "ar_picket")
             self.ar_healpix_order = cast_as_int(self.ar_healpix_order, "ar_healpix_order")
-            self.n_sub_intervals = cast_as_int_or_set_default(self.n_sub_intervals, "n_sub_intervals", 101)
+            self.ar_n_sub_intervals = cast_as_int(self.ar_n_sub_intervals, "ar_n_sub_intervals")
         elif self._ephemerides_type == "external":
             # makes sure when these are not needed that they are not populated
             check_key_doesnt_exist(self.ar_ang_fov, "ar_ang_fov", "but ephemerides type is external")
@@ -1311,39 +1311,6 @@ def cast_as_bool_or_set_default(value, key, default):
         return default
 
 
-def cast_as_int_or_set_default(value, key, default):
-
-    # replaces PPGetBoolOrExit: checks to make sure the value can be cast as a bool.
-    """
-    Checks to see if value can be cast as an int and if not set (equals None) gives default int.
-
-    Parameters
-    -----------
-    value : object attribute
-        value of the config file attribute
-
-    key : string
-        The key being checked.
-
-    default : int
-        default int if value is None
-
-    Returns
-    ----------
-    value as an int
-    """
-
-    if value is not None:
-        try:
-            int(value)
-        except ValueError:
-            logging.error(f"ERROR: expected an int for config parameter {key}. Check value in config file.")
-            sys.exit(f"ERROR: expected an int for config parameter {key}. Check value in config file.")
-        return value
-    elif value is None:
-        return default
-
-
 def PrintConfigsToLog(sconfigs, cmd_args):
     """
     Prints all the values from the config file and command line to the log.
@@ -1549,6 +1516,7 @@ def PrintConfigsToLog(sconfigs, cmd_args):
         pplogger.info("...the picket interval is: " + str(sconfigs.simulation.ar_picket))
         pplogger.info("...the observatory code is: " + str(sconfigs.simulation.ar_obs_code))
         pplogger.info("...the healpix order is: " + str(sconfigs.simulation.ar_healpix_order))
+        pplogger.info("...the number of sub-intervals is: " + str(sconfigs.simulation.ar_n_sub_intervals))
     else:
         pplogger.info("ASSIST+REBOUND Simulation is turned OFF.")
 

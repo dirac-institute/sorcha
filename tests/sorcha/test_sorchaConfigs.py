@@ -35,7 +35,7 @@ correct_simulation = {
     "ar_picket": 1,
     "ar_obs_code": "X05",
     "ar_healpix_order": 6,
-    "n_sub_intervals": 101
+    "ar_n_sub_intervals": 101
 }
 
 correct_filters_read = {"observing_filters": "r,g,i,z,u,y", "survey_name": "rubin_sim"}
@@ -262,7 +262,7 @@ def test_simulationConfigs_float(key_name):
     )
 
 
-@pytest.mark.parametrize("key_name", ["ar_picket", "ar_healpix_order","n_sub_intervals"])
+@pytest.mark.parametrize("key_name", ["ar_picket", "ar_healpix_order","ar_n_sub_intervals"])
 def test_simulationConfigs_int(key_name):
     """
     Tests that wrong inputs for simulationConfigs int attributes is caught correctly

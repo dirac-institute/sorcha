@@ -224,6 +224,7 @@ sorcha.utilities.sorchaConfigs INFO     ...the buffer around the FOV is: 0.2
 sorcha.utilities.sorchaConfigs INFO     ...the picket interval is: 1 
 sorcha.utilities.sorchaConfigs INFO     ...the observatory code is: X05 
 sorcha.utilities.sorchaConfigs INFO     ...the healpix order is: 6 
+sorcha.utilities.sorchaConfigs INFO     ...the number of sub-intervals is: 101 
 sorcha.utilities.sorchaConfigs INFO     No lightcurve model is being applied. 
 sorcha.utilities.sorchaConfigs INFO     Output files will be saved in path: ./ with filestem testout 
 sorcha.utilities.sorchaConfigs INFO     Output files will be saved as format: csv 

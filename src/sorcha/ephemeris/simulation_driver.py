@@ -111,7 +111,7 @@ def create_ephemeris(orbits_df, pointings_df, args, sconfigs):
     picket_interval = sconfigs.simulation.ar_picket
     obsCode = sconfigs.simulation.ar_obs_code
     nside = 2**sconfigs.simulation.ar_healpix_order
-    n_sub_intervals = sconfigs.simulation.n_sub_intervals
+    n_sub_intervals = sconfigs.simulation.ar_n_sub_intervals
 
     ephemeris_csv_filename = None
     if args.output_ephemeris_file and args.outpath:
