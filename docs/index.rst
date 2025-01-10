@@ -52,8 +52,7 @@ works, tutorials, and demonstration notebooks that show how each of the various 
    configfiles
    inputs
    ephemerisgen
-   apparentmag 
-   filters
+   postprocessing 
    outputs
    gettingstarted
    hpc

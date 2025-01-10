@@ -14,6 +14,8 @@ The :ref:`inputs<Inputs>` that ``Sorcha`` requires are shown in the figure below
   :width: 800
   :alt: An overview of the inputs and outputs for Sorcha
 
+``Sorcha`` is split into two stages :ref:`ephemeris generation<ephemeris_gen>` and :ref:`post-processing<post_processing>`. **Ephemeris generation** calculates the on-sky position of the simulated objects and matches them to the survey observations in which they appear. **Post-Processing** performs the apparent magnitude calculatons and apply the rest of the survey's observational biases (such as detection effiency) in order to identify which objects in the input small body population would have been discovered by the discovery and the observations the objects would have been detected in.  
+
 
 ``Sorcha`` by default uses its own :ref:`ephemeris generator<ephemeris_gen>` to propagate the orbits and translate them to on-sky locations and rates. ``Sorcha``'s ephemeris generator is powered by `ASSIST  <https://github.com/matthewholman/assist>`_, a software package for ephemeris-quality integrations of test particles, and the `REBOUND <https://rebound.readthedocs.io/en/latest/>`_ N-body integrator.  If the user prefers to use a different generator, ``Sorcha`` is also to be configured to read in an external ephemeris file with pre-calculated ephemerides of the input synthetic orbital population.  
 

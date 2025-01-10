@@ -24,10 +24,6 @@ demo_FootprintFilter
 - **Demonstrates:** PPFootprintFilter
 - **Files:** detector_corners.csv, footprintFilterValidationObservations.csv, oneline_v2.0.db
 
-demo_CalculateLSSTColours
-- **Demonstrates:** How to take an optical/near-infrared spectrum of a known Solar System object and convert it to predicted LSST filter colors
-- **Files:** 2002PN34_highres.spec, 
-
 demo_Lightcurve
 - **Demonstrates:**  lightcurve_registration (LC_METHODS, update_lc_subclasses), AbstractLightCurve class
 - **Files:** none
