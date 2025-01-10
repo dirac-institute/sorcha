@@ -276,14 +276,14 @@ def runLSSTSimulation(args, sconfigs):
             )
             verboselog("Number of rows AFTER applying FOV filters: " + str(len(observations.index)))
 
-        if sconfigs.expert.SNR_limit_on and len(observations.index) > 0:
+        if sconfigs.expert.snr_limit_on and len(observations.index) > 0:
             verboselog(
                 "Dropping observations with signal to noise ratio less than {}...".format(
-                    sconfigs.expert.SNR_limit
+                    sconfigs.expert.snr_limit
                 )
             )
             verboselog("Number of rows BEFORE applying SNR limit filter: " + str(len(observations.index)))
-            observations = PPSNRLimit(observations, sconfigs.expert.SNR_limit)
+            observations = PPSNRLimit(observations, sconfigs.expert.snr_limit)
             verboselog("Number of rows AFTER applying SNR limit filter: " + str(len(observations.index)))
 
         if sconfigs.expert.mag_limit_on and len(observations.index) > 0:

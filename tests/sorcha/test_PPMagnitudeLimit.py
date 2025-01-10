@@ -6,10 +6,10 @@ from numpy.testing import assert_equal
 def test_PPMagnitudeLimit():
     from sorcha.modules.PPMagnitudeLimit import PPMagnitudeLimit
 
-    test_input = pd.DataFrame({"PSFMag": np.arange(15, 25)})
+    test_input = pd.DataFrame({"trailedSourceMag": np.arange(15, 25)})
 
     test_output = PPMagnitudeLimit(test_input, 18.0)
-    assert_equal(test_output["PSFMag"].values, [15, 16, 17])
+    assert_equal(test_output["trailedSourceMag"].values, [15, 16, 17])
 
     test_zero = PPMagnitudeLimit(test_input, 14.0)
     assert len(test_zero) == 0

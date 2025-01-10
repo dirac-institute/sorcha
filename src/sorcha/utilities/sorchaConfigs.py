@@ -580,10 +580,10 @@ class outputConfigs:
     output_columns: str = None
     """Controls which columns are in the output files."""
 
-    position_decimals: float = None
+    position_decimals: int = None
     """position decimal places"""
 
-    magnitude_decimals: float = None
+    magnitude_decimals: int = None
     """magnitude decimal places"""
 
     def __post_init__(self):
@@ -628,9 +628,9 @@ class outputConfigs:
         None
         """
         if self.position_decimals is not None:
-            self.position_decimals = cast_as_float(self.position_decimals, "position_decimals")
+            self.position_decimals = cast_as_int(self.position_decimals, "position_decimals")
         if self.magnitude_decimals is not None:
-            self.magnitude_decimals = cast_as_float(self.magnitude_decimals, "magnitude_decimals")
+            self.magnitude_decimals = cast_as_int(self.magnitude_decimals, "magnitude_decimals")
         if self.position_decimals is not None and self.position_decimals < 0:
             logging.error("ERROR: decimal places config variables cannot be negative.")
             sys.exit("ERROR: decimal places config variables cannot be negative.")
@@ -709,10 +709,10 @@ class activityConfigs:
 class expertConfigs:
     """Data class for holding expert section configuration file keys and validating them."""
 
-    SNR_limit: float = None
+    snr_limit: float = None
     """Drops observations with signal to noise ratio less than limit given"""
 
-    SNR_limit_on: bool = None
+    snr_limit_on: bool = None
     """flag for when an SNR limit is given"""
 
     mag_limit: float = None
@@ -724,7 +724,7 @@ class expertConfigs:
     trailing_losses_on: bool = None
     """flag for trailing losses"""
 
-    default_SNR_cut: bool = None
+    default_snr_cut: bool = None
     """flag for default SNR"""
 
     randomization_on: bool = None
@@ -749,15 +749,17 @@ class expertConfigs:
         ----------
         None
         """
-        if self.SNR_limit is not None:
-            self.SNR_limit_on = True
-            if self.SNR_limit < 0:
+        if self.snr_limit is not None:
+            self.snr_limit = cast_as_float(self.snr_limit, "snr_limit")
+            self.snr_limit_on = True
+            if self.snr_limit < 0:
                 logging.error("ERROR: SNR limit is negative.")
                 sys.exit("ERROR: SNR limit is negative.")
         else:
-            self.SNR_limit_on = False
+            self.snr_limit_on = False
 
         if self.mag_limit is not None:
+            self.mag_limit = cast_as_float(self.mag_limit, "mag_limit")
             self.mag_limit_on = True
             if self.mag_limit < 0:
                 logging.error("ERROR: magnitude limit is negative.")
@@ -765,7 +767,7 @@ class expertConfigs:
         else:
             self.mag_limit_on = False
 
-        if self.mag_limit_on and self.SNR_limit_on:
+        if self.mag_limit_on and self.snr_limit_on:
             logging.error(
                 "ERROR: SNR limit and magnitude limit are mutually exclusive. Please delete one or both from config file."
             )
@@ -776,7 +778,7 @@ class expertConfigs:
         self.trailing_losses_on = cast_as_bool_or_set_default(
             self.trailing_losses_on, "trailing_losses_on", True
         )
-        self.default_SNR_cut = cast_as_bool_or_set_default(self.default_SNR_cut, "default_SNR_cut", True)
+        self.default_snr_cut = cast_as_bool_or_set_default(self.default_snr_cut, "default_snr_cut", True)
         self.randomization_on = cast_as_bool_or_set_default(self.randomization_on, "randomization_on", True)
         self.vignetting_on = cast_as_bool_or_set_default(self.vignetting_on, "vignetting_on", True)
 
@@ -1407,12 +1409,12 @@ def PrintConfigsToLog(sconfigs, cmd_args):
     else:
         pplogger.info("Saturation limit is turned OFF.")
 
-    if sconfigs.expert.SNR_limit_on:
-        pplogger.info("The lower SNR limit is: " + str(sconfigs.expert.SNR_limit))
+    if sconfigs.expert.snr_limit_on:
+        pplogger.info("The lower SNR limit is: " + str(sconfigs.expert.snr_limit))
     else:
         pplogger.info("SNR limit is turned OFF.")
 
-    if sconfigs.expert.default_SNR_cut:
+    if sconfigs.expert.default_snr_cut:
         pplogger.info("Default SNR cut is ON. All observations with SNR < 2.0 will be removed.")
 
     if sconfigs.expert.mag_limit_on:

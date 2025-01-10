@@ -111,7 +111,7 @@ def test_randomizeAstrometryAndPhotometry():
 
     observations = pd.DataFrame(data_in, index=[0])
 
-    configs = {"default_SNR_cut": True, "trailing_losses_on": True}
+    configs = {"default_snr_cut": True, "trailing_losses_on": True}
     configs = expertConfigs(**configs)
     setattr(configs,"expert",configs)
     obs_out = randomizeAstrometryAndPhotometry(observations, configs, PerModuleRNG(2021))

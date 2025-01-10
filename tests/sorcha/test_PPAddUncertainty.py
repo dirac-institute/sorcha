@@ -104,7 +104,7 @@ def test_addUncertainties():
         }
     )
 
-    configs = {"trailing_losses_on": True, "default_SNR_cut": False}
+    configs = {"trailing_losses_on": True, "default_snr_cut": False}
     configs = expertConfigs(**configs)
     setattr(configs, "expert",configs)
 
