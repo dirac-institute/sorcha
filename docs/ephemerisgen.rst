@@ -122,6 +122,14 @@ If you want to use the same input orbits across multiple ``Sorcha`` runs, you ca
 .. tip::
    Compared to the other outputs from ``Sorcha``, the ephemeris output files are typicaly very large in size.  The output will be slow to read in to ``Sorcha``, but for some use cases reading in the ephemeris as a file  can be faster than ephemeris generation on the fly. We recommend only outuputting the contents of the ephemeris stage if you need it to speed up future simulations. If possible, use the HDF5 file format to help with disk I/O  speeds. 
 
+Validation
+--------------------------
+
+We have two Jupyter notebooks validationg different aspects of  ``Sorcha``'s ephemeris generator:
+
+-   `Coordinate Transformation <notebooks/demo_CoordinateTransformations.ipynb>`_
+-   `Sorcha End-to-End Verification <notebooks/demo_Verification.ipynb>`_
+ 
 
 Providing Your Own Ephemerides 
 ---------------------------------

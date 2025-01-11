@@ -15,7 +15,7 @@ The best way to get in touch about a bug, suggest enhancements to ``Sorcha``, or
 Contributing Code
 -----------------------------------
 
-We welcome upgrades/bug fixes to the code. This can be done by opening a pull request in the main ``Sorcha`` `GitHub repository <https://github.com/dirac-institute/sorcha>`_. If you have new classes that provide enhanced light curve or activity estimations, we welcome pull requests to the ``Sorcha Add-ons`` ` GitHub repository <https://github.com/dirac-institute/sorcha-addons>`_.
+We welcome upgrades/bug fixes to the code. This can be done by opening a pull request in the main ``Sorcha`` `GitHub repository <https://github.com/dirac-institute/sorcha>`_. If you have new classes that provide enhanced light curve or activity estimations, we welcome pull requests to the ``Sorcha Add-ons`` `GitHub repository <https://github.com/dirac-institute/sorcha-addons>`_.
 
 You will need to install ``Sorcha`` from the source code via pip in editable mode as described in the :ref:`installation` page.
 

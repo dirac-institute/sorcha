@@ -50,6 +50,7 @@ This is a file which contains the orbital information of a set of synthetic obje
 .. note::
   For readability we show examples of whitespace-separated files below. We show only the heliocentric versions of these inputs, as the barycentric column requirements are identical, changing only the `FORMAT` designation
 
+
 Cometary Orbit Format
 ~~~~~~~~~~~~~~~~~~~~~~~
 

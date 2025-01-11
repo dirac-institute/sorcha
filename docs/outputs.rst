@@ -7,9 +7,6 @@ Outputs
    Use the **-o** flag on the command line to specify where ``Sorcha`` should be  saving any output and log files (the file path).
 
 
-.. attention::
-   Use the **-t** flag on the command line to specify the filename stem for all the ``Sorcha`` output files and logs.
-
 
 Output File Formats
 ----------------------------
@@ -26,6 +23,8 @@ The :ref:`configuration file<configs>` keyword output_format in the OUTPUT secti
    If you are writing to a HDF5 file that you plan to access using the PyTables library, note that your object IDs cannot begin
    with a number (due to a limitation in PyTables).
 
+.. attention::
+   Use the **-t** flag on the command line to specify the filename stem for all the ``Sorcha`` output files and logs.
 
 Detections File
 ----------------------
@@ -278,7 +277,13 @@ Statistics (Tally) File
 file lists the number of observations for each object in each filter, along with the minimum, maximum and median apparent magnitude and the minimum and maximum
 phase angle. If the :ref:`linking filter<linking>` is on, this file also contains information on whether and when the object was linked by SSP.
 
-The columns in the statistics file are as follows:
+
+.. attention::
+   Use the **-st** flag on the command line to initialize ``Sorcha`` to generate the statistics file and specify the file stem for the resulting file.
+
+
+Statistics (Tally) File Column Names, Formats, and Descriptions
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 +------------------------------------+--------------+----------------------------------------------------------------------------------------------------------+
 | Keyword                            | Format       | Description                                                                                              |
