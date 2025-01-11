@@ -23,51 +23,68 @@ Trailed Source Magnitude and PSF (Point Spread Function) Magnitude
 Phase Curves
 ------------------------------------------------------------
 
+
+
 .. _addons:
 
 Incorporating Rotational Light Curves and Activity
 ------------------------------------------------------------
-``Sorcha`` has the ability user provided functions though python classes that augment/change the apparent brightness calculations for the synthetic Solar System objects. Any values required as input for these calculations, must be provided in the separate :ref:`CPP` file as input. 
-
-We have base example classes that the user can take and modify to whatever your need is. Within the ``Sorcha`` :ref:`configs`, the user would then specify which class they want to use and provide the required :ref:`CPP` file on the command line. 
-
-
-Once the Sorcha addons is installed, Sorcha will automatically detect the available plugins and make them available during processing.
-
-To use one of the plugins from the community utilities, simply add the unique name of the plugin to the configuration file provided to Sorcha, and provide the complex parameters file on the command line.
-
- We also have 2 pre-made example classes that can augment the calculated apparent magnitude of each synthetic object, One for handling cometary activity as a function of heliocentric distance and one that applies rotational light curves to the synthetic objects. In both cases, any derived class must inherit from the corresponding base class and follow its API, to ensure that Sorcha knows how to find and use your class.
+``Sorcha`` has the ability user provided functions though python classes that augment/change the apparent brightness calculations for the synthetic Solar System objects. Any values required as input for these calculations, must be provided in the separate :ref:`CPP` file as input. Rather than forcing the user directly modify  the ``Sorcha`` codebase every time they want to apply a different model for representing the effects of rotational lightcurves or cometary activity, we provide the ability to develop separate activity and lightcurve/brightness enhancement functions as  plugins using our template classes  and add them to the `Sorcha addons <https://github.com/dirac-institute/sorcha-addons>`_ package. In both cases, any derived class must inherit from the corresponding base class and follow its API, to ensure that Sorcha knows how to find and use your class. Once the Sorcha addons is installed, Sorcha will automatically detect the available plugins and make them available during post-processing.  To use one of the plugins from the community utilities, simply add the unique name of the plugin to the :ref:`configs` provided to Sorcha, and provide the  :ref:`CPP` file on the command line. We currently have 2 pre-made classes  that can augment the calculated apparent magnitude of each synthetic object, One for handling cometary activity as a function of heliocentric distance and one that applies rotational light curves to the synthetic objects.
 
 Cometary Activity or Simulating Other Active Objects
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+
+You can user cometary activity class provided in also your own class to apply a different comentary activity and add it into a custom version of the``Sorcha addons`` package.  Once the Sorcha-addons is installed, Sorcha will automatically detect the available plugins and make them available during processing.
+
+
+Cometary Activity Configuration Parameters
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Set the **cometary_activity** :ref:`configuration file<configs>` file varialble to **none** if you do you want to apply any cometary activity brightness enhancements to ``Sorcha``'s apparent magnitude calculations. 
+
+.. code-block::
+
+   [ACTIVITY]
+
+   # The unique name of the actvity model to use. Defined in the ``name_id`` method
+   #  of the subclasses of AbstractCometaryActivity.  If not none, a complex physical parameters 
+   # file must be specified at the command line.
+
+   comet_activity = none
+
+
+
+Cometary Activity Template Class 
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 .. literalinclude:: ../src/sorcha/activity/base_activity.py
    :language: python
 
 
-Through the ``Sorcha'' configuration file. 
+LSSTCometActivity Class
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.. seealso::
+  We have an `example Jupyter notebook <notebooks/demo_Cometary_Activity.ipynb>`_  demonstrating the LSSTCometActivity class built into `Sorcha addons package  <https://github.com/dirac-institute/sorcha-addons>`_.
+
 
 lsst_comet
 
 
-.. seealso::
-  We have an `example Jupyter notebook <notebooks/demo_Cometary_Activity.ipynb>`_  demonstrating the LSSTCometActivity class built into `Sorcha addons  GitHub repository <https://github.com/dirac-institute/sorcha-addons>`_.  
 
-You can also develop your own class to apply a different comentary activity and add it into a custom version of the``Sorcha addons`` package.  Once the Sorcha-addons is installed, Sorcha will automatically detect the available plugins and make them available during processing.
-
-
-
-
-Rotational Light Curve Effects
+Rotational Lightcurve Effects
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 The base lightcurve class is `AbstractLightCurve <https://github.com/dirac-institute/sorcha/blob/04baa79a7d67e1647b839a2d3880d8bfd9ce4624/src/sorcha/lightcurves/base_lightcurve.py#L10>`_ (see below). Inside the `Sorcha addons  GitHub repository <https://github.com/dirac-institute/sorcha-addons>`_, we provide a simple example implementation where the apparent magnitude of the object (that is, the magnitude after all geometric effects have been taken into account), has a sinusoidal term added to it. To use this function, in the :ref:`CPP` file, the user must provide a light curve amplitude (`LCA`), corresponding to half the peak-to-peak amplitude for the magnitude changes, a period `Period`, and a reference time `Time0` where the light curve is at 0 - if these are not provided, the software will produce an error message. Despite being simple, that implementation shows all the class methods that need to be implemented for a custom light curve function.
 
-.. literalinclude:: ../src/sorcha/lightcurves/base_lightcurve.py
-   :language: python
-
 
 .. seealso::
-  We have an `example Jupyter notebook <notebooks/demo_Lightcurve.ipynb>`_  demonstrating the SinusoidalLightCurve class built into `Sorcha addons  GitHub repository <https://github.com/dirac-institute/sorcha-addons>`_, 
+  We have an `example Jupyter notebook <notebooks/demo_Lightcurve.ipynb>`_  demonstrating the SinusoidalLightCurve class built into `Sorcha addons package <https://github.com/dirac-institute/sorcha-addons>`_,
+
+
+Lightcurve Template Class
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. literalinclude:: ../src/sorcha/lightcurves/base_lightcurve.py
+   :language: python
 
 
 Applying Photometric and Astrometric Uncerainties 
@@ -115,7 +132,7 @@ estimate that the saturation limit for the LSST will be ~16 in the r filter.
 For the latter, limits must be given in a comma-separated list in the same order as the filters supplied 
 for the observing_filters config file variable.
 
-To include this filter, the configuration file should contain::
+To include this filter, the :ref:`configs` should contain::
 
     [SATURATION]
     bright_limit = 16.0
@@ -138,7 +155,7 @@ to detect them. ``Sorcha`` uses the fading function formulation of `Veres and Ch
 see the below plot. This fading function is parameterised by the fading function width and peak efficiency.
 The default values are modelled on those from the aforementioned paper.
 
-To include this filter, the following options should be set in the configuration file::
+To include this filter, the following options should be set in the :ref:`configs`::
 
     [FADINGFUNCTION]
     fading_function_on = True
@@ -150,6 +167,9 @@ To include this filter, the following options should be set in the configuration
   :alt: Graph showing the fading function. Detection probability is plotted against magnitude - limiting magnitude, showing three smoothed step-functions centred on 0.0 on the x axis for three different widths.
   :align: center
 
+
+.. seealso::
+    We have a`Jupyter notebook <notebooks/demo_DetectionEfficiencyValidation.ipynb>`_  showing how ``Sorcha`` applies the survey detection efficiency (fading function). 
 
 Camera Footprint
 -----------------
@@ -175,7 +195,7 @@ Circle Radius (Simple Sensor Area)
 Using this filter applies a very simple circular camera footprint. The radius of the circle (**circle_radius** key) should
 be given in degrees. The **fill_factor** key specifics what fraction of observations should be randomly removed to roughly mimic detector chip
  gaps in this circular footprint approximation. The fraction of observations not removed is controlled by the config variable fill_factor.
-To include this filter, the following options should be set in the configuration file::
+To include this filter, the following options should be set in the :ref:`configs`::
 
     [FOV]
     camera_model = circle
@@ -196,19 +216,17 @@ Full Camera Footprint
 
 Using this filter applies a full camera footprint, including chip gaps. This is the slowest and most accurate version of the footprint filter.
 
-To include this filter, the following options should be set in the configuration file::
+To include this filter, the following options should be set in the :ref:`configs`::
 
     [FOV]
     camera_model = footprint
-    footprint_path = ./data/detectors_corners.csv
 
-.. tip::
-    ``Sorcha`` comes with a representation of the LSSTCam footprint already installed. If you do not include the **footprint_path** in the configuration file, then ``Sorcha`` assumes you're using its internal LSSTCam footprint.
+``Sorcha`` comes with a representation of the LSSTCam footprint already installed. If you do not include the **footprint_path** in the :ref:`configs`, then ``Sorcha`` assumes you're using its internal LSSTCam footprint. Further details about supplying your own camera footprint file can be found in the  :ref:`inoputs` page.
 
 .. warning::
     Note that :ref:`ASSIST+REBOUND ephemeris generator<ephemeris_gen>` uses a circular radius for its search area. To get accurate results, the ASSIST+REBOUND radius must be set to be larger than the circle_radius. For simmulating the LSST, we rcommend setting **ar_ang_fov = 2.06** and **ar_fov_buffer = 0.2**.
 
-Additionally, the camera footprint  model can account for the losses at the edge of the CCDs where the detection software will not be able to pick out sources close to the edge. You can add an exclusion zone around each CCD measured in arcseconds (on the focal plane) using the `footprint_edge_threshold` key to the configuraiton file.  An example setup in the configuration file::
+Additionally, the camera footprint  model can account for the losses at the edge of the CCDs where the detection software will not be able to pick out sources close to the edge. You can add an exclusion zone around each CCD measured in arcseconds (on the focal plane) using the `footprint_edge_threshold` key to the configuraiton file.  An example setup in the :ref:`configs`::
 
     [FOV]
     camera_model = footprint
@@ -216,7 +234,7 @@ Additionally, the camera footprint  model can account for the losses at the edge
     footprint_edge_threshold = 0.0001
 
 .. tip::
-    ``Sorcha`` comes with a representation of the LSSTCam footprint already installed. If you do not include the **footprint_path** in the configuration file, then ``Sorcha`` assumes you're using its internal LSSTCam footprint.
+    ``Sorcha`` comes with a representation of the LSSTCam footprint already installed. If you do not include the **footprint_path** in the :ref:`configs`, then ``Sorcha`` assumes you're using its internal LSSTCam footprint.
 
 .. _linking:
 
@@ -231,7 +249,14 @@ Linking is performed by detecting multiple observations of an object in a single
 A number of these tracklets must then be detected in a specific time window
 to form a 'track'.
 
-To use this filter, the user must specify all seven of the parameters in the configuration file.
+
+.. image:: images/lsst_ssp_linking.png
+  :width: 600
+  :alt: Plot of the LSST camera footprint where x and y are x and y distance from the pupil in degrees. The footprint also shows two overplotted circle radii of 1.75deg (corresponding to a 75% fill factor) and 2.06deg.
+  :align: center
+
+
+To use this filter, the user must specify all seven of the parameters in the :ref:`configs`.
 The defaults given below are those used by SSP and are explained in the comments::
 
     [LINKING]
@@ -263,10 +288,14 @@ The defaults given below are those used by SSP and are explained in the comments
     SSP_night_start_utc = 16.0
 
 By default, when the linking filter is on, ``Sorcha`` will drop all observations of unlinked objects. If the user wishes to retain
-these observations, this can be set in the configuration file. This will add an additional column to the output, **object_linked**, which states whether
-the observation is of a linked object or not. To enable this functionality, add the following to the configuration file::
+these observations, this can be set in the :ref:`configs`. This will add an additional column to the output, **object_linked**, which states whether
+the observation is of a linked object or not. To enable this functionality, add the following to the :ref:`configs`::
 
     [LINKING]
     drop_unlinked = False
+
+
+.. seealso::
+    See our `Jupyter notebook <notebooks/demo_miniDifiValidation.ipynb>`_  that validates the linking filter.
 
 

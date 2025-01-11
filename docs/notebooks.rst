@@ -12,7 +12,7 @@ Below we provide Jupyter notebooks that demonstrate ``Sorcha``'s capabilities an
     Circle Footprint Filter <notebooks/demo_CircleFootprint>
     LSST Camera Footprint Filter <notebooks/demo_FootprintFilter>
     Coordinate Transformation Example <notebooks/demo_CoordinateTransformations.ipynb>
-    Detection Efficiency Validation <notebooks/demo_DetectionEfficiencyValidation>
+    Detection Efficiency (Fading Function) Validation <notebooks/demo_DetectionEfficiencyValidation>
     Estimating Colors in LSST Filters From Optical/NIR Spectra <notebooks/demo_CalculateLSSTColours.ipynb>
     SSP Linking Filter <notebooks/demo_LinkingFilter>
     Magnitude and SNR Cuts <notebooks/demo_MagnitudeAndSNRCuts>

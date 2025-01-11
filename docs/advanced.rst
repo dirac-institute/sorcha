@@ -19,8 +19,8 @@ The value used to seed the random number generator can be specified via the **SO
    If you're trying to reproduce a crash or a certain behavior in ``Sorcha``, you can find the value that you need to set the random seed to in the log file.  
   
 
-Expert User Config File Options
------------------------------------
+Expert User Filters and Config File Options
+-----------------------------------------------
 
 The following options can be optionally added to an expert section ([EXPERT]) of the :ref:`configs`. 
 
@@ -96,6 +96,8 @@ To implement the magnitude limit (remove detections of objects fainter than 22 m
 .. attention::
     Only one of these filters may be implemented at once.
 
+.. seealso::
+  We have an `example Jupyter notebook <notebooks/demo_MagnitudeAndSNRCuts.ipynb>`_  demonstrating how these filters work within ``Sorcha``.
 
 Specifying Alernative Versions of the Auxiliary Files Used in the Ephemeris Generator 
 -----------------------------------------------------------------------------------------
