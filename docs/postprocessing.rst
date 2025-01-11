@@ -20,6 +20,12 @@ Trailed Source Magnitude and PSF (Point Spread Function) Magnitude
   :alt: A cartoon explanation of trailed source mag and PSF mag
   :align: center
 
+
+.. seealso::
+    See our `Jupyter notebook <notebooks/demo_ApparentMagnitudeValidation.ipynb>`_  that validates the apparent magnitude calulcation.
+
+
+
 Phase Curves
 ------------------------------------------------------------
 
@@ -221,7 +227,7 @@ To include this filter, the following options should be set in the :ref:`configs
     [FOV]
     camera_model = footprint
 
-``Sorcha`` comes with a representation of the LSSTCam footprint already installed. If you do not include the **footprint_path** in the :ref:`configs`, then ``Sorcha`` assumes you're using its internal LSSTCam footprint. Further details about supplying your own camera footprint file can be found in the  :ref:`inoputs` page.
+``Sorcha`` comes with a representation of the LSSTCam footprint already installed. If you do not include the **footprint_path** in the :ref:`configs`, then ``Sorcha`` assumes you're using its internal LSSTCam footprint. Further details about supplying your own camera footprint file can be found in the  :ref:`inputs` page.
 
 .. warning::
     Note that :ref:`ASSIST+REBOUND ephemeris generator<ephemeris_gen>` uses a circular radius for its search area. To get accurate results, the ASSIST+REBOUND radius must be set to be larger than the circle_radius. For simmulating the LSST, we rcommend setting **ar_ang_fov = 2.06** and **ar_fov_buffer = 0.2**.

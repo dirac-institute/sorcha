@@ -99,6 +99,14 @@ To implement the magnitude limit (remove detections of objects fainter than 22 m
 .. seealso::
   We have an `example Jupyter notebook <notebooks/demo_MagnitudeAndSNRCuts.ipynb>`_  demonstrating how these filters work within ``Sorcha``.
 
+Modifying the Ephemeris Generator Interpolation
+--------------------------------------------------
+
+A user can update the number of sub-intervals for the Lagrange ephemerides interpolation used within ``Sorcha``'s internal ephemeris generator. By default this value is set to **101**, but the user can update it to a different value. 101 works for most orbits, but it may be worth exploring using a different value if you're modeling Earth impactors and very close Near-Earth Objects (NEOs). To change the number of sub-intervals, **n_sub_intervals** variable is  added to the ([SIMULATION]) section::
+
+    [SIMULATION]
+    n_sub_intervals = 122
+
 Specifying Alernative Versions of the Auxiliary Files Used in the Ephemeris Generator 
 -----------------------------------------------------------------------------------------
 
