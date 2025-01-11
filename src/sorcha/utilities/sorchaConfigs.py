@@ -77,6 +77,9 @@ class simulationConfigs:
     ar_healpix_order: int = None
     """the order of healpix which we will use for the healpy portions of the code."""
 
+    ar_n_sub_intervals: int = 101
+    """Number of sub-intervals for the Lagrange ephemerides interpolation (default: 101)"""
+
     _ephemerides_type: str = None
     """Simulation used for ephemeris input."""
 
@@ -111,6 +114,7 @@ class simulationConfigs:
             self.ar_fov_buffer = cast_as_float(self.ar_fov_buffer, "ar_fov_buffer")
             self.ar_picket = cast_as_int(self.ar_picket, "ar_picket")
             self.ar_healpix_order = cast_as_int(self.ar_healpix_order, "ar_healpix_order")
+            self.ar_n_sub_intervals = cast_as_int(self.ar_n_sub_intervals, "ar_n_sub_intervals")
         elif self._ephemerides_type == "external":
             # makes sure when these are not needed that they are not populated
             check_key_doesnt_exist(self.ar_ang_fov, "ar_ang_fov", "but ephemerides type is external")
@@ -1512,6 +1516,7 @@ def PrintConfigsToLog(sconfigs, cmd_args):
         pplogger.info("...the picket interval is: " + str(sconfigs.simulation.ar_picket))
         pplogger.info("...the observatory code is: " + str(sconfigs.simulation.ar_obs_code))
         pplogger.info("...the healpix order is: " + str(sconfigs.simulation.ar_healpix_order))
+        pplogger.info("...the number of sub-intervals is: " + str(sconfigs.simulation.ar_n_sub_intervals))
     else:
         pplogger.info("ASSIST+REBOUND Simulation is turned OFF.")
 
