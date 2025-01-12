@@ -10,16 +10,17 @@ Post-Processing (Applying Survey Biases)
 How it Works
 ------------------------
 
-Once the ephemerides have been generated or read in from an external file, Sorcha moves on to486
-the second phase, which we call post-processing. For each of the input objects, Sorcha goes through487
-the potential observations identified in the ephemeris generation step and performs a series of cal-488
-culations and assessments in the post-processing stage to determine whether the objects would have489
-been detectable as a source in the survey images and would have later been identified as a moving490
+Once the ephemerides have been generated or read in from an external file, Sorcha moves on to
+the second phase, which we call post-processing. For each of the input objects, Sorcha goes through
+the potential observations identified in the ephemeris generation step and performs a series of
+calculations and assessments in the post-processing stage to determine whether the objects would have
+been detectable as a source in the survey images and would have later been identified as a moving
 solar system object. All aspects of post-processing can be adjusted or turned on/off via ``Sorcha``'s :ref:`configs`.  
 
+.. _mags::
 
-Trailed Source Magnitude and PSF (Point Spread Function) Magnitude
----------------------------------------------------------------------
+Calculating the Trailed Source Magnitude and PSF (Point Spread Function) Magnitude
+-------------------------------------------------------------------------------------
 
 ``Sorcha`` calculates two apparent magnitudes that we will refer to as the **trailed source magnitude** and the **PSF magnitude**. 
 
@@ -37,8 +38,7 @@ Trailed Source Magnitude and PSF (Point Spread Function) Magnitude
 
 
 Phase Curves
-------------------------------------------------------------
-
+~~~~~~~~~~~~~~~~~~~~~
 
 .. _addons:
 
@@ -175,12 +175,12 @@ Or::
 Fading Function/Detection Efficiency
 ------------------------------------
 
-This filter serves to remove observations of objects which are faint beyond the survey's capability
-to detect them. ``Sorcha`` uses the fading function formulation of `Veres and Chesley (2017) <https://ui.adsabs.harvard.edu/abs/2017arXiv170506209C/abstract>`_:
+This filter serves to remove potential detections of the input small bodies which are too faint to be detected in the each survey observation.
+ ``Sorcha`` uses the fading function formulation of `Veres and Chesley (2017) <https://ui.adsabs.harvard.edu/abs/2017arXiv170506209C/abstract>`_:
 see the below plot. This fading function is parameterised by the fading function width and peak efficiency.
 The default values are modelled on those from the aforementioned paper.
 
-To include this filter, the following options should be set in the :ref:`configs`::
+To configure the fading function, the following variabless should be set in the :ref:`configs`::
 
     [FADINGFUNCTION]
     fading_function_width = 0.1
@@ -191,6 +191,8 @@ To include this filter, the following options should be set in the :ref:`configs
   :alt: Graph showing the fading function. Detection probability is plotted against magnitude - limiting magnitude, showing three smoothed step-functions centred on 0.0 on the x axis for three different widths.
   :align: center
 
+.. note::
+    The fading function uses the  :ref:`PSF magnitude <mags>` to evaluate detectability on the relevant survey images.  
 
 .. seealso::
     We have a`Jupyter notebook <notebooks/demo_DetectionEfficiencyValidation.ipynb>`_  showing how ``Sorcha`` applies the survey detection efficiency (fading function). 
