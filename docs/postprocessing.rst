@@ -40,11 +40,6 @@ data management pipelines (including Solar System Processing [SSP]).
   :align: center
 
 
-.. seealso::
-    See our `Jupyter notebook <notebooks/demo_ApparentMagnitudeValidation.ipynb>`_  that validates the apparent magnitude calulcation.
-
-
-
 Colors and Phase Curves
 ~~~~~~~~~~~~~~~~~~~~~
 
@@ -60,7 +55,7 @@ For each potential detection of an object from the input population, the trailed
 .. note::
     The HG12 model is the `Penttilä et al. (2016) <https://www.sciencedirect.com/science/article/abs/pii/S0032063315002408>`_ modified model, and not the original (IAU adopted) `Muinonen et al. (2010) <https://www.sciencedirect.com/science/article/abs/pii/S001910351000151X>`_ model.
 
-The phase curve function to apply is set via the [PHASECURVES] section of:ref:`configs`::
+The phase curve function to apply is set via the [PHASECURVES] section of the :ref:`configs` ::
 
    [PHASECURVES]
 
@@ -68,10 +63,12 @@ The phase curve function to apply is set via the [PHASECURVES] section of:ref:`c
    # file must contain the columns needed to calculate the phase function.
    # Options: HG, HG1G2, HG12, linear, none.
 
+   phase_function = HG12
+
 .. _addons:
 
 
-Calculating Trailing Losses and Calculating the PSF Magnigtude
+Applying Trailing Losses and Calculating the PSF Magnigtude
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
@@ -84,7 +81,7 @@ This filter will recalculate the PSF magnitude of the observations, adjusting fo
   :align: center
 
 
-Applying Photometric and Astrometric Uncerainties
+Applying Photometric and Astrometric Uncertainities
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Real astronomical surveys measure photometry and astrometry that have uncertainities. To better compare to what the survey detected, ``Sorcha`` applies photometric and astrometric errors that modify the ca;culated value for the right acension, declination, trailed source magnitude, and PSF masgnitude for each potential detection. The models for these uncertainties are primarily driven by the signal-to-noise ratio (SNR) for a particular input object in an image, following the methods in `(Ivezić et al. 2019) <https://iopscience.iop.org/article/10.3847/1538-4357/ab042c>`_ 
@@ -94,6 +91,13 @@ Real astronomical surveys measure photometry and astrometry that have uncertaini
 
 .. warning::
     Right now ``Sorcha`` only has functions to compute the photometric and astrometric uncertainties and SNR estimations specifically for Rubin Observatory.       
+
+Validating Sorcha's Trailed Source Magnitude Calculations
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. seealso::
+    See our `Jupyter notebook <notebooks/demo_ApparentMagnitudeValidation.ipynb>`_  that validates the apparent magnitude calulcation.
+
 
 Incorporating Rotational Light Curves and Activity
 ------------------------------------------------------------
