@@ -29,13 +29,16 @@ The following options can be optionally added to an expert section ([EXPERT]) of
 Turning Vignetting Off 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-By default, vignetting using LSSTCam parameters is applied. To turn vignetting off, add to the :ref:`configs`::
+By default, :ref:`vignetting<vignetting>` using LSSTCam parameters is applied. To turn vignetting off, add to the :ref:`configs`::
 
    [EXPERT]
    vignetting_on = False
 
+If vigentting is turned off, then the 5σ Limiting Magnitude at the Source Location will be the limiting magnitude at the cetner of the FOV from the :ref:`pointing`.
+ 
 .. tip::
    Vignetting is a small effect for the LSSTCam, so you will see only a modest change in results if you turn this off for LSST simulations
+
 
 Turning Off the Randomization of the Magnitude and Astrometry Values
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -59,6 +62,13 @@ The trailing losses filter is on by default, but it can be turned off by includi
     this option for debugging or for speed increases when the user is absolutely sure
     they are only supplying slow-moving objects.
 
+Turning off Detection Efficiency/Applying the Fading Function
+----------------------------------------------------------------
+
+Applying the survey detection effieincy is on by default, but it can be turned off by including the option in the :ref:`configs`::
+
+    [FADINGFUNCTION]
+    fading_function_on = False
 
 Turning Off the Camera Footprint Filter
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

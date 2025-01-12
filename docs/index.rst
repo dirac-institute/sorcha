@@ -20,7 +20,7 @@ This documentation site contains an installation guide, an overview of how ``Sor
 works, tutorials, and demonstration notebooks that show how each of the various components within ``Sorcha`` work and can be customized.
 
 .. seealso::
-   For a more detailed description of ``Sorcha`` and how it works, please see Merritt et al. (submiited) and Holman et al (submitted).
+   For a more detailed description of ``Sorcha`` and how it works, please see Merritt et al. (submiited) and Holman et al. (submitted).
 
 .. warning::
    This documentation site and the software package it describes are under

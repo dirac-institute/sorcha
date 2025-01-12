@@ -1,6 +1,9 @@
 Overview
 =================
 
+.. seealso::
+   For a more detailed description of ``Sorcha`` and how it works, please see Merritt et al. (submiited) and Holman et al. (submitted).
+
 How Sorcha Works
 -------------------------------
 

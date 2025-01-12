@@ -3,10 +3,20 @@
 Post-Processing (Applying Survey Biases)
 ==========================================================
 
+
+.. seealso::
+   For a more detailed description of ``Sorcha``'s post-processing stage please see Merritt et al. (submitted).
+
 How it Works
 ------------------------
 
-All aspects of post-processing can be adjusted 
+Once the ephemerides have been generated or read in from an external file, Sorcha moves on to486
+the second phase, which we call post-processing. For each of the input objects, Sorcha goes through487
+the potential observations identified in the ephemeris generation step and performs a series of cal-488
+culations and assessments in the post-processing stage to determine whether the objects would have489
+been detectable as a source in the survey images and would have later been identified as a moving490
+solar system object. All aspects of post-processing can be adjusted or turned on/off via ``Sorcha``'s :ref:`configs`.  
+
 
 Trailed Source Magnitude and PSF (Point Spread Function) Magnitude
 ---------------------------------------------------------------------
@@ -28,7 +38,6 @@ Trailed Source Magnitude and PSF (Point Spread Function) Magnitude
 
 Phase Curves
 ------------------------------------------------------------
-
 
 
 .. _addons:
@@ -75,8 +84,6 @@ LSSTCometActivity Class
 
 lsst_comet
 
-
-
 Rotational Lightcurve Effects
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 The base lightcurve class is `AbstractLightCurve <https://github.com/dirac-institute/sorcha/blob/04baa79a7d67e1647b839a2d3880d8bfd9ce4624/src/sorcha/lightcurves/base_lightcurve.py#L10>`_ (see below). Inside the `Sorcha addons  GitHub repository <https://github.com/dirac-institute/sorcha-addons>`_, we provide a simple example implementation where the apparent magnitude of the object (that is, the magnitude after all geometric effects have been taken into account), has a sinusoidal term added to it. To use this function, in the :ref:`CPP` file, the user must provide a light curve amplitude (`LCA`), corresponding to half the peak-to-peak amplitude for the magnitude changes, a period `Period`, and a reference time `Time0` where the light curve is at 0 - if these are not provided, the software will produce an error message. Despite being simple, that implementation shows all the class methods that need to be implemented for a custom light curve function.
@@ -111,32 +118,44 @@ This filter will recalculate the PSF magnitude of the observations, adjusting fo
 .. seealso::
   We have a Jupyter notebook <notebooks/demo_Cometary_Activity.ipynb>`_  demonstrating the LSSTCometActivity class built into `Sorcha addons  GitHub repository <https://github.com/dirac-institute/sorcha-addons>`_.
 
+.. _vignettting:
 
+Calculating the 5σ Limiting Magnitude at the Source Location and Vignetting
+----------------------------------------------------------------------------------------------------
 
-Vignetting
------------------
 Objects that are on the edges of the field of view are dimmer due to vignetting: the field-of-view is not
-uniformly illuminated, and so the limiting magnitude for each detection will depend on its position within the FOV.
-This filter applies a model of this from a built-in function tailored specifically for the LSST (see
-`Araujo-Hauck et al. 2016 <https://ui.adsabs.harvard.edu/abs/2016SPIE.9906E..0LA/abstract>`_, with further
-discussion and below figure from `Veres and Chesley 2017 <https://ui.adsabs.harvard.edu/abs/2017arXiv170506209C/abstract>`_.)
+uniformly illuminated, and so the limiting magnitude for each detection will depend on its position within the FOV (field-of-view).
+The effect of this is to decrease the 5σ limiting magnitude – the apparent magnitude where a detected point source has exactly a
+50% probability of detection – at the edges of the LSSTCam FOV. Sorcha accommodates this by
+calculating the effects of vignetting at the source’s location on the focal plane and adjusting the
+5σ limiting magnitude accordingly for each potential detection. This modified limiting magnitude
+will be used when applying the survey detection efficiency. We this value the **5σ Limiting Magnitude at the Source Location**
 
-.. image:: images/vignetting.jpg
-  :width: 500
+
+``Sorcha``  applies a vignetting model from a built-in function tailored specifically for the LSST (see
+`Araujo-Hauck et al. 2016 <https://ui.adsabs.harvard.edu/abs/2016SPIE.9906E..0LA/abstract>`_). The image below shows the
+effects of vignetting on the 5σ limiting magnitude for a randomized series of points on a
+circular FOV in the LSSTCam focal plane. The LSSTCam detector footprint is also plotted. Locations
+further from the center of the FOV have shallower depths.
+
+
+.. image:: images/vignetting.png
+  :width: 600
   :alt: Plot of the LSST camera footprint in Dec vs. RA, showing shaded dimming due to vignetting.
   :align: center
 
+.. note::
+  The :ref:`pointing` provides the 5σ limiting magnitude at the center of the exposure's FOV. 
 
-Accounting for Saturation (Saturation/Bright Filter) 
+Accounting for Saturation (Saturation/Bright Limit Filter) 
 ------------------------------------------------------------
 
-The saturation limit filter removes all detections that are brighter than the saturation limit
+The saturation/bright limit filter removes all detections that are brighter than the saturation limit
 of the survey. `Ivezić et al. (2019) <https://ui.adsabs.harvard.edu/abs/2019ApJ...873..111I/abstract>`_
 estimate that the saturation limit for the LSST will be ~16 in the r filter. 
 
 ``Sorcha`` includes functionality to specify either a single saturation limit, or a saturation limit in each filter.
-For the latter, limits must be given in a comma-separated list in the same order as the filters supplied 
-for the observing_filters config file variable.
+For the latter, limits must be given in a comma-separated list in the same order as the :ref`optical filters set in the configuration file <whatobs>`..
 
 To include this filter, the :ref:`configs` should contain::
 
@@ -149,7 +168,7 @@ Or::
     bright_limit = 16.0, 16.1, 16.2
 
 
-.. note::
+.. tip::
   The saturation filter is only applied if the :ref:`configuration file<configs>` has a SATURATION section. 
 
 
@@ -164,7 +183,6 @@ The default values are modelled on those from the aforementioned paper.
 To include this filter, the following options should be set in the :ref:`configs`::
 
     [FADINGFUNCTION]
-    fading_function_on = True
     fading_function_width = 0.1
     fading_function_peak_efficiency = 1.
 
@@ -247,7 +265,7 @@ Additionally, the camera footprint  model can account for the losses at the edge
 Linking
 ---------------------------
 
-The linking filter simulates the behaviour of LSST's Solar System Processing (SSP, `Jurić et al. 2020 <https://lse-163.lsst.io/>`_,
+The linking filter simulates the behavior of LSST's Solar System Processing (SSP, `Jurić et al. 2020 <https://lse-163.lsst.io/>`_,
 `Swinbank et al. 2020 <https://docushare.lsst.org/docushare/dsweb/Get/LDM-151>`_), the automated software pipeline
 dedicated to linking and cross-matching observations that belong to the same object.
 
@@ -300,8 +318,32 @@ the observation is of a linked object or not. To enable this functionality, add 
     [LINKING]
     drop_unlinked = False
 
-
 .. seealso::
     See our `Jupyter notebook <notebooks/demo_miniDifiValidation.ipynb>`_  that validates the linking filter.
 
+.. tip::
+  The linking filter is only applied if the :ref:`configuration file<configs>` has a LINKING section.
 
+
+.. _whatobs:
+
+What Observations to Include
+-------------------------------------
+
+The user sets what observations from the survey :ref:`pointing` will be used by setting the **observing_filters** :ref:`configs` variable::
+
+
+   [FILTERS]
+
+   # Filters of the observations you are interested in, comma-separated.
+   # Your physical parameters file must have H calculated in one of these filters
+   # and colour offset columns defined relative to that filter.
+
+   observing_filters = r,g,i,z,u,y
+
+If the user wants to use a subset of the observations, such as only include observations from the first year of the survey or are part of a database, they can either modify the :ref:`pointing`  or modify the :ref:`pointing` query in the :ref:`configs`.
+
+Expert Advanced Post-Processing Features
+---------------------------------------------------
+
+Once a user is familar with ``Sorcha`` and how it works, there are additional :ref:`advanced post-processing tunable features and parameters <advanced>`  available for the  expert user. 
