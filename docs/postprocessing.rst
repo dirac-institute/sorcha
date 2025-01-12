@@ -6,9 +6,9 @@ Post-Processing (Applying Survey Biases)
 How it Works
 ------------------------
 
-Once the ephemerides have been generated or read in from an external file, `Sorcha`` moves on to
+Once the ephemerides have been generated or read in from an external file, ``Sorcha`` moves on to
 the second phase, which we call post-processing. For each of the input objects, ``Sorcha`` goes through
-the potential observations identified in the ephemeris generation step and performs a series of
+the potential detections identified in the ephemeris generation step and performs a series of
 calculations and assessments in the post-processing stage to determine whether the objects would have
 been detectable as a source in the survey images and would have later been identified as a moving
 solar system object. All aspects of post-processing can be adjusted or turned on/off via ``Sorcha``'s :ref:`configs`.  
@@ -41,7 +41,7 @@ data management pipelines (including Solar System Processing [SSP]).
 
 
 Colors and Phase Curves
-~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 For each potential detection of an object from the input population, the trailed source magnitude is calculated for the relevant observing filter using the colors specificed in the :ref:`physical`. The trailed source magnitude is also adjusted for phase curve effects. We have implemented several phase curve parameterizations that can be specified in the :ref:`configuration file<configs>` and then inputted through the :ref:`physical`. **You can either specify one set of phase curve parameters for all observing filters or specify values for each observing filter examined by** ``Sorcha``. We are using the  `sbpy <https://sbpy.org/>`_  phase function utilities. The supported options are: 
 
@@ -65,12 +65,10 @@ The phase curve function to apply is set via the [PHASECURVES] section of the :r
 
    phase_function = HG12
 
-.. _addons:
-
+.. _trailing:
 
 Applying Trailing Losses and Calculating the PSF Magnigtude
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
 
 If the observed object is fast-moving, the signal will form a trail, reducing the measured magnitude.
 This filter will recalculate the PSF magnitude of the observations, adjusting for trailing losses.
@@ -80,6 +78,8 @@ This filter will recalculate the PSF magnitude of the observations, adjusting fo
   :alt: Sky image showing a short trailing source circled in red.
   :align: center
 
+
+.. _randomization:
 
 Applying Photometric and Astrometric Uncertainities
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -98,6 +98,8 @@ Validating Sorcha's Trailed Source Magnitude Calculations
 .. seealso::
     See our `Jupyter notebook <notebooks/demo_ApparentMagnitudeValidation.ipynb>`_  that validates the apparent magnitude calulcation.
 
+
+.. _addons:
 
 Incorporating Rotational Light Curves and Activity
 ------------------------------------------------------------
@@ -123,9 +125,10 @@ Set the **cometary_activity** :ref:`configuration file<configs>` file varialble 
    #  of the subclasses of AbstractCometaryActivity.  If not none, a complex physical parameters 
    # file must be specified at the command line.
 
-   comet_activity = none
+   comet_activity = lsst_comet
 
-
+.. tip::
+  To not include an cometary activity effects on the apparent magnitude calculations, set **comet_activity** to none. 
 
 Cometary Activity Template Class 
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -135,11 +138,8 @@ Cometary Activity Template Class
 
 LSSTCometActivity Class
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-.. seealso::
-  We have an `example Jupyter notebook <notebooks/demo_Cometary_Activity.ipynb>`_  demonstrating the LSSTCometActivity class built into `Sorcha addons package  <https://github.com/dirac-institute/sorcha-addons>`_.
 
-
-lsst_comet
+We have an `example Jupyter notebook <notebooks/demo_Cometary_Activity.ipynb>`_  demonstrating the LSSTCometActivity class built into `Sorcha addons package  <https://github.com/dirac-institute/sorcha-addons>`_. To **comet_activity** :ref:`configuration file<configs>` should be set to lsst_comet to use this cometary activity parameterixation. 
 
 Rotational Lightcurve Effects
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -183,6 +183,7 @@ Or::
 .. tip::
   The saturation filter is only applied if the :ref:`configuration file<configs>` has a SATURATION section.
 
+.. _vignetting:
 
 Calculating the 5σ Limiting Magnitude at the Source Location and Vignetting
 ----------------------------------------------------------------------------------------------------
@@ -217,8 +218,10 @@ further from the center of the FOV have shallower depths.
 .. seealso::
   We have a `Jupyter notebook <notebooks/demo_Vignetting.ipynb>`_  demonstrating ``Sorcha``'s vignetting calculation. 
 
-Fading Function/Detection Efficiency
-------------------------------------
+.. _fading: 
+
+Applying the Survey Detection Efficiency (Fading Function)
+-----------------------------------------------------------------
 
 This filter serves to remove potential detections of the input small bodies which are too faint to be detected in the each survey observation.
  ``Sorcha`` uses the fading function formulation of `Veres and Chesley (2017) <https://ui.adsabs.harvard.edu/abs/2017arXiv170506209C/abstract>`_:
@@ -249,6 +252,7 @@ binsize is 0.04 mag.
 
 .. seealso::
     We have a `Jupyter notebook <notebooks/demo_DetectionEfficiencyValidation.ipynb>`_  showing how ``Sorcha`` applies the survey detection efficiency (fading function). 
+.. _footprint:
 
 Camera Footprint
 -----------------

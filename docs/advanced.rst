@@ -34,7 +34,8 @@ By default, :ref:`vignetting<vignetting>` using LSSTCam parameters is applied. T
    [EXPERT]
    vignetting_on = False
 
-If vigentting is turned off, then the 5σ Limiting Magnitude at the Source Location will be the limiting magnitude at the cetner of the FOV from the :ref:`pointing`.
+.. note::
+   If vigentting is turned off, then the 5σ Limiting Magnitude at the Source Location will be the limiting magnitude at the cetner of the FOV from the :ref:`pointing`.
  
 .. tip::
    Vignetting is a small effect for the LSSTCam, so you will see only a modest change in results if you turn this off for LSST simulations
@@ -43,7 +44,7 @@ If vigentting is turned off, then the 5σ Limiting Magnitude at the Source Locat
 Turning Off the Randomization of the Magnitude and Astrometry Values
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-There may be a reason that you want to turn off the randomization of the trailed source magnitude and PSF magnitude as well as the RA and Dec values::
+There may be a reason that you want to turn off the :ref:`randomization<randomization>` of the trailed source magnitude and PSF magnitude as well as the RA and Dec values::
 
    [EXPERT]
    randomization_on = False
@@ -52,7 +53,7 @@ There may be a reason that you want to turn off the randomization of the trailed
 Turning Off Trailing Losses
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The trailing losses filter is on by default, but it can be turned off by including the option in the :ref:`configs`::
+Applying :ref:`trailing losses<trailing>` is on by default, but it can be turned off by including the option in the :ref:`configs`::
 
     [EXPERT]
     trailing_losses_on = False
@@ -65,7 +66,7 @@ The trailing losses filter is on by default, but it can be turned off by includi
 Turning off Detection Efficiency/Applying the Fading Function
 ----------------------------------------------------------------
 
-Applying the survey detection effieincy is on by default, but it can be turned off by including the option in the :ref:`configs`::
+Applying the :ref:`survey detection efficiency<fading>` is on by default, but it can be turned off by including the option in the :ref:`configs`::
 
     [FADINGFUNCTION]
     fading_function_on = False
@@ -73,7 +74,7 @@ Applying the survey detection effieincy is on by default, but it can be turned o
 Turning Off the Camera Footprint Filter
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-In rare instances you may need to skip the footprint filter off. This can be done by setting the camera model to none in the field-of-view (FOV) section of the :ref:`configs`::
+In rare instances you may need to skip the  :ref:`camera footprint filter<footprint>` and turn it off. This can be done by setting the camera model to none in the field-of-view (FOV) section of the :ref:`configs`::
 
     [FOV]
     camera_model = none
