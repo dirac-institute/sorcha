@@ -22,7 +22,7 @@ The :ref:`inputs<Inputs>` that ``Sorcha`` requires are shown in the figure below
 
 ``Sorcha`` by default uses its own :ref:`ephemeris generator<ephemeris_gen>` to propagate the orbits and translate them to on-sky locations and rates. ``Sorcha``'s ephemeris generator is powered by `ASSIST  <https://github.com/matthewholman/assist>`_, a software package for ephemeris-quality integrations of test particles, and the `REBOUND <https://rebound.readthedocs.io/en/latest/>`_ N-body integrator.  If the user prefers to use a different generator, ``Sorcha`` is also to be configured to read in an external ephemeris file with pre-calculated ephemerides of the input synthetic orbital population.  
 
-The default main steps, calculations, and filter within ``Sorcha`` that are used to estimate what the LSST would discover is shown below. 
+The default main steps, calculations, and filter within ``Sorcha`` that are used to estimate what the LSST would discover are shown below. 
 
 .. image:: images/workflow.png
   :width: 800

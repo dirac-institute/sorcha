@@ -3,19 +3,25 @@
 Post-Processing (Applying Survey Biases)
 ==========================================================
 
-
-.. seealso::
-   For a more detailed description of ``Sorcha``'s post-processing stage please see Merritt et al. (submitted).
-
 How it Works
 ------------------------
 
-Once the ephemerides have been generated or read in from an external file, Sorcha moves on to
-the second phase, which we call post-processing. For each of the input objects, Sorcha goes through
+Once the ephemerides have been generated or read in from an external file, `Sorcha`` moves on to
+the second phase, which we call post-processing. For each of the input objects, ``Sorcha`` goes through
 the potential observations identified in the ephemeris generation step and performs a series of
 calculations and assessments in the post-processing stage to determine whether the objects would have
 been detectable as a source in the survey images and would have later been identified as a moving
 solar system object. All aspects of post-processing can be adjusted or turned on/off via ``Sorcha``'s :ref:`configs`.  
+
+.. seealso::
+   For a more detailed description of ``Sorcha``'s post-processing stage please see Merritt et al. (submitted).
+
+
+The steps within ``Sorcha``'s post-processing stage that are used to estimate what the LSST would discover are shown below.
+
+.. image:: images/workflow.png
+  :width: 800
+  :alt: An overview of the LSST workflow
 
 .. _mags::
 
@@ -39,20 +45,65 @@ data management pipelines (including Solar System Processing [SSP]).
 
 
 
-Phase Curves
+Colors and Phase Curves
 ~~~~~~~~~~~~~~~~~~~~~
+
+For each potential detection of an object from the input population, the trailed source magnitude is calculated for the relevant observing filter using the colors specificed in the :ref:`physical`. The trailed source magnitude is also adjusted for phase curve effects. We have implemented several phase curve parameterizations that can be specified in the :ref:`configuration file<configs>` and then inputted through the :ref:`physical`. **You can either specify one set of phase curve parameters for all observing filters or specify values for each observing filter examined by** ``Sorcha``. We are using the  `sbpy <https://sbpy.org/>`_  phase function utilities. The supported options are: 
+
+
+* `HG <https://sbpy.readthedocs.io/en/latest/api/sbpy.photometry.HG.html#sbpy.photometry.HG>`_
+*  `HG1G2 <https://sbpy.readthedocs.io/en/latest/api/sbpy.photometry.HG1G2.html#sbpy.photometry.HG1G2>`_
+*  `HG12 <https://sbpy.readthedocs.io/en/latest/api/sbpy.photometry.HG12.html#sbpy.photometry.HG12>`_
+* `linear <https://sbpy.readthedocs.io/en/latest/api/sbpy.photometry.LinearPhaseFunc.html#sbpy.photometry.LinearPhaseFunc>`_ (specified by S in the header of the :ref:`physical`)
+* none (if no columns for phase curve are included in the physical parameters file then the synthetic object is considered to have a flat phase curve).
+
+.. note::
+    The HG12 model is the `Penttilä et al. (2016) <https://www.sciencedirect.com/science/article/abs/pii/S0032063315002408>`_ modified model, and not the original (IAU adopted) `Muinonen et al. (2010) <https://www.sciencedirect.com/science/article/abs/pii/S001910351000151X>`_ model.
+
+The phase curve function to apply is set via the [PHASECURVES] section of:ref:`configs`::
+
+   [PHASECURVES]
+
+   # The phase function used to calculate apparent magnitude. The physical parameters input
+   # file must contain the columns needed to calculate the phase function.
+   # Options: HG, HG1G2, HG12, linear, none.
 
 .. _addons:
 
+
+Calculating Trailing Losses and Calculating the PSF Magnigtude
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+If the observed object is fast-moving, the signal will form a trail, reducing the measured magnitude.
+This filter will recalculate the PSF magnitude of the observations, adjusting for trailing losses.
+
+.. image:: images/Trail.png
+  :width: 400
+  :alt: Sky image showing a short trailing source circled in red.
+  :align: center
+
+
+Applying Photometric and Astrometric Uncerainties
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Real astronomical surveys measure photometry and astrometry that have uncertainities. To better compare to what the survey detected, ``Sorcha`` applies photometric and astrometric errors that modify the ca;culated value for the right acension, declination, trailed source magnitude, and PSF masgnitude for each potential detection. The models for these uncertainties are primarily driven by the signal-to-noise ratio (SNR) for a particular input object in an image, following the methods in `(Ivezić et al. 2019) <https://iopscience.iop.org/article/10.3847/1538-4357/ab042c>`_ 
+
+.. note::
+    As a compromise between low-probability detections and unrealistic magnitude uncertainties producing “fake detections”, by default ``Sorcha`` removes all observations with SNR less than 2 after calculating the astronometric and photometric uncertainties.
+
+.. warning::
+    Right now ``Sorcha`` only has functions to compute the photometric and astrometric uncertainties and SNR estimations specifically for Rubin Observatory.       
+
 Incorporating Rotational Light Curves and Activity
 ------------------------------------------------------------
-``Sorcha`` has the ability user provided functions though python classes that augment/change the apparent brightness calculations for the synthetic Solar System objects. Any values required as input for these calculations, must be provided in the separate :ref:`CPP` file as input. Rather than forcing the user directly modify  the ``Sorcha`` codebase every time they want to apply a different model for representing the effects of rotational lightcurves or cometary activity, we provide the ability to develop separate activity and lightcurve/brightness enhancement functions as  plugins using our template classes  and add them to the `Sorcha addons <https://github.com/dirac-institute/sorcha-addons>`_ package. In both cases, any derived class must inherit from the corresponding base class and follow its API, to ensure that Sorcha knows how to find and use your class. Once the Sorcha addons is installed, Sorcha will automatically detect the available plugins and make them available during post-processing.  To use one of the plugins from the community utilities, simply add the unique name of the plugin to the :ref:`configs` provided to Sorcha, and provide the  :ref:`CPP` file on the command line. We currently have 2 pre-made classes  that can augment the calculated apparent magnitude of each synthetic object, One for handling cometary activity as a function of heliocentric distance and one that applies rotational light curves to the synthetic objects.
+``Sorcha`` has the ability user provided functions though python classes that augment/change the apparent brightness calculations for the synthetic Solar System objects. Any values required as input for these calculations, must be provided in the separate :ref:`CPP` file as input. Rather than forcing the user directly modify  the ``Sorcha`` codebase every time they want to apply a different model for representing the effects of rotational lightcurves or cometary activity, we provide the ability to develop separate activity and lightcurve/brightness enhancement functions as  plugins using our template classes  and add them to the `Sorcha addons <https://github.com/dirac-institute/sorcha-addons>`_ package. In both cases, any derived class must inherit from the corresponding base class and follow its API, to ensure that ``Sorcha`` knows how to find and use your class. Once the ``Sorcha addons`` is installed, ``Sorcha`` will automatically detect the available plugins and make them available during post-processing.  To use one of the plugins from the community utilities, simply add the unique name of the plugin to the :ref:`configs` provided to ``Sorcha``, and provide the  :ref:`CPP` file on the command line. We currently have 2 pre-made classes  that can augment the calculated apparent magnitude of each synthetic object, One for handling cometary activity as a function of heliocentric distance and one that applies rotational light curves to the synthetic objects.
 
 Cometary Activity or Simulating Other Active Objects
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
-You can user cometary activity class provided in also your own class to apply a different comentary activity and add it into a custom version of the``Sorcha addons`` package.  Once the Sorcha-addons is installed, Sorcha will automatically detect the available plugins and make them available during processing.
+You can user cometary activity class provided in also your own class to apply a different comentary activity and add it into a custom version of the``Sorcha addons`` package.  Once the ``Sorcha-addons`` package is installed, ``Sorcha`` will automatically detect the available plugins and make them available during processing.
 
 
 Cometary Activity Configuration Parameters
@@ -102,21 +153,6 @@ Lightcurve Template Class
    :language: python
 
 
-Applying Photometric and Astrometric Uncerainties 
-------------------------------------------------------------
-
-Trailing Losses
------------------
-
-If the observed object is fast-moving, the signal will form a trail, reducing the measured magnitude.
-This filter will recalculate the PSF magnitude of the observations, adjusting for trailing losses.
-
-.. image:: images/Trail.png
-  :width: 400
-  :alt: Sky image showing a short trailing source circled in red.
-  :align: center
-
-
 .. _vignettting:
 
 Accounting for Saturation (Saturation/Bright Limit Filter)
@@ -127,7 +163,7 @@ of the survey. `Ivezić et al. (2019) <https://ui.adsabs.harvard.edu/abs/2019ApJ
 estimate that the saturation limit for the LSST will be ~16 in the r filter.
 
 ``Sorcha`` includes functionality to specify either a single saturation limit, or a saturation limit in each filter.
-For the latter, limits must be given in a comma-separated list in the same order as the :ref:`optical filters set in the configuration file <whatobs>`
+For the latter, limits must be given in a comma-separated list in the same order as the :ref:`observing filters set in the configuration file <whatobs>`
 
 To include this filter, the :ref:`configs` should contain::
 
@@ -150,7 +186,7 @@ Calculating the 5σ Limiting Magnitude at the Source Location and Vignetting
 Objects that are on the edges of the field of view are dimmer due to vignetting: the field-of-view is not
 uniformly illuminated, and so the limiting magnitude for each detection will depend on its position within the FOV (field-of-view).
 The effect of this is to decrease the 5σ limiting magnitude – the apparent magnitude where a detected point source has exactly a
-50% probability of detection – at the edges of the LSSTCam FOV. Sorcha accommodates this by
+50% probability of detection – at the edges of the LSSTCam FOV. ``Sorcha`` accommodates this by
 calculating the effects of vignetting at the source’s location on the focal plane and adjusting the
 5σ limiting magnitude accordingly for each potential detection. This modified limiting magnitude
 will be used when applying the survey detection efficiency. We this value the **5σ Limiting Magnitude at the Source Location**
@@ -170,6 +206,9 @@ further from the center of the FOV have shallower depths.
 
 .. note::
   The :ref:`pointing` provides the 5σ limiting magnitude at the center of the exposure's FOV. 
+
+.. note::
+``Sorcha`` currently only has  a vignetting model for the LSSTCam.
 
 .. seealso::
   We have a `Jupyter notebook <notebooks/demo_Vignetting.ipynb>`_  demonstrating ``Sorcha``'s vignetting calculation. 
@@ -197,7 +236,7 @@ The figure above shows the fading function and how ``Sorcha`` appliels it. The t
 sources as a function of magnitude. The different lines represent the effect of the variation of the peak
 detection efficiency and the width parameter on the shape of the function. The 5σ limiting magnitude
 at the source location is marked in gray (m5σ=24.5). The bottom plot show histogram showing detection probability
-of 10,000 point sources passed through Sorcha’s fading function filter, with the actual calculated detection
+of 10,000 point sources passed through ``Sorcha``’s fading function filter, with the actual calculated detection
 probability from Equation 10 overplotted as a solid line. Here, detection efficiency  = 1.0,  width parameter = 0.1, and m5σ=24.5 and the
 binsize is 0.04 mag.
 
@@ -353,6 +392,9 @@ The user sets what observations from the survey :ref:`pointing` will be used by 
    # and colour offset columns defined relative to that filter.
 
    observing_filters = r,g,i,z,u,y
+
+The first observing filters in the list are separated by a comma. The first observing filter listed should is the main filter that the absolute magnitude is defined for.
+The :ref:`physical` must have colors relative to the main filter specified for the iput small body population. 
 
 If the user wants to use a subset of the observations, such as only include observations from the first year of the survey or are part of a database, they can either modify the :ref:`pointing`  or modify the :ref:`pointing` query in the :ref:`configs`.
 

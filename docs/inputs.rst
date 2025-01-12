@@ -212,13 +212,13 @@ The input file for the physical parameters includes information about the object
   *  Each simulated object **must** have a unique string identifier
   *  You  **must use the same phase curve prescription for all simulated objects**. If you want to use different phase curve prescriptions for different synthetic populations, you will need to run them in separate input files to ``Sorcha``
   *  If the  phase curve function is set to NONE in the configuration value then no phase curve parameter values are required in the physical parameters files.
-  *  In the :ref:`configuration file<configs>` you can decide which filters you want have ``Sorcha`` run on and specify which filter is the main filter that the absolute magnitude is defined for. You only need to provide colors for those filters specified in the :ref:`configuration file<configs>`.
+  *  In the :ref:`configuration file<configs>` you can decide which observing filters (e.g *r*-band,*g*-band,etc) you want have ``Sorcha`` run on and specify which observing filter is the main filter that the absolute magnitude is defined for. You only need to provide colors for those filters specified in the :ref:`configuration file<configs>`.
 
-We have implemented several phase curve parameterizations that can be specified in the :ref:`configuration file<configs>` and then inputted through the physical parameters. **You can either specify one set of phase curve parameters for all filters or specify values for each filter examined by** ``Sorcha``. We are using the  `sbpy <https://sbpy.org/>`_  phase function utilities. The supported options are: `HG <https://sbpy.readthedocs.io/en/latest/api/sbpy.photometry.HG.html#sbpy.photometry.HG>`_, `HG1G2 <https://sbpy.readthedocs.io/en/latest/api/sbpy.photometry.HG1G2.html#sbpy.photometry.HG1G2>`_, `HG12 <https://sbpy.readthedocs.io/en/latest/api/sbpy.photometry.HG12.html#sbpy.photometry.HG12>`_, `linear <https://sbpy.readthedocs.io/en/latest/api/sbpy.photometry.LinearPhaseFunc.html#sbpy.photometry.LinearPhaseFunc>`_ (specified by S in the header of the physical parameters file), and none (if no columns for phase curve are included in the physical parameters file then the synthetic object is considered to have a flat phase curve). Note that the HG12 model is the `Penttilä et al. (2016) <https://www.sciencedirect.com/science/article/abs/pii/S0032063315002408>`_ modified model, and not the original (IAU adopted) `Muinonen et al. (2010) <https://www.sciencedirect.com/science/article/abs/pii/S001910351000151X>`_ model.
+We have implemented several phase curve parameterizations that can be specified in the :ref:`configuration file<configs>` and then inputted through the physical parameters. **You can either specify one set of phase curve parameters for all observing filters or specify values for each filter examined by** ``Sorcha``. We are using the  `sbpy <https://sbpy.org/>`_  phase function utilities. The supported options are: `HG <https://sbpy.readthedocs.io/en/latest/api/sbpy.photometry.HG.html#sbpy.photometry.HG>`_, `HG1G2 <https://sbpy.readthedocs.io/en/latest/api/sbpy.photometry.HG1G2.html#sbpy.photometry.HG1G2>`_, `HG12 <https://sbpy.readthedocs.io/en/latest/api/sbpy.photometry.HG12.html#sbpy.photometry.HG12>`_, `linear <https://sbpy.readthedocs.io/en/latest/api/sbpy.photometry.LinearPhaseFunc.html#sbpy.photometry.LinearPhaseFunc>`_ (specified by S in the header of the physical parameters file), and none (if no columns for phase curve are included in the physical parameters file then the synthetic object is considered to have a flat phase curve). Note that the HG12 model is the `Penttilä et al. (2016) <https://www.sciencedirect.com/science/article/abs/pii/S0032063315002408>`_ modified model, and not the original (IAU adopted) `Muinonen et al. (2010) <https://www.sciencedirect.com/science/article/abs/pii/S001910351000151X>`_ model.
 
 
 
-Example Pphysical Parameters File (single linear slope phase curve parameter for all filters)
+Example Physical Parameters File (single linear slope phase curve parameter for all observing filters)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. note::
@@ -234,7 +234,7 @@ Example Pphysical Parameters File (single linear slope phase curve parameter for
    St500004a 10.2 1.90 0.58 -0.21 -0.30 -0.39 0.15
 
 
-Example Physical Parameters File (a HG value is specified for each filter)
+Example Physical Parameters File (a HG value is specified for each observing filter)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. note::
