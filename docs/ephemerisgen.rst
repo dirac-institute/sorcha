@@ -9,6 +9,9 @@ Ephemeris Generator
   We recommend using ``Sorcha``'s ephemeris generator for all your survey simulations. 
 
 
+.. seealso::
+   For a more detailed description of ``Sorcha``'s ephemeris geneeration stage  please see Holman et al (submitted).
+
 How It Works
 --------------------------------------------------------
 

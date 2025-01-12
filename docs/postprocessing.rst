@@ -181,7 +181,7 @@ Camera Footprint
 -----------------
 
 .. attention::
-    Applying some form of the camera footprint filter is mandatory.
+    Applying some form of the camera footprint filter is mandatory if you are trying to preform a science quality simulation, but we do have the ability to turn it off for other types of modeling cases. See the :ref:`advamced`:: page.
 
 Due to the footprint of the LSST Camera (LSSTCam), see the figure below, it is possible that some object detections  may be lost in
 gaps between the chips.
