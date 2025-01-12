@@ -1,5 +1,10 @@
 .. _citethecode:
 
+.. image:: images/sorcha_logo.png
+  :width: 410
+  :alt: Sorcha logo
+  :align: center
+
 Citing the Software
 ==========================
 
