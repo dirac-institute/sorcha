@@ -79,7 +79,7 @@ Best Practices/Tips and Tricks
 
     sorcha run … -ar /path/to/folder/ 
 
-  This is because ``Sorcha`` will otherwise attempt to download the files into the local cache, which may be on the HPC nodes rather than in your user directory, potentially triggering multiple slow downloads.
+This is because ``Sorcha`` will otherwise attempt to download the files into the local cache, which may be on the HPC nodes rather than in your user directory, potentially triggering multiple slow downloads.
 
 2. We recommend that each ``Sorcha`` run be given its own individual output directory. If multiple parallel ``Sorcha`` runs are attempting to save to the same file in the same directory, this will cause confusing and unexpected results.
 
@@ -88,6 +88,6 @@ Best Practices/Tips and Tricks
 4. Think about having useful, helpful file names for your outputs. It is often tempting to call them something like “sorcha_output_<number>” or “sorcha_output_<taskid>”, but hard-won experience has led us to instead recommend more explanatory names for when you come back to your output later.
  
 
-..tip::
+.. tip::
   You can use the **sorcha init** command to copy ``Sorcha``'s :ref:`example configuration files  <example_configs>` into a directory of your choice.
  
