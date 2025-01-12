@@ -9,7 +9,7 @@ Have You Checked the Error Log File?
 If ``Sorcha`` runs successfully the .err log file created will be empty. If the software exited gracefully with an error it will print error statements to the error log file. If ``Sorcha'' looks like it completed but you're not getting the expected output, the .err log file is the first place to check. 
 
 .. tip::
-   You cna also usee the **-l** flag to set get more detailed and informative messages in the log file produced by **sorcha run**. 
+   You can also usee the **-l** flag to set get more detailed and informative messages in the log file produced by **sorcha run**. 
 
 Using Relative File Paths
 ---------------------------------------------------------------

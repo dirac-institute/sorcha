@@ -24,7 +24,9 @@ Calculating the Trailed Source Magnitude and PSF (Point Spread Function) Magnitu
 
 ``Sorcha`` calculates two apparent magnitudes that we will refer to as the **trailed source magnitude** and the **PSF magnitude**. 
 
-
+Below is a cartoon schematic depicting the difference between how the trailed source magnitude and the
+PSF magnitude for a moving solar system object observed on an LSST image are estimated by the Rubin
+data management pipelines (including Solar System Processing [SSP]). 
 
 .. image:: images/trailed_source.png
   :width: 500
@@ -115,10 +117,32 @@ This filter will recalculate the PSF magnitude of the observations, adjusting fo
   :align: center
 
 
-.. seealso::
-  We have a Jupyter notebook <notebooks/demo_Cometary_Activity.ipynb>`_  demonstrating the LSSTCometActivity class built into `Sorcha addons  GitHub repository <https://github.com/dirac-institute/sorcha-addons>`_.
-
 .. _vignettting:
+
+Accounting for Saturation (Saturation/Bright Limit Filter)
+------------------------------------------------------------
+
+The saturation/bright limit filter removes all detections that are brighter than the saturation limit
+of the survey. `Ivezić et al. (2019) <https://ui.adsabs.harvard.edu/abs/2019ApJ...873..111I/abstract>`_
+estimate that the saturation limit for the LSST will be ~16 in the r filter.
+
+``Sorcha`` includes functionality to specify either a single saturation limit, or a saturation limit in each filter.
+For the latter, limits must be given in a comma-separated list in the same order as the :ref:`optical filters set in the configuration file <whatobs>`
+
+To include this filter, the :ref:`configs` should contain::
+
+    [SATURATION]
+    bright_limit = 16.0
+
+Or::
+
+    [SATURATION]
+    bright_limit = 16.0, 16.1, 16.2
+
+
+.. tip::
+  The saturation filter is only applied if the :ref:`configuration file<configs>` has a SATURATION section.
+
 
 Calculating the 5σ Limiting Magnitude at the Source Location and Vignetting
 ----------------------------------------------------------------------------------------------------
@@ -147,30 +171,8 @@ further from the center of the FOV have shallower depths.
 .. note::
   The :ref:`pointing` provides the 5σ limiting magnitude at the center of the exposure's FOV. 
 
-Accounting for Saturation (Saturation/Bright Limit Filter) 
-------------------------------------------------------------
-
-The saturation/bright limit filter removes all detections that are brighter than the saturation limit
-of the survey. `Ivezić et al. (2019) <https://ui.adsabs.harvard.edu/abs/2019ApJ...873..111I/abstract>`_
-estimate that the saturation limit for the LSST will be ~16 in the r filter. 
-
-``Sorcha`` includes functionality to specify either a single saturation limit, or a saturation limit in each filter.
-For the latter, limits must be given in a comma-separated list in the same order as the :ref`optical filters set in the configuration file <whatobs>`..
-
-To include this filter, the :ref:`configs` should contain::
-
-    [SATURATION]
-    bright_limit = 16.0
-
-Or::
-
-    [SATURATION]
-    bright_limit = 16.0, 16.1, 16.2
-
-
-.. tip::
-  The saturation filter is only applied if the :ref:`configuration file<configs>` has a SATURATION section. 
-
+.. seealso::
+  We have a `Jupyter notebook <notebooks/demo_Vignetting.ipynb>`_  demonstrating ``Sorcha``'s vignetting calculation. 
 
 Fading Function/Detection Efficiency
 ------------------------------------
@@ -187,21 +189,26 @@ To configure the fading function, the following variabless should be set in the 
     fading_function_peak_efficiency = 1.
 
 .. image:: images/fading_function.png
-  :width: 400
+  :width: 600
   :alt: Graph showing the fading function. Detection probability is plotted against magnitude - limiting magnitude, showing three smoothed step-functions centred on 0.0 on the x axis for three different widths.
   :align: center
+
+The figure above shows the fading function and how ``Sorcha`` appliels it. The top plot shows the fading function representing the fraction of detected point
+sources as a function of magnitude. The different lines represent the effect of the variation of the peak
+detection efficiency and the width parameter on the shape of the function. The 5σ limiting magnitude
+at the source location is marked in gray (m5σ=24.5). The bottom plot show histogram showing detection probability
+of 10,000 point sources passed through Sorcha’s fading function filter, with the actual calculated detection
+probability from Equation 10 overplotted as a solid line. Here, detection efficiency  = 1.0,  width parameter = 0.1, and m5σ=24.5 and the
+binsize is 0.04 mag.
 
 .. note::
     The fading function uses the  :ref:`PSF magnitude <mags>` to evaluate detectability on the relevant survey images.  
 
 .. seealso::
-    We have a`Jupyter notebook <notebooks/demo_DetectionEfficiencyValidation.ipynb>`_  showing how ``Sorcha`` applies the survey detection efficiency (fading function). 
+    We have a `Jupyter notebook <notebooks/demo_DetectionEfficiencyValidation.ipynb>`_  showing how ``Sorcha`` applies the survey detection efficiency (fading function). 
 
 Camera Footprint
 -----------------
-
-.. attention::
-    Applying some form of the camera footprint filter is mandatory if you are trying to preform a science quality simulation, but we do have the ability to turn it off for other types of modeling cases. See the :ref:`advamced`:: page.
 
 Due to the footprint of the LSST Camera (LSSTCam), see the figure below, it is possible that some object detections  may be lost in
 gaps between the chips.
@@ -214,6 +221,10 @@ gaps between the chips.
 However, the full camera footprint is most relevant for slow-moving objects, where an object may move only a small amount per night and could thus in a
 subsequent observation fall into a chip gap. This is less concerning for faster-moving objects such as asteroids and near-Earth objects. As a result,
 we provide two methods of applying the camera footprint.
+
+    
+.. attention::
+    Applying some form of the camera footprint filter is mandatory if you are trying to preform a science quality simulation, but we do have the ability to turn it off for other types of modeling cases. See the :ref:`advanced post-processing tunable features and parameters <advanced>`. 
 
 Circle Radius (Simple Sensor Area)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -332,7 +343,7 @@ the observation is of a linked object or not. To enable this functionality, add 
 What Observations to Include
 -------------------------------------
 
-The user sets what observations from the survey :ref:`pointing` will be used by setting the **observing_filters** :ref:`configs` variable::
+The user sets what observations from the survey :ref:`pointing` will be used by setting the **observing_filters** :ref:`configs` variable in the [FILTERS] section::
 
 
    [FILTERS]
