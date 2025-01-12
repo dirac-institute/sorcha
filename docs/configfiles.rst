@@ -43,6 +43,8 @@ approximation of the Rubin detector.
     :language: text
     :linenos:
 
+.. _known_config:
+
 Rubin Known Object Prediction
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 This configuration file is appropriate for running ``Sorcha`` using the full camera footprint but with randomization,

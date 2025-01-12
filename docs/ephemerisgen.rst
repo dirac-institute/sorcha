@@ -122,6 +122,9 @@ If you want to use the same input orbits across multiple ``Sorcha`` runs, you ca
 .. tip::
    Compared to the other outputs from ``Sorcha``, the ephemeris output files are typicaly very large in size.  The output will be slow to read in to ``Sorcha``, but for some use cases reading in the ephemeris as a file  can be faster than ephemeris generation on the fly. We recommend only outuputting the contents of the ephemeris stage if you need it to speed up future simulations. If possible, use the HDF5 file format to help with disk I/O  speeds. 
 
+.. tip::
+   If instead you want to know which of the input small body population lands in the survey observations with an estimate of their apparent magnitude wihtout applying any other cuts or filters on the detections (not including discovery efficiency and linking effects), you can use/adapt the :ref:`known_config` example :ref:`configs`.
+
 Validation
 --------------------------
 
