@@ -35,7 +35,7 @@ correct_simulation = {
     "ar_picket": 1,
     "ar_obs_code": "X05",
     "ar_healpix_order": 6,
-    "ar_n_sub_intervals": 101
+    "ar_n_sub_intervals": 101,
 }
 
 correct_filters_read = {"observing_filters": "r,g,i,z,u,y", "survey_name": "rubin_sim"}
@@ -104,6 +104,7 @@ correct_expert = {
     "default_snr_cut": True,
     "randomization_on": True,
     "vignetting_on": True,
+    "brute_force": True,
 }
 
 correct_auxciliary_URLs = {
@@ -262,7 +263,7 @@ def test_simulationConfigs_float(key_name):
     )
 
 
-@pytest.mark.parametrize("key_name", ["ar_picket", "ar_healpix_order","ar_n_sub_intervals"])
+@pytest.mark.parametrize("key_name", ["ar_picket", "ar_healpix_order", "ar_n_sub_intervals"])
 def test_simulationConfigs_int(key_name):
     """
     Tests that wrong inputs for simulationConfigs int attributes is caught correctly
@@ -964,6 +965,7 @@ def test_activity_config():
 
 # expert config test
 
+
 @pytest.mark.parametrize("key_name", ["snr_limit", "mag_limit"])
 def test_expert_config_float(key_name):
     """
@@ -975,7 +977,10 @@ def test_expert_config_float(key_name):
     with pytest.raises(SystemExit) as error_text:
         test_configs = expertConfigs(**expect_configs)
 
-    assert error_text.value.code == f"ERROR: expected a float for config parameter {key_name}. Check value in config file."
+    assert (
+        error_text.value.code
+        == f"ERROR: expected a float for config parameter {key_name}. Check value in config file."
+    )
 
 
 @pytest.mark.parametrize("key_name, error_name", [("snr_limit", "SNR"), ("mag_limit", "magnitude")])
@@ -1072,8 +1077,6 @@ def test_auxiliary_config_making_url_none(file):
     assert getattr(test_configs, file + "_url") == None
 
 
-
-
 def test_PrintConfigsToLog(tmp_path):
     from sorcha.modules.PPGetLogger import PPGetLogger
     from sorcha.utilities.sorchaConfigs import PrintConfigsToLog
@@ -1106,14 +1109,14 @@ def test_PrintConfigsToLog(tmp_path):
     PrintConfigsToLog(test_configs, args)
 
     datalog = glob.glob(os.path.join(tmp_path, "*-sorcha.log"))
-    #when updating PrintConfigsToLog text file test_PPPrintConfigsToLog.txt needs to be updated too.
+    # when updating PrintConfigsToLog text file test_PPPrintConfigsToLog.txt needs to be updated too.
     testfile = open(os.path.join(test_path, "test_PrintConfigsToLog.txt"), mode="r")
     newfile = open(datalog[0], mode="r")
     alltest = testfile.readlines()
     allnew = newfile.readlines()
-    allnew_ = allnew[1:] #skipping first line as that line specifies user file location
+    allnew_ = allnew[1:]  # skipping first line as that line specifies user file location
     assert alltest == allnew_
-    
+
     testfile.close()
     newfile.close()
 

@@ -20,7 +20,7 @@ from sorcha.modules.PPSNRLimit import PPSNRLimit
 from sorcha.modules import PPAddUncertainties, PPRandomizeMeasurements
 from sorcha.modules import PPVignetting
 from sorcha.modules.PPFadingFunctionFilter import PPFadingFunctionFilter
-
+from sorcha.modules.PPFaintObjectCullingFilter import PPFaintObjectCullingFilter
 
 from sorcha.modules.PPGetLogger import PPGetLogger
 from sorcha.modules.PPCommandLineParser import PPCommandLineParser
@@ -187,6 +187,33 @@ def runLSSTSimulation(args, sconfigs):
         else:
             verboselog("Ingest chunk of orbits")
             orbits_df = reader.read_aux_block(block_size=sconfigs.input.size_serial_chunk)
+
+            if not sconfigs.expert.brute_force:
+                verboselog("Cutting all objects too faint to be observed")
+                verboselog(
+                    "Number of rows BEFORE removing faint objects in faint object culling filter: "
+                    + str(len(orbits_df.index))
+                )
+                orbits_df = PPFaintObjectCullingFilter(
+                    orbits_df,
+                    filterpointing,
+                    sconfigs.filters.mainfilter,
+                    sconfigs.filters.observing_filters,
+                    sconfigs.lightcurve.lc_model,
+                    sconfigs.activity.comet_activity,
+                )
+                verboselog(
+                    "Number of rows After removing faint objects in faint object culling filter: "
+                    + str(len(orbits_df.index))
+                )
+                if len(orbits_df) == 0:  # the above could feasibly nuke the entire dataframe, so...
+                    pplogger.info(
+                        "WARNING: no objects in this chunk pass faint object culling filter. Skipping to next chunk..."
+                    )
+                    startChunk = startChunk + sconfigs.input.size_serial_chunk
+                    loopCounter = loopCounter + 1
+                    continue
+
             verboselog("Starting ephemeris generation")
             observations = create_ephemeris(orbits_df, filterpointing, args, sconfigs)
             verboselog("Ephemeris generation completed")

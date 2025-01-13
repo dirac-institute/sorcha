@@ -4,9 +4,9 @@ import numpy as np
 import spiceypy as spice
 from pooch import Decompress
 from sorcha.ephemeris.simulation_constants import RADIUS_EARTH_KM
-from sorcha.ephemeris.simulation_geometry import ecliptic_to_equatorial
+from sorcha.ephemeris.simulation_geometry import ecliptic_to_equatorial, equatorial_to_ecliptic
 from sorcha.ephemeris.simulation_data_files import make_retriever
-from sorcha.ephemeris.orbit_conversion_utilities import universal_cartesian
+from sorcha.ephemeris.orbit_conversion_utilities import universal_cartesian, universal_keplerian
 
 
 def mjd_tai_to_epoch(mjd_tai):
@@ -122,6 +122,157 @@ def parse_orbit_row(row, epochJD_TDB, ephem, sun_dict, gm_sun, gm_total):
         equatorial_velocities += np.array((sun.vx, sun.vy, sun.vz))
 
     return tuple(np.concatenate([equatorial_coords, equatorial_velocities]))
+
+
+def get_perihelion_row(row, epochJD_TDB, ephem, ssb_dict, gm_sun, gm_total):
+    """
+    Parses the input orbit row, computing the perihelion for the maximum
+    apparent magnitude filter
+
+    Parameters
+    ---------------
+    row : Pandas dataframe row
+        Row of the input dataframe
+    epochJD_TDB : float
+        epoch of the elements, in JD TDB
+    ephem: Ephem
+        ASSIST ephemeris object
+    sun_dict : dict
+        Dictionary with the position of the Sun at each epoch
+    gm_sun : float
+        Standard gravitational parameter GM for the Sun
+    gm_total : float
+        Standard gravitational parameter GM for the Solar System barycenter
+
+    Returns
+    ------------
+    : tuple
+        Cometary elements (q, e, inc, node, argPeri, Tp (in MJD!))
+
+    """
+    orbit_format = row["FORMAT"]
+
+    if epochJD_TDB not in ssb_dict:
+        ssb_dict[epochJD_TDB] = ephem.get_particle("Sun", epochJD_TDB - ephem.jd_ref)
+    ssb = ssb_dict[epochJD_TDB]
+
+    ssb_pos = -equatorial_to_ecliptic([ssb.x, ssb.y, ssb.z])
+    ssb_vel = -equatorial_to_ecliptic([ssb.vx, ssb.vy, ssb.vz])
+
+    if orbit_format not in ["COM"]:
+        if orbit_format == "CART":
+            q, e, inc, node, argPeri, Tp = universal_keplerian(
+                gm_sun,
+                row["x"],
+                row["y"],
+                row["z"],
+                row["xdot"],
+                row["ydot"],
+                row["zdot"],
+                epochJD_TDB,
+            )
+            inc *= 180 / np.pi
+            node *= 180 / np.pi
+            argPeri *= 180 / np.pi
+            Tp += -2400000.5
+
+        elif orbit_format == "BCART":  # convert to helio here
+            q, e, inc, node, argPeri, Tp = universal_keplerian(
+                gm_total,
+                row["x"] + ssb_pos[0],
+                row["y"] + ssb_pos[1],
+                row["z"] + ssb_pos[2],
+                row["xdot"] + ssb_vel[0],
+                row["ydot"] + ssb_vel[1],
+                row["zdot"] + ssb_vel[2],
+                epochJD_TDB,
+            )
+            inc *= 180 / np.pi
+            node *= 180 / np.pi
+            argPeri *= 180 / np.pi
+            Tp += -2400000.5
+        elif orbit_format == "KEP":
+            q = row["a"] * (1 - row["e"])
+            e = row["e"]
+            inc = row["inc"]
+            node = row["node"]
+            argPeri = row["argPeri"]
+            M = row["ma"] * np.pi / 180
+            if M > np.pi:
+                M -= 2 * np.pi
+            Tp = epochJD_TDB - M * np.sqrt(row["a"] ** 3 / gm_sun) - 2400000.5  # jd to mjd
+
+        elif orbit_format == "BKEP":
+            # need to first go to BCART
+            ecx, ecy, ecz, dx, dy, dz = universal_cartesian(
+                gm_total,
+                row["a"] * (1 - row["e"]),
+                row["e"],
+                row["inc"] * np.pi / 180.0,
+                row["node"] * np.pi / 180.0,
+                row["argPeri"] * np.pi / 180.0,
+                epochJD_TDB - (row["ma"] * np.pi / 180.0) * np.sqrt(row["a"] ** 3 / gm_total),
+                epochJD_TDB,
+            )
+
+            # now go to helio
+            q, e, inc, node, argPeri, Tp = universal_keplerian(
+                gm_sun,
+                ecx + ssb_pos[0],
+                ecy + ssb_pos[1],
+                ecz + ssb_pos[2],
+                dx + ssb_vel[0],
+                dy + ssb_vel[1],
+                dz + ssb_vel[2],
+                epochJD_TDB,
+            )
+            inc *= 180 / np.pi
+            node *= 180 / np.pi
+            argPeri *= 180 / np.pi
+            Tp += -2400000.5
+
+        elif orbit_format == "BCOM":
+            # need to first go to BCART
+            ecx, ecy, ecz, dx, dy, dz = universal_cartesian(
+                gm_total,
+                row["q"],
+                row["e"],
+                row["inc"] * np.pi / 180.0,
+                row["node"] * np.pi / 180.0,
+                row["argPeri"] * np.pi / 180.0,
+                row["t_p_MJD_TDB"] + 2400000.5,
+                epochJD_TDB,
+            )
+
+            # now go to helio
+            q, e, inc, node, argPeri, Tp = universal_keplerian(
+                gm_sun,
+                ecx + ssb_pos[0],
+                ecy + ssb_pos[1],
+                ecz + ssb_pos[2],
+                dx + ssb_vel[0],
+                dy + ssb_vel[1],
+                dz + ssb_vel[2],
+                epochJD_TDB,
+            )
+            inc *= 180 / np.pi
+            node *= 180 / np.pi
+            argPeri *= 180 / np.pi
+            Tp += -2400000.5
+
+        else:
+            raise ValueError("Provided orbit format not supported.")
+    else:
+        q, e, inc, node, argPeri, Tp = (
+            row["q"],
+            row["e"],
+            row["inc"],
+            row["node"],
+            row["argPeri"],
+            row["t_p_MJD_TDB"],
+        )
+
+    return tuple(np.array([q, e, inc, node, argPeri, Tp]))
 
 
 class Observatory:

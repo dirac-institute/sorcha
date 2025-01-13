@@ -4,6 +4,7 @@ from sorcha.ephemeris.simulation_constants import (
     RADIUS_EARTH_KM,
     SPEED_OF_LIGHT,
     ECL_TO_EQ_ROTATION_MATRIX,
+    EQ_TO_ECL_ROTATION_MATRIX,
 )
 import spiceypy as spice
 
@@ -18,6 +19,24 @@ def ecliptic_to_equatorial(v, rot_mat=ECL_TO_EQ_ROTATION_MATRIX):
         vector
     rot_mat: 2D array (3x3 matrix)
         Rotation matrix. Default is the matrix that computes the ecliptic to equatorial conversion
+    Returns
+    -------
+    v: array (3 entries)
+        Rotated vector
+    """
+    return np.dot(v, rot_mat)
+
+
+def equatorial_to_ecliptic(v, rot_mat=EQ_TO_ECL_ROTATION_MATRIX):
+    """
+    Converts an equatorially-aligned vector to an ecliptic-aligned vector
+
+    Parameters
+    ----------
+    v: array (3 entries)
+        vector
+    rot_mat: 2D array (3x3 matrix)
+        Rotation matrix. Default is the matrix that computes the equatorial to ecliptic conversion
     Returns
     -------
     v: array (3 entries)
