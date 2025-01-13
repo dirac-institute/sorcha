@@ -39,6 +39,11 @@ data management pipelines (including Solar System Processing [SSP]).
   :alt: A cartoon explanation of trailed source mag and PSF mag
   :align: center
 
+.. warning
+    When analyzing the detections and discoveries output from a ``Sorcha`` simulation, we caution the
+    user **to only use the trailed source magnitude**. Using the PSF magnitude will give incorrect results
+    because it is missing some of the object’s flux. The PSF magnitude is only used to assess detectability/apply the
+    survey detection efficiency.  
 
 Colors and Phase Curves
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -67,11 +72,15 @@ The phase curve function to apply is set via the [PHASECURVES] section of the :r
 
 .. _trailing:
 
+Accounting for Cometary Activity and Rotational Lightcurves
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+``Sorcha`` has the capability of accounting for the rotational lightcurve and cometary activity effects on the calculated trailed source magnitude. Further details are available in this :ref:`addons` section. 
+
 Applying Trailing Losses and Calculating the PSF Magnigtude
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-If the observed object is fast-moving, the signal will form a trail, reducing the measured magnitude.
-This filter will recalculate the PSF magnitude of the observations, adjusting for trailing losses.
+Once ``Sorcha`` calculates the trailed source magnitude for all potential detections, it then calculates the PSF magnitude for each potential detection accoutning for trailing losses (the effect that the simulated moving object does not have a perfect point-source PSF but is instead elongated due the object's on-sky motion). simulated moving object is moving fast enough in the potential detection's observation, the flux wouldl form a trail (elongated source on the image in the direction of the object's motion), changing the apparent magnitude that the survey's source deteciton software will measure as well as decrease the SNR of the trailed soruce magnitude compared to a point source. ``Sorcha``'s trailing loss functions calculates these trailing losses to be used by the rest of the post-processing stage. 
 
 .. image:: images/Trail.png
   :width: 400
