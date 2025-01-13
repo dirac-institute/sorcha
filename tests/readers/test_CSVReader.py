@@ -399,20 +399,26 @@ def test_CSVDataReader_delims():
 def test_CSVDataReader_blank_lines():
     """Test that we fail if the input file has blank lines."""
     with tempfile.TemporaryDirectory() as dir_name:
-        file_name = os.path.join(dir_name, "test.csv")
+        file_name = os.path.join(dir_name, "test.ecsv")
         with open(file_name, 'w') as output:
+            output.write("# My comment\n")
             output.write("ObjID,b,c\n")
             output.write("0,1,2\n")
-            output.write("1,2,3\n")
+            output.write("1,1,2\n")
+            output.write("2,1,2\n")
 
         # The checks pass.
-        reader = CSVDataReader(file_name, sep="csv", full_checks=False)
+        reader = CSVDataReader(file_name, sep="csv", cache_table=False)
+        data = reader.read_objects([1, 2])
+        assert len(data) == 2
+
         with open(file_name, 'a') as output:
-             output.write("\n")  # add a blank line
+            output.write("3,1,2\n")
+            output.write("\n")  # add another blank line
+            output.write("\n")  # add another blank line
+            output.write("\n")  # add another blank line
         
         # The code now fails by default.
-        with pytest.raises(SystemExit):
-            _ = CSVDataReader(file_name, sep="csv")
-        
-        # Checking can be turned off.
-        reader = CSVDataReader(file_name, sep="csv", full_checks=False)
+        reader2 = CSVDataReader(file_name, sep="csv", cache_table=False)
+        data2 = reader2.read_objects([1, 2])
+        assert len(data2) == 2

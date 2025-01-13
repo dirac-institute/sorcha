@@ -12,7 +12,7 @@ class CSVDataReader(ObjectDataReader):
     Requires that the file's first column is ObjID.
     """
 
-    def __init__(self, filename, sep="csv", header=-1, full_checks=True, **kwargs):
+    def __init__(self, filename, sep="csv", header=-1, **kwargs):
         """A class for reading the object data from a CSV file.
 
         Parameters
@@ -28,11 +28,6 @@ class CSVDataReader(ObjectDataReader):
             The row number of the header. If not provided, does an automatic search.
             Default = -1
 
-        full_checks : bool, optional
-            Scan the file pre-validating the format. This may be expensive for
-            larger files.
-            Default = True
-
         **kwargs: dictionary, optional
             Extra arguments
         """
@@ -47,8 +42,6 @@ class CSVDataReader(ObjectDataReader):
 
         # To pre-validation and collect the header information.
         self.header_row = self._find_and_validate_header_line(header)
-        if full_checks:
-            self._prevalidate_csv(self.header_row)
 
         # A table holding just the object ID for each row. Only populated
         # if we try to read data for specific object IDs.
@@ -139,14 +132,19 @@ class CSVDataReader(ObjectDataReader):
             pplogger.error(error_str)
             sys.exit(error_str)
 
-    def _prevalidate_csv(self, header):
-        """Perform a pre-validation of the CSV file, such as checking
+    def _validate_csv(self, header):
+        """Perform a validation of the CSV file, such as checking
         for blank lines.
 
         Parameters
         ----------
         header : integer
             The row number of the header.
+        
+        Returns
+        -------
+        : bool
+            True indicating success.
         """
         pplogger = logging.getLogger(__name__)
 
@@ -161,6 +159,7 @@ class CSVDataReader(ObjectDataReader):
                         )
                         pplogger.error(error_str)
                         sys.exit(error_str)
+        return True
 
     def _read_rows_internal(self, block_start=0, block_size=None, **kwargs):
         """Reads in a set number of rows from the input.
@@ -194,6 +193,7 @@ class CSVDataReader(ObjectDataReader):
             skip_rows.extend([i for i in range(self.header_row + 1, self.header_row + 1 + block_start)])
 
         # Read the rows.
+        #try:
         if self.sep == "whitespace":
             res_df = pd.read_csv(
                 self.filename,
@@ -208,6 +208,13 @@ class CSVDataReader(ObjectDataReader):
                 skiprows=skip_rows,
                 nrows=block_size,
             )
+        #except IndexError as current_exc:
+        #    # Check if there is a more understandable error we can raise.
+        #    self._validate_csv(self.header_row)
+        #
+        #    # If we do not detect the a problem with _validate_csv, reraise the error.
+        #    raise current_exc
+
         return res_df
 
     def _build_id_map(self):
