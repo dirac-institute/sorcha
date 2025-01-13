@@ -40,6 +40,7 @@ class CSVDataReader(ObjectDataReader):
             sys.exit(f"ERROR: Unrecognized delimiter ({sep})")
         self.sep = sep
 
+        # To pre-validation and collect the header information.
         self.header_row = self._find_and_validate_header_line(header)
 
         # A table holding just the object ID for each row. Only populated
@@ -131,6 +132,37 @@ class CSVDataReader(ObjectDataReader):
             pplogger.error(error_str)
             sys.exit(error_str)
 
+    def _validate_csv(self, header):
+        """Perform a validation of the CSV file, such as checking for blank lines.
+
+        This is an expensive test and should only be performed when something
+        has gone wrong.  This is needed because panda's read_csv() function can
+        given vague errors (such as failing with an index error if the file
+        has blank lines at the end).
+
+        Parameters
+        ----------
+        header : integer
+            The row number of the header.
+
+        Returns
+        -------
+        : bool
+            True indicating success.
+        """
+        pplogger = logging.getLogger(__name__)
+
+        with open(self.filename) as fh:
+            for i, line in enumerate(fh):
+                if i >= header:
+                    # Check for blank lines. We do this explicitly because pandas read_csv()
+                    # has problems when skipping lines and finding blank lines at the end.
+                    if len(line) == 0 or line.isspace():
+                        error_str = f"ERROR: CSVReader: found a blank line on line {i} of {self.filename}."
+                        pplogger.error(error_str)
+                        sys.exit(error_str)
+        return True
+
     def _read_rows_internal(self, block_start=0, block_size=None, **kwargs):
         """Reads in a set number of rows from the input.
 
@@ -177,6 +209,7 @@ class CSVDataReader(ObjectDataReader):
                 skiprows=skip_rows,
                 nrows=block_size,
             )
+
         return res_df
 
     def _build_id_map(self):
@@ -225,18 +258,25 @@ class CSVDataReader(ObjectDataReader):
         skipped_row.extend(~self.obj_id_table["ObjID"].isin(obj_ids).values)
 
         # Read the rows.
-        if self.sep == "whitespace":
-            res_df = pd.read_csv(
-                self.filename,
-                sep="\\s+",
-                skiprows=(lambda x: skipped_row[x]),
-            )
-        else:
-            res_df = pd.read_csv(
-                self.filename,
-                delimiter=",",
-                skiprows=(lambda x: skipped_row[x]),
-            )
+        try:
+            if self.sep == "whitespace":
+                res_df = pd.read_csv(
+                    self.filename,
+                    sep="\\s+",
+                    skiprows=(lambda x: skipped_row[x]),
+                )
+            else:
+                res_df = pd.read_csv(
+                    self.filename,
+                    delimiter=",",
+                    skiprows=(lambda x: skipped_row[x]),
+                )
+        except IndexError as current_exc:
+            # Check if there is a more understandable error we can raise.
+            self._validate_csv(self.header_row)
+
+            # If we do not detect a problem with _validate_csv, reraise the error.
+            raise current_exc
         return res_df
 
     def _process_and_validate_input_table(self, input_table, **kwargs):
