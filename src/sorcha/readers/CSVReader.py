@@ -275,7 +275,7 @@ class CSVDataReader(ObjectDataReader):
             # Check if there is a more understandable error we can raise.
             self._validate_csv(self.header_row)
 
-            # If we do not detect the a problem with _validate_csv, reraise the error.
+            # If we do not detect a problem with _validate_csv, reraise the error.
             raise current_exc
         return res_df
 
