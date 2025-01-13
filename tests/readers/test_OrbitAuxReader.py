@@ -307,6 +307,7 @@ def test_orbit_reader_wrong_delim():
     with pytest.raises(SystemExit) as err:
         _ = OrbitAuxReader(get_test_filepath("testorb.des"), "csv")
 
+
 def test_orbit_sanity_check_kep():
     """If an orbit parameter is undefined, raise an exception"""
 
@@ -333,7 +334,6 @@ def test_orbit_sanity_check_kep():
         _ = OrbitAuxReader(get_test_filepath("orbit_test_files/orbit_sanity_check_kep_e<1_a<0.des"),"whitespace")
         _.read_rows()
     assert err.value.code == "ERROR: Invalid Keplerian elements detected for one or more objects (check log for information)"
-
 
 
 def test_orbit_sanity_check_com():
