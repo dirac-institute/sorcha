@@ -307,47 +307,66 @@ def test_orbit_reader_wrong_delim():
     with pytest.raises(SystemExit) as err:
         _ = OrbitAuxReader(get_test_filepath("testorb.des"), "csv")
 
+
 def test_orbit_sanity_check_kep():
     """If an orbit parameter is undefined, raise an exception"""
 
-    #for keplerian e==1
+    # for keplerian e==1
     with pytest.raises(SystemExit) as err:
-        _ = OrbitAuxReader(get_test_filepath("orbit_test_files/orbit_sanity_check_kep_e=1.des"),"whitespace")
+        _ = OrbitAuxReader(get_test_filepath("orbit_test_files/orbit_sanity_check_kep_e=1.des"), "whitespace")
         _.read_rows()
-    assert err.value.code == "ERROR: Invalid Keplerian elements detected for one or more objects (check log for information)"
+    assert (
+        err.value.code
+        == "ERROR: Invalid Keplerian elements detected for one or more objects (check log for information)"
+    )
 
-     #for keplerian e<0
+    # for keplerian e<0
     with pytest.raises(SystemExit) as err:
-        _ = OrbitAuxReader(get_test_filepath("orbit_test_files/orbit_sanity_check_kep_e<0.des"),"whitespace")
+        _ = OrbitAuxReader(get_test_filepath("orbit_test_files/orbit_sanity_check_kep_e<0.des"), "whitespace")
         _.read_rows()
-    assert err.value.code == "ERROR: Invalid Keplerian elements detected for one or more objects (check log for information)"
+    assert (
+        err.value.code
+        == "ERROR: Invalid Keplerian elements detected for one or more objects (check log for information)"
+    )
 
-     #for keplerian e>1
+    # for keplerian e>1
     with pytest.raises(SystemExit) as err:
-        _ = OrbitAuxReader(get_test_filepath("orbit_test_files/orbit_sanity_check_kep_e>1.des"),"whitespace")
+        _ = OrbitAuxReader(get_test_filepath("orbit_test_files/orbit_sanity_check_kep_e>1.des"), "whitespace")
         _.read_rows()
-    assert err.value.code == "ERROR: Invalid Keplerian elements detected for one or more objects (check log for information)"
+    assert (
+        err.value.code
+        == "ERROR: Invalid Keplerian elements detected for one or more objects (check log for information)"
+    )
 
-     #for keplerian e<1 a<0
+    # for keplerian e<1 a<0
     with pytest.raises(SystemExit) as err:
-        _ = OrbitAuxReader(get_test_filepath("orbit_test_files/orbit_sanity_check_kep_e<1_a<0.des"),"whitespace")
+        _ = OrbitAuxReader(
+            get_test_filepath("orbit_test_files/orbit_sanity_check_kep_e<1_a<0.des"), "whitespace"
+        )
         _.read_rows()
-    assert err.value.code == "ERROR: Invalid Keplerian elements detected for one or more objects (check log for information)"
-
+    assert (
+        err.value.code
+        == "ERROR: Invalid Keplerian elements detected for one or more objects (check log for information)"
+    )
 
 
 def test_orbit_sanity_check_com():
     """If an orbit parameter is undefined, raise an exception"""
 
-    #for comentary  q<0
+    # for comentary  q<0
     with pytest.raises(SystemExit) as err:
-        _ = OrbitAuxReader(get_test_filepath("orbit_test_files/orbit_sanity_check_com_q<0.csv"),"csv")
+        _ = OrbitAuxReader(get_test_filepath("orbit_test_files/orbit_sanity_check_com_q<0.csv"), "csv")
         _.read_rows()
-    assert err.value.code == "ERROR: Invalid cometary elements detected for one or more objects (check log for information)"
+    assert (
+        err.value.code
+        == "ERROR: Invalid cometary elements detected for one or more objects (check log for information)"
+    )
 
-    #for comentary  e<0
+    # for comentary  e<0
     with pytest.raises(SystemExit) as err:
-        _ = OrbitAuxReader(get_test_filepath("orbit_test_files/orbit_sanity_check_com_e<0.csv"),"csv")
+        _ = OrbitAuxReader(get_test_filepath("orbit_test_files/orbit_sanity_check_com_e<0.csv"), "csv")
         _.read_rows()
-    assert err.value.code == "ERROR: Invalid cometary elements detected for one or more objects (check log for information)"
-
+    assert (
+        err.value.code
+        == "ERROR: Invalid cometary elements detected for one or more objects (check log for information)"
+    )

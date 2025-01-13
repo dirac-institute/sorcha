@@ -6,6 +6,7 @@ from sorcha.modules.PPModuleRNG import PerModuleRNG
 from sorcha.utilities.dataUtilitiesForTests import get_test_filepath
 from sorcha.utilities.sorchaConfigs import sorchaConfigs, fovConfigs
 
+
 def test_PPSimpleSensorArea():
     from sorcha.modules.PPApplyFOVFilter import PPSimpleSensorArea
 
@@ -102,7 +103,7 @@ def test_PPApplyFOVFilters():
         130.0,
     ]
     assert set(new_obs["detectorID"].values) == set(expected_ids)
-    
+
     configs = {"camera_model": "none"}
     configs = fovConfigs(**configs)
     setattr(configs, "fov", configs)

@@ -9,7 +9,7 @@ from sorcha.utilities.sorchaArguments import sorchaArguments
 from sorcha.ephemeris.simulation_driver import create_ephemeris, write_out_ephemeris_file
 from sorcha.modules.PPReadPointingDatabase import PPReadPointingDatabase
 from sorcha.ephemeris.simulation_setup import precompute_pointing_information
-from sorcha.utilities.sorchaConfigs import sorchaConfigs ,inputConfigs
+from sorcha.utilities.sorchaConfigs import sorchaConfigs, inputConfigs
 
 from sorcha.readers.CombinedDataReader import CombinedDataReader
 from sorcha.readers.EphemerisReader import EphemerisDataReader
@@ -126,10 +126,13 @@ def test_ephemeris_end2end(single_synthetic_pointing, tmp_path):
         args.configfile,
         args.surveyname,
     )
-    #configs["seed"] = 24601
+    # configs["seed"] = 24601
 
     filterpointing = PPReadPointingDatabase(
-        args.pointing_database, configs.filters.observing_filters, configs.input.pointing_sql_query, "rubin_sim"
+        args.pointing_database,
+        configs.filters.observing_filters,
+        configs.input.pointing_sql_query,
+        "rubin_sim",
     )
 
     filterpointing = precompute_pointing_information(filterpointing, args, configs)
@@ -165,14 +168,14 @@ def test_ephemeris_writeread_csv(single_synthetic_ephemeris, tmp_path):
     cmd_args = args()
 
     correct_inputs = {
-    "ephemerides_type": "ar",
-    "eph_format": "csv",
-    "size_serial_chunk": 5000,
-    "aux_format": "whitespace",
-    "pointing_sql_query": "SELECT observationId, observationStartMJD as observationStartMJD_TAI, visitTime, visitExposureTime, filter, seeingFwhmGeom as seeingFwhmGeom_arcsec, seeingFwhmEff as seeingFwhmEff_arcsec, fiveSigmaDepth as fieldFiveSigmaDepth_mag , fieldRA as fieldRA_deg, fieldDec as fieldDec_deg, rotSkyPos as fieldRotSkyPos_deg FROM observations order by observationId",
-}
+        "ephemerides_type": "ar",
+        "eph_format": "csv",
+        "size_serial_chunk": 5000,
+        "aux_format": "whitespace",
+        "pointing_sql_query": "SELECT observationId, observationStartMJD as observationStartMJD_TAI, visitTime, visitExposureTime, filter, seeingFwhmGeom as seeingFwhmGeom_arcsec, seeingFwhmEff as seeingFwhmEff_arcsec, fiveSigmaDepth as fieldFiveSigmaDepth_mag , fieldRA as fieldRA_deg, fieldDec as fieldDec_deg, rotSkyPos as fieldRotSkyPos_deg FROM observations order by observationId",
+    }
     configs = inputConfigs(**correct_inputs)
-    setattr(configs,"input", configs)
+    setattr(configs, "input", configs)
 
     out_path = os.path.join(tmp_path, "test_ephem_out")
 
@@ -203,14 +206,14 @@ def test_ephemeris_writeread_whitespace(single_synthetic_ephemeris, tmp_path):
     cmd_args = args()
 
     correct_inputs = {
-    "ephemerides_type": "ar",
-    "eph_format": "whitespace",
-    "size_serial_chunk": 5000,
-    "aux_format": "whitespace",
-    "pointing_sql_query": "SELECT observationId, observationStartMJD as observationStartMJD_TAI, visitTime, visitExposureTime, filter, seeingFwhmGeom as seeingFwhmGeom_arcsec, seeingFwhmEff as seeingFwhmEff_arcsec, fiveSigmaDepth as fieldFiveSigmaDepth_mag , fieldRA as fieldRA_deg, fieldDec as fieldDec_deg, rotSkyPos as fieldRotSkyPos_deg FROM observations order by observationId",
-}
+        "ephemerides_type": "ar",
+        "eph_format": "whitespace",
+        "size_serial_chunk": 5000,
+        "aux_format": "whitespace",
+        "pointing_sql_query": "SELECT observationId, observationStartMJD as observationStartMJD_TAI, visitTime, visitExposureTime, filter, seeingFwhmGeom as seeingFwhmGeom_arcsec, seeingFwhmEff as seeingFwhmEff_arcsec, fiveSigmaDepth as fieldFiveSigmaDepth_mag , fieldRA as fieldRA_deg, fieldDec as fieldDec_deg, rotSkyPos as fieldRotSkyPos_deg FROM observations order by observationId",
+    }
     configs = inputConfigs(**correct_inputs)
-    setattr(configs,"input", configs)
+    setattr(configs, "input", configs)
 
     out_path = os.path.join(tmp_path, "test_ephem_out_whitespace")
 
@@ -241,14 +244,14 @@ def test_ephemeris_writeread_hdf5(single_synthetic_ephemeris, tmp_path):
     cmd_args = args()
 
     correct_inputs = {
-    "ephemerides_type": "ar",
-    "eph_format": "hdf5",
-    "size_serial_chunk": 5000,
-    "aux_format": "whitespace",
-    "pointing_sql_query": "SELECT observationId, observationStartMJD as observationStartMJD_TAI, visitTime, visitExposureTime, filter, seeingFwhmGeom as seeingFwhmGeom_arcsec, seeingFwhmEff as seeingFwhmEff_arcsec, fiveSigmaDepth as fieldFiveSigmaDepth_mag , fieldRA as fieldRA_deg, fieldDec as fieldDec_deg, rotSkyPos as fieldRotSkyPos_deg FROM observations order by observationId",
-}
+        "ephemerides_type": "ar",
+        "eph_format": "hdf5",
+        "size_serial_chunk": 5000,
+        "aux_format": "whitespace",
+        "pointing_sql_query": "SELECT observationId, observationStartMJD as observationStartMJD_TAI, visitTime, visitExposureTime, filter, seeingFwhmGeom as seeingFwhmGeom_arcsec, seeingFwhmEff as seeingFwhmEff_arcsec, fiveSigmaDepth as fieldFiveSigmaDepth_mag , fieldRA as fieldRA_deg, fieldDec as fieldDec_deg, rotSkyPos as fieldRotSkyPos_deg FROM observations order by observationId",
+    }
     configs = inputConfigs(**correct_inputs)
-    setattr(configs,"input", configs)
+    setattr(configs, "input", configs)
 
     out_path = os.path.join(tmp_path, "test_ephem_out_h5")
 

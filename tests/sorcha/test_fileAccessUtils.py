@@ -8,6 +8,7 @@ import glob
 from sorcha.utilities.dataUtilitiesForTests import get_test_filepath
 from sorcha.utilities.sorchaArguments import sorchaArguments
 
+
 def test_FindFileOrExit():
     from sorcha.utilities.fileAccessUtils import FindFileOrExit
 
@@ -21,6 +22,7 @@ def test_FindFileOrExit():
     assert e.value.code == "ERROR: filename totally_fake_file.txt supplied for test argument does not exist."
 
     return
+
 
 def test_FindDirectoryOrExit():
     from sorcha.utilities.fileAccessUtils import FindDirectoryOrExit

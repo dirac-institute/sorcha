@@ -6,6 +6,7 @@ from sorcha.modules.PPModuleRNG import PerModuleRNG
 from sorcha.utilities.dataUtilitiesForTests import get_test_filepath
 from sorcha.utilities.sorchaConfigs import expertConfigs
 
+
 def test_randomizePhotometry():
     from sorcha.modules.PPRandomizeMeasurements import randomizePhotometry
 
@@ -113,7 +114,7 @@ def test_randomizeAstrometryAndPhotometry():
 
     configs = {"default_snr_cut": True, "trailing_losses_on": True}
     configs = expertConfigs(**configs)
-    setattr(configs,"expert",configs)
+    setattr(configs, "expert", configs)
     obs_out = randomizeAstrometryAndPhotometry(observations, configs, PerModuleRNG(2021))
 
     assert_almost_equal(obs_out["trailedSourceMag"][0], 19.663194, decimal=6)
