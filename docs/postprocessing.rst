@@ -344,7 +344,7 @@ Additionally, the camera footprint  model can account for the losses at the edge
 
 .. _linking:
 
-Applying the Linking Filter 
+The Linking Filter 
 -------------------------------
 
 The linking filter simulates the behavior of LSST's Solar System Processing (SSP, `Jurić et al. 2020 <https://lse-163.lsst.io/>`_,
