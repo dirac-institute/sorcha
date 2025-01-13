@@ -229,8 +229,8 @@ further from the center of the FOV have shallower depths.
 
 .. _fading: 
 
-Applying the Survey Detection Efficiency (Fading Function)
------------------------------------------------------------------
+Applying the Survey Detection Efficiency (Fading Function) Filter
+--------------------------------------------------------------------
 
 This filter serves to remove potential detections of the input small bodies which are too faint to be detected in the each survey observation.
  ``Sorcha`` uses the fading function formulation of `Veres and Chesley (2017) <https://ui.adsabs.harvard.edu/abs/2017arXiv170506209C/abstract>`_:
