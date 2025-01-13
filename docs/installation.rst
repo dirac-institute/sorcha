@@ -113,7 +113,7 @@ You can find the command to run the ``Sorcha`` demo on the command line in two w
 
    sorcha demo howto
 
-Or you can in an interactive python session or jupyter notebook. You can run the following
+Or in an interactive python session or jupyter notebook, you can run the following
 
 .. exec::
 
