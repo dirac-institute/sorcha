@@ -45,6 +45,7 @@ sorcha-init = "sorcha_cmdline.init:main"
 sorcha-demo = "sorcha_cmdline.demo:main"
 sorcha-outputs = "sorcha_cmdline.outputs:main"
 sorcha-bootstrap = "sorcha_cmdline.bootstrap:main"
+sorcha-cite = "sorcha_cmdline.cite:main"
 
 [project.urls]
 "Documentation" = "https://sorcha.readthedocs.io/en/latest/"
