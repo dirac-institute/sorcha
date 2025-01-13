@@ -24,8 +24,13 @@ Otherwise, you run the risk of the output files being mixed up. If you want to r
 the same computer/compute node, make sure to update the output path in the config file or commandline arguments, 
 as appropriate. We have developed tools and example Slurm scripts to help you run multiple instances safely. 
 
-Pointing Database 
----------------------
+sqlite3.OperationalError: index ObjID already exists/ sqlite3.OperationalError: index ObjID already exists
+---------------------------------------------------------------------------------------------------------------------------------------------
+This happens if you are outputting as sql databases and you have dueling ``Sorcha`` processes running in the same directory with the same output file names running on the same input files  using  the -f flag to force overwriting of output files. One way to check this is to only allow for one ``Sorcha`` run to be output to a directory and see if you've got two log files that are actively being written to/were created. Note if you're using CSV, text file, or pytables format you won't get this error when you hit this race condition.
+
+
+Pointing Database Issues 
+----------------------------
 
 If you are having issues with reading the LSST pointing database such as getting an error like::
   
@@ -41,9 +46,9 @@ it might be your computer setup. SQLite uses a temporary store to hold temporary
 
 Mismatch in Inputs 
 ---------------------
-There are several files associated with the synthetic small bodies  which are passed into Sorcha. These are
+There are several files associated with the synthetic small bodies  which are passed into ``Sorcha``. These are
 the orbit file, the physical parameter file and an optional complex parameters file and optional ephemeris 
-file (if not using the internal ephemeris generator within ``Sorcha``). Each provide specific information about the 
+file (if not using the :ref:`the internal ephemeris generator <ephemeris_gen>` buit within ``Sorcha``). Each provide specific information about the 
 synthetic population that is being analysed. Within these files, it is necessary to specify an entry for every 
 object. The ``Sorcha`` code will run a check to ensure that all entries have an associated orbit and 
 physical/complex physical  parameter value, so if you get an error like::
@@ -56,10 +61,3 @@ then make sure to check that you have entries in all the input files for each ob
 ERROR: Unable to find ObjID column headings (OrbitAuxReader:....)
 --------------------------------------------------------------------
 Check your input files and ensure that they have ObjID column as the first column. 
-
-in PPOutWriteSqlite3: sqlite3.OperationalError: index ObjID already existssqlite3.OperationalError: index ObjID already exists
----------------------------------------------------------------------------------------------------------------------------------------------
-This happens if you are outputting as sql databases and you have dueling ``Sorcha`` processes running in the same directory with the same output file names running on the same input files  using  the -f flag to force overwriting of output files. One way to check this is to only allow for one ``Sorcha`` run to be output to a directory and see if you've got two log files that are actively being written to/were created. Note if you're using CSV, text file, or pytables format you won't get this error when you hit this race condition.
-
-
-
