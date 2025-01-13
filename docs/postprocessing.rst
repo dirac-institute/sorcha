@@ -83,15 +83,29 @@ Applying Trailing Losses and Calculating the PSF Magnigtude
 Once ``Sorcha`` calculates the trailed source magnitude for all potential detections, it then calculates the PSF magnitude for each potential detection accoutning for trailing losses (the effect that the simulated moving object does not have a perfect point-source PSF but is instead elongated due the object's on-sky motion). simulated moving object is moving fast enough in the potential detection's observation, the flux wouldl form a trail (elongated source on the image in the direction of the object's motion), changing the apparent magnitude that the survey's source deteciton software will measure as well as decrease the SNR of the trailed soruce magnitude compared to a point source. ``Sorcha``'s trailing loss functions calculates these trailing losses to be used by the rest of the post-processing stage. 
 
 .. image:: images/Trail.png
-  :width: 400
+  :width: 800
   :alt: Sky image showing a short trailing source circled in red.
   :align: center
+Magnitude losses due to trailing, shown as a function of the object’s on-sky velocity (v). Left:
+the trailing loss components for different values of the seeing θ. The dashed lines represent magnitude
+losses due to the PSF trailing loss component only. The solid lines represent trailing losses due to both
+the PSF and detection trailing loss components. Right: a single trailing loss model at low v, with vertical
+lines representing the thresholds for typical on-sky motions of a TNO (Trans-Neptunian object), a Jupiter
+Trojan, and inner and outer MBAs (main-belt asteroids) `(Luu & Jewitt 1988, Equation 1) <https://ui.adsabs.harvard.edu/abs/1988AJ.....95.1256L/abstract>`
 
+.. warning::
+    Right now ``Sorcha`` only has functions to compute the trailing losses for the LSST.
+
+.. warning
+    When analyzing the detections and discoveries output from a ``Sorcha`` simulation, we caution the
+    user **to only use the trailed source magnitude**. Using the PSF magnitude will give incorrect results
+    because it is missing some of the object’s flux. The PSF magnitude is only used to assess detectability/apply the
+    survey detection efficiency. 
 
 .. _randomization:
 
-Applying Photometric and Astrometric Uncertainities
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Applying Photometric and Astrometric Uncertainitie and Randomization
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Real astronomical surveys measure photometry and astrometry that have uncertainities. To better compare to what the survey detected, ``Sorcha`` applies photometric and astrometric errors that modify the ca;culated value for the right acension, declination, trailed source magnitude, and PSF masgnitude for each potential detection. The models for these uncertainties are primarily driven by the signal-to-noise ratio (SNR) for a particular input object in an image, following the methods in `(Ivezić et al. 2019) <https://iopscience.iop.org/article/10.3847/1538-4357/ab042c>`_ 
 
@@ -101,16 +115,20 @@ Real astronomical surveys measure photometry and astrometry that have uncertaini
 .. warning::
     Right now ``Sorcha`` only has functions to compute the photometric and astrometric uncertainties and SNR estimations specifically for Rubin Observatory.       
 
+.. seealso::
+  We have a `Jupyter notebook <notebooks/demo_UncertaintiesAndRandomization.ipynb>`_  demonstrating the application of the uncertainities and radnomization of the photometric and astrometric values within ``Sorcha``. 
+
+
 Validating Sorcha's Trailed Source Magnitude Calculations
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. seealso::
-    See our `Jupyter notebook <notebooks/demo_ApparentMagnitudeValidation.ipynb>`_  that validates the apparent magnitude calulcation.
+    See our `Jupyter notebook <notebooks/demo_ApparentMagnitudeValidation.ipynb>`_  that validates the apparent magnitude calculation.
 
 
 .. _addons:
 
-Incorporating Rotational Light Curves and Activity
+Incorporating Rotational Lightcurves and Cometary Activity
 ------------------------------------------------------------
 ``Sorcha`` has the ability user provided functions though python classes that augment/change the apparent brightness calculations for the synthetic Solar System objects. Any values required as input for these calculations, must be provided in the separate :ref:`CPP` file as input. Rather than forcing the user directly modify  the ``Sorcha`` codebase every time they want to apply a different model for representing the effects of rotational lightcurves or cometary activity, we provide the ability to develop separate activity and lightcurve/brightness enhancement functions as  plugins using our template classes  and add them to the `Sorcha addons <https://github.com/dirac-institute/sorcha-addons>`_ package. In both cases, any derived class must inherit from the corresponding base class and follow its API, to ensure that ``Sorcha`` knows how to find and use your class. Once the ``Sorcha addons`` is installed, ``Sorcha`` will automatically detect the available plugins and make them available during post-processing.  To use one of the plugins from the community utilities, simply add the unique name of the plugin to the :ref:`configs` provided to ``Sorcha``, and provide the  :ref:`CPP` file on the command line. We currently have 2 pre-made classes  that can augment the calculated apparent magnitude of each synthetic object, One for handling cometary activity as a function of heliocentric distance and one that applies rotational light curves to the synthetic objects.
 
@@ -233,9 +251,9 @@ Applying the Survey Detection Efficiency (Fading Function) Filter
 --------------------------------------------------------------------
 
 This filter serves to remove potential detections of the input small bodies which are too faint to be detected in the each survey observation.
- ``Sorcha`` uses the fading function formulation of `Veres and Chesley (2017) <https://ui.adsabs.harvard.edu/abs/2017arXiv170506209C/abstract>`_:
-see the below plot. This fading function is parameterised by the fading function width and peak efficiency.
-The default values are modelled on those from the aforementioned paper.
+``Sorcha`` uses the fading function formulation of `Veres and Chesley (2017) <https://ui.adsabs.harvard.edu/abs/2017arXiv170506209C/abstract>`_.
+This fading function is parameterised by the fading function width and peak efficiency.
+The default values are modeled on those from the aforementioned paper.
 
 To configure the fading function, the following variabless should be set in the :ref:`configs`::
 
@@ -305,6 +323,8 @@ To include this filter, the following options should be set in the :ref:`configs
    For Rubin Observatory, the circle radius should be set to 1.75 degrees with a fill factor of 0.9 to approximate the detector area of LSSTCam.
 
 
+.. seealso::
+  We have a `Jupyter notebook <notebooks/demo_CircleFootprint.ipynb>`_  demonstrating ``Sorcha``'s circle radius (simple sensor area) filter.
 
 .. _full_camera_footprint:
 
@@ -341,6 +361,10 @@ Additionally, the camera footprint  model can account for the losses at the edge
 
 .. note::
     If **footprint_edge_threshold** is not includeed, then ``Sorcha`` will assume all of the CCD detector area should be considered. 
+
+
+.. seealso::
+  We have a `Jupyter notebook <notebooks/demo_FootprintFilter.ipynb>`_  demonstrating ``Sorcha``'s full camera footprint filter.
 
 .. _linking:
 
