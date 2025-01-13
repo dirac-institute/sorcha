@@ -75,7 +75,7 @@ The phase curve function to apply is set via the [PHASECURVES] section of the :r
 Accounting for Cometary Activity and Rotational Lightcurves
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-``Sorcha`` has the capability of accounting for the rotational lightcurve and cometary activity effects on the calculated trailed source magnitude. Further details are available in this :ref:`addons` section. 
+``Sorcha`` has the capability of accounting for the rotational lightcurve and cometary activity effects on the calculated trailed source magnitude. Further details are available in the :ref:`addons` section. 
 
 Applying Trailing Losses and Calculating the PSF Magnigtude
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
