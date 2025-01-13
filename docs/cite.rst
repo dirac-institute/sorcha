@@ -1,9 +1,27 @@
+.. _citethecode:
+
+.. image:: images/sorcha_logo.png
+  :width: 410
+  :alt: Sorcha logo
+  :align: center
+
 Citing the Software
 ==========================
 
+``Sorcha`` is described provided in joint Astromical Journal/JOSS software papers: Merritt et al. (submitted) and Holman et al.(submitted). We also ask that you reference in your software citations and acknowledgements the other packages that ``Sorcha`` is built upon (see below). 
+
+.. tip::
+   Beyond citing the relevant papers, make sure to include details about your configuration for ``Sorcha`` (e.g. which footprint filter you're using), details about your input population (e.g. orbital, H, color, and phase curve distribution), and information about the pointing database used. 
+
+
+.. hint::
+   You find out what version of ``Sorcha`` you're running by typing **sorcha --version** on the command line. 
+
+.. _citefunc:
+
 Built-In Citation Function
 ----------------------------
-If you use Sorcha in your research, please do include a citation in your published papers for sorcha and the software packages and resources that sorcha is based on. The simplest way to find this information is to use our built-in citation function. In an interactive Python session or a Jupyter notebook::
+If you use ``Sorcha`` in your research, please do include a citation in your published papers for ``Sorcha`` and the software packages and resources that ``Sorcha'' is based on. The simplest way to find this information is to use our built-in citation function. In an interactive Python session or a Jupyter notebook::
 
    import sorcha
    sorcha.cite()
@@ -12,9 +30,7 @@ If you use Sorcha in your research, please do include a citation in your publish
 Additional Citation Details
 ----------------------------
 
-The main overview of Sorcha is provided in our AAS journal software papers and JOSS paper. (in prep)
-
-Please also cite the software and ancillary data files that helps power Sorcha:
+Please also cite the software and ancillary data files that helps power ``Sorcha``. Our :ref:`citation function<citefunc>` described above will give the full details or you can manually find the acknowledgement information for each package:
 
 * assist https://assist.readthedocs.io/en/latest/
 * astropy https://www.astropy.org/acknowledging.html
@@ -35,5 +51,5 @@ Please also cite the software and ancillary data files that helps power Sorcha:
 * tqdm https://tqdm.github.io/
 
 .. note::
-   The same information is available from our built-in citation function.
+   The same information is available from our :ref:`built-on citation function<citefunc>`.
 

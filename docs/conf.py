@@ -6,7 +6,6 @@
 
 import os
 import sys
-
 import autoapi
 from importlib.metadata import version
 
@@ -17,9 +16,9 @@ sys.path.insert(0, os.path.abspath("../src/"))
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
 
-copyright = "2024"
-project = "Sorcha"
-author = "Sorcha development team"
+copyright = "2025"
+project = "sorcha"
+author = "Sorcha Team"
 release = version("sorcha")
 # for example take major/minor
 version = ".".join(release.split(".")[:2])
