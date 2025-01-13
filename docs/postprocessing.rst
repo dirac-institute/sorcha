@@ -254,8 +254,8 @@ binsize is 0.04 mag.
     We have a `Jupyter notebook <notebooks/demo_DetectionEfficiencyValidation.ipynb>`_  showing how ``Sorcha`` applies the survey detection efficiency (fading function). 
 .. _footprint:
 
-Camera Footprint
------------------
+Applying the Camera Footprint Filter
+-----------------------------------------
 
 Due to the footprint of the LSST Camera (LSSTCam), see the figure below, it is possible that some object detections  may be lost in
 gaps between the chips.
@@ -278,7 +278,7 @@ Circle Radius (Simple Sensor Area)
 
 Using this filter applies a very simple circular camera footprint. The radius of the circle (**circle_radius** key) should
 be given in degrees. The **fill_factor** key specifics what fraction of observations should be randomly removed to roughly mimic detector chip
- gaps in this circular footprint approximation. The fraction of observations not removed is controlled by the config variable fill_factor.
+gaps in this circular footprint approximation. The fraction of observations not removed is controlled by the config variable fill_factor.
 To include this filter, the following options should be set in the :ref:`configs`::
 
     [FOV]
@@ -290,7 +290,11 @@ To include this filter, the following options should be set in the :ref:`configs
     Note that :ref:`ASSIST+REBOUND ephemeris generator<ephemeris_gen>` also uses a circular radius for its search area. To get accurate results, the ASSIST+REBOUND radius must be set to be larger than the circle_radius. For simmulating the LSST, we rcommend setting **ar_ang_fov = 2.06** and **ar_fov_buffer = 0.2**. Setting the circle_radius to be larger than the radius used for ASSIST+REBOUND will have no effect.
 
 .. tip::
+   Applying the fill factor in the circle radius camera filter is option. If the  **fill_factor** is not present in the :ref:`configs` file then ``Sorcha`` includes all potential detections that land within the circular area.  
+
+.. tip::
    For Rubin Observatory, the circle radius should be set to 1.75 degrees with a fill factor of 0.9 to approximate the detector area of LSSTCam.
+
 
 
 .. _full_camera_footprint:
@@ -298,9 +302,19 @@ To include this filter, the following options should be set in the :ref:`configs
 Full Camera Footprint
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-Using this filter applies a full camera footprint, including chip gaps. This is the slowest and most accurate version of the footprint filter.
+Using this filter applies a full camera footprint, including chip gaps. The full camera footprint filter figures out which of  the  possible input population detections (as idenitifed by the ephemeris generation stage/input)  for each survey observations land within on the survey camera's detectors. This is the slowest and most accurate version of the footprint filter. The image below shows the full camera footprint filter for the default LSSTCam architecture. 
 
-To include this filter, the following options should be set in the :ref:`configs`::
+
+.. image:: images/full_footprint_filter.png
+  :width: 800
+  :alt: Example of how the  full camera footprint filter for LSSTCam. Left plot is a full circle of detections, and on the right shows those detections in the sahpe of the LSSTCam detectors where detector gaps can be seen. 
+  :align: center
+The effect of the full camera footprint filter on a selection of 100,000 random synthetic sources.
+Left: original sources, distributed over a circular FOV (field-of-view)  of radius 2.1 degrees. Right: the same sources after running
+Sorcha’s full camera footprint filter. The shape of the LSSTCam detector footprint can be seen with the
+loss of detections in the raft and chip gaps.
+
+To use the full camera footprint filter, the following option should be set in the :ref:`configs`::
 
     [FOV]
     camera_model = footprint
@@ -310,20 +324,19 @@ To include this filter, the following options should be set in the :ref:`configs
 .. warning::
     Note that :ref:`ASSIST+REBOUND ephemeris generator<ephemeris_gen>` uses a circular radius for its search area. To get accurate results, the ASSIST+REBOUND radius must be set to be larger than the circle_radius. For simmulating the LSST, we rcommend setting **ar_ang_fov = 2.06** and **ar_fov_buffer = 0.2**.
 
-Additionally, the camera footprint  model can account for the losses at the edge of the CCDs where the detection software will not be able to pick out sources close to the edge. You can add an exclusion zone around each CCD measured in arcseconds (on the focal plane) using the `footprint_edge_threshold` key to the configuraiton file.  An example setup in the :ref:`configs`::
+Additionally, the camera footprint  model can account for the losses at the edge of the CCDs where the detection software will not be able to pick out sources close to the edge. You can add an exclusion zone around each CCD measured in arcseconds (on the focal plane) using the **footprint_edge_threshold**  key to the configuraiton file.  An example setup in the :ref:`configs`::
 
     [FOV]
     camera_model = footprint
-    footprint_path = ./data/detectors_corners.csv
     footprint_edge_threshold = 0.0001
 
-.. tip::
-    ``Sorcha`` comes with a representation of the LSSTCam footprint already installed. If you do not include the **footprint_path** in the :ref:`configs`, then ``Sorcha`` assumes you're using its internal LSSTCam footprint.
+.. note::
+    If **footprint_edge_threshold** is not includeed, then ``Sorcha`` will assume all of the CCD detector area should be considered. 
 
 .. _linking:
 
-Linking
----------------------------
+Applying the Linking Filter 
+-------------------------------
 
 The linking filter simulates the behavior of LSST's Solar System Processing (SSP, `Jurić et al. 2020 <https://lse-163.lsst.io/>`_,
 `Swinbank et al. 2020 <https://docushare.lsst.org/docushare/dsweb/Get/LDM-151>`_), the automated software pipeline
@@ -387,8 +400,8 @@ the observation is of a linked object or not. To enable this functionality, add 
 
 .. _whatobs:
 
-What Observations to Include
--------------------------------------
+Specifying What Observations to Include
+------------------------------------------
 
 The user sets what observations from the survey :ref:`pointing` will be used by setting the **observing_filters** :ref:`configs` variable in the [FILTERS] section::
 

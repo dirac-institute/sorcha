@@ -63,8 +63,11 @@ Applying :ref:`trailing losses<trailing>` is on by default, but it can be turned
     this option for debugging or for speed increases when the user is absolutely sure
     they are only supplying slow-moving objects.
 
+.. note::
+   If trailing losses are not applied, then for each potential input population detection ``Sorcha`` will set the PSF magnitude equal to the calculated trailed source magnitude. 
+
 Turning off Detection Efficiency/Applying the Fading Function
-----------------------------------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Applying the :ref:`survey detection efficiency<fading>` is on by default, but it can be turned off by including the option in the :ref:`configs`::
 
