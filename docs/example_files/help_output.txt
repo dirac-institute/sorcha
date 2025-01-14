@@ -1,5 +1,6 @@
-usage: sorcha [-h] -c C -o O -ob OB -p P -pd PD [-er ER] [-ew EW] [-ar AR]
-              [-cp CP] [-f] [-s S] [-t T] [-v]
+usage: sorcha run [-h] -c C -o O --ob OB -p P --pd PD [--er ER] [--ew EW] [--ar AR] [--cp CP] [-f] [-s S] [-t T] [-l] [--st ST]
+
+Run a simulation.
 
 options:
   -h, --help            show this help message and exit
@@ -7,29 +8,26 @@ options:
 Required arguments:
   -c C, --config C      Input configuration file name (default: None)
   -o O, --outfile O     Path to store output and logs. (default: None)
-  -ob OB, --orbit OB    Orbit file name (default: None)
-  -p P, --params P      Physical parameters file name (default: None)
-  -pd PD, --pointing_database PD
+  --ob OB, --orbits OB  Orbit catalog file name (default: None)
+  -p P, --physical-parameters P
+                        Catalog of object physical parameters (default: None)
+  --pd PD, --pointing-db PD
                         Survey pointing information (default: None)
 
 Optional arguments:
-  -er ER, --ephem_read ER
-                        Previously generated ephemeris simulation file name,
-                        required if ephemerides_type in config file is
-                        'external'. (default: None)
-  -ew EW, --ephem_write EW
-                        Output file name for newly generated ephemeris
-                        simulation, required if ephemerides_type in config
-                        file is not 'external'. (default: None)
-  -ar AR, --ar_data_path AR
-                        Directory path where Assist+Rebound data files where
-                        stored when running bootstrap_sorcha_data_files from
-                        the command line. (default: None)
-  -cp CP, --complex_physical_parameters CP
-                        Complex physical parameters file name (default: None)
-  -f, --force           Force deletion/overwrite of existing output file(s).
-                        Default False. (default: False)
+  --er ER, --ephem-read ER
+                        Previously generated ephemeris simulation file name, required if ephemerides_type in config file is 'external'. (default:
+                        None)
+  --ew EW, --ephem-write EW
+                        Output file name for newly generated ephemeris simulation, required if ephemerides_type in config file is not 'external'.
+                        (default: None)
+  --ar AR, --ar-data-path AR
+                        Directory path where Assist+Rebound data files where stored when running bootstrap_sorcha_data_files from the command line.
+                        (default: None)
+  --cp CP, --complex-physical-parameters CP
+                        Catalog of object complex physical parameters (default: None)
+  -f, --force           Force deletion/overwrite of existing output file(s). Default False. (default: False)
   -s S, --survey S      Survey to simulate (default: rubin_sim)
   -t T, --stem T        Output file name stem. (default: SSPPOutput)
-  -l, --log-level         Verbosity. Default currently true; include to turn off
-                        verbosity. (default: True)
+  -l, --log-level       Print additional information to log while running (default: True)
+  --st ST, --stats ST   Output summary statistics table to this stem filename. (default: None)
