@@ -437,7 +437,6 @@ def cite_sorcha(f=sys.stdout):
     f.write("\nREBOUND:\n\n")
     _cite_rebound(f=f)
 
-
     f.write("\nAdapted Functions From rubin_sim:\n\n")
 
     f.write("@software{peter_yoachim_2022_7087823,\n")
@@ -725,12 +724,11 @@ def _cite_rebound(f):
     -----------
     None
     """
-    #saving the default sys.stdout
+    # saving the default sys.stdout
     original_stdout = sys.stdout
-    #making the sys.stdout output to f.
+    # making the sys.stdout output to f.
     sys.stdout = f
     sim = rebound.Simulation()
     sim.cite()
-    #making the stdout default again
+    # making the stdout default again
     sys.stdout = original_stdout
-    
