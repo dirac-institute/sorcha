@@ -178,7 +178,7 @@ def get_perihelion_row(row, epochJD_TDB, ephem, ssb_dict, gm_sun, gm_total):
 
         elif orbit_format == "BCART":  # convert to helio here
             q, e, inc, node, argPeri, Tp = universal_keplerian(
-                gm_total,
+                gm_sun,
                 row["x"] + ssb_pos[0],
                 row["y"] + ssb_pos[1],
                 row["z"] + ssb_pos[2],
