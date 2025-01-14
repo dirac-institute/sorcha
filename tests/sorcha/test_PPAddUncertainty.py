@@ -106,7 +106,7 @@ def test_addUncertainties():
 
     configs = {"trailing_losses_on": True, "default_snr_cut": False}
     configs = expertConfigs(**configs)
-    setattr(configs, "expert",configs)
+    setattr(configs, "expert", configs)
 
     rng = PerModuleRNG(2021)
 
@@ -148,7 +148,7 @@ def test_uncertainties():
 
     configs = {"trailing_losses_on": False}
     configs = expertConfigs(**configs)
-    setattr(configs, "expert",configs)
+    setattr(configs, "expert", configs)
     ast_sig_deg, photo_sig, SNR = uncertainties(observations, configs)
 
     assert_almost_equal(ast_sig_deg[0], 0.000004, decimal=6)
@@ -157,7 +157,7 @@ def test_uncertainties():
 
     configs_trail = {"trailing_losses_on": True}
     configs_trail = expertConfigs(**configs_trail)
-    setattr(configs_trail, "expert",configs_trail)
+    setattr(configs_trail, "expert", configs_trail)
 
     ast_sig_deg_T, photo_sig_T, SNR_T = uncertainties(observations, configs_trail)
 

@@ -317,8 +317,6 @@ def test_PPLinkingFilter():
 
     assert -3 < resid_sigma < 3
 
-    return
-
     # check that the correct linking window has been applied
     inputdf = pd.read_csv(get_test_filepath("./test_input_minidifi_observations.csv"))
 
@@ -334,6 +332,7 @@ def test_PPLinkingFilter():
             min_tracklet_window,
             min_angular_separation,
             max_time_separation,
+            night_start_utc,
         )
     except ValueError:
         assert False

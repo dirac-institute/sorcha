@@ -240,4 +240,4 @@ def test_orbit_conversion_realdata():
     for i in orbit_types:
         converted = np.array(parse_orbit_row(orbit_types[i], epochJD_TDB, None, sun_dict, gm_sun, gm_total))
         for j in range(6):
-            assert np.isclose(converted[j], vec_bary[j])
+            assert np.isclose(converted[j], vec_bary[j], 1e-8)

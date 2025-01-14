@@ -737,6 +737,9 @@ class expertConfigs:
     vignetting_on: bool = None
     """flag for calculating effects of vignetting on limiting magnitude"""
 
+    brute_force: bool = None
+    """brute-force ephemeris generation on all objects without running a first-pass"""
+
     def __post_init__(self):
         """Automagically validates the expert configs after initialisation."""
         self._validate_expert_configs()
@@ -785,6 +788,7 @@ class expertConfigs:
         self.default_snr_cut = cast_as_bool_or_set_default(self.default_snr_cut, "default_snr_cut", True)
         self.randomization_on = cast_as_bool_or_set_default(self.randomization_on, "randomization_on", True)
         self.vignetting_on = cast_as_bool_or_set_default(self.vignetting_on, "vignetting_on", True)
+        self.brute_force = cast_as_bool_or_set_default(self.brute_force, "brute_force", True)
 
 
 @dataclass

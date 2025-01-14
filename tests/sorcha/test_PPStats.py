@@ -28,11 +28,10 @@ def test_PPStats(tmp_path):
     }
     test_df = pd.DataFrame(test_dict)
 
-    
     configs = linkingfilterConfigs()
     configs.ssp_linking_on = True
     configs.drop_unlinked = False
-    setattr(configs,"linkingfilter",configs)
+    setattr(configs, "linkingfilter", configs)
     filename_stats = "test_stats"
     stats(test_df, filename_stats, tmp_path, configs)
 
@@ -98,7 +97,7 @@ def test_PPStats_nolinking(tmp_path):
 
     configs = {"SSP_linking_on": False, "drop_unlinked": True}
     configs = linkingfilterConfigs()
-    setattr(configs,"linkingfilter",configs)
+    setattr(configs, "linkingfilter", configs)
 
     filename_stats = "test_stats"
     stats(test_df, filename_stats, tmp_path, configs)
@@ -150,11 +149,10 @@ def test_PPStats_justlinking(tmp_path):
     }
     test_df = pd.DataFrame(test_dict)
 
-
     configs = linkingfilterConfigs()
     configs.ssp_linking_on = True
     configs.drop_unlinked = True
-    setattr(configs,"linkingfilter",configs)
+    setattr(configs, "linkingfilter", configs)
 
     filename_stats = "test_stats"
     stats(test_df, filename_stats, tmp_path, configs)
