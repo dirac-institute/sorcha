@@ -37,6 +37,7 @@ def main():
         "   outputs   Manipulate/package sorcha outputs\n"
         "   demo      Set up a demo simulation\n"
         "   bootstrap Download datafiles required to run sorcha\n"
+        "   cite      Outputs the citation to a file\n"
         "\n"
         "To get more information, run the verb with --help. For example:\n\n"
         "   sorcha run --help\n"
