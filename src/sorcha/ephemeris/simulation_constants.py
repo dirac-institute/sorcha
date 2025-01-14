@@ -33,3 +33,4 @@ def create_ecl_to_eq_rotation_matrix(ecl):
 
 
 ECL_TO_EQ_ROTATION_MATRIX = create_ecl_to_eq_rotation_matrix(OBLIQUITY_ECLIPTIC)
+EQ_TO_ECL_ROTATION_MATRIX = create_ecl_to_eq_rotation_matrix(-OBLIQUITY_ECLIPTIC)

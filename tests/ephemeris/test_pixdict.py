@@ -17,6 +17,7 @@ from sorcha.ephemeris.simulation_geometry import ecliptic_to_equatorial, vec2ra_
 from sorcha.ephemeris.simulation_constants import SPEED_OF_LIGHT, AU_KM
 from sorcha.utilities.sorchaConfigs import sorchaConfigs
 
+
 def test_pixeldict(tmp_path):
     # this test function will test out a bunch of different things inside
     # the PixelDict class
@@ -70,20 +71,25 @@ def test_pixeldict(tmp_path):
         args.configfile,
         args.surveyname,
     )
-    #configs["seed"] = 24601
+    # configs["seed"] = 24601
 
     filterpointing = PPReadPointingDatabase(
-        args.pointing_database, configs.filters.observing_filters, configs.input.pointing_sql_query, "rubin_sim"
+        args.pointing_database,
+        configs.filters.observing_filters,
+        configs.input.pointing_sql_query,
+        "rubin_sim",
     )
 
     filterpointing = precompute_pointing_information(filterpointing, args, configs)
     args = sorchaArguments(cmd_args_dict)
 
-    ephem, gm_sun, gm_total = create_assist_ephemeris(args,configs.auxiliary)
-    furnish_spiceypy(args,configs.auxiliary)
+    ephem, gm_sun, gm_total = create_assist_ephemeris(args, configs.auxiliary)
+    furnish_spiceypy(args, configs.auxiliary)
 
     sim_dict = generate_simulations(ephem, gm_sun, gm_total, orbits_df, args)
-    observatory = Observatory(auxconfigs=configs.auxiliary,args=None, oc_file=get_test_filepath("ObsCodes_test.json"))
+    observatory = Observatory(
+        auxconfigs=configs.auxiliary, args=None, oc_file=get_test_filepath("ObsCodes_test.json")
+    )
 
     pixdict = PixelDict(54800.0 + 2400000.5, sim_dict, ephem, "Z20", observatory, picket_interval=1, nside=32)
 
