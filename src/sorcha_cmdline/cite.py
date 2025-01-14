@@ -15,11 +15,11 @@ def main():
 
     optional = parser.add_argument_group("Optional arguments")
     optional.add_argument(
-        "-cf",
-        "--cite-file-path",
+        "-o",
+        "--outfile",
         help="File path to store citation file sorcha_citation.txt.",
         type=str,
-        dest="cf",
+        dest="o",
         required=False,
         default=os.getcwd(),
     )
@@ -40,29 +40,18 @@ def main():
 
 def execute(args):
     import sys
-    import io
     from sorcha.utilities.citation_text import cite_sorcha
 
     if args.p:  # prints citation to terminal
         cite_sorcha()
 
-    if not os.path.isdir(args.cf):
-        sys.exit(f"ERROR: file path {args.cf} does not exist or isn't a directory")
+    if not os.path.isdir(args.o):
+        sys.exit(f"ERROR: file path {args.o} does not exist or isn't a directory")
 
-    output_file_path = os.path.join(args.cf, "sorcha_citation.txt")
-
-    # Makes sdtdout output the print statements into a temporary file
-    output_capture = io.StringIO()
-    sys.stdout = output_capture
-
-    cite_sorcha()
+    output_file_path = os.path.join(args.o, "sorcha_citation.txt")
 
     # writes the outputs in the temporary file to a text file
-    with open(output_file_path, "w") as output_file:
-        output_file.write(output_capture.getvalue())
-
-    # Resets stdout back to normal
-    sys.stdout = sys.__stdout__
-    output_capture.close()
+    with open(output_file_path, "w") as f:
+        cite_sorcha(f=f)
 
     print(f"Citations have been written into {os.path.abspath(output_file_path)}")
