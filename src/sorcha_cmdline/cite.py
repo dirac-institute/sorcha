@@ -44,14 +44,15 @@ def execute(args):
 
     if args.p:  # prints citation to terminal
         cite_sorcha()
+    else:
 
-    if not os.path.isdir(args.o):
-        sys.exit(f"ERROR: file path {args.o} does not exist or isn't a directory")
+        if not os.path.isdir(args.o):
+            sys.exit(f"ERROR: file path {args.o} does not exist or isn't a directory")
 
-    output_file_path = os.path.join(args.o, "sorcha_citation.txt")
+        output_file_path = os.path.join(args.o, "sorcha_citation.txt")
 
-    # writes the outputs in the temporary file to a text file
-    with open(output_file_path, "w") as f:
-        cite_sorcha(f=f)
+        # writes the outputs in the temporary file to a text file
+        with open(output_file_path, "w") as f:
+            cite_sorcha(f=f)
 
-    print(f"Citations have been written into {os.path.abspath(output_file_path)}")
+        print(f"Citations have been written into {os.path.abspath(output_file_path)}")
