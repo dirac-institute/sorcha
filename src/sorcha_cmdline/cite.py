@@ -10,7 +10,7 @@ def main():
     parser = SorchaArgumentParser(
         prog="sorcha cite",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
-        description="Providing the bibtex, AAS Journals software latex command, and acknowledgement statements for Sorcha and the associated packages that power it in a file called sorcha_citation.txt.",
+        description="Providing the bibtex, AAS Journals software latex command, and acknowledgement statements for Sorcha and the associated packages that power it in a file (sorcha_citation.txt (by default) or printed to the terminal (standard out).",
     )
 
     optional = parser.add_argument_group("Optional arguments")
