@@ -32,22 +32,22 @@ authors:
     affiliation: "5"
   - name: Siegfried Eggl
     orcid:  0000-0002-1398-6302
-    affiliation: "4,7,8,9"
+    affiliation: "4,7,8"
   - name: Drew Oldag
     orcid:  0000-0001-6984-8411
-    affiliation: "5,10"
+    affiliation: "5,9"
   - name: Maxine West
     orcid: 0009-0003-3171-3118
-    affiliation: "5,10"
+    affiliation: "5,9"
   - name: Jeremy Kubica
     orcid: 0009-0009-2281-7031
-    affiliation: "11,10"
+    affiliation: "10,19"
   - name: Joseph Murtagh
     orcid: 0000-0001-9505-1131
     affiliation: "1"
   - name:  R. Lynne Jones
     orcid: 0000-0001-5916-0031
-    affiliation: "12,13"
+    affiliation: "11,12"
   - name: Peter Yoachim
     orcid: 0000-0003-2874-6464
     affiliation: "5"
@@ -56,25 +56,25 @@ authors:
     affiliation: "1"
   - name: Michael S. P. Kelley
     orcid:  0000-0002-6702-7676
-    affiliation: "14"
+    affiliation: "13"
   - name: Joachim Moeyens
     orcid: 0000-0001-5820-3925
-    affiliation: "15,5"
+    affiliation: "14,5"
   - name: Kathleen Kiker
     orcid: 
-    affiliation: "15"
+    affiliation: "14"
   - name: Shantanu P. Naidu
     orcid: 0000-0003-4439-7014
-    affiliation: "16"
+    affiliation: "15"
   - name: Colin Snodgrass
     orcid: 0000-0001-9328-2905
-    affiliation: "17"
+    affiliation: "16"
   - name: Shannon M. Matthews
     orcid: 0000-0001-8633-9141
     affiliation: "1"
   - name: Colin Orion Chandler
     orcid: 0000-0001-7335-1715
-    affiliation: "5,10"
+    affiliation: "5,9"
 affiliations:
  - name: Astrophysics Research Centre, School of Mathematics and Physics, Queen’s University Belfast, Belfast BT7 1NN, UK
    index: 1
@@ -92,32 +92,30 @@ affiliations:
    index: 7
  - name: National Center for Supercomputing Applications, University of Illinois at Urbana-Champaign, Urbana, IL 61801, USA
    index: 8
- - name: IMCCE, Paris Observatory, 77 Avenue Denfert-Rochereau, 75014 Paris, France
-   index: 9
  - name: LSST Interdisciplinary Network for Collaboration and Computing Frameworks, 933 N. Cherry Avenue, Tucson AZ 8572
-   index: 10
+   index: 9
  - name: McWilliams Center for Cosmology, Department of Physics, Carnegie Mellon University, Pittsburgh, PA 15213, USA
-   index: 11
+   index: 10
  - name: Rubin Observatory, 950 N. Cherry Ave., Tucson, AZ 85719, USA
-   index: 12
+   index: 11
  - name: Aston Carter, Suite 150, 4321 Still Creek Drive, Burnaby, BC V5C6S, Canada
-   index: 13
+   index: 12
  - name: Department of Astronomy, University of Maryland, College Park, MD 20742-0001, USA
-   index: 14
+   index: 13
  - name: Asteroid Institute, 20 Sunnyside Ave., Suite 427, Mill Valley, CA 94941, USA
-   index: 15
+   index: 14
  - name: Jet Propulsion Laboratory, California Institute of Technology, Pasadena, CA, USA
-   index: 16
+   index: 15
  - name: Institute for Astronomy, University of Edinburgh, Royal Observatory, Edinburgh, EH9 3HJ, UK
-   index: 17
+   index: 16
 
-date: 15 January 2025
+date: 20 January 2025
 bibliography: paper.bib
 
 # Optional fields if submitting to a AAS journal too, see this blog post:
 # https://blog.joss.theoj.org/2018/12/a-new-collaboration-with-aas-publishing
 aas-doi: 
-aas-journal: Astrophysical Journal
+aas-journal: Astronomical Journal
 ---
 
 # Statement of Need
@@ -128,11 +126,11 @@ Probing the orbital/size/brightness distributions and surface composition in eac
 
 # Summary
 
-`sorcha` is a multipurpose, open-source solar system survey simulator for the LSST. Its modular design and configuration file allows each simulation to be finely customized by the user for their specific needs.  `sorcha` was designed to work at the large scale demanded by the large data rate from the LSST, and simulations can be run both locally and on high-performance computing clusters. The simulator can be used to facilitate predictions before the LSST begins science operations and achieve a wide range of science goals with the LSST solar system discoveries are available. 
+`Sorcha` is a multipurpose, open-source solar system survey simulator for the LSST. Its modular design and configuration file allows each simulation to be finely customized by the user for their specific needs.  `Sorcha` was designed to work at the large scale demanded by the large data rate from the LSST, and simulations can be run both locally and on high-performance computing clusters. The simulator can be used to facilitate predictions before the LSST begins science operations and achieve a wide range of science goals with the LSST solar system discoveries are available. 
 
-Built in Python to be flexible, easy-to-use, and applicable to all solar system small body populations, 'sorcha’ runs on the command-line, ingesting files which describe the input population and the input survey. To predict the position of millions of solar system objects over ten years and over ~billion observations in a reasonable timescale, `sorcha` makes use of an ephemeris generator (described in @holman2025) powered by ASSIST [@holman2023], an open-source Python and C99 software package for producing ephemeris-quality integrations of solar system test particles using the the IAS15 (15th order Gauss-Radau) integrator [@rein2015] within the REBOUND N-body integrator package  [@rein2012] to model the motion of the particles under the influence of gravity. `sorcha` also makes use of a per-module randomization approach, as described in @schwamb2024, allowing for deterministic random number generation during testing regardless of the order in which modules are executed. Additionally, in order to facilitate the use of customisable, community-built classes to describe cometary activity or light-curve modulation effects, `sorcha` provides abstract base classes from which custom implementations can inherit, allowing a high level of customisation of the code without requiring the user to modify the source code directly. 
+Built in Python to be flexible, easy-to-use, and applicable to all solar system small body populations, 'Sorcha’ runs on the command-line, ingesting files which describe the input population and the input survey. To predict the position of millions of solar system objects over ten years and over ~billion observations in a reasonable timescale, `Sorcha` makes use of an ephemeris generator (described in @holman2025) powered by ASSIST [@holman2023], an open-source Python and C99 software package for producing ephemeris-quality integrations of solar system test particles using the the IAS15 (15th order Gauss-Radau) integrator [@rein2015] within the REBOUND N-body integrator package  [@rein2012] to model the motion of the particles under the influence of gravity. `Sorcha` also makes use of a per-module randomization approach, as described in @schwamb2024, allowing for deterministic random number generation during testing regardless of the order in which modules are executed. Additionally, in order to facilitate the use of customisable, community-built classes to describe cometary activity or light-curve modulation effects, `Sorcha` provides abstract base classes from which custom implementations can inherit, allowing a high level of customisation of the code without requiring the user to modify the source code directly. 
 
-`sorcha` is expected to be a key community tool for solar system science with the LSST. The software package has already enabled predictive work to be made ahead of the start of the LSST, with predictions made of the overall yield of new the asteroid and trans-Neptunian object discoveries (@kurlander2025) and of Centaurs, a class of small, icy bodies that orbit the Sun on giant planet-crossing paths (@murtagh2025). We expect that future upgrades to`sorcha` will include adding the capability to simulate past well characterized wide-field discovery surveys in addition to the LSST.  
+`Sorcha` is expected to be a key community tool for solar system science with the LSST. The software package has already enabled predictive work to be made ahead of the start of the LSST, with predictions made of the overall yield of new the asteroid and trans-Neptunian object discoveries (@kurlander2025) and of Centaurs, a class of small, icy bodies that orbit the Sun on giant planet-crossing paths (@murtagh2025). We expect that future upgrades to`Sorcha` will include adding the capability to simulate past well characterized wide-field discovery surveys in addition to the LSST.  
 
 # Acknowledgements
 
