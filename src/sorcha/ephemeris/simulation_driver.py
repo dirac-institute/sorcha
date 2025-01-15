@@ -1,23 +1,22 @@
-from dataclasses import dataclass
 from collections import defaultdict
 from csv import writer
+from dataclasses import dataclass
 from io import StringIO
 
 import numpy as np
 import pandas as pd
 import spiceypy as spice
 
-from sorcha.ephemeris.simulation_setup import (
-    create_assist_ephemeris,
-    furnish_spiceypy,
-    generate_simulations,
-)
+from sorcha.ephemeris.pixel_dict import PixelDict
 from sorcha.ephemeris.simulation_constants import *
 from sorcha.ephemeris.simulation_geometry import *
 from sorcha.ephemeris.simulation_parsing import *
+from sorcha.ephemeris.simulation_setup import (create_assist_ephemeris,
+                                               furnish_spiceypy,
+                                               generate_simulations)
+from sorcha.modules.PPOutput import (PPOutWriteCSV, PPOutWriteHDF5,
+                                     PPOutWriteSqlite3)
 from sorcha.utilities.dataUtilitiesForTests import get_data_out_filepath
-from sorcha.ephemeris.pixel_dict import PixelDict
-from sorcha.modules.PPOutput import PPOutWriteCSV, PPOutWriteSqlite3, PPOutWriteHDF5
 
 
 @dataclass
@@ -177,6 +176,7 @@ def create_ephemeris(orbits_df, pointings_df, args, sconfigs):
         picket_interval,
         nside,
         n_sub_intervals=n_sub_intervals,
+        use_integrate=sconfigs.expert.ar_use_integrate,
     )
     for _, pointing in pointings_df.iterrows():
         mjd_tai = float(pointing["observationMidpointMJD_TAI"])
@@ -208,7 +208,7 @@ def create_ephemeris(orbits_df, pointings_df, args, sconfigs):
                     _,
                     ephem_geom_params.r_ast,
                     ephem_geom_params.v_ast,
-                ) = integrate_light_time(sim, ex, pointing["fieldJD_TDB"] - ephem.jd_ref, r_obs, lt0=0.01)
+                ) = integrate_light_time(sim, ex, pointing["fieldJD_TDB"] - ephem.jd_ref, r_obs, lt0=0.01, use_integrate=sconfigs.expert.ar_use_integrate)
                 ephem_geom_params.rho_hat = ephem_geom_params.rho / ephem_geom_params.rho_mag
 
                 ang_from_center = 180 / np.pi * np.arccos(np.dot(ephem_geom_params.rho_hat, visit_vector))
