@@ -12,8 +12,7 @@ from assist import Ephem
 
 from sorcha.ephemeris.simulation_constants import *
 from sorcha.ephemeris.simulation_data_files import make_retriever
-from sorcha.ephemeris.simulation_geometry import (barycentricObservatoryRates,
-                                                  get_hp_neighbors, ra_dec2vec)
+from sorcha.ephemeris.simulation_geometry import barycentricObservatoryRates, get_hp_neighbors, ra_dec2vec
 from sorcha.ephemeris.simulation_parsing import Observatory, mjd_tai_to_epoch
 from sorcha.utilities.generate_meta_kernel import build_meta_kernel_file
 
