@@ -4,7 +4,7 @@ Acknowledgements
 This effort is a collaboration between Queen's University Belfast, the University of Washington's DiRAC Institute, the University of Illinois Urbana-Champaign, the Center for Astrophysics | Harvard & Smithsonian, and LINCC Frameworks (through the LINCC Frameworks Incubator Program).
 
 .. image:: images/QUBLogo.png
-  :width: 210
+  :width: 220
   :alt: Queen's University Belfast logo
 
 .. image:: images/DIRAC_logo-purple-text_transparent-bckg_ALPHA-1-1.png
@@ -16,7 +16,7 @@ This effort is a collaboration between Queen's University Belfast, the Universit
   :alt: University Washington Logo
 
 .. image:: images/IllionisLogo.png
-  :width: 210
+  :width: 220
   :alt: University of Illinois Urbana-Champaign Logo
 
 .. image:: images/cfa_logo_vertical_cmyk.jpg
@@ -27,6 +27,9 @@ This effort is a collaboration between Queen's University Belfast, the Universit
   :width: 190
   :alt: LINCC Logo
 
+.. image:: images/lsst-discovery-alliance-logo.png
+  :width: 290
+  :alt: LSST-DA Logo
 
 ``Sorcha`` development was supported in part by:
 
