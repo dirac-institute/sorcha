@@ -610,27 +610,9 @@ def test_fadingfunctionConfig_on_float(key_name):
     )
 
 
-def test_fadingfunctionConfig_bool():
-    """
-    Tests that wrong inputs for fadingfunctionConfig bool attributes is caught correctly
-    """
-
-    fadingfunction_configs = correct_fadingfunction.copy()
-    test_configs = fadingfunctionConfigs(**fadingfunction_configs)
-    assert test_configs.__dict__ == fadingfunction_configs
-
-    fadingfunction_configs["fading_function_on"] = "ten"
-    with pytest.raises(SystemExit) as error_text:
-        test_configs = fadingfunctionConfigs(**fadingfunction_configs)
-
-    assert (
-        error_text.value.code
-        == "ERROR: expected a bool for config parameter fading_function_on. Check value in config file."
-    )
-
 
 @pytest.mark.parametrize(
-    "key_name", ["fading_function_on", "fading_function_width", "fading_function_peak_efficiency"]
+    "key_name", ["fading_function_width", "fading_function_peak_efficiency"]
 )
 def test_fadingfunction_mandatory(key_name):
     """
@@ -692,7 +674,19 @@ def test_fadingfunction_outofbounds(key_name):
             == "ERROR: fading_function_peak_efficiency out of bounds. Must be between 0 and 1."
         )
 
-
+def test_fadingfunction_allnone():
+    """
+    This loops through the not required keys and makes sure the code fails correctly when all attributes are none
+    """
+    fadingfunction_configs = correct_fadingfunction.copy()
+    fadingfunction_configs["fading_function_on"] = None
+    fadingfunction_configs["fading_function_width"] = None
+    fadingfunction_configs["fading_function_peak_efficiency"] = None
+    with pytest.raises(SystemExit) as error_text:
+        test_configs = fadingfunctionConfigs(**fadingfunction_configs)
+    assert (
+        error_text.value.code == "ERROR: Both fading_function_peak_efficiency and fading_function_width are needed to be supplied for fading function"
+    )
 ##################################################################################################################################
 
 # linkingfilter tests

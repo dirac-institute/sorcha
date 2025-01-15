@@ -392,7 +392,7 @@ class fadingfunctionConfigs:
     """Data class for holding FADINGFUNCTION section configuration file keys and validating them"""
 
     fading_function_on: bool = None
-    """Detection efficiency fading function on or off."""
+    """Detection efficiency fading function on or off. Default True"""
 
     fading_function_width: float = None
     """Width parameter for fading function. Should be greater than zero and less than 0.5."""
@@ -417,10 +417,20 @@ class fadingfunctionConfigs:
         None
         """
 
-        # make sure all the mandatory keys have been populated.
-        check_key_exists(self.fading_function_on, "fading_function_on")
-        self.fading_function_on = cast_as_bool(self.fading_function_on, "fading_function_on")
-
+        if (
+            self.fading_function_on is None
+            and self.fading_function_peak_efficiency is None
+            and self.fading_function_width is None
+        ):
+            logging.error(
+                "ERROR: Both fading_function_peak_efficiency and fading_function_width are needed to be supplied for fading function"
+            )
+            sys.exit(
+                "ERROR: Both fading_function_peak_efficiency and fading_function_width are needed to be supplied for fading function"
+            )
+        self.fading_function_on = cast_as_bool_or_set_default(
+            self.fading_function_on, "fading_function_on", True
+        )
         if self.fading_function_on == True:
 
             # when fading_function_on = true, fading_function_width and fading_function_peak_efficiency now mandatory
