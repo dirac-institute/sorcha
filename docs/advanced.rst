@@ -114,6 +114,32 @@ To implement the magnitude limit (remove detections of objects fainter than 22 m
 .. seealso::
   We have an `example Jupyter notebook <notebooks/demo_MagnitudeAndSNRCuts.ipynb>`_  demonstrating how these filters work within ``Sorcha``.
 
+
+Faint Object Culling Filter
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This filter automatically drops objects from the user's input model that will never be detectable 
+within the LSST before ephemeris generation begins. This has the benefit of potentially massively 
+speeding up simulations by removing the overhead of ephemeris generation for these unobservable
+objects.
+
+The filter calculates a maximum apparent trailed source magnitude in each filter (with any relevant
+activity or light curve brightness modifiers) per object, and checks if all of them are brighter than
+2 + the faintest survey observation per respective filter (as obtained from the pointing database). If
+the object is fainter in **all** filters, then it is dropped and not simulated further.
+
+To implement the faint object culling filter, include the following in the :ref:`configs`::
+
+    [EXPERT]
+    brute_force = False
+
+.. attention::
+    This filter will, by default, be turned off (brute_force = True), with ``Sorcha`` generating ephemerides for every object of an input population.
+
+.. note::
+    This filter is only approximate, and is not applied to objects with a perihelion distance *q* < 2 au.
+
+
 Modifying the Ephemeris Generator Interpolation
 --------------------------------------------------
 
