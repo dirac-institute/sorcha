@@ -995,7 +995,7 @@ def test_expertConfig_bool(key_name):
 @pytest.mark.parametrize(
     "file",
     [
-        "de440s",
+        "planet_ephemeris",
         "earth_predict",
         "earth_historical",
         "jpl_planets",
@@ -1015,7 +1015,7 @@ def test_auxiliary_config_url_given_filename_not(file):
 @pytest.mark.parametrize(
     "file",
     [
-        "de440s",
+        "planet_ephemeris",
         "earth_predict",
         "earth_historical",
         "jpl_planets",

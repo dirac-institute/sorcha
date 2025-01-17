@@ -790,10 +790,10 @@ class expertConfigs:
 class auxiliaryConfigs:
     """Data class for holding auxiliary section configuration file keys and validating them."""
 
-    de440s: str = "de440s.bsp"
-    """filename of de440s"""
-    de440s_url: str = "https://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/planets/de440s.bsp"
-    """url for de4440s"""
+    planet_ephemeris: str = "de440s.bsp"
+    """filename of planet_ephemeris"""
+    planet_ephemeris_url: str = "https://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/planets/de440s.bsp"
+    """url for planet_ephemeris"""
 
     earth_predict: str = "earth_200101_990827_predict.bpc"
     """filename of earth_predict"""
@@ -868,7 +868,7 @@ class auxiliaryConfigs:
     def default_url(self):
         """returns a dictionary of the default urls used in this version of sorcha"""
         return {
-            "de440s": self.__class__.de440s_url,
+            "planet_ephemeris": self.__class__.planet_ephemeris_url,
             "earth_predict": self.__class__.earth_predict_url,
             "earth_historical": self.__class__.earth_historical_url,
             "earth_high_precision": self.__class__.earth_high_precision_url,
@@ -883,7 +883,7 @@ class auxiliaryConfigs:
     def default_filenames(self):
         """returns a dictionary of the default filenames used in this version"""
         return {
-            "de440s": self.__class__.de440s,
+            "planet_ephemeris": self.__class__.planet_ephemeris,
             "earth_predict": self.__class__.earth_predict,
             "earth_historical": self.__class__.earth_historical,
             "earth_high_precision": self.__class__.earth_high_precision,
@@ -934,7 +934,7 @@ class auxiliaryConfigs:
         """
 
         self.urls = {
-            self.de440s: self.de440s_url,
+            self.planet_ephemeris: self.planet_ephemeris_url,
             self.earth_predict: self.earth_predict_url,
             self.earth_historical: self.earth_historical_url,
             self.earth_high_precision: self.earth_high_precision_url,
@@ -946,7 +946,7 @@ class auxiliaryConfigs:
         }
 
         self.data_file_list = [
-            self.de440s,
+            self.planet_ephemeris,
             self.earth_predict,
             self.earth_historical,
             self.earth_high_precision,
@@ -960,7 +960,7 @@ class auxiliaryConfigs:
         ]
 
         self.data_files_to_download = [
-            self.de440s,
+            self.planet_ephemeris,
             self.earth_predict,
             self.earth_historical,
             self.earth_high_precision,
@@ -976,7 +976,7 @@ class auxiliaryConfigs:
             self.earth_historical,
             self.earth_predict,
             self.orientation_constants,
-            self.de440s,
+            self.planet_ephemeris,
             self.earth_high_precision,
         ]
 
@@ -1487,7 +1487,9 @@ def PrintConfigsToLog(sconfigs, cmd_args):
         "...the orientation information and physical constants for other bodies file is: "
         + str(sconfigs.auxiliary.orientation_constants)
     )
-    pplogger.info("...the Earth's position for ephemerides file is: " + str(sconfigs.auxiliary.de440s))
+    pplogger.info(
+        "...the Earth's position for ephemerides file is: " + str(sconfigs.auxiliary.planet_ephemeris)
+    )
     pplogger.info(
         "...the regularly updated specification of the Earth's orientation file is: "
         + str(sconfigs.auxiliary.earth_high_precision)
