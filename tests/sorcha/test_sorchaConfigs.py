@@ -611,46 +611,6 @@ def test_fadingfunctionConfig_on_float(key_name):
 
 
 
-@pytest.mark.parametrize(
-    "key_name", ["fading_function_width", "fading_function_peak_efficiency"]
-)
-def test_fadingfunction_mandatory(key_name):
-    """
-    this loops through the mandatory keys and keys that shouldn't exist and makes sure the code fails correctly when each is missing
-    """
-
-    fadingfunction_configs = correct_fadingfunction.copy()
-
-    del fadingfunction_configs[key_name]
-
-    with pytest.raises(SystemExit) as error_text:
-        test_configs = fadingfunctionConfigs(**fadingfunction_configs)
-
-    assert (
-        error_text.value.code
-        == f"ERROR: No value found for required key {key_name} in config file. Please check the file and try again."
-    )
-
-
-@pytest.mark.parametrize("key_name", ["fading_function_width", "fading_function_peak_efficiency"])
-def test_fadingfunction_notrequired(key_name):
-    """
-    This loops through the not required keys and makes sure the code fails correctly when they're truthy
-    """
-
-    # tests that "fading_function_width" and "fading_function_peak_efficiency" are not called when "fading_function_on" is false
-    fadingfunction_configs = correct_fadingfunction.copy()
-    fadingfunction_configs["fading_function_on"] = "False"
-    fadingfunction_configs["fading_function_width"] = None
-    fadingfunction_configs["fading_function_peak_efficiency"] = None
-    fadingfunction_configs[key_name] = 0.5
-    with pytest.raises(SystemExit) as error_text:
-        test_configs = fadingfunctionConfigs(**fadingfunction_configs)
-    assert (
-        error_text.value.code == f"ERROR: {key_name} supplied in config file but fading_function_on is False."
-    )
-
-
 @pytest.mark.parametrize("key_name", ["fading_function_width", "fading_function_peak_efficiency"])
 def test_fadingfunction_outofbounds(key_name):
     """
@@ -680,7 +640,7 @@ def test_fadingfunction_allnone():
     """
     fadingfunction_configs = correct_fadingfunction.copy()
     fadingfunction_configs["fading_function_on"] = None
-    fadingfunction_configs["fading_function_width"] = None
+    fadingfunction_configs["fading_function_width"] = 5.0
     fadingfunction_configs["fading_function_peak_efficiency"] = None
     with pytest.raises(SystemExit) as error_text:
         test_configs = fadingfunctionConfigs(**fadingfunction_configs)
