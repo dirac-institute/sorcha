@@ -69,10 +69,7 @@ Applying :ref:`trailing losses<trailing>` is on by default, but it can be turned
 Turning off Detection Efficiency/Applying the Fading Function
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Applying the :ref:`survey detection efficiency<fading>` is on by default, but it can be turned off by including the option in the :ref:`configs`::
-
-    [FADINGFUNCTION]
-    fading_function_on = False
+The :ref:`survey detection efficiency<fading>` is disabled if the fading function section of the config file is removed or not included (When fadind_function_width and fadind_function_peak_efficency have not been given).
 
 Turning Off the Camera Footprint Filter
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

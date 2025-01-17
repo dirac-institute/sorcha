@@ -417,25 +417,10 @@ class fadingfunctionConfigs:
         None
         """
 
-        if (
-            self.fading_function_on is None
-            and self.fading_function_peak_efficiency is None
-            and self.fading_function_width is None
-        ):
-            logging.error(
-                "ERROR: Both fading_function_peak_efficiency and fading_function_width are needed to be supplied for fading function"
-            )
-            sys.exit(
-                "ERROR: Both fading_function_peak_efficiency and fading_function_width are needed to be supplied for fading function"
-            )
-        self.fading_function_on = cast_as_bool_or_set_default(
-            self.fading_function_on, "fading_function_on", True
-        )
-        if self.fading_function_on == True:
-
+        if self.fading_function_width is not None and self.fading_function_peak_efficiency is not None:
+            self.fading_function_on = True
             # when fading_function_on = true, fading_function_width and fading_function_peak_efficiency now mandatory
-            check_key_exists(self.fading_function_width, "fading_function_width")
-            check_key_exists(self.fading_function_peak_efficiency, "fading_function_peak_efficiency")
+
             self.fading_function_width = cast_as_float(self.fading_function_width, "fading_function_width")
             self.fading_function_peak_efficiency = cast_as_float(
                 self.fading_function_peak_efficiency, "fading_function_peak_efficiency"
@@ -457,15 +442,15 @@ class fadingfunctionConfigs:
                 )
                 sys.exit("ERROR: fading_function_peak_efficiency out of bounds. Must be between 0 and 1.")
 
-        elif self.fading_function_on == False:
-            # making sure these aren't populated when self.fading_function_on = False
-            check_key_doesnt_exist(
-                self.fading_function_width, "fading_function_width", "but fading_function_on is False."
+        elif self.fading_function_width is None and self.fading_function_peak_efficiency is None:
+            self.fading_function_on = False
+
+        else:
+            logging.error(
+                "ERROR: Both fading_function_peak_efficiency and fading_function_width are needed to be supplied for fading function"
             )
-            check_key_doesnt_exist(
-                self.fading_function_peak_efficiency,
-                "fading_function_peak_efficiency",
-                "but fading_function_on is False.",
+            sys.exit(
+                "ERROR: Both fading_function_peak_efficiency and fading_function_width are needed to be supplied for fading function"
             )
 
 
