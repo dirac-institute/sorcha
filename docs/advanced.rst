@@ -152,8 +152,8 @@ For backwards compability and to enable new version of the files to be run as we
 
 
     [AUXILIARY]
-    de440s = de440s.bsp
-    de440s_url = https://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/planets/de440s.bsp
+    planet_ephemeris = de440s.bsp
+    planet_ephemeris_url = https://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/planets/de440s.bsp
 
     earth_predict = earth_200101_990827_predict.bpc
     earth_predict_url = https://naif.jpl.nasa.gov/pub/naif/generic_kernels/pck/earth_200101_990827_predict.bpc
