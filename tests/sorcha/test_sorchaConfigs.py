@@ -1,24 +1,18 @@
 import pytest
-from sorcha.utilities.sorchaArguments import sorchaArguments
-from sorcha.utilities.dataUtilitiesForTests import get_demo_filepath
-from sorcha.lightcurves.lightcurve_registration import LC_METHODS
+
 from sorcha.activity.activity_registration import CA_METHODS
-from sorcha.utilities.sorchaConfigs import (
-    sorchaConfigs,
-    inputConfigs,
-    simulationConfigs,
-    filtersConfigs,
-    saturationConfigs,
-    phasecurvesConfigs,
-    fovConfigs,
-    fadingfunctionConfigs,
-    linkingfilterConfigs,
-    outputConfigs,
-    lightcurveConfigs,
-    activityConfigs,
-    expertConfigs,
-    auxiliaryConfigs,
-)
+from sorcha.lightcurves.lightcurve_registration import LC_METHODS
+from sorcha.utilities.dataUtilitiesForTests import get_demo_filepath
+from sorcha.utilities.sorchaArguments import sorchaArguments
+from sorcha.utilities.sorchaConfigs import (activityConfigs, auxiliaryConfigs,
+                                            expertConfigs,
+                                            fadingfunctionConfigs,
+                                            filtersConfigs, fovConfigs,
+                                            inputConfigs, lightcurveConfigs,
+                                            linkingfilterConfigs,
+                                            outputConfigs, phasecurvesConfigs,
+                                            saturationConfigs,
+                                            simulationConfigs, sorchaConfigs)
 
 # these are the results we expect from sorcha_config_demo.ini
 correct_inputs = {
@@ -105,6 +99,7 @@ correct_expert = {
     "randomization_on": True,
     "vignetting_on": True,
     "brute_force": True,
+    "ar_use_integrate": False,
 }
 
 correct_auxciliary_URLs = {
@@ -1032,11 +1027,12 @@ def test_auxiliary_config_making_url_none(file):
 
 
 def test_PrintConfigsToLog(tmp_path):
-    from sorcha.modules.PPGetLogger import PPGetLogger
-    from sorcha.utilities.sorchaConfigs import PrintConfigsToLog
-    from sorcha.utilities.dataUtilitiesForTests import get_test_filepath
-    import os
     import glob
+    import os
+
+    from sorcha.modules.PPGetLogger import PPGetLogger
+    from sorcha.utilities.dataUtilitiesForTests import get_test_filepath
+    from sorcha.utilities.sorchaConfigs import PrintConfigsToLog
 
     test_path = os.path.dirname(get_test_filepath("test_input_fullobs.csv"))
     config_file_location = get_test_filepath("test_PPConfig.ini")

@@ -1,29 +1,22 @@
+import logging
+import os
+import sys
+from collections import defaultdict
 from functools import partial
+
+import assist
+import numpy as np
+import rebound
 import spiceypy as spice
 from assist import Ephem
-from . import simulation_parsing as sp
-import rebound
-from collections import defaultdict
-import assist
-import logging
-import sys
-import os
-import numpy as np
 
 from sorcha.ephemeris.simulation_constants import *
 from sorcha.ephemeris.simulation_data_files import make_retriever
-
-from sorcha.ephemeris.simulation_geometry import (
-    barycentricObservatoryRates,
-    get_hp_neighbors,
-    ra_dec2vec,
-)
-from sorcha.ephemeris.simulation_parsing import (
-    Observatory,
-    mjd_tai_to_epoch,
-)
-
+from sorcha.ephemeris.simulation_geometry import barycentricObservatoryRates, get_hp_neighbors, ra_dec2vec
+from sorcha.ephemeris.simulation_parsing import Observatory, mjd_tai_to_epoch
 from sorcha.utilities.generate_meta_kernel import build_meta_kernel_file
+
+from . import simulation_parsing as sp
 
 
 def create_assist_ephemeris(args, auxconfigs) -> tuple:
@@ -197,9 +190,8 @@ def precompute_pointing_information(pointings_df, args, sconfigs):
     pointings_df["visit_vector_z"] = vectors[:, 2]
 
     # use pandas `apply` (even though it's slow) instead of looping over the df in a for loop
-    pointings_df["fieldJD_TDB"] = pointings_df.apply(
-        lambda row: mjd_tai_to_epoch(row["observationMidpointMJD_TAI"]), axis=1
-    )
+    pointings_df["fieldJD_TDB"] = pointings_df["observationMidpointMJD_TAI"].apply(mjd_tai_to_epoch)
+
     et = (pointings_df["fieldJD_TDB"] - spice.j2000()) * 24 * 60 * 60
 
     # create a partial function since most params don't change, and it makes the lambda easier to read
