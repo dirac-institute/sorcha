@@ -4,7 +4,7 @@ import os
 import re
 
 from sorcha.utilities.dataUtilitiesForTests import get_test_filepath, get_demo_filepath
-from sorcha.utilities.sorchaGetLogger import GetLogger
+from sorcha.utilities.sorchaGetLogger import sorchaGetLogger
 from sorcha.utilities.sorchaArguments import sorchaArguments
 from sorcha.ephemeris.simulation_driver import create_ephemeris, write_out_ephemeris_file
 from sorcha.modules.PPReadPointingDatabase import PPReadPointingDatabase
@@ -119,7 +119,7 @@ def test_ephemeris_end2end(single_synthetic_pointing, tmp_path):
         "stats": None,
     }
 
-    pplogger = GetLogger(cmd_args_dict["outpath"], "test_log")
+    pplogger = sorchaGetLogger(cmd_args_dict["outpath"], "test_log")
     args = sorchaArguments(cmd_args_dict)
 
     configs = sorchaConfigs(

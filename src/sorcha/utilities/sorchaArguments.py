@@ -5,7 +5,7 @@ from os import path, urandom
 import logging
 
 from sorcha.utilities.sorchaModuleRNG import PerModuleRNG
-from sorcha.utilities.sorchaGetLogger import GetLogger
+from sorcha.utilities.sorchaGetLogger import sorchaGetLogger
 
 
 @dataclass

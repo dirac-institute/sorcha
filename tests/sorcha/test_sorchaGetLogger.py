@@ -5,10 +5,10 @@ import tempfile
 
 
 def test_GetLogger():
-    from sorcha.utilities.sorchaGetLogger import GetLogger
+    from sorcha.utilities.sorchaGetLogger import sorchaGetLogger
 
     with tempfile.TemporaryDirectory() as dir_name:
-        pplogger = GetLogger(dir_name, "test_log")
+        pplogger = sorchaGetLogger(dir_name, "test_log")
 
         # Check that the files get created.
         errlog = glob.glob(os.path.join(dir_name, "*-sorcha.err"))

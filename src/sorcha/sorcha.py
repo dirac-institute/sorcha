@@ -40,10 +40,10 @@ from sorcha.lightcurves.lightcurve_registration import update_lc_subclasses
 
 from sorcha.utilities.sorchaArguments import sorchaArguments
 from sorcha.utilities.sorchaConfigs import sorchaConfigs, PrintConfigsToLog
-from sorcha.utilities.sorchaCommandLineParser import CommandLineParser
+from sorcha.utilities.sorchaCommandLineParser import sorchaCommandLineParser
 from sorcha.utilities.fileAccessUtils import FindFileOrExit
 from sorcha.utilities.citation_text import cite_sorcha
-from sorcha.utilities.sorchaGetLogger import GetLogger
+from sorcha.utilities.sorchaGetLogger import sorchaGetLogger
 
 
 def cite():  # pragma: no cover
