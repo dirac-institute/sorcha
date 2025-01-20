@@ -1,7 +1,7 @@
 import sys
 import logging
 
-from sorcha.modules.PPModuleRNG import PerModuleRNG
+from sorcha.utilities.sorchaModuleRNG import PerModuleRNG
 
 
 def PPDetectionEfficiency(padain, threshold, module_rngs):

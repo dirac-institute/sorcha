@@ -1032,7 +1032,7 @@ def test_auxiliary_config_making_url_none(file):
 
 
 def test_PrintConfigsToLog(tmp_path):
-    from sorcha.modules.PPGetLogger import PPGetLogger
+    from sorcha.utilities.sorchaGetLogger import sorchaGetLogger
     from sorcha.utilities.sorchaConfigs import PrintConfigsToLog
     from sorcha.utilities.dataUtilitiesForTests import get_test_filepath
     import os
@@ -1040,7 +1040,7 @@ def test_PrintConfigsToLog(tmp_path):
 
     test_path = os.path.dirname(get_test_filepath("test_input_fullobs.csv"))
     config_file_location = get_test_filepath("test_PPConfig.ini")
-    pplogger = PPGetLogger(tmp_path, "test_log", log_format="%(name)-12s %(levelname)-8s %(message)s ")
+    pplogger = sorchaGetLogger(tmp_path, "test_log", log_format="%(name)-12s %(levelname)-8s %(message)s ")
 
     cmd_args = {
         "paramsinput": "testcolour.txt",

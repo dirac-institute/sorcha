@@ -21,7 +21,7 @@
 import numpy as np
 import sys
 import logging
-from sorcha.modules.PPModuleRNG import PerModuleRNG
+from sorcha.utilities.sorchaModuleRNG import PerModuleRNG
 from sorcha.modules.PPSNRLimit import PPSNRLimit
 
 import pandas as pd

@@ -3,7 +3,7 @@ import pandas as pd
 
 from pandas.api.types import is_numeric_dtype
 
-from sorcha.modules.PPModuleRNG import PerModuleRNG
+from sorcha.utilities.sorchaModuleRNG import PerModuleRNG
 from sorcha.sorcha import runLSSTSimulation
 from sorcha.utilities.dataUtilitiesForTests import get_demo_filepath, get_test_filepath
 from sorcha.utilities.sorchaArguments import sorchaArguments

@@ -1,6 +1,6 @@
 import logging
 
-from .PPModuleRNG import PerModuleRNG
+from ..utilities.sorchaModuleRNG import PerModuleRNG
 from .PPDropObservations import PPDropObservations
 from .PPDetectionProbability import PPDetectionProbability
 

@@ -1,4 +1,4 @@
-from sorcha.modules.PPModuleRNG import PerModuleRNG
+from sorcha.utilities.sorchaModuleRNG import PerModuleRNG
 
 
 def test_PerModuleRNG():
