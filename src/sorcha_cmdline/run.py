@@ -137,8 +137,8 @@ def execute(args):
     #
     from sorcha.sorcha import (
         FindFileOrExit,
-        PPGetLogger,
-        PPCommandLineParser,
+        GetLogger,
+        CommandLineParser,
         runLSSTSimulation,
         sorchaArguments,
         sorchaConfigs,
@@ -149,7 +149,7 @@ def execute(args):
 
     # Extract the output file path now in order to set up logging.
     outpath = FindFileOrExit(args.o, "-o, --outfile")
-    pplogger = PPGetLogger(outpath, args.t)
+    pplogger = GetLogger(outpath, args.t)
     pplogger.info("Sorcha Start (Main)")
     pplogger.info(f"Command line: {' '.join(sys.argv)}")
 
@@ -158,7 +158,7 @@ def execute(args):
     update_activity_subclasses()
 
     # Extract and validate the remaining arguments.
-    cmd_args = PPCommandLineParser(args)
+    cmd_args = CommandLineParser(args)
     pplogger.info("Reading configuration file...")
     sconfigs = sorchaConfigs(cmd_args["configfile"], cmd_args["surveyname"])
     pplogger.info("Configuration file read.")

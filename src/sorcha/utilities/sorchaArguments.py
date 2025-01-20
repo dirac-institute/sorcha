@@ -4,8 +4,8 @@ import time
 from os import path, urandom
 import logging
 
-from sorcha.modules.PPModuleRNG import PerModuleRNG
-from sorcha.modules.PPGetLogger import PPGetLogger
+from sorcha.utilities.sorchaModuleRNG import PerModuleRNG
+from sorcha.utilities.sorchaGetLogger import GetLogger
 
 
 @dataclass

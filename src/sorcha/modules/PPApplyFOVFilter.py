@@ -2,7 +2,7 @@ import logging
 import numpy as np
 from astropy.coordinates import SkyCoord
 
-from sorcha.modules.PPModuleRNG import PerModuleRNG
+from sorcha.utilities.sorchaModuleRNG import PerModuleRNG
 
 
 def PPApplyFOVFilter(observations, sconfigs, module_rngs, footprint=None, verbose=False):

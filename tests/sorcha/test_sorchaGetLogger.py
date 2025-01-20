@@ -4,11 +4,11 @@ import pytest
 import tempfile
 
 
-def test_PPGetLogger():
-    from sorcha.modules.PPGetLogger import PPGetLogger
+def test_GetLogger():
+    from sorcha.utilities.sorchaGetLogger import GetLogger
 
     with tempfile.TemporaryDirectory() as dir_name:
-        pplogger = PPGetLogger(dir_name, "test_log")
+        pplogger = GetLogger(dir_name, "test_log")
 
         # Check that the files get created.
         errlog = glob.glob(os.path.join(dir_name, "*-sorcha.err"))

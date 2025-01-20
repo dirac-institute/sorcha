@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 from numpy.testing import assert_equal, assert_almost_equal
 
-from sorcha.modules.PPModuleRNG import PerModuleRNG
+from sorcha.utilities.sorchaModuleRNG import PerModuleRNG
 from sorcha.utilities.dataUtilitiesForTests import get_test_filepath
 from sorcha.utilities.sorchaConfigs import sorchaConfigs, fovConfigs
 

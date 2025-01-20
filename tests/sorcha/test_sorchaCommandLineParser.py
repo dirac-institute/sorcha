@@ -22,12 +22,12 @@ class args:
         self.st = "test.csv"
 
 
-def test_PPCommandLineParser():
-    from sorcha.modules.PPCommandLineParser import PPCommandLineParser
+def test_CommandLineParser():
+    from sorcha.utilities.sorchaCommandLineParser import CommandLineParser
 
     tmp_path = os.path.dirname(get_test_filepath("test_input_fullobs.csv"))
 
-    cmd_dict_1 = PPCommandLineParser(args(False))
+    cmd_dict_1 = CommandLineParser(args(False))
     expected_1 = {
         "paramsinput": get_test_filepath("testcolour.txt"),
         "orbinfile": get_test_filepath("testorb.des"),
@@ -43,7 +43,7 @@ def test_PPCommandLineParser():
         "stats": "test.csv",
     }
 
-    cmd_dict_2 = PPCommandLineParser(args(get_test_filepath("testcomet.txt")))
+    cmd_dict_2 = CommandLineParser(args(get_test_filepath("testcomet.txt")))
     expected_2 = {
         "paramsinput": get_test_filepath("testcolour.txt"),
         "orbinfile": get_test_filepath("testorb.des"),
@@ -64,9 +64,9 @@ def test_PPCommandLineParser():
         pass
 
     with pytest.raises(SystemExit) as e:
-        _ = PPCommandLineParser(args(False, o=tmp_path, t="dummy_file"))
+        _ = CommandLineParser(args(False, o=tmp_path, t="dummy_file"))
 
-    _ = PPCommandLineParser(args(False, o=tmp_path, t="dummy_file", f=True))
+    _ = CommandLineParser(args(False, o=tmp_path, t="dummy_file", f=True))
 
     assert cmd_dict_1 == expected_1
     assert cmd_dict_2 == expected_2

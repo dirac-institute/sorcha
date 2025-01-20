@@ -36,7 +36,7 @@ def warn_or_remove_file(filepath, force_remove, pplogger):
         )
 
 
-def PPCommandLineParser(args):
+def CommandLineParser(args):
     """
     Parses the command line arguments, error-handles them, then stores them in a single dict.
 
