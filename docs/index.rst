@@ -23,8 +23,8 @@ works, tutorials, and demonstration notebooks that show how each of the various 
    For a more detailed description of ``Sorcha`` and how it works, please see Merritt et al. (submiited) and Holman et al. (submitted).
 
 .. warning::
-   This documentation site and the software package it describes are under
-   review.. DO NOT USE this for science purposes just yet. Please wait until we release version 1.0.
+   This documentation site and the software package it describes are under review. 
+    We will release v1.0 on conda-forge and pip when the papers are accepted. Please wait until we release version 1.0.
 
 
 
