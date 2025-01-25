@@ -110,7 +110,7 @@ affiliations:
    index: 16
 
 date: 20 January 2025
-bibliography: JOSS_submission/paper.bib
+bibliography: paper.bib
 
 # Optional fields if submitting to a AAS journal too, see this blog post:
 # https://blog.joss.theoj.org/2018/12/a-new-collaboration-with-aas-publishing
