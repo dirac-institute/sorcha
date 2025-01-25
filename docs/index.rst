@@ -20,12 +20,11 @@ This documentation site contains an installation guide, an overview of how ``Sor
 works, tutorials, and demonstration notebooks that show how each of the various components within ``Sorcha`` work and can be customized.
 
 .. seealso::
-   For a more detailed description of ``Sorcha`` and how it works, please see  `Merritt et al. (submiited) <https://www.dropbox.com/scl/fi/secetw7n0a936iynzxmau/sorcha_paper_2025_Jan_submission_version.pdf?rlkey=pbhchiattrw5bna8sfo6ljvto&dl=0>`_  and `Holman et al. (submitted) <https://www.dropbox.com/scl/fi/lz1lmua2s0yf9t9a2gpmm/sorcha_ephemeris_generation_paper.pdf?rlkey=blm9u4zbk0ci1i4lc5yqz8dbs&dl=0>`_.
+   For a more detailed description of ``Sorcha`` and how it works, please see Merritt et al. (submiited) and Holman et al. (submitted).
 
 .. warning::
-   This documentation site and the software package it describes are currently under review. The code in the repository has been validasted. 
-   We will release ``Sorcha`` v1.0 on PyPI and cond-forge when accepted. We ask
-   that if you're external to the Sorcha team that you please wait to use Sorcha in your science papers until v1.0 is released.  
+   This documentation site and the software package it describes are under
+   review.. DO NOT USE this for science purposes just yet. Please wait until we release version 1.0.
 
 
 
