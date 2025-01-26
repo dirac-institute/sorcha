@@ -148,7 +148,7 @@ A user can update the number of sub-intervals for the Lagrange ephemerides inter
 Specifying Alernative Versions of the Auxiliary Files Used in the Ephemeris Generator 
 -----------------------------------------------------------------------------------------
 
-For backwards compability and to enable new version of the files to be run as well, users can override the default filenames and download locations of the :ref:`auxiliary files<auxfiles>` used by ``Sorcha``'s bult-in :ref:`ephemeris generator<ephemeris_gen>`.  These :ref:`configs`:: variables are added to a new auxiliary ([AUXILIARY]) section::
+For backwards compability and to enable new version of the files to be run as well, users can override the default filenames and download locations of the :ref:`auxiliary files<auxfiles>` used by ``Sorcha``'s bult-in :ref:`ephemeris generator<ephemeris_gen>`.  These :ref:`configs`: variables are added to a new auxiliary ([AUXILIARY]) section::
 
 
     [AUXILIARY]

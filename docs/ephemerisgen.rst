@@ -10,7 +10,7 @@ Ephemeris Generator
 
 
 .. seealso::
-   For a more detailed description of ``Sorcha``'s ephemeris geneeration stage  please see Holman et al. (submitted).
+   For a more detailed description of ``Sorcha``'s ephemeris generation stage  please see Holman et al. (submitted).
 
 How It Works
 --------------------------------------------------------
@@ -94,24 +94,28 @@ To use ``Sorcha``'s internal ephemeris generation engine, the configuration file
 Required Auxiliary Files 
 ---------------------------
 
-A number of auxiliary files available from the `Minor Planet Center <https://www.minorplanetcenter.net/data>`_  `NASA's Navigation and Ancillary Information Facility (NAIF) <https://naif.jpl.nasa.gov/pub/naif/generic_kernels/>`_ are required for ephemeris generation:
+A number of auxiliary files available from the `Minor Planet Center <https://www.minorplanetcenter.net/data>`_  and `NASA's Navigation and Ancillary Information Facility (NAIF) <https://naif.jpl.nasa.gov/pub/naif/generic_kernels/>`_ are required for ephemeris generation:
 
 - **naif0012.tls** is the leap second file. This changes whenever there is a new leap second. The last was in 2017.
 - **"earth_620120_240827.bpc** is the historical Earth orientation specification. This should not change, unless there is a new model.
 - **earth_200101_990827_predict.bpc** is a prediction of the Earth's future orientation. Likewise, this should not change.
 - **pck00010.tpc** contains orientation information and physical constants for other bodies. This should only change rarely.
-- **de440s.bsp** gets used for getting the Earth's position for ephemerides.
+- **de440s.bsp** gets planetary ephemerides.
 - **earth_latest_high_prec.bpc** is a regularly updated specification of the Earth's orientation, refined as new observations are incorporated.
 - **obscodes_extended.json** - observatory position information and Minor Planet Center (MPC) observatory codes.
 - **sb441-n16.bsp** - predictions of the locations of small bodies that will be used as perturbers in the ASSIST integrations
 - **linux_p1550p2650.440** - predictions of the locations of planets that will be massive gravitational pertrubers in the ASSIST integrations
+
 .. tip::
   See our :ref:`installation_aux` instructions to find out how to download and install these auxiliary files automatically using our download utility. 
+
+.. seealso::
+   If the user needs to use older or new versions of these files, eee the :ref:`advanced` page to learn more about how to override the default filenames and download locations of the auxiliary files.
 
 Saving the Output From the Ephemeris Generator
 ------------------------------------------------
 
-If you want to use the same input orbits across multiple ``Sorcha`` runs, you can save time by outputting the output from the ephemeris generation stage using the command line flag **--ew** in combination with a stem filename (do not include the file extension). Then in subsequent runs you will need to use the **--er** flag to on the command line to specify the input ephemeris file to read in. You will also need to remove :ref:`the ephemeris generation parameters<tuneem>` from the configuration file and add the following::
+If you want to use the same input orbits across multiple ``Sorcha`` runs, you can save time by outputting the output from the ephemeris generation stage using the command line flag **--ew (--ephem-writ()** in combination with a stem filename (do not include the file extension). Then in subsequent runs you will need to use the **--er (--ephem-read)** flag to on the command line to specify the input ephemeris file to read in. You will also need to remove :ref:`the ephemeris generation parameters<tuneem>` from the configuration file and add the following::
 
    [INPUT]
    ephemerides_type = external
@@ -149,7 +153,7 @@ If you prefer to use a different method or software package for producing the ep
 **eph_format** is the format of the user provided ephemeris file. Options are **csv**, **whitespace**, and **hdf5**. 
 
 .. tip::
-   Use the **--er** flag on the command line to specify the external ephemeris file that ``Sorcha`` should use. 
+   Use the **--er (--ephem-read)** flag on with the **sorcha run** command on the terminal to specify the external ephemeris file that ``Sorcha`` should use. 
 
 .. warning::
    We have validated and tested ``Sorcha`` and its internal ephemeris generator. If the user decides to use a different method to provide the required ephemerides for their science, it is up to the user to validate/check the output of the external ephemeris generator. 

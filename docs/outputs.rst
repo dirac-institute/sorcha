@@ -5,7 +5,7 @@ Outputs
 
 ``Sorcha`` outputs:
   * :ref:`Detections File <detections>` (list of all the detections of the input popuation made by the simulated survey
-  * (Optioanal) :ref:`Statistics (Tally) File <stats>`  that provides a summary overview for the objects from the input population that were ''found'' in the simulated survey
+  * (Optioaal) :ref:`Statistics (Tally) File <statsf>`  that provides a summary overview for the objects from the input population that were ''found'' in the simulated survey
   * (Optional) :ref:`Ephemeris Output <ephem_output>` that provides the output from the :ref:`Ephemeris Generation<ephemeris_gen>`  
 
 .. image:: images/survey_simulator_flow_chart.png
@@ -15,9 +15,10 @@ Outputs
 
 
 .. attention::
-   Use the **-o** flag on the command line to specify where ``Sorcha`` should be  saving any output and log files (the file path).
+   Use the **-o (--outfile)** flag with the **sorcha run** command to specify where ``Sorcha`` should be  saving any output and log files (the file path).
 
-
+.. tip::
+   By default ``Sorcha`` will complain if a user attempts to overwrite existing files in the output directory. Users can apply the **-f (--force)** flag to force deletion/overwrite of existing the output file(s).
 
 Output File Formats
 ----------------------------
@@ -35,7 +36,7 @@ The :ref:`configuration file<configs>` keyword output_format in the OUTPUT secti
    with a number (due to a limitation in PyTables).
 
 .. attention::
-   Use the **-t** flag on the command line to specify the filename stem for all the ``Sorcha`` output files and logs.
+   Use the **-t (--stem)** flag on the command line to specify the filename stem for all the ``Sorcha`` output files and logs.
 
 .. _detections:
 
@@ -319,14 +320,14 @@ Optionally (with the **--ew** flag set at the command line), an ephemeris file o
 field can be generated to a separate file, which can then be provided back to ``Sorcha`` as an optional external ephemeris file with the **-er** flag.
 More information can be found on this functionality, including the output columns, in the :ref:`Ephemeris Generation<ephemeris_gen>` section of the documentation.
 
-The format of the outputted ephemeris file is controlled by the **eph_format** configuration keyword in the Inputs section of the :ref:`configuration file<configs>`e::
+The format of the outputted ephemeris file is controlled by the **eph_format** configuration keyword in the Inputs section of the :ref:`configuration file<configs>` ::
 
    [INPUT]
    ephemerides_type = external
    eph_format = csv
 
 .. attention::
-   Users should note that output produced by reading in a previously-generated ephemeris file will be in a different order than the output produced when running the ephemeris generator within ``Sorcha``. This is simply a side-effect of how  ``Sorcha`` reads in ephemeris files and does not affect the actual content of the output.
+   Users should note that output produced by reading in a previously generated ephemeris file will be in a different order than the output produced when running the ephemeris generator within ``Sorcha``. This is simply a side-effect of how  ``Sorcha`` reads in ephemeris files and does not affect the actual content of the output.
 
 .. tip::
    If instead you want to know which of the input small body population lands in the survey observations with an estimate of their apparent magnitude wihtout applying any other cuts or filters on the detections (not including discovery efficiency and linking effects), you can use/adapt the :ref:`known_config` example :ref:`configs`.

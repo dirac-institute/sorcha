@@ -450,7 +450,7 @@ The user sets what observations from the survey :ref:`pointing` will be used by 
 The first observing filters in the list are separated by a comma. The first observing filter listed should is the main filter that the absolute magnitude is defined for.
 The :ref:`physical` must have colors relative to the main filter specified for the iput small body population. 
 
-If the user wants to use a subset of the observations, such as only include observations from the first year of the survey or are part of a database, they can either modify the :ref:`pointing`  or modify the :ref:`pointing` query in the :ref:`configs`.
+If the user wants to use a subset of the observations, such as only including observations from the first year of the survey, the user can either modify the :ref:`pointing`  or modify the :ref:`pointing` query in the :ref:`configs`. We recommend the user modify the input survey pointing database in this situation.  
 
 Expert Advanced Post-Processing Features
 ---------------------------------------------------
