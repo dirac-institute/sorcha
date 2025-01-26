@@ -190,7 +190,7 @@ Lightcurve Template Class
 Accounting for Saturation (Saturation/Bright Limit Filter)
 ------------------------------------------------------------
 
-The saturation/bright limit filter removes all detections that are brighter than the saturation limit
+The saturation/bright limit filter removes all potential detections of the input population that are brighter than the saturation limit
 of the survey. `Ivezić et al. (2019) <https://ui.adsabs.harvard.edu/abs/2019ApJ...873..111I/abstract>`_
 estimate that the saturation limit for the LSST will be ~16 in the r filter.
 
@@ -222,7 +222,7 @@ The effect of this is to decrease the 5σ limiting magnitude – the apparent ma
 50% probability of detection – at the edges of the LSSTCam FOV. ``Sorcha`` accommodates this by
 calculating the effects of vignetting at the source’s location on the focal plane and adjusting the
 5σ limiting magnitude accordingly for each potential detection. This modified limiting magnitude
-will be used when applying the survey detection efficiency. We this value the **5σ Limiting Magnitude at the Source Location**
+will be used when applying the survey detection efficiency. We call this value the **5σ Limiting Magnitude at the Source Location** (:math:`m_{5\sigma}`).
 
 
 ``Sorcha``  applies a vignetting model from a built-in function tailored specifically for the LSST (see
@@ -241,7 +241,7 @@ further from the center of the FOV have shallower depths.
   The :ref:`pointing` provides the 5σ limiting magnitude at the center of the exposure's FOV. 
 
 .. note::
-``Sorcha`` currently only has  a vignetting model for the LSSTCam.
+  ``Sorcha`` currently only has  a vignetting model for the LSSTCam.
 
 .. seealso::
   We have a `Jupyter notebook <notebooks/demo_Vignetting.ipynb>`_  demonstrating ``Sorcha``'s vignetting calculation. 
@@ -251,16 +251,17 @@ further from the center of the FOV have shallower depths.
 Applying the Survey Detection Efficiency (Fading Function) Filter
 --------------------------------------------------------------------
 
-This filter serves to remove potential detections of the input small bodies which are too faint to be detected in the each survey observation.
-``Sorcha`` uses the fading function formulation of `Veres and Chesley (2017) <https://ui.adsabs.harvard.edu/abs/2017arXiv170506209C/abstract>`_.
-This fading function is parameterised by the fading function width and peak efficiency.
-The default values are modeled on those from the aforementioned paper.
+This filter serves to remove potential detections of the input small bodies which are too faint to be detected in the relevant survey observation. 
+For an input small body with a PSF magnitude of :math:`m_{PSF}` and a given survey observation with :math:`5\sigma` limiting magnitude at the source location (:math:`m_{5\sigma}`),
+``Sorcha`` uses the detection efficiency (fading function) formulation of `Veres and Chesley (2017) <https://ui.adsabs.harvard.edu/abs/2017arXiv170506209C/abstract>`_
+where:
 
-To configure the fading function, the following variabless should be set in the :ref:`configs`::
+.. math:: \epsilon(m_{PSF}) = \frac{F}{1 + e^\frac{m_{PSF}-m_{5\sigma}}{w}}
 
-    [FADINGFUNCTION]
-    fading_function_width = 0.1
-    fading_function_peak_efficiency = 1.
+This fading function is parameterized by the fading function width (:math:`w`) and peak efficiency  (:math:`F`).
+
+.. note:: 
+  Currently ``Sorcha`` applies the same fading function parameters (:math:`w` and :math:`F`) to all the simulated survey observations.  
 
 .. image:: images/fading_function.png
   :width: 600
@@ -275,8 +276,14 @@ of 10,000 point sources passed through ``Sorcha``’s fading function filter, wi
 probability from Equation 10 overplotted as a solid line. Here, detection efficiency  = 1.0,  width parameter = 0.1, and m5σ=24.5 and the
 binsize is 0.04 mag.
 
+To configure the fading function, the following variabless should be set in the :ref:`configs`::
+
+    [FADINGFUNCTION]
+    fading_function_width = 0.1
+    fading_function_peak_efficiency = 1.
+
 .. note::
-    The fading function uses the  :ref:`PSF magnitude <mags>` to evaluate detectability on the relevant survey images.  
+    The default values are modeled on those from the `Veres and Chesley (2017) <https://ui.adsabs.harvard.edu/abs/2017arXiv170506209C/abstract>`_.
 
 .. seealso::
     We have a `Jupyter notebook <notebooks/demo_DetectionEfficiencyValidation.ipynb>`_  showing how ``Sorcha`` applies the survey detection efficiency (fading function). 
