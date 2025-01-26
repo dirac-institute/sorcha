@@ -86,6 +86,7 @@ Once ``Sorcha`` calculates the trailed source magnitude for all potential detect
   :width: 800
   :alt: Sky image showing a short trailing source circled in red.
   :align: center
+
 Magnitude losses due to trailing, shown as a function of the object’s on-sky velocity (v). Left:
 the trailing loss components for different values of the seeing θ. The dashed lines represent magnitude
 losses due to the PSF trailing loss component only. The solid lines represent trailing losses due to both
@@ -116,14 +117,14 @@ Real astronomical surveys measure photometry and astrometry that have uncertaini
     Right now ``Sorcha`` only has functions to compute the photometric and astrometric uncertainties and SNR estimations specifically for Rubin Observatory.       
 
 .. seealso::
-  We have a `Jupyter notebook <notebooks/demo_UncertaintiesAndRandomization.ipynb>`_  demonstrating the application of the uncertainities and radnomization of the photometric and astrometric values within ``Sorcha``. 
+  We have a `Jupyter notebook <notebooks/demo_UncertaintiesAndRandomization.ipynb>`__  demonstrating the application of the uncertainities and radnomization of the photometric and astrometric values within ``Sorcha``. 
 
 
 Validating Sorcha's Trailed Source Magnitude Calculations
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. seealso::
-    See our `Jupyter notebook <notebooks/demo_ApparentMagnitudeValidation.ipynb>`_  that validates the apparent magnitude calculation.
+    See our `Jupyter notebook <notebooks/demo_ApparentMagnitudeValidation.ipynb>`__  that validates the apparent magnitude calculation.
 
 
 .. _addons:

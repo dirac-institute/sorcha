@@ -22,17 +22,10 @@ Citing the Software
 Built-In Citation Function
 ----------------------------
 
-If you use ``Sorcha`` in your research, please do include a citation in your published papers for ``Sorcha`` and the software packages and resources that ``Sorcha`` is based on. There are two ways to find this information: 
-
-The first is to create a text file of the citation by running the following command on the command line:: 
+If you use ``Sorcha`` in your research, please do include a citation in your published papers for ``Sorcha`` and the software packages and resources that ``Sorcha`` is based on.  The user can create a text file of the citation information (or output the information to the standard output on the terminal) by running the following command on the command line:: 
    
    sorcha cite
    
-The second is to use our built-in citation function. In an interactive Python session or a Jupyter notebook::
-
-   import sorcha
-   sorcha.cite()
-
 
 Additional Citation Details
 ----------------------------

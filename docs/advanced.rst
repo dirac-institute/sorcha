@@ -3,14 +3,11 @@
 Advanced User Features
 ==========================
 
-.. warning::
-   **If you're new to ``Sorcha``, turn away from this section NOW! (we're only partially kidding)** This section provides information about features for advanced users of ``Sorcha``. Changing or adjusting the parameters described in this section may produce unintended results. **With great power comes great responsibility. Be very careful in applying the knowledge below.** Most users will not need to touch these parameters within ``Sorcha``.
+.. danger::
+   **If you're new to** ``Sorcha`` **turn away from this section NOW! (we're only partially kidding)**. This section provides information about features for advanced users of ``Sorcha``. Changing or adjusting the parameters described in this section may produce unintended results. **With great power comes great responsibility. Be very careful in applying the knowledge below.** For many use cases, a user will likely not need to touch these parameters within ``Sorcha``.
 
 Setting the Random Number Generator Seed
 ---------------------------------------------
-
-.. warning::
-   For most science cases, you **DO NOT** want to set the same seed for each ``Sorcha`` run, but if you need reproducibility then you do want to see the seed as an environment variable before running ``Sorcha`` 
 
 The value used to seed the random number generator can be specified via the **SORCHA_SEED** environmental variable. This allows for ``Sorcha``  to be fully reproducibly run with (if using a bash shell or Z-shell)::
 
@@ -18,7 +15,10 @@ The value used to seed the random number generator can be specified via the **SO
 
 .. tip::
    If you're trying to reproduce a crash or a certain behavior in ``Sorcha``, you can find the value that you need to set the random seed to in the log file.  
-  
+
+.. warning::
+   For most science cases, you **DO NOT** want to set the same seed for each ``Sorcha`` run, but if you need reproducibility then you will want to set the random number generator seed environment variable before running ``Sorcha``        
+
 
 Expert User Filters and Config File Options
 -----------------------------------------------

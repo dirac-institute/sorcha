@@ -311,7 +311,7 @@ Statistics (Tally) File Column Names, Formats, and Descriptions
 +------------------------------------+--------------+----------------------------------------------------------------------------------------------------------+
 
 .. note::
-Unless the user has specified **drop_unlinked = False** in the :ref:`configuration file<configs>`, the object_linked column will read TRUE for all objects. To see which objects were not linked by ``Sorcha``, this variable must be set to False.
+   Unless the user has specified **drop_unlinked = False** in the :ref:`configuration file<configs>`, the object_linked column will read TRUE for all objects. To see which objects were not linked by ``Sorcha``, this variable must be set to False.
 
 .. _ephem_output:
   
