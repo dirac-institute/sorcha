@@ -8,7 +8,7 @@
 Citing the Software
 ==========================
 
-``Sorcha`` is described provided in joint Astromical Journal/JOSS software papers: Merritt et al. (submitted) and Holman et al.(submitted). We also ask that you reference in your software citations and acknowledgements the other packages that ``Sorcha`` is built upon (see below). 
+``Sorcha`` is described provided in joint Astromical Journal/JOSS software papers:  `Merritt et al. (submitted) <https://www.dropbox.com/scl/fi/secetw7n0a936iynzxmau/sorcha_paper_2025_Jan_submission_version.pdf?rlkey=pbhchiattrw5bna8sfo6ljvto&dl=0>`_  and `Holman et al. (submitted) <https://www.dropbox.com/scl/fi/lz1lmua2s0yf9t9a2gpmm/sorcha_ephemeris_generation_paper.pdf?rlkey=blm9u4zbk0ci1i4lc5yqz8dbs&dl=0>`_. We also ask that you reference in your software citations and acknowledgements the other packages that ``Sorcha`` is built upon (see below). 
 
 .. tip::
    Beyond citing the relevant papers, make sure to include details about your configuration for ``Sorcha`` (e.g. which footprint filter you're using), details about your input population (e.g. orbital, H, color, and phase curve distribution), and information about the pointing database used. 
