@@ -78,72 +78,10 @@ If using pip::
 
    pip install sorcha
 
-.. _installation_aux:
-
-Downloading Required Supplemental Files
-----------------------------------------
-
-To run ``Sorcha``'s built in :ref:`ephemeris generator<ephemeris_gen>`, you will need to download the auxiliary files required by  assist and rebound for performing the N-body integrations. 
-  
-To install the necessary `SPICE (Spacecraft, Planet, Instrument, C-matrix, Events) <https://naif.jpl.nasa.gov/naif/spiceconcept.html>`_ auxiliary files and other required data files for ephemeris generation (774 MB total in size)::
-
-    sorcha bootstrap
-
-.. note::
-   This script will download and store the auxiliary files in your computer's local cache directory by default. 
-
-.. note::
-   The optional --cache flag allows you to specify a specific location to download the auxiliary files. If the files have  already downloaded and want a fresh download, you need to use the -f flag. 
-
-.. warning:: These files can change/be updated with the revised positions of the planets every once in a while. So if you're running simulations for population statistics, we recommend downloading these files to a directory and having all Sorcha runs these files for consistency. 
- 
 Testing Your Sorcha Installation
 ----------------------------------
 
-You can check that the  ``Sorcha`` installation was successful, by obtaining the demo input files and running the demo command. 
-
-The demo input files and configuration file are installed with the ``Sorcha`` package. Further details about these files is provided on the :ref:`quickstart` page. You can run the following command on the command line to copy the files to the current directory (or a different location)::
-
-    sorcha demo prepare
-
-.. note::
-   The optional -p (--path) flag allows you to specify a specific location to copy the demo input files. If the files already exist, the  -f (--force)  flag can be used to force a fresh copy of the files to be generated. .
-
-You can find the command to run the ``Sorcha`` demo on the command line in two ways. First on the command line::
-
-   sorcha demo howto
-
-Or in an interactive python session or Jupyter notebook, you can run the following
-
-.. exec::
-
-   from sorcha.utilities.sorcha_demo_command import get_demo_command
-   print(get_demo_command())
-
-.. note::
-   The demo command assumes that the demo input files are in the local directory.
-
-.. tip::
-   If the auxiliary files are installed in a different location you will need to specify their location using the --ar flag
-   
-Four files will be created in the current directory. Two will be log files (.log and .err). The other two files will be CSV (comma-separated values; .csv) files. 
-
-
-.. tip::
-   The log files have One \*.log with information about the run  and one \*.err that is used to save error messages from the run.. The \*.err log file should be empty if ``Sorcha`` ran successfully.
-
-One of the files will be the  :ref:`detections file <detections>` (information about each observation of the input small body population in the simulated astronomical survey) will appear in a CSV file (testrun_e2e.csv) in your current directory. The first 21 lines of this CSV file should look like this (because of the random number generation the values will not be exactly the same):
-
-.. literalinclude:: ../docs/example_files/testrun_e2e.csv
-    :language: text
-    :lines: 1-21
-
-The last file outputted will be the :ref:`statistics or tally file <statsf>` (testrun_stats.csv) in CSV format that has summary statistics about each of the input objects detected by the simulated survey. The first 15  lines of this CSV file should look like this (because of the random number generation the values will not be exactly the same):
-
-.. literalinclude:: ../docs/example_files/testrun_stats.csv
-    :language: text
-    :lines: 1-15
-
+You can check that the  ``Sorcha`` installation was successful, by obtaining the demo input files and running the demo command. The demo input files and configuration file are installed with the ``Sorcha`` package. Further details are provided on the :ref:`quickstart` page.
 
 .. _dev_mode:
 

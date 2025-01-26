@@ -4,7 +4,7 @@ Advanced User Features
 ==========================
 
 .. danger::
-   **If you're new to** ``Sorcha`` **turn away from this section NOW! (we're only partially kidding)**. This section provides information about features for advanced users of ``Sorcha``. Changing or adjusting the parameters described in this section may produce unintended results. **With great power comes great responsibility. Be very careful in applying the knowledge below.** For many use cases, a user will likely not need to touch these parameters within ``Sorcha``.
+   **If you're new to** ``Sorcha`` **turn away from this section NOW! We're only partially kidding.** This section provides information about features for advanced users of ``Sorcha``. Changing or adjusting the parameters described in this section may produce unintended results. **With great power comes great responsibility. Be very careful in applying the knowledge below.** For many use cases, a user will likely not need to touch these parameters within ``Sorcha``.
 
 Setting the Random Number Generator Seed
 ---------------------------------------------
@@ -23,7 +23,7 @@ The value used to seed the random number generator can be specified via the **SO
 Expert User Filters and Config File Options
 -----------------------------------------------
 
-The following options can be optionally added to an expert section ([EXPERT]) of the :ref:`configs`. 
+The following options can be optionally applied via changes to the ``Sorcha`` :ref:`configs`. 
 
  
 Turning Vignetting Off 
@@ -142,7 +142,6 @@ To implement the faint object culling filter, include the following in the :ref:
     This filter is only approximate, and is not applied to objects with a perihelion distance *q* < 2 au. The calculations assume the Earth is on a circular orbit
     in order to compute the geocentric distance.
 
-..
 
 Modifying the Ephemeris Generator Interpolation
 --------------------------------------------------
@@ -151,6 +150,11 @@ A user can update the number of sub-intervals for the Lagrange ephemerides inter
 
     [SIMULATION]
     n_sub_intervals = 122
+
+   
+.. note::
+    For most use cases this paramterer will not need to be changed from the default value ``Sorcha`` uses. 
+
 
 Specifying Alternative Versions of the Auxiliary Files Used in the Ephemeris Generator 
 -----------------------------------------------------------------------------------------

@@ -1,4 +1,5 @@
-usage: sorcha run [-h] -c C -o O --ob OB -p P --pd PD [--er ER] [--ew EW] [--ar AR] [--cp CP] [-f] [-s S] [-t T] [-l] [--st ST]
+usage: sorcha run [-h] -c C -o O --ob OB -p P --pd PD [--er ER] [--ew EW]
+                  [--ar AR] [--cp CP] [-f] [-s S] [-t T] [-l] [--st ST]
 
 Run a simulation.
 
@@ -16,18 +17,25 @@ Required arguments:
 
 Optional arguments:
   --er ER, --ephem-read ER
-                        Previously generated ephemeris simulation file name, required if ephemerides_type in config file is 'external'. (default:
-                        None)
+                        Previously generated ephemeris simulation file name,
+                        required if ephemerides_type in config file is
+                        'external'. (default: None)
   --ew EW, --ephem-write EW
-                        Output file name for newly generated ephemeris simulation, required if ephemerides_type in config file is not 'external'.
-                        (default: None)
+                        Output file name for newly generated ephemeris
+                        simulation, required if ephemerides_type in config
+                        file is not 'external'. (default: None)
   --ar AR, --ar-data-path AR
-                        Directory path where Assist+Rebound data files where stored when running bootstrap_sorcha_data_files from the command line.
-                        (default: None)
+                        Directory path where Assist+Rebound data files where
+                        stored when running bootstrap_sorcha_data_files from
+                        the command line. (default: None)
   --cp CP, --complex-physical-parameters CP
-                        Catalog of object complex physical parameters (default: None)
-  -f, --force           Force deletion/overwrite of existing output file(s). Default False. (default: False)
+                        Catalog of object complex physical parameters
+                        (default: None)
+  -f, --force           Force deletion/overwrite of existing output file(s).
+                        Default False. (default: False)
   -s S, --survey S      Survey to simulate (default: rubin_sim)
   -t T, --stem T        Output file name stem. (default: SSPPOutput)
-  -l, --log-level       Print additional information to log while running (default: True)
-  --st ST, --stats ST   Output summary statistics table to this stem filename. (default: None)
+  -l, --log-level       Print additional information to log while running
+                        (default: True)
+  --st ST, --stats ST   Output summary statistics table to this stem filename.
+                        (default: None)

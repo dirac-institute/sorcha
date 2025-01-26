@@ -94,6 +94,9 @@ To use ``Sorcha``'s internal ephemeris generation engine, the configuration file
 Required Auxiliary Files 
 ---------------------------
 
+.. tip:: 
+  See our :ref:`installation_aux` instructions to find out how to download and install these auxiliary files automatically using our download utility. 
+
 A number of auxiliary files available from the `Minor Planet Center <https://www.minorplanetcenter.net/data>`_  and `NASA's Navigation and Ancillary Information Facility (NAIF) <https://naif.jpl.nasa.gov/pub/naif/generic_kernels/>`_ are required for ephemeris generation:
 
 - **naif0012.tls** is the leap second file. This changes whenever there is a new leap second. The last was in 2017.
@@ -106,11 +109,9 @@ A number of auxiliary files available from the `Minor Planet Center <https://www
 - **sb441-n16.bsp** - predictions of the locations of small bodies that will be used as perturbers in the ASSIST integrations
 - **linux_p1550p2650.440** - predictions of the locations of planets that will be massive gravitational pertrubers in the ASSIST integrations
 
-.. tip::
-  See our :ref:`installation_aux` instructions to find out how to download and install these auxiliary files automatically using our download utility. 
 
 .. seealso::
-   If the user needs to use older or new versions of these files, eee the :ref:`advanced` page to learn more about how to override the default filenames and download locations of the auxiliary files.
+   If the user needs to use older or new versions of these files, see the :ref:`advanced` page to learn more about how to override the default filenames and download locations of the auxiliary files.
 
 Saving the Output From the Ephemeris Generator
 ------------------------------------------------

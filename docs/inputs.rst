@@ -587,3 +587,25 @@ Ephemeris File Configuration Parameters
    # Options: csv, whitespace, hdf5
 
    eph_format = csv
+
+
+.. _installation_aux:
+
+Downloading Auxiliary Files For the Ephemeris Generator
+-----------------------------------------------------------
+
+To run ``Sorcha``'s built in :ref:`ephemeris generator<ephemeris_gen>`, you will need to download the auxiliary files required for performing the N-body integrations. 
+
+To install the necessary `SPICE (Spacecraft, Planet, Instrument, C-matrix, Events) <https://naif.jpl.nasa.gov/naif/spiceconcept.html>`_ auxiliary files and other required data files for ephemeris generation (774 MB total in size), run::
+
+    sorcha bootstrap
+
+.. note::
+   This script will download and store the auxiliary files in your computer's local cache directory by default.
+
+.. note::
+   The optional --cache flag allows you to specify a specific location to download the auxiliary files. If the files have  already downloaded and want a fresh download, you need to use the -f flag.
+
+.. warning:: These files can change/be updated with the revised positions of the planets every once in a while. So if you're running simulations for population statistics, we recommend downloading these files to a directory and having all Sorcha runs these files for consistency.
+  
+
