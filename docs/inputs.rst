@@ -495,6 +495,10 @@ Ephemeris File (Optional)
    Use the **--er** flag on the command line to specify the external ephemeris file that ``Sorcha`` should use.
 
 
+.. warning::
+   We have validated ``Sorcha`` with its internal ephemeris generator. If the user chooses to use a different ephemeris engine's calculations as
+   input for ``Sorcha``, the user has the responsibility to check the accuracy of this input.
+
 Example Ephemeris File
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
