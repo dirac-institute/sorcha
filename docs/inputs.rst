@@ -334,7 +334,7 @@ The complex physical parameters file is only needed if you're going to include y
   *  Each simulated object **must** have a unique string identifier
 
 .. seealso::
-   Further details about how to use ``sorcha addons`` to apply cometary activity and lightcurve effects can be found :ref:`here<addons>`.
+   Further details about how to use ``Sorcha add-ons`` to apply cometary activity and lightcurve effects can be found :ref:`here<addons>`.
 
 
 .. attention::
