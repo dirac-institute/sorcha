@@ -20,7 +20,7 @@ Below we provide Jupyter notebooks that demonstrate ``Sorcha``'s capabilities an
     Trailed Source Magnitude Versus PSF Magnitude <notebooks/demo_TrailingLossPhasecurve>
     Uncertainties and Randomization <notebooks/demo_UncertaintiesAndRandomization>
     Vignetting Demo <notebooks/demo_Vignetting>
-    Lightcurve Demo <notebooks/demo_Lightcurve>
+    Light curve Demo <notebooks/demo_Lightcurve>
     Cometary Activity Demo <notebooks/demo_Cometary_Activity> 
     miniDifi Validation <notebooks/demo_miniDifiValidation>
     Sorcha End-to-End Verification <notebooks/demo_Verification>
