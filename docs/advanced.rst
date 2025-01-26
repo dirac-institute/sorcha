@@ -212,7 +212,7 @@ For example, you could state this in your configuration file to get the object I
    late in the code, upon output.
 
 
-Specifying the Decimal Precision for the Photometric and Astromeitc Values 
+Specifying the Decimal Precision for the Photometric and Astrometric  Values 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 By default, no rounding is performed on any of the output values. We recommend that you do not change the decimal place precision  and instead leave ``Sorcha`` to output the full value to machine precision, but there may be reasons why you need to reduce the size of the output.
