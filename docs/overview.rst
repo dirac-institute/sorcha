@@ -2,7 +2,8 @@ Overview
 =================
 
 .. seealso::
-   For a more detailed description of ``Sorcha`` and how it works, please see Merritt et al. (submiited) and Holman et al. (submitted).
+   For a more detailed description of ``Sorcha`` and how it works, please see  `Merritt et al. (submitted) <https://www.dropbox.com/scl/fi/secetw7n0a936iynzxmau/sorcha_paper_2025_Jan_submission_version.pdf?rlkey=pbhchiattrw5bna8sfo6ljvto&dl=0>`_  and `Holman et al. (submitted) <https://www.dropbox.com/scl/fi/lz1lmua2s0yf9t9a2gpmm/sorcha_ephemeris_generation_paper.pdf?rlkey=blm9u4zbk0ci1i4lc5yqz8dbs&dl=0>`_.
+
 
 How Sorcha Works
 -------------------------------
