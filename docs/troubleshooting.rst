@@ -60,4 +60,4 @@ then make sure to check that you have entries in all the input files for each ob
 
 ERROR: Unable to find ObjID column headings (OrbitAuxReader:....)
 --------------------------------------------------------------------
-Check your :ref:`input files<inputs`> and ensure that they have ObjID column as the first column. 
+Check your :ref:`input files<inputs>` and ensure that they have ObjID column as the first column. 
