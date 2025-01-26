@@ -12,7 +12,7 @@ The presence or absence of various variables in the configuration file will turn
 
 
 .. attention::
-   Use the **-c** flag on the command line to specify the configuration file  that ``Sorcha`` should use.
+   Use the **-c (--config)** flag when using the **sorcha run** command on the terminal to specify the configuration file  that ``Sorcha`` should use.
  
 .. _example_configs:
 
