@@ -268,7 +268,7 @@ Detections File: Full Output Column Names, Formats, and Descriptions
 Optional  Outputs
 ----------------------
 
-.. _stats:
+.. _statsf:
    
 Statistics (Tally) File
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
