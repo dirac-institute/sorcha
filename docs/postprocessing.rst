@@ -298,9 +298,6 @@ subsequent observation fall into a chip gap. This is less concerning for faster-
 we provide two methods of applying the camera footprint.
 
     
-.. attention::
-    Applying some form of the camera footprint filter is mandatory if you are trying to preform a science quality simulation, but we do have the ability to turn it off for other types of modeling cases. See the :ref:`advanced post-processing tunable features and parameters <advanced>`. 
-
 Circle Radius (Simple Sensor Area)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -315,10 +312,10 @@ To include this filter, the following options should be set in the :ref:`configs
     fill_factor = 0.9
 
 .. warning::
-    Note that :ref:`ASSIST+REBOUND ephemeris generator<ephemeris_gen>` also uses a circular radius for its search area. To get accurate results, the ASSIST+REBOUND radius must be set to be larger than the circle_radius. For simmulating the LSST, we rcommend setting **ar_ang_fov = 2.06** and **ar_fov_buffer = 0.2**. Setting the circle_radius to be larger than the radius used for ASSIST+REBOUND will have no effect.
+    Note that the :ref:`internal ephemeris generator<ephemeris_gen>` also uses a circular radius for its search area. To get accurate results, the ephemeris generator search radius radius must be set to be larger than the **circle_radius**. For simulating the LSST, we recommend setting **ar_ang_fov = 2.06** and **ar_fov_buffer = 0.2**. Setting the circle_radius to be larger than the radius used for the ephemeris generation stage will have no effect.
 
 .. tip::
-   Applying the fill factor in the circle radius camera filter is option. If the  **fill_factor** is not present in the :ref:`configs` file then ``Sorcha`` includes all potential detections that land within the circular area.  
+   Applying the fill factor in the circle radius camera filter is option. If the  **fill_factor** is not present in the :ref:`configs` then ``Sorcha`` includes all potential detections that land within the circular area.  
 
 .. tip::
    For Rubin Observatory, the circle radius should be set to 1.75 degrees with a fill factor of 0.9 to approximate the detector area of LSSTCam.
@@ -332,7 +329,7 @@ To include this filter, the following options should be set in the :ref:`configs
 Full Camera Footprint
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-Using this filter applies a full camera footprint, including chip gaps. The full camera footprint filter figures out which of  the  possible input population detections (as idenitifed by the ephemeris generation stage/input)  for each survey observations land within on the survey camera's detectors. This is the slowest and most accurate version of the footprint filter. The image below shows the full camera footprint filter for the default LSSTCam architecture. 
+Using this filter applies a full camera footprint, including chip gaps. The full camera footprint filter figures out which of  the  possible input population detections (as identified by the ephemeris generation stage/input)  for each survey observations land within on the survey camera's detectors. This is the slowest and most accurate version of the footprint filter. The image below shows the full camera footprint filter for the default LSSTCam architecture. 
 
 
 .. image:: images/full_footprint_filter.png
@@ -352,9 +349,9 @@ To use the full camera footprint filter, the following option should be set in t
 ``Sorcha`` comes with a representation of the LSSTCam footprint already installed. If you do not include the **footprint_path** in the :ref:`configs`, then ``Sorcha`` assumes you're using its internal LSSTCam footprint. Further details about supplying your own camera footprint file can be found in the  :ref:`inputs` page.
 
 .. warning::
-    Note that :ref:`ASSIST+REBOUND ephemeris generator<ephemeris_gen>` uses a circular radius for its search area. To get accurate results, the ASSIST+REBOUND radius must be set to be larger than the circle_radius. For simmulating the LSST, we rcommend setting **ar_ang_fov = 2.06** and **ar_fov_buffer = 0.2**.
+    Note that the :ref:`internal ephemeris generator<ephemeris_gen>` uses a circular radius for its search area. To get accurate results, the ephemeris generation search radius must be set to be larger than the **circle_radius**. For simulating the LSST, we recommend setting **ar_ang_fov = 2.06** and **ar_fov_buffer = 0.2**.
 
-Additionally, the camera footprint  model can account for the losses at the edge of the CCDs where the detection software will not be able to pick out sources close to the edge. You can add an exclusion zone around each CCD measured in arcseconds (on the focal plane) using the **footprint_edge_threshold**  key to the configuraiton file.  An example setup in the :ref:`configs`::
+Additionally, the camera footprint  model can account for the losses at the edge of the CCDs where the detection software will not be able to pick out sources close to the edge. You can add an exclusion zone around each CCD measured in arcseconds (on the focal plane) using the **footprint_edge_threshold**  key to the configuration file.  An example setup in the :ref:`configs`::
 
     [FOV]
     camera_model = footprint
@@ -449,11 +446,20 @@ The user sets what observations from the survey :ref:`pointing` will be used by 
    observing_filters = r,g,i,z,u,y
 
 The first observing filters in the list are separated by a comma. The first observing filter listed should is the main filter that the absolute magnitude is defined for.
-The :ref:`physical` must have colors relative to the main filter specified for the iput small body population. 
+The :ref:`physical` must have colors relative to the main filter specified for the input small body population. 
 
 If the user wants to use a subset of the observations, such as only including observations from the first year of the survey, the user can either modify the :ref:`pointing`  or modify the :ref:`pointing` query in the :ref:`configs`. We recommend the user modify the input survey pointing database in this situation.  
 
 Expert Advanced Post-Processing Features
 ---------------------------------------------------
 
-Once a user is familar with ``Sorcha`` and how it works, there are additional :ref:`advanced post-processing tunable features and parameters <advanced>`  available for the  expert user. 
+Once a user is familiar with ``Sorcha`` and how it works, there are additional :ref:`advanced post-processing tunable features and parameters <advanced>`  available for the  expert user. 
+
+.. danger::
+   **With great power comes great responsibility.** If you're new to ``Sorcha`` we **strongly recommend** that you first get familiar with running ``Sorcha`` and how it works before going on to apply any advanced post-processing features as they may produce unintended results. For many use cases, a user will likely not need to touch these parameters within ``Sorcha``.
+
+
+.. attention::
+    Applying some form of the :ref:`camera footprint filter <footprint>` is mandatory if you are trying to preform a science quality simulation, but we do have the ability to turn it off for other types of modeling cases as an :ref:`advanced post-processing tunable feature <advanced>`.
+
+
