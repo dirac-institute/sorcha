@@ -23,7 +23,7 @@ The steps within ``Sorcha``'s post-processing stage that are used to estimate wh
   :width: 800
   :alt: An overview of the LSST workflow
 
-.. _mags::
+.. _mags:
 
 Calculating the Trailed Source Magnitude and PSF (Point Spread Function) Magnitude
 -------------------------------------------------------------------------------------
