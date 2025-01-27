@@ -89,6 +89,9 @@ To use ``Sorcha``'s internal ephemeris generation engine, the configuration file
 .. tip::
    We recommend you use the above default values which we also use in our :ref:`example_configs`, as they are sufficient for most Solar System populations you'll want to simulate for LSST observations. For further details about these default values, we refer the reader to the :ref:`the camera footprint filter <footprint>` discussion.
 
+.. warning::
+   Make sure ar_ang_fov + ar_fov_buffer is sufficiently bigger than the camera footprint if :ref:`footprint` to ensure that input objects are not missed that would be within the camera footprint after the :ref:`astrometric randomization <randomization>`  is applied in the :ref:`post-processing <post_processing>` stage. 
+
 .. _auxfiles:
 
 Required Auxiliary Files 
