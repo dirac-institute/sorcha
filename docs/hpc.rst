@@ -43,7 +43,7 @@ multi_sorcha.py:
 .. note::
   We provide these here for you to copy, paste, and edit as needed. You might have to some slight modifications to both the slurm script and multi_sorcha.py depending if you're using ``Sorcha`` without calling the stats file.   
 
-multi_sorcha.sh requests many parallel Slurm jobs of multi_sorcha.py, feeding each a different --instance parameter. After changing ‘my_orbits.csv’, ‘my_colors.csv’, and ‘my_pointings.db’ to match the above, you could generate 10 jobs, each with 4 cores running 25 orbits each, as follows::
+multi_sorcha.sh requests many parallel Slurm jobs of multi_sorcha.py, feeding each a different --instance parameter. After changing ‘my_orbits.csv’, ‘my_colors.csv’, ‘my_pointings.db’, ‘my_config.ini’, and the various slurm parameters to match the above, you could generate 10 jobs, each with 4 cores running 25 orbits each, as follows::
 
    sbatch --array=0-9 multi_sorcha.sh 25 4
 
