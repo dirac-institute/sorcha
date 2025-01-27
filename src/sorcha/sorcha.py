@@ -22,8 +22,7 @@ from sorcha.modules import PPVignetting
 from sorcha.modules.PPFadingFunctionFilter import PPFadingFunctionFilter
 from sorcha.modules.PPFaintObjectCullingFilter import PPFaintObjectCullingFilter
 
-from sorcha.modules.PPGetLogger import PPGetLogger
-from sorcha.modules.PPCommandLineParser import PPCommandLineParser
+
 from sorcha.modules.PPMatchPointingToObservations import PPMatchPointingToObservations
 from sorcha.modules.PPMagnitudeLimit import PPMagnitudeLimit
 from sorcha.modules.PPOutput import PPWriteOutput, PPIndexSQLDatabase
@@ -41,8 +40,10 @@ from sorcha.lightcurves.lightcurve_registration import update_lc_subclasses
 
 from sorcha.utilities.sorchaArguments import sorchaArguments
 from sorcha.utilities.sorchaConfigs import sorchaConfigs, PrintConfigsToLog
+from sorcha.utilities.sorchaCommandLineParser import sorchaCommandLineParser
 from sorcha.utilities.fileAccessUtils import FindFileOrExit
 from sorcha.utilities.citation_text import cite_sorcha
+from sorcha.utilities.sorchaGetLogger import sorchaGetLogger
 
 
 def cite():  # pragma: no cover

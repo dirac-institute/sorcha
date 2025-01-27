@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 from numpy.testing import assert_equal
 
-from sorcha.modules.PPModuleRNG import PerModuleRNG
+from sorcha.utilities.sorchaModuleRNG import PerModuleRNG
 
 
 def test_PPDetectionEfficiency():

@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 from sorcha.utilities.dataUtilitiesForTests import get_test_filepath, get_demo_filepath
-from sorcha.modules.PPGetLogger import PPGetLogger
+from sorcha.utilities.sorchaGetLogger import sorchaGetLogger
 from sorcha.utilities.sorchaArguments import sorchaArguments
 from sorcha.modules.PPReadPointingDatabase import PPReadPointingDatabase
 from sorcha.ephemeris.simulation_setup import (

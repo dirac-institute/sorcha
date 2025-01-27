@@ -1,4 +1,4 @@
-from sorcha.modules.PPModuleRNG import PerModuleRNG
+from sorcha.utilities.sorchaModuleRNG import PerModuleRNG
 
 
 def PPDropObservations(observations, module_rngs, probability="detection probability"):

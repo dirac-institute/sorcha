@@ -3,7 +3,7 @@ import os
 from datetime import datetime
 
 
-def PPGetLogger(
+def sorchaGetLogger(
     log_location,
     log_stem,
     log_format="%(asctime)s %(name)-12s %(levelname)-8s %(message)s ",
