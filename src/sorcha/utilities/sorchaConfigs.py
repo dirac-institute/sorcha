@@ -195,6 +195,24 @@ class filtersConfigs:
                         bad_list, self.survey_name
                     )
                 )
+        if self.survey_name in ["DES", "des"]:
+            lsst_filters = ["g", "r", "i", "z", "Y"]
+            filters_ok = all(elem in lsst_filters for elem in self.observing_filters)
+
+            if not filters_ok:
+                bad_list = np.setdiff1d(self.observing_filters, lsst_filters)
+                logging.error(
+                    "ERROR: Filter(s) {} given in config file are not recognised filters for {} survey.".format(
+                        bad_list, self.survey_name
+                    )
+                )
+                logging.error("Accepted {} filters: {}".format("LSST", lsst_filters))
+                logging.error("Change observing_filters in config file or select another survey.")
+                sys.exit(
+                    "ERROR: Filter(s) {} given in config file are not recognised filters for {} survey.".format(
+                        bad_list, self.survey_name
+                    )
+                )
 
 
 @dataclass
@@ -735,6 +753,9 @@ class expertConfigs:
     brute_force: bool = None
     """brute-force ephemeris generation on all objects without running a first-pass"""
 
+    survey_name: str = None
+    """survey name to be used for checking flags are correct"""
+
     def __post_init__(self):
         """Automagically validates the expert configs after initialisation."""
         self._validate_expert_configs()
@@ -777,13 +798,36 @@ class expertConfigs:
                 "ERROR: SNR limit and magnitude limit are mutually exclusive. Please delete one or both from config file."
             )
 
-        self.trailing_losses_on = cast_as_bool_or_set_default(
-            self.trailing_losses_on, "trailing_losses_on", True
-        )
         self.default_snr_cut = cast_as_bool_or_set_default(self.default_snr_cut, "default_snr_cut", True)
-        self.randomization_on = cast_as_bool_or_set_default(self.randomization_on, "randomization_on", True)
-        self.vignetting_on = cast_as_bool_or_set_default(self.vignetting_on, "vignetting_on", True)
         self.brute_force = cast_as_bool_or_set_default(self.brute_force, "brute_force", True)
+
+        if self.survey_name in ["rubin_sim", "RUBIN_SIM", "LSST", "lsst"]:
+            self.randomization_on = cast_as_bool_or_set_default(
+                self.randomization_on, "randomization_on", True
+            )
+            self.vignetting_on = cast_as_bool_or_set_default(self.vignetting_on, "vignetting_on", True)
+            self.trailing_losses_on = cast_as_bool_or_set_default(
+                self.trailing_losses_on, "trailing_losses_on", True
+            )
+        elif self.survey_name in ["DES", "des"]:
+            logging.warning(
+                "WARNING: DES simulation does not support trailing losses, vignetting and randomization. These are off by default"
+            )
+
+            self.randomization_on = cast_as_bool_or_set_default(
+                self.randomization_on, "randomization_on", False
+            )
+            self.vignetting_on = cast_as_bool_or_set_default(self.vignetting_on, "vignetting_on", False)
+            self.trailing_losses_on = cast_as_bool_or_set_default(
+                self.trailing_losses_on, "trailing_losses_on", False
+            )
+            if self.randomization_on == True or self.vignetting_on == True or self.trailing_losses_on == True:
+                logging.ERROR(
+                    "ERROR: DES simulation does not support trailing losses, vignetting and randomization."
+                )
+                sys.exit(
+                    "ERROR: DES simulation does not support trailing losses, vignetting and randomization."
+                )
 
 
 @dataclass
@@ -1095,6 +1139,8 @@ class sorchaConfigs:
                 elif section == "SATURATION":
                     extra_args["_observing_filters"] = self.filters.observing_filters
                 elif section == "FOV":
+                    extra_args["survey_name"] = self.survey_name
+                elif section == "EXPERT":
                     extra_args["survey_name"] = self.survey_name
                 section_dict = dict(config_object[section])
                 config_instance = config_section(**section_dict, **extra_args)

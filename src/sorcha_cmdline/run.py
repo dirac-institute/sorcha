@@ -145,6 +145,7 @@ def execute(args):
         update_activity_subclasses,
         update_lc_subclasses,
     )
+    from sorcha.DES import runDESSimulation
     import sys, os
 
     # Extract the output file path now in order to set up logging.
@@ -201,6 +202,18 @@ def execute(args):
                 ["rubin_sim", "RUBIN_SIM"]
             )
         )
+    elif cmd_args["surveyname"] in ["DES", "des"]:
+        try:
+            args = sorchaArguments(cmd_args)
+        except Exception as err:
+            pplogger.error(err)
+            sys.exit(err)
+        try:
+            args.validate_arguments()
+        except Exception as err:
+            pplogger.error(err)
+            sys.exit(err)
+        runDESSimulation(args, sconfigs)
     else:
         pplogger.error(
             "ERROR: Survey name not recognised. Current allowed surveys are: {}".format(

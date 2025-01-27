@@ -59,6 +59,11 @@ def PPReadPointingDatabase(bsdbname, observing_filters, dbquery, surveyname):
         dfo["observationMidpointMJD_TAI"] = dfo["observationStartMJD_TAI"] + (
             (dfo["visitTime"] / 2.0) / 86400.0
         )
+
+    if surveyname in ["DES", "des"]:
+        dfo["observationStartMJD_TAI"] = dfo["observationMidpointMJD_TAI"] - (
+            (dfo["visitExposureTime"] / 2.0) / 86400.0
+        )
     else:
         pplogger.error("ERROR: PPReadPointingDatabase: survey name not recognised.")
         sys.exit("ERROR: PPReadPointingDatabase: survey name not recognised.")
