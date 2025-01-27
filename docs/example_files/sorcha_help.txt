@@ -1,0 +1,26 @@
+usage: sorcha [-h] [--version] [{bootstrap,cite,demo,init,outputs,run}] ...
+
+Sorcha survey simulator suite.
+
+positional arguments:
+  {bootstrap,cite,demo,init,outputs,run}
+                        Verb to execute
+  args                  Arguments for the verb
+
+options:
+  -h, --help            show this help message and exit
+  --version             Print version information
+
+These are the most common sorcha verbs:
+
+   init      Initialize a new simulation
+   run       Run a simulation
+   outputs   Manipulate/package sorcha outputs
+   demo      Set up a demo simulation
+   bootstrap Download datafiles required to run sorcha
+   cite      Outputs the citation to a file
+
+To get more information, run the verb with --help. For example:
+
+   sorcha run --help
+ 

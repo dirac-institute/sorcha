@@ -126,3 +126,13 @@ The last file outputted will be the :ref:`statistics or tally file <statsf>` (**
 
 .. tip::
    If you want to run this command a second time you'll need to add a **-f** flag to the command line to force overwriting output files that already were exist in the output directory. Do note that the previous run's log and error log files will not be removed. New log files are generated at each run.  
+
+Available Commands Within Sorcha
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+To see all the commands/utilities available within ``Sorcha``, run::
+
+   sorcha --help
+
+.. literalinclude:: ./example_files/sorcha_help.txt
+    :language: text
