@@ -21,7 +21,7 @@ Quickstart
 
 We provide as a starting point our example scripts for running  on HPC facilities using slurm. Some modifications will be required to make them work for your facility.
 
-Below is a very simple slurm script example designed to run the demo files three times on three cores in parallel. Here, one core has been assigned to each ``Sorcha`` run, with each core assigned 1Gb of memory. 
+Below is a very simple slurm script example designed to run the :ref:`demo files <quickstart>` three times on three cores in parallel. Here, one core has been assigned to each ``Sorcha`` run, with each core assigned 1Gb of memory. 
 
 .. literalinclude:: ./example_files/multi_sorcha.sh 
     :language: text
@@ -41,7 +41,7 @@ multi_sorcha.py:
     :language: python
 
 .. note::
-  We provide these here for you to copy, paste, and edit as needed. You might have to some some slight modifications to both the slurm script and multi_sorcha.py depending if you're using ``Sorcha`` without calling the stats file.   
+  We provide these here for you to copy, paste, and edit as needed. You might have to some slight modifications to both the slurm script and multi_sorcha.py depending if you're using ``Sorcha`` without calling the stats file.   
 
 multi_sorcha.sh requests many parallel Slurm jobs of multi_sorcha.py, feeding each a different --instance parameter. After changing ‘my_orbits.csv’, ‘my_colors.csv’, and ‘my_pointings.db’ to match the above, it could be run as sbatch --array=0-9 multi_sorcha.sh 25 4 to generate ten jobs, each with 4 cores running 25 orbits each. 
 
@@ -63,7 +63,7 @@ Sorcha’s Helpful Utilities
 
    sorcha outputs create-sqlite –help
 
-``Sorcha`` also has a tool designed to search for and check the logs of a large number of runs. This tool can make sure all of the runs completed successfully, and output to either the terminal or a .csv file the names of the runs which have not completed and the relevant error message, if applicable. To see the usage of this tool, on the command line run::
+``Sorcha`` also has a tool designed to search for and check the logs of a large number of runs. This tool can make sure all runs completed successfully, and output to either the terminal or a .csv file the names of the runs which have not completed and the relevant error message, if applicable. To see the usage of this tool, on the command line run::
 
    sorcha outputs check-logs –help
 

@@ -5,7 +5,7 @@ Outputs
 
 ``Sorcha`` outputs:
   * :ref:`Detections File <detections>` (list of all the detections of the input popuation made by the simulated survey
-  * (Optioanal) :ref:`Statistics (Tally) File <stats>`  that provides a summary overview for the objects from the input population that were ''found'' in the simulated survey
+  * (Optioaal) :ref:`Statistics (Tally) File <statsf>`  that provides a summary overview for the objects from the input population that were ''found'' in the simulated survey
   * (Optional) :ref:`Ephemeris Output <ephem_output>` that provides the output from the :ref:`Ephemeris Generation<ephemeris_gen>`  
 
 .. image:: images/survey_simulator_flow_chart.png
@@ -15,9 +15,10 @@ Outputs
 
 
 .. attention::
-   Use the **-o** flag on the command line to specify where ``Sorcha`` should be  saving any output and log files (the file path).
+   Use the **-o (--outfile)** flag with the **sorcha run** command to specify where ``Sorcha`` should be  saving any output and log files (the file path).
 
-
+.. tip::
+   By default ``Sorcha`` will complain if a user attempts to overwrite existing files in the output directory. Users can apply the **-f (--force)** flag to force deletion/overwrite of existing the output file(s).
 
 Output File Formats
 ----------------------------
@@ -35,7 +36,7 @@ The :ref:`configuration file<configs>` keyword output_format in the OUTPUT secti
    with a number (due to a limitation in PyTables).
 
 .. attention::
-   Use the **-t** flag on the command line to specify the filename stem for all the ``Sorcha`` output files and logs.
+   Use the **-t (--stem)** flag on the command line to specify the filename stem for all the ``Sorcha`` output files and logs.
 
 .. _detections:
 
@@ -94,15 +95,16 @@ Detections File: Basic Output Column Names, Formats, and Descriptions
 +------------------------------------+--------------+----------------------------------------------------------------------------------+
 | Obj_Sun_LTC_km                     | Float        | Object-sun light-time-corrected distance (km)                                    |
 +------------------------------------+--------------+----------------------------------------------------------------------------------+
-| object_linked                      | Boolean      | Whether the object was linked by the SSP pipeline. Optional: see note.           |
+| object_linked                      | Boolean      | True/False whether the object passed the linking filter. See note below          |
 +------------------------------------+--------------+----------------------------------------------------------------------------------+
-
+| date_linked_MJD                    | Boolean      | MJD (TAI) Date the object was linked (if it was linked) See note below           |
++------------------------------------+--------------+----------------------------------------------------------------------------------+
 
 .. note::
    All positions and velocities are in respect to J2000.
    
 .. note::
-   The object_linked column only appears if the :ref:`linking filter<linking>` is on and the user has requested that observations of unlinked objects should not be dropped.
+   The **date_linked_MJD** only appears if :ref:`linking filter<linking>` is turned on. The **object_linked** column only appears if the :ref:`linking filter<linking>` is on and **drop_unlinked = False** in the :ref:`configuration file<configs> (the user has requested that detections of unlinked objects not be dropped in the output).
 
 
 .. warning::
@@ -268,7 +270,7 @@ Detections File: Full Output Column Names, Formats, and Descriptions
 Optional  Outputs
 ----------------------
 
-.. _stats:
+.. _statsf:
    
 Statistics (Tally) File
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -309,24 +311,24 @@ Statistics (Tally) File Column Names, Formats, and Descriptions
 +------------------------------------+--------------+----------------------------------------------------------------------------------------------------------+
 
 .. note::
-Unless the user has specified **drop_unlinked = False** in the :ref:`configuration file<configs>`, the object_linked column will read TRUE for all objects. To see which objects were not linked by ``Sorcha``, this variable must be set to False.
+   Unless the user has specified **drop_unlinked = False** in the :ref:`configuration file<configs>`, the object_linked column will read TRUE for all objects. To see which objects were not linked by ``Sorcha``, this variable must be set to False.
 
 .. _ephem_output:
   
 Ephemeris Output
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Optionally (with the **--ew** flag set at the command line), an ephemeris file of all detections near the
-field can be generated to a separate file, which can then be provided back to ``Sorcha`` as an optional external ephemeris file with the **-er** flag.
+Optionally (with the **--ew (--ephem-write)** flag set at the command line), an ephemeris file of all detections near the
+field can be generated to a separate file, which can then be provided back to ``Sorcha`` as an optional external ephemeris file with the **--er (--ephem-read)** flag.
 More information can be found on this functionality, including the output columns, in the :ref:`Ephemeris Generation<ephemeris_gen>` section of the documentation.
 
-The format of the outputted ephemeris file is controlled by the **eph_format** configuration keyword in the Inputs section of the :ref:`configuration file<configs>`e::
+The format of the outputted ephemeris file is controlled by the **eph_format** configuration keyword in the Inputs section of the :ref:`configuration file<configs>` ::
 
    [INPUT]
    ephemerides_type = external
    eph_format = csv
 
 .. attention::
-   Users should note that output produced by reading in a previously-generated ephemeris file will be in a different order than the output produced when running the ephemeris generator within ``Sorcha``. This is simply a side-effect of how  ``Sorcha`` reads in ephemeris files and does not affect the actual content of the output.
+   Users should note that output produced by reading in a previously generated ephemeris file will be in a different order than the output produced when running the ephemeris generator within ``Sorcha``. This is simply a side-effect of how  ``Sorcha`` reads in ephemeris files and does not affect the actual content of the output.
 
 .. tip::
    If instead you want to know which of the input small body population lands in the survey observations with an estimate of their apparent magnitude wihtout applying any other cuts or filters on the detections (not including discovery efficiency and linking effects), you can use/adapt the :ref:`known_config` example :ref:`configs`.

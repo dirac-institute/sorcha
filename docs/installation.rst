@@ -72,68 +72,16 @@ If using mamba::
 
    mamba install -c conda-forge sorcha
 
-You can install ``Sorcha`` via from pypi using pip, but installation via  conda/mamba is recommended. 
+You can install ``Sorcha`` via from PyPi using pip, but installation via  conda/mamba is recommended. 
 
 If using pip::
 
    pip install sorcha
 
-.. _installation_aux:
-
-Downloading Required Supplemental Files
-----------------------------------------
-
-To run ``Sorcha``'s built in :ref:`ephemeris generator<ephemeris_gen>`, you will need to download the auxiliary files required by  assist and rebound for performing the N-body integrations. 
-  
-To install the necessary `SPICE (Spacecraft, Planet, Instrument, C-matrix, Events) <https://naif.jpl.nasa.gov/naif/spiceconcept.html>`_ auxiliary files and other required data files for ephemeris generation (774 MB total in size)::
-
-    sorcha bootstrap
-
-.. note::
-   This script will download and store the auxiliary files in your computer's local cache directory by default. 
-
-.. note::
-   The optional --cache flag allows you to specify a specific location to download the auxillary files. If the files have  already downloaded and want a fresh download, you need to use the -f flag. 
-
-.. warning:: These files can change/be updated with the revised positions of the planets every once in a while. So if you're running simulations for population statistics, we recommend downloading these files to a directory and having all Sorcha runs these files for consistency. 
- 
 Testing Your Sorcha Installation
 ----------------------------------
 
-You can check that the  ``Sorcha`` installation was successful, by obtaining the demo input files and running the demo command. 
-
-The demo input files and configuration file are installed with the socha package. You can run the following command on the command line to copy the files to the current directory (or a different location)::
-
-    sorcha demo prepare
-
-.. note::
-   The optional -p flag allows you to specify a specific location to copy the demo input files. If the files already exist, the  -f flag can be used to force a fresh copy of the files to be generated. .
-
-You can find the command to run the ``Sorcha`` demo on the command line in two ways. First on the command line::
-
-   sorcha demo howto
-
-Or in an interactive python session or jupyter notebook, you can run the following
-
-.. exec::
-
-   from sorcha.utilities.sorcha_demo_command import get_demo_command
-   print(get_demo_command())
-
-.. note::
-   The demo command assumes that the demo input files are in the local directory.
-
-.. tip::
-   If the auxillary files are installed in a different location you will need to specify their location using the --ar flag
-   
-The output will appear in a csv file (testrun_e2e.csv) in your current directory. The first 51 lines of the csv file should look like this (because of the random number generation the values will not be exactly the same):
-
-.. literalinclude:: ../docs/example_files/testrun_e2e.csv
-    :language: text
-    :lines: 1-51
-
-.. tip::
-   Two log files will be created in the current directory. One \*.log and one \*.err. The \*.err log file should be empty if all run successfully. 
+You can check that the  ``Sorcha`` installation was successful, by obtaining the demo input files and running the demo command. The demo input files and configuration file are installed with the ``Sorcha`` package. Further details are provided on the :ref:`quickstart` page.
 
 .. _dev_mode:
 

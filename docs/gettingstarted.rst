@@ -1,60 +1,86 @@
+.. _quickstart:
+
 Getting Started
 =====================
 
-In this tutorial, we will show you how to setup and run a basic simulation using ``Sorcha``. 
+In this demonstration, we will show you how to setup and run a basic simulation using ``Sorcha``. 
+
+.. seealso::
+    ``Sorcha`` is designed to allow multiple instances to be run in parallel in order to accommodate simulations with very large numbers of synthetic planetesimals by breaking up the job across multiple live processes. We recommend first starting with the examples below, before moving on to our :ref:`parallel processing/high-performance computing (HPC) guide <hpc>`.
+
+Grab All The Demo Files
+-------------------------
+
+Use the following command to copy all the demo :ref:`inputs <inputs>` and :ref:`configuration file <configs>` to your local directory::
+
+   sorcha demo prepare
+
+.. note::
+  All input data files in this example are white-space separated format solely for the ease of reading.
+
+
+.. note::
+   The optional -p (--path) flag allows you to specify a specific location to copy the demo input files. The demo command you will be using expects these files will be in your current workingn directory.
 
 .. tip::
-   In this tutorial,  we demonstrate how to run a single instance of ``Sorcha``. ``Sorcha`` is designed to allow multiple instances to be run in parallel in order to accommodate simulations with very large numbers of synthetic planetesimals by breaking up the job across multiple live processes. We recommend first starting with the examples below, before moving on to parallel processing.
+    If the files already exist and you want a fresh copy, the -f (--force)  flag can be used to force a fresh copy of the files to be generated.
 
+Orbit and Physical Parameters Files For the Input Solar System Small Body Population
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. important::
-  You can copy all the files used in this tutorial to your local directory  via the **sorcha demo prepare** command. 
+Orbit File
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. note::
-  All input data files in this example are white-space separated format solely for the ease of reading.   
+The :ref:`orbits` in the demo set is labeled **sspp_testset_orbits.des**, which contains the orbits of five synthetic objects:
 
-Creating the Orbit and Physical Parameter Files For the Synthetic Solar System Populations
---------------------------------------------------------------------------------------------
-The first step in the process is to generate a set of files which describe the orbital and physical parameters
-of our synthetic Solar System population that we wish to input into the simulator. 
-
-Making the Orbit File
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-First, we will start with creating an :ref:`orbits`, and generate a file called 'sspp_testset_orbits.des', which contains the orbits of five synthetic objects The contents of the file is below:
-
-.. literalinclude:: ../demo/sspp_testset_orbits.des
+.. literalinclude:: ../src/sorcha/data/demo/sspp_testset_orbits.des
     :language: text
 
-Make the Physical Parameters File
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Physical Parameters File
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Next, we need to produce the :ref:`physical`, which we call 'sspp_testset_colours.txt'. This file assigns colors, phase curve properties, and absolute magnitudes to each of the simulated small bodies whose orbits are defined in our input orbit file. The contents of the file is below:
+The :ref:`physical` is named **sspp_testset_colours.txt**. This file assigns colors, phase curve properties, and absolute magnitudes to each of the simulated small bodies whose orbits are defined in our input orbit file. The contents of the file are below:
 
-.. literalinclude:: ../demo/sspp_testset_colours.txt
+.. literalinclude:: ../src/sorcha/data/demo/sspp_testset_colours.txt
     :language: text
 
 .. note::
-  For this tutorial, we have defined chosen the main filter to be r-band. In the following configuration file, we will list the r filter first when we have to input our list of filters to use. 
+  For this demo, we have defined chosen the main filter to be r-band.
 
-Getting the Pointing Database 
-------------------------------------------
-For this tutorial, we're using the first year of the baseline v2.0 LSST cadence simulation as the :ref:`pointing`.
+Survey Pointing Database 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Setting Up Sorcha's Configuration File 
-------------------------------------------
+We'll be using the first year of the baseline v2.0 ``rubin_sim`` LSST cadence simulation as the :ref:`pointing` (**baseline_v2.0_1yr.db**).
 
-The key information about the simulation parameters are held in the configuration file. For further details check out our :ref:`configs` page. We'll be using the configuration file we have set up to get you started. The contents of the file is below: 
+Configuration File 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The **sorcha_config_demo.ini** :ref:`configs` will initalize ``Sorcha``. The contents of the file are below: 
 
 .. literalinclude:: ../demo/sorcha_config_demo.ini
     :language: text
 
 .. note::
-  For this tutorial, we have set up ``Sorcha`` to only find detections on g,r,i,z,u, or y filter observations, by what we have set the **observing_filters** parameter to. Since we specified the absolute magnitude and colors for our synthetic objects to r-band, the r filter starts the list of filters for  **observing_filters**.
+   The demo configuration file sets the  output to be in CSV (comma-separated values) format.   
+
+
+Downloading Auxiliary Files For the Ephemeris Generator
+-----------------------------------------------------------
+
+To run ``Sorcha``'s built in :ref:`ephemeris generator<ephemeris_gen>`, you will need to download the auxiliary files required by  assist and rebound for performing the N-body integrations.
+   
+To install the necessary `SPICE (Spacecraft, Planet, Instrument, C-matrix, Events) <https://naif.jpl.nasa.gov/naif/spiceconcept.html>`_ auxiliary files and other required data files for ephemeris generation (774 MB total in size)::
+
+    sorcha bootstrap
 
 .. note::
-   This config file sets the  output to be in CSV format.   
+   This script will download and store the auxiliary files in your computer's local cache directory by default which is where the demo command will expect the files are installed. The optional --cache flag allows you to specify a specific location to download the auxiliary files. If the files have  already downloaded and want a fresh download, you need to use the -f flag. 
 
+.. warning:: These files can change/be updated with the revised positions of the planets every once in a while. So if you're running simulations for population statistics, we recommend downloading these files to a directory and having all Sorcha runs these files for consistency.
+
+
+.. tip::
+   If the auxiliary files are installed in a different location you will need to specify their location using the --ar flag when running ``Sorcha``
 
 Running Sorcha
 ----------------------
@@ -81,20 +107,32 @@ Or you can in an interactive python session or jupyter notebook. You can run the
    from sorcha.utilities.sorcha_demo_command import get_demo_command
    print(get_demo_command())
 
+Four files will be created in the current directory after you run the **sorcha run** command. Two will be log files (.log and .err). The other two files will be CSV (comma-separated values; .csv) files.
 
 .. tip::
-   ``Sorcha`` outputs a log file (*.log) and error file (*.err) in the output directory. If all has gone well, the error file will be empty. The log file has the configuration parameters outputted to it as a record of the run setup.
+   The log files have One \*.log with information about the run  and one \*.err that is used to save error messages from the run. The \*.err log file should be empty if ``Sorcha`` ran successfully.
 
-The output will appear in a csv file (testrun_e2e.csv) in your current directory. The first 51 lines of the csv file should look something like this:
+One of the files will be the  :ref:`detections file <detections>` (information about each observation of the input small body population in the simulated astronomical survey) will appear in a CSV file (**testrun_e2e.csv**) in your current directory. The first 21 lines of this CSV file should look like this (because of the random number generation the values will not be exactly the same):
 
 .. literalinclude:: ../docs/example_files/testrun_e2e.csv
     :language: text
-    :lines: 1-51
+    :lines: 1-21
 
-.. note:: The values will not be exactly the same because of the different random number generator seed applied each time ``Sorcha`` runs. We use the random generator to adjust the calculated values to be within the measurement precision/uncertainty both in position (RA/Dec) and apparent magnitude.  
+The last file outputted will be the :ref:`statistics or tally file <statsf>` (**testrun_stats.csv**) in CSV format that has summary statistics about each of the input objects detected by the simulated survey. The first 15  lines of this CSV file should look like this (because of the random number generation the values will not be exactly the same):
+
+.. literalinclude:: ../docs/example_files/testrun_stats.csv
+    :language: text
+    :lines: 1-15
 
 .. tip::
    If you want to run this command a second time you'll need to add a **-f** flag to the command line to force overwriting output files that already were exist in the output directory. Do note that the previous run's log and error log files will not be removed. New log files are generated at each run.  
 
-.. warning::
-   Only one instance of ``Sorcha`` should be run per output directory to ensure that distinct log and error files are created for each ``Sorcha`` run. Make sure to have different output pathways if you are running multiple instances on the same compute node.
+Available Commands Within Sorcha
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+To see all the commands/utilities available within ``Sorcha``, run::
+
+   sorcha --help
+
+.. literalinclude:: ./example_files/sorcha_help.txt
+    :language: text
