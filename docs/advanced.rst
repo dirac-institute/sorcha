@@ -9,7 +9,7 @@ Advanced User Features
 Setting the Random Number Generator Seed
 ---------------------------------------------
 
-The value used to seed the random number generator can be specified via the **SORCHA_SEED** environmental variable. This allows for ``Sorcha``  to be fully reproducibly run with (if using a bash shell or Z-shell)::
+The value used to seed the random number generator can be specified via the **SORCHA_SEED** environmental variable. This allows for ``Sorcha`` to be fully reproducibly run with (if using a bash shell or Z-shell)::
 
    export SORCHA_SEED=52
 
@@ -69,18 +69,18 @@ Applying :ref:`trailing losses<trailing>` is on by default, but it can be turned
 Turning off Detection Efficiency/Applying the Fading Function
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The :ref:`survey detection efficiency<fading>` is disabled if the fading function ([FADINGFUNCTION]) section of the :ref:`configs` is removed or not included (when **fading_function_width** and **fading_function_peak_efficency** have not been provided).
+The :ref:`survey detection efficiency<fading>` is disabled if the fading function ([FADINGFUNCTION]) section of the :ref:`configs` is removed or not included (when **fading_function_width** and **fading_function_peak_efficiency** have not been provided).
 
 Turning Off the Camera Footprint Filter
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-In rare instances you may need to skip the  :ref:`camera footprint filter<footprint>` and turn it off. This can be done by setting the camera model to none in the field-of-view (FOV) section of the :ref:`configs`::
+In rare instances you may need to skip the :ref:`camera footprint filter<footprint>` and turn it off. This can be done by setting the camera model to none in the field-of-view (FOV) section of the :ref:`configs`::
 
     [FOV]
     camera_model = none
 
 .. note::
-    If you're using ``Sorcha``'s bult-in :ref:`ephemeris generator<ephemeris_gen>`, the generator will apply a circular search region around each filed pointing when associating potential input population detections with the survey observations. 
+    If you're using ``Sorcha``'s built-in :ref:`ephemeris generator<ephemeris_gen>`, the generator will apply a circular search region around each filed pointing when associating potential input population detections with the survey observations. 
 
 
 SNR/Apparent Magnitude Filters
@@ -95,7 +95,7 @@ below a user-defined SNR threshold; or the magnitude limit, to remove all observ
 of objects above a user-defined **trailed source magnitude** threshold. 
 **These filters are applied before the detection efficiency (fading function) is applied in** ``Sorcha``. 
 
-The SNR filter which will remove synthetic observations that are less than a user-supplied  SNR limit, To implement the SNR limit (in this example to keep synthetic observations of input objects with a SNR > =2) include the following in the config file::
+The SNR filter which will remove synthetic observations that are less than a user-supplied SNR limit, To implement the SNR limit (in this example to keep synthetic observations of input objects with a SNR > =2) include the following in the config file::
 
     [EXPERT]
     SNR_limit = 2.0
@@ -109,7 +109,7 @@ To implement the magnitude limit (remove detections of objects fainter than 22 m
     Only one of these filters may be implemented at once.
 
 .. seealso::
-  We have an `example Jupyter notebook <notebooks/demo_MagnitudeAndSNRCuts.ipynb>`_  demonstrating how these filters work within ``Sorcha``.
+  We have an `example Jupyter notebook <notebooks/demo_MagnitudeAndSNRCuts.ipynb>`_ demonstrating how these filters work within ``Sorcha``.
 
 
 Faint Object Culling Filter
@@ -120,7 +120,7 @@ within the LSST before ephemeris generation begins. This has the benefit of pote
 speeding up simulations by removing the overhead of ephemeris generation for these unobservable
 objects.
 
-The filter calculates a maximum apparent trailed source magnitude in each survey observing  filter (with any relevant
+The filter calculates a maximum apparent trailed source magnitude in each survey observing filter (with any relevant
 activity or light curve brightness modifiers) per object, and checks if all of them are brighter than
 2 + the faintest survey observation per respective filter (as obtained from the pointing database). If
 the object is fainter in **all** filters, then it is dropped and not simulated further.
@@ -146,7 +146,7 @@ To implement the faint object culling filter, include the following in the :ref:
 Modifying the Ephemeris Generator Interpolation
 --------------------------------------------------
 
-A user can update the number of sub-intervals for the Lagrange ephemerides interpolation used within ``Sorcha``'s internal ephemeris generator. By default this value is set to **101**, but the user can update it to a different value. 101 works for most orbits, but it may be worth exploring using a different value if you're modeling Earth impactors and very close Near-Earth Objects (NEOs). To change the number of sub-intervals, **ar_n_sub_intervals** variable is  added to the ([SIMULATION]) section::
+A user can update the number of sub-intervals for the Lagrange ephemerides interpolation used within ``Sorcha``'s internal ephemeris generator. By default, this value is set to **101**, but the user can update it to a different value. 101 works for most orbits, but it may be worth exploring using a different value if you're modeling Earth impactors and very close Near-Earth Objects (NEOs). To change the number of sub-intervals, **ar_n_sub_intervals** variable is added to the ([SIMULATION]) section::
 
     [SIMULATION]
     ar_n_sub_intervals = 122
@@ -159,7 +159,7 @@ A user can update the number of sub-intervals for the Lagrange ephemerides inter
 Specifying Alternative Versions of the Auxiliary Files Used in the Ephemeris Generator 
 -----------------------------------------------------------------------------------------
 
-For backwards combability and to enable new version of the files to be run as well, users can override the default filenames and download locations of the :ref:`auxiliary files<auxfiles>` used by ``Sorcha``'s bult-in :ref:`ephemeris generator<ephemeris_gen>`.  These :ref:`configs`: variables are added to a new auxiliary ([AUXILIARY]) section::
+For backwards compatibility and to enable new version of the files to be run as well, users can override the default filenames and download locations of the :ref:`auxiliary files<auxfiles>` used by ``Sorcha``'s built-in :ref:`ephemeris generator<ephemeris_gen>`.  These :ref:`configs`: variables are added to a new auxiliary ([AUXILIARY]) section::
 
 
     [AUXILIARY]
@@ -198,7 +198,7 @@ For backwards combability and to enable new version of the files to be run as we
    You can specify one or any number of the filenames or URLs. 
  
 .. note::
-   If you make changes to the filenames or the download URLs, you'll likely need to first remove meta_kernel.txt  from the auxiliary cache (the directory these files are stored in) or specify a different filename name for meta_kernel file in the config file so that it can be rebuilt with the appropriate names.  
+   If you make changes to the filenames or the download URLs, you'll likely need to first remove meta_kernel.txt from the auxiliary cache (the directory these files are stored in) or specify a different filename name for meta_kernel file in the config file so that it can be rebuilt with the appropriate names.  
 
 .. note:: 
    ``Sorcha`` checks if the :ref:`auxiliary files<auxfiles>` exist in the cache directory first before attempting to download any missing files and copies them over into the default filenames. 
@@ -223,10 +223,10 @@ For example, you could state this in your configuration file to get the object I
    late in the code, upon output.
 
 
-Specifying the Decimal Precision for the Photometric and Astrometric  Values 
+Specifying the Decimal Precision for the Photometric and Astrometric Values 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-By default, no rounding is performed on any of the output values. We recommend that you do not change the decimal place precision  and instead leave ``Sorcha`` to output the full value to machine precision, but there may be reasons why you need to reduce the size of the output.
+By default, no rounding is performed on any of the output values. We recommend that you do not change the decimal place precision and instead leave ``Sorcha`` to output the full value to machine precision, but there may be reasons why you need to reduce the size of the output.
 
 In the [OUTPUT] section of the :ref:`configs`, you can set the decimal precision for the astrometry outputs::
 
