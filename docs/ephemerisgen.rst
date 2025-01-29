@@ -10,7 +10,7 @@ Ephemeris Generator
 
 
 .. seealso::
-   For a more detailed description of ``Sorcha``'s ephemeris generation stage  please see Holman et al. (submitted).
+   For a more detailed description of ``Sorcha``'s ephemeris generation stage  please see `Holman et al. (submitted)<https://www.dropbox.com/scl/fi/lz1lmua2s0yf9t9a2gpmm/sorcha_ephemeris_generation_paper.pdf?rlkey=blm9u4zbk0ci1i4lc5yqz8dbs&e=1&dl=0>`.
 
 How It Works
 --------------------------------------------------------
@@ -72,7 +72,7 @@ There are several tunable options for the ephemeris generation which are describ
 - Field of view of our search field (in degrees) (**ar_ang_fov** configuration parameter)
 - Buffer zone around the field of view we want to include (in degrees) (**ar_fov_buffer** configuration parameter)
 - Picket length (in days) (**ar_picket** configuration parameter) 
-- Order of healpix used by healpy (*ar_healpix_order** configuration parameter)
+- Order of healpix used by healpy (**ar_healpix_order** configuration parameter)
 
 To use ``Sorcha``'s internal ephemeris generation engine, the configuration file should contain::
 
@@ -103,7 +103,7 @@ Required Auxiliary Files
 A number of auxiliary files available from the `Minor Planet Center <https://www.minorplanetcenter.net/data>`_  and `NASA's Navigation and Ancillary Information Facility (NAIF) <https://naif.jpl.nasa.gov/pub/naif/generic_kernels/>`_ are required for ephemeris generation:
 
 - **naif0012.tls** is the leap second file. This changes whenever there is a new leap second. The last was in 2017.
-- **"earth_620120_240827.bpc** is the historical Earth orientation specification. This should not change, unless there is a new model.
+- **earth_620120_240827.bpc** is the historical Earth orientation specification. This should not change, unless there is a new model.
 - **earth_200101_990827_predict.bpc** is a prediction of the Earth's future orientation. Likewise, this should not change.
 - **pck00010.tpc** contains orientation information and physical constants for other bodies. This should only change rarely.
 - **de440s.bsp** gets planetary ephemerides.
