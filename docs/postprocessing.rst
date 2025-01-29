@@ -104,16 +104,16 @@ Accounting for Cometary Activity and Rotational Light Curves
 
 ``Sorcha`` has the capability of accounting for the rotational light curve and cometary activity effects on the calculated trailed source magnitude. Further details are available in the :ref:`addons` section. 
 
-Applying Trailing Losses and Calculating the PSF Magnigtude
+Applying Trailing Losses and Calculating the PSF Magnitude
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Once ``Sorcha`` calculates the trailed source magnitude for all potential detections, it then calculates the PSF magnitude for each potential detection accoutning for trailing losses (the effect that the simulated moving object does not have a perfect point-source PSF but is instead elongated due the object's on-sky motion). simulated moving object is moving fast enough in the potential detection's observation, the flux wouldform a trail (elongated source on the image in the direction of the object's motion), changing the apparent magnitude that the survey's source deteciton software will measure as well as decrease the SNR of the trailed soruce magnitude compared to a point source. ``Sorcha``'s trailing loss functions calculates these trailing losses to be used by the rest of the post-processing stage. 
+Once ``Sorcha`` calculates the trailed source magnitude for all potential detections, it then calculates the PSF magnitude for each potential detection accounting for trailing losses (the effect that the simulated moving object does not have a perfect point-source PSF but is instead elongated due the object's on-sky motion). Simulated moving object is moving fast enough in the potential detection's observation, the flux would form a trail (elongated source on the image in the direction of the object's motion), changing the apparent magnitude that the survey's source detection software will measure as well as decrease the SNR of the trailed source magnitude compared to a point source. ``Sorcha``'s trailing loss functions calculates these trailing losses to be used by the rest of the post-processing stage. 
 
-In order to estimate the astrometric and photometric uncertainties and determine the PSF magnitude, \sorcha calculates for each potential detection the equivalent photometric losses caused by the elongated PSFs. \sorcha calculates these losses as magnitude offsets to the trailed source magnitude. ``Sorcha`` uses the trailing loss implementation developed by `Jones et al. (2018) <https://ui.adsabs.harvard.edu/abs/2018Icar..303..181J/abstract>`_ and ther best=fit values for the parameterizations estimated for the LSST.
+In order to estimate the astrometric and photometric uncertainties and determine the PSF magnitude, \sorcha calculates for each potential detection the equivalent photometric losses caused by the elongated PSFs. \sorcha calculates these losses as magnitude offsets to the trailed source magnitude. ``Sorcha`` uses the trailing loss implementation developed by `Jones et al. (2018) <https://ui.adsabs.harvard.edu/abs/2018Icar..303..181J/abstract>`_ and their best-fit values for the parametrizations estimated for the LSST.
 
 There are two different trailing losses that must be calculated. The first is the trailing loss due to the smearing of the photometric signal over a larger number of pixels than for a point-source PSF, :math:`\Delta m(\textrm{PSF})`, the **PSF trailing loss**. The second is the trailing loss due to the Rubin Data Management software  detection algorithm attempting to identify sources on the image using a stellar PSF-like matched filter. We refer to this as the **detection trailing loss**,  :math:`\Delta m(\textrm{PSF + detection})`, as it accounts for both the matched filter excluding part of the trail and the SNR losses due to the object's flux being distributed differently than a point source for the pixels that are included by the detection algorithm. 
 
-The PSF magnitude (:math:`m_{\textrm{PSF}}`) and the  trailed source magnitude (:math:`m_{\textrm{trailed source}}`) are related by:
+The PSF magnitude (:math:`m_{\textrm{PSF}}`) and the trailed source magnitude (:math:`m_{\textrm{trailed source}}`) are related by:
 
 .. math::
   m_{\textrm{PSF}} = m_{\textrm{trailed source}}+\Delta m(\textrm{PSF + detection}) 
@@ -142,20 +142,20 @@ outer MBAs (main-belt asteroids), a Jupiter Trojan, and inner and outer MBAs (ma
 
 .. _randomization:
 
-Applying Photometric and Astrometric Uncertainitie and Randomization
+Applying Photometric and Astrometric Uncertainties and Randomization
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Real astronomical surveys measure photometry and astrometry that have uncertainities. To better compare to what the survey detected,  For each potential detection of the input small body population, ``Sorcha`` applies photometric and astrometric errors that modify the calculated values for the right acension, declination, trailed source magnitude, and PSF masgnitude. ``Sorcha`` computes the uncertainties for each potential detection of the input 
+Real astronomical surveys measure photometry and astrometry that have uncertainties. To better compare to what the survey detected, for each potential detection of the input small body population, ``Sorcha`` applies photometric and astrometric errors that modify the calculated values for the right ascension, declination, trailed source magnitude, and PSF masgnitude. ``Sorcha`` computes the uncertainties for each potential detection of the input 
 population and use them to characterize a normal distribution with a mean equal to the true value. Full details are provided in Merritt et al. (submitted). 
 
 .. note::
-    As a compromise between low-probability detections and unrealistic magnitude uncertainties producing “fake detections”, by default ``Sorcha`` removes all observations with the trailed source magnitude SNR is less than 2 after calculating the astronometric and photometric uncertainties.
+    As a compromise between low-probability detections and unrealistic magnitude uncertainties producing “fake detections”, by default ``Sorcha`` removes all observations with the trailed source magnitude SNR is less than 2 after calculating the astrometric and photometric uncertainties.
 
 .. warning::
     Right now ``Sorcha`` only has functions to compute the photometric and astrometric uncertainties and SNR estimations specifically for Rubin Observatory.       
 
 .. seealso::
-  We have a `Jupyter notebook <notebooks/demo_UncertaintiesAndRandomization.ipynb>`__  demonstrating the application of the uncertainities and radnomization of the photometric and astrometric values within ``Sorcha``. 
+  We have a `Jupyter notebook <notebooks/demo_UncertaintiesAndRandomization.ipynb>`__  demonstrating the application of the uncertainties and randomization of the photometric and astrometric values within ``Sorcha``. 
 
 
 Validating Sorcha's Trailed Source Magnitude Calculations
@@ -175,13 +175,13 @@ Cometary Activity or Simulating Other Active Objects
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
-A user can use the cometary activity prescriptions available in the `Sorcha add-ons <https://github.com/dirac-institute/sorcha-addons>`_ package or add their own class to apply a different comentary activity model in a custom version of the ``Sorcha add-ons`` package.  Once the ``Sorcha add-ons`` package is installed, ``Sorcha`` will automatically detect the available plugins and make them available during processing.
+A user can use the cometary activity prescriptions available in the `Sorcha add-ons <https://github.com/dirac-institute/sorcha-addons>`_ package or add their own class to apply a different cometary activity model in a custom version of the ``Sorcha add-ons`` package.  Once the ``Sorcha add-ons`` package is installed, ``Sorcha`` will automatically detect the available plugins and make them available during processing.
 
 
 Cometary Activity Configuration Parameters
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Set the **cometary_activity** :ref:`configuration file<configs>` file varialble to **none** if you do you want to apply any cometary activity brightness enhancements to ``Sorcha``'s apparent magnitude calculations. 
+Set the **cometary_activity** :ref:`configuration file<configs>` file variable to **none** if you do you want to apply any cometary activity brightness enhancements to ``Sorcha``'s apparent magnitude calculations. 
 
 .. code-block::
 
@@ -214,7 +214,7 @@ Rotational Lightcurve Effects
 Rotational Light Curve Configuration Parameters
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-A user can use the rotational light curve prescriptions available in the `Sorcha add-ons <https://github.com/dirac-institute/sorcha-addons>`_ package or add their own class to apply a different model for rotation effects  in a custom version of the ``Sorcha add-ons`` package.  Once the ``Sorcha add-ons`` package is installed, ``Sorcha`` will automatically detect the available plugins and make them available during processing.
+A user can use the rotational light curve prescriptions available in the `Sorcha add-ons <https://github.com/dirac-institute/sorcha-addons>`_ package or add their own class to apply a different model for rotation effects in a custom version of the ``Sorcha add-ons`` package.  Once the ``Sorcha add-ons`` package is installed, ``Sorcha`` will automatically detect the available plugins and make them available during processing.
 
 .. code-block::
 
@@ -283,7 +283,7 @@ further from the center of the FOV have shallower depths.
 Applying the Camera Footprint Filter
 -----------------------------------------
 
-Due to the footprint of the LSST Camera (LSSTCam), see the figure below, it is possible that some object detections  may be lost in
+Due to the footprint of the LSST Camera (LSSTCam), see the figure below, it is possible that some object detections may be lost in
 gaps between the chips.
 
 .. image:: images/Footprint.png
@@ -310,10 +310,10 @@ To include this filter, the following options should be set in the :ref:`configs
     fill_factor = 0.9
 
 .. warning::
-    Note that the :ref:`internal ephemeris generator<ephemeris_gen>` also uses a circular radius for its search area. To get accurate results, the ephemeris generator search radius radius must be set to be larger than the **circle_radius**. For simulating the LSST, we recommend setting **ar_ang_fov = 2.06** and **ar_fov_buffer = 0.2**. Setting the circle_radius to be larger than the radius used for the ephemeris generation stage will have no effect.
+    Note that the :ref:`internal ephemeris generator<ephemeris_gen>` also uses a circular radius for its search area. To get accurate results, the ephemeris generator search radius must be set to be larger than the **circle_radius**. For simulating the LSST, we recommend setting **ar_ang_fov = 2.06** and **ar_fov_buffer = 0.2**. Setting the circle_radius to be larger than the radius used for the ephemeris generation stage will have no effect.
 
 .. tip::
-   Applying the fill factor in the circle radius camera filter is option. If the  **fill_factor** is not present in the :ref:`configs` then ``Sorcha`` includes all potential detections that land within the circular area.  
+   Applying the fill factor in the circle radius camera filter is option. If the **fill_factor** is not present in the :ref:`configs` then ``Sorcha`` includes all potential detections that land within the circular area.  
 
 .. tip::
    For Rubin Observatory, the circle radius should be set to 1.75 degrees with a fill factor of 0.9 to approximate the detector area of LSSTCam.
@@ -327,16 +327,16 @@ To include this filter, the following options should be set in the :ref:`configs
 Full Camera Footprint
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-Using this filter applies a full camera footprint, including chip gaps. The full camera footprint filter figures out which of  the  possible input population detections (as identified by the ephemeris generation stage/input)  for each survey observations land within on the survey camera's detectors. This is the slowest and most accurate version of the footprint filter. The image below shows the full camera footprint filter for the default LSSTCam architecture. 
+Using this filter applies a full camera footprint, including chip gaps. The full camera footprint filter figures out which of the possible input population detections (as identified by the ephemeris generation stage/input) for each survey observations land within on the survey camera's detectors. This is the slowest and most accurate version of the footprint filter. The image below shows the full camera footprint filter for the default LSSTCam architecture. 
 
 
 .. image:: images/full_footprint_filter.png
   :width: 800
-  :alt: Example of how the  full camera footprint filter for LSSTCam. Left plot is a full circle of detections, and on the right shows those detections in the sahpe of the LSSTCam detectors where detector gaps can be seen. 
+  :alt: Example of how the full camera footprint filter for LSSTCam. Left plot is a full circle of detections, and on the right shows those detections in the shape of the LSSTCam detectors where detector gaps can be seen. 
   :align: center
 The effect of the full camera footprint filter on a selection of 100,000 random synthetic sources.
-Left: original sources, distributed over a circular FOV (field-of-view)  of radius 2.1 degrees. Right: the same sources after running
-Sorcha’s full camera footprint filter. The shape of the LSSTCam detector footprint can be seen with the
+Left: original sources, distributed over a circular FOV (field-of-view) of radius 2.1 degrees. Right: the same sources after running
+``Sorcha``’s full camera footprint filter. The shape of the LSSTCam detector footprint can be seen with the
 loss of detections in the raft and chip gaps.
 
 To use the full camera footprint filter, the following option should be set in the :ref:`configs`::
@@ -349,7 +349,7 @@ To use the full camera footprint filter, the following option should be set in t
 .. warning::
     Note that the :ref:`internal ephemeris generator<ephemeris_gen>` uses a circular radius for its search area. To get accurate results, the ephemeris generation search radius must be set to be larger than the **circle_radius**. For simulating the LSST, we recommend setting **ar_ang_fov = 2.06** and **ar_fov_buffer = 0.2**.
 
-Additionally, the camera footprint  model can account for the losses at the edge of the CCDs where the detection software will not be able to pick out sources close to the edge. You can add an exclusion zone around each CCD measured in arcseconds (on the focal plane) using the **footprint_edge_threshold**  key to the configuration file.  An example setup in the :ref:`configs`::
+Additionally, the camera footprint model can account for the losses at the edge of the CCDs where the detection software will not be able to pick out sources close to the edge. You can add an exclusion zone around each CCD measured in arcseconds (on the focal plane) using the **footprint_edge_threshold**  key to the configuration file.  An example setup in the :ref:`configs`::
 
     [FOV]
     camera_model = footprint
@@ -515,12 +515,12 @@ The user sets what observations from the survey :ref:`pointing` will be used by 
 The first observing filters in the list are separated by a comma. The first observing filter listed should is the main filter that the absolute magnitude is defined for.
 The :ref:`physical` must have colors relative to the main filter specified for the input small body population. 
 
-If the user wants to use a subset of the observations, such as only including observations from the first year of the survey, the user can either modify the :ref:`pointing`  or modify the :ref:`pointing` query in the :ref:`configs`. We recommend the user modify the input survey pointing database in this situation.  
+If the user wants to use a subset of the observations, such as only including observations from the first year of the survey, the user can either modify the :ref:`pointing` or modify the :ref:`pointing` query in the :ref:`configs`. We recommend the user modify the input survey pointing database in this situation.  
 
 Expert Advanced Post-Processing Features
 ---------------------------------------------------
 
-Once a user is familiar with ``Sorcha`` and how it works, there are additional :ref:`advanced post-processing tunable features and parameters <advanced>`  available for the  expert user. 
+Once a user is familiar with ``Sorcha`` and how it works, there are additional :ref:`advanced post-processing tunable features and parameters <advanced>` available for the expert user. 
 
 .. danger::
    **With great power comes great responsibility.** If you're new to ``Sorcha`` we **strongly recommend** that you first get familiar with running ``Sorcha`` and how it works before going on to apply any advanced post-processing features as they may produce unintended results. For many use cases, a user will likely not need to touch these parameters within ``Sorcha``.
