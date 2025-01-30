@@ -59,6 +59,7 @@ correct_fadingfunction = {
     "fading_function_on": True,
     "fading_function_width": 0.1,
     "fading_function_peak_efficiency": 1.0,
+    "survey_name": "rubin_sim",
 }
 
 correct_linkingfilter = {
@@ -105,6 +106,7 @@ correct_expert = {
     "randomization_on": True,
     "vignetting_on": True,
     "brute_force": True,
+    "survey_name": "rubin_sim"
 }
 
 correct_auxciliary_URLs = {

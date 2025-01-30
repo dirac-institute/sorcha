@@ -51,6 +51,37 @@ def calcDetectionProbability(mag, limmag, fillFactor=1.0, w=0.1):
     return P
 
 
+def calcDetectionProbabilityDES(mag, limmag, c, k):
+    """
+    Find the probability of a detection given a visual magnitude,
+    limiting magnitude, and fill factor, determined by the fading function
+    from Veres & Chesley (2017).
+
+    Parameters
+    -----------
+    mag : float or array of floats
+        Magnitude of object in filter used for that field.
+
+    limmag : float or array of floats
+        Limiting magnitude of the field.
+
+    c : float or array of floats
+        scaling factor
+
+    k : float or array of floats
+        transition sharpness
+
+    Returns
+    ----------
+    P : float or array of floats
+        Probability of detection.
+    """
+
+    P = c / (1 + np.exp(k * (mag - limmag)))
+
+    return P
+
+
 def PPDetectionProbability(
     eph_df,
     trailing_losses=False,
@@ -60,6 +91,7 @@ def PPDetectionProbability(
     field_id_name="FieldID",
     fillFactor=1.0,
     w=0.1,
+    survey_name=None,
 ):
     """
     Find probability of observations being observable for objectInField output.
@@ -103,9 +135,14 @@ def PPDetectionProbability(
     """
 
     if not trailing_losses:
-        return calcDetectionProbability(
-            eph_df[magnitude_name], eph_df[limiting_magnitude_name], fillFactor, w
-        )
+        if survey_name in ["DES", "des"]:
+            return calcDetectionProbabilityDES(
+                eph_df[magnitude_name], eph_df[limiting_magnitude_name], eph_df["c"], eph_df["k"]
+            )
+        else:
+            return calcDetectionProbability(
+                eph_df[magnitude_name], eph_df[limiting_magnitude_name], fillFactor, w
+            )
     elif trailing_losses:
         return calcDetectionProbability(
             eph_df[magnitude_name] + eph_df[trailing_loss_name],

@@ -418,9 +418,33 @@ class fadingfunctionConfigs:
     fading_function_peak_efficiency: float = None
     """Peak efficiency for the fading function, called the 'fill factor' in Chesley and Veres (2017)."""
 
+    survey_name: str = None
+
     def __post_init__(self):
         """Automagically validates the fading function configs after initialisation."""
-        self._validate_fadingfunction_configs()
+        if self.survey_name in ["DES", "des"]:
+            self._validate_fadingfunction_configs_DES()
+        else:
+            self._validate_fadingfunction_configs()
+
+    def _validate_fadingfunction_configs_DES(self):
+        """
+        Validates the fadindfunction config attributes after initialisation for DES.
+
+        Parameters
+        -----------
+        None.
+
+        Returns
+        ----------
+        None
+        """
+        check_key_exists(self.fading_function_on, "fadingfunction")
+        self.fading_function_on = cast_as_bool(self.fading_function_on, "fadinf_function_on")
+        check_key_doesnt_exist(
+            self.fading_function_peak_efficiency, "fading_function_peak_efficiency", "but survey is DES."
+        )
+        check_key_doesnt_exist(self.fading_function_width, "fading_function_width", "but survey is DES.")
 
     def _validate_fadingfunction_configs(self):
         """
@@ -434,7 +458,6 @@ class fadingfunctionConfigs:
         ----------
         None
         """
-
         if self.fading_function_width is not None and self.fading_function_peak_efficiency is not None:
             self.fading_function_on = True
             # when fading_function_on = true, fading_function_width and fading_function_peak_efficiency now mandatory
@@ -809,7 +832,7 @@ class expertConfigs:
             self.trailing_losses_on = cast_as_bool_or_set_default(
                 self.trailing_losses_on, "trailing_losses_on", True
             )
-        elif self.survey_name in ["DES", "des"]:
+        if self.survey_name in ["DES", "des"]:
             logging.warning(
                 "WARNING: DES simulation does not support trailing losses, vignetting and randomization. These are off by default"
             )
@@ -1130,23 +1153,25 @@ class sorchaConfigs:
         # to be the same as the attributes defined above in lowercase e.g. section INPUT has attribute input
         # general function that reads in config file sections into there config dataclasses
         for section, config_section in section_list.items():
+            extra_args = {}
+            if section == "FILTERS" or section == "FOV" or section == "EXPERT" or section == "FADINGFUNCTION":
+                extra_args["survey_name"] = self.survey_name
+
             if config_object.has_section(section):
-                extra_args = {}
                 if section == "SIMULATION":
                     extra_args["_ephemerides_type"] = self.input.ephemerides_type
-                elif section == "FILTERS":
-                    extra_args["survey_name"] = self.survey_name
+
                 elif section == "SATURATION":
                     extra_args["_observing_filters"] = self.filters.observing_filters
-                elif section == "FOV":
-                    extra_args["survey_name"] = self.survey_name
-                elif section == "EXPERT":
-                    extra_args["survey_name"] = self.survey_name
+
                 section_dict = dict(config_object[section])
                 config_instance = config_section(**section_dict, **extra_args)
 
             else:
-                config_instance = config_section()  # if section not in config file take default values
+
+                config_instance = config_section(
+                    **extra_args
+                )  # if section not in config file take default values
             section_key = section.lower()
             setattr(self, section_key, config_instance)
 

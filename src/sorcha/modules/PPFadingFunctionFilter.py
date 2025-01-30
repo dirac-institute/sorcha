@@ -5,7 +5,7 @@ from .PPDropObservations import PPDropObservations
 from .PPDetectionProbability import PPDetectionProbability
 
 
-def PPFadingFunctionFilter(observations, fillfactor, width, module_rngs, verbose=False):
+def PPFadingFunctionFilter(observations, fillfactor, width, module_rngs, survey_name=None, verbose=False):
     """
     Wrapper function for PPDetectionProbability and PPDropObservations.
 
@@ -37,7 +37,7 @@ def PPFadingFunctionFilter(observations, fillfactor, width, module_rngs, verbose
 
     verboselog("Calculating probabilities of detections...")
     observations["detection_probability"] = PPDetectionProbability(
-        observations, fillFactor=fillfactor, w=width
+        observations, fillFactor=fillfactor, w=width, survey_name=survey_name
     )
 
     verboselog("Dropping observations below detection threshold...")

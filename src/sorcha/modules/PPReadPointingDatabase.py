@@ -59,8 +59,7 @@ def PPReadPointingDatabase(bsdbname, observing_filters, dbquery, surveyname):
         dfo["observationMidpointMJD_TAI"] = dfo["observationStartMJD_TAI"] + (
             (dfo["visitTime"] / 2.0) / 86400.0
         )
-
-    if surveyname in ["DES", "des"]:
+    elif surveyname in ["DES", "des"]:
         dfo["observationStartMJD_TAI"] = dfo["observationMidpointMJD_TAI"] - (
             (dfo["visitExposureTime"] / 2.0) / 86400.0
         )

@@ -331,6 +331,7 @@ def runDESSimulation(args, sconfigs):
                 sconfigs.fadingfunction.fading_function_peak_efficiency,
                 sconfigs.fadingfunction.fading_function_width,
                 args._rngs,
+                survey_name=sconfigs.survey_name,
                 verbose=args.loglevel,
             )
             verboselog("Number of rows AFTER applying fading function: " + str(len(observations.index)))
