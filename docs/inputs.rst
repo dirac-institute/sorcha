@@ -3,7 +3,7 @@
 Inputs
 ==========
 
-``Sorcha`` requires two input files describing the synthetic solar system objects to simulate -- one for the orbital parameters and one for the physical parameters -- as well as survey pointing database. Optionally, the user can provide a pre-generated ephemeris with the positions of each object near the survey pointings and a complex physical parameter file for rotational light curves and cometary activity. Each of these files are described within this section and example files are shown.
+``Sorcha`` requires two input files describing the synthetic solar system objects to simulate -- one for the orbital parameters and one for the physical parameters -- as well as a survey pointing database. Optionally, the user can provide a pre-generated ephemeris file with the positions of each object and a complex physical parameter file for rotational light curves and cometary activity. Each of these files are described within this section and example files are shown.
 
 
 .. image:: images/survey_simulator_flow_chart.png
@@ -74,9 +74,9 @@ Cometary Orbit Format Required Columns
 +=============+==================================================================================+
 | ObjID       | Object identifier for each synthetic planetesimal simulated (string)             |
 +-------------+----------------------------------------------------------------------------------+
-| FORMAT      | Orbit format string (COM for heliocentric or BCOM for barycentric)  		 |
+| FORMAT      | Orbit format string (COM for heliocentric or BCOM for barycentric)  		     |
 +-------------+----------------------------------------------------------------------------------+
-| q           | Perihelion distance(au)	                                                         |
+| q           | Perihelion distance (au)	                                                     |
 +-------------+----------------------------------------------------------------------------------+
 | e           | Eccentricity                                                                     |
 +-------------+----------------------------------------------------------------------------------+
@@ -86,7 +86,7 @@ Cometary Orbit Format Required Columns
 +-------------+----------------------------------------------------------------------------------+
 | argPeri     | Argument of perihelion (degrees)                                                 |
 +-------------+----------------------------------------------------------------------------------+
-| t_p_MJD_TDB | Time of periapsis (years, MJD)                                                   |
+| t_p_MJD_TDB | Time of periapsis (MJD)                                                          |
 +-------------+----------------------------------------------------------------------------------+
 | epochMJD_TDB| Epoch (MJD)                                                                      |
 +-------------+----------------------------------------------------------------------------------+
@@ -249,7 +249,7 @@ Example Physical Parameters File (a HG value is specified for each observing fil
    St500003a 6.67 1.72 0.48 -0.11 -0.12 -0.12 0.15 0.16 0.12 0.20 0.15 0.19
    St500004a 10.2 1.90 0.58 -0.21 -0.30 -0.39 0.15 0.15 0.16 0.15 0.14 0.16
 
-Rubin Observatory will survey the sky in six broadband (optical filters), *u, g, r, i, z,* and *y* . In the physical parameters file, you will specify the object's absolute magnitude in the main filter (as specified in the :ref:`configuration file<configs>` (sually this is g or r band) and then provide the synthetic planetesimal's color in other filters relative to the main filter.
+Rubin Observatory will survey the sky in six broadband (optical filters), *u, g, r, i, z,* and *y* . In the physical parameters file, you will specify the object's absolute magnitude in the main filter as specified in the :ref:`configuration file<configs>` (usually this is g or r band) and then provide the synthetic planetesimal's color in other filters relative to the main filter.
 
 
 Required Physical Parameters File Columns and Format
@@ -268,7 +268,7 @@ Required Physical Parameters File Columns and Format
 +------------------+----------------------------------------------------------------------------------+
 
 .. note::
-  The Phase curve parameters(s) column will not be present if the phase curve function/calculation is set to None in the :ref:`configuration file<configs>'.
+  The Phase curve parameters(s) column will not be present if the phase curve function/calculation is set to None in the :ref:`configuration file<configs>`.
 
 .. note::
   In the :ref:`configuration file<configs>` you can decide which filters you want to have ``Sorcha`` run on and specify which filter is the main filter that the absolute magnitude is defined for. You only need to provide colors for those filters specified in the :ref:`configuration file<configs>`.
@@ -284,7 +284,7 @@ Required Physical Parameters File Columns and Format
 Physical Parameters  File Configuration Parameters
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-``Sorcha`` is initialized for the format of the input physical parameters file through the :ref:`configuration file<configs>` INPUT, FILTERS. and PHASECURVES sections:
+``Sorcha`` is initialized for the format of the input physical parameters file through the :ref:`configuration file<configs>` INPUT, FILTERS, and PHASECURVES sections:
 
 .. code-block::
 
