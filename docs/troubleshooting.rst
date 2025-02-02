@@ -6,7 +6,7 @@ Troubleshooting
 
 Have You Checked the Error Log File?
 ---------------------------------------------------------------
-If ``Sorcha`` runs successfully the .err log file created will be empty. If the software exited gracefully with an error it will print error statements to the error log file. If ``Sorcha'' looks like it completed but you're not getting the expected output, the .err log file is the first place to check. 
+If ``Sorcha`` runs successfully the .err log file created will be empty. If the software exited gracefully with an error it will print error statements to the error log file. If ``Sorcha`` looks like it completed but you're not getting the expected output, the .err log file is the first place to check. 
 
 .. tip::
    You can also usee the **-l** flag to set get more detailed and informative messages in the log file produced by **sorcha run**. 
@@ -14,7 +14,7 @@ If ``Sorcha`` runs successfully the .err log file created will be empty. If the 
 Using Relative File Paths
 ---------------------------------------------------------------
 
-If you're using relative paths (e.g. '../this_directory') and those do not seem to be working, try using the full directory/file paths.
+If you're using relative paths (e.g. '../this_directory') and those do not seem to be working, try using the absolute directory/file paths.
 
 Running Multiple Instances With the Same Output Directories
 ---------------------------------------------------------------
@@ -42,7 +42,7 @@ If you see an error like::
 
    ERROR: PPReadPointingDatabase: SQL query on pointing database failed. Check that the query is correct in the config file.
 
-it might be your computer setup. SQLite uses a temporary store to hold temporary files, and if it configured on your machine with a small quota you might get an error. You can fix this by setting the SQLITE_TEMPDIR environment variable to a folder in your working directory. Then if this variable is defined, SQLite will automatically default to using this pathway for its temporary store. 
+The issue may be your computer setup. SQLite uses a temporary store to hold temporary files, and if it configured on your machine with a small quota you might get an error. You can fix this by setting the SQLITE_TEMPDIR environment variable to a folder in your working directory. Then if this variable is defined, SQLite will automatically default to using this pathway for its temporary store. 
 
 Mismatch in Inputs 
 ---------------------
@@ -55,7 +55,7 @@ physical/complex physical  parameter value, so if you get an error like::
 
    ERROR: PPCheckOrbitAndColourMatching: input colour/cometary parameter and orbit files do not match.
 
-then make sure to check that you have entries in all the input files for each object you wish to simulate.
+Check that you have entries in all the input files for each object you wish to simulate.
 
 
 ERROR: Unable to find ObjID column headings (OrbitAuxReader:....)
