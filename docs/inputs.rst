@@ -69,27 +69,27 @@ Example Orbit File in Cometary Format
 Cometary Orbit Format Required Columns
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-+-------------+----------------------------------------------------------------------------------+
-| Keyword     | Description                                                                      |
-+=============+==================================================================================+
-| ObjID       | Object identifier for each synthetic planetesimal simulated (string)             |
-+-------------+----------------------------------------------------------------------------------+
-| FORMAT      | Orbit format string (COM for heliocentric or BCOM for barycentric)  		     |
-+-------------+----------------------------------------------------------------------------------+
-| q           | Perihelion distance (au)	                                                     |
-+-------------+----------------------------------------------------------------------------------+
-| e           | Eccentricity                                                                     |
-+-------------+----------------------------------------------------------------------------------+
-| inc         | Inclination (degrees)                                                            |
-+-------------+----------------------------------------------------------------------------------+
-| node        | Longitude of the ascending node (degrees)                                        |
-+-------------+----------------------------------------------------------------------------------+
-| argPeri     | Argument of perihelion (degrees)                                                 |
-+-------------+----------------------------------------------------------------------------------+
-| t_p_MJD_TDB | Time of periapsis (MJD)                                                          |
-+-------------+----------------------------------------------------------------------------------+
-| epochMJD_TDB| Epoch (MJD)                                                                      |
-+-------------+----------------------------------------------------------------------------------+
++-------------+--------------------------------------------------------------------------------------------+
+| Keyword     | Description                                                                                |
++=============+============================================================================================+
+| ObjID       | Object identifier for each synthetic planetesimal simulated (string)                       |
++-------------+--------------------------------------------------------------------------------------------+
+| FORMAT      | Orbit format string (COM for heliocentric or BCOM for barycentric)                         |
++-------------+--------------------------------------------------------------------------------------------+
+| q           | Perihelion distance (au)	                                                           |
++-------------+--------------------------------------------------------------------------------------------+
+| e           | Eccentricity                                                                               |
++-------------+--------------------------------------------------------------------------------------------+
+| inc         | Inclination (degrees)                                                                      |
++-------------+--------------------------------------------------------------------------------------------+
+| node        | Longitude of the ascending node (degrees)                                                  |
++-------------+--------------------------------------------------------------------------------------------+
+| argPeri     | Argument of perihelion (degrees)                                                           |
++-------------+--------------------------------------------------------------------------------------------+
+| t_p_MJD_TDB | Time of periapsis specified as Mean Julian Date (MJD) in TDB (Barycentric Dynamical Time)  |
++-------------+--------------------------------------------------------------------------------------------+
+| epochMJD_TDB| Epoch specified as Mean Julian Date (MJD) in TDB (Barycentric Dynamical Time)              |
++-------------+--------------------------------------------------------------------------------------------+
 
 Keplerian Orbit Format
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -128,7 +128,7 @@ Keplerian Orbit Format Required Columns
 +-------------+----------------------------------------------------------------------------------+
 | ma          | Mean Anomaly (degrees)                                                           |           
 +-------------+----------------------------------------------------------------------------------+
-| epochMJD_TDB| Epoch (MJD)                                                                      |
+| epochMJD_TDB| Epoch specified as Mean Julian Date (MJD) in TDB (Barycentric Dynamical Time)    |
 +-------------+----------------------------------------------------------------------------------+
 
 Cartesian Orbit Format
@@ -172,7 +172,7 @@ Cartesian Orbit Format Required Columns
 +-------------+----------------------------------------------------------------------------------+
 | zdot        | heliocentric or barycentric velocity on the ecliptic z axis (au/day)             |
 +-------------+----------------------------------------------------------------------------------+
-| epochMJD_TDB| Epoch (MJD)                                                                      |
+| epochMJD_TDB| Epoch specified as Mean Julian Date (MJD) in TDB (Barycentric Dynamical Time)    |
 +-------------+----------------------------------------------------------------------------------+
 
 .. note::
@@ -448,6 +448,27 @@ Example Camera Footprint File
     :language: text
     :lines: 1-20
 
+Required Camera Footprints File Columns and Format
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
++--------------------------+-----------------------------------------------------------------------------------------+
+| Keyword                  | Description                                                                             |
++==========================+=========================================================================================+
+| detector                 | Detector identifier (integer)                                                           |
++--------------------------+-----------------------------------------------------------------------------------------+
+| x                        | x position of the detector corner on the focal plane (float)                            |
++--------------------------+-----------------------------------------------------------------------------------------+
+| y                        | y position of the detector corner on the focal plane (float)                            |
++--------------------------+-----------------------------------------------------------------------------------------+
+
+
+.. note::
+   The x and y values are unitless and are respectively equal to
+   tan(ra) and tan(dec) , where ra and dec are the vertical and horizontal
+   angles of the points from the center of the sphere tangent to the origin
+   in the focal plane. For each detector, all four corners must be specified
+   in the camera footprint file.
+
 Camera Footprint File Configuration Parameters
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 You can set whether you're using a camera footprint file and the location of the file in the :ref:`configuration file<configs>` FOV section:
@@ -509,57 +530,59 @@ Example Ephemeris File
     :language: text
     :lines: 1-20
 
+
 Required Ephemeris File Columns and Format
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-+--------------------------+----------------------------------------------------------------------------------+
-| Keyword                  | Description                                                                      |
-+==========================+==================================================================================+
-| ObjID                    | Object identifier for each synthetic planetesimal simulated (string)             |
-+--------------------------+----------------------------------------------------------------------------------+
-| FieldID                  | Observation pointing field identificator                                         |
-+--------------------------+----------------------------------------------------------------------------------+
-| FieldMJD_TAI             | Observation Mean Julian Date                                                     |
-+--------------------------+----------------------------------------------------------------------------------+
-| AstRange(km)             | Topocentric distance to the synthetic planetesimal                               |
-+--------------------------+----------------------------------------------------------------------------------+
-| AstRangeRate(km/s)       | Radial component of the object’s topocentric velocity (km/s)                     |
-+--------------------------+----------------------------------------------------------------------------------+
-| AstRA(deg)               | Synthetic plantesimal's right ascension (degrees)                                |
-+--------------------------+----------------------------------------------------------------------------------+
-| AstRARate(deg/day)       | Synthetic plantesimal's right ascension rate of motion (deg/day)                 |
-+--------------------------+----------------------------------------------------------------------------------+
-| AstDec(deg)              | Synthetic plantesimal's declination (degrees)                                    |
-+--------------------------+----------------------------------------------------------------------------------+
-| AstDecRate(deg/day)      | Synthetic plantesimal's declination rate of motion (deg/day)                     |
-+--------------------------+----------------------------------------------------------------------------------+
-| Ast-Sun(J2000x)(km)      |  Cartesian X-component of the synthetic planetesimal's heliocentric distance (km)|
-+--------------------------+----------------------------------------------------------------------------------+
-| Ast-Sun(J2000y)(km)      |  Cartesian Y-component of the synthetic planetesimal's heliocentric distance (km)|
-+--------------------------+----------------------------------------------------------------------------------+
-| Ast-Sun(J2000z)(km)      |  Cartesian Z-component of the synthetic planetesimal's heliocentric distance (km)|
-+--------------------------+----------------------------------------------------------------------------------+
-|Ast-Sun(J2000vx)(km/s)    |Cartesian X-component of the synthetic planetesimal's heliocentric velocity (km/s)|
-+--------------------------+----------------------------------------------------------------------------------+
-|Ast-Sun(J2000vy)(km/s)    |Cartesian Y-component of the synthetic planetesimal's heliocentric velocity (km/s)|
-+--------------------------+----------------------------------------------------------------------------------+
-| Ast-Sun(J2000vz)(km/s)   |Cartesian Z-component of the synthetic planetesimal's heliocentric velocity (km/s)|
-+--------------------------+----------------------------------------------------------------------------------+
-| Obs-Sun(J2000x)(km)      |  Cartesian X-component of observer's heliocentric distance (km)                  |
-+--------------------------+----------------------------------------------------------------------------------+
-| Obs-Sun(J2000y)(km)      |  Cartesian Y-component of the observer's heliocentric distance (km)              |
-+--------------------------+----------------------------------------------------------------------------------+
-| Obs-Sun(J2000z)(km)      |  Cartesian Z-component of the observer's heliocentric distance (km)              |
-+--------------------------+----------------------------------------------------------------------------------+
-|Obs-Sun(J2000vx)(km/s)    |  Cartesian X-component of the observer's heliocentric velocity (km/s)            |
-+--------------------------+----------------------------------------------------------------------------------+
-|Obs-Sun(J2000vy)(km/s)    |  Cartesian Y-component of the observer's heliocentric velocity (km/s)            |
-+--------------------------+----------------------------------------------------------------------------------+
-| Obs-Sun(J2000vz)(km/s)   |Cartesian Z-component of the observer's heliocentric velocity (km/s)              |
-+--------------------------+----------------------------------------------------------------------------------+
-| Sun-Ast-Obs(deg)         | The phase angle between the Sun, synthetic planetesimal, & observer (deg)        |
-+--------------------------+----------------------------------------------------------------------------------+
-
++--------------------------+-----------------------------------------------------------------------------------------+
+| Keyword                  | Description                                                                             |
++==========================+=========================================================================================+
+| ObjID                    | Object identifier for each synthetic planetesimal simulated (string)                    |
++--------------------------+-----------------------------------------------------------------------------------------+
+| FieldID                  | Observation pointing field identificator                                                |
++--------------------------+-----------------------------------------------------------------------------------------+
+| FieldMJD_TAI             | Observation Mean Julian Date (MJD) in TAI (International Atomic Time)                   |
++--------------------------+-----------------------------------------------------------------------------------------+
+| fieldJD_TDB              | Observation Julian Date in TDB (Barycentric Dynamical Time)                             |
++--------------------------+-----------------------------------------------------------------------------------------+
+| Range_LTC_km             | Topocentric distance to the simulated object                                            |
++--------------------------+-----------------------------------------------------------------------------------------+
+| RangeRate_LTC_km_s       | Radial component of the object’s topocentric velocity (km/s)                            |
++--------------------------+-----------------------------------------------------------------------------------------+
+| RA_deg                   | Object right ascension (degrees)                                                        |
++--------------------------+-----------------------------------------------------------------------------------------+
+| RARateCosDec_deg_day     | Object right ascension rate of motion multiplied by cos(Dec) (deg/day)                  |
++--------------------------+-----------------------------------------------------------------------------------------+
+| Dec_deg                  | Object declination (degrees)                                                            |
++--------------------------+-----------------------------------------------------------------------------------------+
+| DecRate_deg_day          | Object declination rate of motion (deg/day)                                             |
++--------------------------+-----------------------------------------------------------------------------------------+
+| Obj_Sun_x_LTC_km         | Light-time-corrected Cartesian X-component of the object’s heliocentric distance (km)   |
++--------------------------+-----------------------------------------------------------------------------------------+
+| Obj_Sun_y_LT_km          | Light-time-corrected Cartesian Y-component of the object’s heliocentric distance (km)   |
++--------------------------+-----------------------------------------------------------------------------------------+
+| Obj_Sun_z_LTC_km         | Light-time-corrected Cartesian X-component of the object’s heliocentric distance (km)   |
++--------------------------+-----------------------------------------------------------------------------------------+
+| Obj_Sun_vx_LTC_km_s      | Light-time-corrected Cartesian X-component of the object’s heliocentric velocity (km/s) |
++--------------------------+-----------------------------------------------------------------------------------------+
+| Obj_Sun_vy_LTC_km_s      | Light-time-corrected Cartesian Y-component of the object’s heliocentric velocity (km/s) |
++--------------------------+-----------------------------------------------------------------------------------------+
+| Obj_Sun_vz_LTC_km_s      | Light-time-corrected Cartesian Z-component of the object’s heliocentric velocity (km/s) |
++--------------------------+-----------------------------------------------------------------------------------------+
+| Obs_Sun_x_km             |  Cartesian X-component of observer's heliocentric distance (km)                         |
++--------------------------+-----------------------------------------------------------------------------------------+
+| Obs_Sun_y_km             |  Cartesian Y-component of the observer's heliocentric distance (km)                     |
++--------------------------+-----------------------------------------------------------------------------------------+
+| Obs_Sun_z_km             |  Cartesian Z-component of the observer's heliocentric distance (km)                     |
++--------------------------+-----------------------------------------------------------------------------------------+
+| Obs_Sun_vx_km_s          |  Cartesian X-component of the observer's heliocentric velocity (km/s)                   |
++--------------------------+-----------------------------------------------------------------------------------------+
+| Obs_Sun_vy_km_s          |  Cartesian Y-component of the observer's heliocentric velocity (km/s)                   |
++--------------------------+-----------------------------------------------------------------------------------------+
+| Obs_Sun_vz_km_s          | Cartesian Z-component of the observer’s heliocentric velocity (km/s)                    |
++--------------------------+-----------------------------------------------------------------------------------------+
+| phase_deg                | Phase angle between the Sun, object, and observer (degrees)                             |
++--------------------------+-----------------------------------------------------------------------------------------+
 .. note::
    All positions and velocities are in respect to J2000
 
