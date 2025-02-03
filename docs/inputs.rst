@@ -172,7 +172,7 @@ Cartesian Orbit Format Required Columns
 +-------------+----------------------------------------------------------------------------------+
 | zdot        | heliocentric or barycentric velocity on the ecliptic z axis (au/day)             |
 +-------------+----------------------------------------------------------------------------------+
-| epochMJD_TDB| poch specified as Mean Julian Date (MJD) in TDB (Barycentric Dynamical Time)     |
+| epochMJD_TDB| Epoch specified as Mean Julian Date (MJD) in TDB (Barycentric Dynamical Time)    |
 +-------------+----------------------------------------------------------------------------------+
 
 .. note::
@@ -464,7 +464,7 @@ Required Camera Footprints File Columns and Format
 
 .. note::
    The x and y values are unitless and are respectively equal to
-   tan(ra)andtan(dec) , where ra and dec are the vertical and horizontal
+   tan(ra) and tan(dec) , where ra and dec are the vertical and horizontal
    angles of the points from the center of the sphere tangent to the origin
    in the focal plane. For each detector, all four corners must be specified
    in the camera footprint file.
