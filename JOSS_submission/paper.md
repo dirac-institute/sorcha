@@ -41,7 +41,7 @@ authors:
     affiliation: "5,9"
   - name: Jeremy Kubica
     orcid: 0009-0009-2281-7031
-    affiliation: "10,19"
+    affiliation: "10,9"
   - name: Joseph Murtagh
     orcid: 0000-0001-9505-1131
     affiliation: "1"
