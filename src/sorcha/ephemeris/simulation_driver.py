@@ -108,9 +108,9 @@ def create_ephemeris(orbits_df, pointings_df, args, sconfigs):
 
     ang_fov = sconfigs.simulation.ar_ang_fov
     buffer = sconfigs.simulation.ar_fov_buffer
-    
+
     ang_fov_buffer = ang_fov + buffer
-    
+
     picket_interval = sconfigs.simulation.ar_picket
     obsCode = sconfigs.simulation.ar_obs_code
     nside = 2**sconfigs.simulation.ar_healpix_order
