@@ -10,7 +10,7 @@ Ephemeris Generator
 
 
 .. seealso::
-   For a more detailed description of ``Sorcha``'s ephemeris generation stage  please see `Holman et al. (submitted)<https://www.dropbox.com/scl/fi/lz1lmua2s0yf9t9a2gpmm/sorcha_ephemeris_generation_paper.pdf?rlkey=blm9u4zbk0ci1i4lc5yqz8dbs&e=1&dl=0>`.
+   For a more detailed description of ``Sorcha``'s ephemeris generation stage  please see `Holman et al. (submitted) <https://www.dropbox.com/scl/fi/lz1lmua2s0yf9t9a2gpmm/sorcha_ephemeris_generation_paper.pdf?rlkey=blm9u4zbk0ci1i4lc5yqz8dbs&dl=0>`_.
 
 How It Works
 --------------------------------------------------------
