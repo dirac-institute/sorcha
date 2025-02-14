@@ -349,6 +349,7 @@ def test_orbit_sanity_check_kep():
         == "ERROR: Invalid Keplerian elements detected for one or more objects (check log for information)"
     )
 
+
 def test_orbit_sanity_check_com():
     """If an orbit parameter is undefined, raise an exception"""
 
@@ -365,4 +366,7 @@ def test_orbit_sanity_check_com():
     with pytest.raises(SystemExit) as err:
         _ = OrbitAuxReader(get_test_filepath("orbit_test_files/orbit_sanity_check_com_e<0.csv"), "csv")
         _.read_rows()
-    assert err.value.code == "ERROR: Invalid cometary elements detected for one or more objects (check log for information)"
+    assert (
+        err.value.code
+        == "ERROR: Invalid cometary elements detected for one or more objects (check log for information)"
+    )

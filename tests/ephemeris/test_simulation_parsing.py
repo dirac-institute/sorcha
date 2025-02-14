@@ -1,8 +1,7 @@
-import pytest
 import numpy as np
 import sorcha.ephemeris.simulation_parsing as sp
 from sorcha.utilities.dataUtilitiesForTests import get_test_filepath
-from sorcha.utilities.sorchaConfigs import sorchaConfigs, auxiliaryConfigs
+from sorcha.utilities.sorchaConfigs import auxiliaryConfigs
 
 
 def test_observatory_compared_to_original():
