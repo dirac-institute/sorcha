@@ -1,5 +1,4 @@
 from .PPCalculateApparentMagnitudeInFilter import PPCalculateApparentMagnitudeInFilter
-from .PPCalculateSimpleCometaryMagnitude import PPCalculateSimpleCometaryMagnitude
 from .PPApplyColourOffsets import PPApplyColourOffsets
 import logging
 
@@ -33,7 +32,7 @@ def PPCalculateApparentMagnitude(
     and replaced with a GS column containing either GS_r or GS_g depending on observation filter.
 
     Parameters
-    -----------
+    ----------
     observations : Pandas dataframe
         dataframe of observations.
 
@@ -60,7 +59,7 @@ def PPCalculateApparentMagnitude(
         Flag for turning on verbose logging. Default = False
 
     Returns
-    ----------
+    -------
     observations : Pandas dataframe
         Modified observations pandas dataframe with calculated trailed source
         apparent magnitude column, H calculated in relevant filter (H_filter),

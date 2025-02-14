@@ -1,6 +1,4 @@
-import os
 import numpy as np
-import tempfile
 
 from numpy.testing import assert_equal
 
