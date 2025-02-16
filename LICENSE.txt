@@ -1,4 +1,17 @@
-Copyright 2023,2024 Sorcha Development Team
+Copyright 2023,2024, 2025 Sorcha Development Team
+
+The following files are licensed under GPLv3 only:
+src/sorcha/modules/PPAddUncertainties.py
+src/sorcha/modules/PPDetectionProbability.py
+src/sorcha/modules/PPFootprintFilter.py
+src/sorcha/modules/PPRandomizeMeasurements.py
+src/sorcha/modules/PPTrailingLoss.py
+
+The rest of the files in this package are licensed both under GPL(GNU General Public License)v3 and BSD (Berkeley Source Distribution). 
+
+========================================================================
+
+BSD (Berkeley Source Distribution) Public License 
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions
