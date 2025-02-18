@@ -2,12 +2,12 @@ import logging
 
 from ..utilities.sorchaModuleRNG import PerModuleRNG
 from .PPDropObservations import PPDropObservations
-from .PPDetectionProbability import PPDetectionProbability
+from .DESDetectionProbability import DESDetectionProbability
 
 
-def PPFadingFunctionFilter(observations, fillfactor, width, module_rngs, verbose=False):
+def DESFadingFunctionFilter(observations, fillfactor, width, module_rngs, verbose=False):
     """
-    Wrapper function for PPDetectionProbability and PPDropObservations.
+    Wrapper function for DESDetectionProbability and PPDropObservations.
 
     Calculates detection probability based on a fading function, then drops rows where the
     probabilty of detection is less than sample drawn from a uniform distribution.
@@ -36,10 +36,8 @@ def PPFadingFunctionFilter(observations, fillfactor, width, module_rngs, verbose
     verboselog = pplogger.info if verbose else lambda *a, **k: None
 
     verboselog("Calculating probabilities of detections...")
-    observations["detection_probability"] = PPDetectionProbability(
-        observations,
-        fillFactor=fillfactor,
-        w=width,
+    observations["detection_probability"] = DESDetectionProbability(
+        observations, fillFactor=fillfactor, w=width
     )
 
     verboselog("Dropping observations below detection threshold...")

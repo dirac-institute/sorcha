@@ -440,7 +440,7 @@ class fadingfunctionConfigs:
         None
         """
         check_key_exists(self.fading_function_on, "fadingfunction")
-        self.fading_function_on = cast_as_bool(self.fading_function_on, "fadinf_function_on")
+        self.fading_function_on = cast_as_bool(self.fading_function_on, "fading_function_on")
         check_key_doesnt_exist(
             self.fading_function_peak_efficiency, "fading_function_peak_efficiency", "but survey is DES."
         )

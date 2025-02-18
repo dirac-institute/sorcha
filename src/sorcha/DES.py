@@ -19,7 +19,7 @@ from sorcha.modules.PPApplyFOVFilter import PPApplyFOVFilter
 from sorcha.modules.PPSNRLimit import PPSNRLimit
 from sorcha.modules import PPAddUncertainties, PPRandomizeMeasurements
 from sorcha.modules import PPVignetting
-from sorcha.modules.PPFadingFunctionFilter import PPFadingFunctionFilter
+from sorcha.modules.DESFadingFunctionFilter import DESFadingFunctionFilter
 from sorcha.modules.PPFaintObjectCullingFilter import PPFaintObjectCullingFilter
 
 
@@ -324,14 +324,13 @@ def runDESSimulation(args, sconfigs):
             verboselog("Number of rows AFTER applying mag limit filter: " + str(len(observations.index)))
 
         if sconfigs.fadingfunction.fading_function_on and len(observations.index) > 0:
-            verboselog("Applying detection efficiency fading function...")
+            verboselog("Applying detection efficiency fading function for DES...")
             verboselog("Number of rows BEFORE applying fading function: " + str(len(observations.index)))
-            observations = PPFadingFunctionFilter(
+            observations = DESFadingFunctionFilter(
                 observations,
                 sconfigs.fadingfunction.fading_function_peak_efficiency,
                 sconfigs.fadingfunction.fading_function_width,
                 args._rngs,
-                survey_name=sconfigs.survey_name,
                 verbose=args.loglevel,
             )
             verboselog("Number of rows AFTER applying fading function: " + str(len(observations.index)))
