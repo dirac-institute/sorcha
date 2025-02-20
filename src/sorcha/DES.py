@@ -15,7 +15,7 @@ from sorcha.modules.PPLinkingFilter import PPLinkingFilter
 from sorcha.modules.PPTrailingLoss import PPTrailingLoss
 from sorcha.modules.PPBrightLimit import PPBrightLimit
 from sorcha.modules.PPCalculateApparentMagnitude import PPCalculateApparentMagnitude
-from sorcha.modules.PPApplyFOVFilter import PPApplyFOVFilter
+from sorcha.modules.DESApplyFOVFilter import DESApplyFOVFilter
 from sorcha.modules.PPSNRLimit import PPSNRLimit
 from sorcha.modules import PPAddUncertainties, PPRandomizeMeasurements
 from sorcha.modules import PPVignetting
@@ -27,7 +27,7 @@ from sorcha.modules.PPMatchPointingToObservations import PPMatchPointingToObserv
 from sorcha.modules.PPMagnitudeLimit import PPMagnitudeLimit
 from sorcha.modules.PPOutput import PPWriteOutput, PPIndexSQLDatabase
 from sorcha.modules.PPGetMainFilterAndColourOffsets import PPGetMainFilterAndColourOffsets
-from sorcha.modules.PPFootprintFilter import Footprint
+from sorcha.modules.DESFootprintFilter import DESFootprint
 from sorcha.modules.PPStats import stats
 
 from sorcha.readers.CombinedDataReader import CombinedDataReader
@@ -44,21 +44,6 @@ from sorcha.utilities.sorchaCommandLineParser import sorchaCommandLineParser
 from sorcha.utilities.fileAccessUtils import FindFileOrExit
 from sorcha.utilities.citation_text import cite_sorcha
 from sorcha.utilities.sorchaGetLogger import sorchaGetLogger
-
-
-def cite():  # pragma: no cover
-    """Providing the bibtex, AAS Journals software latex command, and acknowledgement
-    statements for Sorcha and the associated packages that power it.
-
-    Parameters
-    ----------
-    None
-
-    Returns
-    --------
-    None
-    """
-    cite_sorcha()
 
 
 def mem(df):
@@ -173,7 +158,7 @@ def runDESSimulation(args, sconfigs):
     footprint = None
     if sconfigs.fov.camera_model == "footprint":
         verboselog("Creating sensor footprint object for filtering")
-        footprint = Footprint(sconfigs.fov.footprint_path)
+        footprint = DESFootprint(sconfigs.fov.footprint_path)
 
     while endChunk < lenf:
         verboselog("Starting main Sorcha processing loop round {}".format(loopCounter))
@@ -302,7 +287,7 @@ def runDESSimulation(args, sconfigs):
         if sconfigs.fov.camera_model != "none" and len(observations.index) > 0:
             verboselog("Applying field-of-view filters...")
             verboselog("Number of rows BEFORE applying FOV filters: " + str(len(observations.index)))
-            observations = PPApplyFOVFilter(
+            observations = DESApplyFOVFilter(
                 observations, sconfigs, args._rngs, footprint=footprint, verbose=args.loglevel
             )
             verboselog("Number of rows AFTER applying FOV filters: " + str(len(observations.index)))
@@ -328,8 +313,6 @@ def runDESSimulation(args, sconfigs):
             verboselog("Number of rows BEFORE applying fading function: " + str(len(observations.index)))
             observations = DESFadingFunctionFilter(
                 observations,
-                sconfigs.fadingfunction.fading_function_peak_efficiency,
-                sconfigs.fadingfunction.fading_function_width,
                 args._rngs,
                 verbose=args.loglevel,
             )

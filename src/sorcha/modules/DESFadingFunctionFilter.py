@@ -5,7 +5,7 @@ from .PPDropObservations import PPDropObservations
 from .DESDetectionProbability import DESDetectionProbability
 
 
-def DESFadingFunctionFilter(observations, fillfactor, width, module_rngs, verbose=False):
+def DESFadingFunctionFilter(observations, module_rngs, verbose=False):
     """
     Wrapper function for DESDetectionProbability and PPDropObservations.
 
@@ -17,8 +17,6 @@ def DESFadingFunctionFilter(observations, fillfactor, width, module_rngs, verbos
     observations : Pandas dataframe
         Dataframe of observations with a column containing the probability of detection.
 
-    fillFactor : float
-        Fraction of camera field-of-view covered by detectors
 
     module_rngs : PerModuleRNG
         A collection of random number generators (per module).
@@ -36,9 +34,7 @@ def DESFadingFunctionFilter(observations, fillfactor, width, module_rngs, verbos
     verboselog = pplogger.info if verbose else lambda *a, **k: None
 
     verboselog("Calculating probabilities of detections...")
-    observations["detection_probability"] = DESDetectionProbability(
-        observations, fillFactor=fillfactor, w=width
-    )
+    observations["detection_probability"] = DESDetectionProbability(observations)
 
     verboselog("Dropping observations below detection threshold...")
     observations = PPDropObservations(observations, module_rngs, "detection_probability")

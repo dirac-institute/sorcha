@@ -302,7 +302,7 @@ class fovConfigs:
     """Choose between circular or actual camera footprint, including chip gaps."""
 
     footprint_path: str = None
-    """Path to camera footprint file. Uncomment to provide a path to the desired camera detector configuration file if not using the default built-in LSSTCam detector configuration for the actual camera footprint."""
+    """Path to camera footprint file. Uncomment to provide a path to the desired camera detector configuration file if not using the default built-in detector configuration for the actual camera footprint."""
 
     fill_factor: str = None
     """Fraction of detector surface area which contains CCD -- simulates chip gaps for OIF output. Comment out if using camera footprint."""
@@ -355,12 +355,12 @@ class fovConfigs:
         """
         if self.footprint_path is not None:
             FindFileOrExit(self.footprint_path, "footprint_path")
-        elif self.survey_name.lower() not in ["lsst", "rubin_sim"]:
+        elif self.survey_name.lower() not in ["lsst", "rubin_sim", "des"]:
             logging.error(
-                "ERROR: a default detector footprint is currently only provided for LSST; please provide your own footprint file."
+                "ERROR: a default detector footprint is currently only provided for LSST and DES; please provide your own footprint file."
             )
             sys.exit(
-                "ERROR: a default detector footprint is currently only provided for LSST; please provide your own footprint file."
+                "ERROR: a default detector footprint is currently only provided for LSST and DES; please provide your own footprint file."
             )
         if self.footprint_edge_threshold is not None:
             self.footprint_edge_threshold = cast_as_float(

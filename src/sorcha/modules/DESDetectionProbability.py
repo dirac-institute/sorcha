@@ -55,9 +55,8 @@ def DESDetectionProbability(
     eph_df,
     magnitude_name="PSFMag",
     limiting_magnitude_name="fiveSigmaDepth_mag",
-    scaling_factor_name = "c",
-    transition_sharpness_name = "k"
-
+    scaling_factor_name="c",
+    transition_sharpness_name="k",
 ):
     """
     Find probability of observations being observable for objectInField output.
@@ -98,5 +97,8 @@ def DESDetectionProbability(
     """
 
     return DEScalcDetectionProbability(
-        eph_df[magnitude_name], eph_df[limiting_magnitude_name], eph_df[scaling_factor_name], eph_df[transition_sharpness_name]
+        eph_df[magnitude_name],
+        eph_df[limiting_magnitude_name],
+        eph_df[scaling_factor_name],
+        eph_df[transition_sharpness_name],
     )

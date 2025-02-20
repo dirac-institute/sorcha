@@ -514,7 +514,7 @@ def test_fovConfigs_surveyname():
         test_configs = fovConfigs(**fov_configs)
     assert (
         error_text.value.code
-        == "ERROR: a default detector footprint is currently only provided for LSST; please provide your own footprint file."
+        == "ERROR: a default detector footprint is currently only provided for LSST and DES; please provide your own footprint file."
     )
 
 
