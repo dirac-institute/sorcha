@@ -61,3 +61,8 @@ Check that you have entries in all the input files for each object you wish to s
 ERROR: Unable to find ObjID column headings (OrbitAuxReader:....)
 --------------------------------------------------------------------
 Check your :ref:`input files<inputs>` and ensure that they have ObjID column as the first column. 
+
+
+Cache issues (JPL SPICE files)
+--------------------------------------------------------------------
+Issues with the cached JPL spice files, especially if Sorcha cannot find its cache, can often be resolved with `sorcha bootstrap -f`. Even if the command does not succeed (perhaps due to meta_kernel issues), it should log the directory of the Sorcha cache and the URLs from which all required files can be retrieved and downloaded manually.  
