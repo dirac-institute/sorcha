@@ -44,9 +44,13 @@ def DESApplyFOVFilter(observations, sconfigs, module_rngs, footprint=None, verbo
 
     if sconfigs.fov.camera_model == "footprint":
         verboselog("Applying sensor footprint filter...")
-        onSensor, detectorIDs = footprint.applyDESFootprint(
+
+        onSensor, detectorIDs = footprint.applyDESFootprint_KDpolygons(
             observations, edge_thresh=sconfigs.fov.footprint_edge_threshold
         )
+        # onSensor, detectorIDs = footprint.applyDESFootprint_loadpolygons(
+        #     observations, edge_thresh=sconfigs.fov.footprint_edge_threshold
+        # )
 
         observations = observations.iloc[onSensor].copy()
 

@@ -20,10 +20,17 @@
 import logging
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
+
 import sys
 import importlib_resources
-from shapely.geometry import Point, MultiPolygon, Polygon
+from shapely.geometry import Point, Polygon, MultiPolygon
+from shapely import STRtree, wkb
+import sqlite3
+import geopandas as gpd
+import matplotlib.pyplot as plt
+from scipy.spatial import KDTree
+from sklearn.neighbors import KDTree as skKD
+from tqdm import tqdm
 
 from numba import njit
 
@@ -133,8 +140,8 @@ class DESFootprint:
         """
 
         # file should be a .csv (and should be actually comma seperated)
-        # First column is the number of each detector
-        # other columns are strings of tuples of the points (I know its dumb gonna change it later)
+        # First column is the name of each detector
+        # the other two columns are the x, y postion of the detector corner
         # if the user doesn't provide their own version of the footprint,
         # we'll use the default DES version that comes included.
         if path:
@@ -177,7 +184,7 @@ class DESFootprint:
         polys = []
         poly_name_list = []
 
-        ccd_names = [
+        self.ccd_names = [
             "N1",
             "N2",
             "N3",
@@ -237,14 +244,11 @@ class DESFootprint:
             "S27",
             "S28",
             "S29",
-            "S30",
             "S31",
         ]
 
         # creates a polygon of each ccd using their corners
-        for detector in ccd_names:
-            if detector == "S30":
-                continue
+        for detector in self.ccd_names:
 
             corners = ccd_corners[ccd_corners["detectorId"] == detector].reset_index(drop=True)
 
@@ -260,17 +264,11 @@ class DESFootprint:
             polys.append(poly)
             poly_name_list.append(detector)
         # combines all polygons into a MultiPolygon
-        self.footprint = MultiPolygon(polys)
+        self.footprint = polys
         self.detectorId_list = poly_name_list
 
-    def applyDESFootprint(
-        self,
-        field_df,
-        ra_name="RA_deg",
-        dec_name="Dec_deg",
-        ra_name_field="fieldRA_deg",
-        dec_name_field="fieldDec_deg",
-        edge_thresh=None,
+    def applyDESFootprint_loadpolygons(
+        self, field_df, ra_name="RA_deg", dec_name="Dec_deg", fieldId="FieldID", edge_thresh=None
     ):
         """
         Determine whether detections fall on the sensors defined by the
@@ -308,85 +306,355 @@ class DESFootprint:
         detected : array
             Indices of rows in field_df which fall on the sensor(s).
 
+        detectorID :array
+            name of the detector that the object falls on.
         """
 
-        # convert detections to xyz on unit sphere
-        ra = deg2rad(field_df[ra_name])
-        dec = deg2rad(field_df[dec_name])
+        # connecting to visitors database and creating a list of polygons
+        with sqlite3.connect("/Users/ryanlyttle/Documents/Workstation/Dark energy survey /visits.db") as conn:
+            cursor = conn.cursor()
+            query = "SELECT geom FROM polygons_table WHERE observationId = ?"
+            index_ = set()
+            field_df_no_duplicates = field_df.drop_duplicates(subset=[fieldId], keep="first")
+            for obs_id in tqdm(field_df_no_duplicates[fieldId], desc="Processing Observations"):
 
-        # convert field pointings to xyz on unit sphere
-        fieldra = deg2rad(field_df[ra_name_field])
-        fielddec = deg2rad(field_df[dec_name_field])
+                row = cursor.execute(query, (obs_id,)).fetchone()
 
-        points = np.array((radec_to_tangent_plane(ra, dec, fieldra, fielddec)))
+                polygon = wkb.loads(row[0])
+                check_points = field_df[field_df[fieldId] == obs_id]
 
-        detected = []
-        detectorId = []
-        for i in range(points.shape[1]):
-            point = points[:, i]
-            P = Point(point[0], point[1])
+                points = [
+                    Point(ra_val, dec_val)
+                    for ra_val, dec_val in zip(check_points[ra_name], check_points[dec_name])
+                ]
 
-            if self.footprint.contains(P):
-                detected.append(i)
+                for point_index, point in enumerate(points):
+                    if polygon.contains(point):
+                        index_.add(check_points.index[point_index])
 
-        # for detector Ids. Takes more time to run as need to loop through 60 polygon contain functions
-        # for idx, poly in enumerate(self.footprint.geoms):
-        #     if poly.contains(P):
-        #         detected.append(i)
-        #         detectorId.append(self.detectorId_list[idx])
+        detected = list(index_)
+        detectorID = []
 
-        # uncomment for plot of camera footprint when running sorcha
-        # self.plot(field_df)
+        return detected, detectorID
 
-        return detected, detectorId
-
-        # check whether they land on the footprint
-
-    def plot(
-        self,
-        field_df,
-        ra_name="RA_deg",
-        dec_name="Dec_deg",
-        ra_name_field="fieldRA_deg",
-        dec_name_field="fieldDec_deg",
+    def applyDESFootprint_KDpolygons_test(
+        self, field_df, ra_name="RA_deg", dec_name="Dec_deg", fieldId="FieldID", edge_thresh=None
     ):
         """
-        Shows a plot of DeCam footprint and detections of objects
+        Determine whether detections fall on the sensors defined by the
+        footprint. Also returns the an ID for the sensor a detection is made
+        on.
+
+        Parameters
+        -----------
+        field_df : Pandas dataframe
+            Dataframe containing detection information with pointings.
+
+        ra_name : string, optional
+            "field_df" dataframe's column name for object's RA
+            for the given observation. Default = "RA_deg" [units: degrees]
+
+        dec_name : string, optional
+            "field_df" dataframe's column name for object's declination
+            for the given observation. Default = "Dec_deg" [units: dgrees]
+
+        ra_name_field : string, optional
+            "field_df" dataframe's column name for the observation field's RA
+            Default = "fieldRA_deg" [units: degrees]
+
+        dec_name_field : string, optional
+            "field_df" dataframe's column name for the observation field's declination
+            Default = "fieldDec_deg" [Units: degrees]
+
+
+        edge_thresh: float, optional
+            An angular threshold in arcseconds for dropping pixels too close to the edge.
+            Default  = None
+
+        Returns
+        ----------
+        detected : array
+            Indices of rows in field_df which fall on the sensor(s).
+
+        detectorID :array
+            name of the detector that the object falls on.
         """
 
-        # convert detections to xyz on unit sphere
-        ra = deg2rad(field_df[ra_name])
-        dec = deg2rad(field_df[dec_name])
+        detected_index = set()
 
-        # convert field pointings to xyz on unit sphere
-        fieldra = deg2rad(field_df[ra_name_field])
-        fielddec = deg2rad(field_df[dec_name_field])
+        # SQLite Database Connection
+        with sqlite3.connect(
+            "/Users/ryanlyttle/Documents/Workstation/Dark energy survey /visits_cent.db"
+        ) as conn:
+            cursor = conn.cursor()
+            query = "SELECT ra1,dec1,ra2,dec2,ra3,dec3,ra4,dec4,racenter,deccenter FROM observations WHERE observationId = ?"
+        # taking all non duplicate exposure ids (Some footprints have a chance of no objects in them and so polygons won't be made of them when using the ids from the detection pd)
+        field_df_no_duplicates = field_df.drop_duplicates(subset=[fieldId], keep="first")
+        # going through each polygon in a loop
 
-        points = np.array((radec_to_tangent_plane(ra, dec, fieldra, fielddec)))
+        flag = 0
+        for obs_id in tqdm(field_df_no_duplicates[fieldId], desc="Processing Observations"):
 
-        import geopandas as gpd
+            # executing query for this observation id
+            rows = cursor.execute(query, (obs_id,)).fetchall()
 
-        poly = gpd.GeoSeries(self.footprint)
-        fig, ax = plt.subplots()
-        poly.plot(ax=ax, color="lightblue")
-        for i in range(points.shape[1]):
-            point = points[:, i]
-            P = Point(point[0], point[1])
-            if self.footprint.contains(P):
-                ax.plot(P.x, P.y, "go", markersize=0.1)
-            else:
-                ax.plot(P.x, P.y, "ro", markersize=0.1)
-        plt.legend(
-            ["Detected", "Not Detected"],
-            loc="best",
-            labels=["Detected", "Not Detected"],
-            handles=[
-                plt.Line2D([0], [0], marker="o", markersize=5, color="g", lw=0),
-                plt.Line2D([0], [0], marker="o", markersize=5, color="r", lw=0),
-            ],
-        )
-        plt.xlabel("ra (radians)")
-        plt.ylabel("dec (radians)")
-        plt.title("Relative position of objects on DeCam footprint for entire survey")
-        # plt.savefig('DeCam_footprint.svg', format='svg', dpi=1200)
-        plt.show()
+            # filtering points for given observation Id
+            check_points = field_df[field_df[fieldId] == obs_id]
+            points_query = [
+                list([ra_val, dec_val])
+                for ra_val, dec_val in zip(check_points[ra_name], check_points[dec_name])
+            ]
+
+            # attampt using sklearn Kdtree
+            ccd_index = skKD(list(zip([row[8] for row in rows], [row[9] for row in rows])))
+            max_diff = max(abs(row[0] - row[8]) for row in rows)
+            polygon_index_to_create = ccd_index.query_radius(
+                points_query, max_diff, count_only=False, return_distance=False
+            )
+            polygon_index_to_create = list(set(np.concatenate(polygon_index_to_create)))
+            if not polygon_index_to_create:
+                continue
+
+            polys = []
+            for index in polygon_index_to_create:
+
+                row = rows[index]
+                polys.append(
+                    Polygon([[row[i], row[i + 1]] for i in range(0, len(row) - 2, 2)] + [[row[0], row[1]]])
+                )
+            polygon = MultiPolygon(polys)
+
+            pol = gpd.GeoSeries(polygon)
+            pol.plot()
+
+            plt.scatter(list(zip([row[8] for row in rows])), list(zip([row[9] for row in rows])))
+            for p in points_query:
+
+                plt.scatter(p[0], p[1])
+            plt.title("defined range")
+
+            # Build KDTree for ra_center and dec_center and query the 3 nearest points for each ccd
+            ccd_index = KDTree(list(zip([row[8] for row in rows], [row[9] for row in rows])))
+            _, polygon_index_to_create = ccd_index.query(points_query, k=3)
+            polygon_index_to_create = list(set(polygon_index_to_create.flatten()))  # removes duplicate ccds.
+
+            polys = []
+            for index in polygon_index_to_create:
+
+                row = rows[index]
+                polys.append(
+                    Polygon([[row[i], row[i + 1]] for i in range(0, len(row) - 2, 2)] + [[row[0], row[1]]])
+                )
+            polygon = MultiPolygon(polys)
+
+            pol = gpd.GeoSeries(polygon)
+            pol.plot()
+
+            plt.scatter(list(zip([row[8] for row in rows])), list(zip([row[9] for row in rows])))
+            for p in points_query:
+
+                plt.scatter(p[0], p[1])
+            plt.title("3 closest ccds for each point")
+            plt.show()
+
+            # creation of camera footprint for this ob id
+            # will only create the ccds near possible detections
+
+            flag += 1
+
+            # Create a list of Shapely Point objects for each query point
+            points = [Point(point) for point in points_query]
+
+            # Check if points are within any of the polygons
+            for point_index, point in enumerate(points):
+                if polygon.contains(point):
+                    # Add the index to a set if it is inside the polygon
+                    detected_index.add(check_points.index[point_index])
+            print(detected_index)
+            if flag > 30:
+
+                sys.exit()
+
+        detected = list(detected_index)
+        detectorID = []
+
+        return detected, detectorID
+
+    def applyDESFootprint_createallpolygons(
+        self, field_df, ra_name="RA_deg", dec_name="Dec_deg", fieldId="FieldID", edge_thresh=None
+    ):
+        """
+        Determine whether detections fall on the sensors defined by the
+        footprint. Also returns the an ID for the sensor a detection is made
+        on.
+
+        Parameters
+        -----------
+        field_df : Pandas dataframe
+            Dataframe containing detection information with pointings.
+
+        ra_name : string, optional
+            "field_df" dataframe's column name for object's RA
+            for the given observation. Default = "RA_deg" [units: degrees]
+
+        dec_name : string, optional
+            "field_df" dataframe's column name for object's declination
+            for the given observation. Default = "Dec_deg" [units: dgrees]
+
+        ra_name_field : string, optional
+            "field_df" dataframe's column name for the observation field's RA
+            Default = "fieldRA_deg" [units: degrees]
+
+        dec_name_field : string, optional
+            "field_df" dataframe's column name for the observation field's declination
+            Default = "fieldDec_deg" [Units: degrees]
+
+
+        edge_thresh: float, optional
+            An angular threshold in arcseconds for dropping pixels too close to the edge.
+            Default  = None
+
+        Returns
+        ----------
+        detected : array
+            Indices of rows in field_df which fall on the sensor(s).
+
+        detectorID :array
+            name of the detector that the object falls on.
+        """
+        index_ = set()
+        with sqlite3.connect("/Users/ryanlyttle/Documents/Workstation/Dark energy survey /visits.db") as conn:
+            cursor = conn.cursor()
+            query = "SELECT ra1,dec1,ra2,dec2,ra3,dec3,ra4,dec4 FROM observations WHERE observationId = ?"
+
+        field_df_no_duplicates = field_df.drop_duplicates(subset=[fieldId], keep="first")
+        for obs_id in tqdm(field_df_no_duplicates[fieldId], desc="Processing Observations"):
+
+            rows = cursor.execute(query, (obs_id,)).fetchall()
+
+            polys = [
+                Polygon([[row[i], row[i + 1]] for i in range(0, len(row), 2)] + [[row[0], row[1]]])
+                for row in rows
+            ]
+            polygon = MultiPolygon(polys)
+
+            check_points = field_df[field_df[fieldId] == obs_id]
+
+            points = [
+                Point(ra_val, dec_val)
+                for ra_val, dec_val in zip(check_points[ra_name], check_points[dec_name])
+            ]
+
+            for point_index, point in enumerate(points):
+                if polygon.contains(point):
+                    index_.add(check_points.index[point_index])
+        detected = list(index_)
+        detectorID = []
+
+        return detected, detectorID
+
+
+
+    def applyDESFootprint_KDpolygons(
+            self, field_df, ra_name="RA_deg", dec_name="Dec_deg", fieldId="FieldID", edge_thresh=None
+        ):
+            """
+            Determine whether detections fall on the sensors defined by the
+            footprint. Also returns the an ID for the sensor a detection is made
+            on.
+
+            Parameters
+            -----------
+            field_df : Pandas dataframe
+                Dataframe containing detection information with pointings.
+
+            ra_name : string, optional
+                "field_df" dataframe's column name for object's RA
+                for the given observation. Default = "RA_deg" [units: degrees]
+
+            dec_name : string, optional
+                "field_df" dataframe's column name for object's declination
+                for the given observation. Default = "Dec_deg" [units: dgrees]
+
+            ra_name_field : string, optional
+                "field_df" dataframe's column name for the observation field's RA
+                Default = "fieldRA_deg" [units: degrees]
+
+            dec_name_field : string, optional
+                "field_df" dataframe's column name for the observation field's declination
+                Default = "fieldDec_deg" [Units: degrees]
+
+
+            edge_thresh: float, optional
+                An angular threshold in arcseconds for dropping pixels too close to the edge.
+                Default  = None
+
+            Returns
+            ----------
+            detected : array
+                Indices of rows in field_df which fall on the sensor(s).
+
+            detectorID :array
+                name of the detector that the object falls on.
+            """
+
+            detected_index = set()
+
+            # SQLite Database Connection
+            with sqlite3.connect(
+                "/Users/ryanlyttle/Documents/Workstation/Dark energy survey /visits_cent.db"
+            ) as conn:
+                cursor = conn.cursor()
+                query = "SELECT ra1,dec1,ra2,dec2,ra3,dec3,ra4,dec4,racenter,deccenter FROM observations WHERE observationId = ?"
+            # taking all non duplicate exposure ids (Some footprints have a chance of no objects in them and so polygons won't be made of them when using the ids from the detection pd)
+            field_df_no_duplicates = field_df.drop_duplicates(subset=[fieldId], keep="first")
+            # going through each polygon in a loop
+
+
+            for obs_id in tqdm(field_df_no_duplicates[fieldId], desc="Processing Observations"):
+
+                # executing query for this observation id
+                rows = cursor.execute(query, (obs_id,)).fetchall()
+
+                # filtering points for given observation Id
+                check_points = field_df[field_df[fieldId] == obs_id]
+                points_query = [
+                    list([ra_val, dec_val])
+                    for ra_val, dec_val in zip(check_points[ra_name], check_points[dec_name])
+                ]
+
+                # attampt using sklearn Kdtree
+                ccd_index = skKD(list(zip([row[8] for row in rows], [row[9] for row in rows])))
+                max_diff = max(abs(row[0] - row[8]) for row in rows)
+                polygon_index_to_create = ccd_index.query_radius(
+                    points_query, max_diff, count_only=False, return_distance=False
+                )
+                polygon_index_to_create = list(set(np.concatenate(polygon_index_to_create)))
+                if not polygon_index_to_create:
+                    continue
+
+                polys = []
+                for index in polygon_index_to_create:
+
+                    row = rows[index]
+                    polys.append(
+                        Polygon([[row[i], row[i + 1]] for i in range(0, len(row) - 2, 2)] + [[row[0], row[1]]])
+                    )
+                polygon = MultiPolygon(polys)
+
+            
+                # Create a list of Shapely Point objects for each query point
+                points = [Point(point) for point in points_query]
+
+                # Check if points are within any of the polygons
+                for point_index, point in enumerate(points):
+                    if polygon.contains(point):
+                        # Add the index to a set if it is inside the polygon
+                        detected_index.add(check_points.index[point_index])
+
+                
+
+            detected = list(detected_index)
+            detectorID = []
+
+            return detected, detectorID
