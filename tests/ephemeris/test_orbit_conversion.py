@@ -3,7 +3,7 @@ import numpy as np
 
 def test_orbit_conversion_relationships():
     # this uses a very similar idea to the demo notebook - this is a case where we *know* the answer
-    from sorcha.ephemeris.orbit_conversion_utilities import universal_cartesian, universal_keplerian
+    from sorcha.ephemeris.orbit_conversion_utilities import universal_cartesian, universal_cometary
 
     # define orbits (no e)
     q = 10
@@ -63,7 +63,7 @@ def test_orbit_conversion_relationships():
 
 
 def test_orbit_conversion_edgecases():
-    from sorcha.ephemeris.orbit_conversion_utilities import universal_cartesian, universal_keplerian
+    from sorcha.ephemeris.orbit_conversion_utilities import universal_cartesian, universal_cometary
 
     # this will test weird edge cases that require additional work to converge to a solution
     # fow now, this only has the Centaur from one of our larger test populations

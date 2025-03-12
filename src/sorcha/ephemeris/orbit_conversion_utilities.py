@@ -353,9 +353,9 @@ def principal_value(theta):
 
 
 @numba.njit(fastmath=True)
-def universal_keplerian(mu, x, y, z, vx, vy, vz, epochMJD_TDB):
+def universal_cometary(mu, x, y, z, vx, vy, vz, epochMJD_TDB):
     """
-    Converts from a state vectors into orbital elements
+    Converts from a state vectors into cometary orbital elements
     using the universal variable formulation
 
     The input vector will determine the orientation
@@ -479,3 +479,58 @@ def universal_keplerian(mu, x, y, z, vx, vy, vz, epochMJD_TDB):
         tp = epochMJD_TDB - N / mm
 
     return q, e, incl, longnode, argperi, tp
+
+
+@numba.njit(fastmath=True)
+def universal_keplerian(mu, x, y, z, vx, vy, vz, epochMJD_TDB):
+    """
+    Converts from a state vectors into Keplerian orbital elements
+    using the universal variable formulation
+
+    The input vector will determine the orientation
+    of the positional angles (i, Omega, omega)
+
+
+    Note that mu and the state vectors must have compatible units
+    As an example, if x is in au and vx are in au/days, mu must
+    be in (au^3)/days^2
+
+
+    Parameters
+    -----------
+    mu : float
+        Standard gravitational parameter GM (see note above about units)
+    x : float
+        x coordinate
+    y : float
+        y coordinate
+    z : float
+        z coordinate
+    vx : float
+        x velocity
+    vy : float
+        y velocity
+    vz : float
+        z velocity
+    epochMJD_TDB (float):
+        Epoch (in TDB) when the elements are defined (see note above about units)
+
+    Returns
+    ----------
+    float
+        Semi-major axis (see note above about units)
+    float
+        Eccentricity
+    float
+        Inclination (radians)
+    float
+        Longitude of ascending node (radians)
+    float
+        Argument of perihelion (radians)
+    float
+        Mean anomaly (radians)
+    """
+    q, e, incl, longnode, argperi, tp = universal_cometary(mu, x, y, z, vx, vy, vz, epochMJD_TDB)
+    a = q / (1 - e)
+    M = (epochMJD_TDB - tp) * np.sqrt(mu / a**3)
+    return a, e, incl, longnode, argperi, M
