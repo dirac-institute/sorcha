@@ -109,6 +109,9 @@ def create_ephemeris(orbits_df, pointings_df, args, sconfigs):
 
     ang_fov = sconfigs.simulation.ar_ang_fov
     buffer = sconfigs.simulation.ar_fov_buffer
+
+    ang_fov_buffer = ang_fov + buffer
+
     picket_interval = sconfigs.simulation.ar_picket
     obsCode = sconfigs.simulation.ar_obs_code
     nside = 2**sconfigs.simulation.ar_healpix_order
@@ -201,7 +204,7 @@ def create_ephemeris(orbits_df, pointings_df, args, sconfigs):
             sim, ex = v["sim"], v["ex"]
             uv /= np.linalg.norm(uv)
             ang = np.arccos(np.dot(uv, visit_vector)) * 180 / np.pi
-            if ang < ang_fov + buffer:
+            if ang < ang_fov_buffer:
                 (
                     ephem_geom_params.rho,
                     ephem_geom_params.rho_mag,
@@ -212,7 +215,7 @@ def create_ephemeris(orbits_df, pointings_df, args, sconfigs):
                 ephem_geom_params.rho_hat = ephem_geom_params.rho / ephem_geom_params.rho_mag
 
                 ang_from_center = 180 / np.pi * np.arccos(np.dot(ephem_geom_params.rho_hat, visit_vector))
-                if ang_from_center < ang_fov:
+                if ang_from_center < ang_fov_buffer:
                     out_tuple = calculate_rates_and_geometry(pointing, ephem_geom_params)
                     in_memory_csv.writerow(out_tuple)
 
