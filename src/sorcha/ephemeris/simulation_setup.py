@@ -46,6 +46,7 @@ def create_assist_ephemeris(args, auxconfigs) -> tuple:
     cache_directory = args.ar_data_file_path
     return _create_assist_ephemeris(auxconfigs, cache_directory)
 
+
 def _create_assist_ephemeris(auxconfigs, cache_dir=None) -> tuple:
     """Build the ASSIST ephemeris object
     Parameter
