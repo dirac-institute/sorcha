@@ -549,7 +549,20 @@ def test_fovConfigs_circle_mandatory():
         error_text.value.code
         == 'ERROR: either "fill_factor" or "circle_radius" must be specified for circular footprint.'
     )
+def test_fovConfigs_DES():
+    """
+    Makes sure the code fails when using DES and having an edge thresh
+    """
 
+    fov_configs = correct_fov_read.copy()
+    fov_configs["survey_name"] = "DES"
+
+    with pytest.raises(SystemExit) as error_text:
+        test_configs = fovConfigs(**fov_configs)
+    assert (
+        error_text.value.code
+        == "ERROR: footprint_edge_threshold supplied in config file But DES doesn't use edge threshold"
+    )
 
 @pytest.mark.parametrize("key_name", ["fill_factor", "circle_radius"])
 def test_fovConfigs_bounds(key_name):

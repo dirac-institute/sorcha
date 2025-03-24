@@ -363,9 +363,16 @@ class fovConfigs:
                 "ERROR: a default detector footprint is currently only provided for LSST and DES; please provide your own footprint file."
             )
         if self.footprint_edge_threshold is not None:
+            if self.survey_name.lower() == "des":
+                check_key_doesnt_exist(
+                    self.footprint_edge_threshold,
+                    "footprint_edge_threshold",
+                    "But DES doesn't use edge threshold",
+                )
             self.footprint_edge_threshold = cast_as_float(
                 self.footprint_edge_threshold, "footprint_edge_threshold"
             )
+
         check_key_doesnt_exist(self.fill_factor, "fill_factor", 'but camera model is not "circle".')
         check_key_doesnt_exist(self.circle_radius, "circle_radius", 'but camera model is not "circle".')
 
