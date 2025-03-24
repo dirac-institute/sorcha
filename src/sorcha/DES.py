@@ -158,7 +158,7 @@ def runDESSimulation(args, sconfigs):
     footprint = None
     if sconfigs.fov.camera_model == "footprint":
         verboselog("Creating sensor footprint object for filtering")
-        footprint = DESFootprint(sconfigs.fov.footprint_path)
+        footprint = DESFootprint(query=sconfigs.fov.visits_query, visits=args.visits)
 
     while endChunk < lenf:
         verboselog("Starting main Sorcha processing loop round {}".format(loopCounter))

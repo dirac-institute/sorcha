@@ -77,10 +77,12 @@ correct_linkingfilter = {
 correct_fov = {
     "camera_model": "footprint",
     "footprint_path": None,
+    "visits_query": None,
     "fill_factor": None,
     "circle_radius": None,
     "footprint_edge_threshold": 2.0,
     "survey_name": "rubin_sim",
+    
 }
 
 correct_fov_read = {"camera_model": "footprint", "footprint_edge_threshold": 2.0, "survey_name": "rubin_sim"}
@@ -554,8 +556,10 @@ def test_fovConfigs_DES():
     Makes sure the code fails when using DES and having an edge thresh
     """
 
-    fov_configs = correct_fov_read.copy()
+    fov_configs = correct_fov.copy()
     fov_configs["survey_name"] = "DES"
+
+    fov_configs["visits_query"] = "something"
 
     with pytest.raises(SystemExit) as error_text:
         test_configs = fovConfigs(**fov_configs)
@@ -563,6 +567,17 @@ def test_fovConfigs_DES():
         error_text.value.code
         == "ERROR: footprint_edge_threshold supplied in config file But DES doesn't use edge threshold"
     )
+
+    fov_configs["visits_query"] = None
+
+    
+    with pytest.raises(SystemExit) as error_text:
+        test_configs = fovConfigs(**fov_configs)
+    assert (
+        error_text.value.code
+        == "ERROR: No value found for required key visits_query in config file. Please check the file and try again."
+    )
+
 
 @pytest.mark.parametrize("key_name", ["fill_factor", "circle_radius"])
 def test_fovConfigs_bounds(key_name):
@@ -1069,6 +1084,7 @@ def test_PrintConfigsToLog(tmp_path):
         "loglevel": True,
         "seed": 24601,
         "stats": None,
+        "visits_database": None,
     }
     test_configs = sorchaConfigs(config_file_location, "rubin_sim")
     test_configs.filters.mainfilter = "r"

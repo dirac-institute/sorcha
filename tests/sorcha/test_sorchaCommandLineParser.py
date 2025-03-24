@@ -20,6 +20,7 @@ class args:
         self.f = f
         self.ar = None
         self.st = "test.csv"
+        self.vd = None
 
 
 def test_sorchaCommandLineParser():
@@ -41,6 +42,7 @@ def test_sorchaCommandLineParser():
         "ar_data_path": None,
         "output_ephemeris_file": None,
         "stats": "test.csv",
+        "visits_database": None,
     }
 
     cmd_dict_2 = sorchaCommandLineParser(args(get_test_filepath("testcomet.txt")))
@@ -58,6 +60,7 @@ def test_sorchaCommandLineParser():
         "ar_data_path": None,
         "output_ephemeris_file": None,
         "stats": "test.csv",
+        "visits_database": None,
     }
 
     with open(os.path.join(tmp_path, "dummy_file.txt"), "w") as _:

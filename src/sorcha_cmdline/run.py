@@ -119,6 +119,14 @@ def main():
         dest="st",
         default=None,
     )
+    optional.add_argument(
+        "--vd",
+        "--visits-db",
+        help="sql database of RA and Dec of ccd corners",
+        type=str,
+        dest="vd",
+        default=None,
+    )
 
     args = parser.parse_args()
 
@@ -213,6 +221,18 @@ def execute(args):
         except Exception as err:
             pplogger.error(err)
             sys.exit(err)
+        if (
+            args.visits is not None
+            and sconfigs.fov.visits_query is None
+            or args.visits is None
+            and sconfigs.fov.visits_query is not None
+        ):
+            pplogger.error(
+                "ERROR: cmd line arg --vd, --visits-db and config fov varible visits_query must both be specified"
+            )
+            sys.exit(
+                "ERROR: cmd line arg --vd, --visits-db and config fov varible visits_query must both be specified"
+            )
         runDESSimulation(args, sconfigs)
     else:
         pplogger.error(

@@ -19,10 +19,7 @@
 
 import logging
 import numpy as np
-import pandas as pd
 
-import sys
-import importlib_resources
 from shapely.geometry import Point, Polygon, MultiPolygon
 import sqlite3
 from scipy.spatial import KDTree
@@ -43,27 +40,29 @@ logger = logging.getLogger(__name__)
 class DESFootprint:
     """DES Camera footprint class"""
 
-    def __init__(self, path=None):
+    def __init__(self, query=None, visits=None):
         """
         Initiates a Footprint object for DES.
 
         Parameters
         -----------
-        path : string, optional
-            Path to a .csv file containing detector corners. Default = None
+        query : sting, optional
+            query for visits database. Default = None
+
+        visits : string, optional
+            Path to a sql database containing detector corners and centers. Default = None
 
 
         Returns
         ----------
-        Footprint : Footprint
-            Footprint object for the provided sensors.
+        None
 
         """
         # currently hard coded in.
         # next step would be either to make them config.fov.attributes and cmdline args
 
-        self.filename = "/Users/ryanlyttle/Documents/Workstation/Dark energy survey /visits_cent.db"
-        self.query = "SELECT ra1,dec1,ra2,dec2,ra3,dec3,ra4,dec4,racenter,deccenter FROM observations WHERE observationId = ?"
+        self.filename = visits
+        self.query = query
 
     def applyDESFootprint(self, field_df, ra_name="RA_deg", dec_name="Dec_deg", fieldId="FieldID"):
         """

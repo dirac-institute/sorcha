@@ -304,6 +304,9 @@ class fovConfigs:
     footprint_path: str = None
     """Path to camera footprint file. Uncomment to provide a path to the desired camera detector configuration file if not using the default built-in detector configuration for the actual camera footprint."""
 
+    visits_query: str = None
+    """SQL query for extracting data from visits database."""
+
     fill_factor: str = None
     """Fraction of detector surface area which contains CCD -- simulates chip gaps for OIF output. Comment out if using camera footprint."""
 
@@ -362,13 +365,17 @@ class fovConfigs:
             sys.exit(
                 "ERROR: a default detector footprint is currently only provided for LSST and DES; please provide your own footprint file."
             )
-        if self.footprint_edge_threshold is not None:
-            if self.survey_name.lower() == "des":
+
+        if self.survey_name.lower() == "des":
+            check_key_exists(self.visits_query, "visits_query")
+            if self.footprint_edge_threshold is not None:
                 check_key_doesnt_exist(
                     self.footprint_edge_threshold,
                     "footprint_edge_threshold",
                     "But DES doesn't use edge threshold",
                 )
+
+        elif self.footprint_edge_threshold is not None and self.survey_name.lower() != "des":
             self.footprint_edge_threshold = cast_as_float(
                 self.footprint_edge_threshold, "footprint_edge_threshold"
             )

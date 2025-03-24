@@ -73,6 +73,7 @@ class sorchaArguments:
         self.ar_data_file_path = args.get("ar_data_path")
         self.loglevel = args["loglevel"]
         self.stats = args["stats"]
+        self.visits = args["visits_database"]
 
         self.surveyname = args["surveyname"]
 

@@ -117,6 +117,7 @@ def test_ephemeris_end2end(single_synthetic_pointing, tmp_path):
         "outfilestem": f"out_400k",
         "loglevel": False,
         "stats": None,
+        "visits_database": None,
     }
 
     pplogger = sorchaGetLogger(cmd_args_dict["outpath"], "test_log")

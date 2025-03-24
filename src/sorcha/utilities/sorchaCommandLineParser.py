@@ -75,6 +75,13 @@ def sorchaCommandLineParser(args):
     # if the user didn't provide output_ephemeris_file on the CLI, this will default to None
     cmd_args_dict["output_ephemeris_file"] = args.ew
 
+    # if the user didn't provide a visits database on the CLI, this will default to None
+
+    if args.vd is not None:
+        cmd_args_dict["visits_database"] = FindFileOrExit(args.vd, "-vd, --visits-db")
+    else:
+        cmd_args_dict["visits_database"] = args.vd
+
     # if a value was provided, warn the user about overwriting if the file exists
     if cmd_args_dict["output_ephemeris_file"]:
         warn_or_remove_file(
