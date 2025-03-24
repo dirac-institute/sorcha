@@ -205,8 +205,13 @@ Cometary Activity Template Class
 LSSTCometActivity Class
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-We have an `example Jupyter notebook <notebooks/demo_Cometary_Activity.ipynb>`_  demonstrating the LSSTCometActivity class built into `Sorcha add-ons package  <https://github.com/dirac-institute/sorcha-addons>`_. To use this prescription the **comet_activity** :ref:`configuration file<configs>` variable should be set to **lsst_comet**.
+Inside the `Sorcha add-ons  GitHub repository <https://github.com/dirac-institute/sorcha-addons>`_, we provide an example of a comet activity class. To use this function, in the :ref:`CPP` file, the user must provide a dust falling exponential value (k), Quantity of A'Hearn et al. (1984). at 1 au (afrho1), Observing filter of the observation (optFilter), Apparent magnitude in the input filter of the comet nucleus adding up all of the counts in the trail (TrailedSourceMag). If these are not provided then the software will produce an error message. We have an `example Jupyter notebook <notebooks/demo_Cometary_Activity.ipynb>`_ demonstrating the LSSTCometActivity class built into `Sorcha add-ons package  <https://github.com/dirac-institute/sorcha-addons>`_. To use this prescription the **comet_activity** :ref:`configuration file<configs>` variable should be set to **lsst_comet**.
 
+.. note::
+  ``afrho1`` - The product of albedo, filling factor of grains within the observer field
+  of view, and the linear radius of the field of view at the comet
+
+  This class is derived from ``lsstcomet`` by Mike Kelley (C)  LSST Solar System Scientific Collaboration 2019
 
 Rotational Lightcurve Effects
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
