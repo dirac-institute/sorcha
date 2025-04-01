@@ -45,7 +45,7 @@ def haversine_np(lon1, lat1, lon2, lat2):
 
 
 @njit(cache=True)
-def hasTracklet(mjd, ra, dec, maxdt_minutes, minlen_arcsec):
+def hasTracklet(mjd, ra, dec, maxdt_minutes, minlen_arcsec, min_observations):
     """
     Given a set of observations in one night, calculate it has
     at least onedetectable tracklet.
@@ -67,6 +67,9 @@ def hasTracklet(mjd, ra, dec, maxdt_minutes, minlen_arcsec):
     minlen_arcsec : float
         Minimum allowable distance separation between observations [Units: arcsec]
 
+    min_observations (int):
+        the minimum number of observations in a night required to form a tracklet.
+
     Returns
     --------
         : boolean
@@ -78,11 +81,14 @@ def hasTracklet(mjd, ra, dec, maxdt_minutes, minlen_arcsec):
     ## tracklets by taking all observations in a night and computing
     ## all of theirs pairwise distances, then selecting on that.
     nobs = len(ra)
+    if nobs >= 1 and min_observations == 1:  # edge case when 1 observation is needed for a tracklet
+        return True
     if nobs < 2:
         return False
 
     maxdt = maxdt_minutes / (60 * 24)
     minlen = minlen_arcsec / 3600
+    detection_pair_count = 0  # counting number of detection pairs
 
     for i in range(nobs):
         for j in range(nobs):
@@ -90,13 +96,15 @@ def hasTracklet(mjd, ra, dec, maxdt_minutes, minlen_arcsec):
             if diff > 0 and diff < maxdt:
                 sep = haversine_np(ra[i], dec[i], ra[j], dec[j])
                 if sep > minlen:
-                    return True
-
-    return False
+                    detection_pair_count += 1
+    if detection_pair_count >= (min_observations - 1):
+        return True
+    else:
+        return False
 
 
 @njit(cache=True)
-def trackletsInNights(night, mjd, ra, dec, maxdt_minutes, minlen_arcsec):
+def trackletsInNights(night, mjd, ra, dec, maxdt_minutes, minlen_arcsec, min_observations):
     """
     Calculate, for a given set of observations sorted by observation time,
     whether or not it has at least one discoverable tracklet in each night.
@@ -121,6 +129,9 @@ def trackletsInNights(night, mjd, ra, dec, maxdt_minutes, minlen_arcsec):
     minlen_arcsec : float
         Minimum allowable distance separation between observations [Units: arcsec]
 
+    min_observations (int):
+        the minimum number of observations in a night required to form a tracklet.
+
     Returns
     --------
     nights : float or array of floats
@@ -139,7 +150,7 @@ def trackletsInNights(night, mjd, ra, dec, maxdt_minutes, minlen_arcsec):
     # for each night, test if it has a tracklet
     b = 0
     for k, e in enumerate(i):
-        hasTrk[k] = hasTracklet(mjd[b:e], ra[b:e], dec[b:e], maxdt_minutes, minlen_arcsec)
+        hasTrk[k] = hasTracklet(mjd[b:e], ra[b:e], dec[b:e], maxdt_minutes, minlen_arcsec, min_observations)
         b = e
 
     return nights, hasTrk
@@ -232,7 +243,9 @@ def discoveryOpportunities(nights, nightHasTracklets, window, nlink, p, rng):
     return discIdx, disc
 
 
-def linkObject(obsv, seed, maxdt_minutes, minlen_arcsec, window, nlink, p, night_start_utc_days):
+def linkObject(
+    obsv, seed, maxdt_minutes, minlen_arcsec, min_observations, window, nlink, p, night_start_utc_days
+):
     """
     For a set of observations of a single object, calculate if there are any tracklets,
     if there are enough tracklets to form a discovery window, and then report back all of
@@ -261,6 +274,9 @@ def linkObject(obsv, seed, maxdt_minutes, minlen_arcsec, window, nlink, p, night
 
     minlen_arcsec : float
         Minimum allowable distance separation between observations [Units: arcsec]
+
+    min_observations (int):
+        the minimum number of observations in a night required to form a tracklet.
 
     window : float
         Number of tracklets required with <= this window to complete a detection
@@ -313,7 +329,9 @@ def linkObject(obsv, seed, maxdt_minutes, minlen_arcsec, window, nlink, p, night
         seed %= 0xFFFF_FFFF
         rng = np.random.default_rng(seed)
 
-        nights, hasTrk = trackletsInNights(night, mjd, ra, dec, maxdt_minutes, minlen_arcsec)
+        nights, hasTrk = trackletsInNights(
+            night, mjd, ra, dec, maxdt_minutes, minlen_arcsec, min_observations
+        )
         discIdx, discNights = discoveryOpportunities(nights, hasTrk, window, nlink, p, rng)
         if discIdx != -1:
             discoveryChances = len(discNights)

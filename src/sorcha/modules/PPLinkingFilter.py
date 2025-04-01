@@ -76,6 +76,7 @@ def PPLinkingFilter(
         objectId="ssObjectId",
         maxdt_minutes=maximum_time * 24 * 60,
         minlen_arcsec=minimum_separation,
+        min_observations=min_observations,
         window=tracklet_interval,
         nlink=min_tracklets,
         p=detection_efficiency,
