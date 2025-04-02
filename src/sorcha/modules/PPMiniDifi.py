@@ -88,7 +88,7 @@ def hasTracklet(mjd, ra, dec, maxdt_minutes, minlen_arcsec, min_observations):
 
     maxdt = maxdt_minutes / (60 * 24)
     minlen = minlen_arcsec / 3600
-    detection_pair_count = 0  # counting number of detection pairs
+    detection_indexes = []  # index of objects linked to eachother in pairs
 
     for i in range(nobs):
         for j in range(nobs):
@@ -96,8 +96,12 @@ def hasTracklet(mjd, ra, dec, maxdt_minutes, minlen_arcsec, min_observations):
             if diff > 0 and diff < maxdt:
                 sep = haversine_np(ra[i], dec[i], ra[j], dec[j])
                 if sep > minlen:
-                    detection_pair_count += 1
-    if detection_pair_count >= (min_observations - 1):
+                    detection_indexes.append(i)
+                    detection_indexes.append(j)  # store indexes of tracklet pairs that have pairs
+
+    if (
+        len(set(detection_indexes)) >= min_observations
+    ):  # removes duplicates and checks minimum number of observations
         return True
     else:
         return False

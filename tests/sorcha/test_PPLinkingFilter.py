@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 
+
 from sorcha.utilities.dataUtilitiesForTests import get_test_filepath
 
 
@@ -395,3 +396,116 @@ def test_PPLinkingFilter_nodrop():
     assert all(~linked_observations[linked_observations["ObjID"] == "unlinked_object"]["object_linked"])
     assert len(linked_observations[linked_observations["ObjID"] == "linked_object"]) == 6
     assert len(linked_observations[linked_observations["ObjID"] == "unlinked_object"]) == 6
+
+
+def test_PPLinkingFilter_minobs():
+    """
+    Testing min_observations for one night to consider a tracklet
+    """
+    from sorcha.modules.PPLinkingFilter import PPLinkingFilter
+
+    # min obs 5 and 5 detections on 1 night. should return all 5 observations
+    min_observations = 5
+    min_angular_separation = 0.5
+    max_time_separation = 0.0625
+    min_tracklets = 1
+    min_tracklet_window = 15
+    detection_efficiency = 1
+    night_start_utc = 17.0
+
+    obj_id = ["pretend_object"] * 5
+    field_id = np.arange(1, 6)
+    t0 = 60000.0
+    times = np.asarray([0.03, 0.06,0.07,0.08,0.09]) + t0
+    ra = [142, 142.1,142.2,142.3,142.4]
+    dec = [8, 8.1,8.2,8.3,8.4]
+
+    observations = pd.DataFrame(
+        {"ObjID": obj_id, "FieldID": field_id, "fieldMJD_TAI": times, "RA_deg": ra, "Dec_deg": dec}
+    )
+
+    linked_observations = PPLinkingFilter(
+        observations,
+        detection_efficiency,
+        min_observations,
+        min_tracklets,
+        min_tracklet_window,
+        min_angular_separation,
+        max_time_separation,
+        night_start_utc,
+    )
+
+    assert len(linked_observations) == 5
+
+    # min obs 6 and 5 detections on 1 night. Should return empty dataframe
+
+
+    min_observations = 6
+    min_angular_separation = 0.5
+    max_time_separation = 0.0625
+    min_tracklets = 1
+    min_tracklet_window = 15
+    detection_efficiency = 1
+    night_start_utc = 17.0
+
+    # create object that should link 6 observations on one night to tracklet but only give it 5 observations for that night.
+    obj_id = ["pretend_object"] * 5
+    field_id = np.arange(1, 6)
+    t0 = 60000.0
+    times = np.asarray([0.03, 0.06,0.07,0.08,0.09]) + t0
+    ra = [142, 142.1,142.2,142.3,142.4]
+    dec = [8, 8.1,8.2,8.3,8.4]
+
+    observations = pd.DataFrame(
+        {"ObjID": obj_id, "FieldID": field_id, "fieldMJD_TAI": times, "RA_deg": ra, "Dec_deg": dec}
+    )
+
+    linked_observations = PPLinkingFilter(
+        observations,
+        detection_efficiency,
+        min_observations,
+        min_tracklets,
+        min_tracklet_window,
+        min_angular_separation,
+        max_time_separation,
+        night_start_utc,
+    )
+
+    assert len(linked_observations) == 0
+
+    # min obs 1 and 2 detections on two different nights
+
+    min_observations = 1
+    min_angular_separation = 0
+    max_time_separation = 0
+    min_tracklets = 1
+    min_tracklet_window = 15
+    detection_efficiency = 1
+    night_start_utc = 17.0
+
+    # create object that should link 1 observation on one night to tracklet.
+    obj_id = ["pretend_object"] * 2 
+    field_id = np.arange(1,3)
+    t0 = 60000.0
+    times = np.asarray([0.03,1000]) + t0
+    ra = [142,152]
+    dec = [8,9]
+
+    observations = pd.DataFrame(
+        {"ObjID": obj_id, "FieldID": field_id, "fieldMJD_TAI": times, "RA_deg": ra, "Dec_deg": dec}
+    )
+
+    linked_observations = PPLinkingFilter(
+        observations,
+        detection_efficiency,
+        min_observations,
+        min_tracklets,
+        min_tracklet_window,
+        min_angular_separation,
+        max_time_separation,
+        night_start_utc,
+    )
+    print(linked_observations)
+    assert len(linked_observations) == 2
+
+  
