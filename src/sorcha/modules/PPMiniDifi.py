@@ -81,11 +81,11 @@ def hasTracklet(mjd, ra, dec, maxdt_minutes, minlen_arcsec, min_observations):
     ## tracklets by taking all observations in a night and computing
     ## all of theirs pairwise distances, then selecting on that.
     nobs = len(ra)
-    if nobs >= 1 and min_observations == 1:  # edge case when 1 observation is needed for a tracklet
-        return True
-    if nobs < 2:
+    if nobs < min_observations:
         return False
 
+    if min_observations == 1:  # for edge case where one observation is needed for a tracklet
+        return True
     maxdt = maxdt_minutes / (60 * 24)
     minlen = minlen_arcsec / 3600
     detection_indexes = []  # index of objects linked to eachother in pairs
@@ -97,11 +97,9 @@ def hasTracklet(mjd, ra, dec, maxdt_minutes, minlen_arcsec, min_observations):
                 sep = haversine_np(ra[i], dec[i], ra[j], dec[j])
                 if sep > minlen:
                     detection_indexes.append(i)
-                    detection_indexes.append(j)  # store indexes of tracklet pairs that have pairs
+                    detection_indexes.append(j)  # store indexes of observations that are linked.
 
-    if (
-        len(set(detection_indexes)) >= min_observations
-    ):  # removes duplicates and checks minimum number of observations
+    if len((detection_indexes)) >= min_observations:
         return True
     else:
         return False
