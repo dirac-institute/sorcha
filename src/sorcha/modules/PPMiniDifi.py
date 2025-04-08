@@ -99,10 +99,10 @@ def hasTracklet(mjd, ra, dec, maxdt_minutes, minlen_arcsec, min_observations):
                     detection_indexes.append(i)
                     detection_indexes.append(j)  # store indexes of observations that are linked.
 
-    if len(set(detection_indexes)) >= min_observations:
-        return True
-    else:
-        return False
+                    if len(set(detection_indexes)) >= min_observations:
+                        return True
+
+    return False
 
 
 @njit(cache=True)
