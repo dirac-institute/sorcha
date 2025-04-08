@@ -437,6 +437,42 @@ def test_PPLinkingFilter_minobs():
 
     assert len(linked_observations) == 5
 
+
+    # min obs 5 and 5 detections on 1 night, but only 4 observations can link into a tracklet. 
+    # should return 0
+    min_observations = 5
+    min_angular_separation = 0.5
+    max_time_separation = 0.0625
+    min_tracklets = 1
+    min_tracklet_window = 15
+    detection_efficiency = 1
+    night_start_utc = 17.0
+
+    obj_id = ["pretend_object"] * 5
+    field_id = np.arange(1, 6)
+    t0 = 60000.0
+    times = np.asarray([0.03, 0.06,0.07,0.08,0.15]) + t0 #last time has difference > max_time_separation so unlinkable
+    ra = [142, 142.1,142.2,142.3,142.15]
+    dec = [8, 8.1,8.2,8.3,8.4]
+
+    observations = pd.DataFrame(
+        {"ObjID": obj_id, "FieldID": field_id, "fieldMJD_TAI": times, "RA_deg": ra, "Dec_deg": dec}
+    )
+
+    linked_observations = PPLinkingFilter(
+        observations,
+        detection_efficiency,
+        min_observations,
+        min_tracklets,
+        min_tracklet_window,
+        min_angular_separation,
+        max_time_separation,
+        night_start_utc,
+    )
+
+    assert len(linked_observations) == 0
+
+
     # min obs 6 and 5 detections on 1 night. Should return empty dataframe
 
 
