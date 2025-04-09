@@ -1,50 +1,63 @@
-
 import numpy as np
+import astropy.units as u
 
 
-## filter for the DES object discovery requirements. 
+## filter for the DES object discovery requirements.
 #  the reqiurments are:
-#       a distance and motion limit 
+#       a distance and motion limit
 #       An ARCCUT limit (has to be at least 2 objects not in a triplet discovery season)
-#       SSP_number_tracklets >= 7 (this is a config file parameter and already decided by the user, the default config file will ) 
+#       SSP_number_tracklets >= 7 (this is a config file parameter and already decided by the user, the default config file will )
 #       the observation of the discovery triplets have to be within 60/90 days (depending on distance) of eachother
-
 
 
 # this is a rough example of a discovery filter for DES that can be used after PPLinkingFilter
 
-def discoveryfilter(sconfigs,observations):
-    discoveried_index = []
-    if sconfigs.linkingfilter.ssp_distance_cut_on:
-        observations = observations[sconfigs.linkingfilter.ssp_distance_cut_lower < observations["Obj_Sun_LTC_km"]>sconfigs.linkingfilter.ssp_distance_cut_upper]
 
-    if sconfigs.linkingfilter.ssp_motion_cut_on:
-        observations = observations[sconfigs.linkingfilter.ssp_motion_cut_lower < observations["Obj_Sun_LTC_km"]>sconfigs.linkingfilter.ssp_motion_cut_upper]
-
+def DESDiscoveryFilter(observations):
+    discovered_indices = []
 
     for object in observations["ObjID"].unique():
         obj = observations[observations["ObjID"] == object]
-
-        if obj["Obj_Sun_LTC_km"]> 50 :
+        bound = (50 * u.au).to(u.km).value
+        distance = np.sqrt(
+            observations["Obj_Sun_x_LTC_km"].values ** 2
+            + observations["Obj_Sun_y_LTC_km"].values ** 2
+            + observations["Obj_Sun_z_LTC_km"].values ** 2
+        )
+        if all(distance >= bound):
             window = 90
-        if  obj["Obj_Sun_LTC_km"]< 50 :
+        else:
             window = 60
-        if arccut(obj) and triplet(obj,window):
-            discoveried_index = 
-    
-    return discoveried_index
+
+        if not arccut(np.array(obj["fieldMJD_TAI"])):
+            continue
+
+        if not triplet(np.array(obj["fieldMJD_TAI"]), window):
+            continue
+
+        discovered_indices.extend(obj.index.tolist())
+    observations = observations.iloc[discovered_indices].copy()
+
+    observations = observations.sort_index()
+
+    return observations
+
 
 def arccut(obj):
-    if abs(obj["mjd"][-2] - obj["mjd"][0]) > 6 and abs(obj["mjd"][-1] - obj["mjd"][1]) > 6:
+    if abs(obj[-2] - obj[0]) > 0.5 * 365.25 and abs(obj[-1] - obj[1]) > 0.5 * 365.25:
         return True
-    else: 
+    else:
         return False
-    
 
-def triplet(obj,window):
-    for n in np.arange(1, len(obj)):
-        if abs(obj["mjd"][n]- obj["mjd"][n+1]) < window and abs(obj["mjd"][n+2]- obj["mjd"][n+1]) < window :
-            continue
-        else:
-            return False
-    return True
+
+def triplet(obj, window):
+    flag = 0
+    for n in np.arange(len(obj) - 2):
+        if abs(obj[n] - obj[n + 1]) < window and abs(obj[n + 2] - obj[n + 1]) < window:
+            flag = 1
+            break
+    if flag == 1:
+
+        return True
+    else:
+        return False

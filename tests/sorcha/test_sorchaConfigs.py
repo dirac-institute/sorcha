@@ -72,6 +72,13 @@ correct_linkingfilter = {
     "ssp_number_tracklets": 3,
     "ssp_track_window": 15,
     "ssp_night_start_utc": 16.0,
+    "survey_name": "rubin_sim",
+    'des_distance_cut_on': None, 
+    'des_distance_cut_upper': None, 
+    'des_distance_cut_lower': None, 
+    'des_motion_cut_on': None, 
+    'des_motion_cut_upper': None, 
+    'des_motion_cut_lower': None
 }
 
 correct_fov = {

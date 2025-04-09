@@ -11,7 +11,9 @@ from sorcha.ephemeris.simulation_driver import create_ephemeris
 from sorcha.ephemeris.simulation_setup import precompute_pointing_information
 
 from sorcha.modules.PPReadPointingDatabase import PPReadPointingDatabase
+from sorcha.modules.DESCuts import des_distance_cut, des_motion_cut
 from sorcha.modules.PPLinkingFilter import PPLinkingFilter
+from sorcha.modules.DESDiscoveryFilter import DESDiscoveryFilter
 from sorcha.modules.PPTrailingLoss import PPTrailingLoss
 from sorcha.modules.PPBrightLimit import PPBrightLimit
 from sorcha.modules.PPCalculateApparentMagnitude import PPCalculateApparentMagnitude
@@ -326,6 +328,24 @@ def runDESSimulation(args, sconfigs):
             )
             verboselog("Number of rows AFTER applying bright limit filter " + str(len(observations.index)))
 
+        if sconfigs.linkingfilter.des_distance_cut_on and len(observations.index) > 0:
+            verboselog("Number of rows BEFORE applying distance cuts: " + str(len(observations.index)))
+            observations = des_distance_cut(
+                observations,
+                sconfigs.linkingfilter.des_distance_cut_upper,
+                sconfigs.linkingfilter.des_distance_cut_lower,
+            )
+            verboselog("Number of rows AFTER applying distance cuts: " + str(len(observations.index)))
+
+        if sconfigs.linkingfilter.des_motion_cut_on and len(observations.index) > 0:
+            verboselog("Number of rows BEFORE applying motion cuts: " + str(len(observations.index)))
+            observations = des_motion_cut(
+                observations,
+                sconfigs.linkingfilter.des_motion_cut_upper,
+                sconfigs.linkingfilter.des_motion_cut_lower,
+            )
+            verboselog("Number of rows AFTER applying motion cuts: " + str(len(observations.index)))
+
         if sconfigs.linkingfilter.ssp_linking_on and len(observations.index) > 0:
             verboselog("Applying SSP linking filter...")
             verboselog("Number of rows BEFORE applying SSP linking filter: " + str(len(observations.index)))
@@ -341,7 +361,32 @@ def runDESSimulation(args, sconfigs):
                 drop_unlinked=sconfigs.linkingfilter.drop_unlinked,
             )
             observations.reset_index(drop=True, inplace=True)
+            if len(observations.index) > 0:
+                observations.drop("date_linked_MJD", axis=1, inplace=True)
+                # use linking filter again for triplet detection.
+                observations = PPLinkingFilter(
+                    observations,
+                    sconfigs.linkingfilter.ssp_detection_efficiency,
+                    sconfigs.linkingfilter.ssp_number_observations,
+                    3,
+                    180,
+                    sconfigs.linkingfilter.ssp_separation_threshold,
+                    sconfigs.linkingfilter.ssp_maximum_time,
+                    sconfigs.linkingfilter.ssp_night_start_utc,
+                    drop_unlinked=sconfigs.linkingfilter.drop_unlinked,
+                )
+            observations.reset_index(drop=True, inplace=True)
             verboselog("Number of rows AFTER applying SSP linking filter: " + str(len(observations.index)))
+            if len(observations.index) > 0:
+                verboselog("Applying DES discovery filter...")
+                verboselog(
+                    "Number of rows BEFORE applying DES Discovery filter: " + str(len(observations.index))
+                )
+                observations = DESDiscoveryFilter(observations)
+
+                verboselog(
+                    "Number of rows AFTER applying DES Discovery filter: " + str(len(observations.index))
+                )
 
         # write output if chunk not empty
         if len(observations.index) > 0:
