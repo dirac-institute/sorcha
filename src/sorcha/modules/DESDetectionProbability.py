@@ -60,8 +60,7 @@ def DESDetectionProbability(
 ):
     """
     Find probability of observations being observable for objectInField output.
-    Wrapper for calcDetectionProbability which takes into account column names
-    and trailing losses. Used by PPFadingFunctionFilter.
+    Wrapper for calcDetectionProbability which takes into account column names. Used by DESFadingFunctionFilter.
 
     Parameters
     -----------
