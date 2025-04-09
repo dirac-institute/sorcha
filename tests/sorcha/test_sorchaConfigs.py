@@ -824,7 +824,77 @@ def test_linkingfilter_bool():
         == f"ERROR: expected a bool for config parameter drop_unlinked. Check value in config file."
     )
 
+@pytest.mark.parametrize(
+    "key_name, prob_name", 
+    [
+        ("des_distance_cut_upper", "des_distance_cut_lower"),
+        ("des_distance_cut_lower", "des_distance_cut_upper"),
+        ("des_motion_cut_upper", "des_motion_cut_lower"),
+        ("des_motion_cut_lower", "des_motion_cut_upper")
+    ]
+)
 
+def test_linkingfilter_descuts_exists(key_name,prob_name):
+    """
+    tests the descut inputs in the linkingfilter
+    """
+
+    linkingfilter_configs = correct_linkingfilter.copy()
+
+    linkingfilter_configs[key_name] = 10
+
+    with pytest.raises(SystemExit) as error_text:
+        test_configs = linkingfilterConfigs(**linkingfilter_configs)
+
+    assert (
+        error_text.value.code
+        ==             f"ERROR: No value found for required key {prob_name} in config file. Please check the file and try again."
+
+    )
+
+@pytest.mark.parametrize(
+    "key_name, prob_name", 
+    [
+        ("des_distance_cut_upper", "des_distance_cut_lower"),
+        ("des_distance_cut_lower", "des_distance_cut_upper"),
+        ("des_motion_cut_upper", "des_motion_cut_lower"),
+        ("des_motion_cut_lower", "des_motion_cut_upper")
+    ]
+)
+def test_linkingfilter_descuts_float(key_name,prob_name):
+    """
+    tests that the descut inputs are float in the linkingfilter
+    """
+
+    linkingfilter_configs = correct_linkingfilter.copy()
+
+    linkingfilter_configs[key_name] = 10.0
+    linkingfilter_configs[prob_name] = "str"
+
+    with pytest.raises(SystemExit) as error_text:
+        test_configs = linkingfilterConfigs(**linkingfilter_configs)
+
+    assert (
+        error_text.value.code
+        ==             f"ERROR: expected a float for config parameter {prob_name}. Check value in config file."
+
+    )
+def test_linkingfilter_wrongsurvey():
+    """
+    makes sure DEScuts are only used in DES
+    """
+    linkingfilter_configs = correct_linkingfilter.copy()
+    linkingfilter_configs["des_distance_cut_on"] = True
+    
+
+    with pytest.raises(SystemExit) as error_text:
+        test_configs = linkingfilterConfigs(**linkingfilter_configs)
+
+    assert (
+        error_text.value.code
+        ==        "ERROR: distance cut and motion cut is a DES only feature"     
+
+    )
 ##################################################################################################################################
 
 # output config tests

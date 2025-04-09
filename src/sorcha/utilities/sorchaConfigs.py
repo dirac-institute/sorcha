@@ -657,8 +657,8 @@ class linkingfilterConfigs:
             self.des_motion_cut_lower = cast_as_float(self.des_motion_cut_lower, "des_motion_cut_lower")
         if self.des_distance_cut_on or self.des_motion_cut_on:
             if self.survey_name.lower() not in ["des"]:
-                logging.error("ERROR: distance cut and motion cut is a DES onlu feature")
-                sys.exit("ERROR: distance cut and motion cut is a DES onlu feature")
+                logging.error("ERROR: distance cut and motion cut is a DES only feature")
+                sys.exit("ERROR: distance cut and motion cut is a DES only feature")
 
 
 @dataclass

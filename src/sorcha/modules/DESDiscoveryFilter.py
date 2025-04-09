@@ -3,14 +3,8 @@ import astropy.units as u
 
 
 ## filter for the DES object discovery requirements.
-#  the reqiurments are:
-#       a distance and motion limit
-#       An ARCCUT limit (has to be at least 2 objects not in a triplet discovery season)
-#       SSP_number_tracklets >= 7 (this is a config file parameter and already decided by the user, the default config file will )
-#       the observation of the discovery triplets have to be within 60/90 days (depending on distance) of eachother
-
-
-# this is a rough example of a discovery filter for DES that can be used after PPLinkingFilter
+#    An ARCCUT limit (has to be at least 2 objects not in a triplet discovery season)
+#    the observation of the discovery triplets have to be within 60/90 days (depending on distance) of eachother
 
 
 def DESDiscoveryFilter(observations):
