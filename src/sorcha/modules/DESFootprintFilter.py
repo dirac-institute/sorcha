@@ -58,8 +58,6 @@ class DESFootprint:
         None
 
         """
-        # currently hard coded in.
-        # next step would be either to make them config.fov.attributes and cmdline args
 
         self.filename = visits
         self.query = query
