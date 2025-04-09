@@ -1,9 +1,8 @@
 import logging
 import numpy as np
-from astropy.coordinates import SkyCoord
 
-from sorcha.utilities.sorchaModuleRNG import PerModuleRNG
-from sorcha.modules.PPApplyFOVFilter import PPCircleFootprint,PPGetSeparation,PPSimpleSensorArea
+from sorcha.modules.PPApplyFOVFilter import PPCircleFootprint, PPSimpleSensorArea
+
 
 def DESApplyFOVFilter(observations, sconfigs, module_rngs, footprint=None, verbose=False):
     """
@@ -61,4 +60,3 @@ def DESApplyFOVFilter(observations, sconfigs, module_rngs, footprint=None, verbo
             observations = PPSimpleSensorArea(observations, module_rngs, sconfigs.fov.fill_factor)
 
     return observations
-
