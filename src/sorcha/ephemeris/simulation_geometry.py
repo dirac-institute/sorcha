@@ -196,8 +196,8 @@ def barycentricObservatoryRates(et, obsCode, observatories, Rearth=RADIUS_EARTH_
     vel = posvel[3:6]
     # Get the matrix that rotates from the Earth's equatorial body fixed frame to the J2000 equatorial frame.
     # We don't need to compute this repeatedly
-    et_1962 = spice.str2et('1962-Jan-20')    
-    if et>=et_1962:
+    et_1962 = spice.str2et("1962-Jan-20")
+    if et >= et_1962:
         m = spice.pxform("ITRF93", "J2000", et)
         mp = spice.pxform("ITRF93", "J2000", et + delta_et)
         mm = spice.pxform("ITRF93", "J2000", et - delta_et)
@@ -205,9 +205,9 @@ def barycentricObservatoryRates(et, obsCode, observatories, Rearth=RADIUS_EARTH_
         m = spice.pxform("IAU_EARTH", "J2000", et)
         mp = spice.pxform("IAU_EARTH", "J2000", et + delta_et)
         mm = spice.pxform("IAU_EARTH", "J2000", et - delta_et)
-    #m = spice.pxform("ITRF93", "J2000", et)
-    #mp = spice.pxform("ITRF93", "J2000", et + delta_et)
-    #mm = spice.pxform("ITRF93", "J2000", et - delta_et)
+    # m = spice.pxform("ITRF93", "J2000", et)
+    # mp = spice.pxform("ITRF93", "J2000", et + delta_et)
+    # mm = spice.pxform("ITRF93", "J2000", et - delta_et)
     # Get the MPC's unit vector from the geocenter to
     # the observatory
     obsVec = observatories.ObservatoryXYZ[obsCode]
