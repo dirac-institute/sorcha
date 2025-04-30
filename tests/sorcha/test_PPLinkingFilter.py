@@ -544,4 +544,72 @@ def test_PPLinkingFilter_minobs():
     print(linked_observations)
     assert len(linked_observations) == 2
 
-  
+
+
+    # min obs 4 and 4 detections on 1 night, but only 2 observations can link into a tracklet either side. 
+    # should return 0
+    min_observations = 4
+    min_angular_separation = 0.5
+    max_time_separation = 0.0625
+    min_tracklets = 1
+    min_tracklet_window = 15
+    detection_efficiency = 1
+    night_start_utc = 17.0
+
+    obj_id = ["pretend_object"] * 4
+    field_id = np.arange(1, 5)
+    t0 = 60000.0
+    times = np.asarray([0.03, 0.04,0.15,0.16]) + t0 # obs split in two with time difference > max_time_separation so unlinkable
+    ra = [142, 142.1,142.5,142.6]
+    dec = [8, 8.1,8.5,8.6]
+
+    observations = pd.DataFrame(
+        {"ObjID": obj_id, "FieldID": field_id, "fieldMJD_TAI": times, "RA_deg": ra, "Dec_deg": dec}
+    )
+
+    linked_observations = PPLinkingFilter(
+        observations,
+        detection_efficiency,
+        min_observations,
+        min_tracklets,
+        min_tracklet_window,
+        min_angular_separation,
+        max_time_separation,
+        night_start_utc,
+    )
+
+    assert len(linked_observations) == 0
+
+   # min obs 4 and 6 detections on 1 night, where only 4 observations can link into a tracklet.
+    # should return 6
+    min_observations = 4
+    min_angular_separation = 0.5
+    max_time_separation = 0.0625
+    min_tracklets = 1
+    min_tracklet_window = 15
+    detection_efficiency = 1
+    night_start_utc = 17.0
+
+    obj_id = ["pretend_object"] * 6
+    field_id = np.arange(1, 7)
+    t0 = 60000.0
+    times = np.asarray([0.03, 0.04,0.15,0.16,0.17,0.18]) + t0 # obs split in two with time difference > max_time_separation 2 on left and 4 on right
+    ra = [142, 142.1,142.5,142.6,142.7,142.8]
+    dec = [8, 8.1,8.5,8.6,8.7,8.8]
+
+    observations = pd.DataFrame(
+        {"ObjID": obj_id, "FieldID": field_id, "fieldMJD_TAI": times, "RA_deg": ra, "Dec_deg": dec}
+    )
+
+    linked_observations = PPLinkingFilter(
+        observations,
+        detection_efficiency,
+        min_observations,
+        min_tracklets,
+        min_tracklet_window,
+        min_angular_separation,
+        max_time_separation,
+        night_start_utc,
+    )
+
+    assert len(linked_observations) == 6
