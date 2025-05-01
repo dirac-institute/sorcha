@@ -241,3 +241,38 @@ def test_orbit_conversion_realdata():
         converted = np.array(parse_orbit_row(orbit_types[i], epochJD_TDB, None, sun_dict, gm_sun, gm_total))
         for j in range(6):
             assert np.isclose(converted[j], vec_bary[j], 1e-8)
+
+    from sorcha.ephemeris.orbit_conversion_utilities import universal_keplerian
+    from sorcha.ephemeris.simulation_constants import ECL_TO_EQ_ROTATION_MATRIX
+
+    # let's finalize this by testing universal_keplerian
+
+    newx = np.array([orbit_types["BCART"]["x"], orbit_types["BCART"]["y"], orbit_types["BCART"]["z"]])
+    newv = np.array(
+        [orbit_types["BCART"]["xdot"], orbit_types["BCART"]["ydot"], orbit_types["BCART"]["zdot"]]
+    )
+
+    newa, newe, newi, newlan, newaop, newma = universal_keplerian(
+        gm_total, newx[0], newx[1], newx[2], newv[0], newv[1], newv[2], epochJD_TDB - 2400000.5
+    )
+
+    assert np.isclose(orbit_types["BKEP"]["a"], newa, 1e-8)
+    assert np.isclose(orbit_types["BKEP"]["e"], newe, 1e-8)
+    assert np.isclose(orbit_types["BKEP"]["inc"], newi * 180 / np.pi, 1e-8)
+    assert np.isclose(orbit_types["BKEP"]["node"], newlan * 180 / np.pi, 1e-8)
+    assert np.isclose(orbit_types["BKEP"]["argPeri"], newaop * 180 / np.pi, 1e-8)
+    assert np.isclose(orbit_types["BKEP"]["ma"] - 360.0, newma * 180 / np.pi, 1e-8)  # wrap angle
+
+    newx = np.array([orbit_types["CART"]["x"], orbit_types["CART"]["y"], orbit_types["CART"]["z"]])
+    newv = np.array([orbit_types["CART"]["xdot"], orbit_types["CART"]["ydot"], orbit_types["CART"]["zdot"]])
+
+    newa, newe, newi, newlan, newaop, newma = universal_keplerian(
+        gm_sun, newx[0], newx[1], newx[2], newv[0], newv[1], newv[2], epochJD_TDB - 2400000.5
+    )
+
+    assert np.isclose(orbit_types["KEP"]["a"], newa, 1e-8)
+    assert np.isclose(orbit_types["KEP"]["e"], newe, 1e-8)
+    assert np.isclose(orbit_types["KEP"]["inc"], newi * 180 / np.pi, 1e-8)
+    assert np.isclose(orbit_types["KEP"]["node"], newlan * 180 / np.pi, 1e-8)
+    assert np.isclose(orbit_types["KEP"]["argPeri"], newaop * 180 / np.pi, 1e-8)
+    assert np.isclose(orbit_types["KEP"]["ma"] - 360.0, newma * 180 / np.pi, 1e-8)  # same
