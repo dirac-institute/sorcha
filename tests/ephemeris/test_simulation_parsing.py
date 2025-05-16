@@ -38,15 +38,14 @@ def test_observatory_before_1962():
         auxconfigs=auxconfigs, args=None, oc_file=get_test_filepath("ObsCodes_test.json")
     )
 
-    obs = observatory.ObservatoryXYZ
-
-    et = sp.spice.str2et("1961-Jan-20 00:00")
+    et = -1229083166.3680687  # thanks to Rahil Makadia
 
     pos, _ = sg.barycentricObservatoryRates(et, "Z20", observatory)
 
-    x, y, z = -7.426461821563405e07, 1.177545544454091e08, 5.105719899396534e07
-    print("X COORD ", pos[0] - x)
-    print("Y COORD ", pos[1] - y)
-    print("Z COORD ", pos[2] - z)
+    x, y, z = -7.426461821563405e07, 1.177545544454091e08, 5.105719899396534e07  # taken from JPL
 
-    # print(pos, x,y,z)
+    # note these should not match precisely because pre-1962 we're using an approximation
+    # but this is good enough
+    assert np.isclose(pos[0], x, 5)
+    assert np.isclose(pos[1], y, 5)
+    assert np.isclose(pos[2], z, 5)
