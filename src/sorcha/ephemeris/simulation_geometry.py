@@ -205,9 +205,6 @@ def barycentricObservatoryRates(et, obsCode, observatories, Rearth=RADIUS_EARTH_
         m = spice.pxform("IAU_EARTH", "J2000", et)
         mp = spice.pxform("IAU_EARTH", "J2000", et + delta_et)
         mm = spice.pxform("IAU_EARTH", "J2000", et - delta_et)
-    # m = spice.pxform("ITRF93", "J2000", et)
-    # mp = spice.pxform("ITRF93", "J2000", et + delta_et)
-    # mm = spice.pxform("ITRF93", "J2000", et - delta_et)
     # Get the MPC's unit vector from the geocenter to
     # the observatory
     obsVec = observatories.ObservatoryXYZ[obsCode]

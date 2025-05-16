@@ -2,6 +2,8 @@ import numpy as np
 import sorcha.ephemeris.simulation_parsing as sp
 from sorcha.utilities.dataUtilitiesForTests import get_test_filepath
 from sorcha.utilities.sorchaConfigs import auxiliaryConfigs
+import sorcha.ephemeris.simulation_geometry as sg
+import sorcha.ephemeris.simulation_setup as ss
 
 
 def test_observatory_compared_to_original():
@@ -27,3 +29,24 @@ def test_observatory_for_moving_observatories():
     obs = observatory.ObservatoryXYZ
 
     assert obs["250"] == (None, None, None)
+
+
+def test_observatory_before_1962():
+    # THIS UNIT TEST IS INCOMPLETE!
+    auxconfigs = auxiliaryConfigs()
+    observatory = sp.Observatory(
+        auxconfigs=auxconfigs, args=None, oc_file=get_test_filepath("ObsCodes_test.json")
+    )
+
+    obs = observatory.ObservatoryXYZ
+
+    et = sp.spice.str2et("1961-Jan-20 00:00")
+
+    pos, _ = sg.barycentricObservatoryRates(et, "Z20", observatory)
+
+    x, y, z = -7.426461821563405e07, 1.177545544454091e08, 5.105719899396534e07
+    print("X COORD ", pos[0] - x)
+    print("Y COORD ", pos[1] - y)
+    print("Z COORD ", pos[2] - z)
+
+    # print(pos, x,y,z)
