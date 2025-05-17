@@ -59,7 +59,7 @@ Here's the list of asteroid pertubers that are included in the ASSIST+REBOUND in
 - **(4) Vesta = A807 FA** 
 
 .. warning::
-  If you simulate the orbits of these select asteroids you will get **POOR results** with the internal ``Sorcha`` ephemeris generator because of how the n-body integration is set up. We recommend getting the positions of these asteroids from some other source and inputting them as an external ephemeris file. 
+  If you simulate the orbits of these select asteroids, you will get **POOR results** with the internal ``Sorcha`` ephemeris generator because of how the n-body integration is set up. We recommend getting the positions of these asteroids from some other source and inputting them as an external ephemeris file. 
 
 .. _tuneem:
 

@@ -129,7 +129,7 @@ Left and Right: The trailing losses for different values of the seeing θ, shown
 of the object’s on-sky velocity v, given in degrees per day on the bottom axis and pixels per 30 s visit on
 the upper axis. Right: A zoomed in version of the figure on the left for low v. Vertical lines represent the
 thresholds for typical on-sky motions of a TNO (Trans-Neptunian object), a Jupiter Trojan, and inner and
-outer MBAs (main-belt asteroids), a Jupiter Trojan, and inner and outer MBAs (main-belt asteroids) :ref:`(Luu & Jewitt 1988, Equation 1) <https://ui.adsabs.harvard.edu/abs/1988AJ.....95.1256L/abstract>`.
+outer MBAs (main-belt asteroids), a Jupiter Trojan, and inner and outer MBAs (main-belt asteroids) `(Luu & Jewitt 1988, Equation 1) <https://ui.adsabs.harvard.edu/abs/1988AJ.....95.1256L/abstract>`_.
 
 .. warning::
     Right now ``Sorcha`` only has functions to compute the trailing losses for the LSST.
@@ -248,7 +248,7 @@ Sinusoidal Light Curve  Class
 
 Inside the `Sorcha add-ons  GitHub repository <https://github.com/dirac-institute/sorcha-addons>`_, we provide a simple example implementation where the apparent magnitude of the object (that is, the magnitude after all geometric effects have been taken into account), has a sinusoidal term added to it. To use this function, in the :ref:`CPP` file, the user must provide a light curve amplitude (`LCA`), corresponding to half the peak-to-peak amplitude for the magnitude changes, a period `Period`, and a reference time `Time0` where the light curve is at 0 - if these are not provided, the software will produce an error message. Despite being simple, that implementation shows all the class methods that need to be implemented for a custom light curve function. We have an `example Jupyter notebook <notebooks/demo_Lightcurve.ipynb>`_  demonstrating the SinusoidalLightCurve class built into `Sorcha add-ons package <https://github.com/dirac-institute/sorcha-addons>`_,  To use this prescription, the **lc_model** :ref:`configuration file<configs>` variable should be set to **sinusoidal**.
 
-.. _vignettting:
+.. _vignetting:
 
 Calculating the 5σ Limiting Magnitude at the Source Location and Vignetting
 ----------------------------------------------------------------------------------------------------
