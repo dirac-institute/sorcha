@@ -32,7 +32,6 @@ def test_observatory_for_moving_observatories():
 
 
 def test_observatory_before_1962():
-    # THIS UNIT TEST IS INCOMPLETE!
     auxconfigs = auxiliaryConfigs()
     observatory = sp.Observatory(
         auxconfigs=auxconfigs, args=None, oc_file=get_test_filepath("ObsCodes_test.json")
