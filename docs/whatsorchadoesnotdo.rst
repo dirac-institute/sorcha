@@ -15,6 +15,7 @@ Here is a short summary of the key effects not accounted for in ``Sorcha``:
 - Properly handling collisions between the planets and the simulated objects 
 - Removing simulated objects due to small body collisions and breakup events
 - Handling or including false detections/linkages
+- Using space-based or moving observatory locations. We currently require an observatory code for a stationary observatory on the Earth with a location that is reported to the Minor Planet Center. 
 
 
 .. seealso::
