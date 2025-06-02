@@ -23,9 +23,8 @@ works, tutorials, and demonstration notebooks that show how each of the various 
    For a more detailed description of ``Sorcha`` and how it works, please see  `Merritt et al. (in press) <https://www.dropbox.com/scl/fi/ku3s6aqpo6p8cambfclqi/Merritt_et_al_sorcha_paper.pdf?rlkey=07daa4q51nvr1tf7b818s3fy4&dl=0>`_  and `Holman et al. (in press) <https://www.dropbox.com/scl/fi/uofk7nz64a9xzf0aszmtx/sorcha_ephemeris_generation_paper.pdf?rlkey=2xmzwxar7qj2tj48qpqq3xcae&dl=0>`_.
 
 .. warning::
-   This documentation site and the software package it describes are currently under review. The code in the repository has been validated (see the :ref:`various validation notebooks we provide <demonotebooks>`).
-   We will release ``Sorcha`` v1.0 on PyPI and conda-forge when the papers describing how they work are accepted. We ask
-   that if you're external to the ``Sorcha`` team that you please wait to use ``Sorcha`` in your science papers until v1.0 is released.
+   The code is still under going JOSS (Journal of Open Source Software) review, but we expect minimal changes as that finalizes. The code in the repository has been validated (see the :ref:`various validation notebooks we provide <demonotebooks>`).
+   We will release ``Sorcha`` v1.0 on PyPI and conda-forge soon - do double check the version from conda-forge/pypi. If your version is less than v1.0 uninstall and install via the development instructions using the source code directly from the Github repo. 
 
 
 What is Sorcha?
