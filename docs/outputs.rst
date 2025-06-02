@@ -189,17 +189,7 @@ Detections File: Full Output Column Names, Formats, and Descriptions
 +------------------------------------+--------------+----------------------------------------------------------------------------------------------------------+
 | phase_deg                          | Float        | The sun-object-observer angle (degrees)                                                                  |
 +------------------------------------+--------------+----------------------------------------------------------------------------------------------------------+
-| q                                  | Float        | Object perihelion (au)                                                                                   |
-+------------------------------------+--------------+----------------------------------------------------------------------------------------------------------+
-| e                                  | Float        | Orbital eccentricity                                                                                     |
-+------------------------------------+--------------+----------------------------------------------------------------------------------------------------------+
-| inc                                | Float        | Orbital inclination (degrees)                                                                            |
-+------------------------------------+--------------+----------------------------------------------------------------------------------------------------------+
-| node                               | Float        | Longitude of the ascending node of the object (degrees)                                                  |
-+------------------------------------+--------------+----------------------------------------------------------------------------------------------------------+
-| argPeri                            | Float        | Argument of periaspsis of the object (degrees)                                                           |
-+------------------------------------+--------------+----------------------------------------------------------------------------------------------------------+
-| t_p_MJD_TDB                        | Float        | Time of periapsis (MJD)  in Barycentric Dynamical Time                                                   |
+| *Orbital parameters*               | Float        | Specified input orbits in provided format (KEP, COM, CART, etc.)                                         |
 +------------------------------------+--------------+----------------------------------------------------------------------------------------------------------+
 | epochMJD_TDB                       | Float        | Epoch of orbit (MJD) in Barycentric Dynamical Time                                                       |
 +------------------------------------+--------------+----------------------------------------------------------------------------------------------------------+
@@ -257,14 +247,17 @@ Detections File: Full Output Column Names, Formats, and Descriptions
 +------------------------------------+--------------+----------------------------------------------------------------------------------------------------------+
 | object_linked                      | Boolean      | True/False whether the object passed the linking filter. See note below                                  |
 +------------------------------------+--------------+----------------------------------------------------------------------------------------------------------+
-| date_linked_MJD                    | Boolean      | MJD (TAI) Date the object was linked (if it was linked) See note below                                   |
+| date_linked_MJD                    | Float        | MJD (TAI) Date the object was linked (if it was linked) See note below                                   |
 +------------------------------------+--------------+----------------------------------------------------------------------------------------------------------+
+
+.. note::
+   If the user has specified **drop_unlinked = False** in the :ref:`configuration file<configs>`, the object_linked column will only contain TRUE. To see outputs for unlinked objects set **drop_unlinked = False**.
 
 .. note::
    All positions, positions, and velocities are in respect to J2000.
 
 .. note::
-   All columns in the comple physicalx parameters file will also be included in the full output. 
+   All columns in the complete physical parameters file will also be included in the full output. 
 
 
 .. warning::
@@ -309,11 +302,10 @@ Statistics (Tally) File Column Names, Formats, and Descriptions
 +------------------------------------+--------------+----------------------------------------------------------------------------------------------------------+
 | min_phase                          | Float        | Maximum calculated phase angle for this object in this filter (degrees)                                  |
 +------------------------------------+--------------+----------------------------------------------------------------------------------------------------------+
+| object_linked                      | Boolean      | True/False whether the object was linked by SSP (only included if linking is on)                         |
++------------------------------------+--------------+----------------------------------------------------------------------------------------------------------+
 | date_linked_MJD                    | Float        | Date the object was linked (if it was linked) in MJD (only included if linking is on)                    |
 +------------------------------------+--------------+----------------------------------------------------------------------------------------------------------+
-
-.. note::
-   Unless the user has specified **drop_unlinked = False** in the :ref:`configuration file<configs>`, the object_linked column will read TRUE for all objects. To see which objects were not linked by ``Sorcha``, this variable must be set to False.
 
 .. _ephem_output:
   
