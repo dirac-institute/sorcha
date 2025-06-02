@@ -24,7 +24,7 @@ This effort is a collaboration between Queen's University Belfast, the Universit
   :alt: Center for Astrophysics | Harvard & Smithsonian Logo
 
 .. image:: images/LINCC.png
-  :width: 190
+  :width: 180
   :alt: LINCC Logo
 
 .. image:: images/lsst-discovery-alliance-logo.png
