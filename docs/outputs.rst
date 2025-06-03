@@ -100,7 +100,7 @@ Detections File: Basic Output Column Names, Formats, and Descriptions
    All positions and velocities are in respect to J2000.
    
 .. note::
-   The **date_linked_MJD** only appears if :ref:`linking filter<linking>` is turned on. The **object_linked** column only appears if the :ref:`linking filter<linking>` is on and **drop_unlinked = False** in the :ref:`configuration file<configs>` (the user has requested that detections of unlinked objects not be dropped in the output).
+   The **object_linked** column only appears if the :ref:`linking filter<linking>` is on and **drop_unlinked = False** in the :ref:`configuration file<configs>` (the user has requested that detections of unlinked objects not be dropped in the output).
 
 
 .. warning::
@@ -302,7 +302,7 @@ Statistics (Tally) File Column Names, Formats, and Descriptions
 +------------------------------------+--------------+----------------------------------------------------------------------------------------------------------+
 | min_phase                          | Float        | Maximum calculated phase angle for this object in this filter (degrees)                                  |
 +------------------------------------+--------------+----------------------------------------------------------------------------------------------------------+
-| object_linked                      | Boolean      | True/False whether the object was linked by SSP (only included if linking is on and )                         |
+| object_linked                      | Boolean      | True/False whether the object was linked by SSP (only included if linking is on and drop_unlinked = False )                         |
 +------------------------------------+--------------+----------------------------------------------------------------------------------------------------------+
 | date_linked_MJD                    | Float        | Date the object was linked (if it was linked) in MJD (only included if linking is on)                    |
 +------------------------------------+--------------+----------------------------------------------------------------------------------------------------------+
