@@ -383,7 +383,7 @@ What we call the LSST pointing database (currently simulated since Rubin Observa
 
 
 
-The latest version of `rubin_sim <https://github.com/lsst/rubin_sim>`_ cadence simulations can be found at https://s3df.slac.stanford.edu/data/rubin/sim-data/. An example rubin_sim simulation visualized on sky is shown in the plot below of the number of on-sky visits over the 10-year simulated baseline v3.2 survey (image credit: Lynne Jones):
+The latest version of `rubin_sim <https://github.com/lsst/rubin_sim>`_ cadence simulations can be found at https://survey-strategy.lsst.io/baseline/index.html or  https://s3df.slac.stanford.edu/data/rubin/sim-data/. An example rubin_sim simulation visualized on sky is shown in the plot below of the number of on-sky visits over the 10-year simulated baseline v3.2 survey (image credit: Lynne Jones):
 
 .. image:: images/Rubin_v3.2_baseline_visits.png
   :width: 410
