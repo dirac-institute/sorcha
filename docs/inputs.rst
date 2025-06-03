@@ -541,7 +541,7 @@ Required Ephemeris File Columns and Format
 +--------------------------+-----------------------------------------------------------------------------------------+
 | FieldID                  | Observation pointing field identificator                                                |
 +--------------------------+-----------------------------------------------------------------------------------------+
-| FieldMJD_TAI             | Observation Mean Julian Date (MJD) in TAI (International Atomic Time)                   |
+| fieldMJD_TAI             | Observation Mean Julian Date (MJD) in TAI (International Atomic Time)                   |
 +--------------------------+-----------------------------------------------------------------------------------------+
 | fieldJD_TDB              | Observation Julian Date in TDB (Barycentric Dynamical Time)                             |
 +--------------------------+-----------------------------------------------------------------------------------------+
@@ -586,6 +586,8 @@ Required Ephemeris File Columns and Format
 .. note::
    All positions and velocities are in respect to J2000
 
+.. tip::
+   The format and columns contained in Sorcha's  :ref:`optional ephemeris output file<ephem_output>` are the same as the columns outlined above. 
 
 Ephemeris File Configuration Parameters 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
