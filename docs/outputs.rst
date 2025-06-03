@@ -379,7 +379,7 @@ ObjID,FieldID,fieldMJD_TAI,fieldJD_TDB,Range_LTC_km,RangeRate_LTC_km_s,RA_deg,RA
    All positions, positions, and velocities are in respect to J2000.
 
 .. note::
-   All columns in the comple physical parameters file will also be included in the full output.
+   All columns in the  physical parameters and complex physical parameters files will also be included in the full output.
 
 .. attention::
    Users should note that output produced by reading in a previously generated ephemeris file will be in a different order than the output produced when running the ephemeris generator within ``Sorcha``. This is simply a side-effect of how  ``Sorcha`` reads in ephemeris files and does not affect the actual content of the output.
