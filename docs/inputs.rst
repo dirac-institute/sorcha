@@ -587,7 +587,7 @@ Required Ephemeris File Columns and Format
    All positions and velocities are in respect to J2000
 
 .. tip::
-   The format and columns contained in Sorcha's  :ref:`optional ephemeris output file<ephem_output>` has the same as the columns outlined above. 
+   The format and columns contained in Sorcha's  :ref:`optional ephemeris output file<ephem_output>` are the same as the columns outlined above. 
 
 Ephemeris File Configuration Parameters 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
