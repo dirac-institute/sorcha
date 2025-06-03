@@ -325,7 +325,7 @@ Detections File: Full Output Column Names, Formats, and Descriptions
 
 
 .. note::
-   The format and columns for the ephemeris file output are the same as the columns and information required for the optional input epheemeris file that Sorcha can ingest. To see the format and colmns containined in the ephemeris output file see :ref:`here<_ephemf>`.
+   The format and columns for the ephemeris file output are the same as the columns and information required for the optional input ephemeris file that Sorcha can ingest. To see the format and colmns containined in the ephemeris output file see :ref:`here<ephemf>`.
 
 
 .. attention::
