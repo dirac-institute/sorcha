@@ -302,7 +302,7 @@ Statistics (Tally) File Column Names, Formats, and Descriptions
 +------------------------------------+--------------+----------------------------------------------------------------------------------------------------------+
 | min_phase                          | Float        | Maximum calculated phase angle for this object in this filter (degrees)                                  |
 +------------------------------------+--------------+----------------------------------------------------------------------------------------------------------+
-| object_linked                      | Boolean      | True/False whether the object was linked by SSP (only included if linking is on and drop_unlinked = False )                         |
+| object_linked                      | Boolean      | True/False whether the object was linked by SSP (only included if linking is on and drop_unlinked=False) |
 +------------------------------------+--------------+----------------------------------------------------------------------------------------------------------+
 | date_linked_MJD                    | Float        | Date the object was linked (if it was linked) in MJD (only included if linking is on)                    |
 +------------------------------------+--------------+----------------------------------------------------------------------------------------------------------+
@@ -322,64 +322,12 @@ The format of the outputted ephemeris file is controlled by the **eph_format** c
    eph_format = csv
 
 Detections File: Full Output Column Names, Formats, and Descriptions
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-ObjID,FieldID,fieldMJD_TAI,fieldJD_TDB,Range_LTC_km,RangeRate_LTC_km_s,RA_deg,RARateCosDec_deg_day,Dec_deg,DecRate_deg_day,Obj_Sun_x_LTC_km,Obj_Sun_y_LTC_km,Obj_Sun_z_LTC_km,Obj_Sun_vx_LTC_km_s,Obj_Sun_vy_LTC_km_s,Obj_Sun_vz_LTC_km_s,Obs_Sun_x_km,Obs_Sun_y_km,Obs_Sun_z_km,Obs_Sun_vx_km_s,Obs_Sun_vy_km_s,Obs_Sun_vz_km_s,phase_deg
 
-+------------------------------------+--------------+----------------------------------------------------------------------------------------------------------+
-| Keyword                            | Format       | Description                                                                                              |
-+====================================+==============+==========================================================================================================+
-| ObjID                              | String       | Unique string identifier                                                                                 |
-+------------------------------------+--------------+----------------------------------------------------------------------------------------------------------+
-| fieldId                            | Int          | Integer identifier of the observation                                                                    |
-+------------------------------------+--------------+----------------------------------------------------------------------------------------------------------+
-| fieldMJD_TAI                       | Float        | MJD (International Atomic Time Modified Julian Date) of the observation                                  |
-+------------------------------------+--------------+----------------------------------------------------------------------------------------------------------+
-| fieldJD_TDB                        | Float        | JD (Barycentric Julian Date) of the observation                                                          |
-+------------------------------------+--------------+----------------------------------------------------------------------------------------------------------+
-| Range_LTC_km                       | Float        | Light-time-corrected object-observer distance (km)                                                       |
-+------------------------------------+--------------+----------------------------------------------------------------------------------------------------------+
-| RangeRate_LTC_km_s                 | Float        | Light-time-corrected rate of change of the object-observer distance (km/s)                               |
-+------------------------------------+--------------+----------------------------------------------------------------------------------------------------------+
-| RA_deg                             | Float        | Calculated value of object right ascension unadjusted for astrometric uncertainty (degrees)              |
-+------------------------------------+--------------+----------------------------------------------------------------------------------------------------------+
-| RARateCosDec_deg_day               | Float        | Object right ascension rate of motion (deg/day)                                                          |
-+------------------------------------+--------------+----------------------------------------------------------------------------------------------------------+
-| Dec_deg                            | Float        | Calculated value of object declination unadjusted for astrometric uncertainty  (degrees)                 |
-+------------------------------------+--------------+----------------------------------------------------------------------------------------------------------+
-| DecRate_deg_day                    | Float        | Object declination rate of motion (deg/day)                                                              |
-+------------------------------------+--------------+----------------------------------------------------------------------------------------------------------+
-| Obj_Sun_x_LTC_km                   | Float        | Heliocentric object-sun light-time-corrected Cartesian x distance (km)                                   |
-+------------------------------------+--------------+----------------------------------------------------------------------------------------------------------+
-| Obj_Sun_y_LTC_km                   | Float        | Heliocentric object-sun light-time-corrected Cartesian y distance (km)                                   |
-+------------------------------------+--------------+----------------------------------------------------------------------------------------------------------+
-| Obj_Sun_x_LTC_km                   | Float        | Heliocentric object-sun light-time-corrected Cartesian z distance (km)                                   |
-+------------------------------------+--------------+----------------------------------------------------------------------------------------------------------+
-| Obj_Sun_vx_LTC_km_s                | Float        | Heliocentric object-sun light-time-corrected Cartesian x velocity (km/s)                                 |
-+------------------------------------+--------------+----------------------------------------------------------------------------------------------------------+
-| Obj_Sun_vy_LTC_km_s                | Float        | Heliocentric object-sun light-time-corrected Cartesian y velocity (km/s)                                 |
-+------------------------------------+--------------+----------------------------------------------------------------------------------------------------------+
-| Obj_Sun_vz_LTC_km_s                | Float        | Heliocentric object-sun light-time-corrected Cartesian z velocity (km/s)                                 |
-+------------------------------------+--------------+----------------------------------------------------------------------------------------------------------+
-| Obj_Sun_x_km                       | Float        | Heliocentric object-sun Cartesian x distance (km)                                                        |
-+------------------------------------+--------------+----------------------------------------------------------------------------------------------------------+
-| Obj_Sun_y_km                       | Float        | Heliocentric object-sun Cartesian y distance (km)                                                        |
-+------------------------------------+--------------+----------------------------------------------------------------------------------------------------------+
-| Obj_Sun_x_km                       | Float        | Heliocentric object-sun Cartesian z distance (km)                                                        |
-+------------------------------------+--------------+----------------------------------------------------------------------------------------------------------+
-| Obj_Sun_vx_km_s                    | Float        | Heliocentric object-sun Cartesian x velocity (km/s)                                                      |
-+------------------------------------+--------------+----------------------------------------------------------------------------------------------------------+
-| Obj_Sun_vy_km_s                    | Float        | Heliocentric object-sun Cartesian y velocity (km/s)                                                      |
-+------------------------------------+--------------+----------------------------------------------------------------------------------------------------------+
-| Obj_Sun_vz_km_s                    | Float        | Heliocentric object-sun Cartesian z velocity (km/s)                                                      |
-+------------------------------------+--------------+----------------------------------------------------------------------------------------------------------+
-| phase_deg                          | Float        | The sun-object-observer angle (degrees)                                                                  |
-+------------------------------------+--------------+----------------------------------------------------------------------------------------------------------+
 
 .. note::
-   All positions, positions, and velocities are in respect to J2000.
+   The format and columns for the ephemeris file output are the same as the columns and information required for the optional input epheemeris file that Sorcha can ingest. To
+see the format and colmns for the ephemeris output file see :ref:`here<_ephemf>` .
 
-.. note::
-   All columns in the  physical parameters and complex physical parameters files will also be included in the full output.
 
 .. attention::
    Users should note that output produced by reading in a previously generated ephemeris file will be in a different order than the output produced when running the ephemeris generator within ``Sorcha``. This is simply a side-effect of how  ``Sorcha`` reads in ephemeris files and does not affect the actual content of the output.
