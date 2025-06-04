@@ -1,7 +1,7 @@
 import numpy as np
 import astropy.units as u
 import numba
-
+import pandas as pd
 from numba.typed import List
 
 ## filter for the DES object discovery requirements.
@@ -15,13 +15,13 @@ bound = ((50 * u.au).to(u.km).value) ** 2  # square of the boundary 50au
 def DESDiscoveryFilter(
     observations,
     objectId="ObjID",
-    mjdTime="midPointTai",
+    mjdTime="fieldMJD_TAI",
     x_km="Obj_Sun_x_LTC_km",
     y_km="Obj_Sun_y_LTC_km",
     z_km="Obj_Sun_z_LTC_km",
 ):
     """
-    Filter for the DES object discovery requirements. This filter checks for an ARCCUT limit (has to be at least 2 objects not in a triplet discovery season) and 
+    Filter for the DES object discovery requirements. This filter checks for an ARCCUT limit (has to be at least 2 objects not in a triplet discovery season) and
     that the observation of the discovery triplets have to be within 60/90 days (depending on distance) of eachother.
     Parameters
     -----------
@@ -35,32 +35,48 @@ def DESDiscoveryFilter(
         Modified 'observations' dataframe without observations that could not be observed.
 
     """
+    # creating a numpy array of the obervations
+    obsv = pd.DataFrame(
+        {
+            objectId: observations["ObjID"],
+            mjdTime: observations["fieldMJD_TAI"],
+            x_km: observations["Obj_Sun_x_LTC_km"],
+            y_km: observations["Obj_Sun_y_LTC_km"],
+            z_km: observations["Obj_Sun_z_LTC_km"],
+        }
+    )
+    nameLen = obsv[objectId].str.len().max()
+    obsv = obsv.to_records(
+        index=False,
+        column_dtypes=dict(objectId=f"S{nameLen}", midPointTai="f8", x_km="f8", y_km="f8", z_km="f8"),
+    )
 
     discovered_indices = []
-    i = np.argsort(observations[objectId]) # index of objects sorted  
-    _ , idx = np.unique(observations[objectId][i], return_index=True) # making an idx for each unique object
+    i = np.argsort(obsv[objectId])  # index of objects sorted
+    _, idx = np.unique(obsv[objectId][i], return_index=True)  # making an idx for each unique object
 
-    splits = np.split(i, idx[1:]) # splitting the objects into their detections 
+    splits = np.split(i, idx[1:])  # splitting the objects into their detections
 
-    for _ , obsv_indices in enumerate(splits): # loop for each object
-        thisObsv = observations[[objectId, mjdTime, x_km, y_km, z_km]][obsv_indices]
+    for _, obsv_indices in enumerate(splits):  # loop for each object
+        thisObsv = obsv[[objectId, mjdTime, x_km, y_km, z_km]][obsv_indices]
         thisObsv.dtype.names = [objectId, mjdTime, x_km, y_km, z_km]
 
-        distance_sq = thisObsv[x_km] ** 2 + thisObsv[y_km] ** 2 + thisObsv[z_km] ** 2 # should i just calculate for one detection 
-        if any(distance_sq >= bound):  # boundary condition for triplet detection (depends on distance)
+        distance_sq = (
+            thisObsv[x_km][0] ** 2 + thisObsv[y_km][0] ** 2 + thisObsv[z_km][0] ** 2
+        )  # should i just calculate for one detection
+        if distance_sq >= bound:  # boundary condition for triplet detection (depends on distance)
             window = 90
         else:
             window = 60
         # sort the objects observations by time mjd
-        i_times = np.argsort(thisObsv[mjdTime]) 
-        thisObsv = thisObsv[i_times] 
+        i_times = np.argsort(thisObsv[mjdTime])
+        thisObsv = thisObsv[i_times]
 
-        # check cinditions are meet for detection. 
-        if not compute_arccut(thisObsv[mjdTime]) > 0.5 * 365.25 or not compute_triplet(
-            thisObsv[mjdTime], window
-        ):
-            continue # if conditions are not met skip object
-
+        # check cinditions are meet for detection.
+        if compute_arccut(thisObsv[mjdTime]) <= 0.5 * 365.25:
+            continue
+        if not compute_triplet(thisObsv[mjdTime], window):
+            continue
         discovered_indices.extend(obsv_indices)
     # return pandas dataframe of only the discovered objects
     observations = observations.iloc[discovered_indices].copy()
