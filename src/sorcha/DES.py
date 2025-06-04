@@ -377,7 +377,7 @@ def runDESSimulation(args, sconfigs):
                 )
             observations.reset_index(drop=True, inplace=True)
             verboselog("Number of rows AFTER applying SSP linking filter: " + str(len(observations.index)))
-            if len(observations.index) > 0:
+            if len(observations.index) > 0 and sconfigs.linkingfilter.ssp_number_tracklets >= 3:
                 verboselog("Applying DES discovery filter...")
                 verboselog(
                     "Number of rows BEFORE applying DES Discovery filter: " + str(len(observations.index))
@@ -387,6 +387,10 @@ def runDESSimulation(args, sconfigs):
                 verboselog(
                     "Number of rows AFTER applying DES Discovery filter: " + str(len(observations.index))
                 )
+            else: 
+                verboselog(
+                    "Minimum number of tracklets is < 3, DES Discovery filter is not applied"
+                    )
 
         # write output if chunk not empty
         if len(observations.index) > 0:
