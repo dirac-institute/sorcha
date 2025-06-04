@@ -38,11 +38,11 @@ def DESDiscoveryFilter(
     # creating a numpy array of the obervations
     obsv = pd.DataFrame(
         {
-            objectId: observations["ObjID"],
-            mjdTime: observations["fieldMJD_TAI"],
-            x_km: observations["Obj_Sun_x_LTC_km"],
-            y_km: observations["Obj_Sun_y_LTC_km"],
-            z_km: observations["Obj_Sun_z_LTC_km"],
+            objectId: observations[objectId],
+            mjdTime: observations[mjdTime],
+            x_km: observations[x_km],
+            y_km: observations[y_km],
+            z_km: observations[z_km],
         }
     )
     nameLen = obsv[objectId].str.len().max()
@@ -51,19 +51,21 @@ def DESDiscoveryFilter(
         column_dtypes=dict(objectId=f"S{nameLen}", midPointTai="f8", x_km="f8", y_km="f8", z_km="f8"),
     )
 
-    discovered_indices = []
+    
     i = np.argsort(obsv[objectId])  # index of objects sorted
     _, idx = np.unique(obsv[objectId][i], return_index=True)  # making an idx for each unique object
 
     splits = np.split(i, idx[1:])  # splitting the objects into their detections
 
+    discovered_indices = []
     for _, obsv_indices in enumerate(splits):  # loop for each object
         thisObsv = obsv[[objectId, mjdTime, x_km, y_km, z_km]][obsv_indices]
         thisObsv.dtype.names = [objectId, mjdTime, x_km, y_km, z_km]
 
-        distance_sq = (
-            thisObsv[x_km][0] ** 2 + thisObsv[y_km][0] ** 2 + thisObsv[z_km][0] ** 2
-        )  # should i just calculate for one detection
+        distance_sq = np.min(
+            thisObsv[x_km] ** 2 + thisObsv[y_km] ** 2 + thisObsv[z_km] ** 2
+        )  
+
         if distance_sq >= bound:  # boundary condition for triplet detection (depends on distance)
             window = 90
         else:
