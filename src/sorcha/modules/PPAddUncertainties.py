@@ -21,8 +21,6 @@ import numpy as np
 import logging
 import astropy.units as u
 from sorcha.modules import PPTrailingLoss
-from sorcha.modules import PPRandomizeMeasurements
-from sorcha.modules.PPSNRLimit import PPSNRLimit
 
 
 def degCos(x):
@@ -30,12 +28,12 @@ def degCos(x):
     Calculate cosine of an angle in degrees.
 
     Parameters
-    -----------
+    ----------
     x : float
         angle in degrees.
 
     Returns
-    -----------
+    -------
     float
         The cosine of x.
     """
@@ -48,12 +46,12 @@ def degSin(x):
     Calculate sine of an angle in degrees.
 
     Parameters
-    -----------
+    ----------
     x : float
         angle in degrees.
 
     Returns
-    -----------
+    -------
     float
         The sine of x.
     """
@@ -76,7 +74,7 @@ def addUncertainties(detDF, sconfigs, module_rngs, verbose=True):
     - PSFMag
 
     Parameters
-    -----------
+    ----------
     detDF : Pandas dataframe)
         Dataframe of observations.
 
@@ -90,7 +88,7 @@ def addUncertainties(detDF, sconfigs, module_rngs, verbose=True):
     Verbose Logging Flag. Default = True
 
     Returns
-    -----------
+    -------
     detDF : Pandas dataframe
         dataframe of observations, with new columns for observed
         magnitudes, SNR, and astrometric/photometric uncertainties.
@@ -126,7 +124,7 @@ def uncertainties(
     Add astrometric and photometric uncertainties to observations.
 
     Parameters
-    -----------
+    ----------
     detDF : Pandas dataframe
         dataframe containing observations.
 
@@ -162,7 +160,7 @@ def uncertainties(
         Default = "visitExposureTime"
 
     Returns
-    -----------
+    -------
     astrSigDeg: numpy array
         astrometric uncertainties in degrees.
 
@@ -199,7 +197,7 @@ def calcAstrometricUncertainty(
 
 
     Parameters
-    -----------
+    ----------
     mag : float or array of floats)
         magnitude of the observation.
 
@@ -228,7 +226,7 @@ def calcAstrometricUncertainty(
         other options: "arcsec" (arcseconds)
 
     Returns
-    -----------
+    -------
     astrom_error : float or array of floats)
         astrometric error.
 
@@ -289,7 +287,7 @@ def calcRandomAstrometricErrorPerCoord(FWHMeff, SNR, AstromErrCoeff=0.60):
     two catalogs) will be sqrt(2) times larger.
 
     Parameters
-    -----------
+    ----------
     FWHMeff : float or array of floats
         Effective Full Width at Half Maximum of Point Spread Function [mas].
 
@@ -301,7 +299,7 @@ def calcRandomAstrometricErrorPerCoord(FWHMeff, SNR, AstromErrCoeff=0.60):
         Default =0.60
 
     Returns
-    -----------
+    -------
     RandomAstrometricErrorPerCoord: float or array of floats
         random astrometric uncertainty per coordinate.
 
@@ -343,12 +341,12 @@ def calcPhotometricUncertainty(snr):
     Convert flux signal to noise ratio to an uncertainty in magnitude.
 
     Parameters
-    -----------
+    ----------
     snr : float or array of floats
         The signal-to-noise-ratio in flux.
 
     Returns
-    -----------
+    -------
     magerr : float or rray of floats
         The resulting uncertainty in magnitude.
     """

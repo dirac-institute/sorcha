@@ -8,7 +8,7 @@
 Citing the Software
 ==========================
 
-``Sorcha`` is described provided in joint Astromical Journal/JOSS software papers: Merritt et al. (submitted) and Holman et al.(submitted). We also ask that you reference in your software citations and acknowledgements the other packages that ``Sorcha`` is built upon (see below). 
+``Sorcha`` is described provided in joint Astromical Journal/JOSS software papers:  `Merritt et al. (in press) <https://arxiv.org/abs/2506.02804>`_  and `Holman et al. (submitted) <https://arxiv.org/abs/2506.02140>`_. We also ask that you reference in your software citations and acknowledgements the other packages that ``Sorcha`` is built upon (see below). 
 
 .. tip::
    Beyond citing the relevant papers, make sure to include details about your configuration for ``Sorcha`` (e.g. which footprint filter you're using), details about your input population (e.g. orbital, H, color, and phase curve distribution), and information about the pointing database used. 
@@ -22,17 +22,10 @@ Citing the Software
 Built-In Citation Function
 ----------------------------
 
-If you use ``Sorcha`` in your research, please do include a citation in your published papers for ``Sorcha`` and the software packages and resources that ``Sorcha`` is based on. There are two ways to find this information: 
-
-The first is to create a text file of the citation by running the following command on the command line:: 
+If you use ``Sorcha`` in your research, please do include a citation in your published papers for ``Sorcha`` and the software packages and resources that ``Sorcha`` is based on.  The user can create a text file of the citation information (or output the information to the standard output on the terminal) by running the following command on the command line:: 
    
    sorcha cite
    
-The second is to use our built-in citation function. In an interactive Python session or a Jupyter notebook::
-
-   import sorcha
-   sorcha.cite()
-
 
 Additional Citation Details
 ----------------------------

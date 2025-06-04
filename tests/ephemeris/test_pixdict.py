@@ -1,7 +1,6 @@
 import numpy as np
 import pandas as pd
 from sorcha.utilities.dataUtilitiesForTests import get_test_filepath, get_demo_filepath
-from sorcha.utilities.sorchaGetLogger import sorchaGetLogger
 from sorcha.utilities.sorchaArguments import sorchaArguments
 from sorcha.modules.PPReadPointingDatabase import PPReadPointingDatabase
 from sorcha.ephemeris.simulation_setup import (
@@ -13,8 +12,8 @@ from sorcha.ephemeris.simulation_setup import (
 
 from sorcha.ephemeris.pixel_dict import PixelDict
 from sorcha.ephemeris.simulation_parsing import Observatory
-from sorcha.ephemeris.simulation_geometry import ecliptic_to_equatorial, vec2ra_dec
-from sorcha.ephemeris.simulation_constants import SPEED_OF_LIGHT, AU_KM
+from sorcha.ephemeris.simulation_geometry import ecliptic_to_equatorial
+from sorcha.ephemeris.simulation_constants import SPEED_OF_LIGHT
 from sorcha.utilities.sorchaConfigs import sorchaConfigs
 
 

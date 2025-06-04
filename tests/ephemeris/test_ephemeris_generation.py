@@ -144,8 +144,8 @@ def test_ephemeris_end2end(single_synthetic_pointing, tmp_path):
         args,
         configs,
     )
-
-    assert len(observations) == 10
+    
+    assert len(observations) == 15
 
     # ensure no ephemeris file is written
     files = os.listdir(tmp_path)

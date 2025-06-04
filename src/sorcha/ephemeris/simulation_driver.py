@@ -15,9 +15,8 @@ from sorcha.ephemeris.simulation_setup import (
 from sorcha.ephemeris.simulation_constants import *
 from sorcha.ephemeris.simulation_geometry import *
 from sorcha.ephemeris.simulation_parsing import *
-from sorcha.utilities.dataUtilitiesForTests import get_data_out_filepath
 from sorcha.ephemeris.pixel_dict import PixelDict
-from sorcha.modules.PPOutput import PPOutWriteCSV, PPOutWriteSqlite3, PPOutWriteHDF5
+from sorcha.modules.PPOutput import PPOutWriteCSV, PPOutWriteHDF5
 
 
 @dataclass
@@ -35,11 +34,13 @@ class EphemerisGeometryParameters:
 
 def get_vec(row, vecname):
     """
-    Extracts a vector from a Pandas dataframe row
+    Extracts a vector from a Pandas dataframe row.
+
     Parameters
     ----------
     row : row from the dataframe
     vecname : name of the vector
+
     Returns
     -------
     : 3D numpy array
@@ -108,6 +109,9 @@ def create_ephemeris(orbits_df, pointings_df, args, sconfigs):
 
     ang_fov = sconfigs.simulation.ar_ang_fov
     buffer = sconfigs.simulation.ar_fov_buffer
+
+    ang_fov_buffer = ang_fov + buffer
+
     picket_interval = sconfigs.simulation.ar_picket
     obsCode = sconfigs.simulation.ar_obs_code
     nside = 2**sconfigs.simulation.ar_healpix_order
@@ -123,7 +127,6 @@ def create_ephemeris(orbits_df, pointings_df, args, sconfigs):
     furnish_spiceypy(args, sconfigs.auxiliary)
     verboselog("Generating ASSIST+REBOUND simulations.")
     sim_dict = generate_simulations(ephem, gm_sun, gm_total, orbits_df, args)
-    pixel_dict = defaultdict(list)
     observatories = Observatory(args, sconfigs.auxiliary)
 
     output = StringIO()
@@ -201,7 +204,7 @@ def create_ephemeris(orbits_df, pointings_df, args, sconfigs):
             sim, ex = v["sim"], v["ex"]
             uv /= np.linalg.norm(uv)
             ang = np.arccos(np.dot(uv, visit_vector)) * 180 / np.pi
-            if ang < ang_fov + buffer:
+            if ang < ang_fov_buffer:
                 (
                     ephem_geom_params.rho,
                     ephem_geom_params.rho_mag,
@@ -212,7 +215,7 @@ def create_ephemeris(orbits_df, pointings_df, args, sconfigs):
                 ephem_geom_params.rho_hat = ephem_geom_params.rho / ephem_geom_params.rho_mag
 
                 ang_from_center = 180 / np.pi * np.arccos(np.dot(ephem_geom_params.rho_hat, visit_vector))
-                if ang_from_center < ang_fov:
+                if ang_from_center < ang_fov_buffer:
                     out_tuple = calculate_rates_and_geometry(pointing, ephem_geom_params)
                     in_memory_csv.writerow(out_tuple)
 
@@ -244,17 +247,19 @@ def get_residual_vectors(v1):
     Decomposes the vector into two unit vectors to facilitate computation of on-sky angles
     The decomposition is such that A  = (-sin (RA), cos(RA), 0) is in the direction of increasing RA,
     and D = (-sin(dec)cos (RA), -sin(dec) sin(RA), cos(dec)) is in the direction of increasing Dec
-    The triplet (A,D,v1) forms an orthonormal basis of the 3D vector space
+    The triplet (A,D,v1) forms an orthonormal basis of the 3D vector space.
+
     Parameters
-    -----------
-        v1 : array, shape = (3,))
-            The vector to be decomposed
-    Returns
     ----------
-        A :  array, shape = (3,))
-            A  vector
-        D : array, shape = (3,))
-            D vector
+    v1 : array, shape = (3,))
+        The vector to be decomposed
+
+    Returns
+    -------
+    A :  array, shape = (3,))
+        A  vector
+    D : array, shape = (3,))
+        D vector
     """
     x, y, z = v1
     cosd = np.sqrt(1 - z * z)

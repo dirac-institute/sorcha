@@ -3,7 +3,7 @@
 Inputs
 ==========
 
-``Sorcha`` requires two input files describing the synthetic solar system objects to simulate -- one for the orbital parameters and one for the physical parameters -- as well as survey pointing database. Optionally, the user can provide a pre-generated ephemeris with the positions of each object near the survey pointings and a complex physical parameter file for rotational light curves and cometary activity. Each of these files are described within this section and example files are shown.
+``Sorcha`` requires two input files describing the synthetic solar system objects to simulate -- one for the orbital parameters and one for the physical parameters -- as well as a survey pointing database. Optionally, the user can provide a pre-generated ephemeris file with the positions of each object and a complex physical parameter file for rotational light curves and cometary activity. Each of these files are described within this section and example files are shown.
 
 
 .. image:: images/survey_simulator_flow_chart.png
@@ -45,7 +45,7 @@ This is a file which contains the orbital information of a set of synthetic obje
   Be careful about the way your input elements are defined! Using heliocentric elements as barycentric (or vice-versa) will lead to wrong outputs. Similarly, if using Cartesian elements, be careful about the orientation of the coordinate system! ``Sorcha`` assumes that Cartesian elements are Ecliptic-oriented.
 
 .. attention::
-   Use the **--ob** flag on the command line to specify the orbit file  that ``Sorcha`` should use.
+   Use the **--ob (--orbits)** flag with the **sorcha run** command on the terminal to specify the orbit file  that ``Sorcha`` should use.
 
 .. note::
   For readability we show examples of whitespace-separated files below. We show only the heliocentric versions of these inputs, as the barycentric column requirements are identical, changing only the `FORMAT` designation
@@ -69,27 +69,27 @@ Example Orbit File in Cometary Format
 Cometary Orbit Format Required Columns
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-+-------------+----------------------------------------------------------------------------------+
-| Keyword     | Description                                                                      |
-+=============+==================================================================================+
-| ObjID       | Object identifier for each synthetic planetesimal simulated (string)             |
-+-------------+----------------------------------------------------------------------------------+
-| FORMAT      | Orbit format string (COM for heliocentric or BCOM for barycentric)  		 |
-+-------------+----------------------------------------------------------------------------------+
-| q           | Perihelion (au)	                                                                 |
-+-------------+----------------------------------------------------------------------------------+
-| e           | Eccentricity                                                                     |
-+-------------+----------------------------------------------------------------------------------+
-| inc         | Inclination (degrees)                                                            |
-+-------------+----------------------------------------------------------------------------------+
-| node        | Longitude of the ascending node (degrees)                                        |
-+-------------+----------------------------------------------------------------------------------+
-| argPeri     | Argument of perihelion (degrees)                                                 |
-+-------------+----------------------------------------------------------------------------------+
-| t_p_MJD_TDB | Time of periapsis (years, MJD)                                                   |
-+-------------+----------------------------------------------------------------------------------+
-| epochMJD_TDB| Epoch (MJD)                                                                      |
-+-------------+----------------------------------------------------------------------------------+
++-------------+--------------------------------------------------------------------------------------------+
+| Keyword     | Description                                                                                |
++=============+============================================================================================+
+| ObjID       | Object identifier for each synthetic planetesimal simulated (string)                       |
++-------------+--------------------------------------------------------------------------------------------+
+| FORMAT      | Orbit format string (COM for heliocentric or BCOM for barycentric)                         |
++-------------+--------------------------------------------------------------------------------------------+
+| q           | Perihelion distance (au)	                                                           |
++-------------+--------------------------------------------------------------------------------------------+
+| e           | Eccentricity                                                                               |
++-------------+--------------------------------------------------------------------------------------------+
+| inc         | Inclination (degrees)                                                                      |
++-------------+--------------------------------------------------------------------------------------------+
+| node        | Longitude of the ascending node (degrees)                                                  |
++-------------+--------------------------------------------------------------------------------------------+
+| argPeri     | Argument of perihelion (degrees)                                                           |
++-------------+--------------------------------------------------------------------------------------------+
+| t_p_MJD_TDB | Time of periapsis specified as Mean Julian Date (MJD) in TDB (Barycentric Dynamical Time)  |
++-------------+--------------------------------------------------------------------------------------------+
+| epochMJD_TDB| Epoch specified as Mean Julian Date (MJD) in TDB (Barycentric Dynamical Time)              |
++-------------+--------------------------------------------------------------------------------------------+
 
 Keplerian Orbit Format
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -128,7 +128,7 @@ Keplerian Orbit Format Required Columns
 +-------------+----------------------------------------------------------------------------------+
 | ma          | Mean Anomaly (degrees)                                                           |           
 +-------------+----------------------------------------------------------------------------------+
-| epochMJD_TDB| Epoch (MJD)                                                                      |
+| epochMJD_TDB| Epoch specified as Mean Julian Date (MJD) in TDB (Barycentric Dynamical Time)    |
 +-------------+----------------------------------------------------------------------------------+
 
 Cartesian Orbit Format
@@ -172,7 +172,7 @@ Cartesian Orbit Format Required Columns
 +-------------+----------------------------------------------------------------------------------+
 | zdot        | heliocentric or barycentric velocity on the ecliptic z axis (au/day)             |
 +-------------+----------------------------------------------------------------------------------+
-| epochMJD_TDB| Epoch (MJD)                                                                      |
+| epochMJD_TDB| Epoch specified as Mean Julian Date (MJD) in TDB (Barycentric Dynamical Time)    |
 +-------------+----------------------------------------------------------------------------------+
 
 .. note::
@@ -249,7 +249,7 @@ Example Physical Parameters File (a HG value is specified for each observing fil
    St500003a 6.67 1.72 0.48 -0.11 -0.12 -0.12 0.15 0.16 0.12 0.20 0.15 0.19
    St500004a 10.2 1.90 0.58 -0.21 -0.30 -0.39 0.15 0.15 0.16 0.15 0.14 0.16
 
-Rubin Observatory will survey the sky in six broadband (optical filters), *u, g, r, i, z,* and *y* . In the physical parameters file, you will specify the object's absolute magnitude in the main filter (as specified in the :ref:`configuration file<configs>` (sually this is g or r band) and then provide the synthetic planetesimal's color in other filters relative to the main filter.
+Rubin Observatory will survey the sky in six broadband (optical filters), *u, g, r, i, z,* and *y* . In the physical parameters file, you will specify the object's absolute magnitude in the main filter as specified in the :ref:`configuration file<configs>` (usually this is g or r band) and then provide the synthetic planetesimal's color in other filters relative to the main filter.
 
 
 Required Physical Parameters File Columns and Format
@@ -268,14 +268,14 @@ Required Physical Parameters File Columns and Format
 +------------------+----------------------------------------------------------------------------------+
 
 .. note::
-  The Phase curve parameters(s) column will not be present if the phase curve function/calculation is set to None in the :ref:`configuration file<configs>'.
+  The Phase curve parameters(s) column will not be present if the phase curve function/calculation is set to None in the :ref:`configuration file<configs>`.
 
 .. note::
   In the :ref:`configuration file<configs>` you can decide which filters you want to have ``Sorcha`` run on and specify which filter is the main filter that the absolute magnitude is defined for. You only need to provide colors for those filters specified in the :ref:`configuration file<configs>`.
 
 
 .. attention::
-   Use the **--p** flag on the command line to specify the pointing database that ``Sorcha`` should use.
+   Use the **-p (--physical-parameters)** flag with the **sorcha run** command on the terminal to specify the pointing database that ``Sorcha`` should use.
 
 .. seealso::
   We have an `example Jupyter notebook <notebooks/demo_CalculateLSSTColours.ipynb>`_  demonstrating how to take a representative optical/NIR spectra of your input population and using the `rubin_sim <https://github.com/lsst/rubin_sim>`_  package to estimate the expected colors in the LSST filter bandpasses.  
@@ -284,7 +284,7 @@ Required Physical Parameters File Columns and Format
 Physical Parameters  File Configuration Parameters
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-``Sorcha`` is initialized for the format of the input physical parameters file through the :ref:`configuration file<configs>` INPUT, FILTERS. and PHASECURVES sections:
+``Sorcha`` is initialized for the format of the input physical parameters file through the :ref:`configuration file<configs>` INPUT, FILTERS, and PHASECURVES sections:
 
 .. code-block::
 
@@ -334,11 +334,11 @@ The complex physical parameters file is only needed if you're going to include y
   *  Each simulated object **must** have a unique string identifier
 
 .. seealso::
-   Further details about how to use ``sorcha addons`` to apply cometary activity and lightcurve effects can be found :ref:`here<addons>`.
+   Further details about how to use ``Sorcha add-ons`` to apply cometary activity and lightcurve effects can be found :ref:`here<addons>`.
 
 
 .. attention::
-   Use the **--cp** flag on the command line to specify the pointing database that ``Sorcha`` should use.
+   Use the **--cp (--complex-physical-parameters)** flag with the **sorcha run**  command on the terminal to specify the pointing database that ``Sorcha`` should use.
 
 Complex Parameters File Configuration Parameters
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -383,7 +383,7 @@ What we call the LSST pointing database (currently simulated since Rubin Observa
 
 
 
-The latest version of rubin_sim cadence simulations can be found at https://s3df.slac.stanford.edu/data/rubin/sim-data/. An example rubin_sim simulation visualized on sky is shown in the plot below of the number of on-sky visits over the 10-year simulated baseline v3.2 survey (image credit: Lynne Jones):
+The latest version of `rubin_sim <https://github.com/lsst/rubin_sim>`_ cadence simulations can be found at https://survey-strategy.lsst.io/baseline/index.html or  https://s3df.slac.stanford.edu/data/rubin/sim-data/. An example rubin_sim simulation visualized on sky is shown in the plot below of the number of on-sky visits over the 10-year simulated baseline v3.2 survey (image credit: Lynne Jones):
 
 .. image:: images/Rubin_v3.2_baseline_visits.png
   :width: 410
@@ -391,7 +391,7 @@ The latest version of rubin_sim cadence simulations can be found at https://s3df
   :align: center
 
 .. attention::
-   There may be changes to how this information is read in when the Rubin Observatory operations begin in early 2026.
+   There may be changes to how this information is read in when the Rubin Observatory operations begin in late 2025.
 
 
 .. _database_query:
@@ -402,11 +402,11 @@ Setting Up the Correct LSST Pointing Database Query
 
 ``Sorcha``'s **ppsqldbquery** :ref:`configuration file<configs>` parameter contains the SQL query for obtaining this information from the pointing database.
 
-From rubin_sim v2.0 simulations onward use the query::
+From `rubin_sim <https://github.com/lsst/rubin_sim>`_ v2.0 cadence simulations onward use the query::
 
   SELECT observationId, observationStartMJD as observationStartMJD_TAI, visitTime, visitExposureTime, filter, seeingFwhmGeom as seeingFwhmGeom_arcsec, seeingFwhmEff as seeingFwhmEff_arcsec, fiveSigmaDepth as fieldFiveSigmaDepth_mag , fieldRA as fieldRA_deg, fieldDec as fieldDec_deg, rotSkyPos as fieldRotSkyPos_deg FROM observations order by observationId
 
-For past rubin_sim/OpSim simulations pre-v2.0 use the query::
+For past `rubin_sim <https://github.com/lsst/rubin_sim>`_ LSST cadence simulations pre-v2.0 use the query::
 
   SELECT observationId, observationStartMJD as observationStartMJD_TAI, visitTime, visitExposureTime, filter, seeingFwhmGeom as seeingFwhmGeom_arcsec, seeingFwhmEff as seeingFwhmEff_arcsec, fiveSigmaDepth  fieldFiveSigmaDepth_mag, fieldRA as fieldRA_deg, fieldDec as fieldDec_deg, rotSkyPos as fieldRotSkyPos_deg  FROM SummaryAllProps order by observationId
 
@@ -448,6 +448,27 @@ Example Camera Footprint File
     :language: text
     :lines: 1-20
 
+Required Camera Footprints File Columns and Format
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
++--------------------------+-----------------------------------------------------------------------------------------+
+| Keyword                  | Description                                                                             |
++==========================+=========================================================================================+
+| detector                 | Detector identifier (integer)                                                           |
++--------------------------+-----------------------------------------------------------------------------------------+
+| x                        | x position of the detector corner on the focal plane (float)                            |
++--------------------------+-----------------------------------------------------------------------------------------+
+| y                        | y position of the detector corner on the focal plane (float)                            |
++--------------------------+-----------------------------------------------------------------------------------------+
+
+
+.. note::
+   The x and y values are unitless and are respectively equal to
+   tan(ra) and tan(dec) , where ra and dec are the vertical and horizontal
+   angles of the points from the center of the sphere tangent to the origin
+   in the focal plane. For each detector, all four corners must be specified
+   in the camera footprint file.
+
 Camera Footprint File Configuration Parameters
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 You can set whether you're using a camera footprint file and the location of the file in the :ref:`configuration file<configs>` FOV section:
@@ -469,10 +490,10 @@ You can set whether you're using a camera footprint file and the location of the
    footprint_path= ./data/detectors_corners.csv
 
 .. note::
-   If camera_model is set to footprint and footprint_path config variable is not set, ``Sorcha`` will automatically read in its installed LSSTCam detector footprint file. 
+   If **camera_model** is set to footprint and **footprint_path** variable is not set, ``Sorcha`` will automatically read in its installed LSSTCam detector footprint file. 
 
 .. tip::
-   If using the cicle camera module, foot_print needs to be removed or commented out of the :ref:`configuration file<configs>` . 
+   If using the cicle camera model, the **footprint_path** variable should not be present or commented out of the :ref:`configuration file<configs>` . 
 
 
 .. _ephemf:
@@ -488,12 +509,16 @@ Ephemeris File (Optional)
   *  The first column must be ObjID, but the ordering of the remaining columns does not matter as long as the required columns exist and have entries
   *  The first row in the physical parameters file **must** list  the column names
   *  The **correct capitalization of column names** is required
-  *  The ephemeris file can be either **whitespace-separated** or **comma-separated values(CSV)**
+  *  The ephemeris file can be either **whitespace-separated** or **comma-separated values (CSV)**
   *  Each simulated object **must** have a unique string identifier
 
 .. attention::
-   Use the **--er** flag on the command line to specify the external ephemeris file that ``Sorcha`` should use.
+   Use the **--er (--ephem-read)** flag with the **sorcha run** command on then terminal to specify the external ephemeris file that ``Sorcha`` should use.
 
+
+.. warning::
+   We have validated ``Sorcha`` with its internal ephemeris generator. If the user chooses to use a different ephemeris engine's calculations as
+   input for ``Sorcha``, the user has the responsibility to check the accuracy of this input.
 
 Example Ephemeris File
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -505,60 +530,64 @@ Example Ephemeris File
     :language: text
     :lines: 1-20
 
+
 Required Ephemeris File Columns and Format
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-+--------------------------+----------------------------------------------------------------------------------+
-| Keyword                  | Description                                                                      |
-+==========================+==================================================================================+
-| ObjID                    | Object identifier for each synthetic planetesimal simulated (string)             |
-+--------------------------+----------------------------------------------------------------------------------+
-| FieldID                  | Observation pointing field identificator                                         |
-+--------------------------+----------------------------------------------------------------------------------+
-| FieldMJD_TAI             | Observation Mean Julian Date                                                     |
-+--------------------------+----------------------------------------------------------------------------------+
-| AstRange(km)             | Topocentric distance to the synthetic planetesimal                               |
-+--------------------------+----------------------------------------------------------------------------------+
-| AstRangeRate(km/s)       | Radial component of the object’s topocentric velocity (km/s)                     |
-+--------------------------+----------------------------------------------------------------------------------+
-| AstRA(deg)               | Synthetic plantesimal's right ascension (degrees)                                |
-+--------------------------+----------------------------------------------------------------------------------+
-| AstRARate(deg/day)       | Synthetic plantesimal's right ascension rate of motion (deg/day)                 |
-+--------------------------+----------------------------------------------------------------------------------+
-| AstDec(deg)              | Synthetic plantesimal's declination (degrees)                                    |
-+--------------------------+----------------------------------------------------------------------------------+
-| AstDecRate(deg/day)      | Synthetic plantesimal's declination rate of motion (deg/day)                     |
-+--------------------------+----------------------------------------------------------------------------------+
-| Ast-Sun(J2000x)(km)      |  Cartesian X-component of the synthetic planetesimal's heliocentric distance (km)|
-+--------------------------+----------------------------------------------------------------------------------+
-| Ast-Sun(J2000y)(km)      |  Cartesian Y-component of the synthetic planetesimal's heliocentric distance (km)|
-+--------------------------+----------------------------------------------------------------------------------+
-| Ast-Sun(J2000z)(km)      |  Cartesian Z-component of the synthetic planetesimal's heliocentric distance (km)|
-+--------------------------+----------------------------------------------------------------------------------+
-|Ast-Sun(J2000vx)(km/s)    |Cartesian X-component of the synthetic planetesimal's heliocentric velocity (km/s)|
-+--------------------------+----------------------------------------------------------------------------------+
-|Ast-Sun(J2000vy)(km/s)    |Cartesian Y-component of the synthetic planetesimal's heliocentric velocity (km/s)|
-+--------------------------+----------------------------------------------------------------------------------+
-| Ast-Sun(J2000vz)(km/s)   |Cartesian Z-component of the synthetic planetesimal's heliocentric velocity (km/s)|
-+--------------------------+----------------------------------------------------------------------------------+
-| Obs-Sun(J2000x)(km)      |  Cartesian X-component of observer's heliocentric distance (km)                  |
-+--------------------------+----------------------------------------------------------------------------------+
-| Obs-Sun(J2000y)(km)      |  Cartesian Y-component of the observer's heliocentric distance (km)              |
-+--------------------------+----------------------------------------------------------------------------------+
-| Obs-Sun(J2000z)(km)      |  Cartesian Z-component of the observer's heliocentric distance (km)              |
-+--------------------------+----------------------------------------------------------------------------------+
-|Obs-Sun(J2000vx)(km/s)    |  Cartesian X-component of the observer's heliocentric velocity (km/s)            |
-+--------------------------+----------------------------------------------------------------------------------+
-|Obs-Sun(J2000vy)(km/s)    |  Cartesian Y-component of the observer's heliocentric velocity (km/s)            |
-+--------------------------+----------------------------------------------------------------------------------+
-| Obs-Sun(J2000vz)(km/s)   |Cartesian Z-component of the observer's heliocentric velocity (km/s)              |
-+--------------------------+----------------------------------------------------------------------------------+
-| Sun-Ast-Obs(deg)         | The phase angle between the Sun, synthetic planetesimal, & observer (deg)        |
-+--------------------------+----------------------------------------------------------------------------------+
-
++--------------------------+-----------------------------------------------------------------------------------------+
+| Keyword                  | Description                                                                             |
++==========================+=========================================================================================+
+| ObjID                    | Object identifier for each synthetic planetesimal simulated (string)                    |
++--------------------------+-----------------------------------------------------------------------------------------+
+| FieldID                  | Observation pointing field identificator                                                |
++--------------------------+-----------------------------------------------------------------------------------------+
+| fieldMJD_TAI             | Observation Mean Julian Date (MJD) in TAI (International Atomic Time)                   |
++--------------------------+-----------------------------------------------------------------------------------------+
+| fieldJD_TDB              | Observation Julian Date in TDB (Barycentric Dynamical Time)                             |
++--------------------------+-----------------------------------------------------------------------------------------+
+| Range_LTC_km             | Topocentric distance to the simulated object                                            |
++--------------------------+-----------------------------------------------------------------------------------------+
+| RangeRate_LTC_km_s       | Radial component of the object’s topocentric velocity (km/s)                            |
++--------------------------+-----------------------------------------------------------------------------------------+
+| RA_deg                   | Object right ascension (degrees)                                                        |
++--------------------------+-----------------------------------------------------------------------------------------+
+| RARateCosDec_deg_day     | Object right ascension rate of motion multiplied by cos(Dec) (deg/day)                  |
++--------------------------+-----------------------------------------------------------------------------------------+
+| Dec_deg                  | Object declination (degrees)                                                            |
++--------------------------+-----------------------------------------------------------------------------------------+
+| DecRate_deg_day          | Object declination rate of motion (deg/day)                                             |
++--------------------------+-----------------------------------------------------------------------------------------+
+| Obj_Sun_x_LTC_km         | Light-time-corrected Cartesian X-component of the object’s heliocentric distance (km)   |
++--------------------------+-----------------------------------------------------------------------------------------+
+| Obj_Sun_y_LT_km          | Light-time-corrected Cartesian Y-component of the object’s heliocentric distance (km)   |
++--------------------------+-----------------------------------------------------------------------------------------+
+| Obj_Sun_z_LTC_km         | Light-time-corrected Cartesian X-component of the object’s heliocentric distance (km)   |
++--------------------------+-----------------------------------------------------------------------------------------+
+| Obj_Sun_vx_LTC_km_s      | Light-time-corrected Cartesian X-component of the object’s heliocentric velocity (km/s) |
++--------------------------+-----------------------------------------------------------------------------------------+
+| Obj_Sun_vy_LTC_km_s      | Light-time-corrected Cartesian Y-component of the object’s heliocentric velocity (km/s) |
++--------------------------+-----------------------------------------------------------------------------------------+
+| Obj_Sun_vz_LTC_km_s      | Light-time-corrected Cartesian Z-component of the object’s heliocentric velocity (km/s) |
++--------------------------+-----------------------------------------------------------------------------------------+
+| Obs_Sun_x_km             |  Cartesian X-component of observer's heliocentric distance (km)                         |
++--------------------------+-----------------------------------------------------------------------------------------+
+| Obs_Sun_y_km             |  Cartesian Y-component of the observer's heliocentric distance (km)                     |
++--------------------------+-----------------------------------------------------------------------------------------+
+| Obs_Sun_z_km             |  Cartesian Z-component of the observer's heliocentric distance (km)                     |
++--------------------------+-----------------------------------------------------------------------------------------+
+| Obs_Sun_vx_km_s          |  Cartesian X-component of the observer's heliocentric velocity (km/s)                   |
++--------------------------+-----------------------------------------------------------------------------------------+
+| Obs_Sun_vy_km_s          |  Cartesian Y-component of the observer's heliocentric velocity (km/s)                   |
++--------------------------+-----------------------------------------------------------------------------------------+
+| Obs_Sun_vz_km_s          | Cartesian Z-component of the observer’s heliocentric velocity (km/s)                    |
++--------------------------+-----------------------------------------------------------------------------------------+
+| phase_deg                | Phase angle between the Sun, object, and observer (degrees)                             |
++--------------------------+-----------------------------------------------------------------------------------------+
 .. note::
    All positions and velocities are in respect to J2000
 
+.. tip::
+   The format and columns contained in Sorcha's  :ref:`optional ephemeris output file<ephem_output>` are the same as the columns outlined above. 
 
 Ephemeris File Configuration Parameters 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -583,3 +612,25 @@ Ephemeris File Configuration Parameters
    # Options: csv, whitespace, hdf5
 
    eph_format = csv
+
+
+.. _installation_aux:
+
+Downloading Auxiliary Files For the Ephemeris Generator
+-----------------------------------------------------------
+
+To run ``Sorcha``'s built in :ref:`ephemeris generator<ephemeris_gen>`, you will need to download the auxiliary files required for performing the N-body integrations. 
+
+To install the necessary `SPICE (Spacecraft, Planet, Instrument, C-matrix, Events) <https://naif.jpl.nasa.gov/naif/spiceconcept.html>`_ auxiliary files and other required data files for ephemeris generation (774 MB total in size), run::
+
+    sorcha bootstrap
+
+.. note::
+   This script will download and store the auxiliary files in your computer's local cache directory by default.
+
+.. note::
+   The optional --cache flag allows you to specify a specific location to download the auxiliary files. If the files have  already downloaded and want a fresh download, you need to use the -f flag.
+
+.. warning:: These files can change/be updated with the revised positions of the planets every once in a while. So if you're running simulations for population statistics, we recommend downloading these files to a directory and having all Sorcha runs these files for consistency.
+  
+

@@ -647,7 +647,6 @@ def test_fadingfunctionConfig_on_float(key_name):
     )
 
 
-
 @pytest.mark.parametrize("key_name", ["fading_function_width", "fading_function_peak_efficiency"])
 def test_fadingfunction_outofbounds(key_name):
     """
@@ -671,6 +670,7 @@ def test_fadingfunction_outofbounds(key_name):
             == "ERROR: fading_function_peak_efficiency out of bounds. Must be between 0 and 1."
         )
 
+
 def test_fadingfunction_allnone():
     """
     This loops through the not required keys and makes sure the code fails correctly when all attributes are none
@@ -682,8 +682,11 @@ def test_fadingfunction_allnone():
     with pytest.raises(SystemExit) as error_text:
         test_configs = fadingfunctionConfigs(**fadingfunction_configs)
     assert (
-        error_text.value.code == "ERROR: Both fading_function_peak_efficiency and fading_function_width are needed to be supplied for fading function"
+        error_text.value.code
+        == "ERROR: Both fading_function_peak_efficiency and fading_function_width are needed to be supplied for fading function"
     )
+
+
 ##################################################################################################################################
 
 # linkingfilter tests

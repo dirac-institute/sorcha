@@ -30,11 +30,34 @@ def create_assist_ephemeris(args, auxconfigs) -> tuple:
     """Build the ASSIST ephemeris object
     Parameter
     ---------
+    args: dictionary
+        Dictionary of command-line arguments.
     auxconfigs: dataclass
         Dataclass of auxiliary configuration file arguments.
     Returns
     ---------
-    Ephem : ASSIST ephemeris obejct
+    Ephem : ASSIST ephemeris object
+        The ASSIST ephemeris object
+    gm_sun : float
+        value for the GM_SUN value
+    gm_total : float
+        value for gm_total
+    """
+    cache_directory = args.ar_data_file_path
+    return _create_assist_ephemeris(auxconfigs, cache_directory)
+
+
+def _create_assist_ephemeris(auxconfigs, cache_dir=None) -> tuple:
+    """Build the ASSIST ephemeris object
+    Parameter
+    ---------
+    auxconfigs: dataclass
+        Dataclass of auxiliary configuration file arguments.
+    cache_dir: string
+        The base directory to place all downloaded files. Default = None
+    Returns
+    ---------
+    Ephem : ASSIST ephemeris object
         The ASSIST ephemeris object
     gm_sun : float
         value for the GM_SUN value
@@ -43,7 +66,7 @@ def create_assist_ephemeris(args, auxconfigs) -> tuple:
     """
     pplogger = logging.getLogger(__name__)
 
-    retriever = make_retriever(auxconfigs, args.ar_data_file_path)
+    retriever = make_retriever(auxconfigs, cache_dir)
     planets_file_path = retriever.fetch(auxconfigs.jpl_planets)
     small_bodies_file_path = retriever.fetch(auxconfigs.jpl_small_bodies)
     ephem = Ephem(planets_path=planets_file_path, asteroids_path=small_bodies_file_path)

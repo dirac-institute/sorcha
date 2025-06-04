@@ -6,7 +6,7 @@ from pooch import Decompress
 from sorcha.ephemeris.simulation_constants import RADIUS_EARTH_KM
 from sorcha.ephemeris.simulation_geometry import ecliptic_to_equatorial, equatorial_to_ecliptic
 from sorcha.ephemeris.simulation_data_files import make_retriever
-from sorcha.ephemeris.orbit_conversion_utilities import universal_cartesian, universal_keplerian
+from sorcha.ephemeris.orbit_conversion_utilities import universal_cartesian, universal_cometary
 
 
 def mjd_tai_to_epoch(mjd_tai):
@@ -161,7 +161,7 @@ def get_perihelion_row(row, epochJD_TDB, ephem, ssb_dict, gm_sun, gm_total):
 
     if orbit_format not in ["COM"]:
         if orbit_format == "CART":
-            q, e, inc, node, argPeri, Tp = universal_keplerian(
+            q, e, inc, node, argPeri, Tp = universal_cometary(
                 gm_sun,
                 row["x"],
                 row["y"],
@@ -177,7 +177,7 @@ def get_perihelion_row(row, epochJD_TDB, ephem, ssb_dict, gm_sun, gm_total):
             Tp += -2400000.5
 
         elif orbit_format == "BCART":  # convert to helio here
-            q, e, inc, node, argPeri, Tp = universal_keplerian(
+            q, e, inc, node, argPeri, Tp = universal_cometary(
                 gm_sun,
                 row["x"] + ssb_pos[0],
                 row["y"] + ssb_pos[1],
@@ -216,7 +216,7 @@ def get_perihelion_row(row, epochJD_TDB, ephem, ssb_dict, gm_sun, gm_total):
             )
 
             # now go to helio
-            q, e, inc, node, argPeri, Tp = universal_keplerian(
+            q, e, inc, node, argPeri, Tp = universal_cometary(
                 gm_sun,
                 ecx + ssb_pos[0],
                 ecy + ssb_pos[1],
@@ -245,7 +245,7 @@ def get_perihelion_row(row, epochJD_TDB, ephem, ssb_dict, gm_sun, gm_total):
             )
 
             # now go to helio
-            q, e, inc, node, argPeri, Tp = universal_keplerian(
+            q, e, inc, node, argPeri, Tp = universal_cometary(
                 gm_sun,
                 ecx + ssb_pos[0],
                 ecy + ssb_pos[1],
