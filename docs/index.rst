@@ -23,7 +23,7 @@ works, tutorials, and demonstration notebooks that show how each of the various 
    For a more detailed description of ``Sorcha`` and how it works, please see  `Merritt et al. (in press) <https://arxiv.org/abs/2506.02804>`_  and `Holman et al. (in press) <https://arxiv.org/abs/2506.02140>`_.
 
 .. warning::
-   ``Sorcha`` v1.0 has been released on conda-forge and pypi. The code is still in the JOSS (Journal of Open Source Software) review process, but we expect minimal changes, but there could be a minor bug fix or two as that finalizes. So do install the latest version before finalizing your publication ready simulation output. The code in the repository has been validated (see the :ref:`various validation notebooks we provide <demonotebooks>` for LSST-like moving object discovery/linking).
+   ``Sorcha`` v1.0 has been released on conda-forge and pypi. The code is still in the JOSS (Journal of Open Source Software) review process, We expect minimal changes, but there could be a minor bug fix or two as that finalizes. So do install the latest version before finalizing your publication ready simulation output. The code in the repository has been validated (see the :ref:`various validation notebooks we provide <demonotebooks>` for LSST-like moving object discovery/linking).
     
 
 
