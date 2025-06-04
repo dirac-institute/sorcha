@@ -21,15 +21,16 @@ def des_distance_cut(observations, distance_upper, distance_lower):
       a pandas dataframe containing observations with distance cuts
 
     """
-    distance = np.sqrt(
+
+    distance_sq = (
         observations["Obj_Sun_x_LTC_km"].values ** 2
         + observations["Obj_Sun_y_LTC_km"].values ** 2
         + observations["Obj_Sun_z_LTC_km"].values ** 2
     )
-    distance_upper = (distance_upper * u.au).to(u.km).value
-    distance_lower = (distance_lower * u.au).to(u.km).value
+    distance_upper = ((distance_upper * u.au).to(u.km).value) ** 2
+    distance_lower = ((distance_lower * u.au).to(u.km).value) ** 2
     observations = observations.drop(
-        observations[~((distance < distance_upper) & (distance > distance_lower))].index
+        observations[~((distance_sq < distance_upper) & (distance_sq > distance_lower))].index
     )
     return observations
 
