@@ -387,10 +387,8 @@ def runDESSimulation(args, sconfigs):
                 verboselog(
                     "Number of rows AFTER applying DES Discovery filter: " + str(len(observations.index))
                 )
-            else: 
-                verboselog(
-                    "Minimum number of tracklets is < 3, DES Discovery filter is not applied"
-                    )
+            else:
+                verboselog("Minimum number of tracklets is < 3, DES Discovery filter is not applied")
 
         # write output if chunk not empty
         if len(observations.index) > 0:

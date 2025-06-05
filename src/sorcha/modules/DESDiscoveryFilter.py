@@ -31,65 +31,46 @@ def DESDiscoveryFilter(
 
     Returns
     ----------
-    observations : Pandas dataframe)
+    observations : Pandas dataframe
         Modified 'observations' dataframe without observations that could not be observed.
 
     """
     # creating a numpy array of the obervations
-    obsv = pd.DataFrame(
-        {
-            objectId: observations[objectId],
-            mjdTime: observations[mjdTime],
-            x_km: observations[x_km],
-            y_km: observations[y_km],
-            z_km: observations[z_km],
-        }
-    )
-    nameLen = obsv[objectId].str.len().max()
+    obsv = observations[[objectId, mjdTime, x_km, y_km, z_km]]  # new dataframe of reduced columns
+    nameLen = obsv[objectId].str.len().max()  # allows strings in objectid to be fixed length for numby array
     obsv = obsv.to_records(
         index=False,
         column_dtypes=dict(objectId=f"S{nameLen}", midPointTai="f8", x_km="f8", y_km="f8", z_km="f8"),
-    )
+    )  # converts pd.dataframe to numpy array
 
-    
     i = np.argsort(obsv[objectId])  # index of objects sorted
     _, idx = np.unique(obsv[objectId][i], return_index=True)  # making an idx for each unique object
 
     splits = np.split(i, idx[1:])  # splitting the objects into their detections
 
-    discovered_indices = []
-    for _, obsv_indices in enumerate(splits):  # loop for each object
-        thisObsv = obsv[[objectId, mjdTime, x_km, y_km, z_km]][obsv_indices]
-        thisObsv.dtype.names = [objectId, mjdTime, x_km, y_km, z_km]
+    # creating a mask for dropping observations that dont meet requirments
+    mask = np.zeros(len(obsv), dtype=bool)
+    for obsv_indices in splits:  # loop for each object
+        thisObsv = obsv[obsv_indices]
+        # boundary condition for triplet detection (depends on minimum distance)
+        distance_sq = np.min(thisObsv[x_km] ** 2 + thisObsv[y_km] ** 2 + thisObsv[z_km] ** 2)
+        window = 90 if distance_sq >= bound else 60
 
-        distance_sq = np.min(
-            thisObsv[x_km] ** 2 + thisObsv[y_km] ** 2 + thisObsv[z_km] ** 2
-        )  
-
-        if distance_sq >= bound:  # boundary condition for triplet detection (depends on distance)
-            window = 90
-        else:
-            window = 60
-        # sort the objects observations by time mjd
+        # sort the object's observations by time mjd
         i_times = np.argsort(thisObsv[mjdTime])
         thisObsv = thisObsv[i_times]
 
         # check cinditions are meet for detection.
-        if compute_arccut(thisObsv[mjdTime]) <= 0.5 * 365.25:
-            continue
-        if not compute_triplet(thisObsv[mjdTime], window):
-            continue
-        discovered_indices.extend(obsv_indices)
-    # return pandas dataframe of only the discovered objects
-    observations = observations.iloc[discovered_indices].copy()
+        if compute_arccut(thisObsv[mjdTime]) and compute_triplet(thisObsv[mjdTime], window):
+            mask[obsv_indices] = True
 
-    observations = observations.sort_index()
+    observations = observations[mask]
 
-    return observations
+    return observations.sort_values(mjdTime).reset_index(drop=True)
 
 
 @numba.jit(
-    "f8(f8[:])",
+    "b1(f8[:])",
     nopython=True,
 )
 def compute_arccut(times):
@@ -114,7 +95,7 @@ def compute_arccut(times):
 
     arccut = min(t2 - t1a, t2a - t1)
 
-    return arccut
+    return arccut > 0.5 * 365.25
 
 
 @numba.jit(
