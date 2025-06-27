@@ -196,17 +196,17 @@ class filtersConfigs:
                     )
                 )
         if self.survey_name in ["DES", "des"]:
-            lsst_filters = ["g", "r", "i", "z", "Y"]
-            filters_ok = all(elem in lsst_filters for elem in self.observing_filters)
+            des_filters = ["g", "r", "i", "z", "Y"]
+            filters_ok = all(elem in des_filters for elem in self.observing_filters)
 
             if not filters_ok:
-                bad_list = np.setdiff1d(self.observing_filters, lsst_filters)
+                bad_list = np.setdiff1d(self.observing_filters, des_filters)
                 logging.error(
                     "ERROR: Filter(s) {} given in config file are not recognised filters for {} survey.".format(
                         bad_list, self.survey_name
                     )
                 )
-                logging.error("Accepted {} filters: {}".format("LSST", lsst_filters))
+                logging.error("Accepted {} filters: {}".format("DES", des_filters))
                 logging.error("Change observing_filters in config file or select another survey.")
                 sys.exit(
                     "ERROR: Filter(s) {} given in config file are not recognised filters for {} survey.".format(

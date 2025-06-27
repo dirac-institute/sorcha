@@ -55,6 +55,8 @@ def des_motion_cut(observations, motion_upper, motion_lower):
 
     """
 
-    motion = np.sqrt(observations["RARateCosDec_deg_day"] ** 2 + observations["DecRate_deg_day"] ** 2)
-    observations = observations.drop(observations[~((motion < motion_upper) & (motion > motion_lower))].index)
+    motion_sq = (observations["RARateCosDec_deg_day"] ** 2 + observations["DecRate_deg_day"] ** 2)
+    motion_upper = motion_upper**2
+    motion_lower = motion_lower**2
+    observations = observations.drop(observations[~((motion_sq < motion_upper) & (motion_sq > motion_lower))].index)
     return observations
