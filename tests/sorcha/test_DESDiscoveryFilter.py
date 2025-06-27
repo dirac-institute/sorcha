@@ -83,9 +83,9 @@ def test_DESDiscoveryFilter_multiple_objects():
             *[4] * 7,
         ],
         "Obj_Sun_y_LTC_km": [
-            *[0.1] * 7,
+            *[0.1,0.4,0.91,1,4,5,10] ,
             *[0.2] * 7,
-            *[0.3] * 7,
+            *[0.3,0.45,0.99,2,4,6,6],
             *[0.4] * 7,
         ],
         "Obj_Sun_z_LTC_km": [
