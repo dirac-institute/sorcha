@@ -116,6 +116,7 @@ def runDESSimulation(args, sconfigs):
         sconfigs.filters.observing_filters,
         sconfigs.input.pointing_sql_query,
         args.surveyname,
+        fading_function_on= sconfigs.fadingfunction.fading_function_on
     )
 
     # if we are going to compute the ephemerides, then we should pre-compute all
