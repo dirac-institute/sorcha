@@ -336,11 +336,14 @@ class fovConfigs:
         None
         """
         check_key_exists(self.camera_model, "camera_model")
-        check_value_in_list(self.camera_model, ["circle", "footprint", "none"], "camera_model")
+        check_value_in_list(
+            self.camera_model, ["circle", "footprint", "visits_footprint", "none"], "camera_model"
+        )
 
         if self.camera_model == "footprint":
             self._camera_footprint()
-
+        if self.camera_model == "visits_footprint":
+            self._camera_visits_footprint()
         elif self.camera_model == "circle":
             self._camera_circle()
 
@@ -365,21 +368,26 @@ class fovConfigs:
             sys.exit(
                 "ERROR: a default detector footprint is currently only provided for LSST and DES; please provide your own footprint file."
             )
-
-        if self.survey_name.lower() == "des":
-            check_key_exists(self.visits_query, "visits_query")
-            if self.footprint_edge_threshold is not None:
-                check_key_doesnt_exist(
-                    self.footprint_edge_threshold,
-                    "footprint_edge_threshold",
-                    "But DES doesn't use edge threshold",
-                )
-
-        elif self.footprint_edge_threshold is not None and self.survey_name.lower() != "des":
+        if self.footprint_edge_threshold is not None:
             self.footprint_edge_threshold = cast_as_float(
                 self.footprint_edge_threshold, "footprint_edge_threshold"
             )
+        check_key_doesnt_exist(
+            self.visits_query, "visits_query", 'but camera model is not "visits_footprint".'
+        )
+        check_key_doesnt_exist(self.fill_factor, "fill_factor", 'but camera model is not "circle".')
+        check_key_doesnt_exist(self.circle_radius, "circle_radius", 'but camera model is not "circle".')
 
+    def _camera_visits_footprint(self):
+        if self.survey_name.lower() not in ["des"]:
+            logging.error("ERROR: a visits detector footprint is currently only functional for DES.")
+            sys.exit("ERROR: a visits detector footprint is currently only functional for DES.")
+        check_key_exists(self.visits_query, "visits_query")
+        check_key_doesnt_exist(
+            self.footprint_edge_threshold,
+            "footprint_edge_threshold",
+            "But visits footprint does not use edge threshold",
+        )
         check_key_doesnt_exist(self.fill_factor, "fill_factor", 'but camera model is not "circle".')
         check_key_doesnt_exist(self.circle_radius, "circle_radius", 'but camera model is not "circle".')
 
@@ -619,7 +627,7 @@ class linkingfilterConfigs:
                 logging.error("ERROR: ssp_detection_efficiency out of bounds (should be between 0 and 1).")
                 sys.exit("ERROR: ssp_detection_efficiency out of bounds (should be between 0 and 1).")
 
-            if self.ssp_separation_threshold <= 0.0:
+            if self.ssp_separation_threshold <= 0.0:  # if self.ssp_separation_threshold < 0.0:
                 logging.error("ERROR: ssp_separation_threshold is zero or negative.")
                 sys.exit("ERROR: ssp_separation_threshold is zero or negative.")
 
@@ -1513,7 +1521,10 @@ def PrintConfigsToLog(sconfigs, cmd_args):
         if sconfigs.fov.footprint_path:
             pplogger.info("Loading camera footprint from " + sconfigs.fov.footprint_path)
         else:
-            pplogger.info("Loading default LSST footprint LSST_detector_corners_100123.csv")
+            if cmd_args.surveyname.lower() in ["rubin_sim", "lsst"]:
+                pplogger.info("Loading default LSST footprint LSST_detector_corners_100123.csv")
+            if cmd_args.surveyname.lower() == "des":
+                pplogger.info("Loading default DES footprint DES_ccd_corners.csv")
         if sconfigs.fov.footprint_edge_threshold:
             pplogger.info(
                 "The footprint edge threshold is "
@@ -1532,6 +1543,9 @@ def PrintConfigsToLog(sconfigs, cmd_args):
             pplogger.info(
                 "A circular footprint will be applied with radius: " + str(sconfigs.fov.circle_radius)
             )
+    elif sconfigs.fov.camera_model == "visits_footprint":
+        pplogger.info("Footprint is the actual camera footprint for each observation.")
+        pplogger.info("Loading camera footprint from " + cmd_args.visits)
     else:
         pplogger.info("Camera footprint is turned OFF.")
 

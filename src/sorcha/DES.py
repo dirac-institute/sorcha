@@ -17,7 +17,8 @@ from sorcha.modules.DESDiscoveryFilter import DESDiscoveryFilter
 from sorcha.modules.PPTrailingLoss import PPTrailingLoss
 from sorcha.modules.PPBrightLimit import PPBrightLimit
 from sorcha.modules.PPCalculateApparentMagnitude import PPCalculateApparentMagnitude
-from sorcha.modules.DESApplyFOVFilter import DESApplyFOVFilter
+from sorcha.modules.PPApplyFOVFilter import PPApplyFOVFilter
+from sorcha.modules.PPFootprintFilter import Footprint
 from sorcha.modules.PPSNRLimit import PPSNRLimit
 from sorcha.modules import PPAddUncertainties, PPRandomizeMeasurements
 from sorcha.modules import PPVignetting
@@ -29,7 +30,6 @@ from sorcha.modules.PPMatchPointingToObservations import PPMatchPointingToObserv
 from sorcha.modules.PPMagnitudeLimit import PPMagnitudeLimit
 from sorcha.modules.PPOutput import PPWriteOutput, PPIndexSQLDatabase
 from sorcha.modules.PPGetMainFilterAndColourOffsets import PPGetMainFilterAndColourOffsets
-from sorcha.modules.DESFootprintFilter import DESFootprint
 from sorcha.modules.PPStats import stats
 
 from sorcha.readers.CombinedDataReader import CombinedDataReader
@@ -116,7 +116,7 @@ def runDESSimulation(args, sconfigs):
         sconfigs.filters.observing_filters,
         sconfigs.input.pointing_sql_query,
         args.surveyname,
-        fading_function_on= sconfigs.fadingfunction.fading_function_on
+        fading_function_on=sconfigs.fadingfunction.fading_function_on,
     )
 
     # if we are going to compute the ephemerides, then we should pre-compute all
@@ -161,7 +161,7 @@ def runDESSimulation(args, sconfigs):
     footprint = None
     if sconfigs.fov.camera_model == "footprint":
         verboselog("Creating sensor footprint object for filtering")
-        footprint = DESFootprint(query=sconfigs.fov.visits_query, visits=args.visits)
+        footprint = Footprint(sconfigs.fov.footprint_path, args.surveyname)
 
     while endChunk < lenf:
         verboselog("Starting main Sorcha processing loop round {}".format(loopCounter))
@@ -290,8 +290,13 @@ def runDESSimulation(args, sconfigs):
         if sconfigs.fov.camera_model != "none" and len(observations.index) > 0:
             verboselog("Applying field-of-view filters...")
             verboselog("Number of rows BEFORE applying FOV filters: " + str(len(observations.index)))
-            observations = DESApplyFOVFilter(
-                observations, sconfigs, args._rngs, footprint=footprint, verbose=args.loglevel
+            observations = PPApplyFOVFilter(
+                observations,
+                sconfigs,
+                args._rngs,
+                visits=args.visits,
+                footprint=footprint,
+                verbose=args.loglevel,
             )
             verboselog("Number of rows AFTER applying FOV filters: " + str(len(observations.index)))
 

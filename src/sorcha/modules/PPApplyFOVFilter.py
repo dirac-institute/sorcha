@@ -3,9 +3,10 @@ import numpy as np
 from astropy.coordinates import SkyCoord
 
 from sorcha.utilities.sorchaModuleRNG import PerModuleRNG
+from sorcha.modules.PPVisitsFootprintFilter import applyVisitsFootprint
 
 
-def PPApplyFOVFilter(observations, sconfigs, module_rngs, footprint=None, verbose=False):
+def PPApplyFOVFilter(observations, sconfigs, module_rngs, visits=None, footprint=None, verbose=False):
     """
     Wrapper function for PPFootprintFilter and PPFilterDetectionEfficiency that checks to see
     whether a camera footprint filter should be applied or if a simple fraction of the
@@ -54,6 +55,13 @@ def PPApplyFOVFilter(observations, sconfigs, module_rngs, footprint=None, verbos
         observations = observations.iloc[onSensor].copy()
         observations["detectorID"] = detectorIDs
 
+        observations = observations.sort_index()
+
+    if sconfigs.fov.camera_model == "visits_footprint":
+        verboselog("Applying sensor footprint filter...")
+        onSensor = applyVisitsFootprint(observations, sconfigs.fov.visits_query, visits)
+
+        observations = observations.iloc[onSensor].copy()
         observations = observations.sort_index()
 
     if sconfigs.fov.camera_model == "circle":

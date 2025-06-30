@@ -174,7 +174,7 @@ def runLSSTSimulation(args, sconfigs):
     footprint = None
     if sconfigs.fov.camera_model == "footprint":
         verboselog("Creating sensor footprint object for filtering")
-        footprint = Footprint(sconfigs.fov.footprint_path)
+        footprint = Footprint(sconfigs.fov.footprint_path, args.surveyname)
 
     while endChunk < lenf:
         verboselog("Starting main Sorcha processing loop round {}".format(loopCounter))
@@ -300,7 +300,12 @@ def runLSSTSimulation(args, sconfigs):
             verboselog("Applying field-of-view filters...")
             verboselog("Number of rows BEFORE applying FOV filters: " + str(len(observations.index)))
             observations = PPApplyFOVFilter(
-                observations, sconfigs, args._rngs, footprint=footprint, verbose=args.loglevel
+                observations,
+                sconfigs,
+                args._rngs,
+                visits=args.visits,
+                footprint=footprint,
+                verbose=args.loglevel,
             )
             verboselog("Number of rows AFTER applying FOV filters: " + str(len(observations.index)))
 
