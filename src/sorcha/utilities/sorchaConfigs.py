@@ -627,7 +627,7 @@ class linkingfilterConfigs:
                 logging.error("ERROR: ssp_detection_efficiency out of bounds (should be between 0 and 1).")
                 sys.exit("ERROR: ssp_detection_efficiency out of bounds (should be between 0 and 1).")
 
-            if self.ssp_separation_threshold <= 0.0:  # if self.ssp_separation_threshold < 0.0:
+            if self.ssp_separation_threshold <= 0.0:
                 logging.error("ERROR: ssp_separation_threshold is zero or negative.")
                 sys.exit("ERROR: ssp_separation_threshold is zero or negative.")
 

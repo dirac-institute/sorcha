@@ -60,37 +60,37 @@ def applyVisitsFootprint(
 
             # executing query for this observation id
             rows = cursor.execute(query, (obs_id,)).fetchall()
+            if rows != []: # next step if there is a matching id in the visits database
+                # filtering points for given observation Id
+                check_points = field_df[field_df[fieldId] == obs_id]
+                points_query = [
+                    list([ra_val, dec_val])
+                    for ra_val, dec_val in zip(check_points[ra_name], check_points[dec_name])
+                ]
+                # creating kd tree of center of each ccd and finding 3 closest ccds to each point
+                ccd_index = KDTree(list(zip([row[8] for row in rows], [row[9] for row in rows])))
+                _, ccds_to_create = ccd_index.query(points_query, k=3)
 
-            # filtering points for given observation Id
-            check_points = field_df[field_df[fieldId] == obs_id]
-            points_query = [
-                list([ra_val, dec_val])
-                for ra_val, dec_val in zip(check_points[ra_name], check_points[dec_name])
-            ]
-            # creating kd tree of center of each ccd and finding 3 closest ccds to each point
-            ccd_index = KDTree(list(zip([row[8] for row in rows], [row[9] for row in rows])))
-            _, ccds_to_create = ccd_index.query(points_query, k=3)
+                ccds_to_create = list(set(ccds_to_create.flatten()))  # removes duplicate ccds.
 
-            ccds_to_create = list(set(ccds_to_create.flatten()))  # removes duplicate ccds.
+                # creates shapely Multipolygon of only selected ccds
+                polys = []
+                for index in ccds_to_create:
 
-            # creates shapely Multipolygon of only selected ccds
-            polys = []
-            for index in ccds_to_create:
+                    row = rows[index]
+                    polys.append(
+                        Polygon([[row[i], row[i + 1]] for i in range(0, len(row) - 2, 2)] + [[row[0], row[1]]])
+                    )
+                polygon = MultiPolygon(polys)
 
-                row = rows[index]
-                polys.append(
-                    Polygon([[row[i], row[i + 1]] for i in range(0, len(row) - 2, 2)] + [[row[0], row[1]]])
-                )
-            polygon = MultiPolygon(polys)
+                # Create a list of Shapely Point objects for each query point
+                points = [Point(point) for point in points_query]
 
-            # Create a list of Shapely Point objects for each query point
-            points = [Point(point) for point in points_query]
-
-            # Check if points are within any of the polygons
-            for point_index, point in enumerate(points):
-                if polygon.contains(point):
-                    # Add the index to a set if it is inside the polygon
-                    detected_index.add(check_points.index[point_index])
+                # Check if points are within any of the polygons
+                for point_index, point in enumerate(points):
+                    if polygon.contains(point):
+                        # Add the index to a set if it is inside the polygon
+                        detected_index.add(check_points.index[point_index])
 
     detected = list(detected_index)
 
