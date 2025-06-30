@@ -5,7 +5,7 @@ Outputs
 
 ``Sorcha`` outputs:
   * :ref:`Detections File <detections>` (list of all the detections of the input popuation made by the simulated survey
-  * (Optioaal) :ref:`Statistics (Tally) File <statsf>`  that provides a summary overview for the objects from the input population that were ''found'' in the simulated survey
+  * (Optional) :ref:`Statistics (Tally) File <statsf>`  that provides a summary overview for the objects from the input population that were ''found'' in the simulated survey
   * (Optional) :ref:`Ephemeris Output <ephem_output>` that provides the output from the :ref:`Ephemeris Generation<ephemeris_gen>`  
 
 .. image:: images/survey_simulator_flow_chart.png
@@ -95,16 +95,12 @@ Detections File: Basic Output Column Names, Formats, and Descriptions
 +------------------------------------+--------------+----------------------------------------------------------------------------------+
 | Obj_Sun_LTC_km                     | Float        | Object-sun light-time-corrected distance (km)                                    |
 +------------------------------------+--------------+----------------------------------------------------------------------------------+
-| object_linked                      | Boolean      | True/False whether the object passed the linking filter. See note below          |
-+------------------------------------+--------------+----------------------------------------------------------------------------------+
-| date_linked_MJD                    | Boolean      | MJD (TAI) Date the object was linked (if it was linked) See note below           |
-+------------------------------------+--------------+----------------------------------------------------------------------------------+
 
 .. note::
    All positions and velocities are in respect to J2000.
    
 .. note::
-   The **date_linked_MJD** only appears if :ref:`linking filter<linking>` is turned on. The **object_linked** column only appears if the :ref:`linking filter<linking>` is on and **drop_unlinked = False** in the :ref:`configuration file<configs> (the user has requested that detections of unlinked objects not be dropped in the output).
+   The **object_linked** column only appears if the :ref:`linking filter<linking>` is on and **drop_unlinked = False** in the :ref:`configuration file<configs>` (the user has requested that detections of unlinked objects not be dropped in the output).
 
 
 .. warning::
@@ -117,16 +113,18 @@ Example Detections File in Basic Format
 
 .. code-block::
 
-   ObjID,fieldMJD_TAI,fieldRA_deg,fieldDec_deg,RA_deg,Dec_deg,astrometricSigma_deg,optFilter,PSFMag,trailedSourceMag,PSFMagSigma,trailedSourceMagSigma,fiveSigmaDepth_mag,fiveSigmaDepthAtSource
-   S1000000a,61769.320619,163.87542090842982,-18.84327137012991,164.03771300000017,-17.58257500000004,2.9880927198448093e-06,r,19.667095021023798,19.655534004675797,0.006775654132479691,0.006755926588113991,23.86356436464961,23.839403736057715
-   S1000000a,61769.332335,163.87542090842982,-18.84327137012991,164.03840499999956,-17.583782000000177,3.0580983448792015e-06,i,19.654439857054346,19.651499866857677,0.008648382870172588,0.00861644095296432,23.50948086026021,23.485408367730255
-   S1000000a,61773.283672,163.33185289781585,-17.478349047859123,164.25272700000096,-17.970833000000166,2.8628267283501646e-06,g,19.605094385361397,19.59913996244041,0.004573058990569846,0.004562676340629368,24.412081324532746,24.40274105573913
-   S1000000a,61773.304607,163.33185289781585,-17.478349047859123,164.2535509999998,-17.972800999999485,2.8619239276501636e-06,r,19.60417845127433,19.610463241887746,0.005414938113316873,0.005396964439230442,24.142184414583568,24.132798535794453
-   S1000000a,61780.286672,163.70205228035468,-18.10471138055092,164.4364500000006,-18.561287999999216,3.106487369364405e-06,i,19.50224387218658,19.49961057650898,0.00996299590797273,0.009945212307287087,23.1343489868631,23.13059981155987
-   S1000000a,61780.310927,163.70205228035468,-18.10471138055092,164.4365160000002,-18.56311500000129,3.0899264531165437e-06,z,19.506070321795203,19.506622970072044,0.01126449135209172,0.011237007559280756,22.968207967454678,22.964441345175853
-   S1000000a,61781.239134,163.95033588103914,-18.031113105727716,164.44201499999986,-18.63119400000105,3.2223774034283947e-06,i,19.50028114807821,19.494448387335947,0.01214406799779637,0.01212132996202541,22.85013563621249,22.84858482288965
-   S1000000a,61781.263141,163.95033588103914,-18.031113105727716,164.4419770000004,-18.63294700000159,3.042088583360277e-06,z,19.486562767073988,19.47832341807803,0.011723502868190884,0.011688663662533069,22.899894717824814,22.898283896399494
-   S1000000a,61789.27659,164.99043640246796,-19.09523631317997,164.29665099999988,-19.110176000000447,2.8895553381860802e-06,z,19.376978135088684,19.359651855968583,0.008079363622311368,0.00805998568672928,23.293210067462763,23.293123719813384
+   ObjID,fieldMJD_TAI,fieldRA_deg,fieldDec_deg,RA_deg,Dec_deg,astrometricSigma_deg,optFilter,trailedSourceMag,trailedSourceMagSigma,fiveSigmaDepth_mag,phase_deg,Range_LTC_km,RangeRate_LTC_km_s,Obj_Sun_LTC_km
+   2011_OB60,60225.247167832895,2.8340797698367206,-12.194064864430457,1.9825620351227258,-11.895484307981585,7.4867112566597e-06,i,22.397430358313322,0.06355310419224419,23.811384411034403,0.5514796131072949,5381400132.572322,8.91189502816155,5521397111.153749
+   2011_OB60,60225.27094733885,2.8340797698367206,-12.194064864430457,1.9820733099821837,-11.895712910186568,1.970228013144157e-05,z,22.460227240263052,0.13963007732177396,22.882545620891758,0.5519774373107185,5381418504.312244,8.970786995836564,5521396245.784194
+   2011_OB60,60225.28270233429,2.8340797698367206,-12.194064864430457,1.9818659905929508,-11.895814828402601,1.3684499193740731e-05,z,22.53660697139078,0.11795137669248643,23.08084637194619,0.5522233482014428,5381427629.198054,8.997821199753972,5521395818.016169
+   2011_OB60,60227.24471872862,1.830365601304555,-10.653419743409385,1.9444189752160241,-11.911537564591345,1.2466492192790164e-05,r,22.51906829448326,0.07307916451539384,23.764317867665323,0.5935019031565647,5382985829.82119,9.8900048055957,5521324456.507859
+   2011_OB60,60227.26843110208,1.830365601304555,-10.653419743409385,1.9439540758655767,-11.911714297468937,1.0506087754733871e-05,i,22.46544565090926,0.07951187390559222,23.55633186666243,0.5940086408462589,5383006152.782514,9.947927989901528,5521323594.47957
+   2011_OB60,60229.23294578834,1.7408953022743148,-11.367447303472217,1.9068694316324013,-11.926897607683264,6.448960302837116e-06,g,23.140501955036218,0.050129668307068526,24.689706821972628,0.6359862246231764,5384729639.820431,10.83405865998129,5521252216.560329
+   2011_OB60,60229.25681096732,1.7408953022743148,-11.367447303472217,1.9064220778352592,-11.927086784963755,1.1882851203406536e-05,r,22.612408442214235,0.07164675338559678,23.793181284412043,0.6365024755814216,5384752041.250169,10.893584442112983,5521251349.911665
+   2011_OB60,60230.18746404967,2.7692539237126224,-11.336818754683701,1.889048916261686,-11.934078257963817,5.321102892399358e-06,r,22.65756207818313,0.043887401062701954,24.36853846041664,0.656511920586929,5385624478.812803,11.19259941049343,5521217562.0051365
+   2010_TU149,60230.2013547434,15.887030292262942,2.610528423589063,16.290872685024397,3.366320258497593,3.317636137485369e-06,r,21.073976986836836,0.0175955975012035,24.304131138512204,2.7059212412059983,95234455.08950086,-19.59908790043077,244356465.5755924
+   2011_OB60,60230.21124082722,2.7692539237126224,-11.336818754683701,1.8885945451311272,-11.93423196825781,7.4281493616584545e-06,i,22.38771848485939,0.06317500696644751,23.83261335450819,0.6570289187575631,5385647540.167239,11.25923211162477,5521216699.0213375
+   2010_TU149,60230.22511697796,15.887030292262942,2.610528423589063,16.273200569421988,3.358882710303584,3.93383422696979e-06,i,20.849349008832156,0.023711054681634577,23.68081053978629,2.723994416598135,95194288.60276434,-19.527216320319525,244312929.4142877
 
 
 .. _full:
@@ -146,6 +144,8 @@ Detections File: Full Output Column Names, Formats, and Descriptions
 | Keyword                            | Format       | Description                                                                                              |
 +====================================+==============+==========================================================================================================+
 | ObjID                              | String       | Unique string identifier                                                                                 |
++------------------------------------+--------------+----------------------------------------------------------------------------------------------------------+
+| FieldID                            | Int          | Integer identifier of the observation                                                                    |
 +------------------------------------+--------------+----------------------------------------------------------------------------------------------------------+
 | fieldMJD_TAI                       | Float        | MJD (International Atomic Time Modified Julian Date) of the observation                                  |
 +------------------------------------+--------------+----------------------------------------------------------------------------------------------------------+
@@ -189,19 +189,9 @@ Detections File: Full Output Column Names, Formats, and Descriptions
 +------------------------------------+--------------+----------------------------------------------------------------------------------------------------------+
 | phase_deg                          | Float        | The sun-object-observer angle (degrees)                                                                  |
 +------------------------------------+--------------+----------------------------------------------------------------------------------------------------------+
+| *Orbital parameters*               | Float        | Specified input orbits in provided format (KEP, COM, CART, etc.)                                         |
++------------------------------------+--------------+----------------------------------------------------------------------------------------------------------+
 | epochMJD_TDB                       | Float        | Epoch of orbit (MJD) in Barycentric Dynamical Time                                                       |
-+------------------------------------+--------------+----------------------------------------------------------------------------------------------------------+
-| t_p_MJD_TDB                        | Float        | Time of periapsis (MJD)  in Barycentric Dynamical Time                                                   |
-+------------------------------------+--------------+----------------------------------------------------------------------------------------------------------+
-| argPeri                            | Float        | Argument of periaspsis of the object (degrees)                                                           |
-+------------------------------------+--------------+----------------------------------------------------------------------------------------------------------+
-| node                               | Float        | Longitude of the ascending node of the object (degrees)                                                  |
-+------------------------------------+--------------+----------------------------------------------------------------------------------------------------------+
-| inc                                | Float        | Orbital inclination (degrees)                                                                            |
-+------------------------------------+--------------+----------------------------------------------------------------------------------------------------------+
-| e                                  | Float        | Orbital eccentricity                                                                                     |
-+------------------------------------+--------------+----------------------------------------------------------------------------------------------------------+
-| q                                  | Float        | Object perihelion (au)                                                                                   |
 +------------------------------------+--------------+----------------------------------------------------------------------------------------------------------+
 | FORMAT                             | Float        | Orbit format string (COM for heliocentric, BCOM for barycentric, KEP for Keplerian, CART for Cartesian)  |
 +------------------------------------+--------------+----------------------------------------------------------------------------------------------------------+
@@ -255,12 +245,19 @@ Detections File: Full Output Column Names, Formats, and Descriptions
 +------------------------------------+--------------+----------------------------------------------------------------------------------------------------------+
 | Obj_Sun_LTC_km                     | Float        | Object-sun light-time-corrected distance (km)                                                            |
 +------------------------------------+--------------+----------------------------------------------------------------------------------------------------------+
+| object_linked                      | Boolean      | True/False whether the object passed the linking filter. See note below                                  |
++------------------------------------+--------------+----------------------------------------------------------------------------------------------------------+
+| date_linked_MJD                    | Float        | MJD (TAI) Date the object was linked (if it was linked) See note below                                   |
++------------------------------------+--------------+----------------------------------------------------------------------------------------------------------+
+
+.. note::
+   If the user has specified **drop_unlinked = False** in the :ref:`configuration file<configs>`, the object_linked column will only contain TRUE. To see outputs for unlinked objects set **drop_unlinked = False**.
 
 .. note::
    All positions, positions, and velocities are in respect to J2000.
 
 .. note::
-   All columns in the comple physicalx parameters file will also be included in the full output. 
+   All columns in the complete physical parameters file will also be included in the full output. 
 
 
 .. warning::
@@ -276,7 +273,7 @@ Statistics (Tally) File
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ``Sorcha`` can also output a statistics or "tally" file (if specified uisng the **--st flag)  which contains an overview of the ``Sorcha`` output for each object and filter. Minimally, this
 file lists the number of observations for each object in each filter, along with the minimum, maximum and median apparent magnitude and the minimum and maximum
-phase angle. If the :ref:`linking filter<linking>` is on, this file also contains information on whether and when the object was linked by SSP.
+phase angle. If the :ref:`linking filter<linking>` is on, this file also contains information on when the object was linked by SSP.
 
 
 .. attention::
@@ -305,13 +302,10 @@ Statistics (Tally) File Column Names, Formats, and Descriptions
 +------------------------------------+--------------+----------------------------------------------------------------------------------------------------------+
 | min_phase                          | Float        | Maximum calculated phase angle for this object in this filter (degrees)                                  |
 +------------------------------------+--------------+----------------------------------------------------------------------------------------------------------+
-| object_linked                      | Boolean      | True/False whether the object was linked by SSP (only included if linking is on)                         |
+| object_linked                      | Boolean      | True/False whether the object was linked by SSP (only included if linking is on and drop_unlinked=False) |
 +------------------------------------+--------------+----------------------------------------------------------------------------------------------------------+
 | date_linked_MJD                    | Float        | Date the object was linked (if it was linked) in MJD (only included if linking is on)                    |
 +------------------------------------+--------------+----------------------------------------------------------------------------------------------------------+
-
-.. note::
-   Unless the user has specified **drop_unlinked = False** in the :ref:`configuration file<configs>`, the object_linked column will read TRUE for all objects. To see which objects were not linked by ``Sorcha``, this variable must be set to False.
 
 .. _ephem_output:
   
@@ -319,13 +313,21 @@ Ephemeris Output
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Optionally (with the **--ew (--ephem-write)** flag set at the command line), an ephemeris file of all detections near the
 field can be generated to a separate file, which can then be provided back to ``Sorcha`` as an optional external ephemeris file with the **--er (--ephem-read)** flag.
-More information can be found on this functionality, including the output columns, in the :ref:`Ephemeris Generation<ephemeris_gen>` section of the documentation.
+More information can be found on this functionality in the :ref:`Ephemeris Generation<ephemeris_gen>` section of the documentation.
 
 The format of the outputted ephemeris file is controlled by the **eph_format** configuration keyword in the Inputs section of the :ref:`configuration file<configs>` ::
 
    [INPUT]
    ephemerides_type = external
    eph_format = csv
+
+Detections File: Full Output Column Names, Formats, and Descriptions
+
+
+.. note::
+   The format and columns for the ephemeris file output are the same as the columns and information required for the optional input ephemeris file that ``Sorcha`` can ingest. To see the format and colmns containined in the ephemeris output file see :ref:`here<ephemf>`.
+
+
 
 .. attention::
    Users should note that output produced by reading in a previously generated ephemeris file will be in a different order than the output produced when running the ephemeris generator within ``Sorcha``. This is simply a side-effect of how  ``Sorcha`` reads in ephemeris files and does not affect the actual content of the output.

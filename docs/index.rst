@@ -20,12 +20,11 @@ This documentation site contains an installation guide, an overview of how ``Sor
 works, tutorials, and demonstration notebooks that show how each of the various components within ``Sorcha`` work and can be customized.
 
 .. seealso::
-   For a more detailed description of ``Sorcha`` and how it works, please see  `Merritt et al. (submitted) <https://www.dropbox.com/scl/fi/secetw7n0a936iynzxmau/sorcha_paper_2025_Jan_submission_version.pdf?rlkey=pbhchiattrw5bna8sfo6ljvto&dl=0>`_  and `Holman et al. (submitted) <https://www.dropbox.com/scl/fi/lz1lmua2s0yf9t9a2gpmm/sorcha_ephemeris_generation_paper.pdf?rlkey=blm9u4zbk0ci1i4lc5yqz8dbs&dl=0>`_.
+   For a more detailed description of ``Sorcha`` and how it works, please see  `Merritt et al. (in press) <https://arxiv.org/abs/2506.02804>`_  and `Holman et al. (in press) <https://arxiv.org/abs/2506.02140>`_.
 
 .. warning::
-   This documentation site and the software package it describes are currently under review. The code in the repository has been validated (see the :ref:`various validation notebooks we provide <demonotebooks>`).
-   We will release ``Sorcha`` v1.0 on PyPI and conda-forge when the papers describing how they work are accepted. We ask
-   that if you're external to the ``Sorcha`` team that you please wait to use ``Sorcha`` in your science papers until v1.0 is released.
+   ``Sorcha`` v1.0 has been released on conda-forge and pypi. The code is still in the JOSS (Journal of Open Source Software) review process, We expect minimal changes, but there could be a minor bug fix or two as that finalizes. So do install the latest version before finalizing your publication ready simulation output. The code in the repository has been validated (see the :ref:`various validation notebooks we provide <demonotebooks>` for LSST-like moving object discovery/linking).
+    
 
 
 What is Sorcha?

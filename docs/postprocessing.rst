@@ -129,7 +129,7 @@ Left and Right: The trailing losses for different values of the seeing θ, shown
 of the object’s on-sky velocity v, given in degrees per day on the bottom axis and pixels per 30 s visit on
 the upper axis. Right: A zoomed in version of the figure on the left for low v. Vertical lines represent the
 thresholds for typical on-sky motions of a TNO (Trans-Neptunian object), a Jupiter Trojan, and inner and
-outer MBAs (main-belt asteroids), a Jupiter Trojan, and inner and outer MBAs (main-belt asteroids) :ref:`(Luu & Jewitt 1988, Equation 1) <https://ui.adsabs.harvard.edu/abs/1988AJ.....95.1256L/abstract>`.
+outer MBAs (main-belt asteroids), a Jupiter Trojan, and inner and outer MBAs (main-belt asteroids) `(Luu & Jewitt 1988, Equation 1) <https://ui.adsabs.harvard.edu/abs/1988AJ.....95.1256L/abstract>`_.
 
 .. warning::
     Right now ``Sorcha`` only has functions to compute the trailing losses for the LSST.
@@ -205,7 +205,12 @@ Cometary Activity Template Class
 LSSTCometActivity Class
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-We have an `example Jupyter notebook <notebooks/demo_Cometary_Activity.ipynb>`_  demonstrating the LSSTCometActivity class built into `Sorcha add-ons package  <https://github.com/dirac-institute/sorcha-addons>`_. To use this prescription the **comet_activity** :ref:`configuration file<configs>` variable should be set to **lsst_comet**.
+Inside the `Sorcha add-ons  GitHub repository <https://github.com/dirac-institute/sorcha-addons>`_, we provide an example of a comet activity class. To use this function, in the :ref:`CPP` file, the user must provide a dust falling exponential value (k), the :math:`{af\rho}`, the product of albedo, the filling factor of grains within the observer field of view, and the linear radius of the field of view (typically selected to be 10,000 km) for the comet when it is located at a heliocentric distance of  1 au (:math:`{af\rho_{1}}`), Observing filter of the observation (optFilter), Apparent magnitude in the input filter of the comet nucleus adding up all of the counts in the trail (TrailedSourceMag). If these are not provided then the software will produce an error message. We have an `example Jupyter notebook <notebooks/demo_Cometary_Activity.ipynb>`_ demonstrating the LSSTCometActivity class built into `Sorcha add-ons package  <https://github.com/dirac-institute/sorcha-addons>`_. To use this prescription the **comet_activity** :ref:`configuration file<configs>` variable should be set to **lsst_comet**. The :math:`{af\rho(r)}` at the given observation is then estimated using the equation
+
+.. math::
+  af\rho(r) = af\rho_{1} \cdot r^{k} \cdot f(\alpha)
+
+Where :math:`{f(\alpha)}` is the Halley-Marcus phase function at phase angle ({\alpha}) from `Schleicher <https://asteroid.lowell.edu/comet/dustphase/>`_.
 
 
 Rotational Lightcurve Effects
@@ -243,7 +248,7 @@ Sinusoidal Light Curve  Class
 
 Inside the `Sorcha add-ons  GitHub repository <https://github.com/dirac-institute/sorcha-addons>`_, we provide a simple example implementation where the apparent magnitude of the object (that is, the magnitude after all geometric effects have been taken into account), has a sinusoidal term added to it. To use this function, in the :ref:`CPP` file, the user must provide a light curve amplitude (`LCA`), corresponding to half the peak-to-peak amplitude for the magnitude changes, a period `Period`, and a reference time `Time0` where the light curve is at 0 - if these are not provided, the software will produce an error message. Despite being simple, that implementation shows all the class methods that need to be implemented for a custom light curve function. We have an `example Jupyter notebook <notebooks/demo_Lightcurve.ipynb>`_  demonstrating the SinusoidalLightCurve class built into `Sorcha add-ons package <https://github.com/dirac-institute/sorcha-addons>`_,  To use this prescription, the **lc_model** :ref:`configuration file<configs>` variable should be set to **sinusoidal**.
 
-.. _vignettting:
+.. _vignetting:
 
 Calculating the 5σ Limiting Magnitude at the Source Location and Vignetting
 ----------------------------------------------------------------------------------------------------
