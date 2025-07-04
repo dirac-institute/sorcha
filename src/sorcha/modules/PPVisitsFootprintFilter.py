@@ -51,8 +51,8 @@ def applyVisitsFootprint(
 
             ccd_centers = [(row["ra_centre"], row["dec_centre"]) for row in rows]
             ccd_tree = KDTree(ccd_centers)
-            if len(ccd_centers>1):
-                k = min(3, len(ccd_centers)) # making sure theirs no error with less than 3 ccds
+            if len(ccd_centers) > 1:                
+                k = min(3, len(ccd_centers)) # making sure theirs no error with 2 ccds
                 _, closest_ccd_indices = ccd_tree.query(points_query, k=k)
                 unique_ccd_indices = set(closest_ccd_indices.flatten()) #remove duplicates
             else:
