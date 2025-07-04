@@ -59,9 +59,11 @@ def PPApplyFOVFilter(observations, sconfigs, module_rngs, visits=None, footprint
 
     if sconfigs.fov.camera_model == "visits_footprint":
         verboselog("Applying sensor footprint filter...")
-        onSensor = applyVisitsFootprint(observations, sconfigs.fov.visits_query, visits)
+        onSensor, detectorIDs = applyVisitsFootprint(observations, sconfigs.fov.visits_query, visits)
 
         observations = observations.iloc[onSensor].copy()
+        observations["detectorID"] = detectorIDs
+
         observations = observations.sort_index()
 
     if sconfigs.fov.camera_model == "circle":
