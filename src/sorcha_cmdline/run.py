@@ -122,7 +122,7 @@ def main():
     optional.add_argument(
         "--vd",
         "--visits-db",
-        help="sql database of RA and Dec of ccd corners",
+        help="sql database of RA and Dec of ccd corners and centres",
         type=str,
         dest="vd",
         default=None,

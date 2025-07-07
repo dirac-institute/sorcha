@@ -3,7 +3,7 @@ import numpy as np
 from astropy.coordinates import SkyCoord
 
 from sorcha.utilities.sorchaModuleRNG import PerModuleRNG
-from sorcha.modules.PPVisitsFootprintFilter import applyVisitsFootprint
+from sorcha.modules.PPVisitsFootprintFilter import PPVisitsFootprint 
 
 
 def PPApplyFOVFilter(observations, sconfigs, module_rngs, visits=None, footprint=None, verbose=False):
@@ -59,7 +59,7 @@ def PPApplyFOVFilter(observations, sconfigs, module_rngs, visits=None, footprint
 
     if sconfigs.fov.camera_model == "visits_footprint":
         verboselog("Applying sensor footprint filter...")
-        onSensor, detectorIDs = applyVisitsFootprint(observations, sconfigs.fov.visits_query, visits)
+        onSensor, detectorIDs = PPVisitsFootprint(observations, sconfigs.fov.visits_query, visits)
 
         observations = observations.iloc[onSensor].copy()
         observations["detectorID"] = detectorIDs

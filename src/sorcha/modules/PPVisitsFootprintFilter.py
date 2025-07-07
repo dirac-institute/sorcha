@@ -8,6 +8,7 @@ logger = logging.getLogger(__name__)
 
 
 def applyVisitsFootprint(
+def PPVisitsFootprint(
     field_df, query, visits_filename, ra_name="RA_deg", dec_name="Dec_deg", fieldId="FieldID"
 ):
     """

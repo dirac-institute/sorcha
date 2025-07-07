@@ -344,7 +344,7 @@ class fovConfigs:
             self._camera_footprint()
         if self.camera_model == "visits_footprint":
             self._camera_visits_footprint()
-        elif self.camera_model == "circle":
+        if self.camera_model == "circle":
             self._camera_circle()
 
     def _camera_footprint(self):
@@ -379,9 +379,17 @@ class fovConfigs:
         check_key_doesnt_exist(self.circle_radius, "circle_radius", 'but camera model is not "circle".')
 
     def _camera_visits_footprint(self):
-        if self.survey_name.lower() not in ["des"]:
-            logging.error("ERROR: a visits detector footprint is currently only functional for DES.")
-            sys.exit("ERROR: a visits detector footprint is currently only functional for DES.")
+        """
+        Validates the fov config attributes for a per observation footprint camera model.
+
+        Parameters
+        -----------
+        None.
+
+        Returns
+        ----------
+        None
+        """
         check_key_exists(self.visits_query, "visits_query")
         check_key_doesnt_exist(
             self.footprint_edge_threshold,
