@@ -225,11 +225,12 @@ class saturationConfigs:
         ----------
         None
         """
-        check_key_exists(self._observing_filters, "_observing_filters")
+
         if self.bright_limit is not None:
             self.bright_limit_on = True
 
         if self.bright_limit_on:
+            check_key_exists(self._observing_filters, "_observing_filters")
             try:
                 self.bright_limit = [float(e.strip()) for e in self.bright_limit.split(",")]
             except ValueError:
