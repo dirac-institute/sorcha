@@ -11,7 +11,7 @@ from sorcha.ephemeris.simulation_driver import create_ephemeris
 from sorcha.ephemeris.simulation_setup import precompute_pointing_information
 
 from sorcha.modules.PPReadPointingDatabase import PPReadPointingDatabase
-from sorcha.modules.DESCuts import des_distance_cut, des_motion_cut
+from sorcha.modules.PPDistanceandMotionCuts import distance_cut, motion_cut
 from sorcha.modules.PPLinkingFilter import PPLinkingFilter
 from sorcha.modules.DESDiscoveryFilter import DESDiscoveryFilter
 from sorcha.modules.PPTrailingLoss import PPTrailingLoss
@@ -334,21 +334,21 @@ def runDESSimulation(args, sconfigs):
             )
             verboselog("Number of rows AFTER applying bright limit filter " + str(len(observations.index)))
 
-        if sconfigs.linkingfilter.des_distance_cut_on and len(observations.index) > 0:
+        if sconfigs.linkingfilter.distance_cut_on and len(observations.index) > 0:
             verboselog("Number of rows BEFORE applying distance cuts: " + str(len(observations.index)))
-            observations = des_distance_cut(
+            observations = distance_cut(
                 observations,
-                sconfigs.linkingfilter.des_distance_cut_upper,
-                sconfigs.linkingfilter.des_distance_cut_lower,
+                sconfigs.linkingfilter.distance_cut_upper,
+                sconfigs.linkingfilter.distance_cut_lower,
             )
             verboselog("Number of rows AFTER applying distance cuts: " + str(len(observations.index)))
 
-        if sconfigs.linkingfilter.des_motion_cut_on and len(observations.index) > 0:
+        if sconfigs.linkingfilter.motion_cut_on and len(observations.index) > 0:
             verboselog("Number of rows BEFORE applying motion cuts: " + str(len(observations.index)))
-            observations = des_motion_cut(
+            observations = motion_cut(
                 observations,
-                sconfigs.linkingfilter.des_motion_cut_upper,
-                sconfigs.linkingfilter.des_motion_cut_lower,
+                sconfigs.linkingfilter.motion_cut_upper,
+                sconfigs.linkingfilter.motion_cut_lower,
             )
             verboselog("Number of rows AFTER applying motion cuts: " + str(len(observations.index)))
 

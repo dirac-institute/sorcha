@@ -559,21 +559,21 @@ class linkingfilterConfigs:
     survey_name: str = None
     """name of survey"""
 
-    des_distance_cut_on: bool = None
+    distance_cut_on: bool = None
     """flag for DES for object-sun light-time-corrected distance cuts """
 
-    des_distance_cut_upper: float = None
+    distance_cut_upper: float = None
     """The upper distance limit for object-sun light-time-corrected distance for DES to detect objects. in km"""
 
-    des_distance_cut_lower: float = None
+    distance_cut_lower: float = None
     """The lower distance limit for object-sun light-time-corrected distance for DES to detect objects. in km"""
-    des_motion_cut_on: bool = None
+    motion_cut_on: bool = None
     """flag for when DES motion cuts are selected"""
 
-    des_motion_cut_upper: float = None
+    motion_cut_upper: float = None
     """The upper motion limit for DES to detect objects in (deg/day)"""
 
-    des_motion_cut_lower: float = None
+    motion_cut_lower: float = None
     """The lower motion limit for DES to detect objects (deg/day)"""
 
     def __post_init__(self):
@@ -659,19 +659,19 @@ class linkingfilterConfigs:
             )
         self.drop_unlinked = cast_as_bool_or_set_default(self.drop_unlinked, "drop_unlinked", True)
 
-        if self.des_distance_cut_upper is not None or self.des_distance_cut_lower is not None:
-            self.des_distance_cut_on = True
-            check_key_exists(self.des_distance_cut_upper, "des_distance_cut_upper")
-            check_key_exists(self.des_distance_cut_lower, "des_distance_cut_lower")
-            self.des_distance_cut_upper = cast_as_float(self.des_distance_cut_upper, "des_distance_cut_upper")
-            self.des_distance_cut_lower = cast_as_float(self.des_distance_cut_lower, "des_distance_cut_lower")
-        if self.des_motion_cut_upper is not None or self.des_motion_cut_lower is not None:
-            self.des_motion_cut_on = True
-            check_key_exists(self.des_motion_cut_upper, "des_motion_cut_upper")
-            check_key_exists(self.des_motion_cut_lower, "des_motion_cut_lower")
-            self.des_motion_cut_upper = cast_as_float(self.des_motion_cut_upper, "des_motion_cut_upper")
-            self.des_motion_cut_lower = cast_as_float(self.des_motion_cut_lower, "des_motion_cut_lower")
-        if self.des_distance_cut_on or self.des_motion_cut_on:
+        if self.distance_cut_upper is not None or self.distance_cut_lower is not None:
+            self.distance_cut_on = True
+            check_key_exists(self.distance_cut_upper, "distance_cut_upper")
+            check_key_exists(self.distance_cut_lower, "distance_cut_lower")
+            self.distance_cut_upper = cast_as_float(self.distance_cut_upper, "distance_cut_upper")
+            self.distance_cut_lower = cast_as_float(self.distance_cut_lower, "distance_cut_lower")
+        if self.motion_cut_upper is not None or self.motion_cut_lower is not None:
+            self.motion_cut_on = True
+            check_key_exists(self.motion_cut_upper, "motion_cut_upper")
+            check_key_exists(self.motion_cut_lower, "motion_cut_lower")
+            self.motion_cut_upper = cast_as_float(self.motion_cut_upper, "motion_cut_upper")
+            self.motion_cut_lower = cast_as_float(self.motion_cut_lower, "motion_cut_lower")
+        if self.distance_cut_on or self.motion_cut_on:
             if self.survey_name.lower() not in ["des"]:
                 logging.error("ERROR: distance cut and motion cut is a DES only feature")
                 sys.exit("ERROR: distance cut and motion cut is a DES only feature")

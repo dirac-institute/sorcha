@@ -5,9 +5,7 @@ import sqlite3
 from scipy.spatial import KDTree
 import numpy as np
 logger = logging.getLogger(__name__)
-
-
-def applyVisitsFootprint(
+# @profile
 def PPVisitsFootprint(
     field_df, query, visits_filename, ra_name="RA_deg", dec_name="Dec_deg", fieldId="FieldID"
 ):
@@ -21,7 +19,7 @@ def PPVisitsFootprint(
     field_df : pandas.DataFrame
         DataFrame containing detection information with pointings.
     query : str
-        SQL query string for visits database. name columns as (llcra, llcdec, lrcra, lrcdec, urcra, urcdec, ulcra, ulcdec, ra_centre, dec_centre, detector)
+        SQL query string for visits database. name columns as (llcra, llcdec, lrcra, lrcdec, urcra, urcdec, ulcra, ulcdec, ra_centre, dec_centre, detectorID, fieldFiveSigmaDepth_mag )
     visits_filename : str
         Path to SQLite database containing footprint data.
     ra_name, dec_name, fieldId : str
@@ -36,6 +34,7 @@ def PPVisitsFootprint(
     """
     detected_indices = set()
     detector_for_index = {}
+    lim_mag_list = {}
 
 # open visits database file
     with sqlite3.connect(visits_filename) as conn:
@@ -61,6 +60,7 @@ def PPVisitsFootprint(
             # create polygons for closest ccds to points and record detector name/id
             polygons = []
             detectors = []
+            limmag = []
             for idx in unique_ccd_indices:
                 row = rows[idx]
                 corners = np.array([
@@ -71,7 +71,8 @@ def PPVisitsFootprint(
                     (row["llcra"], row["llcdec"])  # closing polygon
                 ])
                 polygons.append(Polygon(corners))
-                detectors.append(row["detector"])
+                detectors.append(row["detectorID"])
+                limmag.append(row["fieldFiveSigmaDepth_mag"])
 
 
             # Create a list of Shapely Point objects for each possible detection
@@ -83,10 +84,11 @@ def PPVisitsFootprint(
                         idx_in_df = points_df.index[point_index]
                         detected_indices.add(idx_in_df)
                         detector_for_index[idx_in_df] = detectors[poly_idx]
+                        lim_mag_list[idx_in_df] = limmag[poly_idx]
                         break  # no need to check other polygons for this point if already on one
 
 
     detected_list = list(detected_indices) # list of detected observations
     detector_id_list = [detector_for_index[idx] for idx in detected_list] # list of detector Ids for observation
-
-    return detected_list, detector_id_list
+    lim_mag = [lim_mag_list[idx] for idx in detected_list]
+    return detected_list, detector_id_list, lim_mag

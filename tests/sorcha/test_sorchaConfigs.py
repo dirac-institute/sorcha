@@ -73,12 +73,12 @@ correct_linkingfilter = {
     "ssp_track_window": 15,
     "ssp_night_start_utc": 16.0,
     "survey_name": "rubin_sim",
-    'des_distance_cut_on': None, 
-    'des_distance_cut_upper': None, 
-    'des_distance_cut_lower': None, 
-    'des_motion_cut_on': None, 
-    'des_motion_cut_upper': None, 
-    'des_motion_cut_lower': None
+    'distance_cut_on': None, 
+    'distance_cut_upper': None, 
+    'distance_cut_lower': None, 
+    'motion_cut_on': None, 
+    'motion_cut_upper': None, 
+    'motion_cut_lower': None
 }
 
 correct_fov = {
@@ -831,10 +831,10 @@ def test_linkingfilter_bool():
 @pytest.mark.parametrize(
     "key_name, prob_name", 
     [
-        ("des_distance_cut_upper", "des_distance_cut_lower"),
-        ("des_distance_cut_lower", "des_distance_cut_upper"),
-        ("des_motion_cut_upper", "des_motion_cut_lower"),
-        ("des_motion_cut_lower", "des_motion_cut_upper")
+        ("distance_cut_upper", "distance_cut_lower"),
+        ("distance_cut_lower", "distance_cut_upper"),
+        ("motion_cut_upper", "motion_cut_lower"),
+        ("motion_cut_lower", "motion_cut_upper")
     ]
 )
 
@@ -859,10 +859,10 @@ def test_linkingfilter_descuts_exists(key_name,prob_name):
 @pytest.mark.parametrize(
     "key_name, prob_name", 
     [
-        ("des_distance_cut_upper", "des_distance_cut_lower"),
-        ("des_distance_cut_lower", "des_distance_cut_upper"),
-        ("des_motion_cut_upper", "des_motion_cut_lower"),
-        ("des_motion_cut_lower", "des_motion_cut_upper")
+        ("distance_cut_upper", "distance_cut_lower"),
+        ("distance_cut_lower", "distance_cut_upper"),
+        ("motion_cut_upper", "motion_cut_lower"),
+        ("motion_cut_lower", "motion_cut_upper")
     ]
 )
 def test_linkingfilter_descuts_float(key_name,prob_name):
@@ -888,7 +888,7 @@ def test_linkingfilter_wrongsurvey():
     makes sure DEScuts are only used in DES
     """
     linkingfilter_configs = correct_linkingfilter.copy()
-    linkingfilter_configs["des_distance_cut_on"] = True
+    linkingfilter_configs["distance_cut_on"] = True
     
 
     with pytest.raises(SystemExit) as error_text:

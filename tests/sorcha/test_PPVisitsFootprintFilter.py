@@ -1,5 +1,10 @@
 from sorcha.modules.PPVisitsFootprintFilter import PPVisitsFootprint
 import pandas as pd
+import os
+from sorcha.utilities.dataUtilitiesForTests import get_test_filepath
+
+ 
+visits_filename = get_test_filepath("test_visits_footprint.db")
 
 # testing the PPVisitsFootprint using the LSST DP1 visits ccds
 def test_is_on():
@@ -14,10 +19,10 @@ def test_is_on():
         "Dec_deg":dec,
     }
     field_df = pd.DataFrame(observations)
-    query  = "SELECT llcra, llcdec, lrcra, lrcdec, urcra, urcdec, ulcra, ulcdec, ra as ra_centre, dec as dec_centre, detector FROM observations WHERE visitId = ?"
-    visits_filename = "tests/data/test_visits_footprint.db"
+    query  = "SELECT llcra, llcdec, lrcra, lrcdec, urcra, urcdec, ulcra, ulcdec, ra as ra_centre, dec as dec_centre, detector as detectorID, magLim as fieldFiveSigmaDepth_mag FROM observations WHERE visitId = ?"
 
-    onsensor, detectorId = PPVisitsFootprint(
+
+    onsensor, detectorId,_ = PPVisitsFootprint(
         field_df=field_df,
         query=query,
         visits_filename= visits_filename,
@@ -36,10 +41,10 @@ def test_is_off():
         "Dec_deg":dec,
     }
     field_df = pd.DataFrame(observations)
-    query  = "SELECT llcra, llcdec, lrcra, lrcdec, urcra, urcdec, ulcra, ulcdec, ra as ra_centre, dec as dec_centre, detector FROM observations WHERE visitId = ?"
-    visits_filename = "tests/data/test_visits_footprint.db"
+    query  = "SELECT llcra, llcdec, lrcra, lrcdec, urcra, urcdec, ulcra, ulcdec, ra as ra_centre, dec as dec_centre, detector as detectorID, magLim as fieldFiveSigmaDepth_mag FROM observations WHERE visitId = ?"
+ 
 
-    onsensor, detectorId = PPVisitsFootprint(
+    onsensor, _, _ = PPVisitsFootprint(
         field_df=field_df,
         query=query,
         visits_filename= visits_filename,

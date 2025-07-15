@@ -2,7 +2,7 @@ import numpy as np
 import astropy.units as u
 
 
-def des_distance_cut(observations, distance_upper, distance_lower):
+def distance_cut(observations, distance_upper, distance_lower):
     """
     removes objects outside of distance range from Sun given
 
@@ -35,7 +35,7 @@ def des_distance_cut(observations, distance_upper, distance_lower):
     return observations
 
 
-def des_motion_cut(observations, motion_upper, motion_lower):
+def motion_cut(observations, motion_upper, motion_lower):
     """
     removes objects outside of motion range given
 

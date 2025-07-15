@@ -1,5 +1,5 @@
 import pytest
-from sorcha.modules.DESCuts import des_distance_cut,des_motion_cut
+from sorcha.modules.PPDistanceandMotionCuts import distance_cut,motion_cut
 import pandas as pd
 import numpy as np
 import astropy.units as u
@@ -18,7 +18,7 @@ def test_distancecut():
     distance_up = 2
     distance_low = 0
 
-    test_cut = des_distance_cut(observations,distance_up,distance_low)
+    test_cut = distance_cut(observations,distance_up,distance_low)
     assert len(observations) == len(test_cut)
     # when out of boundary value gets dropped
     observations = {
@@ -33,7 +33,7 @@ def test_distancecut():
     distance_up = (distance_up * u.km).to(u.au).value
     
 
-    test_cut = des_distance_cut(observations,distance_up,distance_low)
+    test_cut = distance_cut(observations,distance_up,distance_low)
     assert 0 == len(test_cut)
     # one object dropped the other staying
     observations = {
@@ -48,7 +48,7 @@ def test_distancecut():
     distance_up = (distance_up * u.km).to(u.au).value
     
 
-    test_cut = des_distance_cut(observations,distance_up,distance_low)
+    test_cut = distance_cut(observations,distance_up,distance_low)
     assert 1 == len(test_cut)
 
 
@@ -65,7 +65,7 @@ def test_motioncut():
     motion_up = 2
     motion_low = 0
 
-    test_cut = des_motion_cut(observations,motion_up,motion_low)
+    test_cut = motion_cut(observations,motion_up,motion_low)
     assert len(observations) == len(test_cut)
     # when out of boundary value gets dropped
     observations = {
@@ -76,7 +76,7 @@ def test_motioncut():
     motion_up = 2
     motion_low = 0
 
-    test_cut = des_motion_cut(observations,motion_up,motion_low)
+    test_cut = motion_cut(observations,motion_up,motion_low)
     assert 0 == len(test_cut)
     # one object dropped the other staying
     observations = {
@@ -87,6 +87,6 @@ def test_motioncut():
     motion_up = 2
     motion_low = 0
 
-    test_cut = des_motion_cut(observations,motion_up,motion_low)
+    test_cut = motion_cut(observations,motion_up,motion_low)
     assert 1 == len(test_cut)
 

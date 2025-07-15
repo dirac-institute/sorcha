@@ -204,7 +204,7 @@ def execute(args):
             "ERROR: cmd line arg --vd, --visits-db and config fov varible visits_query must both be specified"
         )
 
-    if cmd_args["surveyname"] in ["rubin_sim", "RUBIN_SIM"]:
+    if cmd_args["surveyname"] in ["rubin_sim", "RUBIN_SIM","lsst", "LSST"]:
         try:
             args = sorchaArguments(cmd_args)
         except Exception as err:
@@ -216,17 +216,6 @@ def execute(args):
             pplogger.error(err)
             sys.exit(err)
         runLSSTSimulation(args, sconfigs)
-    elif cmd_args["surveyname"] in ["LSST", "lsst"]:
-        pplogger.error(
-            "ERROR: The LSST has not started yet Current allowed surveys are: {}".format(
-                ["rubin_sim", "RUBIN_SIM"]
-            )
-        )
-        sys.exit(
-            "ERROR: The LSST has not started. Current allowed surveys are: {}".format(
-                ["rubin_sim", "RUBIN_SIM"]
-            )
-        )
     elif cmd_args["surveyname"] in ["DES", "des"]:
         try:
             args = sorchaArguments(cmd_args)
