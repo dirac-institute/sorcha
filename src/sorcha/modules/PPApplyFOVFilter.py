@@ -3,7 +3,7 @@ import numpy as np
 from astropy.coordinates import SkyCoord
 
 from sorcha.utilities.sorchaModuleRNG import PerModuleRNG
-from sorcha.modules.PPVisitsFootprintFilter import PPVisitsFootprint 
+from sorcha.modules.PPVisitsFootprintFilter import PPVisitsFootprint
 
 
 def PPApplyFOVFilter(observations, sconfigs, module_rngs, visits=None, footprint=None, verbose=False):
@@ -63,7 +63,7 @@ def PPApplyFOVFilter(observations, sconfigs, module_rngs, visits=None, footprint
 
         observations = observations.iloc[onSensor].copy()
         observations["detectorID"] = detectorIDs
-        observations["limMag_perChip"] = lim_mag 
+        observations["limMag_perChip"] = lim_mag
         observations = observations.sort_index()
 
     if sconfigs.fov.camera_model == "circle":

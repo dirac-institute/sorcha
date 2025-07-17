@@ -44,7 +44,9 @@ def execute(args):  # pragma: no cover
     print(
         "3. Rubin-specific configuration file using full camera footprint but with all filters turned off, for known object detection. WARNING: do not use this unless you are sure you know what you are doing!\n"
     )
-    print("4. Rubin data prerelease 1 (DP1) configuration file using full camera footprint per observation.\n")
+    print(
+        "4. Rubin data prerelease 1 (DP1) configuration file using full camera footprint per observation.\n"
+    )
     print("5. All.\n")
     file_select = input("Please enter a number and hit Return/Enter.\n")
 

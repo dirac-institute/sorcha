@@ -37,7 +37,7 @@ def copy_demo_configs(copy_location, which_configs, force_overwrite):
         "rubin_circle": ["Rubin_circular_approximation.ini"],
         "rubin_footprint": ["Rubin_full_footprint.ini"],
         "rubin_known": ["Rubin_known_object_prediction.ini"],
-        "dp1_visits": ["DP1_visits_footprint.ini"]
+        "dp1_visits": ["DP1_visits_footprint.ini"],
     }
 
     if which_configs in configs:
