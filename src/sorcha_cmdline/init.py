@@ -30,7 +30,14 @@ def parse_file_selection(file_select):
     if file_select not in [1, 2, 3, 4, 5, 6]:
         sys.exit("Input could not be converted to a valid integer. Please input an integer between 1 and 6.")
 
-    selection_dict = {1: "rubin_circle", 2: "rubin_footprint", 3: "rubin_known", 4: "dp1_visits", 5:"des_configs",6: "all"}
+    selection_dict = {
+        1: "rubin_circle",
+        2: "rubin_footprint",
+        3: "rubin_known",
+        4: "dp1_visits",
+        5: "des_configs",
+        6: "all",
+    }
 
     which_configs = selection_dict[file_select]
 
@@ -47,9 +54,7 @@ def execute(args):  # pragma: no cover
     print(
         "4. Rubin data prerelease 1 (DP1) configuration file using full camera footprint per observation.\n"
     )
-    print(
-        "5. Dark Energy Survey (DES) configuration file using full camera footprint per observation.\n"
-    )
+    print("5. Dark Energy Survey (DES) configuration file using full camera footprint per observation.\n")
     print("6. All.\n")
     file_select = input("Please enter a number and hit Return/Enter.\n")
 
