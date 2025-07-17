@@ -5,7 +5,7 @@ import sqlite3
 from scipy.spatial import KDTree
 import numpy as np
 logger = logging.getLogger(__name__)
-# @profile
+
 def PPVisitsFootprint(
     field_df, query, visits_filename, ra_name="RA_deg", dec_name="Dec_deg", fieldId="FieldID"
 ):
@@ -72,7 +72,7 @@ def PPVisitsFootprint(
                 ])
                 polygons.append(Polygon(corners))
                 detectors.append(row["detectorID"])
-                limmag.append(row["fieldFiveSigmaDepth_mag"])
+                limmag.append(row["limMag_perChip"])
 
 
             # Create a list of Shapely Point objects for each possible detection

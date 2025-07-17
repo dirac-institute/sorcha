@@ -63,7 +63,7 @@ def PPApplyFOVFilter(observations, sconfigs, module_rngs, visits=None, footprint
 
         observations = observations.iloc[onSensor].copy()
         observations["detectorID"] = detectorIDs
-        observations["fieldFiveSigmaDepth_mag"] = lim_mag 
+        observations["limMag_perChip"] = lim_mag 
         observations = observations.sort_index()
 
     if sconfigs.fov.camera_model == "circle":

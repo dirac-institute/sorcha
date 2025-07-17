@@ -59,34 +59,37 @@ def PPReadPointingDatabase(bsdbname, observing_filters, dbquery, surveyname, fad
         dfo["observationMidpointMJD_TAI"] = dfo["observationStartMJD_TAI"] + (
             (dfo["visitTime"] / 2.0) / 86400.0
         )
-    elif surveyname in ["DES", "des","lsst","LSST"]:
+    elif surveyname in ["DES", "des","lsst","LSST","DP1","dp1"]:
         dfo["observationStartMJD_TAI"] = dfo["observationMidpointMJD_TAI"] - (
             (dfo["visitExposureTime"] / 2.0) / 86400.0
         )
-        if fading_function_on:
-            missing_cols = [col for col in ["c", "k"] if col not in dfo.columns]
-
-            if missing_cols:
-                pplogger.error(
-                    f"ERROR: Fading Function has been turned on for DES but the following columns are missing "
-                    f"from the pointing database: {', '.join(missing_cols)}."
-                )
-                sys.exit(
-                    f"ERROR: Fading Function has been turned on for DES but the following columns are missing "
-                    f"from the pointing database: {', '.join(missing_cols)}."
-                )
-
-            if dfo[["c", "k"]].isnull().any().any():
-                pplogger.error(
-                    "ERROR: Fading Function has been turned on for DES but some values for scaling factor 'c' "
-                    "and/or transition sharpness 'k' are missing in the pointing database."
-                )
-                sys.exit(
-                    "ERROR: Fading Function has been turned on for DES but some values for scaling factor 'c' "
-                    "and/or transition sharpness 'k' are missing in the pointing database."
-                )
     else:
         pplogger.error("ERROR: PPReadPointingDatabase: survey name not recognised.")
         sys.exit("ERROR: PPReadPointingDatabase: survey name not recognised.")
+
+
+    if fading_function_on and surveyname in ["DES", "des"]:
+        missing_cols = [col for col in ["c", "k"] if col not in dfo.columns]
+
+        if missing_cols:
+            pplogger.error(
+                f"ERROR: Fading Function has been turned on for DES but the following columns are missing "
+                f"from the pointing database: {', '.join(missing_cols)}."
+            )
+            sys.exit(
+                f"ERROR: Fading Function has been turned on for DES but the following columns are missing "
+                f"from the pointing database: {', '.join(missing_cols)}."
+            )
+
+        if dfo[["c", "k"]].isnull().any().any():
+            pplogger.error(
+                "ERROR: Fading Function has been turned on for DES but some values for scaling factor 'c' "
+                "and/or transition sharpness 'k' are missing in the pointing database."
+            )
+            sys.exit(
+                "ERROR: Fading Function has been turned on for DES but some values for scaling factor 'c' "
+                "and/or transition sharpness 'k' are missing in the pointing database."
+            )
+    
 
     return dfo

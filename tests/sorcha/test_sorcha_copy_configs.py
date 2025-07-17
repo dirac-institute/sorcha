@@ -17,10 +17,14 @@ def test_sorcha_copy_configs(tmp_path):
     copy_demo_configs(tmp_path, "rubin_known", False)
     assert os.path.isfile(os.path.join(tmp_path, "Rubin_known_object_prediction.ini"))
 
+    copy_demo_configs(tmp_path, "dp1_visits", False)
+    assert os.path.isfile(os.path.join(tmp_path, "DP1_visits_footprint.ini"))
+
     # remove those files
     os.remove(os.path.join(tmp_path, "Rubin_circular_approximation.ini"))
     os.remove(os.path.join(tmp_path, "Rubin_full_footprint.ini"))
     os.remove(os.path.join(tmp_path, "Rubin_known_object_prediction.ini"))
+    os.remove(os.path.join(tmp_path, "DP1_visits_footprint.ini"))
 
     # test that all the configs are successfully copied
     copy_demo_configs(tmp_path, "all", False)
@@ -28,6 +32,7 @@ def test_sorcha_copy_configs(tmp_path):
     assert os.path.isfile(os.path.join(tmp_path, "Rubin_circular_approximation.ini"))
     assert os.path.isfile(os.path.join(tmp_path, "Rubin_full_footprint.ini"))
     assert os.path.isfile(os.path.join(tmp_path, "Rubin_known_object_prediction.ini"))
+    assert os.path.isfile(os.path.join(tmp_path, "DP1_visits_footprint.ini"))
 
     # test that files are successfully overwritten if -f flag used
     copy_demo_configs(tmp_path, "all", True)

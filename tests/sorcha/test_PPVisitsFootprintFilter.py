@@ -19,7 +19,7 @@ def test_is_on():
         "Dec_deg":dec,
     }
     field_df = pd.DataFrame(observations)
-    query  = "SELECT llcra, llcdec, lrcra, lrcdec, urcra, urcdec, ulcra, ulcdec, ra as ra_centre, dec as dec_centre, detector as detectorID, magLim as fieldFiveSigmaDepth_mag FROM observations WHERE visitId = ?"
+    query  = "SELECT llcra, llcdec, lrcra, lrcdec, urcra, urcdec, ulcra, ulcdec, ra as ra_centre, dec as dec_centre, detector as detectorID, magLim as limMag_perChip FROM observations WHERE visitId = ?"
 
 
     onsensor, detectorId,_ = PPVisitsFootprint(
@@ -41,7 +41,7 @@ def test_is_off():
         "Dec_deg":dec,
     }
     field_df = pd.DataFrame(observations)
-    query  = "SELECT llcra, llcdec, lrcra, lrcdec, urcra, urcdec, ulcra, ulcdec, ra as ra_centre, dec as dec_centre, detector as detectorID, magLim as fieldFiveSigmaDepth_mag FROM observations WHERE visitId = ?"
+    query  = "SELECT llcra, llcdec, lrcra, lrcdec, urcra, urcdec, ulcra, ulcdec, ra as ra_centre, dec as dec_centre, detector as detectorID, magLim as limMag_perChip FROM observations WHERE visitId = ?"
  
 
     onsensor, _, _ = PPVisitsFootprint(

@@ -115,6 +115,7 @@ correct_expert = {
     "randomization_on": True,
     "vignetting_on": True,
     "brute_force": True,
+    "camera_model": None,
     "survey_name": "rubin_sim"
 }
 
