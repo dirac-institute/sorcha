@@ -52,7 +52,7 @@ def test_sorcha_copy_configs(tmp_path):
 
     assert (
         e2.value.code
-        == "String 'laphroaig' not recognised for 'configs' variable. Must be 'rubin_circle', 'rubin_footprint', 'rubin_known' or 'all'."
+        == "String 'laphroaig' not recognised for 'configs' variable. Must be 'rubin_circle', 'rubin_footprint', 'rubin_known', dp1_visits, des_configs or 'all'."
     )
 
     # test the error message if file exists and overwrite isn't forced
@@ -74,12 +74,15 @@ def test_parse_file_selection():
     test_rubin_footprint = parse_file_selection("2")
     test_rubin_known = parse_file_selection("3")
     test_dp1_visits = parse_file_selection("4")
-    test_all = parse_file_selection("5")
+    test_des_configs = parse_file_selection("5")
+    test_all = parse_file_selection("6")
+
 
     assert test_rubin_circle == "rubin_circle"
     assert test_rubin_footprint == "rubin_footprint"
     assert test_rubin_known == "rubin_known"
     assert test_dp1_visits == "dp1_visits"
+    assert test_des_configs == "des_configs"
     assert test_all == "all"
 
     # test error messages
@@ -94,5 +97,5 @@ def test_parse_file_selection():
 
     assert (
         e2.value.code
-        == "Input could not be converted to a valid integer. Please input an integer between 1 and 5."
+        == "Input could not be converted to a valid integer. Please input an integer between 1 and 6."
     )
