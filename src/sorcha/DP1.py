@@ -46,39 +46,6 @@ from sorcha.utilities.citation_text import cite_sorcha
 from sorcha.utilities.sorchaGetLogger import sorchaGetLogger
 
 
-def cite():  # pragma: no cover
-    """Providing the bibtex, AAS Journals software latex command, and acknowledgement
-    statements for Sorcha and the associated packages that power it.
-
-    Parameters
-    ----------
-    None
-
-    Returns
-    --------
-    None
-    """
-    cite_sorcha()
-
-
-def mem(df):
-    """
-    Memory utility function that returns back how much memory the inputted pandas dataframe is using
-    Parameters
-    ------------
-    df : pandas dataframe
-
-    Returns
-    -----------
-    usage : int
-
-    """
-
-    usage = df.memory_usage(deep=True).sum()
-    for k, v in df.attrs.items():
-        usage += v.nbytes
-    return usage
-
 
 def runDP1Simulation(args, sconfigs):
     """

@@ -6,13 +6,13 @@ from sorcha.utilities.dataUtilitiesForTests import get_test_filepath
  
 visits_filename = get_test_filepath("test_visits_footprint.db")
 
-# testing the PPVisitsFootprint using the LSST DP1 visits ccds
+# testing the PPVisitsFootprint using simulated visits ccds
 def test_is_on():
-    "testing if points are on ccd using DP1 visits. Both points are on detectorId= '0' "
-    fieldid = [2024110800245,2024110800246]
+    "testing if points are on ccd using simulated visits file. Both points are on detectorId= '0' "
+    fieldid = ["05","06"]
     # using the ra and dec of the centre of detector '0' for both visits 
-    ra = [53.00453551947407,53.00490912491905]
-    dec = [-28.190330812465483,-28.19118466571906]
+    ra = [0,10]
+    dec = [0,0]
     observations= {
         "FieldID":fieldid,
         "RA_deg":ra,
@@ -31,9 +31,9 @@ def test_is_on():
     assert all(detector == '0' for detector in detectorId)
 
 def test_is_off():
-    "testing if points are off ccd using DP1 visits. Both points are far away from the footprint "
-    fieldid = [2024110800245,2024110800246]
-    ra = [10,10]
+    "testing if points are off ccd using simulated visits file. Both points are far away from the footprint "
+    fieldid = ["05","06"]
+    ra = [50,50]
     dec = [-28,-28]
     observations= {
         "FieldID":fieldid,
