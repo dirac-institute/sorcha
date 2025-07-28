@@ -46,7 +46,6 @@ from sorcha.utilities.citation_text import cite_sorcha
 from sorcha.utilities.sorchaGetLogger import sorchaGetLogger
 
 
-
 def runDP1Simulation(args, sconfigs):
     """
     Runs the post processing survey simulator functions that apply a series of
