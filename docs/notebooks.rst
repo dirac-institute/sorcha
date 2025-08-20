@@ -13,7 +13,7 @@ In addition to installing ``Sorcha`` and its dependencies, you will need to inst
 * jupyter
 * seaborn
 * sorcha-addons
-* rubin_sim (only required for demo_CalculateLSSTColours.ipynb) and the associated filter/optical system throughputs via (running ``scheduler_download_data`` ``rs_download_data`` on the command line)
+* rubin_sim (only required for demo_CalculateLSSTColours.ipynb) and the associated filter/optical system throughputs via (running ``scheduler_download_data`` on the command line)
 
 .. toctree::
     :maxdepth: 1

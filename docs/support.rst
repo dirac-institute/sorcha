@@ -17,11 +17,24 @@ Contributing Code
 
 We welcome upgrades/bug fixes to the code. This can be done by opening a pull request in the main ``Sorcha`` `GitHub repository <https://github.com/dirac-institute/sorcha>`_. If you have new classes that provide enhanced light curve or activity estimations, we welcome pull requests to the ``Sorcha Add-ons`` `GitHub repository <https://github.com/dirac-institute/sorcha-addons>`_.
 
-You will need to install ``Sorcha`` from the source code via pip in editable mode as described in the :ref:`installation` page.
+You will need to install ``Sorcha`` from the source code via pip in editable development mode as described in the :ref:`dev_mode` page.
 
 .. note::
    If you are planning to submit a pull request with enhancements, please raise a `GitHub issue in the main sorcha repository <https://github.com/dirac-institute/sorcha/issues>`_ first to discuss further with the ``Sorcha`` team.
 
+Running the unit tests
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+You will need to install ``Sorcha`` from the source code via pip in editable development mode as described in the :ref:`dev_mode` page.
+
+Then in the terminal running::
+
+   pytest
+
+or:: 
+
+   python -m pytest
+   
 
 Contributing to the  Documentation
 --------------------------------------

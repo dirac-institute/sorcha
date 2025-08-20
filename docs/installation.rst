@@ -91,7 +91,7 @@ You can check that the  ``Sorcha`` installation was successful, by obtaining the
 Installing Sorcha in Development Mode
 ---------------------------------------------------------------------
 
-**This is the installation method for adding/edit sorcha's codebase or for working on/updating sorcha's documentation.**
+**This is the installation method for adding/edit sorcha's codebase, running unit tests, or working on/updating sorcha's documentation.**
 
 **Step 1** Create a directory to contain the ``Sorcha`` repos::
 
@@ -115,7 +115,7 @@ If you just want the source code installed so edits in the source code are autom
 
    pip install -e .
 
-If you are going to be editing documentation or significantly modifying unit tests, it is best to install the full development version::
+If you are going to be doing significant software development, editing documentation, running unit tests, or modifying unit tests, it is best to install the full development version::
 
    pip install -e '.[dev]'
 
