@@ -17,7 +17,7 @@ def PPFadingFunctionFilter(observations, fillfactor, width, module_rngs, verbose
     observations : Pandas dataframe
         Dataframe of observations with a column containing the probability of detection.
 
-    fillFactor : float
+    fillfactor : float
         Fraction of camera field-of-view covered by detectors
 
     module_rngs : PerModuleRNG

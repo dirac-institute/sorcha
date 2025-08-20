@@ -31,6 +31,9 @@ Requirements
 .. tip::
    We also recommend installing h5py in your conda/mamba environment to ensure that the proper HDF5 libraries are installed. 
 
+.. note::
+   If you plan on running ref:`our demo and validation jupyter notebooks <demonotebooks>` locally on your own machine, you will also need to install ``juypter`` This online documentation automatically 
+   displays and runs the notebooks so you can view the output iny your browser . 
 
 
 Setup Your Conda Environment 

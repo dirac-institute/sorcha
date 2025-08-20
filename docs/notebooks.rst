@@ -5,6 +5,16 @@ Demo Notebooks
 
 Below we provide Jupyter notebooks that demonstrate ``Sorcha``'s capabilities and validate various functions and components within ``Sorcha``.
 
+.. note::
+    You will need to install jupyter labs/notebooks into your environement to be able to run these Jupyter notebooks. 
+ 
+In addition to installing ``Sorcha`` and its dependencies, you will need to install (through pip/conda/mamba) the following additional packages to run all of the demo notebooks:
+
+* jupyter
+* seaborn
+* sorcha-addons
+* rubin_sim (only required for demo_CalculateLSSTColours.ipynb) and the associated filter/optical system throughputs via (running ``scheduler_download_data`` ``rs_download_data`` on the command line)
+
 .. toctree::
     :maxdepth: 1
 
