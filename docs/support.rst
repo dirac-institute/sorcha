@@ -17,12 +17,12 @@ Contributing Code
 
 We welcome upgrades/bug fixes to the code. This can be done by opening a pull request in the main ``Sorcha`` `GitHub repository <https://github.com/dirac-institute/sorcha>`_. If you have new classes that provide enhanced light curve or activity estimations, we welcome pull requests to the ``Sorcha Add-ons`` `GitHub repository <https://github.com/dirac-institute/sorcha-addons>`_.
 
-You will need to install ``Sorcha`` from the source code via pip in editable development mode as described in the :ref:`dev_mode` page.
+You will need to install ``Sorcha`` from the source code via pip in editable development mode as described in the :ref:`dev_mode` page. If you are making a contributio to the ``Sorcha Add-ons`` package,  you will also need to install that in editable development mode via `these instructions <https://sorcha-addons.readthedocs.io/en/latest/installation.html>`_.
 
 .. note::
    If you are planning to submit a pull request with enhancements, please raise a `GitHub issue in the main sorcha repository <https://github.com/dirac-institute/sorcha/issues>`_ first to discuss further with the ``Sorcha`` team.
 
-Running the unit tests
+Running the Unit Tests
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 You will need to install ``Sorcha`` from the source code via pip in editable development mode as described in the :ref:`dev_mode` page.
@@ -41,7 +41,7 @@ Contributing to the  Documentation
 
 We are very happy to receive feedback on the online documentation through the `project's GitHub repository <https://github.com/dirac-institute/sorcha/issues>`_. Beyond pointing out typos and small changes through issues, we welcome pull requests on the `sphinx <https://www.sphinx-doc.org/en/master/#user-guides>`_ documentation used here on the readthedocs.
 
-You will need to install the development version of ``Sorcha`` from a clone of the ``Sorcha`` repository as well as the `Sorcha Add-ons package <https://github.com/dirac-institute/sorcha-addons>`_. See the our  :ref:`dev_mode` instructions for further details. 
+You will need to install the development version of ``Sorcha`` from a clone of the ``Sorcha`` repository and other associated packages for documentation.  See the our  :ref:`dev_mode` instructions for further details. 
 
 
 If you move to the docs directory (cd sorcha/docs/), edit the .rst files, and run::

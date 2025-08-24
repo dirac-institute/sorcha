@@ -65,7 +65,7 @@ On mamba::
 Installing Sorcha
 ----------------------
 
-Unless you're editing the source code, you can use the version of  ``Sorcha`` published on conda-forge. 
+Unless you're editing the source code, running the demo notebooks yourself, or contirbtuing to the documentation, you should use the version of  ``Sorcha`` published on conda-forge and PyPi. 
 
 If using conda::
 
@@ -115,10 +115,10 @@ If you just want the source code installed so edits in the source code are autom
 
    pip install -e .
 
-If you are going to be doing significant software development, editing documentation, running unit tests, or modifying unit tests, it is best to install the full development version::
+If you are going to be doing significant software development, editing documentation, running unit tests, modifying unit tests, or manually running all of the example demo notebooks, you will need to install the full development version::
 
    pip install -e '.[dev]'
 
-**Step 6 (Optional unless working on documentation):** You will need to install the pandoc package (either via conda/pip or `direct download <https://pandoc.org/installing.html>`_ and a version of the `sorcha-addons package <https://github.com/dirac-institute/sorcha-addons>`_. 
+**Step 6 (Optional unless working on documentation):** You will need to install the pandoc package (either via conda/pip or `direct download <https://pandoc.org/installing.html>`
 
 
