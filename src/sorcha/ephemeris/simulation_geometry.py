@@ -180,7 +180,7 @@ def barycentricObservatoryRates(et, obsCode, observatories, Rearth=RADIUS_EARTH_
     Rearth: float
         Radius of the Earth (default is RADIUS_EARTH_KM)
     delta_et: float
-        Difference in ephemeris time (in days) to derive the rotation matrix from the fixed Earth equatorial frame to J2000 (default: 10)
+        Difference in ephemeris time (in seconds) to derive the rotation matrix from the fixed Earth equatorial frame to J2000 (default: 10)
     Returns
     -------
      : array
