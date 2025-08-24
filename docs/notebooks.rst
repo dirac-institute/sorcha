@@ -15,6 +15,9 @@ In addition to installing ``Sorcha`` and its dependencies, you will need to inst
 * sorcha-addons
 * rubin_sim (only required for demo_CalculateLSSTColours.ipynb) and the associated filter/optical system throughputs via (running ``scheduler_download_data`` on the command line)
 
+..  note:
+    These packages are installed (except for ``rubin_sim``) if you install ``Sorcha`` from the source code via pip in editable development mode as described in the :ref:`dev_mode` page.
+
 .. toctree::
     :maxdepth: 1
 
