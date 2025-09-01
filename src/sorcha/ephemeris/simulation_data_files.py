@@ -10,7 +10,7 @@ def make_retriever(auxconfigs, directory_path: str = None) -> pooch.Pooch:
         Dataclass of auxiliary configuration file arguments.
 
     directory_path : string, default=None
-        The base directory to place all downloaded files. 
+        The base directory to place all downloaded files.
 
     Returns
     -------

@@ -54,7 +54,7 @@ def _create_assist_ephemeris(auxconfigs, cache_dir=None) -> tuple:
     auxconfigs: dataclass
         Dataclass of auxiliary configuration file arguments.
     cache_dir: string, default=None
-        The base directory to place all downloaded files. 
+        The base directory to place all downloaded files.
     Returns
     ---------
     Ephem : ASSIST ephemeris object

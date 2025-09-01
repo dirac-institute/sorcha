@@ -26,13 +26,13 @@ def sorchaGetLogger(
         Format for log filename.
 
     log_name : string, default=""
-        Name of log. 
+        Name of log.
 
     log_file_info : string, default="sorcha.log"
-        Suffix and extension with which to save info log. 
+        Suffix and extension with which to save info log.
 
     log_file_error : string, optional, default="sorcha.err"
-        Suffix and extension with which to save error log. 
+        Suffix and extension with which to save error log.
 
     Returns
     ----------

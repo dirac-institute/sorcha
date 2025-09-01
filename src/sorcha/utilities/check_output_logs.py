@@ -77,7 +77,7 @@ def check_output_logs(filepath, output=False):
     filepath : str
         Filepath of top-level directory within which to search for Sorcha log files.
     output : str or bool, default=False
-        Either the filepath/name in which to save output, or False to print output to terminal. 
+        Either the filepath/name in which to save output, or False to print output to terminal.
 
     """
 
