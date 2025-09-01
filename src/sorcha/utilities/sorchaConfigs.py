@@ -796,17 +796,17 @@ class auxiliaryConfigs:
     planet_ephemeris_url: str = "https://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/planets/de440s.bsp"
     """url for planet_ephemeris"""
 
-    earth_predict: str = "earth_200101_990827_predict.bpc"
+    earth_predict: str = "earth_2025_250826_2125_predict.bpc"
     """filename of earth_predict"""
     earth_predict_url: str = (
-        "https://naif.jpl.nasa.gov/pub/naif/generic_kernels/pck/earth_200101_990827_predict.bpc"
+        "https://naif.jpl.nasa.gov/pub/naif/generic_kernels/pck/earth_2025_250826_2125_predict.bpc"
     )
     """url for earth_predict"""
 
-    earth_historical: str = "earth_620120_240827.bpc"
+    earth_historical: str = "earth_620120_250826.bpc"
     """filename of earth_histoical"""
     earth_historical_url: str = (
-        "https://naif.jpl.nasa.gov/pub/naif/generic_kernels/pck/earth_620120_240827.bpc"
+        "https://naif.jpl.nasa.gov/pub/naif/generic_kernels/pck/earth_620120_250826.bpc"
     )
     """url for earth_historical"""
 
