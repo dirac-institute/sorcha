@@ -1,0 +1,603 @@
+
+Sorcha: 
+
+@ARTICLE{2025AJ....170..100M,
+author = {{Merritt}, Stephanie R. and {Fedorets}, Grigori and {Schwamb}, Megan E. and {Cornwall}, Samuel and {Bernardinelli}, Pedro H. and {Juri{'c}}, Mario and {Holman}, Matthew J. and {Kurlander}, Jacob A. and {Eggl}, Siegfried and {Oldag}, Drew and {West}, Maxine and {Kubica}, Jeremy and {Murtagh}, Joseph and {Jones}, R. Lynne and {Yoachim}, Peter and {Lyttle}, Ryan R. and {Kelley}, Michael S.~P. and {Moeyens}, Joachim and {Kiker}, Kathleen and {Naidu}, Shantanu P. and {Snodgrass}, Colin and {Matthews}, Shannon M. and {Chandler}, Colin Orion},
+title = "{Sorcha: A Solar System Survey Simulator for the Legacy Survey of Space and Time}"
+,journal = {j},
+keywords = {Solar system astronomy, Small Solar System bodies, Astronomy software, Astronomical simulations, 1529, 1469, 1855, 1857, Earth and Planetary Astrophysics, Instrumentation and Methods for Astrophysics},
+year = 2025,
+month = aug,
+volume = {170},
+number = {2},
+eid = {100},
+pages = {100},
+doi = {10.3847/1538-3881/add3ec},
+archivePrefix = {arXiv},
+eprint = {2506.02804},
+primaryClass = {astro-ph.EP},
+adsurl = {https://ui.adsabs.harvard.edu/abs/2025AJ....170..100M},
+adsnote = {Provided by the SAO/NASA Astrophysics Data System}
+}
+
+
+@ARTICLE{2025AJ....170...97H,
+author = {{Holman}, Matthew J. and {Bernardinelli}, Pedro H. and {Schwamb}, Megan E. and {Juri{'c}}, Mario and {Oldag}, Drew and {West}, Maxine and {Napier}, Kevin J. and {Merritt}, Stephanie R. and {Fedorets}, Grigori and {Cornwall}, Samuel and {Kurlander}, Jacob A. and {Eggl}, Siegfried and {Kubica}, Jeremy and {Kiker}, Kathleen and {Murtagh}, Joseph and {Naidu}, Shantanu P. and {Chandler}, Colin Orion},
+title = "{Sorcha: Optimized Solar System Ephemeris Generation}",
+journal = {j},
+keywords = {Ephemerides, Small Solar System bodies, N-body simulations, Sky surveys, 464, 1469, 1083, 1464, Earth and Planetary Astrophysics, Instrumentation and Methods for Astrophysics, Computational Physics},
+year = 2025,
+month = aug,
+volume = {170},
+number = {2},
+eid = {97},
+pages = {97},
+doi = {10.3847/1538-3881/ade435},
+archivePrefix = {arXiv},
+eprint = {2506.02140},
+primaryClass = {astro-ph.EP},
+ adsurl = {https://ui.adsabs.harvard.edu/abs/2025AJ....170...97H},
+ adsnote = {Provided by the SAO/NASA Astrophysics Data System}
+}
+
+
+Please also cite the packages that are utilized by Sorcha:
+
+ASSIST:
+
+@ARTICLE{2023PSJ.....4...69H,
+author = {{Holman}, Matthew J. and {Akmal}, Arya and {Farnocchia}, Davide and {Rein}, Hanno and {Payne}, Matthew J. and {Weryk}, Robert and {Tamayo}, Daniel and {Hernandez}, David M.},
+title = "{ASSIST: An Ephemeris-quality Test-particle Integrator}",
+journal = {\psj},
+keywords = {Ephemerides, N-body simulations, Asteroid dynamics, Comet dynamics, 464, 1083, 2210, 2213, Astrophysics - Earth and Planetary Astrophysics,Astrophysics - Instrumentation and Methods for Astrophysics},
+year = 2023,
+month = apr,
+volume = {4},
+number = {4},
+eid = {69},
+pages = {69},
+doi = {10.3847/PSJ/acc9a9},
+archivePrefix = {arXiv},
+eprint = {2303.16246},
+primaryClass = {astro-ph.EP},
+adsurl = {https://ui.adsabs.harvard.edu/abs/2023PSJ.....4...69H},
+adsnote = {Provided by the SAO/NASA Astrophysics Data System}
+}
+
+
+@software{hanno_rein_2023_7778017,
+author       = {Hanno Rein and matthewholman and Arya Akmal},
+title        = {matthewholman/assist: v1.1.1},
+month        = mar,
+year         = 2023,
+publisher    = {Zenodo},
+version      = {v1.1.1},
+doi          = {10.5281/zenodo.7778017},
+url          = {https://doi.org/10.5281/zenodo.7778017}
+}
+
+Astropy:
+
+@ARTICLE{2013A&A...558A..33A,
+author = {{Astropy Collaboration} and {Robitaille}, Thomas P. 
+and {Tollerud}, Erik J. and {Greenfield}, Perry and {Droettboom}, 
+ Michael and {Bray}, Erik and {Aldcroft}, Tom and {Davis}, Matt 
+and {Ginsburg}, Adam and {Price-Whelan}, Adrian M. and {Kerzendorf}, 
+ Wolfgang E. and {Conley}, Alexander and {Crighton}, Neil and 
+{Barbary}, Kyle and {Muna}, Demitri and {Ferguson}, Henry 
+ and {Grollier}, Fr{\'e}d{\'e}ric and {Parikh}, Madhura M. 
+and {Nair}, Prasanth H. and {Unther}, Hans M. and {Deil}, Christoph 
+ and {Woillez}, Julien and {Conseil}, Simon and {Kramer}, Roban 
+and {Turner}, James E.~H. and {Singer}, Leo and {Fox}, Ryan and 
+{Weaver}, Benjamin A. and {Zabalza}, Victor and {Edwards}, 
+Zachary I. and {Azalee Bostroem}, K. and {Burke}, D.~J. and {Casey}, 
+Andrew R. and {Crawford}, Steven M. and {Dencheva}, Nadia and {Ely},
+Justin and {Jenness}, Tim and {Labrie}, Kathleen and {Lim}, Pey Lian and 
+{Pierfederici}, Francesco and {Pontzen}, Andrew and {Ptak}, Andy 
+ and {Refsdal}, Brian and {Servillat}, Mathieu and {Streicher}, Ole},
+title = "{Astropy: A community Python package for astronomy}",
+journal = {\aap},
+keywords = {methods: data analysis, methods: miscellaneous, virtual observatory tools, Astrophysics - Instrumentation and Methods for Astrophysics},
+year = 2013,
+month = oct,
+volume = {558},
+eid = {A33},
+pages = {A33},
+doi = {10.1051/0004-6361/201322068},
+archivePrefix = {arXiv},
+eprint = {1307.6212},
+primaryClass = {astro-ph.IM},
+adsurl = {https://ui.adsabs.harvard.edu/abs/2013A&A...558A..33A},
+adsnote = {Provided by the SAO/NASA Astrophysics Data System}
+}
+
+
+@ARTICLE{2018AJ....156..123A,
+author = {{Astropy Collaboration} and {Price-Whelan}, A.~M. 
+and {Sip{\H{o}}cz}, B.~M. and {G{\"u}nther}, H.~M. and {Lim}, P.~L. 
+and {Crawford}, S.~M. and {Conseil}, S. and {Shupe}, D.~L. and 
+{Craig}, M.~W. and {Dencheva}, N. and {Ginsburg}, A. and 
+{VanderPlas}, J.~T. and {Bradley}, L.~D. and {P{'e}rez-Su{'a}rez}, D. 
+and {de Val-Borro}, M. and {Aldcroft}, T.~L. and {Cruz}, K.~L. and 
+{Robitaille}, T.~P. and {Tollerud}, E.~J. and {Ardelean}, C. and 
+{Babej}, T. and {Bach}, Y.~P. and {Bachetti}, M. and {Bakanov}, 
+A.~V. and {Bamford}, S.~P. and {Barentsen}, G. and {Barmby}, 
+ P. and {Baumbach}, A. and {Berry}, K.~L. and {Biscani}, F. and {Boquien}, 
+M. and {Bostroem}, K.~A. and {Bouma}, L.~G. and {Brammer}, G.~B. and 
+ {Bray}, E.~M. and {Breytenbach}, H. and {Buddelmeijer}, H. and 
+{Burke}, D.~J. and {Calderone}, G. and {Cano Rodr{\'\i}guez}, J.~L. 
+and {Cara}, M. and {Cardoso}, J.~V.~M. and {Cheedella}, S. and {Copin}, 
+Y. and {Corrales}, L. and {Crichton}, D. and {D'Avella}, D. and {Deil}, 
+C. and {Depagne}, {'E}. and {Dietrich}, J.~P. and {Donath}, A. and 
+{Droettboom}, M. and {Earl}, N. and {Erben}, T. and {Fabbro}, S. and 
+{Ferreira}, L.~A. and {Finethy}, T. and {Fox}, R.~T. and {Garrison}, 
+L.~H. and {Gibbons}, S.~L.~J. and {Goldstein}, D.~A. and {Gommers}, R. 
+and {Greco}, J.~P. and {Greenfield}, P. and {Groener}, A.~M. and 
+{Grollier}, F. and {Hagen}, A. and {Hirst}, P. and {Homeier}, D. 
+and {Horton}, A.~J. and {Hosseinzadeh}, G. and {Hu}, L. and {Hunkeler}, 
+J.~S. and {Ivezi{\'c}}, {\v{Z}}. and {Jain}, A. and {Jenness}, T. 
+and {Kanarek}, G. and {Kendrew}, S. and {Kern}, N.~S. and {Kerzendorf}, 
+W.~E. and {Khvalko}, A. and {King}, J. and {Kirkby}, D. and {Kulkarni}, 
+A.~M. and {Kumar}, A. and {Lee}, A. and {Lenz}, D. and {Littlefair}, 
+S.~P. and {Ma}, Z. and {Macleod}, D.~M. and {Mastropietro}, M. and 
+{McCully}, C. and {Montagnac}, S. and {Morris}, B.~M. and {Mueller}, M. 
+ and {Mumford}, S.~J. and {Muna}, D. and {Murphy}, N.~A. and {Nelson}, S. 
+ and {Nguyen}, G.~H. and {Ninan}, J.~P. and {N{"o}the}, M. and {Ogaz}, S. 
+and {Oh}, S. and {Parejko}, J.~K. and {Parley}, N. and {Pascual}, S. and 
+{Patil}, R. and {Patil}, A.~A. and {Plunkett}, A.~L. and {Prochaska}, J.~X. 
+and {Rastogi}, T. and {Reddy Janga}, V. and {Sabater}, J. and {Sakurikar}, 
+P. and {Seifert}, M. and {Sherbert}, L.~E. and {Sherwood-Taylor}, H. 
+ and {Shih}, A.~Y. and {Sick}, J. and {Silbiger}, M.~T. and 
+{Singanamalla}, S. and {Singer}, L.~P. and {Sladen}, P.~H. and {Sooley}, 
+K.~A. and {Sornarajah}, S. and {Streicher}, O. and {Teuben}, P. and 
+{Thomas}, S.~W. and {Tremblay}, G.~R. and {Turner}, J.~E.~H. and 
+{Terr{\'o}n}, V. and {van Kerkwijk}, M.~H. and {de la Vega}, A. and 
+{Watkins}, L.~L. and {Weaver}, B.~A. and {Whitmore}, J.~B. and {Woillez}, 
+J. and {Zabalza}, V. and {Astropy Contributors}},
+title = "{The Astropy Project: Building an Open-science Project and Status of the v2.0 Core Package}",
+journal = {\aj},
+keywords = {methods: data analysis, methods: miscellaneous, methods: statistical, reference systems, Astrophysics - Instrumentation and Methods for Astrophysics},
+year = 2018,
+month = sep,
+volume = {156},
+number = {3},
+eid = {123},
+pages = {123},
+doi = {10.3847/1538-3881/aabc4f},
+archivePrefix = {arXiv},
+eprint = {1801.02634},
+primaryClass = {astro-ph.IM},
+adsurl = {https://ui.adsabs.harvard.edu/abs/2018AJ....156..123A},
+adsnote = {Provided by the SAO/NASA Astrophysics Data System}
+}
+
+
+@ARTICLE{2022ApJ...935..167A,
+author = {{Astropy Collaboration} and {Price-Whelan}, Adrian M. and 
+{Lim}, Pey Lian and {Earl}, Nicholas and {Starkman}, Nathaniel and {Bradley}, 
+Larry and {Shupe}, David L. and {Patil}, Aarya A. and {Corrales}, Lia and 
+{Brasseur}, C.~E. and {N{\"o}the}, Maximilian and {Donath}, Axel and 
+{Tollerud}, Erik and {Morris}, Brett M. and {Ginsburg}, Adam and {Vaher}, 
+Eero and {Weaver}, Benjamin A. and {Tocknell}, James and {Jamieson}, William 
+and {van Kerkwijk}, Marten H. and {Robitaille}, Thomas P. and {Merry}, Bruce 
+and {Bachetti}, Matteo and {G{\"u}nther}, H. Moritz and {Aldcroft}, Thomas L. 
+and {Alvarado-Montes}, Jaime A. and {Archibald}, Anne M. and {B{'o}di}, 
+Attila and {Bapat}, Shreyas and {Barentsen}, Geert and {Baz{'a}n}, Juanjo 
+and {Biswas}, Manish and {Boquien}, M{\'e}d{\'e}ric and {Burke}, D.~J. and 
+{Cara}, Daria and {Cara}, Mihai and {Conroy}, Kyle E. and {Conseil}, Simon and 
+{Craig}, Matthew W. and {Cross}, Robert M. and {Cruz}, Kelle L. and {D'Eugenio}, 
+Francesco and {Dencheva}, Nadia and {Devillepoix}, Hadrien A.~R. and {Dietrich}, J{\"o}rg P. 
+and {Eigenbrot}, Arthur Davis and {Erben}, Thomas and {Ferreira}, Leonardo and 
+{Foreman-Mackey}, Daniel and {Fox}, Ryan and {Freij}, Nabil and {Garg}, Suyog and {Geda}, 
+Robel and {Glattly}, Lauren and {Gondhalekar}, Yash and {Gordon}, Karl D. and {Grant}, David 
+and {Greenfield}, Perry and {Groener}, Austen M. and {Guest}, Steve and {Gurovich}, Sebastian 
+and {Handberg}, Rasmus and {Hart}, Akeem and {Hatfield-Dodds}, Zac and {Homeier}, Derek and 
+{Hosseinzadeh}, Griffin and {Jenness}, Tim and {Jones}, Craig K. and {Joseph}, Prajwel and 
+{Kalmbach}, J. Bryce and {Karamehmetoglu}, Emir and {Ka{\l}uszy{'n}ski}, Miko{\l}aj and {Kelley}, 
+Michael S.~P. and {Kern}, Nicholas and {Kerzendorf}, Wolfgang E. and {Koch}, Eric W. and 
+{Kulumani}, Shankar and {Lee}, Antony and {Ly}, Chun and {Ma}, Zhiyuan and {MacBride}, Conor 
+and {Maljaars}, Jakob M. and {Muna}, Demitri and {Murphy}, N.~A. and {Norman}, Henrik and {O'Steen}, Richard 
+and {Oman}, Kyle A. and {Pacifici}, Camilla and {Pascual}, Sergio and {Pascual-Granado}, J. and 
+{Patil}, Rohit R. and {Perren}, Gabriel I. and {Pickering}, Timothy E. and {Rastogi}, Tanuj and 
+{Roulston}, Benjamin R. and {Ryan}, Daniel F. and {Rykoff}, Eli S. and {Sabater}, Jose and {Sakurikar}, 
+Parikshit and {Salgado}, Jes{\'u}s and {Sanghi}, Aniket and {Saunders}, Nicholas and {Savchenko}, 
+Volodymyr and {Schwardt}, Ludwig and {Seifert-Eckert}, Michael and {Shih}, Albert Y. and {Jain}, 
+Anany Shrey and {Shukla}, Gyanendra and {Sick}, Jonathan and {Simpson}, Chris and {Singanamalla}, 
+Sudheesh and {Singer}, Leo P. and {Singhal}, Jaladh and {Sinha}, Manodeep and {Sip{\H{o}}cz}, 
+Brigitta M. and {Spitler}, Lee R. and {Stansby}, David and {Streicher}, Ole and {{\v{S}}umak}, 
+Jani and {Swinbank}, John D. and {Taranu}, Dan S. and {Tewary}, Nikita and {Tremblay}, Grant R. 
+and {de Val-Borro}, Miguel and {Van Kooten}, Samuel J. and {Vasovi{\'c}}, Zlatan and {Verma}, Shresth 
+and {de Miranda Cardoso}, Jos{\'e} Vin{\'\i}cius and {Williams}, Peter K.~G. and 
+{Wilson}, Tom J. and {Winkel}, Benjamin and {Wood-Vasey}, W.~M. and {Xue}, 
+Rui and {Yoachim}, Peter and {Zhang}, Chen and {Zonca}, Andrea and {Astropy Project Contributors}},
+title = "{The Astropy Project: Sustaining and Growing a Community-oriented Open-source Project and the Latest Major Release (v5.0) of the Core Package}", 
+journal = {\apj},
+keywords = {Astronomy software, Open source software, Astronomy data analysis, 1855, 1866, 1858, Astrophysics - Instrumentation and Methods for Astrophysics},
+year = 2022,
+month = aug,
+volume = {935},
+number = {2},
+eid = {167},
+pages = {167},
+doi = {10.3847/1538-4357/ac7c74},
+archivePrefix = {arXiv},
+eprint = {2206.14220},
+primaryClass = {astro-ph.IM},
+adsurl = {https://ui.adsabs.harvard.edu/abs/2022ApJ...935..167A},
+adsnote = {Provided by the SAO/NASA Astrophysics Data System}
+}
+
+Healpy:
+
+@article{Zonca2019,
+doi = {10.21105/joss.01298},
+url = {https://doi.org/10.21105/joss.01298},
+year = {2019},
+month = mar,
+publisher = {The Open Journal},
+volume = {4},
+number = {35},
+pages = {1298},
+author = {Andrea Zonca and Leo Singer and Daniel Lenz and Martin Reinecke and Cyrille Rosset and Eric Hivon and Krzysztof Gorski},
+title = {healpy: equal area pixelization and spherical harmonics transforms for data on the sphere in Python},
+journal = {Journal of Open Source Software}
+}
+
+
+@ARTICLE{2005ApJ...622..759G,
+author = {{G{'o}rski}, K.~M. and {Hivon}, E. and {Banday}, A.~J. and 
+{Wandelt}, B.~D. and {Hansen}, F.~K. and {Reinecke}, M. and 
+{Bartelmann}, M.},
+title = "{HEALPix: A Framework for High-Resolution Discretization and Fast Analysis of Data Distributed on the Sphere}",
+journal = {\apj},
+eprint = {arXiv:astro-ph/0409513},
+keywords = {Cosmology: Cosmic Microwave Background, Cosmology: Observations, Methods: Statistical},
+year = 2005,
+month = apr,
+volume = 622,
+pages = {759-771},
+doi = {10.1086/427976},
+adsurl = {http://adsabs.harvard.edu/abs/2005ApJ...622..759G},
+adsnote = {Provided by the SAO/NASA Astrophysics Data System}
+}
+
+
+Add an acknowledgment statement: “Some of the results in this paper have been derived using the healpy and HEALPix packages”.
+
+
+At the first use of the HEALPix acronym, a footnote placed in the main body of the paper referring to the HEALPix web site, currently http://healpix.sf.net 
+
+Jupyter Notebooks:
+
+@inproceedings{soton403913,
+booktitle = {Positioning and Power in Academic Publishing: Players, Agents and Agendas},
+title = {Jupyter Notebooks ? a publishing format for reproducible computational workflows},
+author = {Thomas Kluyver and Benjamin Ragan-Kelley and Fernando P{\'e}rez and Brian Granger and Matthias Bussonnier and Jonathan Frederic and Kyle Kelley and Jessica Hamrick and Jason Grout and Sylvain Corlay and Paul Ivanov and Dami{\'a}n Avila and Safia Abdalla and Carol Willing and  Jupyter development team},
+publisher = {IOS Press},
+year = {2016},
+pages = {87--90},
+url = {https://eprints.soton.ac.uk/403913/},
+}
+
+matplotlib:
+
+@Article{Hunter:2007,
+Author    = {Hunter, J. D.},
+Title     = {Matplotlib: A 2D graphics environment},
+Journal   = {Computing in Science \& Engineering},
+Volume    = {9},
+Number    = {3},
+Pages     = {90--95},
+abstract  = {Matplotlib is a 2D graphics package used for Python for 
+application development, interactive scripting, and publication-quality 
+image generation across user interfaces and operating systems.},
+publisher = {IEEE COMPUTER SOC},
+doi       = {10.1109/MCSE.2007.55},
+year      = 2007
+}
+
+Minor Planet Center Resources:
+
+Add an acknowledgment statement: This research has made use of data and/or services provided by the International Astronomical Union's Minor Planet Center. 
+
+NASA ADS:
+
+Add an acknowledgment statement: This research has made use of NASA’s Astrophysics Data System Bibliographic Services. 
+
+Numba:
+
+@INPROCEEDINGS{2015llvm.confE...1L,
+author = {{Lam}, Siu Kwan and {Pitrou}, Antoine and {Seibert}, Stanley},
+title = "{Numba: A LLVM-based Python JIT Compiler}",keywords = {LLVM, Python, Compiler},
+booktitle = {Proc. Second Workshop on the LLVM Compiler Infrastructure in HPC},
+ year = 2015,
+month = nov,
+pages = {1-6},
+doi = {10.1145/2833157.2833162},
+adsurl = {https://ui.adsabs.harvard.edu/abs/2015llvm.confE...1L},
+adsnote = {Provided by the SAO/NASA Astrophysics Data System}
+}
+
+Numpy:
+
+@Article{         harris2020array,
+title         = {Array programming with {NumPy}},
+author        = {Charles R. Harris and K. Jarrod Millman and St{\'{e}}fan J. van der Walt and Ralf Gommers and Pauli Virtanen and David Cournapeau and Eric Wieser and Julian Taylor and Sebastian Berg and Nathaniel J. Smith and Robert Kern and Matti Picus and Stephan Hoyer and Marten H. van Kerkwijk and Matthew Brett and Allan Haldane and Jaime Fern{\'{a}}ndez del R{\'{i}}o and Mark Wiebe and Pearu Peterson and Pierre G{\'{e}}rard-Marchant and Kevin Sheppard and Tyler Reddy and Warren Weckesser and Hameer Abbasi and Christoph Gohlke and Travis E. Oliphant},
+year          = {2020},
+month         = sep,
+journal       = {Nature},
+volume        = {585},
+number        = {7825},
+pages         = {357--362},
+doi           = {10.1038/s41586-020-2649-2},
+publisher     = {Springer Science and Business Media {LLC}},
+url           = {https://doi.org/10.1038/s41586-020-2649-2}
+}
+
+Pandas:
+
+@InProceedings{ mckinney-proc-scipy-2010,
+author    = { {W}es {M}c{K}inney },
+title     = { {D}ata {S}tructures for {S}tatistical {C}omputing in {P}ython },
+booktitle = { {P}roceedings of the 9th {P}ython in {S}cience {C}onference },
+pages     = { 56 - 61 },
+year      = { 2010 },
+editor    = { {S}t{\'{e}}fan van der {W}alt and {J}arrod {M}illman },
+doi       = { 10.25080/Majora-92bf1922-00a }
+}
+
+
+Update to the exact version you have installed. Below is the generic Zenodo link reference. 
+
+@software{reback2020pandas,
+author       = {The pandas development team},
+title        = {pandas-dev/pandas: Pandas},
+month        = feb,
+year         = 2020,
+publisher    = {Zenodo},
+version      = {latest},
+doi          = {10.5281/zenodo.3509134},
+url          = {https://doi.org/10.5281/zenodo.3509134}
+}
+
+Pooch:
+
+@article{uieda2020,
+title = {{Pooch}: {A} friend to fetch your data files},
+author = {Leonardo Uieda and Santiago Soler and R{\'{e}}mi Rampin and Hugo van Kemenade and Matthew Turk and Daniel Shapero and Anderson Banihirwe and John Leeman},
+year = {2020},
+doi = {10.21105/joss.01943},
+url = {https://doi.org/10.21105/joss.01943},
+month = jan,
+publisher = {The Open Journal},
+volume = {5},
+ number = {45},
+pages = {1943},
+journal = {Journal of Open Source Software}
+}
+
+Pytables
+
+@Misc{pytables,
+author = {PyTables Developers Team},
+title = {{PyTables}: Hierarchical Datasets in {Python}},
+year = {2002--},
+url = "https://www.pytables.org/",
+}
+
+REBOUND:
+
+Simulations in this paper made use of the REBOUND N-body code \citep{rebound}. The simulations were integrated using IAS15, a 15th order Gauss-Radau integrator \citep{reboundias15}. 
+
+
+@ARTICLE{rebound,
+       author = {{Rein}, H. and {Liu}, S. -F.},
+        title = "{REBOUND: an open-source multi-purpose N-body code for collisional dynamics}",
+      journal = {\aap},
+     keywords = {methods: numerical, planets and satellites: rings, protoplanetary disks, Astrophysics - Earth and Planetary Astrophysics, Astrophysics - Instrumentation and Methods for Astrophysics, Mathematics - Dynamical Systems, Physics - Computational Physics},
+         year = 2012,
+        month = jan,
+       volume = {537},
+          eid = {A128},
+        pages = {A128},
+          doi = {10.1051/0004-6361/201118085},
+archivePrefix = {arXiv},
+       eprint = {1110.4876},
+ primaryClass = {astro-ph.EP},
+       adsurl = {https://ui.adsabs.harvard.edu/abs/2012A&A...537A.128R},
+      adsnote = {Provided by the SAO/NASA Astrophysics Data System}
+}
+@ARTICLE{reboundias15,
+       author = {{Rein}, Hanno and {Spiegel}, David S.},
+        title = "{IAS15: a fast, adaptive, high-order integrator for gravitational dynamics, accurate to machine precision over a billion orbits}",
+      journal = {\mnras},
+     keywords = {gravitation, methods: numerical, planets and satellites: dynamical evolution and stability, Astrophysics - Earth and Planetary Astrophysics, Astrophysics - Instrumentation and Methods for Astrophysics, Astrophysics - Solar and Stellar Astrophysics, Mathematics - Numerical Analysis},
+         year = 2015,
+        month = jan,
+       volume = {446},
+       number = {2},
+        pages = {1424-1437},
+          doi = {10.1093/mnras/stu2164},
+archivePrefix = {arXiv},
+       eprint = {1409.4779},
+ primaryClass = {astro-ph.EP},
+       adsurl = {https://ui.adsabs.harvard.edu/abs/2015MNRAS.446.1424R},
+      adsnote = {Provided by the SAO/NASA Astrophysics Data System}
+}
+
+
+Adapted Functions From rubin_sim:
+
+@software{peter_yoachim_2022_7087823,
+author       = {Peter Yoachim and R. Lynne Jones and Eric H. Neilsen and Tiago Ribeiro and Scott Daniel and Natasha Abrams and Husni Almoubayyed and Igor Andreoni and Humna Awan and Matthew R. Becker and  Keaton Bell and Eric Bellm and Federica Bianco and Johan Bregeon and Katja Bricman and Owen Boberg and Jeff Carlin and YuChia Chen and Will Clarkson and Andrew Connolly and Philippe Gris and Alina Hu and Michael Kelley and Somayeh Khakpash and Simon Krughoff and Xiaolong Li and Michael B. Lund and Phil Marshall and Josh Meyers and Loredana Prisinzano and Elahesadat Naghib and Meredith Rawls and Michael Reuter and Daniel Rothchild and Christian N. Setzer and Jonathan Sick and  Rachel Street},
+title        = {lsst/rubin\_sim: 0.12.1},
+month        = sep,
+year         = 2022,
+publisher    = {Zenodo},
+version      = {0.12.1},
+doi          = {10.5281/zenodo.7087823},
+url          = {https://doi.org/10.5281/zenodo.7087823}
+}
+
+
+@ARTICLE{2018Icar..303..181J,
+author = {{Jones}, R. Lynne and {Slater}, Colin T. and {Moeyens}, Joachim and {Allen}, Lori and {Axelrod}, Tim and {Cook}, Kem and {Ivezi{\'c}}, {{Z}}eljko and {Juri{\'c}}, Mario and {Myers}, Jonathan and {Petry}, Catherine E.},
+title = "{The Large Synoptic Survey Telescope as a Near-Earth Object discovery machine}",
+journal = {\icarus},
+keywords = {Near-Earth objects, Image processing, Asteroids, Earth Science, Astrophysics - Earth and Planetary Astrophysics, Astrophysics - Instrumentation and Methods for Astrophysics},
+year = 2018,
+month = mar,
+volume = {303},
+pages = {181-202},
+doi = {10.1016/j.icarus.2017.11.033},
+archivePrefix = {arXiv},
+eprint = {1711.10621},
+ primaryClass = {astro-ph.EP},
+adsurl = {https://ui.adsabs.harvard.edu/abs/2018Icar..303..181J},
+ adsnote = {Provided by the SAO/NASA Astrophysics Data System}
+}
+
+sbpy:
+
+@ARTICLE{2019JOSS....4.1426M,
+author = {{Mommert}, Michael and {Kelley}, Michael and {de Val-Borro}, Miguel and {Li}, Jian-Yang and {Guzman}, Giannina and {Sip{\H{o}}cz}, Brigitta and {{\v{D}}urech}, Josef and {Granvik}, Mikael and {Grundy}, Will and {Moskovitz}, Nick and {Penttil{\"a}}, Antti and {Samarasinha}, Nalin},
+title = "{sbpy: A Python module for small-body planetary astronomy}",
+journal = {The Journal of Open Source Software},
+keywords = {comets, kuiper belt objects, Python, trans-neptunian objects, centaurs, planetary science, python, solar system, asteroids, meteoroids, trojans, astronomy, small bodies},
+year = 2019,
+month = aug,
+volume = {4},
+number = {38},
+eid = {1426},
+pages = {1426},
+doi = {10.21105/joss.01426},
+adsurl = {https://ui.adsabs.harvard.edu/abs/2019JOSS....4.1426M},
+adsnote = {Provided by the SAO/NASA Astrophysics Data System}
+}
+
+SciPy:
+
+@ARTICLE{2020SciPy-NMeth,
+author  = {Virtanen, Pauli and Gommers, Ralf and Oliphant, Travis E. and 
+Haberland, Matt and Reddy, Tyler and Cournapeau, David and 
+Burovski, Evgeni and Peterson, Pearu and Weckesser, Warren and 
+Bright, Jonathan and {van der Walt}, St{\'{e}}fan J. and 
+Brett, Matthew and Wilson, Joshua and Millman, K. Jarrod and 
+Mayorov, Nikolay and Nelson, Andrew R. J. and Jones, Eric and 
+Kern, Robert and Larson, Eric and Carey, C J and 
+Polat, {\.I}lhan and Feng, Yu and Moore, Eric W. and 
+{VanderPlas}, Jake and Laxalde, Denis and Perktold, Josef and 
+Cimrman, Robert and Henriksen, Ian and Quintero, E. A. and 
+Harris, Charles R. and Archibald, Anne M. and 
+Ribeiro, Ant{\^o}nio H. and Pedregosa, Fabian and 
+{van Mulbregt}, Paul and {SciPy 1.0 Contributors}},
+title   = {{{SciPy} 1.0: Fundamental Algorithms for Scientific 
+Computing in Python}},
+journal = {Nature Methods},
+year    = {2020},
+volume  = {17},
+pages   = {261--272},
+adsurl  = {https://rdcu.be/b08Wh},
+doi     = {10.1038/s41592-019-0686-2},
+}
+
+Spice Resources:
+
+ @ARTICLE{1996P&SS...44...65A,
+author = {{Acton}, Charles H.},
+title = {Ancillary data services of  NASA's Navigation and Ancillary Information Facility},
+journal = {\planss},
+year = 1996,
+month = jan,
+volume = {44},
+number = {1},
+pages = {65-70},
+doi = {10.1016/0032-0633(95)00107-7},
+adsurl = {https://ui.adsabs.harvard.edu/abs/1996P&SS...44...65A},
+adsnote = {Provided by the SAO/NASA Astrophysics Data System}
+}
+
+
+@ARTICLE{2018P&SS..150....9A,
+author = {{Acton}, Charles and {Bachman}, Nathaniel and {Semenov}, Boris and {Wright}, Edward},
+title = "{A look towards the future in the handling of space science mission geometry}",
+journal = {\planss},
+year = 2018,
+month = jan,
+volume = {150},
+pages = {9-12},
+doi = {10.1016/j.pss.2017.02.013},
+adsurl = {https://ui.adsabs.harvard.edu/abs/2018P&SS..150....9A},
+adsnote = {Provided by the SAO/NASA Astrophysics Data System} 
+}
+
+Add an acknowledgment statement:  The SPICE Resource files used in this work ere described in \citep{1996P&SS...44...65A, 2018P&SS..150....9A}
+
+Spiceypy:
+
+@ARTICLE{2020JOSS....5.2050A,
+author = {{Annex}, Andrew and {Pearson}, Ben and {Seignovert}, Beno{\^\i}t and {Carcich}, Brian and {Eichhorn}, Helge and {Mapel}, Jesse and {von Forstner}, Johan and {McAuliffe}, Jonathan and {del Rio}, Jorge and {Berry}, Kristin and {Aye}, K. -Michael and {Stefko}, Marcel and {de Val-Borro}, Miguel and {Kulumani}, Shankar and {Murakami}, Shin-ya}, 
+title = "{SpiceyPy: a Pythonic Wrapper for the SPICE Toolkit}",
+journal = {The Journal of Open Source Software},
+keywords = {geometry, Python, spacecraft, Batchfile, planets, ephemeris, navigation, SPICE},
+year = 2020,
+month = feb,
+volume = {5},
+number = {46},
+ eid = {2050},
+pages = {2050},
+doi = {10.21105/joss.02050},
+adsurl = {https://ui.adsabs.harvard.edu/abs/2020JOSS....5.2050A},
+adsnote = {Provided by the SAO/NASA Astrophysics Data System}
+}
+
+tqdm:
+
+@software{casper_da_costa_luis_2023_8233425,
+author       = {Casper da Costa-Luis and
+Stephen Karl Larroque and
+Kyle Altendorf and
+Hadrien Mary and
+richardsheridan and
+Mikhail Korobov and
+Noam Yorav-Raphael and
+Ivan Ivanov and
+Marcel Bargull and
+Nishant Rodrigues and
+Guangshuo Chen and
+Antony Lee and
+Charles Newey and
+CrazyPython and
+JC and
+Martin Zugnoni and
+Matthew D. Pagel and
+mjstevens777 and
+Mikhail Dektyarev and
+Alex Rothberg and
+ Alexander Plavin and
+Fabian Dill and
+FichteFoll and
+Gregor Sturm and
+HeoHeo and
+Hugo van Kemenade and
+Jack McCracken and
+MapleCCC and
+Max Nordlund and
+Mike Boyle},
+title        = {{tqdm: A fast, Extensible Progress Bar for Python 
+and CLI}},
+month        = aug,
+year         = 2023,
+ publisher    = {Zenodo},
+ version      = {v4.66.1},
+doi          = {10.5281/zenodo.8233425},
+url          = {https://doi.org/10.5281/zenodo.8233425}
+}
+
+If using a rubin_sim simulated survey pointing database:
+
+Add an acknowledgment statement: This material or work is supported in part by the National Science  Foundation through Cooperative Agreement AST-1258333 and Cooperative Support Agreement AST1836783 managed by the Association of Universities for Research in Astronomy (AURA), and the Department of Energy under Contract No. DE-AC02-76SF00515 with the SLAC National Accelerator Laboratory managed by Stanford University.
+
+
+If you are submitting a paper to AAS Journals, here is the software citation latex command you will need once you have included all of the above  bibtex references above.
+\software{Sorcha,ASSIST \citep{2023PSJ.....4...69H,hanno_rein_2023_7778017},Astropy \citep{2013A&A...558A..33A,2018AJ....156..123A,2022ApJ...935..167A}, Healpy \citep{Zonca2019,2005ApJ...622..759G}, Matplotlib \citep{Hunter:2007}, Numba \citep{2015llvm.confE...1L}, Numpy \citep{harris2020array}, pandas \citep{mckinney-proc-scipy-2010, reback2020pandas}, Pooch \citep{uieda2020}, PyTables \citep{pytables}, REBOUND \citep{rebound,reboundias15}, rubin$\_$sim \citep{2018Icar..303..181J,peter_yoachim_2022_7087823}, sbpy \citep{2019JOSS....4.1426M}, SciPy \citep{2020SciPy-NMeth}, Spiceypy \citep{2020JOSS....5.2050A}, sqlite (\url{https://www.sqlite.org/index.html}), sqlite3 (\url{https://docs.python.org/3/library/sqlite3.html}), tqdm \citep{casper_da_costa_luis_2023_8233425}, Black (\url{https://black.readthedocs.io/en/stable/faq.html}), Jupyter Notebooks \citep{soton403913}}

@@ -23,8 +23,8 @@ def PPFadingFunctionFilter(observations, fillfactor, width, module_rngs, verbose
     module_rngs : PerModuleRNG
         A collection of random number generators (per module).
 
-    verbose : boolean, optional
-        Verbose logging flag. Default = False
+    verbose : boolean, default=False
+        Verbose logging flag.
 
     Returns
     ----------

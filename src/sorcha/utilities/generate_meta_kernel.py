@@ -31,10 +31,10 @@ def build_meta_kernel_file(auxconfigs, retriever: pooch.Pooch) -> None:
 
     Parameters
     ----------
-    retriever : pooch
-        Pooch object that maintains the registry of files to download
     auxconfigs: dataclass
         Dataclass of auxiliary configuration file arguments.
+    retriever : pooch
+        Pooch object that maintains the registry of files to download
     Returns
     ---------
     None

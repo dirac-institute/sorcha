@@ -28,13 +28,11 @@ def PPApplyFOVFilter(observations, sconfigs, module_rngs, footprint=None, verbos
     module_rngs : PerModuleRNG
         A collection of random number generators (per module).
 
-    footprint: Footprint
+    footprint: Footprint, default=None
         A Footprint class object that represents the boundaries of the detector(s).
-        Default: None.
 
-    verbose: boolean
+    verbose: boolean, default=False
         Controls whether logging in verbose mode is on or off.
-        Default: False
 
     Returns
     -----------
@@ -152,9 +150,8 @@ def PPSimpleSensorArea(ephemsdf, module_rngs, fillfactor=0.9):
     module_rngs : PerModuleRNG
         A collection of random number generators (per module).
 
-    fillfactor : float
+    fillfactor : float, default=0.9
         fraction of FOV covered by the sensor.
-        Default = 0.9
 
     Returns
     ----------

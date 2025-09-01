@@ -53,8 +53,8 @@ def _create_assist_ephemeris(auxconfigs, cache_dir=None) -> tuple:
     ---------
     auxconfigs: dataclass
         Dataclass of auxiliary configuration file arguments.
-    cache_dir: string
-        The base directory to place all downloaded files. Default = None
+    cache_dir: string, default=None
+        The base directory to place all downloaded files. 
     Returns
     ---------
     Ephem : ASSIST ephemeris object
@@ -84,6 +84,9 @@ def furnish_spiceypy(args, auxconfigs):
     Builds the SPICE kernel, downloading the required files if needed
     Parameters
     -----------
+    args : dictionary or `sorchaArguments` object
+        dictionary of command-line arguments.
+
     auxconfigs: dataclass
         Dataclass of auxiliary configuration file arguments.
     """

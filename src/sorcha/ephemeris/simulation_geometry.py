@@ -17,7 +17,7 @@ def ecliptic_to_equatorial(v, rot_mat=ECL_TO_EQ_ROTATION_MATRIX):
     ----------
     v: array (3 entries)
         vector
-    rot_mat: 2D array (3x3 matrix)
+    rot_mat: 2D array (3x3 matrix), default=ECL_TO_EQ_ROTATION_MATRIX
         Rotation matrix. Default is the matrix that computes the ecliptic to equatorial conversion
     Returns
     -------
@@ -35,7 +35,7 @@ def equatorial_to_ecliptic(v, rot_mat=EQ_TO_ECL_ROTATION_MATRIX):
     ----------
     v: array (3 entries)
         vector
-    rot_mat: 2D array (3x3 matrix)
+    rot_mat: 2D array (3x3 matrix), default=EQ_TO_ECL_ROTATION_MATRIX
         Rotation matrix. Default is the matrix that computes the equatorial to ecliptic conversion
     Returns
     -------
@@ -59,11 +59,11 @@ def integrate_light_time(sim, ex, t, r_obs, lt0=0, iter=3, speed_of_light=SPEED_
         Target time
     r_obs: array (3 entries)
         Observatory position at time t
-    lt0: float
+    lt0: float, default=0
         First guess for light travel time
-    iter: int
+    iter: int, default=3
         Number of iterations
-    speed_of_light: float
+    speed_of_light: float, default=SPEED_OF_LIGHT
         Speed of light for the calculation (default is SPEED_OF_LIGHT constant)
     Returns
     -------
@@ -102,9 +102,9 @@ def get_hp_neighbors(ra_c, dec_c, search_radius, nside=32, nested=True):
         Target dec
     search_radius: float
         Radius for the query
-    nside: int
+    nside: int, default=32
         healpix nside
-    nested: boolean
+    nested: boolean, default=True
         Defines the ordering scheme for the healpix ordering. True (default) means a NESTED ordering
     Returns
     -------
@@ -177,10 +177,10 @@ def barycentricObservatoryRates(et, obsCode, observatories, Rearth=RADIUS_EARTH_
         MPC observatory code
     observatories: Observatory
         Observatory object with spherical representations for the obsCode
-    Rearth: float
-        Radius of the Earth (default is RADIUS_EARTH_KM)
-    delta_et: float
-        Difference in ephemeris time (in seconds) to derive the rotation matrix from the fixed Earth equatorial frame to J2000 (default: 10)
+    Rearth: float, default=RADIUS_EARTH_KM
+        Radius of the Earth units[km]
+    delta_et: float, default=10
+        Difference in ephemeris time (in seconds) to derive the rotation matrix from the fixed Earth equatorial frame to J2000
     Returns
     -------
      : array

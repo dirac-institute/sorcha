@@ -53,8 +53,8 @@ def randomizeAstrometryAndPhotometry(observations, sconfigs, module_rngs, verbos
     module_rngs : PerModuleRNG
        A collection of random number generators (per module).
 
-    verbose : bool
-       Verbosity on or off. Default False.
+    verbose : bool, default=False
+       Verbosity on or off.
 
     Returns
     ---------
@@ -123,31 +123,28 @@ def randomizeAstrometry(
     module_rngs : PerModuleRNG
         A collection of random number generators (per module).
 
-    ra_Name : string, optional
+    ra_Name : string, default="RA_deg"
         "df" dataframe column name for the right ascension.
-        Default = "RA_deg"
 
-    dec_Name : string, optional
-        "df" dataframe column name for the declination. Default = "Dec_deg"
+    dec_Name : string, default="Dec_deg"
+        "df" dataframe column name for the declination.
 
-    raOrigName : string, optional
+    raOrigName : string, default="RATrue_deg"
         "df" dataframe column name for where to store original right
-        ascension. Default = "RATrue_deg"
+        ascension.
 
-    decOrigName : string, optional
+    decOrigName : string, default="DecTrue_deg"
         "df" dataframe column name for where to store original declination.
-        Default = "DecTrue_deg"
 
-    sigName : string, optional
+    sigName : string, default="AstSig(deg)"
         "df" dataframe column name for the standard deviation, uncertainty in the
         astrometric position.
-        Default = "AstSig(deg)"
 
-    radecUnits : string
-        Units for RA and Dec ('deg'/'rad'/'mas'). Default = "deg"
+    radecUnits : string, default="deg"
+        Units for RA and Dec ('deg'/'rad'/'mas').
 
-    sigUnits : string
-        Units for standard deviation ('deg'/'rad'/'mas'). Default = "mas"
+    sigUnits : string, default="mas"
+        Units for standard deviation ('deg'/'rad'/'mas').
 
 
     Returns
@@ -218,8 +215,8 @@ def sampleNormalFOV(center, sigma, module_rngs, ndim=3):
     module_rngs : PerModuleRNG
         A collection of random number generators (per module).
 
-    ndim : integer, optional
-        Dimension of hyper-sphere. Default = 3
+    ndim : integer, default=3
+        Dimension of hyper-sphere.
 
     Return
     --------
@@ -270,14 +267,14 @@ def randomizePhotometry(
     module_rngs : PerModuleRNG
         A collection of random number generators (per module).
 
-    magName : string, optional
-        'df' column name of apparent magnitude. Default = "Filtermag"
+    magName : string, default="Filtermag"
+        'df' column name of apparent magnitude.
 
-    magRndName : string, optional
-       'df' column name for storing randomized apparent magnitude, Default = "FiltermagRnd"
+    magRndName : string, default="FiltermagRnd"
+       'df' column name for storing randomized apparent magnitude,
 
-    sigName : float, optional
-            'df' column name for magnitude standard deviation. Default = "FiltermagSig"
+    sigName : float, default="FiltermagSig"
+            'df' column name for magnitude standard deviation.
 
     Returns
     -----------
@@ -314,8 +311,8 @@ def flux2mag(f, f0=3631):
     f : float or array of floats
         flux. [Units : Jy].
 
-    f0: float, optional
-        Zero point flux. Default = 3631
+    f0: float, default= 3631
+        Zero point flux.
 
     Returns
     -----------
@@ -338,8 +335,8 @@ def mag2flux(mag, f0=3631):
     mag : float or rray of floats
         Pogson magnitude. [Units: mag]
 
-    f0 : float, optional
-        Zero point flux. Default = 3631
+    f0 : float, default=3631
+        Zero point flux.
 
     Returns
     -----------
@@ -362,8 +359,8 @@ def icrf2radec(x, y, z, deg=True):
     x, y, z : floats/arrays of floats
         3D vector of unit length (ICRF)
 
-    de : boolean, optional
-        True for angles in degrees, False for angles in radians. Default = True
+    deg : boolean, default=True
+        True for angles in degrees, False for angles in radians.
 
     Returns
     -----------
@@ -419,8 +416,8 @@ def radec2icrf(ra, dec, deg=True):
     dec: float or array of floats
         Declination. [Units deg]
 
-    deg : boolean, optional
-        True for angles in degrees, False for angles in radians. Default = True
+    deg : boolean, default=True
+        True for angles in degrees, False for angles in radians.
 
     Returns
     -----------

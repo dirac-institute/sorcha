@@ -39,10 +39,10 @@ def _remove_files(auxconfigs, retriever: pooch.Pooch) -> None:  # pragma: no cov
 
     Parameters
     ------------
-    retriever : pooch
-        Pooch object that maintains the registry of files to download.
     auxconfigs: dataclass
         Dataclass of auxiliary configuration file arguments.
+    retriever : pooch
+        Pooch object that maintains the registry of files to download.
     """
 
     for file_name in auxconfigs.data_file_list:

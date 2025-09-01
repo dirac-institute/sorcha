@@ -9,7 +9,7 @@ from sorcha.utilities.dataUtilitiesForTests import get_test_filepath
 
 if __name__ == "__main__":  # pragma: no cover
     """
-    Generates "golden" output for sorcha runs for testing. This should only b
+    Generates "golden" output for sorcha runs for testing. This should only 
     be run sparingly when confident all changes have been confirmed and tested with
     unit tests
     """

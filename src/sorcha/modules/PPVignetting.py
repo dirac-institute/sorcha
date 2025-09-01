@@ -23,20 +23,20 @@ def vignettingEffects(
     df : pandas dataframe
         dataframe of observations.
 
-    raName : string, optional
-        'df' column name of object RA. Default = "RA_deg"
+    raName : string, default="RA_deg"
+        'df' column name of object RA.
 
-    decName : string, optional
-        'df' column name of object declination. Default = "Dec_deg"
+    decName : string, default="Dec_deg"
+        'df' column name of object declination.
 
-    fieldName : string, optional
-        'df' column name for observation pointing field ID. Default = "FieldID"
+    fieldName : string, default="FieldID"
+        'df' column name for observation pointing field ID.
 
-    raNameSurvey : string, optional
-         'df' column name for observation pointing RA. Default = "fieldRA_deg"
+    raNameSurvey : string, default="fieldRA_deg"
+         'df' column name for observation pointing RA.
 
-     decNameSurvey : string, optional
-         'df' column name for observation pointing declination. Default = "fieldDec_deg"
+     decNameSurvey : string, default="fieldDec_deg"
+         'df' column name for observation pointing declination.
 
     Returns
     -----------
