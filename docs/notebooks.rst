@@ -29,12 +29,11 @@ Demo Notebooks
 
     LSST Camera Footprint and Various Other Sorcha Related Fields-of-View <notebooks/demo_PlotLSSTCamCornersFOVs> 
     Apparent Magnitude Validation <notebooks/demo_ApparentMagnitudeValidation>
-    Calculate LSST Colours <notebooks/demo_CalculateLSSTColours>
     Circle Footprint Filter <notebooks/demo_CircleFootprint>
     LSST Camera Footprint Filter <notebooks/demo_FootprintFilter>
-    Coordinate Transformation Example <notebooks/demo_CoordinateTransformations.ipynb>
+    Coordinate Transformation Example <notebooks/demo_CoordinateTransformations>
     Detection Efficiency (Fading Function) Validation <notebooks/demo_DetectionEfficiencyValidation>
-    Estimating Colors in LSST Filters From Optical/NIR Spectra <notebooks/demo_CalculateLSSTColours.ipynb>
+    Estimating Colors in LSST Filters From Optical/NIR Spectra <notebooks/demo_CalculateLSSTColours>
     SSP Linking Filter <notebooks/demo_LinkingFilter>
     Magnitude and SNR Cuts <notebooks/demo_MagnitudeAndSNRCuts>
     Trailing Losses Validation <notebooks/demo_TrailingLossesValidation>
@@ -53,13 +52,17 @@ Files to Download To Run the Notebooks Individually
 
     * :download:`LSSTCam detector configuration file <../src/sorcha/modules/data/LSST_detector_corners_100123.csv>`
 
-* Calculate LSST Colours
-
-    * :download:`2002PN34_highres.spec <./2002PN34_highres.spec>`
-
 * Circle Footprint Filter
 
     * :download:`oneline_v2.0.db <./notebooks/oneline_v2.0.db>`
     * :download:`footprintFilterValidationObservations.csv <./notebooks/footprintFilterValidationObservations.csv>`
 
+* LSST Camera Footprint Filter
 
+    * :download:`oneline_v2.0.db <./notebooks/oneline_v2.0.db>`
+    * :download:`footprintFilterValidationObservations.csv <./notebooks/footprintFilterValidationObservations.csv>`
+
+
+*  Estimating Colors in LSST Filters From Optical/NIR Spectra
+
+    * :download:`2002PN34_highres.spec <./2002PN34_highres.spec>`
