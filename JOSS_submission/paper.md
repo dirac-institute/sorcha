@@ -109,7 +109,7 @@ affiliations:
  - name: Institute for Astronomy, University of Edinburgh, Royal Observatory, Edinburgh, EH9 3HJ, UK
    index: 16
 
-date: 3 September 2025
+date: 28 January 2025
 bibliography: paper.bib
 
 # Optional fields if submitting to a AAS journal too, see this blog post:
