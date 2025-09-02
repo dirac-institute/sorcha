@@ -498,7 +498,7 @@ the observation is of a linked object or not. To enable this functionality, add 
     drop_unlinked = False
 
 .. note::
-   If **drop_unlinked** is not present in the configuration file, ``Sorcha`` will go to its default setting of dropping all observations of unlinked objects. The Rubin Full Footprint and the Rubin Circular Approximation :ref:`configuration file<configs>` are set up this way,  
+   If **drop_unlinked** is not present in the configuration file, ``Sorcha`` will go to its default setting of dropping all observations of unlinked objects. The Rubin Full Footprint and the Rubin Circular Approximation :ref:`configuration file<configs>` are set up this way. 
 
 .. seealso::
     See our `Jupyter notebook <notebooks/demo_miniDifiValidation.ipynb>`__  that validates the linking filter.

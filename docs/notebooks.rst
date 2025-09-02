@@ -45,8 +45,13 @@ Demo Notebooks
     miniDifi Validation <notebooks/demo_miniDifiValidation>
     Sorcha End-to-End Verification <notebooks/demo_Verification>
 
-Files to Download To Run the Notebooks Individually
-------------------------------------------------------
+Supplementary Files Required To Run the Notebooks Individually
+--------------------------------------------------------------------
+
+.. tip::
+
+    The easiest way to run the notebooks is to clone the repository and install ``Sorcha`` from the source code via pip in editable development mode as described in the :ref:`dev_mode` page. Then move to the docs/notebooks directory and run the notebooks from the there. We also provide the data files used below so you can try individual notebooks out without running them all or cloning the full repository.
+
 
 * LSST Camera Footprint and Various Other Sorcha Related Fields-of-View 
 
