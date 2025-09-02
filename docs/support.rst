@@ -6,6 +6,10 @@ Reporting Issues, Proposing Changes, and Contributing
 .. tip::
    Is something not working? Have you checked the :ref:`troubleshooting` page to see if your problem is covered there?
 
+.. tip::
+   To keep up with the latest ``Sorcha`` updates and annoucements, we recommend signing up for our `google group <https://groups.google.com/g/sorcha>`_.
+
+
 Contributions are very welcome. If there is a feature or functionality not yet available in ``Sorcha``, we encourage you to propose the feature or share your code with the new enhancements. 
 
 Submitting a GitHub Issue
