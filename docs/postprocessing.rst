@@ -246,7 +246,7 @@ Lightcurve Template Class
 Sinusoidal Light Curve  Class
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Inside the `Sorcha add-ons  GitHub repository <https://github.com/dirac-institute/sorcha-addons>`_, we provide a simple example implementation where the apparent magnitude of the object (that is, the magnitude after all geometric effects have been taken into account), has a sinusoidal term added to it. To use this function, in the :ref:`CPP` file, the user must provide a light curve amplitude (`LCA`), corresponding to half the peak-to-peak amplitude for the magnitude changes, a period `Period`, and a reference time `Time0` where the light curve is at 0 - if these are not provided, the software will produce an error message. Despite being simple, that implementation shows all the class methods that need to be implemented for a custom light curve function. We have an `example Jupyter notebook <notebooks/demo_Lightcurve.ipynb>`_  demonstrating the SinusoidalLightCurve class built into `Sorcha add-ons package <https://github.com/dirac-institute/sorcha-addons>`_,  To use this prescription, the **lc_model** :ref:`configuration file<configs>` variable should be set to **sinusoidal**.
+Inside the `Sorcha add-ons  GitHub repository <https://github.com/dirac-institute/sorcha-addons>`_, we provide a simple example implementation where the apparent magnitude of the object (that is, the magnitude after all geometric effects have been taken into account), has a sinusoidal term added to it. To use this function, in the :ref:`CPP` file, the user must provide a light curve amplitude (`LCA`), corresponding to half the peak-to-peak amplitude for the magnitude changes, a period `Period`, and a reference time `Time0` where the light curve is at 0 - if these are not provided, the software will produce an error message. Despite being simple, that implementation shows all the class methods that need to be implemented for a custom light curve function. We have an `example Jupyter notebook <notebooks/demo_Lightcurve.ipynb>`__  demonstrating the SinusoidalLightCurve class built into `Sorcha add-ons package <https://github.com/dirac-institute/sorcha-addons>`_,  To use this prescription, the **lc_model** :ref:`configuration file<configs>` variable should be set to **sinusoidal**.
 
 .. _vignetting:
 
@@ -281,7 +281,7 @@ further from the center of the FOV have shallower depths.
   ``Sorcha`` currently only has  a vignetting model for the LSSTCam.
 
 .. seealso::
-  We have a `Jupyter notebook <notebooks/demo_Vignetting.ipynb>`_  demonstrating ``Sorcha``'s vignetting calculation. 
+  We have a `Jupyter notebook <notebooks/demo_Vignetting.ipynb>`__  demonstrating ``Sorcha``'s vignetting calculation. 
 
 .. _footprint:
 
@@ -325,7 +325,7 @@ To include this filter, the following options should be set in the :ref:`configs
 
 
 .. seealso::
-  We have a `Jupyter notebook <notebooks/demo_CircleFootprint.ipynb>`_  demonstrating ``Sorcha``'s circle radius (simple sensor area) filter.
+  We have a `Jupyter notebook <notebooks/demo_CircleFootprint.ipynb>`__  demonstrating ``Sorcha``'s circle radius (simple sensor area) filter.
 
 .. _full_camera_footprint:
 
@@ -365,7 +365,7 @@ Additionally, the camera footprint model can account for the losses at the edge 
 
 
 .. seealso::
-  We have a `Jupyter notebook <notebooks/demo_FootprintFilter.ipynb>`_  demonstrating ``Sorcha``'s full camera footprint filter.
+  We have a `Jupyter notebook <notebooks/demo_FootprintFilter.ipynb>`__  demonstrating ``Sorcha``'s full camera footprint filter.
 
 .. _fading:
 
@@ -410,7 +410,7 @@ To configure the fading function, the following variables should be set in the :
     The default values are modeled on those from the `Annis et al. (2014) <https://iopscience.iop.org/article/10.1088/0004-637X/794/2/120>`_.
 
 .. seealso::
-    We have a `Jupyter notebook <notebooks/demo_DetectionEfficiencyValidation.ipynb>`_  showing how ``Sorcha`` applies the survey detection efficiency (fading function).
+    We have a `Jupyter notebook <notebooks/demo_DetectionEfficiencyValidation.ipynb>`__  showing how ``Sorcha`` applies the survey detection efficiency (fading function).
 
 Accounting for Saturation (Saturation/Bright Limit Filter)
 ------------------------------------------------------------
@@ -487,15 +487,21 @@ The defaults given below are those used by SSP and are explained in the comments
     # For the LSST, 12pm Chile Standard Time is 4pm UTC.
     SSP_night_start_utc = 16.0
 
-By default, when the linking filter is on, ``Sorcha`` will drop all observations of unlinked objects. If the user wishes to retain
+Keeping Unlinked Objects
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+By default, when the linking filter is on unless otherwise specified  ``Sorcha`` will drop all observations of unlinked objects. If the user wishes to retain
 these observations, this can be set in the :ref:`configs`. This will add an additional column to the output, **object_linked**, which states whether
 the observation is of a linked object or not. To enable this functionality, add the following to the :ref:`configs`::
 
     [LINKING]
     drop_unlinked = False
 
+.. note::
+   If **drop_unlinked** is not present in the configuration file, ``Sorcha`` will go to its default setting of dropping all observations of unlinked objects. The Rubin Full Footprint and the Rubin Circular Approximation :ref:`configuration file<configs>` are set up this way,  
+
 .. seealso::
-    See our `Jupyter notebook <notebooks/demo_miniDifiValidation.ipynb>`_  that validates the linking filter.
+    See our `Jupyter notebook <notebooks/demo_miniDifiValidation.ipynb>`__  that validates the linking filter.
 
 .. tip::
   The linking filter is only applied if the :ref:`configuration file<configs>` has a LINKING section.

@@ -587,6 +587,7 @@ Required Ephemeris File Columns and Format
 +--------------------------+-----------------------------------------------------------------------------------------+
 | phase_deg                | Phase angle between the Sun, object, and observer (degrees)                             |
 +--------------------------+-----------------------------------------------------------------------------------------+
+
 .. note::
    All positions and velocities are in respect to J2000
 

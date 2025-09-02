@@ -65,4 +65,15 @@ Files to Download To Run the Notebooks Individually
 
 *  Estimating Colors in LSST Filters From Optical/NIR Spectra
 
-    * :download:`2002PN34_highres.spec <./2002PN34_highres.spec>`
+    * :download:`2002PN34_highres.spec <./notebooks/2002PN34_highres.spec>`
+
+* Vignetting Demo
+
+    * :download:`oneline_v2.0.db <./notebooks/oneline_v2.0.db>`
+    * :download:`footprintFilterValidationObservations.csv <./notebooks/footprintFilterValidationObservations.csv>`
+
+* Sorcha End-to-End Verification
+    * :download:`baseline_v2.0_1yr.db <../src/sorcha/data/demo/baseline_v2.0_1yr.db>`
+    * :download:`2011ob60.txt <./notebooks/2011ob60.txt>`
+    * :download:`2010tu149.txt <./notebooks/2010tu149.txt>`
+

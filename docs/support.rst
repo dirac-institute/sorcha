@@ -14,17 +14,17 @@ Contributions are very welcome. If there is a feature or functionality not yet a
 
 Submitting a GitHub Issue
 ---------------------------
-The best way to get in touch about a bug, suggest enhancements to ``Sorcha``, or recommend changes to the documentation is raise an issue through the `project's GitHub repository <https://github.com/dirac-institute/sorcha/issues>`_. We have a small team working on the project, so please be patient while we get back to you.
+The best way to get in touch about a bug, suggest enhancements to ``Sorcha``, or recommend changes to the documentation is raise an issue through the `project's GitHub repository <https://github.com/dirac-institute/sorcha/issues>`__. We have a small team working on the project, so please be patient while we get back to you.
 
 Contributing Code
 -----------------------------------
 
-We welcome upgrades/bug fixes to the code. This can be done by opening a pull request in the main ``Sorcha`` `GitHub repository <https://github.com/dirac-institute/sorcha>`_. If you have new classes that provide enhanced light curve or activity estimations, we welcome pull requests to the ``Sorcha Add-ons`` `GitHub repository <https://github.com/dirac-institute/sorcha-addons>`_.
+We welcome upgrades/bug fixes to the code. This can be done by opening a pull request in the main ``Sorcha`` `GitHub repository <https://github.com/dirac-institute/sorcha>`__. If you have new classes that provide enhanced light curve or activity estimations, we welcome pull requests to the ``Sorcha Add-ons`` `GitHub repository <https://github.com/dirac-institute/sorcha-addons>`__.
 
-You will need to install ``Sorcha`` from the source code via pip in editable development mode as described in the :ref:`dev_mode` page. If you are making a contributio to the ``Sorcha Add-ons`` package,  you will also need to install that in editable development mode via `these instructions <https://sorcha-addons.readthedocs.io/en/latest/installation.html>`_.
+You will need to install ``Sorcha`` from the source code via pip in editable development mode as described in the :ref:`dev_mode` page. If you are making a contributio to the ``Sorcha Add-ons`` package,  you will also need to install that in editable development mode via `these instructions <https://sorcha-addons.readthedocs.io/en/latest/installation.html>`__.
 
 .. note::
-   If you are planning to submit a pull request with enhancements, please raise a `GitHub issue in the main sorcha repository <https://github.com/dirac-institute/sorcha/issues>`_ first to discuss further with the ``Sorcha`` team.
+   If you are planning to submit a pull request with enhancements, please raise a `GitHub issue in the main sorcha repository <https://github.com/dirac-institute/sorcha/issues>`__ first to discuss further with the ``Sorcha`` team.
 
 Running the Unit Tests
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~

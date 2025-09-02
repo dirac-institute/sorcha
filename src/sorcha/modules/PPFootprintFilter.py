@@ -86,7 +86,7 @@ def radec_to_tangent_plane(ra, dec, field_ra, field_dec):
     """
     Converts ra and dec to xy on the plane tangent to image center, in the 2-d coordinate system where y is aligned with the meridian.
 
-    Parameters:
+    Parameters
     -----------
     ra: float/array of floats
          observation Right Ascension, radians.
@@ -101,7 +101,7 @@ def radec_to_tangent_plane(ra, dec, field_ra, field_dec):
          field pointing Declination, radians.
 
 
-    Returns:
+    Returns
     ----------
     x, y : float/array of floats
         Coordinates on the focal plane, radians projected  to the plane tangent to the unit sphere.
@@ -142,27 +142,27 @@ def radec_to_tangent_plane(ra, dec, field_ra, field_dec):
 
 def radec_to_focal_plane(ra, dec, field_ra, field_dec, field_rot):
     """
-     convert ra, dec to points on focal plane, x pointing to celestial north
+    Convert ra, dec to points on focal plane, x pointing to celestial north
 
-     Parameters:
-     -----------
-     ra: float/array of floats
+    Parameters
+    -----------
+    ra: float/array of floats
           observation Right Ascension, radians.
 
-     dec : float/array of floats
+    dec : float/array of floats
           observation Declination, radians.
 
-     field_ra : float/array of floats
+    field_ra : float/array of floats
           field pointing Right Ascension, radians.
 
-     field_dec : float/array of floats
+    field_dec : float/array of floats
           field pointing Declination, radians.
 
-     field_roat : float/array of floats
+    field_roat : float/array of floats
           field rotation angle, radians
 
-    Returns:
-     ----------
+    Returns
+    ----------
      x, y : float/array of floats
          Coordinates on the focal plane, radians on the detector focal plane
 
