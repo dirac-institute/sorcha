@@ -402,7 +402,11 @@ Setting Up the Correct LSST Pointing Database Query
 
 ``Sorcha``'s **ppsqldbquery** :ref:`configuration file<configs>` parameter contains the SQL query for obtaining this information from the pointing database.
 
-From `rubin_sim <https://github.com/lsst/rubin_sim>`_ v2.0 cadence simulations onward use the query::
+From `rubin_sim <https://github.com/lsst/rubin_sim>`_ v5.0 cadence simulations onward use the query::
+
+  SELECT observationId, observationStartMJD as observationStartMJD_TAI, visitTime, visitExposureTime, band as filter, seeingFwhmGeom as seeingFwhmGeom_arcsec, seeingFwhmEff as seeingFwhmEff_arcsec, fiveSigmaDepth as fieldFiveSigmaDepth_mag , fieldRA as fieldRA_deg, fieldDec as fieldDec_deg, rotSkyPos as fieldRotSkyPos_deg FROM observations order by observationId
+
+From `rubin_sim <https://github.com/lsst/rubin_sim>`_ v2.0 up to v4.0 cadence simulations use the query::
 
   SELECT observationId, observationStartMJD as observationStartMJD_TAI, visitTime, visitExposureTime, filter, seeingFwhmGeom as seeingFwhmGeom_arcsec, seeingFwhmEff as seeingFwhmEff_arcsec, fiveSigmaDepth as fieldFiveSigmaDepth_mag , fieldRA as fieldRA_deg, fieldDec as fieldDec_deg, rotSkyPos as fieldRotSkyPos_deg FROM observations order by observationId
 

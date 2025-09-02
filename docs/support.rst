@@ -34,7 +34,16 @@ Then in the terminal running::
 or:: 
 
    python -m pytest
-   
+
+Modifying the End-to-End Unit Test Comparison Files
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+If you have made significant changes to what ``Sorcha`` outputs by default, then our end-to-end unit tests will need the output files (which we refer to as *the goldens*) updated. We have a script to regenerate these in the correct directory within the sorcha repo. You will need to clone the repo and in the /src/sorcha/utilities/ directory run the ``generateGoldens.py`` script on the command line::
+
+   python generateGoldens.py 
+
+.. danger::
+   For most updates to ``Sorcha`` you should **not** have to change the goldens. Change these files with care as they are used to check that sorcha is outputting what they think it should be. 
 
 Contributing to the  Documentation
 --------------------------------------
