@@ -24,7 +24,7 @@ def print_demo_command(printall=True):
 
     Parameters
     -----------
-    printall : boolean
+    printall : boolean, default=True
         When True, prints the demo command plus the instructions for copying the demo files.
         When False, prints the demo command only.
 

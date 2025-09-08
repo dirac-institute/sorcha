@@ -20,7 +20,7 @@ def mjd_tai_to_epoch(mjd_tai):
 
     Returns
     -------------
-        : Ephemeris time
+    epoch  : Ephemeris time
     """
     jd = mjd_tai + 2400000.5 + 32.184 / (24 * 60 * 60)
     epoch_str = "JD %lf TDT" % jd
@@ -137,7 +137,7 @@ def get_perihelion_row(row, epochJD_TDB, ephem, ssb_dict, gm_sun, gm_total):
         epoch of the elements, in JD TDB
     ephem: Ephem
         ASSIST ephemeris object
-    sun_dict : dict
+    ssb_dict : dict
         Dictionary with the position of the Sun at each epoch
     gm_sun : float
         Standard gravitational parameter GM for the Sun
@@ -361,8 +361,8 @@ class Observatory:
                 JPL internal ephemeris time
             obsCode : str
                 MPC Observatory code
-            Rearth : float
-                Radius of the Earth
+            Rearth : float default=RADIUS_EARTH_KM
+                Radius of the Earth, units[km]
         Returns
         -------
             : array (3,)

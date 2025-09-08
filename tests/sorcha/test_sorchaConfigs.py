@@ -109,8 +109,8 @@ correct_expert = {
 
 correct_auxciliary_URLs = {
     "de440s.bsp": "https://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/planets/de440s.bsp",
-    "earth_200101_990827_predict.bpc": "https://naif.jpl.nasa.gov/pub/naif/generic_kernels/pck/earth_200101_990827_predict.bpc",
-    "earth_620120_240827.bpc": "https://naif.jpl.nasa.gov/pub/naif/generic_kernels/pck/earth_620120_240827.bpc",
+    "earth_2025_250826_2125_predict.bpc": "https://naif.jpl.nasa.gov/pub/naif/generic_kernels/pck/earth_2025_250826_2125_predict.bpc",
+    "earth_620120_250826.bpc": "https://naif.jpl.nasa.gov/pub/naif/generic_kernels/pck/earth_620120_250826.bpc",
     "earth_latest_high_prec.bpc": "https://naif.jpl.nasa.gov/pub/naif/generic_kernels/pck/earth_latest_high_prec.bpc",
     "linux_p1550p2650.440": "https://ssd.jpl.nasa.gov/ftp/eph/planets/Linux/de440/linux_p1550p2650.440",
     "sb441-n16.bsp": "https://ssd.jpl.nasa.gov/ftp/eph/small_bodies/asteroids_de441/sb441-n16.bsp",
@@ -120,8 +120,8 @@ correct_auxciliary_URLs = {
 }
 correct_auxciliary_filenames = [
     "de440s.bsp",
-    "earth_200101_990827_predict.bpc",
-    "earth_620120_240827.bpc",
+    "earth_2025_250826_2125_predict.bpc",
+    "earth_620120_250826.bpc",
     "earth_latest_high_prec.bpc",
     "linux_p1550p2650.440",
     "sb441-n16.bsp",

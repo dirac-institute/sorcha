@@ -6,13 +6,12 @@ def make_retriever(auxconfigs, directory_path: str = None) -> pooch.Pooch:
 
     Parameters
     ----------
-    directory_path : string, optional
-        The base directory to place all downloaded files. Default = None
-    registry : dictionary, optional
-        A dictionary of file names to SHA hashes. Generally we'll not use SHA=None
-        because the files we're tracking change frequently. Default = REGISTRY
     auxconfigs: dataclass
         Dataclass of auxiliary configuration file arguments.
+
+    directory_path : string, default=None
+        The base directory to place all downloaded files.
+
     Returns
     -------
     : pooch

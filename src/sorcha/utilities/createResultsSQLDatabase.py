@@ -33,7 +33,7 @@ def create_results_table(cnx_out, filename, output_path, output_stem, table_name
     output_stem : string
         stem filename for SSPP outputs.
 
-    table_name : string, optional
+    table_name : string, default="sorcha_results"
         name of table of for storing sorcha results. Default ="sorcha_results"
 
     Returns

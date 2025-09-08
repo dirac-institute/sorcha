@@ -47,10 +47,10 @@ def calcTrailingLoss(
     seeing : float or array of floats
         FWHM of the seeing disk. [Units: arcseconds]
 
-    texp : float or array of floats, optional
-        Exposure length. [Units: seconds] Default = 30
+    texp : float or array of floats, default=30
+        Exposure length. [Units: seconds]
 
-    model : string, optional
+    model : string, optional, default="circularPSF"
         Options: 'circularPSF' or trailedSource'
         'circularPSF': Trailing loss due to the DM detection algorithm. Limit SNR:
         5 sigma in a PSF-convolved image with a circular PSF (no trail fitting). Peak
@@ -58,23 +58,18 @@ def calcTrailingLoss(
         'trailedSource': Unavoidable trailing loss due to spreading the PSF
         over more pixels lowering the SNR in each pixel.
         See https://github.com/rhiannonlynne/318-proceedings/blob/master/Trailing%20Losses.ipynb for details.
-        Default = "circularPSF"
 
-    a_trail : float, optional
+    a_trail : float, default=0.761
         a fit parameters for trailedSource model. Default parameters from Veres & Chesley (2017).
-        Default = 0.761
 
-    b_trail : float, optional
+    b_trail : float, default=1.162
         b fit parameters for trailedSource model. Default parameters from Veres & Chesley (2017).
-        Default = 1.162
 
-    a_det : float, optional
+    a_det : float, default=0.420
         a fit parameters for circularPSF model. Default parameters from Veres & Chesley (2017).
-        Default = 0.420
 
-    b_det : float, optional
+    b_det : float, default=0.003
         b fit parameters for circularPSF model. Default parameters from Veres & Chesley (2017).
-        Default = 0.003
 
     Returns
     -----------
@@ -120,25 +115,25 @@ def PPTrailingLoss(
     eph_df : pandas dataframe
         Dataframe of observations for which to calculate trailing losses.
 
-    model : string, optional
+    model : string, default="circularPSF"
         Photometric model. Either 'circularPSF' or 'trailedSource': see docstring for
-        calcTrailingLoss for details. Default = "circularPSF"
+        calcTrailingLoss for details.
 
-    dra_name : string, optional
-        "eph_df" column name for object RA rate. Default = "RARateCosDec_deg_day"
+    dra_name : string, default="RARateCosDec_deg_day"
+        "eph_df" column name for object RA rate.
         Assumes cos(dec) normalization has already been applied
 
-    ddec_name : string, optional
-        "eph_df" column name for object dec rate. Default = "DecRate_deg_day"
+    ddec_name : string, default="DecRate_deg_day"
+        "eph_df" column name for object dec rate.
 
-    dec_name : string, default
-            "eph_df" column name for object declination. Default = "Dec_deg"
+    dec_name : string, default="Dec_deg"
+            "eph_df" column name for object declination.
 
-    seeing_name_survey : string, optional
-        "eph_df" column name for seeing. Default = "seeingFwhmEff_arcsec"
+    seeing_name_survey : string, default="seeingFwhmEff_arcsec"
+        "eph_df" column name for seeing.
 
-    visit_time_name : string, optional
-        "eph_df" column name for exposure length. Default = "visitExposureTime"
+    visit_time_name : string, default="visitExposureTime"
+        "eph_df" column name for exposure length.
 
     Returns
     -----------

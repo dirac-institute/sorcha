@@ -91,9 +91,6 @@ def runLSSTSimulation(args, sconfigs):
     args : dictionary or `sorchaArguments` object
         dictionary of command-line arguments.
 
-    pplogger : logging.Logger, optional
-        The logger to use in this function. If None creates a new one.
-        Default = None
     sconfigs: dataclass
         Dataclass of configuration file arguments.
 
