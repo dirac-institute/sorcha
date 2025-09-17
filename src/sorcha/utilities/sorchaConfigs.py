@@ -558,6 +558,9 @@ class linkingfilterConfigs:
     ssp_night_start_utc: float = None
     """The time in UTC at which it is noon at the observatory location (in standard time). For the LSST, 12pm Chile Standard Time is 4pm UTC."""
 
+    des_discovery_on: bool = None
+    """flag to see if model should run des discovery filter"""
+
     survey_name: str = None
     """name of survey"""
 
@@ -606,7 +609,7 @@ class linkingfilterConfigs:
         ]
 
         # the below if-statement explicitly checks for None so a zero triggers the correct error
-        if all(v != None for v in sspvariables):
+        if all(v != None for v in sspvariables) and self.survey_name.lower() != "des":
 
             self.ssp_detection_efficiency = cast_as_float(
                 self.ssp_detection_efficiency, "ssp_detection_efficiency"
@@ -660,6 +663,10 @@ class linkingfilterConfigs:
                 "ERROR: only some ssp linking variables supplied. Supply all five required variables for ssp linking filter, or none to turn filter off."
             )
         self.drop_unlinked = cast_as_bool_or_set_default(self.drop_unlinked, "drop_unlinked", True)
+        if self.des_discovery_on and self.survey_name.lower() == "des":
+            self.des_discovery_on = cast_as_bool_or_set_default(
+                self.des_discovery_on, "des_discovery_on", False
+            )
 
         if self.distance_cut_upper is not None or self.distance_cut_lower is not None:
             self.distance_cut_on = True

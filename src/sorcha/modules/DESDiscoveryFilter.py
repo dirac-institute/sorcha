@@ -5,9 +5,15 @@ import pandas as pd
 from numba.typed import List
 
 ## filter for the DES object discovery requirements.
-#    An ARCCUT limit (has to be at least 2 objects not in a triplet discovery season)
-#    the observation of the discovery triplets have to be within 60/90 days (depending on distance) of eachother
-#    compute_arccut and compute_triplet are from DESTNOSIM: https://github.com/bernardinelli/DESTNOSIM
+#   either:
+#       nunique >=9 
+#   or:
+#       nunique >=7
+#       An ARCCUT limit (has to be at least 2 objects not in a triplet discovery season)
+#       the observation of the discovery triplets have to be within 60/90 days (depending on distance) of eachother
+
+
+#  compute_arccut, compute_triplet and compute_nunique are from DESTNOSIM: https://github.com/bernardinelli/DESTNOSIM
 
 bound = ((50 * u.au).to(u.km).value) ** 2  # square of the boundary 50au
 
@@ -61,9 +67,16 @@ def DESDiscoveryFilter(
         thisObsv = thisObsv[i_times]
 
         # check cinditions are meet for detection.
-        if compute_arccut(thisObsv[mjdTime]) and compute_triplet(thisObsv[mjdTime], window):
+        if compute_nunique(thisObsv[mjdTime]) >= 9:
             mask[obsv_indices] = True
-
+        elif (
+            compute_arccut(thisObsv[mjdTime])
+            and compute_triplet(thisObsv[mjdTime], window)
+            and compute_nunique(thisObsv[mjdTime]) >= 7
+        ):
+            mask[obsv_indices] = True
+        else:
+            continue
     observations = observations[mask]
 
     return observations.sort_values(mjdTime).reset_index(drop=True)
@@ -132,3 +145,39 @@ def compute_triplet(times, thresh):
         return True
     else:
         return False
+
+
+@numba.jit(
+    "i8(f8[:])",
+    nopython=True,
+)
+def compute_nunique(times):
+    """
+        Computes NUNIQUE, the number of unique nights an object has been observed
+
+        Parameters
+    --------------
+    times : list
+        list of times, must be in DAYS
+
+
+    Returns
+    ----------
+    nunique : int
+        Number of unique nightly detections
+    """
+    nunique = 0
+
+    n = len(times)
+
+    unique = True
+
+    for i in range(n):
+        unique = True
+        for j in range(0, i):
+            if abs(times[j] - times[i]) < 0.4:
+                unique = False
+        if unique:
+            nunique += 1
+
+    return nunique

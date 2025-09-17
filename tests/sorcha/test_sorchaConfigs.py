@@ -78,7 +78,8 @@ correct_linkingfilter = {
     'distance_cut_lower': None, 
     'motion_cut_on': None, 
     'motion_cut_upper': None, 
-    'motion_cut_lower': None
+    'motion_cut_lower': None,
+    'des_discovery_on': None
 }
 
 correct_fov = {

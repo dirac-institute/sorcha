@@ -352,49 +352,12 @@ def runDESSimulation(args, sconfigs):
             )
             verboselog("Number of rows AFTER applying motion cuts: " + str(len(observations.index)))
 
-        if sconfigs.linkingfilter.ssp_linking_on and len(observations.index) > 0:
-            verboselog("Applying SSP linking filter...")
-            verboselog("Number of rows BEFORE applying SSP linking filter: " + str(len(observations.index)))
-            observations = PPLinkingFilter(
-                observations,
-                sconfigs.linkingfilter.ssp_detection_efficiency,
-                sconfigs.linkingfilter.ssp_number_observations,
-                sconfigs.linkingfilter.ssp_number_tracklets,
-                sconfigs.linkingfilter.ssp_track_window,
-                sconfigs.linkingfilter.ssp_separation_threshold,
-                sconfigs.linkingfilter.ssp_maximum_time,
-                sconfigs.linkingfilter.ssp_night_start_utc,
-                drop_unlinked=sconfigs.linkingfilter.drop_unlinked,
-            )
-            observations.reset_index(drop=True, inplace=True)
-            if len(observations.index) > 0:
-                observations.drop("date_linked_MJD", axis=1, inplace=True)
-                # use linking filter again for triplet detection.
-                observations = PPLinkingFilter(
-                    observations,
-                    sconfigs.linkingfilter.ssp_detection_efficiency,
-                    sconfigs.linkingfilter.ssp_number_observations,
-                    3,
-                    180,
-                    sconfigs.linkingfilter.ssp_separation_threshold,
-                    sconfigs.linkingfilter.ssp_maximum_time,
-                    sconfigs.linkingfilter.ssp_night_start_utc,
-                    drop_unlinked=sconfigs.linkingfilter.drop_unlinked,
-                )
-            observations.reset_index(drop=True, inplace=True)
-            verboselog("Number of rows AFTER applying SSP linking filter: " + str(len(observations.index)))
-            if len(observations.index) > 0 and sconfigs.linkingfilter.ssp_number_tracklets >= 3:
-                verboselog("Applying DES discovery filter...")
-                verboselog(
-                    "Number of rows BEFORE applying DES Discovery filter: " + str(len(observations.index))
-                )
-                observations = DESDiscoveryFilter(observations)
+        if sconfigs.linkingfilter.des_discovery_on and len(observations.index) > 3:
+            verboselog("Applying DES discovery filter...")
+            verboselog("Number of rows BEFORE applying DES Discovery filter: " + str(len(observations.index)))
+            observations = DESDiscoveryFilter(observations)
 
-                verboselog(
-                    "Number of rows AFTER applying DES Discovery filter: " + str(len(observations.index))
-                )
-            else:
-                verboselog("Minimum number of tracklets is < 3, DES Discovery filter is not applied")
+            verboselog("Number of rows AFTER applying DES Discovery filter: " + str(len(observations.index)))
 
         # write output if chunk not empty
         if len(observations.index) > 0:
