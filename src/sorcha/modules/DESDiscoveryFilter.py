@@ -6,7 +6,7 @@ from numba.typed import List
 
 ## filter for the DES object discovery requirements.
 #   either:
-#       nunique >=9 
+#       nunique >=9
 #   or:
 #       nunique >=7
 #       An ARCCUT limit (has to be at least 2 objects not in a triplet discovery season)

@@ -59,7 +59,12 @@ def PPApplyFOVFilter(observations, sconfigs, module_rngs, visits=None, footprint
 
     if sconfigs.fov.camera_model == "visits_footprint":
         verboselog("Applying sensor footprint filter...")
-        onSensor, detectorIDs, lim_mag = PPVisitsFootprint(observations, sconfigs.fov.visits_query, visits,ephermers_buffer=sconfigs.simulation.ar_ang_fov + sconfigs.simulation.ar_fov_buffer)
+        onSensor, detectorIDs, lim_mag = PPVisitsFootprint(
+            observations,
+            sconfigs.fov.visits_query,
+            visits,
+            ephermers_buffer=sconfigs.simulation.ar_ang_fov + sconfigs.simulation.ar_fov_buffer,
+        )
 
         observations = observations.iloc[onSensor].copy()
         observations["detectorID"] = detectorIDs

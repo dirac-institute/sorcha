@@ -10,7 +10,13 @@ logger = logging.getLogger(__name__)
 
 
 def PPVisitsFootprint(
-    field_df, query, visits_filename,ephermers_buffer=1.5 ,ra_name="RA_deg", dec_name="Dec_deg", fieldId="FieldID"
+    field_df,
+    query,
+    visits_filename,
+    ephermers_buffer=1.5,
+    ra_name="RA_deg",
+    dec_name="Dec_deg",
+    fieldId="FieldID",
 ):
     """
     Determine whether detections fall on the sensors defined by the
@@ -63,14 +69,17 @@ def PPVisitsFootprint(
             # if the camera footprint is near the boundary i.e the radius of ephermers gen is wrapped round 360-0
             if ephermers_buffer < 180:
 
-                if any(points_df["fieldRA_deg"]+ephermers_buffer>360):
-                    points_query[points_query[:, 0] < 180, 0] += 360 # use a mask to unwrap points so they are in the same relative coordinates as the footprint
-                if any(points_df["fieldRA_deg"]-ephermers_buffer<0):
+                if any(points_df["fieldRA_deg"] + ephermers_buffer > 360):
+                    points_query[
+                        points_query[:, 0] < 180, 0
+                    ] += 360  # use a mask to unwrap points so they are in the same relative coordinates as the footprint
+                if any(points_df["fieldRA_deg"] - ephermers_buffer < 0):
                     points_query[points_query[:, 0] > 180, 0] -= 360
-            else: 
-                logger.warning("Ephemides buffer is too big to account for wrap around. Your footprint will be inaccurate")
+            else:
+                logger.warning(
+                    "Ephemides buffer is too big to account for wrap around. Your footprint will be inaccurate"
+                )
                 # this might casue issues with objects of massive ephermides (greater than 180). Maybe warn the user of the super extreme case?
-
 
             ccd_centers = [(row["ra_centre"], row["dec_centre"]) for row in rows]
             ccd_tree = KDTree(ccd_centers)
@@ -101,7 +110,22 @@ def PPVisitsFootprint(
 
             # Create a list of Shapely Point objects for each possible detection
             points = [Point(point) for point in points_query]
-           
+            # # --- Plotting code for each obs_id ---
+            # plt.figure(figsize=(8, 8))
+            # # Plot polygons (camera footprint)
+            # for poly in polygons:
+            #     x, y = poly.exterior.xy
+            #     plt.plot(x, y, 'b-', linewidth=2)
+            # # Plot points
+            # plt.scatter(points_query[:, 0], points_query[:, 1], c='r', marker='o', label='Detections')
+            # plt.title(f'Camera Footprint and Detections for obs_id {obs_id}')
+            # plt.xlabel('RA (deg)')
+            # plt.ylabel('Dec (deg)')
+            # plt.legend()
+            # plt.tight_layout()
+            # plt.grid(True)
+            # plt.show()
+            # # --- End plotting code ---
             for point_index, point in enumerate(points):  # for every point
                 for poly_idx, polygon in enumerate(polygons):  # for every ccd
                     if polygon.contains(point):
@@ -110,33 +134,10 @@ def PPVisitsFootprint(
                         detector_for_index[idx_in_df] = detectors[poly_idx]
                         lim_mag_list[idx_in_df] = limmag[poly_idx]
                         break  # no need to check other polygons for this point if already on one
-            
 
-            
     detected_list = list(detected_indices)  # list of detected observations
     detector_id_list = [
         detector_for_index[idx] for idx in detected_list
     ]  # list of detector Ids for observation
     lim_mag = [lim_mag_list[idx] for idx in detected_list]
     return detected_list, detector_id_list, lim_mag
-
-
-
-
-
-
-#  # --- Plotting code for each obs_id ---
-#             plt.figure(figsize=(8, 8))
-#             # Plot polygons (camera footprint)
-#             for poly in polygons:
-#                 x, y = poly.exterior.xy
-#                 plt.plot(x, y, 'b-', linewidth=2, label='CCD footprint')
-#             # Plot points
-#             plt.scatter(points_query[:, 0], points_query[:, 1], c='r', marker='o', label='Detections')
-#             plt.title(f'Camera Footprint and Detections for obs_id {obs_id}')
-#             plt.xlabel('RA (deg)')
-#             plt.ylabel('Dec (deg)')
-#             plt.legend()
-#             plt.grid(True)
-#             plt.show()
-#             # --- End plotting code ---
