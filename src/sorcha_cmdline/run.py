@@ -154,7 +154,6 @@ def execute(args):
         update_lc_subclasses,
     )
     from sorcha.DES import runDESSimulation
-    from sorcha.DP1 import runDP1Simulation
     import sys, os
 
     # Extract the output file path now in order to set up logging.
@@ -228,19 +227,6 @@ def execute(args):
                 ["rubin_sim", "RUBIN_SIM"]
             )
         )
-    elif cmd_args["surveyname"] in ["DP1", "dp1"]:
-        try:
-            args = sorchaArguments(cmd_args)
-        except Exception as err:
-            pplogger.error(err)
-            sys.exit(err)
-        try:
-            args.validate_arguments()
-        except Exception as err:
-            pplogger.error(err)
-            sys.exit(err)
-
-        runDP1Simulation(args, sconfigs)
     elif cmd_args["surveyname"] in ["DES", "des"]:
         try:
             args = sorchaArguments(cmd_args)

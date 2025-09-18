@@ -37,7 +37,6 @@ def copy_demo_configs(copy_location, which_configs, force_overwrite):
         "rubin_circle": ["Rubin_circular_approximation.ini"],
         "rubin_footprint": ["Rubin_full_footprint.ini"],
         "rubin_known": ["Rubin_known_object_prediction.ini"],
-        "dp1_visits": ["DP1_visits_footprint.ini"],
         "des_configs": ["DES_config_file.ini"],
     }
 
@@ -47,7 +46,7 @@ def copy_demo_configs(copy_location, which_configs, force_overwrite):
         config_locations = [fn for fns in configs.values() for fn in fns]
     else:
         sys.exit(
-            "String '{}' not recognised for 'configs' variable. Must be 'rubin_circle', 'rubin_footprint', 'rubin_known', dp1_visits, des_configs or 'all'.".format(
+            "String '{}' not recognised for 'configs' variable. Must be 'rubin_circle', 'rubin_footprint', 'rubin_known', des_configs or 'all'.".format(
                 which_configs
             )
         )

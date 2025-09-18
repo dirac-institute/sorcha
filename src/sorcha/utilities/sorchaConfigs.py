@@ -177,7 +177,7 @@ class filtersConfigs:
         None
         """
 
-        if self.survey_name in ["rubin_sim", "RUBIN_SIM", "LSST", "lsst", "dp1", "DP1"]:
+        if self.survey_name in ["rubin_sim", "RUBIN_SIM", "LSST", "lsst"]:
             lsst_filters = ["u", "g", "r", "i", "z", "y"]
             filters_ok = all(elem in lsst_filters for elem in self.observing_filters)
 
@@ -391,7 +391,7 @@ class fovConfigs:
         ----------
         None
         """
-        check_value_in_list(self.survey_name.lower(), ["des", "dp1"], "survey_name")
+        check_value_in_list(self.survey_name.lower(), ["des"], "survey_name")
         check_key_exists(self.visits_query, "visits_query")
         check_key_doesnt_exist(
             self.footprint_edge_threshold,
@@ -930,12 +930,6 @@ class expertConfigs:
                 sys.exit(
                     "ERROR: DES simulation does not support trailing losses, vignetting and randomization."
                 )
-        elif self.survey_name in ["DP1", "dp1"] or self.camera_model == "visits_footprint":
-            logging.warning("WARNING: DP1 simulation does not support vignetting. This is off by default")
-            self.vignetting_on = cast_as_bool_or_set_default(self.vignetting_on, "vignetting_on", False)
-            if self.vignetting_on == True:
-                logging.ERROR("ERROR: DP1 simulation does not support vignetting.")
-                sys.exit("ERROR: DP1 simulation does not support vignetting.")
         elif self.camera_model == "visits_footprint":
             logging.warning(
                 "WARNING: fov camera model 'visits_footprint' does not support vignetting. This is off by default"

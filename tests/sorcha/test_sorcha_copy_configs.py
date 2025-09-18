@@ -17,14 +17,11 @@ def test_sorcha_copy_configs(tmp_path):
     copy_demo_configs(tmp_path, "rubin_known", False)
     assert os.path.isfile(os.path.join(tmp_path, "Rubin_known_object_prediction.ini"))
 
-    copy_demo_configs(tmp_path, "dp1_visits", False)
-    assert os.path.isfile(os.path.join(tmp_path, "DP1_visits_footprint.ini"))
 
     # remove those files
     os.remove(os.path.join(tmp_path, "Rubin_circular_approximation.ini"))
     os.remove(os.path.join(tmp_path, "Rubin_full_footprint.ini"))
     os.remove(os.path.join(tmp_path, "Rubin_known_object_prediction.ini"))
-    os.remove(os.path.join(tmp_path, "DP1_visits_footprint.ini"))
 
     # test that all the configs are successfully copied
     copy_demo_configs(tmp_path, "all", False)
@@ -32,7 +29,6 @@ def test_sorcha_copy_configs(tmp_path):
     assert os.path.isfile(os.path.join(tmp_path, "Rubin_circular_approximation.ini"))
     assert os.path.isfile(os.path.join(tmp_path, "Rubin_full_footprint.ini"))
     assert os.path.isfile(os.path.join(tmp_path, "Rubin_known_object_prediction.ini"))
-    assert os.path.isfile(os.path.join(tmp_path, "DP1_visits_footprint.ini"))
 
     # test that files are successfully overwritten if -f flag used
     copy_demo_configs(tmp_path, "all", True)
@@ -52,7 +48,7 @@ def test_sorcha_copy_configs(tmp_path):
 
     assert (
         e2.value.code
-        == "String 'laphroaig' not recognised for 'configs' variable. Must be 'rubin_circle', 'rubin_footprint', 'rubin_known', dp1_visits, des_configs or 'all'."
+        == "String 'laphroaig' not recognised for 'configs' variable. Must be 'rubin_circle', 'rubin_footprint', 'rubin_known', des_configs or 'all'."
     )
 
     # test the error message if file exists and overwrite isn't forced
@@ -73,15 +69,13 @@ def test_parse_file_selection():
     test_rubin_circle = parse_file_selection("1")
     test_rubin_footprint = parse_file_selection("2")
     test_rubin_known = parse_file_selection("3")
-    test_dp1_visits = parse_file_selection("4")
-    test_des_configs = parse_file_selection("5")
-    test_all = parse_file_selection("6")
+    test_des_configs = parse_file_selection("4")
+    test_all = parse_file_selection("5")
 
 
     assert test_rubin_circle == "rubin_circle"
     assert test_rubin_footprint == "rubin_footprint"
     assert test_rubin_known == "rubin_known"
-    assert test_dp1_visits == "dp1_visits"
     assert test_des_configs == "des_configs"
     assert test_all == "all"
 
