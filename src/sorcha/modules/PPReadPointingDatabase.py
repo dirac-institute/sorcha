@@ -19,6 +19,10 @@ def PPReadPointingDatabase(bsdbname, observing_filters, dbquery, surveyname, fad
     dbquery : string
         Databse query to perform on pointing database.
 
+
+    surveyname : string
+          "Name of survey being simulated"
+
     Returns
     -----------
     dfo : pandas dataframe

@@ -86,22 +86,25 @@ def radec_to_tangent_plane(ra, dec, field_ra, field_dec):
     """
     Converts ra and dec to xy on the plane tangent to image center, in the 2-d coordinate system where y is aligned with the meridian.
 
-    Parameters:
+    Parameters
     -----------
-    ra (float/array of floats): observation Right Ascension, radians.
+    ra: float/array of floats
+         observation Right Ascension, radians.
 
-    dec (float/array of floats): observation Declination, radians.
+    dec : float/array of floats
+         observation Declination, radians.
 
-    fieldra (float/array of floats): field pointing Right Ascension, radians.
+    field_ra : float/array of floats
+         field pointing Right Ascension, radians.
 
-    fielddec (float/array of floats): field pointing Declination, radians.
+    field_dec : float/array of floats
+         field pointing Declination, radians.
 
-    fieldID (float/array of floats): Field ID, optional.
 
-    Returns:
+    Returns
     ----------
-    x, y (float/array of floats): Coordinates on the focal plane, radians projected
-    to the plane tangent to the unit sphere.
+    x, y : float/array of floats
+        Coordinates on the focal plane, radians projected  to the plane tangent to the unit sphere.
 
     """
 
@@ -138,7 +141,33 @@ def radec_to_tangent_plane(ra, dec, field_ra, field_dec):
 
 
 def radec_to_focal_plane(ra, dec, field_ra, field_dec, field_rot):
-    # convert ra, dec to points on focal plane, x pointing to celestial north
+    """
+    Convert ra, dec to points on focal plane, x pointing to celestial north
+
+    Parameters
+    -----------
+    ra: float/array of floats
+          observation Right Ascension, radians.
+
+    dec : float/array of floats
+          observation Declination, radians.
+
+    field_ra : float/array of floats
+          field pointing Right Ascension, radians.
+
+    field_dec : float/array of floats
+          field pointing Declination, radians.
+
+    field_roat : float/array of floats
+          field rotation angle, radians
+
+    Returns
+    ----------
+     x, y : float/array of floats
+         Coordinates on the focal plane, radians on the detector focal plane
+
+    """
+
     x, y = radec_to_tangent_plane(ra, dec, field_ra, field_dec)
     # rotate focal plane to align with detectors
     xy = x + 1.0j * y
@@ -214,16 +243,16 @@ class Detector:
         point : array
             Array of shape (2, n) for n points.
 
-        ϵ : float, optional
-            Threshold for whether point is on detector. Default: 10.0 ** (-11)
+        ϵ : float, default: 10.0 ** (-11)
+            Threshold for whether point is on detector.
 
-        edge_thresh: float, optional
+        edge_thresh: float, default=None
             The focal plane distance (in arcseconds) from the detector's edge
             for a point to be counted. Removes points that are too
-            close to the edge for source detection. Default = None
+            close to the edge for source detection.
 
-        plot : Boolean, optional
-            Flag for whether to plot the detector and the point. Default = False
+        plot : Boolean, default=False
+            Flag for whether to plot the detector and the point.
 
         Returns
         ----------
@@ -495,12 +524,12 @@ class Footprint:
 
         Parameters
         -----------
-        path : string, optional
-            Path to a .csv file containing detector corners. Default = None
+        path : string, default = None
+            Path to a .csv file containing detector corners.
 
-        detectorName : string, optional
+        detectorName : string, default="detector
             Name of column in detector file indicating to which sensor a
-            corner belongs. Default = "detector"
+            corner belongs.
 
         Returns
         ----------
@@ -570,18 +599,18 @@ class Footprint:
 
         Parameters
         -----------
-        theta : float, optional
-            Angle to rotate footprint by, radians or degrees. Default = 0.0
+        theta : float, default=0.0
+            Angle to rotate footprint by, radians or degrees.
 
-        color : string, optional
-            Line color. Default = "gray"
+        color : string, default="gray"
+            Line color.
 
-        units : string, optional
-            Units theta is provided in ("deg" or "rad"). Default = "rad"
+        units : string, default="rad"
+            Units theta is provided in ("deg" or "rad").
 
-        annotate : boolean, optional
+        annotate : boolean, default=False
             Whether to annotate each sensor with its index in
-            self.detectors. Default = False
+            self.detectors.
 
         Returns
         ----------
@@ -613,29 +642,28 @@ class Footprint:
         field_df : Pandas dataframe
             Dataframe containing detection information with pointings.
 
-        ra_name : string, optional
+        ra_name : string, default = "RA_deg"
             "field_df" dataframe's column name for object's RA
-             for the given observation. Default = "RA_deg" [units: degrees]
+             for the given observation. [units: degrees]
 
-        dec_name : string, optional
+        dec_name : string, optional, default = "Dec_deg"
             "field_df" dataframe's column name for object's declination
-             for the given observation. Default = "Dec_deg" [units: dgrees]
+             for the given observation.  [units: dgrees]
 
-        ra_name_field : string, optional
+        ra_name_field : string, default = "fieldRA_deg"
             "field_df" dataframe's column name for the observation field's RA
-             Default = "fieldRA_deg" [units: degrees]
+             [units: degrees]
 
-        dec_name_field : string, optional
+        dec_name_field : string, default = "fieldDec_deg"
             "field_df" dataframe's column name for the observation field's declination
-             Default = "fieldDec_deg" [Units: degrees]
+            [Units: degrees]
 
-        rot_name_field: string, optional
+        rot_name_field: string, default = "fieldRotSkyPos_deg"
             "field_df" dataframe's column name for the observation field's rotation angle
             Default = "fieldRotSkyPos_deg" [Units: degrees]
 
-        edge_thresh: float, optional
+        edge_thresh: float, default=None
             An angular threshold in arcseconds for dropping pixels too close to the edge.
-            Default  = None
 
         Returns
         ----------

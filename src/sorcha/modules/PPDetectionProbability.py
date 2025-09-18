@@ -34,11 +34,11 @@ def calcDetectionProbability(mag, limmag, fillFactor=1.0, w=0.1):
     limmag : float or array of floats
         Limiting magnitude of the field.
 
-    fillFactor : float), optional
-        Fraction of FOV covered by the camera sensor. Default = 1.0
+    fillFactor : float), default=1.0
+        Fraction of FOV covered by the camera sensor.
 
-    w : float
-        Distribution parameter. Default = 0.1
+    w : float, default=0.1
+        Distribution parameter.
 
     Returns
     ----------
@@ -71,29 +71,26 @@ def PPDetectionProbability(
     eph_df : Pandas dataframe
         Dataframe of observations.
 
-    trailing_losses : Boolean, optional
-        Are trailing losses being applied?, Default = False
+    trailing_losses : Boolean, default=False
+        Are trailing losses being applied?
 
-    trailing_loss_name : string, optional
-        eph_df column name for trailing losses, Default = dmagDetect
+    trailing_loss_name : string, default="dmagDetect"
+        eph_df column name for trailing losses
 
-    magnitude_name : string, optional
+    magnitude_name : string, default="PSFMag"
         eph_df column name for observation limiting magnitude
-        Default = PSFMag
 
-    limiting_magnitude_name : string, optional
+    limiting_magnitude_name : string, default="fiveSigmaDepth_mag"
         eph_df column used for observation limiting magnitude.
-        Default = fiveSigmaDepth_mag
 
-    field ID : string, optional
+    field ID : string, default="FieldID"
         eph_df column name for observation field_id
-        Default = FieldID
 
-    fillFactor : float, optional
-        Fraction of FOV covered by the camera sensor. Default = 1.0
+    fillFactor : float, default=1.0
+        Fraction of FOV covered by the camera sensor.
 
-    w : float
-        Distribution parameter. Default =0.1
+    w : float, default=0.1
+        Distribution parameter.
 
     Returns
     ----------

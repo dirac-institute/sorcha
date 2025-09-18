@@ -11,9 +11,9 @@ def PPMagnitudeLimit(observations, mag_limit, colname="trailedSourceMag"):
     mag_limit : float
         Limit for apparent magnitude cut.
 
-    colname : string, optional
+    colname : string, default="TrailedSourceMag"
         Column thats used to apply the magnitude cut.
-        Default = "TrailedSourceMag"
+
     Returns
     -----------
     observations : pandas dataframe

@@ -8,7 +8,7 @@ def PPSNRLimit(observations, sigma_limit=2.0):
     observations : pandas dataframe
         Dataframe of observations. Must have "SNR" column.
 
-    sigma_limit : float, optional.
+    sigma_limit : float, default=2.0
         Limit for SNR cut.
 
     Returns

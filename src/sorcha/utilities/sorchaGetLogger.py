@@ -22,18 +22,17 @@ def sorchaGetLogger(
     log_stem : string
         String output stem used to prefix all Sorcha outputs.
 
-    log_format : string, optional
+    log_format : string, default="%(asctime)s %(name)-12s %(levelname)-8s %(message)s "
         Format for log filename.
-        Default = "%(asctime)s %(name)-12s %(levelname)-8s %(message)s "
 
-    log_name : string, optional
-        Name of log. Default = ""
+    log_name : string, default=""
+        Name of log.
 
-    log_file_info : string, optional
-        Suffix and extension with which to save info log. Default = "sorcha.log"
+    log_file_info : string, default="sorcha.log"
+        Suffix and extension with which to save info log.
 
-    log_file_error : string, optional
-        Suffix and extension with which to save error log. Default = "sorcha.err"
+    log_file_error : string, optional, default="sorcha.err"
+        Suffix and extension with which to save error log.
 
     Returns
     ----------

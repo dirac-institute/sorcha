@@ -123,11 +123,10 @@ def override_seed_and_run(outpath, arg_set="baseline"):
     outpath : string
         The path for the output files.
 
-    arg_set : string, optional
+    arg_set : string, default="baseline"
         set of arguments for setting up the run. Options: "baseline" or "with_ephemeris".
         "baseline"" run does not ephemeris generation. "with_ephemeeris" is a full end to end run
         of all main components of sorcha.
-        Default = "baseline"
     """
 
     if arg_set == "baseline":

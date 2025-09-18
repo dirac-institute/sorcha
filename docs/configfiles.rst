@@ -47,7 +47,7 @@ approximation of the Rubin LSSTCam (LSST Camera) field-of-view (FOV).
 Rubin Known Object Prediction
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 This configuration file is appropriate for running ``Sorcha`` using the full camera footprint but with randomization,
-applying the fading function, accounting for vignetting, applying the linking filter, using the  saturation limit filter, and accounting for trailing losses all turned off. This will output all potential detetions of the input population 
+applying the fading function, accounting for vignetting, applying the linking filter, using the  saturation limit filter, and accounting for trailing losses all turned off. This will output all potential detections of the input population 
 which lie on the LSSTCam (LSST Camera) CCDs (Charged Couple Devices) with unadulterated apparent magnitudes. This could thus be used to predict when 
 and where known objects will land in LSST  observations.
 
