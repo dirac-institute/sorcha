@@ -110,22 +110,7 @@ def PPVisitsFootprint(
 
             # Create a list of Shapely Point objects for each possible detection
             points = [Point(point) for point in points_query]
-            # # --- Plotting code for each obs_id ---
-            # plt.figure(figsize=(8, 8))
-            # # Plot polygons (camera footprint)
-            # for poly in polygons:
-            #     x, y = poly.exterior.xy
-            #     plt.plot(x, y, 'b-', linewidth=2)
-            # # Plot points
-            # plt.scatter(points_query[:, 0], points_query[:, 1], c='r', marker='o', label='Detections')
-            # plt.title(f'Camera Footprint and Detections for obs_id {obs_id}')
-            # plt.xlabel('RA (deg)')
-            # plt.ylabel('Dec (deg)')
-            # plt.legend()
-            # plt.tight_layout()
-            # plt.grid(True)
-            # plt.show()
-            # # --- End plotting code ---
+
             for point_index, point in enumerate(points):  # for every point
                 for poly_idx, polygon in enumerate(polygons):  # for every ccd
                     if polygon.contains(point):
