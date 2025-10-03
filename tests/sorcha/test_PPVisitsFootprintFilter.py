@@ -2,7 +2,7 @@ from sorcha.modules.PPVisitsFootprintFilter import PPVisitsFootprint
 import pandas as pd
 import os
 from sorcha.utilities.dataUtilitiesForTests import get_test_filepath
-
+import numpy as np
  
 visits_filename = get_test_filepath("test_visits_footprint.db")
 
@@ -31,6 +31,8 @@ def test_is_on():
         field_df=field_df,
         query=query,
         visits_filename= visits_filename,
+        k_num=1,
+        plot = False
     )
     assert len(onsensor) == 2
     print(detectorId)
@@ -57,6 +59,8 @@ def test_is_off():
         field_df=field_df,
         query=query,
         visits_filename= visits_filename,
+        k_num=1,
+        plot = False
     )
     assert len(onsensor) == 0
 
@@ -87,6 +91,84 @@ def test_wrap_around_is_working():
         field_df=field_df,
         query=query,
         visits_filename= visits_filename,
+        k_num=1,
+        plot = False
     )
     assert len(onsensor) == 2
     assert all(detector == '0' for detector in detectorId)
+
+
+
+
+
+
+
+# testing des camera footprint 
+
+# testing the PPVisitsFootprint using simulated visits ccds
+def test_is_DES_on():
+    "testing if points are on ccd using DES visits file.  "
+    visits_DES_filename = get_test_filepath("test_DES_visits_footprint.db")
+
+    # using the ra and dec of the centre of detector '0' for both visits 
+    ra =    [305.683,   # top wall, centre left of ccd 
+            307.379,    # middle of ccd 
+            306.140,    # at a ccd corner
+            305.483,    # at a ccd corner 
+            306.701,    # at a ccd corner
+            306.704,    # at a ccd corner
+            305.709,    # middle of a ccd
+            305.136,    # at a ccd corner 
+            304.5,      # left most ccd left edge
+            306.704,    # middle of a ccd 
+            306.91,     # not on footprint
+            ]
+    
+    dec =   [-50.795088,    # top wall, centre left of ccd 
+             -50.712309,    # middle of ccd 
+             -51.301,       # at a ccd corner
+             -50.308,       # at a ccd corner 
+             -50.259,       # at a ccd corner
+             -51.409,       # at a ccd corner
+             -51.744,       # middle of a ccd
+             -51.289,       # at a ccd corner 
+             -50.833,       # left most ccd left edge
+             -51.848,       # middle of a ccd 
+             -51.017,       # not on footprint
+            ]
+    
+
+    fieldid = np.full(len(dec),"226650")
+    fieldra = np.full(len(dec),306.4814)
+    observations= {
+        "FieldID":fieldid,
+        "fieldRA_deg":fieldra,
+        "RA_deg":ra,
+        "Dec_deg":dec,
+    }
+    field_df = pd.DataFrame(observations)
+    query  = "SELECT llcra, llcdec, lrcra, lrcdec, urcra, urcdec, ulcra, ulcdec, ra_centre, dec_centre, detectorID, limMag_perChip FROM observations WHERE visitId = ?"
+
+
+    onsensor, detectorId,_ = PPVisitsFootprint(
+        field_df=field_df,
+        query=query,
+        visits_filename= visits_DES_filename,
+        k_num= 2,
+        plot= True, # set this to true to manuelly see the camera footprint
+    )
+    assert len(onsensor) == 10
+    print(detectorId)
+    assert detectorId == [34, 24, 47, 9, 7, 49, 57, 45, 25, 62]
+
+
+
+def test_des_k_num():
+    """
+    This unit test is for testing the number of ccds needed to generate for each point. 
+    From testing 3 ccds avoids the edge cases for DES.
+    this unit test shows this edge case failing for 1 and 2 ccds and passing for 3.
+
+    LSST might be differnt as its in a sqare grid. this parameter might be camera footprint specific 
+    more testing with LSST data would be needed 
+    """

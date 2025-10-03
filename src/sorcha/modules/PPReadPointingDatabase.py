@@ -51,8 +51,15 @@ def PPReadPointingDatabase(bsdbname, observing_filters, dbquery, surveyname, fad
     df = df.rename(columns={"observationId": "FieldID"})
     df = df.rename(columns={"filter": "optFilter"})  # not to confuse with the pandas filter command
     df["optFilter"] = df["optFilter"].astype("category")  # save memory
-    dfo = df[df.optFilter.isin(observing_filters)].copy()
 
+    dfo = df[df.optFilter.isin(observing_filters)].copy()
+    if dfo.empty:
+        pplogger.error(
+            "No detections with config file filters in the pointing db. check your specifying the right column for your filters."
+        )
+        sys.exit(
+            "No detections with config file filters in the pointing db. check your specifying the right column for your filters."
+        )
     # at the moment the RubinSim pointing databases don't record the observation
     # midpoint, so we calculate it. the actual pointings might.
 
@@ -63,7 +70,7 @@ def PPReadPointingDatabase(bsdbname, observing_filters, dbquery, surveyname, fad
         dfo["observationMidpointMJD_TAI"] = dfo["observationStartMJD_TAI"] + (
             (dfo["visitTime"] / 2.0) / 86400.0
         )
-    elif surveyname in ["DES", "des", "lsst", "LSST"]:
+    elif surveyname in ["DES", "des"]:
         dfo["observationStartMJD_TAI"] = dfo["observationMidpointMJD_TAI"] - (
             (dfo["visitExposureTime"] / 2.0) / 86400.0
         )
@@ -93,5 +100,4 @@ def PPReadPointingDatabase(bsdbname, observing_filters, dbquery, surveyname, fad
                 "ERROR: Fading Function has been turned on for DES but some values for scaling factor 'c' "
                 "and/or transition sharpness 'k' are missing in the pointing database."
             )
-
     return dfo

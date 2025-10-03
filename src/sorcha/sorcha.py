@@ -131,7 +131,6 @@ def runLSSTSimulation(args, sconfigs):
 
     # if we are going to compute the ephemerides, then we should pre-compute all
     # of the needed values derived from the pointing information.
-
     if sconfigs.input.ephemerides_type.casefold() != "external":
         verboselog("Pre-computing pointing information for ephemeris generation")
         filterpointing = precompute_pointing_information(filterpointing, args, sconfigs)
