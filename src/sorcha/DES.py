@@ -352,7 +352,7 @@ def runDESSimulation(args, sconfigs):
             )
             verboselog("Number of rows AFTER applying motion cuts: " + str(len(observations.index)))
 
-        if sconfigs.linkingfilter.des_discovery_on and len(observations.index) > 3:
+        if sconfigs.linkingfilter.des_discovery_on and len(observations.index) > 0:
             verboselog("Applying DES discovery filter...")
             verboselog("Number of rows BEFORE applying DES Discovery filter: " + str(len(observations.index)))
             observations = DESDiscoveryFilter(observations)
