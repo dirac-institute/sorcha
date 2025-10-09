@@ -39,6 +39,8 @@ def PPVisitsFootprint(
         accounts for ar wraping RA points around 0-360, while yhe camera footprint doesnt to avoid the need to create complex shapes
     k_num : int
         number of ccds to check
+    plot : boolen
+        used to turning on plotting for debugging
     Returns
     -------
     detected_list : list
@@ -84,26 +86,25 @@ def PPVisitsFootprint(
                     "Ephemides buffer is too big to account for wrap around. Your footprint will be inaccurate"
                 )
                 # this might casue issues with objects of massive ephermides (greater than 180). Maybe warn the user of the super extreme case?
-            # ————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
-            # Prepare combined list of centers and corners
-            all_ccd_points = []
-            point_to_ccd_map = []  # Maps each point index to its CCD index
 
+
+            # Kd tree using corners and centres of ccds
+            
+            n = len(rows)
+            # make an empty array to contain all ccd ra and decs
+            all_ccd_points = np.empty((n * 5, 2), dtype=float)
+            # make a numpy array for indexing
+            point_to_ccd_map = np.repeat(np.arange(n), 5)
+
+            # create the numpy array
             for idx, row in enumerate(rows):
-                # Add center
-                all_ccd_points.append((row["ra_centre"], row["dec_centre"]))
-                point_to_ccd_map.append(idx)
-
-                # Add corners
-                corners = [
-                    (row["llcra"], row["llcdec"]),
-                    (row["lrcra"], row["lrcdec"]),
-                    (row["urcra"], row["urcdec"]),
-                    (row["ulcra"], row["ulcdec"]),
+                all_ccd_points[idx*5:(idx+1)*5] = [
+                    (row["ra_centre"], row["dec_centre"]),   
+                    (row["llcra"], row["llcdec"]),         
+                    (row["lrcra"], row["lrcdec"]),         
+                    (row["urcra"], row["urcdec"]),         
+                    (row["ulcra"], row["ulcdec"]),         
                 ]
-                all_ccd_points.extend(corners)
-                point_to_ccd_map.extend([idx] * 4)
-
             # Build KDTree with all points
             ccd_tree = KDTree(all_ccd_points)
 
@@ -111,24 +112,15 @@ def PPVisitsFootprint(
                 k = min(k_num, len(all_ccd_points))
                 _, closest_point_indices = ccd_tree.query(points_query, k=k)
 
-                # Map back to unique CCD indices
+                # Map back to unique ccd indices
                 unique_ccd_indices = set(point_to_ccd_map[i] for i in closest_point_indices.flatten())
             else:
                 unique_ccd_indices = {0}
 
-            # ————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
-            # ccd_centers = [(row["ra_centre"], row["dec_centre"]) for row in rows]
-            # ccd_tree = KDTree(ccd_centers)
-            # if len(ccd_centers) > 1:
-            #     k = min(k_num, len(ccd_centers))  # making sure theirs no error with 2 ccds
-            #     _, closest_ccd_indices = ccd_tree.query(points_query, k=k)
-            #     unique_ccd_indices = set(closest_ccd_indices.flatten())  # remove duplicates
-            # else:
-            #     unique_ccd_indices = [0]
-            # create polygons for closest ccds to points and record detector name/id
             polygons = []
             detectors = []
             limmag = []
+            # create polygons of only ccds needed
             for idx in unique_ccd_indices:
                 row = rows[idx]
                 corners = np.array(
@@ -155,9 +147,11 @@ def PPVisitsFootprint(
                         detector_for_index[idx_in_df] = detectors[poly_idx]
                         lim_mag_list[idx_in_df] = limmag[poly_idx]
                         break  # no need to check other polygons for this point if already on one
+            
+            
             # ——————————————————————————————— plotting ———————————————————————————————————
             if plot == True:
-                # Plotting code for each camera footprint
+                # Plotting code for each camera footprint use only for debugging (handy for unit tests)
                 plt.figure(figsize=(8, 8))
                 # Plot ccds with created polygons
                 for idx, poly in enumerate(polygons):
@@ -209,7 +203,7 @@ def PPVisitsFootprint(
                 plt.tight_layout()
                 plt.grid(True)
                 plt.show()
-    # ——————————————————————————————— end of plotting ———————————————————————————————————
+            # ——————————————————————————————— end of plotting ———————————————————————————————————
 
     detected_list = list(detected_indices)  # list of detected observations
     detector_id_list = [
@@ -217,3 +211,227 @@ def PPVisitsFootprint(
     ]  # list of detector Ids for observation
     lim_mag = [lim_mag_list[idx] for idx in detected_list]
     return detected_list, detector_id_list, lim_mag
+
+
+
+
+
+
+
+
+
+import logging
+import sqlite3
+from collections import defaultdict
+
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.path import Path
+from scipy.spatial import KDTree
+
+logger = logging.getLogger(__name__)
+
+# @profile
+def _PPVisitsFootprint(
+    field_df,
+    query,
+    visits_filename,
+    ephermers_buffer=1.5,
+    ra_name="RA_deg",
+    dec_name="Dec_deg",
+    fieldId="FieldID",
+    k_num=3,
+    plot=False,
+):
+    """
+    Determine whether detections fall on the sensors defined by the
+    footprint. Also returns the ID for the sensor a detection is made
+    on.
+
+    Parameters
+    ----------
+    field_df : pandas.DataFrame
+        DataFrame containing detection information with pointings.
+    query : str
+        SQL query string for visits database. name columns as (llcra, llcdec, lrcra, lrcdec, urcra, urcdec, ulcra, ulcdec, ra_centre, dec_centre, detectorID, fieldFiveSigmaDepth_mag )
+    visits_filename : str
+        Path to SQLite database containing footprint data.
+    ra_name, dec_name, fieldId : str
+        Column names in field_df for RA, Dec, and field ID respectively.
+    ephermers_buffer : float
+        accounts for ar wraping RA points around 0-360, while yhe camera footprint doesnt to avoid the need to create complex shapes
+    k_num : int
+        number of ccds to check
+    plot : boolen
+        used to turning on plotting for debugging
+    Returns
+    -------
+    detected_list : list
+        List of indices in field_df that fall on a sensor footprint.
+    detector_id_list : list
+        List of detector IDs corresponding to each detected object.
+    lim_mag : list
+        List of limiting magnitudes for each detected object.
+    """
+    detected_indices = set()
+    detector_for_index = {}
+    lim_mag_list = {}
+
+    # open visits database file
+    with sqlite3.connect(visits_filename) as conn:
+        conn.row_factory = sqlite3.Row
+        cursor = conn.cursor()
+
+        grouped_fieldId = field_df.groupby(fieldId)
+        
+        for obs_id, points_df in grouped_fieldId:
+            rows = cursor.execute(query, (obs_id,)).fetchall()
+            if not rows:
+                continue
+
+            points_query = np.array(
+                list(zip(points_df[ra_name], points_df[dec_name]))
+            )
+
+            # Handle RA wrapping around 0-360 boundary
+            if ephermers_buffer < 180:
+                field_ra = points_df["fieldRA_deg"].iloc[0]
+                if field_ra + ephermers_buffer > 360:
+                    mask = points_query[:, 0] < 180
+                    points_query[mask, 0] += 360
+                elif field_ra - ephermers_buffer < 0:
+                    mask = points_query[:, 0] > 180
+                    points_query[mask, 0] -= 360
+            else:
+                logger.warning(
+                    "Ephemides buffer is too big to account for wrap around. Your footprint will be inaccurate"
+                )
+
+            # Build KD tree using corners and centres of ccds
+            n = len(rows)
+            all_ccd_points = np.empty((n * 5, 2), dtype=float)
+            point_to_ccd_map = np.repeat(np.arange(n), 5)
+
+            all_ccd_points = np.array([
+                [row["ra_centre"], row["dec_centre"],
+                row["llcra"], row["llcdec"],
+                row["lrcra"], row["lrcdec"],
+                row["urcra"], row["urcdec"],
+                row["ulcra"], row["ulcdec"]]
+                for row in rows
+            ]).reshape(-1, 2)
+            
+            ccd_tree = KDTree(all_ccd_points)
+
+            # Find closest CCDs to check
+            if len(rows) > 1:
+                k = min(k_num, len(all_ccd_points))
+                _, closest_point_indices = ccd_tree.query(points_query, k=k)
+                unique_ccd_indices = set(point_to_ccd_map[i] for i in closest_point_indices.flatten())
+            else:
+                unique_ccd_indices = {0}
+
+            # Build polygon paths for the closest CCDs
+            paths = []
+            detectors = []
+            limmag = []
+            corners_list = []
+            
+            for idx in unique_ccd_indices:
+                row = rows[idx]
+                corners = np.array([
+                    (row["llcra"], row["llcdec"]),
+                    (row["lrcra"], row["lrcdec"]),
+                    (row["urcra"], row["urcdec"]),
+                    (row["ulcra"], row["ulcdec"]),
+                ])
+                corners_list.append(corners)
+                paths.append(Path(corners))
+                detectors.append(row["detectorID"])
+                limmag.append(row["limMag_perChip"])
+
+            # Check which points fall within which ccds using matplotlib Path
+            # This is 2x faster than Shapely for 
+            for poly_idx, path in enumerate(paths):
+                # Vectorised point-in-polygon check
+                mask = path.contains_points(points_query)
+                
+                # Process detected points
+                for point_index in np.where(mask)[0]:
+                    idx_in_df = points_df.index[point_index]
+                    if idx_in_df not in detected_indices:
+                        detected_indices.add(idx_in_df)
+                        detector_for_index[idx_in_df] = detectors[poly_idx]
+                        lim_mag_list[idx_in_df] = limmag[poly_idx]
+
+            # plotting 
+            if plot:
+                _plotting_camera_footprint(corners_list,rows,unique_ccd_indices,points_query, points_df, detected_indices, obs_id)
+
+    detected_list = list(detected_indices)
+    detector_id_list = [detector_for_index[idx] for idx in detected_list]
+    lim_mag = [lim_mag_list[idx] for idx in detected_list]
+    
+    return detected_list, detector_id_list, lim_mag
+
+
+
+
+
+
+
+
+def _plotting_camera_footprint(polygons,rows,unique_ccd_indices,points_query, obs_id):
+
+
+    plt.figure(figsize=(8, 8))
+    # Plot ccds with created polygons
+    for idx, poly in enumerate(polygons):
+        x, y = poly.exterior.xy
+        if idx == 0:
+            plt.plot(x, y, "b-", linewidth=2, label="Used CCDs")
+        else:
+            plt.plot(x, y, "b-", linewidth=2)
+
+    polygons_plot = []
+    # plot unused ccds for checks
+    for j, row in enumerate(rows):
+        if j not in unique_ccd_indices:
+            corners = np.array(
+                [
+                    (row["llcra"], row["llcdec"]),
+                    (row["lrcra"], row["lrcdec"]),
+                    (row["urcra"], row["urcdec"]),
+                    (row["ulcra"], row["ulcdec"]),
+                    (row["llcra"], row["llcdec"]),  # closing polygon
+                ]
+            )
+            polygons_plot.append(Polygon(corners))
+        for poly in polygons_plot:
+            x, y = poly.exterior.xy
+
+            if j == 0:
+                plt.plot(x, y, "r-", linewidth=2, label="Not Used CCDs")
+            else:
+                plt.plot(x, y, "r-", linewidth=2)
+    # Plot points
+    for row in points_query:
+
+        ra = row[0]
+
+        dec = row[1]
+
+        if any(poly.contains(Point(ra, dec)) for poly in polygons):
+            plt.scatter(ra, dec, c="g", marker="o", label="Detected")
+        else:
+            plt.scatter(ra, dec, c="r", marker="o", label="Not Detected")
+    #  cool trick to get unique legend with no repeated labels
+    handles, labels = plt.gca().get_legend_handles_labels()
+    unique = dict(zip(labels, handles))
+    plt.legend(unique.values(), unique.keys())
+    plt.title(f"Camera Footprint and Detections for obs_id {obs_id}")
+    plt.xlabel("RA (deg)")
+    plt.ylabel("Dec (deg)")
+    plt.tight_layout()
+    plt.grid(True)
+    plt.show()

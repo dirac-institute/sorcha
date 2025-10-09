@@ -31,7 +31,7 @@ def test_is_on():
         field_df=field_df,
         query=query,
         visits_filename= visits_filename,
-        k_num=1,
+        k_num=3,
         plot = False
     )
     assert len(onsensor) == 2
@@ -59,7 +59,7 @@ def test_is_off():
         field_df=field_df,
         query=query,
         visits_filename= visits_filename,
-        k_num=1,
+        k_num=3,
         plot = False
     )
     assert len(onsensor) == 0
@@ -91,7 +91,7 @@ def test_wrap_around_is_working():
         field_df=field_df,
         query=query,
         visits_filename= visits_filename,
-        k_num=1,
+        k_num=3,
         plot = False
     )
     assert len(onsensor) == 2
@@ -107,7 +107,7 @@ def test_wrap_around_is_working():
 
 # testing the PPVisitsFootprint using simulated visits ccds
 def test_is_DES_on():
-    "testing if points are on ccd using DES visits file.  "
+    "testing if points are on ccd using DES visits file."
     visits_DES_filename = get_test_filepath("test_DES_visits_footprint.db")
 
     # using the ra and dec of the centre of detector '0' for both visits 
@@ -154,12 +154,12 @@ def test_is_DES_on():
         field_df=field_df,
         query=query,
         visits_filename= visits_DES_filename,
-        k_num= 2,
+        k_num= 3,
         plot= True, # set this to true to manuelly see the camera footprint
     )
     assert len(onsensor) == 10
     print(detectorId)
-    assert detectorId == [34, 24, 47, 9, 7, 49, 57, 45, 25, 62]
+    assert detectorId == [27, 24, 47, 9, 7, 49, 57, 45, 25, 62]
 
 
 
@@ -172,3 +172,50 @@ def test_des_k_num():
     LSST might be differnt as its in a sqare grid. this parameter might be camera footprint specific 
     more testing with LSST data would be needed 
     """
+    visits_DES_filename = get_test_filepath("test_DES_visits_footprint.db")
+
+    # using the ra and dec of the centre of detector '0' for both visits 
+    ra =    [305.683,   # top wall, centre of ccd 
+            ]
+    
+    dec =   [-50.795088,    # top wall, centre of ccd 
+            ]
+    
+
+    fieldid = np.full(len(dec),"226650")
+    fieldra = np.full(len(dec),306.4814)
+    observations= {
+        "FieldID":fieldid,
+        "fieldRA_deg":fieldra,
+        "RA_deg":ra,
+        "Dec_deg":dec,
+    }
+    field_df = pd.DataFrame(observations)
+    query  = "SELECT llcra, llcdec, lrcra, lrcdec, urcra, urcdec, ulcra, ulcdec, ra_centre, dec_centre, detectorID, limMag_perChip FROM observations WHERE visitId = ?"
+
+    onsensor, _,_ = PPVisitsFootprint(
+        field_df=field_df,
+        query=query,
+        visits_filename= visits_DES_filename,
+        k_num= 1,
+        plot= False, # set this to true to manuelly see the camera footprint
+    )
+    assert len(onsensor) == 0
+
+    onsensor, _,_ = PPVisitsFootprint(
+        field_df=field_df,
+        query=query,
+        visits_filename= visits_DES_filename,
+        k_num= 2,
+        plot= False, # set this to true to manuelly see the camera footprint
+    )
+    assert len(onsensor) == 0
+
+    onsensor, _,_ = PPVisitsFootprint(
+        field_df=field_df,
+        query=query,
+        visits_filename= visits_DES_filename,
+        k_num= 3,
+        plot= False, # set this to true to manuelly see the camera footprint
+    )
+    assert len(onsensor) == 1
