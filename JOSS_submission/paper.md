@@ -119,7 +119,7 @@ aas-journal: Astronomical Journal
 
 # this raises the left sidebar to prevent it from overflowing
 latex:
-  before-metadata: '\vspace{-3.5cm}'
+  before-metadata: '\vspace{-3.1cm}'
 ---
 
 # Statement of Need
