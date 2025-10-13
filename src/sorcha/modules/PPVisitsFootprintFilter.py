@@ -17,7 +17,7 @@ def PPVisitsFootprint(
     ra_name="RA_deg",
     dec_name="Dec_deg",
     fieldId="FieldID",
-    k_num=3,
+    ccd_num=3,
     plot=False,
 ):
     """
@@ -37,7 +37,7 @@ def PPVisitsFootprint(
         Column names in field_df for RA, Dec, and field ID respectively.
     ephermers_buffer : float
         accounts for ar wraping RA points around 0-360, while yhe camera footprint doesnt to avoid the need to create complex shapes
-    k_num : int
+    ccd_num : int
         number of ccds to check
     plot : boolen
         used to turning on plotting for debugging
@@ -108,7 +108,7 @@ def PPVisitsFootprint(
             ccd_tree = KDTree(all_ccd_points)
 
             if len(rows) > 1:
-                k = min(k_num, len(all_ccd_points))
+                k = min(ccd_num, len(all_ccd_points))
                 _, closest_point_indices = ccd_tree.query(points_query, k=k)
 
                 # Map back to unique ccd indices
@@ -146,11 +146,8 @@ def PPVisitsFootprint(
                         detector_for_index[idx_in_df] = detectors[poly_idx]
                         lim_mag_list[idx_in_df] = limmag[poly_idx]
                         break  # no need to check other polygons for this point if already on one
-
-            # ——————————————————————————————— plotting ———————————————————————————————————
             if plot == True:
                 _plotting_camera_footprint(polygons, rows, unique_ccd_indices, points_query, obs_id)
-            # ——————————————————————————————— end of plotting ———————————————————————————————————
 
     detected_list = list(detected_indices)  # list of detected observations
     detector_id_list = [
@@ -161,8 +158,10 @@ def PPVisitsFootprint(
 
 
 def _plotting_camera_footprint(polygons, rows, unique_ccd_indices, points_query, obs_id):
+    """
+    Plotting code for each camera footprint use only for debugging (handy for unit tests)
+    """
 
-    # Plotting code for each camera footprint use only for debugging (handy for unit tests)
     plt.figure(figsize=(8, 8))
     # Plot ccds with created polygons
     for idx, poly in enumerate(polygons):
@@ -173,7 +172,7 @@ def _plotting_camera_footprint(polygons, rows, unique_ccd_indices, points_query,
             plt.plot(x, y, "b-", linewidth=2)
 
     polygons_plot = []
-    # plot unused ccds for checks
+    # plot unused ccds for checks in red
     for j, row in enumerate(rows):
         if j not in unique_ccd_indices:
             corners = np.array(
@@ -188,18 +187,12 @@ def _plotting_camera_footprint(polygons, rows, unique_ccd_indices, points_query,
             polygons_plot.append(Polygon(corners))
         for poly in polygons_plot:
             x, y = poly.exterior.xy
+            plt.plot(x, y, "r-", linewidth=2, label="Not Used CCDs")
 
-            if j == 0:
-                plt.plot(x, y, "r-", linewidth=2, label="Not Used CCDs")
-            else:
-                plt.plot(x, y, "r-", linewidth=2)
-    # Plot points
+    # Plot possible detections
     for row in points_query:
-
         ra = row[0]
-
         dec = row[1]
-
         if any(poly.contains(Point(ra, dec)) for poly in polygons):
             plt.scatter(ra, dec, c="g", marker="o", label="Detected")
         else:
@@ -208,9 +201,8 @@ def _plotting_camera_footprint(polygons, rows, unique_ccd_indices, points_query,
     handles, labels = plt.gca().get_legend_handles_labels()
     unique = dict(zip(labels, handles))
     plt.legend(unique.values(), unique.keys())
-    plt.title(f"Camera Footprint and Detections for obs_id {obs_id}")
+    plt.title(f"Camera Footprint and Detections for id {obs_id}")
     plt.xlabel("RA (deg)")
     plt.ylabel("Dec (deg)")
     plt.tight_layout()
-    plt.grid(True)
     plt.show()

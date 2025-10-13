@@ -31,7 +31,7 @@ def test_is_on():
         field_df=field_df,
         query=query,
         visits_filename= visits_filename,
-        k_num=3,
+        ccd_num=3,
         plot = False
     )
     assert len(onsensor) == 2
@@ -59,7 +59,7 @@ def test_is_off():
         field_df=field_df,
         query=query,
         visits_filename= visits_filename,
-        k_num=3,
+        ccd_num=3,
         plot = False
     )
     assert len(onsensor) == 0
@@ -91,7 +91,7 @@ def test_wrap_around_is_working():
         field_df=field_df,
         query=query,
         visits_filename= visits_filename,
-        k_num=3,
+        ccd_num=3,
         plot = False
     )
     assert len(onsensor) == 2
@@ -154,7 +154,7 @@ def test_is_DES_on():
         field_df=field_df,
         query=query,
         visits_filename= visits_DES_filename,
-        k_num= 3,
+        ccd_num= 3,
         plot= True, # set this to true to manuelly see the camera footprint
     )
     assert len(onsensor) == 10
@@ -197,7 +197,7 @@ def test_des_k_num():
         field_df=field_df,
         query=query,
         visits_filename= visits_DES_filename,
-        k_num= 1,
+        ccd_num= 1,
         plot= False, # set this to true to manuelly see the camera footprint
     )
     assert len(onsensor) == 0
@@ -206,7 +206,7 @@ def test_des_k_num():
         field_df=field_df,
         query=query,
         visits_filename= visits_DES_filename,
-        k_num= 2,
+        ccd_num= 2,
         plot= False, # set this to true to manuelly see the camera footprint
     )
     assert len(onsensor) == 0
@@ -215,7 +215,7 @@ def test_des_k_num():
         field_df=field_df,
         query=query,
         visits_filename= visits_DES_filename,
-        k_num= 3,
+        ccd_num= 3,
         plot= False, # set this to true to manuelly see the camera footprint
     )
     assert len(onsensor) == 1
