@@ -87,9 +87,8 @@ def PPVisitsFootprint(
                 )
                 # this might casue issues with objects of massive ephermides (greater than 180). Maybe warn the user of the super extreme case?
 
-
             # Kd tree using corners and centres of ccds
-            
+
             n = len(rows)
             # make an empty array to contain all ccd ra and decs
             all_ccd_points = np.empty((n * 5, 2), dtype=float)
@@ -98,12 +97,12 @@ def PPVisitsFootprint(
 
             # create the numpy array
             for idx, row in enumerate(rows):
-                all_ccd_points[idx*5:(idx+1)*5] = [
-                    (row["ra_centre"], row["dec_centre"]),   
-                    (row["llcra"], row["llcdec"]),         
-                    (row["lrcra"], row["lrcdec"]),         
-                    (row["urcra"], row["urcdec"]),         
-                    (row["ulcra"], row["ulcdec"]),         
+                all_ccd_points[idx * 5 : (idx + 1) * 5] = [
+                    (row["ra_centre"], row["dec_centre"]),
+                    (row["llcra"], row["llcdec"]),
+                    (row["lrcra"], row["lrcdec"]),
+                    (row["urcra"], row["urcdec"]),
+                    (row["ulcra"], row["ulcdec"]),
                 ]
             # Build KDTree with all points
             ccd_tree = KDTree(all_ccd_points)
@@ -147,11 +146,10 @@ def PPVisitsFootprint(
                         detector_for_index[idx_in_df] = detectors[poly_idx]
                         lim_mag_list[idx_in_df] = limmag[poly_idx]
                         break  # no need to check other polygons for this point if already on one
-            
-            
+
             # ——————————————————————————————— plotting ———————————————————————————————————
             if plot == True:
-                _plotting_camera_footprint(polygons,rows,unique_ccd_indices,points_query,obs_id)
+                _plotting_camera_footprint(polygons, rows, unique_ccd_indices, points_query, obs_id)
             # ——————————————————————————————— end of plotting ———————————————————————————————————
 
     detected_list = list(detected_indices)  # list of detected observations
@@ -162,12 +160,9 @@ def PPVisitsFootprint(
     return detected_list, detector_id_list, lim_mag
 
 
+def _plotting_camera_footprint(polygons, rows, unique_ccd_indices, points_query, obs_id):
 
-
-def _plotting_camera_footprint(polygons,rows,unique_ccd_indices,points_query, obs_id):
-
-
-     # Plotting code for each camera footprint use only for debugging (handy for unit tests)
+    # Plotting code for each camera footprint use only for debugging (handy for unit tests)
     plt.figure(figsize=(8, 8))
     # Plot ccds with created polygons
     for idx, poly in enumerate(polygons):
