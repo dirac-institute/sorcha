@@ -89,8 +89,16 @@ def DESDiscoveryFilter(
 def compute_arccut(times):
     """
     Computes ARCCUT, the time between the first and last detection dropping one night of detection
-    Arguments:
-    - times: list of times, must be in DAYS
+    
+    Parameters
+    -----------
+    times: list
+        list of times, must be in DAYS
+
+    Returns
+    ----------
+    flag: bool 
+        returns true if ARCCUT is greater than 6 months
     """
     arccut = 0.0
     t1 = np.min(times)
@@ -119,9 +127,18 @@ def compute_triplet(times, thresh):
     """
     Computes the time difference between triplets, returns if a triplet is formed
 
-    Arguments:
-    - times: list of times, must be in DAYS
-    - thresh: threshold time for pairs
+    Parameters
+    -----------
+    times: list
+        list of times, must be in DAYS
+    thresh: 
+        threshold time for pairs
+
+    Returns
+    ----------
+    flag: bool 
+        returns true if triplet is formed
+
     """
     first_pair = 999.0
     second_pair = 999.0
@@ -155,11 +172,10 @@ def compute_nunique(times):
     """
         Computes NUNIQUE, the number of unique nights an object has been observed
 
-        Parameters
+    Parameters
     --------------
     times : list
         list of times, must be in DAYS
-
 
     Returns
     ----------
