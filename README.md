@@ -11,7 +11,7 @@
 [![Anaconda-Server Badge](https://anaconda.org/conda-forge/sorcha/badges/version.svg)](https://anaconda.org/conda-forge/sorcha)
 [![PyPI - Version](https://img.shields.io/pypi/v/sorcha)](https://pypi.python.org/pypi/sorcha)
 [![Template](https://img.shields.io/badge/Template-LINCC%20Frameworks%20Python%20Project%20Template-brightgreen)](https://lincc-ppt.readthedocs.io/en/latest/)
-[![status](https://joss.theoj.org/papers/07afb9d306855ca47606d3a3febc4e00/status.svg)](https://joss.theoj.org/papers/07afb9d306855ca47606d3a3febc4e00)
+[![DOI](https://joss.theoj.org/papers/10.21105/joss.08145/status.svg)](https://doi.org/10.21105/joss.08145)
 
 Documentation: https://sorcha.readthedocs.io
 
