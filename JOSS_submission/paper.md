@@ -8,13 +8,13 @@ authors:
   - name: Stephanie R. Merritt
     orcid: 0000-0001-5930-2829
     affiliation: "1"
-    corresponding: true
   - name: Grigori Fedorets
     orcid: 0000-0002-8418-4809
     affiliation: "1,2,3"
   - name: Megan E. Schwamb
     orcid: 0000-0003-4365-1455
     affiliation: "1"
+    corresponding: true
   - name: Samuel Cornwall
     orcid: 0000-0002-0672-5104
     affiliation: "4"
@@ -24,7 +24,7 @@ authors:
   - name: Mario Jurić
     orcid:  0000-0003-1996-9252
     affiliation: "5"
-  - name: Matthew J.Holman
+  - name: Matthew J. Holman
     orcid:  0000-0002-1139-4880
     affiliation: "6"
   - name: Jacob A. Kurlander
@@ -76,7 +76,7 @@ authors:
     orcid: 0000-0001-7335-1715
     affiliation: "5,9"
 affiliations:
- - name: Astrophysics Research Centre, School of Mathematics and Physics, Queen’s University Belfast, Belfast BT7 1NN, UK
+ - name: Astrophysics Research Centre, School of Mathematics and Physics, Queen’s University Belfast, Belfast, BT7 1NN, UK
    index: 1
  - name: Finnish Centre for Astronomy with ESO, University of Turku, FI-20014 Turku, Finland
    index: 2
@@ -92,7 +92,7 @@ affiliations:
    index: 7
  - name: National Center for Supercomputing Applications, University of Illinois at Urbana-Champaign, Urbana, IL 61801, USA
    index: 8
- - name: LSST Interdisciplinary Network for Collaboration and Computing Frameworks, 933 N. Cherry Avenue, Tucson AZ 8572, USA
+ - name: LSST Interdisciplinary Network for Collaboration and Computing Frameworks, 933 N. Cherry Avenue, Tucson, AZ 8572, USA
    index: 9
  - name: McWilliams Center for Cosmology, Department of Physics, Carnegie Mellon University, Pittsburgh, PA 15213, USA
    index: 10
@@ -116,6 +116,10 @@ bibliography: paper.bib
 # https://blog.joss.theoj.org/2018/12/a-new-collaboration-with-aas-publishing
 aas-doi: 10.3847/1538-3881/add3ec
 aas-journal: Astronomical Journal
+
+# this raises the left sidebar to prevent it from overflowing
+latex:
+  before-metadata: '\vspace{-3.1cm}'
 ---
 
 # Statement of Need
