@@ -19,8 +19,6 @@ def test_kernel_str_length():
             59,
         ],
     )
-    print(test_strings[0])
     for test_data in test_strings:
-        print(test_data[0])
         output = _split_kernel_path_str(test_data[0], split=test_data[2])
         assert output == test_data[1]

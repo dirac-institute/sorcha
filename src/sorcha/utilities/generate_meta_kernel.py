@@ -26,8 +26,20 @@ import pooch
 
 
 def _split_kernel_path_str(abspath: str, split=79):
-    # If directory string is longer than 79 chars, split it up in the meta kernel
-    # 79 is the default because the character limit in SPICE is 80 before the string needs split
+    """If abspath string is longer than 79 chars, split it up in the meta kernel by inserting "+' '".
+    79 is the default because the character limit in SPICE is 80 before the string needs split.
+
+    Parameters
+    ----------
+    abspath: str
+        The filepath string that needs split.
+    Split : int
+        The maximum size each part of the filepath can be before it needs split.
+    Returns
+    ---------
+    abspath : str
+    The filepath string split into chunks of required size.
+    """
 
     n_iter = int(len(str(abspath)) / split)  # Number of splits required
     for n in range(n_iter, 0, -1):  # Goes backwards to not change the character count of the string before it
