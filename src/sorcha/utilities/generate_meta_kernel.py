@@ -24,14 +24,13 @@ import pooch
     \begintext
 """
 
-def _split_kernel_path_str(abspath: str, split = 79):
+
+def _split_kernel_path_str(abspath: str, split=79):
     # If directory string is longer than 79 chars, split it up in the meta kernel
     # 79 is the default because the character limit in SPICE is 80 before the string needs split
-    
+
     n_iter = int(len(str(abspath)) / split)  # Number of splits required
-    for n in range(
-        n_iter, 0, -1
-    ):  # Goes backwards to not change the character count of the string before it
+    for n in range(n_iter, 0, -1):  # Goes backwards to not change the character count of the string before it
         abspath = abspath[: split * n] + "+' '" + abspath[split * n :]
     return abspath
 
