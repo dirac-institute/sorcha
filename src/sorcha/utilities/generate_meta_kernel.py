@@ -25,6 +25,28 @@ import pooch
 """
 
 
+def _split_kernel_path_str(abspath: str, split=79):
+    """If abspath string is longer than 79 chars, split it up in the meta kernel by inserting "+' '".
+    79 is the default because the character limit in SPICE is 80 before the string needs split.
+
+    Parameters
+    ----------
+    abspath: str
+        The filepath string that needs split.
+    Split : int
+        The maximum size each part of the filepath can be before it needs split.
+    Returns
+    ---------
+    abspath : str
+    The filepath string split into chunks of required size.
+    """
+
+    n_iter = int(len(str(abspath)) / split)  # Number of splits required
+    for n in range(n_iter, 0, -1):  # Goes backwards to not change the character count of the string before it
+        abspath = abspath[: split * n] + "+' '" + abspath[split * n :]
+    return abspath
+
+
 def build_meta_kernel_file(auxconfigs, retriever: pooch.Pooch) -> None:
     """Builds a specific text file that will be fed into `spiceypy` that defines
     the list of spice kernel to load, as well as the order to load them.
@@ -41,11 +63,12 @@ def build_meta_kernel_file(auxconfigs, retriever: pooch.Pooch) -> None:
     """
     # build meta_kernel file path
     meta_kernel_file_path = os.path.join(retriever.abspath, auxconfigs.meta_kernel)
+    abspath = _split_kernel_path_str(str(retriever.abspath))
 
     # build a meta_kernel.txt file
     with open(meta_kernel_file_path, "w") as meta_file:
         meta_file.write("\\begindata\n\n")
-        meta_file.write(f"PATH_VALUES = ('{retriever.abspath}')\n\n")
+        meta_file.write(f"PATH_VALUES = ('{abspath}')\n\n")
         meta_file.write("PATH_SYMBOLS = ('A')\n\n")
         meta_file.write("KERNELS_TO_LOAD=(\n")
         for file_name in auxconfigs.ordered_kernel_files:
