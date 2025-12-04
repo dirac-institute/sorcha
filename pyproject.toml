@@ -25,7 +25,7 @@ dependencies = [
     "pandas>=2.0",
     "astropy",
     "matplotlib",
-    "sbpy",
+    "sbpy>=0.6.0",
     "tables",
     "spiceypy",
     "healpy",
