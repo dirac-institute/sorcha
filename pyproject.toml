@@ -34,6 +34,7 @@ dependencies = [
     "pooch",
     "tqdm",
     "numba",
+    "shapely",
     "importlib_resources",
     "scipy" # Needed for linear algebra in numba, do not remove!
 ]
