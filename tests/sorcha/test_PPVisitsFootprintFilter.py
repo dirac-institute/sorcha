@@ -155,7 +155,7 @@ def test_is_DES_on():
         query=query,
         visits_filename= visits_DES_filename,
         ccd_num= 3,
-        plot= True, # set this to true to manuelly see the camera footprint
+        plot= False, # set this to true to manuelly see the camera footprint
     )
     assert len(onsensor) == 10
     print(detectorId)
