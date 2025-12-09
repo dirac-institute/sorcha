@@ -66,7 +66,7 @@ def DESDiscoveryFilter(
         i_times = np.argsort(thisObsv[mjdTime])
         thisObsv = thisObsv[i_times]
 
-        # check cinditions are meet for detection.
+        # check conditions are meet for detection.
         if compute_nunique(thisObsv[mjdTime]) >= 9:
             mask[obsv_indices] = True
         elif (
