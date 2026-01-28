@@ -1110,6 +1110,16 @@ class sorchaConfigs:
             setattr(self, section_key, config_instance)
 
 
+class sorchaConfigsNoFile(sorchaConfigs):
+    """Revert to a regular dataclass so not forced to
+    read a configuration file.
+    """
+    def __init__(self, **kwargs):
+        # attach the logger object so we can print things to the Sorcha logs
+        self.pplogger = logging.getLogger(__name__)
+        for key, val in kwargs.items():
+            setattr(self, key, val)
+
 ## below are the utility functions used to help validate the keywords, add more as needed
 
 
