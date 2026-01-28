@@ -409,7 +409,7 @@ def test_saturationConfigs():
     manual_saturation_config = saturationConfigs(bright_limit=bright_limit, _observing_filters=["g"])
     assert manual_saturation_config.bright_limit == bright_limit
 
-    # Cast float to a list if multiple filters
+    # Cast float to a list if there are multiple filters
     manual_saturation_config = saturationConfigs(bright_limit=bright_limit, _observing_filters=["g", "r"])
     assert len(manual_saturation_config.bright_limit) == 2
 
