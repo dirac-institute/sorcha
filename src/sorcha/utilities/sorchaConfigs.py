@@ -161,7 +161,8 @@ class filtersConfigs:
         # checks mandatory keys are populated
         check_key_exists(self.observing_filters, "observing_filters")
         check_key_exists(self.survey_name, "survey_name")
-        self.observing_filters = [e.strip() for e in self.observing_filters.split(",")]
+        if isinstance(self.observing_filters, str):
+            self.observing_filters = [e.strip() for e in self.observing_filters.split(",")]
         self._check_for_correct_filters()
 
     def _check_for_correct_filters(self):
@@ -241,8 +242,7 @@ class saturationConfigs:
                 self.bright_limit = [self.bright_limit] * len(self._observing_filters)
             if isinstance(self.bright_limit, list):
                 if len(self.bright_limit) == 1:
-                    # when only one value is given that value is saved as a float instead of in a list
-                    self.bright_limit = cast_as_float(self.bright_limit[0], "bright_limit")
+                    self.bright_limit = [self.bright_limit[0]] * len(self._observing_filters)
                 elif len(self.bright_limit) != 1 and len(self.bright_limit) != len(self._observing_filters):
                     logging.error(
                         "ERROR: list of saturation limits is not the same length as list of observing filters."
@@ -989,7 +989,7 @@ class auxiliaryConfigs:
 
 
 @dataclass
-class sorchaConfigs:
+class basesorchaConfigs:
     """Dataclass which stores configuration file keywords in dataclasses."""
 
     input: inputConfigs = None
@@ -1038,6 +1038,10 @@ class sorchaConfigs:
     survey_name: str = ""
     """The name of the survey."""
 
+
+class sorchaConfigs(basesorchaConfigs):
+    """Set the dataclass to load from a file
+    """
     # this __init__ overrides a dataclass's inbuilt __init__ because we want to populate this from a file, not explicitly ourselves
     def __init__(self, config_file_location=None, survey_name=None):
 
@@ -1109,16 +1113,6 @@ class sorchaConfigs:
             section_key = section.lower()
             setattr(self, section_key, config_instance)
 
-
-class sorchaConfigsNoFile(sorchaConfigs):
-    """Revert to a regular dataclass so not forced to
-    read a configuration file.
-    """
-    def __init__(self, **kwargs):
-        # attach the logger object so we can print things to the Sorcha logs
-        self.pplogger = logging.getLogger(__name__)
-        for key, val in kwargs.items():
-            setattr(self, key, val)
 
 ## below are the utility functions used to help validate the keywords, add more as needed
 
