@@ -147,20 +147,22 @@ def test_sorchaConfigs():
     test_configs_file = sorchaConfigs(config_file_location, "rubin_sim")
 
     # test we can make a config without needing to read a file
-    test_configs_nofile = basesorchaConfigs(survey_name="rubin_sim",
-                                            input=inputConfigs(**correct_inputs),
-                                            simulation=simulationConfigs(**correct_simulation),
-                                            filters=filtersConfigs(**correct_filters),
-                                            saturation=saturationConfigs(**correct_saturation),
-                                            phasecurves=phasecurvesConfigs(**correct_phasecurve),
-                                            fov=fovConfigs(**correct_fov),
-                                            fadingfunction=fadingfunctionConfigs(**correct_fadingfunction),
-                                            linkingfilter=linkingfilterConfigs(**correct_linkingfilter),
-                                            output=outputConfigs(**correct_output),
-                                            lightcurve=lightcurveConfigs(**correct_lc_model),
-                                            activity=activityConfigs(**correct_activity),
-                                            expert=expertConfigs(**correct_expert),
-                                            auxiliary=auxiliaryConfigs())
+    test_configs_nofile = basesorchaConfigs(
+        survey_name="rubin_sim",
+        input=inputConfigs(**correct_inputs),
+        simulation=simulationConfigs(**correct_simulation),
+        filters=filtersConfigs(**correct_filters),
+        saturation=saturationConfigs(**correct_saturation),
+        phasecurves=phasecurvesConfigs(**correct_phasecurve),
+        fov=fovConfigs(**correct_fov),
+        fadingfunction=fadingfunctionConfigs(**correct_fadingfunction),
+        linkingfilter=linkingfilterConfigs(**correct_linkingfilter),
+        output=outputConfigs(**correct_output),
+        lightcurve=lightcurveConfigs(**correct_lc_model),
+        activity=activityConfigs(**correct_activity),
+        expert=expertConfigs(**correct_expert),
+        auxiliary=auxiliaryConfigs(),
+    )
     # check each section to make sure you get what you expect
     for test_configs in [test_configs_file, test_configs_nofile]:
         assert correct_inputs == test_configs.input.__dict__
@@ -423,7 +425,7 @@ def test_saturationConfigs():
     )
 
     # Make sure it can take a simple float
-    bright_limit = 2.
+    bright_limit = 2.0
     manual_saturation_config = saturationConfigs(bright_limit=bright_limit, _observing_filters=["g"])
     assert manual_saturation_config.bright_limit[0] == bright_limit
 

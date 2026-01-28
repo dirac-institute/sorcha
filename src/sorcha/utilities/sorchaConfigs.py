@@ -1040,8 +1040,8 @@ class basesorchaConfigs:
 
 
 class sorchaConfigs(basesorchaConfigs):
-    """Set the dataclass to load from a file
-    """
+    """Set the dataclass to load from a file"""
+
     # this __init__ overrides a dataclass's inbuilt __init__ because we want to populate this from a file, not explicitly ourselves
     def __init__(self, config_file_location=None, survey_name=None):
 
