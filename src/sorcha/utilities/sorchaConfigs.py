@@ -231,21 +231,25 @@ class saturationConfigs:
 
         if self.bright_limit_on:
             check_key_exists(self._observing_filters, "_observing_filters")
-            try:
-                self.bright_limit = [float(e.strip()) for e in self.bright_limit.split(",")]
-            except ValueError:
-                logging.error("ERROR: could not parse brightness limits. Check formatting and try again.")
-                sys.exit("ERROR: could not parse brightness limits. Check formatting and try again.")
-            if len(self.bright_limit) == 1:
-                # when only one value is given that value is saved as a float instead of in a list
-                self.bright_limit = cast_as_float(self.bright_limit[0], "bright_limit")
-            elif len(self.bright_limit) != 1 and len(self.bright_limit) != len(self._observing_filters):
-                logging.error(
-                    "ERROR: list of saturation limits is not the same length as list of observing filters."
-                )
-                sys.exit(
-                    "ERROR: list of saturation limits is not the same length as list of observing filters."
-                )
+            if isinstance(self.bright_limit, str):
+                try:
+                    self.bright_limit = [float(e.strip()) for e in self.bright_limit.split(",")]
+                except ValueError:
+                    logging.error("ERROR: could not parse brightness limits. Check formatting and try again.")
+                    sys.exit("ERROR: could not parse brightness limits. Check formatting and try again.")
+            elif isinstance(self.bright_limit, float):
+                self.bright_limit = [self.bright_limit] * len(self._observing_filters)
+            if isinstance(self.bright_limit, list):
+                if len(self.bright_limit) == 1:
+                    # when only one value is given that value is saved as a float instead of in a list
+                    self.bright_limit = cast_as_float(self.bright_limit[0], "bright_limit")
+                elif len(self.bright_limit) != 1 and len(self.bright_limit) != len(self._observing_filters):
+                    logging.error(
+                        "ERROR: list of saturation limits is not the same length as list of observing filters."
+                    )
+                    sys.exit(
+                        "ERROR: list of saturation limits is not the same length as list of observing filters."
+                    )
 
 
 @dataclass

@@ -404,6 +404,15 @@ def test_saturationConfigs():
         error_text.value.code == "ERROR: could not parse brightness limits. Check formatting and try again."
     )
 
+    # Make sure it can take a simple float
+    bright_limit = 2.
+    manual_saturation_config = saturationConfigs(bright_limit=bright_limit, _observing_filters=["g"])
+    assert manual_saturation_config.bright_limit == bright_limit
+
+    # Cast float to a list if multiple filters
+    manual_saturation_config = saturationConfigs(bright_limit=bright_limit, _observing_filters=["g", "r"])
+    assert len(manual_saturation_config.bright_limit) == 2
+
 
 @pytest.mark.parametrize("key_name", ["_observing_filters"])
 def test_saturationConfigs_mandatory(key_name):
