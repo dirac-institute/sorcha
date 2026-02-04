@@ -6,4 +6,4 @@
 #SBATCH --time=24:00:00
 #SBATCH --output=log-%a.log
 
-python3 multi_sorcha.py --config my_config.ini --input_orbits my_orbits.csv --input_physical my_colors.csv --pointings my_pointings.db --path ./ --chunksize $(($1 * $2)) --norbits $1 --cores $2 --instance ${SLURM_ARRAY_TASK_ID} --cleanup --copy_inputs
+python3 multi_sorcha.py --config my_config.ini --input_orbits my_orbits.csv --input_physical my_colors.csv --pointings my_pointings.db --path ./ --chunksize $1 --cores $2 --instance ${SLURM_ARRAY_TASK_ID} --cleanup 

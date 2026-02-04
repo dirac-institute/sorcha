@@ -43,13 +43,13 @@ Below is a more complex example of a Slurm script. Here, multi_sorcha.sh calls m
 .. note::
   We provide these here for you to copy, paste, and edit as needed. You might have to some slight modifications to both the Slurm script and multi_sorcha.py, for example if you're using ``Sorcha`` without calling the stats file.   
 
-``multi_sorcha.sh`` requests many parallel Slurm jobs of ``multi_sorcha.py``, feeding each a different --instance parameter. After changing ‘my_orbits.csv’, ‘my_colors.csv’, ‘my_pointings.db’, ‘my_config.ini’, and the various Slurm parameters to match the above, you could generate 10 jobs, each with 4 cores running 25 orbits each, as follows::
+``multi_sorcha.sh`` requests many parallel Slurm jobs of ``multi_sorcha.py``, feeding each a different --instance parameter. After changing ‘my_orbits.csv’, ‘my_colors.csv’, ‘my_pointings.db’, ‘my_config.ini’, and the various Slurm parameters to match the above, for a file of 1000 objects you could generate 10 jobs with 4 cores running 25 orbits each, as follows::
 
-   sbatch --array=0-9 multi_sorcha.sh 25 4
+   sbatch --array=0-9 multi_sorcha.sh 100 4
 
 You can run multi_sorcha.py on the command line as well::
 
-   python multi_sorcha.py --config sorcha_config_demo.ini --input_orbits mba_sample_1000_orbit.csv --input_physical mba_sample_1000_physical.csv --pointings baseline_v2.0_1yr.db --path ./ --chunksize 1000 --norbits 250 --cores 4 --instance 0 --stats mbastats --cleanup --copy_inputs 
+   python multi_sorcha.py --config sorcha_config_demo.ini --input_orbits mba_sample_1000_orbit.csv --input_physical mba_sample_1000_physical.csv --pointings baseline_v2.0_1yr.db --path ./ --chunksize 1000 --cores 4 --instance 0 --stats mbastats --cleanup
 
 This will generate a single output file. It should work fine on a laptop, and be a bit (but not quite 4x) faster than the single-core equivalent due to overheads.
 

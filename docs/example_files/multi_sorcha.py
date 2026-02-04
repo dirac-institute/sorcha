@@ -3,8 +3,9 @@ import astropy.table as tb
 from multiprocessing import Pool
 import pandas as pd
 import sqlite3
+import numpy as np
 
-def run_sorcha(i, args, path_inputs, pointings, instance,stats, config):
+def run_sorcha(i, args, pointings, instance, config, stats):
     print(f"sorcha run -c {config} --pd {pointings} -o {args.path}{instance}/ -t {instance}_{i} --ob  {args.path}{instance}/orbits_{i}.csv -p {args.path}{instance}/physical_{i}.csv --st {stats}_{i}", flush=True)
     os.system(f"sorcha run -c {config} --pd {pointings} -o {args.path}{instance}/ -t {instance}_{i} --ob  {args.path}{instance}/orbits_{i}.csv -p {args.path}{instance}/physical_{i}.csv --st {stats}_{i}")
 
@@ -16,18 +17,15 @@ if __name__ == '__main__':
         parser.add_argument('--input_physical', type=str)
         parser.add_argument('--path', type=str)
         parser.add_argument('--chunksize', type=int)
-        parser.add_argument('--norbits', type=int)
         parser.add_argument('--cores', type=int)
         parser.add_argument('--instance', type=int)
         parser.add_argument('--cleanup',  action='store_true')
-        parser.add_argument('--copy_inputs', action='store_true')
         parser.add_argument('--pointings', type=str)
         parser.add_argument('--stats', type=str)
         parser.add_argument('--config', type=str)
         args = parser.parse_args()
         chunk = args.chunksize
         instance = args.instance
-        norbits = args.norbits
         pointings = args.pointings
         path = args.path
         config = args.config
@@ -35,24 +33,23 @@ if __name__ == '__main__':
 
         orbits = tb.Table.read(args.input_orbits)
         orbits = orbits[instance*chunk:(instance+1)*chunk]
+        orb_splits = np.array_split(range(len(orbits)), args.cores)
+        
         physical = tb.Table.read(args.input_physical)
         physical = physical[instance*chunk:(instance+1)*chunk]
+        phys_splits = np.array_split(range(len(physical)), args.cores)
 
         os.system(f'mkdir {instance}')
-
-
-        if args.copy_inputs:
-                os.system(f'cp {pointings} {instance}/')
-                path_inputs = f'{instance}'
+        os.system(f'cp {pointings} {instance}/')
 
         for i in range(args.cores):
-                sub_orb = orbits[i*norbits:(i+1)*norbits]
-                sub_phys = physical[i*norbits:(i+1)*norbits]
+                sub_orb = orbits[orb_splits[i]]
+                sub_phys = physical[phys_splits[i]]
                 sub_orb.write(f"{args.path}{instance}/orbits_{i}.csv", overwrite=True)
                 sub_phys.write(f"{args.path}{instance}/physical_{i}.csv", overwrite=True)
 
         with Pool(processes=args.cores) as pool:
-            pool.starmap(run_sorcha, [(i, args, path_inputs, pointings, instance, config, stats) for i in range(args.cores)])
+            pool.starmap(run_sorcha, [(i, args, pointings, instance, config, stats) for i in range(args.cores)])
 
         data = [] 
         for i in range(args.cores):
