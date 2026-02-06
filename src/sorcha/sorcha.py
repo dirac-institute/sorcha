@@ -371,7 +371,9 @@ def runLSSTSimulation(args, sconfigs, return_only=False):
             if return_only:
                 result_observations.append(observations)
                 if args.stats is not None:
-                    result_stats.append(stats(observations, args.stats, args.outpath, sconfigs, return_only=True))
+                    result_stats.append(
+                        stats(observations, args.stats, args.outpath, sconfigs, return_only=True)
+                    )
             else:
                 PPWriteOutput(args, sconfigs, observations, verbose=args.loglevel)
                 if args.stats is not None:

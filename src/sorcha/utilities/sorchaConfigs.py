@@ -1338,7 +1338,7 @@ def PrintConfigsToLog(sconfigs, cmd_args):
     """
     pplogger = logging.getLogger(__name__)
 
-    pplogger.info("The config file used is located at " + cmd_args.configfile)
+    pplogger.info("The config file used is located at " + str(cmd_args.configfile))
     pplogger.info("The physical parameters file used is located at " + cmd_args.paramsinput)
     pplogger.info("The orbits file used is located at " + cmd_args.orbinfile)
     if cmd_args.input_ephemeris_file:
