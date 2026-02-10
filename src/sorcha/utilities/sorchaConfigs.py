@@ -990,7 +990,9 @@ class auxiliaryConfigs:
 
 @dataclass
 class basesorchaConfigs:
-    """Dataclass which stores configuration file keywords in dataclasses."""
+    """Dataclass which stores configuration file keywords in dataclasses,
+    Usefull for using runLSSTSimulation without a dedicated config file. Use
+    sorchaConfigs to read config files."""
 
     input: inputConfigs = None
     """inputConfigs dataclass which stores the keywords from the INPUT section of the config file."""
