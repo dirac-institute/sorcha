@@ -4,6 +4,7 @@ import sys
 import time
 import numpy as np
 import argparse
+import pandas as pd
 import os
 import logging
 
@@ -67,7 +68,7 @@ def mem(df):
     return usage
 
 
-def runDESSimulation(args, sconfigs):
+def runDESSimulation(args, sconfigs, return_only=False):
     """
     Runs the post processing survey simulator functions that apply a series of
     filters to bias a model Solar System small body population to what the Cerro Tololo observatory Dark Energy Survey would observe.
@@ -83,9 +84,12 @@ def runDESSimulation(args, sconfigs):
     sconfigs: dataclass
         Dataclass of configuration file arguments.
 
+    return_only : bool
+        Skip writing to disk and return observations and stats (if requested)
+
     Returns
     -----------
-    None.
+    None or observations DataFrame and stats DataFrame
 
     """
     pplogger = logging.getLogger(__name__)
@@ -162,6 +166,14 @@ def runDESSimulation(args, sconfigs):
     if sconfigs.fov.camera_model == "footprint":
         verboselog("Creating sensor footprint object for filtering")
         footprint = Footprint(sconfigs.fov.footprint_path, args.surveyname)
+
+
+    # Lists to hold results to be concated and returned
+    if return_only:
+        result_observations = []
+        result_stats = []
+
+
 
     while endChunk < lenf:
         verboselog("Starting main Sorcha processing loop round {}".format(loopCounter))
@@ -363,9 +375,17 @@ def runDESSimulation(args, sconfigs):
         if len(observations.index) > 0:
             pplogger.info("Post processing completed for this chunk")
             pplogger.info("Outputting results for this chunk")
-            PPWriteOutput(args, sconfigs, observations, verbose=args.loglevel)
-            if args.stats is not None:
-                stats(observations, args.stats, args.outpath, sconfigs)
+
+            if return_only:
+                result_observations.append(observations)
+                if args.stats is not None:
+                    result_stats.append(
+                        stats(observations, args.stats, args.outpath, sconfigs, return_only=True)
+                    )
+            else:
+                PPWriteOutput(args, sconfigs, observations, verbose=args.loglevel)
+                if args.stats is not None:
+                    stats(observations, args.stats, args.outpath, sconfigs)
         else:
             verboselog("No observations left in chunk. No output will be written for this chunk.")
 
@@ -380,3 +400,10 @@ def runDESSimulation(args, sconfigs):
         PPIndexSQLDatabase(os.path.join(args.outpath, args.outfilestem + ".db"))
 
     pplogger.info("Sorcha process is completed.")
+
+    if return_only:
+        result_observations = pd.concat(result_observations)
+        if args.stats is not None:
+            result_stats = pd.concat(result_stats)
+            return result_observations, result_stats
+        return result_observations
