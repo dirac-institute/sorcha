@@ -1,7 +1,7 @@
 import os
 
 
-def stats(observations, statsfilename, outpath, sconfigs):
+def stats(observations, statsfilename, outpath, sconfigs, return_only=False):
     """
     Write a summary statistics file including whether each object was linked
     or not within miniDifi, their number of observations, min/max phase angles,
@@ -22,9 +22,12 @@ def stats(observations, statsfilename, outpath, sconfigs):
     sconfigs: dataclass
         Dataclass of configuration file arguments.
 
+    return_only: bool
+        Ignore writing result to disk and return DataFrame
+
     Returns
     -------
-    None.
+    None or pandas.DataFrame
 
     """
 
@@ -54,8 +57,10 @@ def stats(observations, statsfilename, outpath, sconfigs):
     else:
         joined_stats = num_obs.join([mag, phase_deg])
 
+    if return_only:
+        return joined_stats
+
     joined_stats.to_csv(
         path_or_buf=statsfilepath, mode="a", header=not os.path.exists(statsfilepath), index=True
     )
-
     return
