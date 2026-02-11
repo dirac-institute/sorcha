@@ -1,7 +1,6 @@
 import os
 import pooch
 
-
 """
     An example output from running `build_meta_kernel_file` might look like
     the following:
