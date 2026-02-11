@@ -167,13 +167,10 @@ def runDESSimulation(args, sconfigs, return_only=False):
         verboselog("Creating sensor footprint object for filtering")
         footprint = Footprint(sconfigs.fov.footprint_path, args.surveyname)
 
-
     # Lists to hold results to be concated and returned
     if return_only:
         result_observations = []
         result_stats = []
-
-
 
     while endChunk < lenf:
         verboselog("Starting main Sorcha processing loop round {}".format(loopCounter))
