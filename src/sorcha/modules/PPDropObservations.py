@@ -14,7 +14,7 @@ def PPDropObservations(observations, module_rngs, probability="detection probabi
     module_rngs : PerModuleRNG
         A collection of random number generators (per module).
 
-    probability : string
+    probability : string, default="detection probability"
         Name of column containing detection probability.
 
     Returns

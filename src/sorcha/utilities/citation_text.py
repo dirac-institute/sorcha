@@ -8,8 +8,8 @@ def cite_sorcha(f=sys.stdout):
 
     Parameters
     -----------
-    f: file-like object
-        The output for where the citation information will be written. Default: sys.stdout
+    f: file-like object, default=sys.stdout
+        The output for where the citation information will be written.
 
     Returns
     -----------
@@ -17,8 +17,54 @@ def cite_sorcha(f=sys.stdout):
     """
 
     f.write("\nSorcha: \n\n")
-    f.write("Merritt et al. (submitted)\n\n")
-    f.write("Holman et al. (submitted)\n")
+    f.write("@ARTICLE{2025AJ....170..100M,\n")
+    f.write(
+        "author = {{Merritt}, Stephanie R. and {Fedorets}, Grigori and {Schwamb}, Megan E. and {Cornwall}, Samuel and {Bernardinelli}, Pedro H. and {Juri{'c}}, Mario and {Holman}, Matthew J. and {Kurlander}, Jacob A. and {Eggl}, Siegfried and {Oldag}, Drew and {West}, Maxine and {Kubica}, Jeremy and {Murtagh}, Joseph and {Jones}, R. Lynne and {Yoachim}, Peter and {Lyttle}, Ryan R. and {Kelley}, Michael S.~P. and {Moeyens}, Joachim and {Kiker}, Kathleen and {Naidu}, Shantanu P. and {Snodgrass}, Colin and {Matthews}, Shannon M. and {Chandler}, Colin Orion},\n"
+    )
+    f.write('title = "{Sorcha: A Solar System Survey Simulator for the Legacy Survey of Space and Time}"\n,')
+    f.write("journal = {\\aj},\n")
+    f.write(
+        "keywords = {Solar system astronomy, Small Solar System bodies, Astronomy software, Astronomical simulations, 1529, 1469, 1855, 1857, Earth and Planetary Astrophysics, Instrumentation and Methods for Astrophysics},\n"
+    )
+    f.write("year = 2025,\n")
+    f.write("month = aug,\n")
+    f.write("volume = {170},\n")
+    f.write("number = {2},\n")
+    f.write("eid = {100},\n")
+    f.write("pages = {100},\n")
+    f.write("doi = {10.3847/1538-3881/add3ec},\n")
+    f.write("archivePrefix = {arXiv},\n")
+    f.write("eprint = {2506.02804},\n")
+    f.write("primaryClass = {astro-ph.EP},\n")
+    f.write("adsurl = {https://ui.adsabs.harvard.edu/abs/2025AJ....170..100M},\n")
+    f.write("adsnote = {Provided by the SAO/NASA Astrophysics Data System}\n")
+    f.write("}\n")
+
+    f.write("\n\n")
+
+    f.write("@ARTICLE{2025AJ....170...97H,\n")
+    f.write(
+        "author = {{Holman}, Matthew J. and {Bernardinelli}, Pedro H. and {Schwamb}, Megan E. and {Juri{'c}}, Mario and {Oldag}, Drew and {West}, Maxine and {Napier}, Kevin J. and {Merritt}, Stephanie R. and {Fedorets}, Grigori and {Cornwall}, Samuel and {Kurlander}, Jacob A. and {Eggl}, Siegfried and {Kubica}, Jeremy and {Kiker}, Kathleen and {Murtagh}, Joseph and {Naidu}, Shantanu P. and {Chandler}, Colin Orion},\n"
+    )
+    f.write('title = "{Sorcha: Optimized Solar System Ephemeris Generation}",\n')
+    f.write("journal = {\\aj},\n")
+    f.write(
+        "keywords = {Ephemerides, Small Solar System bodies, N-body simulations, Sky surveys, 464, 1469, 1083, 1464, Earth and Planetary Astrophysics, Instrumentation and Methods for Astrophysics, Computational Physics},\n"
+    )
+    f.write("year = 2025,\n")
+    f.write("month = aug,\n")
+    f.write("volume = {170},\n")
+    f.write("number = {2},\n")
+    f.write("eid = {97},\n")
+    f.write("pages = {97},\n")
+    f.write("doi = {10.3847/1538-3881/ade435},\n")
+    f.write("archivePrefix = {arXiv},\n")
+    f.write("eprint = {2506.02140},\n")
+    f.write("primaryClass = {astro-ph.EP},\n")
+    f.write(" adsurl = {https://ui.adsabs.harvard.edu/abs/2025AJ....170...97H},\n")
+    f.write(" adsnote = {Provided by the SAO/NASA Astrophysics Data System}\n")
+    f.write("}\n")
+
     f.write("\n\n")
 
     f.write("Please also cite the packages that are utilized by Sorcha:\n")

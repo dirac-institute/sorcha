@@ -31,6 +31,9 @@ Requirements
 .. tip::
    We also recommend installing h5py in your conda/mamba environment to ensure that the proper HDF5 libraries are installed. 
 
+.. note::
+   If you plan on running ref:`our demo and validation jupyter notebooks <demonotebooks>` locally on your own machine, you will also need to install ``juypter`` This online documentation automatically 
+   displays and runs the notebooks so you can view the output iny your browser . 
 
 
 Setup Your Conda Environment 
@@ -62,7 +65,7 @@ On mamba::
 Installing Sorcha
 ----------------------
 
-Unless you're editing the source code, you can use the version of  ``Sorcha`` published on conda-forge. 
+Unless you're editing the source code, running the demo notebooks yourself, or contirbtuing to the documentation, you should use the version of  ``Sorcha`` published on conda-forge and PyPi. 
 
 If using conda::
 
@@ -88,7 +91,7 @@ You can check that the  ``Sorcha`` installation was successful, by obtaining the
 Installing Sorcha in Development Mode
 ---------------------------------------------------------------------
 
-**This is the installation method for adding/edit sorcha's codebase or for working on/updating sorcha's documentation.**
+**This is the installation method for adding/edit sorcha's codebase, running unit tests, or working on/updating sorcha's documentation.**
 
 **Step 1** Create a directory to contain the ``Sorcha`` repos::
 
@@ -112,10 +115,10 @@ If you just want the source code installed so edits in the source code are autom
 
    pip install -e .
 
-If you are going to be editing documentation or significantly modifying unit tests, it is best to install the full development version::
+If you are going to be doing significant software development, editing documentation, running unit tests, modifying unit tests, or manually running all of the example demo notebooks, you will need to install the full development version::
 
    pip install -e '.[dev]'
 
-**Step 6 (Optional unless working on documentation):** You will need to install the pandoc package (either via conda/pip or `direct download <https://pandoc.org/installing.html>`_ and a version of the `sorcha-addons package <https://github.com/dirac-institute/sorcha-addons>`_. 
+**Step 6 (Optional unless working on documentation):** You will need to install the pandoc package (either via conda/pip or `direct download <https://pandoc.org/installing.html>`
 
 

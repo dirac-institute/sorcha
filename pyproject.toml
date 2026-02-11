@@ -25,7 +25,7 @@ dependencies = [
     "pandas>=2.0",
     "astropy",
     "matplotlib",
-    "sbpy",
+    "sbpy>=0.6.0",
     "tables",
     "spiceypy",
     "healpy",
@@ -70,7 +70,9 @@ dev = [
     "ipython", # Also used in building notebooks into Sphinx
     "ipykernel",
     "matplotlib", # Used in sample notebook intro_notebook.ipynb
-    "numpy", # Used in sample notebook intro_notebook.ipynb
+    "sorcha-addons", # used in the demo notebooks
+    "seaborn", # used in demo notebooks
+    "jupyter"  # neeed to run the demo notebooks 
 ]
 
 test = [

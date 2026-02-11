@@ -84,8 +84,8 @@ def addUncertainties(detDF, sconfigs, module_rngs, verbose=True):
     module_rngs : PerModuleRNG
         A collection of random number generators (per module).
 
-    verbose: Boolean, optional
-    Verbose Logging Flag. Default = True
+    verbose: Boolean, default=True
+    Verbose Logging Flag.
 
     Returns
     -------
@@ -131,33 +131,26 @@ def uncertainties(
     sconfigs: dataclass
         Dataclass of configuration file arguments.
 
-    limMagName : string, optional
+    limMagName : string, default="fiveSigmaDepth_mag"
         pandas dataframe column name of the limiting magnitude.
-        Default = "fiveSigmaDepth_mag"
 
-    seeingName : string, optional
+    seeingName : string, default="seeingFwhmGeom_arcsec"
         pandas dataframe column name of the seeing
-        Default = "seeingFwhmGeom_arcsec"
 
-    filterMagName : string, optional
+    filterMagName : string, default="trailedSourceMagTrue"
         pandas dataframe column name of the object magnitude
-        Default = "trailedSourceMagTrue"
 
-    dra_name : string, optional
+    dra_name : string, default="RARateCosDec_deg_day"
         pandas dataframe column name of the object RA rate
-        Default = "RARateCosDec_deg_day"
 
-    ddec_name: string, optional
+    ddec_name: string, default="DecRate_deg_day"
         pandas dataframe column name of the object declination rate
-        Default = "DecRate_deg_day"
 
-    dec_name : string, optional
+    dec_name : string, default="Dec_deg"
         pandas dataframe column name of the object declination
-        Default = "Dec_deg"
 
-    visit_time_name : string, optional
+    visit_time_name : string, default="visitExposureTime"
         pandas dataframe column name for exposure length
-        Default = "visitExposureTime"
 
     Returns
     -------
@@ -204,24 +197,20 @@ def calcAstrometricUncertainty(
     m5 : float or array of floats
         5-sigma limiting magnitude.
 
-    nvisit :int, optional
+    nvisit :int, default=1
         number of visits to consider.
-        Default = 1
 
-    FWHMeff : float, optional
+    FWHMeff : float, default=700.0
         effective Full Width at Half Maximum of Point Spread Function [mas].
-        Default = 700.0
 
-    error_sys : float, optional
+    error_sys : float, default=10.0
         systematic error [mas].
-        Default = 10.0
 
-    astErrCoeff : float, optional
+    astErrCoeff : float, default=0.60
         Astrometric error coefficient
         (see calcRandomAstrometricErrorPerCoord description).
-        Default = 0.60
 
-    output_units : string, optional
+    output_units : string, default="mas"
        Default: "mas"  (milliarcseconds)
         other options: "arcsec" (arcseconds)
 
@@ -294,9 +283,8 @@ def calcRandomAstrometricErrorPerCoord(FWHMeff, SNR, AstromErrCoeff=0.60):
     SNR : float or array of floats
         Signal-to-noise ratio.
 
-    AstromErrCoeff : float, optional
+    AstromErrCoeff : float, default=0.60
         Astrometric error coefficient (see description below).
-        Default =0.60
 
     Returns
     -------

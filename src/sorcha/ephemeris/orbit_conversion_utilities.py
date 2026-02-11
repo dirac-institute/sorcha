@@ -21,10 +21,14 @@ def stumpff(x):
 
     Returns
     ---------
-    c_0(x) : float
-    c_1(x) : float
-    c_2(x) : float
-    c_3(x) : float
+    d0 : float
+         c_0(x)
+    d1 : float
+         c_1(x)
+    d2 : float
+         c_2(x)
+    d3 : float
+         c_3(x)
     """
     n = 0
     xm = 0.1
@@ -117,9 +121,9 @@ def halley_safe(x1, x2, mu, alpha, r0, r0dot, t, xacc=1e-14, maxit=100):
         Initial velocity
     t : float
         Time
-    xacc : float
+    xacc : float, default=1e-14
         Accuracy in x before algorithm declares convergence
-    maxit : int
+    maxit : int, default=100
         Maximum number of iterations
 
     Returns
@@ -342,7 +346,7 @@ def principal_value(theta):
 
     Returns
     ----------
-    : float
+    theta : float
         Principal value of angle
     """
     if theta < 0:
@@ -388,17 +392,17 @@ def universal_cometary(mu, x, y, z, vx, vy, vz, epochMJD_TDB):
 
     Returns
     ----------
-    float
+    q: float
         Perihelion (see note above about units)
-    float
+    e: float
         Eccentricity
-    float
+    incl: float
         Inclination (radians)
-    float
+    longnode : float
         Longitude of ascending node (radians)
-    float
+    argperi: float
         Argument of perihelion (radians)
-    float
+    tp: float
         Time of perihelion passage in TDB scale (see note above about units)
     """
 
@@ -517,17 +521,17 @@ def universal_keplerian(mu, x, y, z, vx, vy, vz, epochMJD_TDB):
 
     Returns
     ----------
-    float
+    a: float
         Semi-major axis (see note above about units)
-    float
+    e: float
         Eccentricity
-    float
+    inc: float
         Inclination (radians)
-    float
+    longnode: float
         Longitude of ascending node (radians)
-    float
+    argperi: float
         Argument of perihelion (radians)
-    float
+    M: float
         Mean anomaly (radians)
     """
     q, e, incl, longnode, argperi, tp = universal_cometary(mu, x, y, z, vx, vy, vz, epochMJD_TDB)

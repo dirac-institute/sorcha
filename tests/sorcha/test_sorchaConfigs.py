@@ -5,6 +5,7 @@ from sorcha.lightcurves.lightcurve_registration import LC_METHODS
 from sorcha.activity.activity_registration import CA_METHODS
 from sorcha.utilities.sorchaConfigs import (
     sorchaConfigs,
+    basesorchaConfigs,
     inputConfigs,
     simulationConfigs,
     filtersConfigs,
@@ -48,7 +49,7 @@ correct_filters = {
 
 correct_saturation = {
     "bright_limit_on": True,
-    "bright_limit": 16.0,
+    "bright_limit": [16.0, 16.0, 16.0, 16.0, 16.0, 16.0],
     "_observing_filters": ["r", "g", "i", "z", "u", "y"],
 }
 correct_saturation_read = {"bright_limit": "16.0", "_observing_filters": ["r", "g", "i", "z", "u", "y"]}
@@ -109,8 +110,8 @@ correct_expert = {
 
 correct_auxciliary_URLs = {
     "de440s.bsp": "https://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/planets/de440s.bsp",
-    "earth_200101_990827_predict.bpc": "https://naif.jpl.nasa.gov/pub/naif/generic_kernels/pck/earth_200101_990827_predict.bpc",
-    "earth_620120_240827.bpc": "https://naif.jpl.nasa.gov/pub/naif/generic_kernels/pck/earth_620120_240827.bpc",
+    "earth_2025_250826_2125_predict.bpc": "https://naif.jpl.nasa.gov/pub/naif/generic_kernels/pck/earth_2025_250826_2125_predict.bpc",
+    "earth_620120_250826.bpc": "https://naif.jpl.nasa.gov/pub/naif/generic_kernels/pck/earth_620120_250826.bpc",
     "earth_latest_high_prec.bpc": "https://naif.jpl.nasa.gov/pub/naif/generic_kernels/pck/earth_latest_high_prec.bpc",
     "linux_p1550p2650.440": "https://ssd.jpl.nasa.gov/ftp/eph/planets/Linux/de440/linux_p1550p2650.440",
     "sb441-n16.bsp": "https://ssd.jpl.nasa.gov/ftp/eph/small_bodies/asteroids_de441/sb441-n16.bsp",
@@ -120,8 +121,8 @@ correct_auxciliary_URLs = {
 }
 correct_auxciliary_filenames = [
     "de440s.bsp",
-    "earth_200101_990827_predict.bpc",
-    "earth_620120_240827.bpc",
+    "earth_2025_250826_2125_predict.bpc",
+    "earth_620120_250826.bpc",
     "earth_latest_high_prec.bpc",
     "linux_p1550p2650.440",
     "sb441-n16.bsp",
@@ -143,22 +144,41 @@ def test_sorchaConfigs():
     # general test to make sure, overall, everything works. checks just one file: sorcha_config_demo.ini
 
     config_file_location = get_demo_filepath("sorcha_config_demo.ini")
-    test_configs = sorchaConfigs(config_file_location, "rubin_sim")
+    test_configs_file = sorchaConfigs(config_file_location, "rubin_sim")
+
+    # test we can make a config without needing to read a file
+    test_configs_nofile = basesorchaConfigs(
+        survey_name="rubin_sim",
+        input=inputConfigs(**correct_inputs),
+        simulation=simulationConfigs(**correct_simulation),
+        filters=filtersConfigs(**correct_filters),
+        saturation=saturationConfigs(**correct_saturation),
+        phasecurves=phasecurvesConfigs(**correct_phasecurve),
+        fov=fovConfigs(**correct_fov),
+        fadingfunction=fadingfunctionConfigs(**correct_fadingfunction),
+        linkingfilter=linkingfilterConfigs(**correct_linkingfilter),
+        output=outputConfigs(**correct_output),
+        lightcurve=lightcurveConfigs(**correct_lc_model),
+        activity=activityConfigs(**correct_activity),
+        expert=expertConfigs(**correct_expert),
+        auxiliary=auxiliaryConfigs(),
+    )
     # check each section to make sure you get what you expect
-    assert correct_inputs == test_configs.input.__dict__
-    assert correct_simulation == test_configs.simulation.__dict__
-    assert correct_filters == test_configs.filters.__dict__
-    assert correct_saturation == test_configs.saturation.__dict__
-    assert correct_phasecurve == test_configs.phasecurves.__dict__
-    assert correct_fov == test_configs.fov.__dict__
-    assert correct_fadingfunction == test_configs.fadingfunction.__dict__
-    assert correct_linkingfilter == test_configs.linkingfilter.__dict__
-    assert correct_output == test_configs.output.__dict__
-    assert correct_lc_model == test_configs.lightcurve.__dict__
-    assert correct_activity == test_configs.activity.__dict__
-    assert correct_expert == test_configs.expert.__dict__
-    assert correct_auxciliary_URLs == test_configs.auxiliary.__dict__["urls"]
-    assert correct_auxciliary_filenames == test_configs.auxiliary.__dict__["data_file_list"]
+    for test_configs in [test_configs_file, test_configs_nofile]:
+        assert correct_inputs == test_configs.input.__dict__
+        assert correct_simulation == test_configs.simulation.__dict__
+        assert correct_filters == test_configs.filters.__dict__
+        assert correct_saturation == test_configs.saturation.__dict__
+        assert correct_phasecurve == test_configs.phasecurves.__dict__
+        assert correct_fov == test_configs.fov.__dict__
+        assert correct_fadingfunction == test_configs.fadingfunction.__dict__
+        assert correct_linkingfilter == test_configs.linkingfilter.__dict__
+        assert correct_output == test_configs.output.__dict__
+        assert correct_lc_model == test_configs.lightcurve.__dict__
+        assert correct_activity == test_configs.activity.__dict__
+        assert correct_expert == test_configs.expert.__dict__
+        assert correct_auxciliary_URLs == test_configs.auxiliary.__dict__["urls"]
+        assert correct_auxciliary_filenames == test_configs.auxiliary.__dict__["data_file_list"]
 
 
 ##################################################################################################################################
@@ -403,6 +423,15 @@ def test_saturationConfigs():
     assert (
         error_text.value.code == "ERROR: could not parse brightness limits. Check formatting and try again."
     )
+
+    # Make sure it can take a simple float
+    bright_limit = 2.0
+    manual_saturation_config = saturationConfigs(bright_limit=bright_limit, _observing_filters=["g"])
+    assert manual_saturation_config.bright_limit[0] == bright_limit
+
+    # Cast float to a list if there are multiple filters
+    manual_saturation_config = saturationConfigs(bright_limit=bright_limit, _observing_filters=["g", "r"])
+    assert len(manual_saturation_config.bright_limit) == 2
 
 
 @pytest.mark.parametrize("key_name", ["_observing_filters"])

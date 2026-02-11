@@ -22,8 +22,8 @@ def PPOutWriteCSV(padain, outf, separator=","):
     outf : string
         Location to which file should be written.
 
-    separator: string of length 1
-        String of CSV separator. Default is ','.
+    separator: string of length 1, default=","
+        String of CSV separator.
 
     Returns
     -----------
@@ -50,7 +50,7 @@ def PPOutWriteHDF5(pp_results, outf, keyname="sorcha_results"):
     outf : string
         Location to which file should be written.
 
-    keyin : string
+    keyname : string, default="sorcha_results"
         Key at which data will be located.
 
     Returns
@@ -86,7 +86,7 @@ def PPOutWriteSqlite3(pp_results, outf, tablename="sorcha_results"):
     outf : string
         Location to which file should be written.
 
-    tablename: string
+    tablename: string, default="sorcha_results"
         String of the table within the database to be indexed.
 
     Returns
@@ -114,7 +114,7 @@ def PPIndexSQLDatabase(outf, tablename="sorcha_results"):
     outf : string
         Location of SQLite database to be indexed.
 
-    tablename: string
+    tablename: string, default="sorcha_results"
         String of the table within the database to be indexed.
 
     Returns
@@ -148,12 +148,8 @@ def PPWriteOutput(cmd_args, sconfigs, observations_in, verbose=False):
     observations_in : Pandas dataframe
         Dataframe of output.
 
-    endChunk : integer, optional
-        Integer of last object in chunk. Used only for HDF5 output key.
-        Default = 0
-
-    verbose : boolean, optional
-        Verbose logging mode on or off. Default = False
+    verbose : boolean, default=False
+        Verbose logging mode on or off.
 
     Returns
     -----------

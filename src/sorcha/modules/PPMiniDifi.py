@@ -19,8 +19,8 @@ def haversine_np(lon1, lat1, lon2, lat2):
     lon2 : float or array of floats
         longitude of point 2
 
-    lat1 : float or array of floats
-        latitude of point 1
+    lat2 : float or array of floats
+        latitude of point 2
 
     Returns
     --------
@@ -380,19 +380,19 @@ def linkObservations(
     seed : float
         Initial seed per object to keep observations deterministic for multithreading
 
-    objectId : string
+    objectId : string, default="ssObjectId"
         Column name for object ID's in observations dataframe
 
-    sourceId : string
+    sourceId : string, default="diaSourceId"
         Column name for observation ID's in observations dataframe
 
-    mjdTime : string
+    mjdTime : string, default="midPointTai"
         Column name for MJD's in observations dataframe
 
-    ra : string
+    ra : string, default=ra"
         Column name for object RA's in observations dataframe
 
-    dec : string
+    dec : string, default="decl"
         Column name for object Dec's in observations dataframe
 
     **config

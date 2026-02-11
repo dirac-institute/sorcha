@@ -190,7 +190,7 @@ sorcha.utilities.sorchaConfigs INFO     Vignetting is switched ON.
 sorcha.utilities.sorchaConfigs INFO     Footprint is modelled after the actual camera footprint. 
 sorcha.utilities.sorchaConfigs INFO     Loading default LSST footprint LSST_detector_corners_100123.csv 
 sorcha.utilities.sorchaConfigs INFO     The footprint edge threshold is 2.0 arcseconds 
-sorcha.utilities.sorchaConfigs INFO     The upper saturation limit(s) is/are: 16.0 
+sorcha.utilities.sorchaConfigs INFO     The upper saturation limit(s) is/are: [16.0, 16.0, 16.0, 16.0] 
 sorcha.utilities.sorchaConfigs INFO     SNR limit is turned OFF. 
 sorcha.utilities.sorchaConfigs INFO     Default SNR cut is ON. All observations with SNR < 2.0 will be removed. 
 sorcha.utilities.sorchaConfigs INFO     Magnitude limit is turned OFF. 
@@ -208,8 +208,8 @@ sorcha.utilities.sorchaConfigs INFO     ...the maximum temporal separation betwe
 sorcha.utilities.sorchaConfigs INFO     ...the time in UTC at which it is noon at the observatory location (in standard time) is 16.0 
 sorcha.utilities.sorchaConfigs INFO     The auxiliary files used for emphemris generation... 
 sorcha.utilities.sorchaConfigs INFO     ...the leap second file is: naif0012.tls 
-sorcha.utilities.sorchaConfigs INFO     ...the historical Earth orientation specification file is: earth_620120_240827.bpc 
-sorcha.utilities.sorchaConfigs INFO     ...the prediction of the Earth's future orientation file is: earth_200101_990827_predict.bpc 
+sorcha.utilities.sorchaConfigs INFO     ...the historical Earth orientation specification file is: earth_620120_250826.bpc 
+sorcha.utilities.sorchaConfigs INFO     ...the prediction of the Earth's future orientation file is: earth_2025_250826_2125_predict.bpc 
 sorcha.utilities.sorchaConfigs INFO     ...the orientation information and physical constants for other bodies file is: pck00010.pck 
 sorcha.utilities.sorchaConfigs INFO     ...the Earth's position for ephemerides file is: de440s.bsp 
 sorcha.utilities.sorchaConfigs INFO     ...the regularly updated specification of the Earth's orientation file is: earth_latest_high_prec.bpc 
