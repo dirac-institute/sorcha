@@ -161,7 +161,8 @@ class filtersConfigs:
         # checks mandatory keys are populated
         check_key_exists(self.observing_filters, "observing_filters")
         check_key_exists(self.survey_name, "survey_name")
-        self.observing_filters = [e.strip() for e in self.observing_filters.split(",")]
+        if isinstance(self.observing_filters, str):
+            self.observing_filters = [e.strip() for e in self.observing_filters.split(",")]
         self._check_for_correct_filters()
 
     def _check_for_correct_filters(self):
@@ -249,21 +250,24 @@ class saturationConfigs:
 
         if self.bright_limit_on:
             check_key_exists(self._observing_filters, "_observing_filters")
-            try:
-                self.bright_limit = [float(e.strip()) for e in self.bright_limit.split(",")]
-            except ValueError:
-                logging.error("ERROR: could not parse brightness limits. Check formatting and try again.")
-                sys.exit("ERROR: could not parse brightness limits. Check formatting and try again.")
-            if len(self.bright_limit) == 1:
-                # when only one value is given that value is saved as a float instead of in a list
-                self.bright_limit = cast_as_float(self.bright_limit[0], "bright_limit")
-            elif len(self.bright_limit) != 1 and len(self.bright_limit) != len(self._observing_filters):
-                logging.error(
-                    "ERROR: list of saturation limits is not the same length as list of observing filters."
-                )
-                sys.exit(
-                    "ERROR: list of saturation limits is not the same length as list of observing filters."
-                )
+            if isinstance(self.bright_limit, str):
+                try:
+                    self.bright_limit = [float(e.strip()) for e in self.bright_limit.split(",")]
+                except ValueError:
+                    logging.error("ERROR: could not parse brightness limits. Check formatting and try again.")
+                    sys.exit("ERROR: could not parse brightness limits. Check formatting and try again.")
+            elif isinstance(self.bright_limit, float):
+                self.bright_limit = [self.bright_limit] * len(self._observing_filters)
+            if isinstance(self.bright_limit, list):
+                if len(self.bright_limit) == 1:
+                    self.bright_limit = [self.bright_limit[0]] * len(self._observing_filters)
+                elif len(self.bright_limit) != 1 and len(self.bright_limit) != len(self._observing_filters):
+                    logging.error(
+                        "ERROR: list of saturation limits is not the same length as list of observing filters."
+                    )
+                    sys.exit(
+                        "ERROR: list of saturation limits is not the same length as list of observing filters."
+                    )
 
 
 @dataclass
@@ -1138,8 +1142,10 @@ class auxiliaryConfigs:
 
 
 @dataclass
-class sorchaConfigs:
-    """Dataclass which stores configuration file keywords in dataclasses."""
+class basesorchaConfigs:
+    """Dataclass which stores configuration file keywords in dataclasses,
+    Usefull for using runLSSTSimulation without a dedicated config file. Use
+    sorchaConfigs to read config files."""
 
     input: inputConfigs = None
     """inputConfigs dataclass which stores the keywords from the INPUT section of the config file."""
@@ -1186,6 +1192,10 @@ class sorchaConfigs:
 
     survey_name: str = ""
     """The name of the survey."""
+
+
+class sorchaConfigs(basesorchaConfigs):
+    """Set the dataclass to load from a file"""
 
     # this __init__ overrides a dataclass's inbuilt __init__ because we want to populate this from a file, not explicitly ourselves
     def __init__(self, config_file_location=None, survey_name=None):
@@ -1496,7 +1506,7 @@ def PrintConfigsToLog(sconfigs, cmd_args):
     """
     pplogger = logging.getLogger(__name__)
 
-    pplogger.info("The config file used is located at " + cmd_args.configfile)
+    pplogger.info("The config file used is located at " + str(cmd_args.configfile))
     pplogger.info("The physical parameters file used is located at " + cmd_args.paramsinput)
     pplogger.info("The orbits file used is located at " + cmd_args.orbinfile)
     if cmd_args.input_ephemeris_file:

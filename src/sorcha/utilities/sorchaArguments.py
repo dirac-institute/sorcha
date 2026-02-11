@@ -99,8 +99,9 @@ class sorchaArguments:
         if self.input_ephemeris_file and not path.isfile(self.input_ephemeris_file):
             raise ValueError("File does not exist at path supplied for -er/--ephem_read argument.")
 
-        if not path.isfile(self.configfile):
-            raise ValueError("File does not exist at path supplied for -c/--config argument.")
+        if self.configfile is not None:
+            if not path.isfile(self.configfile):
+                raise ValueError("File does not exist at path supplied for -c/--config argument.")
 
         if not path.isfile(self.pointing_database):
             raise ValueError("File does not exist at path supplied for -pd/--pointing_database argument.")

@@ -190,7 +190,7 @@ sorcha.utilities.sorchaConfigs INFO     Vignetting is switched ON.
 sorcha.utilities.sorchaConfigs INFO     Footprint is modelled after the actual camera footprint. 
 sorcha.utilities.sorchaConfigs INFO     Loading default LSST footprint LSST_detector_corners_100123.csv 
 sorcha.utilities.sorchaConfigs INFO     The footprint edge threshold is 2.0 arcseconds 
-sorcha.utilities.sorchaConfigs INFO     The upper saturation limit(s) is/are: 16.0 
+sorcha.utilities.sorchaConfigs INFO     The upper saturation limit(s) is/are: [16.0, 16.0, 16.0, 16.0] 
 sorcha.utilities.sorchaConfigs INFO     SNR limit is turned OFF. 
 sorcha.utilities.sorchaConfigs INFO     Default SNR cut is ON. All observations with SNR < 2.0 will be removed. 
 sorcha.utilities.sorchaConfigs INFO     Magnitude limit is turned OFF. 
