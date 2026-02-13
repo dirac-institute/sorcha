@@ -13,7 +13,9 @@ def test_distancecut():
         "Obj_Sun_x_LTC_km":[1],
         "Obj_Sun_y_LTC_km":[0],
         "Obj_Sun_z_LTC_km":[0],
+        "ObjID":["0"],
     }
+
     observations = pd.DataFrame(observations)
     distance_up = 2
     distance_low = 0
@@ -25,7 +27,9 @@ def test_distancecut():
         "Obj_Sun_x_LTC_km":[3],
         "Obj_Sun_y_LTC_km":[0],
         "Obj_Sun_z_LTC_km":[0],
+        "ObjID":["0"],
     }
+
 
     observations = pd.DataFrame(observations)
     distance_up = 2
@@ -40,6 +44,7 @@ def test_distancecut():
         "Obj_Sun_x_LTC_km":[3,1],
         "Obj_Sun_y_LTC_km":[0,0],
         "Obj_Sun_z_LTC_km":[0,0],
+        "ObjID":["0","1"],
     }
 
     observations = pd.DataFrame(observations)

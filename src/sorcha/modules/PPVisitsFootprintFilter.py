@@ -2,7 +2,7 @@ import logging
 
 from shapely.geometry import Point, Polygon
 import sqlite3
-from scipy.spatial import KDTree
+from scipy.spatial import cKDTree
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -105,7 +105,7 @@ def PPVisitsFootprint(
                     (row["ulcra"], row["ulcdec"]),
                 ]
             # Build KDTree with all points
-            ccd_tree = KDTree(all_ccd_points)
+            ccd_tree = cKDTree(all_ccd_points)
 
             if len(rows) > 1:
                 k = min(ccd_num, len(all_ccd_points))
