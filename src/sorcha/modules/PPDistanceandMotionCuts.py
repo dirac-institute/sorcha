@@ -30,13 +30,12 @@ def distance_cut(observations, distance_upper, distance_lower):
     distance_upper = ((distance_upper * u.au).to(u.km).value) ** 2
     distance_lower = ((distance_lower * u.au).to(u.km).value) ** 2
 
+    within_bounds = (distance_sq < distance_upper) & (distance_sq > distance_lower)
 
-    within_bounds =  ((distance_sq < distance_upper) & (distance_sq > distance_lower))
-        
-    objects_within_bounds = observations.loc[within_bounds, 'ObjID'].unique()  
-    
+    objects_within_bounds = observations.loc[within_bounds, "ObjID"].unique()
+
     # Keep all detections for objects that have at least one detection within bounds
-    observations = observations[observations['ObjID'].isin(objects_within_bounds)]  
+    observations = observations[observations["ObjID"].isin(objects_within_bounds)]
 
     return observations
 
