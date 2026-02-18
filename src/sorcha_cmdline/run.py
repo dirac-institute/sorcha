@@ -153,7 +153,7 @@ def execute(args):
         update_activity_subclasses,
         update_lc_subclasses,
     )
-    from sorcha.DES import runDESSimulation
+    from sorcha.des import runDESSimulation
     import sys, os
 
     # Extract the output file path now in order to set up logging.

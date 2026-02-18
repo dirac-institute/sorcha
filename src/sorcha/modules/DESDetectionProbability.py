@@ -20,10 +20,10 @@
 import numpy as np
 
 
-def DEScalcDetectionProbability(mag, limmag, c, k):
+def DEScalcDetectionProbability(mag, limmag, c, k, c_sharp=0.9555):
     """
     Find the probability of a detection given a visual magnitude,
-    limiting magnitude, a scaling factor c, and transition sharpness k. Equation from
+    limiting magnitude, a scaling factor c, transition sharpness k and a transient efficiency. Equation from
     Bernardinelli et al., 2022
 
     Parameters
@@ -40,13 +40,15 @@ def DEScalcDetectionProbability(mag, limmag, c, k):
     k : float or array of floats
         transition sharpness
 
+    c_sharp: float
+        transient efficiency.
     Returns
     ----------
     P : float or array of floats
         Probability of detection.
     """
 
-    P = c / (1 + np.exp(k * (mag - limmag)))
+    P = c_sharp * (c / (1 + np.exp(k * (mag - limmag))))
 
     return P
 
