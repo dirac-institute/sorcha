@@ -454,6 +454,9 @@ class fadingfunctionConfigs:
     fading_function_peak_efficiency: float = None
     """Peak efficiency for the fading function, called the 'fill factor' in Chesley and Veres (2017)."""
 
+    des_transient_efficency: float = None
+    """Overall transient efficiency for moving object detection"""
+
     survey_name: str = None
 
     def __post_init__(self):
@@ -477,6 +480,11 @@ class fadingfunctionConfigs:
         """
         check_key_exists(self.fading_function_on, "fadingfunction")
         self.fading_function_on = cast_as_bool(self.fading_function_on, "fading_function_on")
+        if self.fading_function_on:
+            if self.des_transient_efficency is not None:
+                cast_as_float(self.des_transient_efficency, "des_transient_efficency")
+            else:
+                self.des_transient_efficency = 1  # won't impact detection efficency when 1
         check_key_doesnt_exist(
             self.fading_function_peak_efficiency, "fading_function_peak_efficiency", "but survey is DES."
         )

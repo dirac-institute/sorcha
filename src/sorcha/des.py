@@ -330,6 +330,7 @@ def runDESSimulation(args, sconfigs, return_only=False):
             verboselog("Number of rows BEFORE applying fading function: " + str(len(observations.index)))
             observations = DESFadingFunctionFilter(
                 observations,
+                sconfigs.fadingfunction.des_transient_efficency,
                 args._rngs,
                 verbose=args.loglevel,
             )

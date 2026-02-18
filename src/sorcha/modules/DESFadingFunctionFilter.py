@@ -5,7 +5,12 @@ from .PPDropObservations import PPDropObservations
 from .DESDetectionProbability import DESDetectionProbability
 
 
-def DESFadingFunctionFilter(observations, module_rngs, verbose=False):
+def DESFadingFunctionFilter(
+    observations,
+    transient_efficiency,
+    module_rngs,
+    verbose=False,
+):
     """
     Wrapper function for DESDetectionProbability and PPDropObservations.
 
@@ -17,6 +22,8 @@ def DESFadingFunctionFilter(observations, module_rngs, verbose=False):
     observations : Pandas dataframe
         Dataframe of observations with a column containing the probability of detection.
 
+    transient_efficiency: float
+        overall transient efficiency for moving object detection
 
     module_rngs : PerModuleRNG
         A collection of random number generators (per module).
@@ -34,7 +41,7 @@ def DESFadingFunctionFilter(observations, module_rngs, verbose=False):
     verboselog = pplogger.info if verbose else lambda *a, **k: None
 
     verboselog("Calculating probabilities of detections...")
-    observations["detection_probability"] = DESDetectionProbability(observations)
+    observations["detection_probability"] = DESDetectionProbability(observations, transient_efficiency)
 
     verboselog("Dropping observations below detection threshold...")
     observations = PPDropObservations(observations, module_rngs, "detection_probability")

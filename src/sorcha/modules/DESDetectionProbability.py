@@ -20,7 +20,7 @@
 import numpy as np
 
 
-def DEScalcDetectionProbability(mag, limmag, c, k, c_sharp=0.9555):
+def DEScalcDetectionProbability(mag, limmag, c, k, c_sharp):
     """
     Find the probability of a detection given a visual magnitude,
     limiting magnitude, a scaling factor c, transition sharpness k and a transient efficiency. Equation from
@@ -45,7 +45,7 @@ def DEScalcDetectionProbability(mag, limmag, c, k, c_sharp=0.9555):
     Returns
     ----------
     P : float or array of floats
-        Probability of detection.
+        Probability of detection
     """
 
     P = c_sharp * (c / (1 + np.exp(k * (mag - limmag))))
@@ -55,6 +55,7 @@ def DEScalcDetectionProbability(mag, limmag, c, k, c_sharp=0.9555):
 
 def DESDetectionProbability(
     eph_df,
+    transient_efficiency,
     magnitude_name="PSFMag",
     limiting_magnitude_name="fiveSigmaDepth_mag",
     scaling_factor_name="c",
@@ -90,6 +91,9 @@ def DESDetectionProbability(
         eph_df column name for transition_sharpness
         DEfault: k
 
+    transient_efficiency: float
+        overall transient efficiency for moving object detection
+
     Returns
     ----------
      : float or array of floats
@@ -102,4 +106,5 @@ def DESDetectionProbability(
         eph_df[limiting_magnitude_name],
         eph_df[scaling_factor_name],
         eph_df[transition_sharpness_name],
+        transient_efficiency,
     )

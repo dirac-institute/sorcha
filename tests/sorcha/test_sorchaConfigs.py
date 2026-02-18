@@ -61,6 +61,7 @@ correct_fadingfunction = {
     "fading_function_width": 0.1,
     "fading_function_peak_efficiency": 1.0,
     "survey_name": "rubin_sim",
+    "des_transient_efficency": None,
 }
 
 correct_linkingfilter = {
