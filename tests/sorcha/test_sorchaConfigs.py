@@ -765,12 +765,12 @@ def test_linkingfilter_bounds(key_name):
         with pytest.raises(SystemExit) as error_text:
             test_configs = linkingfilterConfigs(**linkingfilter_configs)
         assert error_text.value.code == f"ERROR: {key_name} is negative."
-        
+
         linkingfilter_configs[key_name] = 0
         with pytest.raises(SystemExit) as error_text:
             test_configs = linkingfilterConfigs(**linkingfilter_configs)
         assert error_text.value.code == f"ERROR: {key_name} is zero."
- 
+
     elif key_name == "ssp_number_tracklets":
         linkingfilter_configs[key_name] = -5
         with pytest.raises(SystemExit) as error_text:

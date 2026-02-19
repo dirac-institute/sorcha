@@ -83,6 +83,10 @@ def hasTracklet(mjd, ra, dec, maxdt_minutes, minlen_arcsec, min_observations):
     nobs = len(ra)
     if nobs < min_observations:
         return False
+
+    if not np.all(mjd[:-1] <= mjd[1:]):  # checking that observations are sorted by time.
+        raise ValueError("ERROR: Observations not in chronological order")
+
     if min_observations == 1:  # for edge case where one observation is needed for a tracklet
         return True
     maxdt = maxdt_minutes / (60 * 24)
