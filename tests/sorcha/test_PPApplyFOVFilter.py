@@ -84,6 +84,7 @@ def test_PPApplyFOVFilters():
         "camera_model": "footprint",
         "footprint_path": get_test_filepath("detectors_corners.csv"),
         "footprint_edge_threshold": 2,
+        "survey_name": "rubin_sim",
     }
     configs = fovConfigs(**configs)
     setattr(configs, "fov", configs)

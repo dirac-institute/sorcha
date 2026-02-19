@@ -27,10 +27,16 @@ def parse_file_selection(file_select):
     except ValueError:
         sys.exit("Input could not be converted to a valid integer. Please try again.")
 
-    if file_select not in [1, 2, 3, 4]:
-        sys.exit("Input could not be converted to a valid integer. Please input an integer between 1 and 4.")
+    if file_select not in [1, 2, 3, 4, 5]:
+        sys.exit("Input could not be converted to a valid integer. Please input an integer between 1 and 6.")
 
-    selection_dict = {1: "rubin_circle", 2: "rubin_footprint", 3: "rubin_known", 4: "all"}
+    selection_dict = {
+        1: "rubin_circle",
+        2: "rubin_footprint",
+        3: "rubin_known",
+        4: "des_configs",
+        5: "all",
+    }
 
     which_configs = selection_dict[file_select]
 
@@ -44,7 +50,8 @@ def execute(args):  # pragma: no cover
     print(
         "3. Rubin-specific configuration file using full camera footprint but with all filters turned off, for known object detection. WARNING: do not use this unless you are sure you know what you are doing!\n"
     )
-    print("4. All.\n")
+    print("4. Dark Energy Survey (DES) configuration file using full camera footprint per observation.\n")
+    print("5. All.\n")
     file_select = input("Please enter a number and hit Return/Enter.\n")
 
     which_configs = parse_file_selection(file_select)

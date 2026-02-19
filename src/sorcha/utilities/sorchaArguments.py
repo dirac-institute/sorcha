@@ -43,6 +43,9 @@ class sorchaArguments:
     pplogger = None
     """The Python logger instance"""
 
+    visits = None
+    """visits database. a sqlite database containing the camera footprint and on-sky location for each ccd per observation"""
+
     def __init__(self, cmd_args_dict=None):
         self.pplogger = logging.getLogger(__name__)
         if cmd_args_dict is not None:
@@ -73,6 +76,7 @@ class sorchaArguments:
         self.ar_data_file_path = args.get("ar_data_path")
         self.loglevel = args["loglevel"]
         self.stats = args["stats"]
+        self.visits = args["visits_database"]
 
         self.surveyname = args["surveyname"]
 

@@ -4,7 +4,7 @@ from sorcha.utilities.sorchaModuleRNG import PerModuleRNG
 def PPDropObservations(observations, module_rngs, probability="detection probability"):
     """
     Drops rows where the probabilty of detection is less than sample drawn
-    from a uniform distribution. Used by PPFadingFunctionFilter.
+    from a uniform distribution. Used by PPFadingFunctionFilter and DESFadingFunctionFilter.
 
     Parameters
     -----------

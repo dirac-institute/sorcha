@@ -518,7 +518,7 @@ class Detector:
 class Footprint:
     """Camera footprint class"""
 
-    def __init__(self, path=None, detectorName="detector"):
+    def __init__(self, path=None, surveyname="rubin_sim", detectorName="detector"):
         """
         Initiates a Footprint object.
 
@@ -552,7 +552,10 @@ class Footprint:
 
         else:
             try:
-                default_camera_config_file = "data/LSST_detector_corners_100123.csv"
+                if surveyname.lower() in ["rubin_sim", "lsst"]:
+                    default_camera_config_file = "data/LSST_detector_corners_100123.csv"
+                if surveyname.lower() == "des":
+                    default_camera_config_file = "data/DES_ccd_corners.csv"
                 # stream = pkg_resources.resource_stream(__name__, default_camera_config_file)
                 # stream = importlib_resources.as_file( default_camera_config_file )
                 stream = importlib_resources.files(__name__).joinpath(default_camera_config_file)
@@ -679,7 +682,11 @@ class Footprint:
         # convert field pointings to xyz on unit sphere
         fieldra = deg2rad(field_df[ra_name_field])
         fielddec = deg2rad(field_df[dec_name_field])
-        rotSkyPos = deg2rad(field_df[rot_name_field])
+
+        if rot_name_field in field_df:
+            rotSkyPos = np.deg2rad(field_df[rot_name_field])
+        else:
+            rotSkyPos = np.zeros(len(field_df))
 
         # (no rotation on 3d unit sphere):
         points = np.array((radec_to_focal_plane(ra, dec, fieldra, fielddec, rotSkyPos)))

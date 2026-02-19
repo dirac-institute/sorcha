@@ -12,15 +12,18 @@ from sorcha.ephemeris.simulation_driver import create_ephemeris
 from sorcha.ephemeris.simulation_setup import precompute_pointing_information
 
 from sorcha.modules.PPReadPointingDatabase import PPReadPointingDatabase
+from sorcha.modules.PPDistanceandMotionCuts import distance_cut, motion_cut
 from sorcha.modules.PPLinkingFilter import PPLinkingFilter
+from sorcha.modules.DESDiscoveryFilter import DESDiscoveryFilter
 from sorcha.modules.PPTrailingLoss import PPTrailingLoss
 from sorcha.modules.PPBrightLimit import PPBrightLimit
 from sorcha.modules.PPCalculateApparentMagnitude import PPCalculateApparentMagnitude
 from sorcha.modules.PPApplyFOVFilter import PPApplyFOVFilter
+from sorcha.modules.PPFootprintFilter import Footprint
 from sorcha.modules.PPSNRLimit import PPSNRLimit
 from sorcha.modules import PPAddUncertainties, PPRandomizeMeasurements
 from sorcha.modules import PPVignetting
-from sorcha.modules.PPFadingFunctionFilter import PPFadingFunctionFilter
+from sorcha.modules.DESFadingFunctionFilter import DESFadingFunctionFilter
 from sorcha.modules.PPFaintObjectCullingFilter import PPFaintObjectCullingFilter
 
 
@@ -28,7 +31,6 @@ from sorcha.modules.PPMatchPointingToObservations import PPMatchPointingToObserv
 from sorcha.modules.PPMagnitudeLimit import PPMagnitudeLimit
 from sorcha.modules.PPOutput import PPWriteOutput, PPIndexSQLDatabase
 from sorcha.modules.PPGetMainFilterAndColourOffsets import PPGetMainFilterAndColourOffsets
-from sorcha.modules.PPFootprintFilter import Footprint
 from sorcha.modules.PPStats import stats
 
 from sorcha.readers.CombinedDataReader import CombinedDataReader
@@ -45,21 +47,6 @@ from sorcha.utilities.sorchaCommandLineParser import sorchaCommandLineParser
 from sorcha.utilities.fileAccessUtils import FindFileOrExit
 from sorcha.utilities.citation_text import cite_sorcha
 from sorcha.utilities.sorchaGetLogger import sorchaGetLogger
-
-
-def cite():  # pragma: no cover
-    """Providing the bibtex, AAS Journals software latex command, and acknowledgement
-    statements for Sorcha and the associated packages that power it.
-
-    Parameters
-    ----------
-    None
-
-    Returns
-    --------
-    None
-    """
-    cite_sorcha()
 
 
 def mem(df):
@@ -81,17 +68,19 @@ def mem(df):
     return usage
 
 
-def runLSSTSimulation(args, sconfigs, return_only=False):
+def runDESSimulation(args, sconfigs, return_only=False):
     """
     Runs the post processing survey simulator functions that apply a series of
-    filters to bias a model Solar System small body population to what the
-    Vera C. Rubin Observatory Legacy Survey of Space and Time would observe.
+    filters to bias a model Solar System small body population to what the Cerro Tololo observatory Dark Energy Survey would observe.
 
     Parameters
     -----------
     args : dictionary or `sorchaArguments` object
         dictionary of command-line arguments.
 
+    pplogger : logging.Logger, optional
+        The logger to use in this function. If None creates a new one.
+        Default = None
     sconfigs: dataclass
         Dataclass of configuration file arguments.
 
@@ -131,10 +120,12 @@ def runLSSTSimulation(args, sconfigs, return_only=False):
         sconfigs.filters.observing_filters,
         sconfigs.input.pointing_sql_query,
         args.surveyname,
+        fading_function_on=sconfigs.fadingfunction.fading_function_on,
     )
 
     # if we are going to compute the ephemerides, then we should pre-compute all
     # of the needed values derived from the pointing information.
+
     if sconfigs.input.ephemerides_type.casefold() != "external":
         verboselog("Pre-computing pointing information for ephemeris generation")
         filterpointing = precompute_pointing_information(filterpointing, args, sconfigs)
@@ -271,10 +262,14 @@ def runLSSTSimulation(args, sconfigs, return_only=False):
         # as columns in the observations dataframe.
         # These are the columns that should be used moving forward for filters etc.
         # Do NOT use trailedSourceMagTrue or PSFMagTrue, these are the unrandomised magnitudes.
-        verboselog("Calculating astrometric and photometric uncertainties...")
-        observations = PPAddUncertainties.addUncertainties(
-            observations, sconfigs, args._rngs, verbose=args.loglevel
-        )
+
+        # Calulculating uncertainties section. (currently removed for DES)
+        # ---------------------------------------------------------------------------------
+
+        # verboselog("Calculating astrometric and photometric uncertainties...")
+        # observations = PPAddUncertainties.addUncertainties(
+        #     observations, sconfigs, args._rngs, verbose=args.loglevel
+        # )
 
         if sconfigs.expert.randomization_on:
             verboselog(
@@ -331,12 +326,11 @@ def runLSSTSimulation(args, sconfigs, return_only=False):
             verboselog("Number of rows AFTER applying mag limit filter: " + str(len(observations.index)))
 
         if sconfigs.fadingfunction.fading_function_on and len(observations.index) > 0:
-            verboselog("Applying detection efficiency fading function...")
+            verboselog("Applying detection efficiency fading function for DES...")
             verboselog("Number of rows BEFORE applying fading function: " + str(len(observations.index)))
-            observations = PPFadingFunctionFilter(
+            observations = DESFadingFunctionFilter(
                 observations,
-                sconfigs.fadingfunction.fading_function_peak_efficiency,
-                sconfigs.fadingfunction.fading_function_width,
+                sconfigs.fadingfunction.des_transient_efficency,
                 args._rngs,
                 verbose=args.loglevel,
             )
@@ -350,22 +344,30 @@ def runLSSTSimulation(args, sconfigs, return_only=False):
             )
             verboselog("Number of rows AFTER applying bright limit filter " + str(len(observations.index)))
 
-        if sconfigs.linkingfilter.ssp_linking_on and len(observations.index) > 0:
-            verboselog("Applying SSP linking filter...")
-            verboselog("Number of rows BEFORE applying SSP linking filter: " + str(len(observations.index)))
-            observations = PPLinkingFilter(
+        if sconfigs.linkingfilter.distance_cut_on and len(observations.index) > 0:
+            verboselog("Number of rows BEFORE applying distance cuts: " + str(len(observations.index)))
+            observations = distance_cut(
                 observations,
-                sconfigs.linkingfilter.ssp_detection_efficiency,
-                sconfigs.linkingfilter.ssp_number_observations,
-                sconfigs.linkingfilter.ssp_number_tracklets,
-                sconfigs.linkingfilter.ssp_track_window,
-                sconfigs.linkingfilter.ssp_separation_threshold,
-                sconfigs.linkingfilter.ssp_maximum_time,
-                sconfigs.linkingfilter.ssp_night_start_utc,
-                drop_unlinked=sconfigs.linkingfilter.drop_unlinked,
+                sconfigs.linkingfilter.distance_cut_upper,
+                sconfigs.linkingfilter.distance_cut_lower,
             )
-            observations.reset_index(drop=True, inplace=True)
-            verboselog("Number of rows AFTER applying SSP linking filter: " + str(len(observations.index)))
+            verboselog("Number of rows AFTER applying distance cuts: " + str(len(observations.index)))
+
+        if sconfigs.linkingfilter.motion_cut_on and len(observations.index) > 0:
+            verboselog("Number of rows BEFORE applying motion cuts: " + str(len(observations.index)))
+            observations = motion_cut(
+                observations,
+                sconfigs.linkingfilter.motion_cut_upper,
+                sconfigs.linkingfilter.motion_cut_lower,
+            )
+            verboselog("Number of rows AFTER applying motion cuts: " + str(len(observations.index)))
+
+        if sconfigs.linkingfilter.des_discovery_on and len(observations.index) > 0:
+            verboselog("Applying DES discovery filter...")
+            verboselog("Number of rows BEFORE applying DES Discovery filter: " + str(len(observations.index)))
+            observations = DESDiscoveryFilter(observations)
+
+            verboselog("Number of rows AFTER applying DES Discovery filter: " + str(len(observations.index)))
 
         # write output if chunk not empty
         if len(observations.index) > 0:

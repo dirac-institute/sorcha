@@ -196,6 +196,24 @@ class filtersConfigs:
                         bad_list, self.survey_name
                     )
                 )
+        if self.survey_name in ["DES", "des"]:
+            des_filters = ["g", "r", "i", "z", "Y"]
+            filters_ok = all(elem in des_filters for elem in self.observing_filters)
+
+            if not filters_ok:
+                bad_list = np.setdiff1d(self.observing_filters, des_filters)
+                logging.error(
+                    "ERROR: Filter(s) {} given in config file are not recognised filters for {} survey.".format(
+                        bad_list, self.survey_name
+                    )
+                )
+                logging.error("Accepted {} filters: {}".format("DES", des_filters))
+                logging.error("Change observing_filters in config file or select another survey.")
+                sys.exit(
+                    "ERROR: Filter(s) {} given in config file are not recognised filters for {} survey.".format(
+                        bad_list, self.survey_name
+                    )
+                )
 
 
 @dataclass
@@ -289,7 +307,10 @@ class fovConfigs:
     """Choose between circular or actual camera footprint, including chip gaps."""
 
     footprint_path: str = None
-    """Path to camera footprint file. Uncomment to provide a path to the desired camera detector configuration file if not using the default built-in LSSTCam detector configuration for the actual camera footprint."""
+    """Path to camera footprint file. Uncomment to provide a path to the desired camera detector configuration file if not using the default built-in detector configuration for the actual camera footprint."""
+
+    visits_query: str = None
+    """SQL query for extracting data from visits database."""
 
     fill_factor: str = None
     """Fraction of detector surface area which contains CCD -- simulates chip gaps for OIF output. Comment out if using camera footprint."""
@@ -320,12 +341,15 @@ class fovConfigs:
         None
         """
         check_key_exists(self.camera_model, "camera_model")
-        check_value_in_list(self.camera_model, ["circle", "footprint", "none"], "camera_model")
+        check_value_in_list(
+            self.camera_model, ["circle", "footprint", "visits_footprint", "none"], "camera_model"
+        )
 
         if self.camera_model == "footprint":
             self._camera_footprint()
-
-        elif self.camera_model == "circle":
+        if self.camera_model == "visits_footprint":
+            self._camera_visits_footprint()
+        if self.camera_model == "circle":
             self._camera_circle()
 
     def _camera_footprint(self):
@@ -342,17 +366,42 @@ class fovConfigs:
         """
         if self.footprint_path is not None:
             FindFileOrExit(self.footprint_path, "footprint_path")
-        elif self.survey_name.lower() not in ["lsst", "rubin_sim"]:
+        elif self.survey_name.lower() not in ["lsst", "rubin_sim", "des"]:
             logging.error(
-                "ERROR: a default detector footprint is currently only provided for LSST; please provide your own footprint file."
+                "ERROR: a default detector footprint is currently only provided for LSST and DES; please provide your own footprint file."
             )
             sys.exit(
-                "ERROR: a default detector footprint is currently only provided for LSST; please provide your own footprint file."
+                "ERROR: a default detector footprint is currently only provided for LSST and DES; please provide your own footprint file."
             )
         if self.footprint_edge_threshold is not None:
             self.footprint_edge_threshold = cast_as_float(
                 self.footprint_edge_threshold, "footprint_edge_threshold"
             )
+        check_key_doesnt_exist(
+            self.visits_query, "visits_query", 'but camera model is not "visits_footprint".'
+        )
+        check_key_doesnt_exist(self.fill_factor, "fill_factor", 'but camera model is not "circle".')
+        check_key_doesnt_exist(self.circle_radius, "circle_radius", 'but camera model is not "circle".')
+
+    def _camera_visits_footprint(self):
+        """
+        Validates the fov config attributes for a per observation footprint camera model.
+
+        Parameters
+        -----------
+        None.
+
+        Returns
+        ----------
+        None
+        """
+        check_value_in_list(self.survey_name.lower(), ["des"], "survey_name")
+        check_key_exists(self.visits_query, "visits_query")
+        check_key_doesnt_exist(
+            self.footprint_edge_threshold,
+            "footprint_edge_threshold",
+            "But visits footprint does not use edge threshold",
+        )
         check_key_doesnt_exist(self.fill_factor, "fill_factor", 'but camera model is not "circle".')
         check_key_doesnt_exist(self.circle_radius, "circle_radius", 'but camera model is not "circle".')
 
@@ -405,9 +454,41 @@ class fadingfunctionConfigs:
     fading_function_peak_efficiency: float = None
     """Peak efficiency for the fading function, called the 'fill factor' in Chesley and Veres (2017)."""
 
+    des_transient_efficency: float = None
+    """Overall transient efficiency for moving object detection"""
+
+    survey_name: str = None
+
     def __post_init__(self):
         """Automagically validates the fading function configs after initialisation."""
-        self._validate_fadingfunction_configs()
+        if self.survey_name in ["DES", "des"]:
+            self._validate_fadingfunction_configs_DES()
+        else:
+            self._validate_fadingfunction_configs()
+
+    def _validate_fadingfunction_configs_DES(self):
+        """
+        Validates the fadindfunction config attributes after initialisation for DES.
+
+        Parameters
+        -----------
+        None.
+
+        Returns
+        ----------
+        None
+        """
+        check_key_exists(self.fading_function_on, "fadingfunction")
+        self.fading_function_on = cast_as_bool(self.fading_function_on, "fading_function_on")
+        if self.fading_function_on:
+            if self.des_transient_efficency is not None:
+                cast_as_float(self.des_transient_efficency, "des_transient_efficency")
+            else:
+                self.des_transient_efficency = 1  # won't impact detection efficency when 1
+        check_key_doesnt_exist(
+            self.fading_function_peak_efficiency, "fading_function_peak_efficiency", "but survey is DES."
+        )
+        check_key_doesnt_exist(self.fading_function_width, "fading_function_width", "but survey is DES.")
 
     def _validate_fadingfunction_configs(self):
         """
@@ -421,7 +502,6 @@ class fadingfunctionConfigs:
         ----------
         None
         """
-
         if self.fading_function_width is not None and self.fading_function_peak_efficiency is not None:
             self.fading_function_on = True
             # when fading_function_on = true, fading_function_width and fading_function_peak_efficiency now mandatory
@@ -490,6 +570,29 @@ class linkingfilterConfigs:
     ssp_night_start_utc: float = None
     """The time in UTC at which it is noon at the observatory location (in standard time). For the LSST, 12pm Chile Standard Time is 4pm UTC."""
 
+    des_discovery_on: bool = None
+    """flag to see if model should run des discovery filter"""
+
+    survey_name: str = None
+    """name of survey"""
+
+    distance_cut_on: bool = None
+    """flag for DES for object-sun light-time-corrected distance cuts """
+
+    distance_cut_upper: float = None
+    """The upper distance limit for object-sun light-time-corrected distance for DES to detect objects. in km"""
+
+    distance_cut_lower: float = None
+    """The lower distance limit for object-sun light-time-corrected distance for DES to detect objects. in km"""
+    motion_cut_on: bool = None
+    """flag for when DES motion cuts are selected"""
+
+    motion_cut_upper: float = None
+    """The upper motion limit for DES to detect objects in (deg/day)"""
+
+    motion_cut_lower: float = None
+    """The lower motion limit for DES to detect objects (deg/day)"""
+
     def __post_init__(self):
         """Automagically validates the linking filter configs after initialisation."""
         self._validate_linkingfilter_configs()
@@ -518,7 +621,7 @@ class linkingfilterConfigs:
         ]
 
         # the below if-statement explicitly checks for None so a zero triggers the correct error
-        if all(v != None for v in sspvariables):
+        if all(v != None for v in sspvariables) and self.survey_name.lower() != "des":
 
             self.ssp_detection_efficiency = cast_as_float(
                 self.ssp_detection_efficiency, "ssp_detection_efficiency"
@@ -572,6 +675,27 @@ class linkingfilterConfigs:
                 "ERROR: only some ssp linking variables supplied. Supply all five required variables for ssp linking filter, or none to turn filter off."
             )
         self.drop_unlinked = cast_as_bool_or_set_default(self.drop_unlinked, "drop_unlinked", True)
+        if self.des_discovery_on and self.survey_name.lower() == "des":
+            self.des_discovery_on = cast_as_bool_or_set_default(
+                self.des_discovery_on, "des_discovery_on", False
+            )
+
+        if self.distance_cut_upper is not None or self.distance_cut_lower is not None:
+            self.distance_cut_on = True
+            check_key_exists(self.distance_cut_upper, "distance_cut_upper")
+            check_key_exists(self.distance_cut_lower, "distance_cut_lower")
+            self.distance_cut_upper = cast_as_float(self.distance_cut_upper, "distance_cut_upper")
+            self.distance_cut_lower = cast_as_float(self.distance_cut_lower, "distance_cut_lower")
+        if self.motion_cut_upper is not None or self.motion_cut_lower is not None:
+            self.motion_cut_on = True
+            check_key_exists(self.motion_cut_upper, "motion_cut_upper")
+            check_key_exists(self.motion_cut_lower, "motion_cut_lower")
+            self.motion_cut_upper = cast_as_float(self.motion_cut_upper, "motion_cut_upper")
+            self.motion_cut_lower = cast_as_float(self.motion_cut_lower, "motion_cut_lower")
+        if self.distance_cut_on or self.motion_cut_on:
+            if self.survey_name.lower() not in ["des"]:
+                logging.error("ERROR: distance cut and motion cut is a DES only feature")
+                sys.exit("ERROR: distance cut and motion cut is a DES only feature")
 
 
 @dataclass
@@ -740,6 +864,12 @@ class expertConfigs:
     brute_force: bool = None
     """brute-force ephemeris generation on all objects without running a first-pass"""
 
+    survey_name: str = None
+    """survey name to be used for checking flags are correct"""
+
+    camera_model: str = None
+    """camera model chosen in fovConfigs"""
+
     def __post_init__(self):
         """Automagically validates the expert configs after initialisation."""
         self._validate_expert_configs()
@@ -782,13 +912,44 @@ class expertConfigs:
                 "ERROR: SNR limit and magnitude limit are mutually exclusive. Please delete one or both from config file."
             )
 
-        self.trailing_losses_on = cast_as_bool_or_set_default(
-            self.trailing_losses_on, "trailing_losses_on", True
-        )
         self.default_snr_cut = cast_as_bool_or_set_default(self.default_snr_cut, "default_snr_cut", True)
-        self.randomization_on = cast_as_bool_or_set_default(self.randomization_on, "randomization_on", True)
-        self.vignetting_on = cast_as_bool_or_set_default(self.vignetting_on, "vignetting_on", True)
         self.brute_force = cast_as_bool_or_set_default(self.brute_force, "brute_force", True)
+
+        if self.survey_name in ["rubin_sim", "RUBIN_SIM", "LSST", "lsst"]:
+            self.randomization_on = cast_as_bool_or_set_default(
+                self.randomization_on, "randomization_on", True
+            )
+            self.vignetting_on = cast_as_bool_or_set_default(self.vignetting_on, "vignetting_on", True)
+            self.trailing_losses_on = cast_as_bool_or_set_default(
+                self.trailing_losses_on, "trailing_losses_on", True
+            )
+        if self.survey_name in ["DES", "des"]:
+            logging.warning(
+                "WARNING: DES simulation does not support trailing losses, vignetting and randomization. These are off by default"
+            )
+
+            self.randomization_on = cast_as_bool_or_set_default(
+                self.randomization_on, "randomization_on", False
+            )
+            self.vignetting_on = cast_as_bool_or_set_default(self.vignetting_on, "vignetting_on", False)
+            self.trailing_losses_on = cast_as_bool_or_set_default(
+                self.trailing_losses_on, "trailing_losses_on", False
+            )
+            if self.randomization_on == True or self.vignetting_on == True or self.trailing_losses_on == True:
+                logging.ERROR(
+                    "ERROR: DES simulation does not support trailing losses, vignetting and randomization."
+                )
+                sys.exit(
+                    "ERROR: DES simulation does not support trailing losses, vignetting and randomization."
+                )
+        elif self.camera_model == "visits_footprint":
+            logging.warning(
+                "WARNING: fov camera model 'visits_footprint' does not support vignetting. This is off by default"
+            )
+            self.vignetting_on = cast_as_bool_or_set_default(self.vignetting_on, "vignetting_on", False)
+            if self.vignetting_on == True:
+                logging.ERROR("ERROR: fov camera model 'visits_footprint' does not support vignetting.")
+                sys.exit("ERROR: fov camera model 'visits_footprint does not support vignetting.")
 
 
 @dataclass
@@ -1097,21 +1258,34 @@ class sorchaConfigs(basesorchaConfigs):
         # to be the same as the attributes defined above in lowercase e.g. section INPUT has attribute input
         # general function that reads in config file sections into there config dataclasses
         for section, config_section in section_list.items():
+            extra_args = {}
+            if (
+                section == "FILTERS"
+                or section == "FOV"
+                or section == "EXPERT"
+                or section == "FADINGFUNCTION"
+                or section == "LINKINGFILTER"
+            ):
+                extra_args["survey_name"] = self.survey_name
+
             if config_object.has_section(section):
-                extra_args = {}
                 if section == "SIMULATION":
                     extra_args["_ephemerides_type"] = self.input.ephemerides_type
-                elif section == "FILTERS":
-                    extra_args["survey_name"] = self.survey_name
+
                 elif section == "SATURATION":
                     extra_args["_observing_filters"] = self.filters.observing_filters
-                elif section == "FOV":
-                    extra_args["survey_name"] = self.survey_name
+
+                if section == "EXPERT":
+                    extra_args["camera_model"] = self.fov.camera_model
+
                 section_dict = dict(config_object[section])
                 config_instance = config_section(**section_dict, **extra_args)
 
             else:
-                config_instance = config_section()  # if section not in config file take default values
+
+                config_instance = config_section(
+                    **extra_args
+                )  # if section not in config file take default values
             section_key = section.lower()
             setattr(self, section_key, config_instance)
 
@@ -1396,7 +1570,10 @@ def PrintConfigsToLog(sconfigs, cmd_args):
         if sconfigs.fov.footprint_path:
             pplogger.info("Loading camera footprint from " + sconfigs.fov.footprint_path)
         else:
-            pplogger.info("Loading default LSST footprint LSST_detector_corners_100123.csv")
+            if cmd_args.surveyname.lower() in ["rubin_sim", "lsst"]:
+                pplogger.info("Loading default LSST footprint LSST_detector_corners_100123.csv")
+            if cmd_args.surveyname.lower() == "des":
+                pplogger.info("Loading default DES footprint DES_ccd_corners.csv")
         if sconfigs.fov.footprint_edge_threshold:
             pplogger.info(
                 "The footprint edge threshold is "
@@ -1415,6 +1592,9 @@ def PrintConfigsToLog(sconfigs, cmd_args):
             pplogger.info(
                 "A circular footprint will be applied with radius: " + str(sconfigs.fov.circle_radius)
             )
+    elif sconfigs.fov.camera_model == "visits_footprint":
+        pplogger.info("Footprint is the actual camera footprint for each observation.")
+        pplogger.info("Loading camera footprint from " + cmd_args.visits)
     else:
         pplogger.info("Camera footprint is turned OFF.")
 

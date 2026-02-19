@@ -55,6 +55,7 @@ BASELINE_ARGS = {
     "outfilestem": f"out_end2end",
     "loglevel": False,
     "stats": None,
+    "visits_database": None,
 }
 
 WITH_EPHEMERIS_ARGS = {
@@ -67,6 +68,7 @@ WITH_EPHEMERIS_ARGS = {
     "outfilestem": f"out_end2end_with_ephemeris_generation",
     "loglevel": False,
     "stats": None,
+    "visits_database": None,
 }
 
 CHUNKED_ARGS = {
@@ -79,6 +81,7 @@ CHUNKED_ARGS = {
     "outfilestem": f"out_end2end_chunked",
     "loglevel": False,
     "stats": None,
+    "visits_database": None,
 }
 
 UNCHUNKED_ARGS = {
@@ -91,6 +94,7 @@ UNCHUNKED_ARGS = {
     "outfilestem": f"out_end2end_unchunked",
     "loglevel": False,
     "stats": None,
+    "visits_database": None,
 }
 
 
@@ -104,6 +108,7 @@ VERIFICATION_TRUTH = {
     "outfilestem": f"verification_output",
     "loglevel": False,
     "stats": None,
+    "visits_database": None,
 }
 
 

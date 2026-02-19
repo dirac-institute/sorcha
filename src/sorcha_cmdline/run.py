@@ -119,6 +119,14 @@ def main():
         dest="st",
         default=None,
     )
+    optional.add_argument(
+        "--vd",
+        "--visits-db",
+        help="sql database of RA and Dec of ccd corners and centres",
+        type=str,
+        dest="vd",
+        default=None,
+    )
 
     args = parser.parse_args()
 
@@ -145,6 +153,7 @@ def execute(args):
         update_activity_subclasses,
         update_lc_subclasses,
     )
+    from sorcha.des import runDESSimulation
     import sys, os
 
     # Extract the output file path now in order to set up logging.
@@ -177,6 +186,23 @@ def execute(args):
     if "SORCHA_SEED" in os.environ:
         cmd_args["seed"] = int(os.environ["SORCHA_SEED"])
         pplogger.info(f"Random seed overridden via environmental variable, SORCHA_SEED={cmd_args['seed']}")
+    if sconfigs.fov.camera_model != "visits_footprint" and cmd_args["visits_database"] is not None:
+        pplogger.error(
+            "ERROR: cmd line arg --vd, --visits-db provided but camera model is not 'visits_footprint'"
+        )
+        sys.exit("ERROR: cmd line arg --vd, --visits-db provided but camera model is not 'visits_footprint'")
+    if (
+        cmd_args["visits_database"] is not None
+        and sconfigs.fov.visits_query is None
+        or cmd_args["visits_database"] is None
+        and sconfigs.fov.visits_query is not None
+    ):
+        pplogger.error(
+            "ERROR: cmd line arg --vd, --visits-db and config fov varible visits_query must both be specified"
+        )
+        sys.exit(
+            "ERROR: cmd line arg --vd, --visits-db and config fov varible visits_query must both be specified"
+        )
 
     if cmd_args["surveyname"] in ["rubin_sim", "RUBIN_SIM"]:
         try:
@@ -201,6 +227,19 @@ def execute(args):
                 ["rubin_sim", "RUBIN_SIM"]
             )
         )
+    elif cmd_args["surveyname"] in ["DES", "des"]:
+        try:
+            args = sorchaArguments(cmd_args)
+        except Exception as err:
+            pplogger.error(err)
+            sys.exit(err)
+        try:
+            args.validate_arguments()
+        except Exception as err:
+            pplogger.error(err)
+            sys.exit(err)
+
+        runDESSimulation(args, sconfigs)
     else:
         pplogger.error(
             "ERROR: Survey name not recognised. Current allowed surveys are: {}".format(

@@ -20,11 +20,11 @@
 import numpy as np
 
 
-def calcDetectionProbability(mag, limmag, fillFactor=1.0, w=0.1):
+def DEScalcDetectionProbability(mag, limmag, c, k, c_sharp):
     """
     Find the probability of a detection given a visual magnitude,
-    limiting magnitude, and fill factor, determined by the fading function
-    from Veres & Chesley (2017).
+    limiting magnitude, a scaling factor c, transition sharpness k and a transient efficiency. Equation from
+    Bernardinelli et al., 2022
 
     Parameters
     -----------
@@ -34,63 +34,65 @@ def calcDetectionProbability(mag, limmag, fillFactor=1.0, w=0.1):
     limmag : float or array of floats
         Limiting magnitude of the field.
 
-    fillFactor : float), default=1.0
-        Fraction of FOV covered by the camera sensor.
+    c : float or array of floats
+        scaling factor
 
-    w : float, default=0.1
-        Distribution parameter.
+    k : float or array of floats
+        transition sharpness
 
+    c_sharp: float
+        transient efficiency.
     Returns
     ----------
     P : float or array of floats
-        Probability of detection.
+        Probability of detection
     """
 
-    P = fillFactor / (1.0 + np.exp((mag - limmag) / w))
+    P = c_sharp * (c / (1 + np.exp(k * (mag - limmag))))
 
     return P
 
 
-def PPDetectionProbability(
+def DESDetectionProbability(
     eph_df,
-    trailing_losses=False,
-    trailing_loss_name="dmagDetect",
+    transient_efficiency,
     magnitude_name="PSFMag",
     limiting_magnitude_name="fiveSigmaDepth_mag",
-    field_id_name="FieldID",
-    fillFactor=1.0,
-    w=0.1,
+    scaling_factor_name="c",
+    transition_sharpness_name="k",
 ):
     """
     Find probability of observations being observable for objectInField output.
-    Wrapper for calcDetectionProbability which takes into account column names
-    and trailing losses. Used by PPFadingFunctionFilter.
+    Wrapper for calcDetectionProbability which takes into account column names. Used by DESFadingFunctionFilter.
 
     Parameters
     -----------
     eph_df : Pandas dataframe
         Dataframe of observations.
 
-    trailing_losses : Boolean, default=False
-        Are trailing losses being applied?
 
-    trailing_loss_name : string, default="dmagDetect"
-        eph_df column name for trailing losses
-
-    magnitude_name : string, default="PSFMag"
+    magnitude_name : string, optional
         eph_df column name for observation limiting magnitude
+        Default = PSFMag
 
-    limiting_magnitude_name : string, default="fiveSigmaDepth_mag"
+    limiting_magnitude_name : string, optional
         eph_df column used for observation limiting magnitude.
+        Default = fiveSigmaDepth_mag
 
-    field ID : string, default="FieldID"
+    field ID : string, optional
         eph_df column name for observation field_id
+        Default = FieldID
 
-    fillFactor : float, default=1.0
-        Fraction of FOV covered by the camera sensor.
+    scaling_factor_name: str, optional
+        eph_df column name for scaling factor
+        Default: c
 
-    w : float, default=0.1
-        Distribution parameter.
+    transition_sharpness_name: str, optional
+        eph_df column name for transition_sharpness
+        DEfault: k
+
+    transient_efficiency: float
+        overall transient efficiency for moving object detection
 
     Returns
     ----------
@@ -98,16 +100,11 @@ def PPDetectionProbability(
         Probability of detection.
 
     """
-    if "limMag_perChip" in eph_df.columns:
-        limiting_magnitude_name = "limMag_perChip"
-    if not trailing_losses:
-        return calcDetectionProbability(
-            eph_df[magnitude_name], eph_df[limiting_magnitude_name], fillFactor, w
-        )
-    elif trailing_losses:
-        return calcDetectionProbability(
-            eph_df[magnitude_name] + eph_df[trailing_loss_name],
-            eph_df[limiting_magnitude_name],
-            fillFactor,
-            w,
-        )
+
+    return DEScalcDetectionProbability(
+        eph_df[magnitude_name],
+        eph_df[limiting_magnitude_name],
+        eph_df[scaling_factor_name],
+        eph_df[transition_sharpness_name],
+        transient_efficiency,
+    )

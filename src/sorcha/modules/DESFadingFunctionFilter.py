@@ -2,12 +2,17 @@ import logging
 
 from ..utilities.sorchaModuleRNG import PerModuleRNG
 from .PPDropObservations import PPDropObservations
-from .PPDetectionProbability import PPDetectionProbability
+from .DESDetectionProbability import DESDetectionProbability
 
 
-def PPFadingFunctionFilter(observations, fillfactor, width, module_rngs, verbose=False):
+def DESFadingFunctionFilter(
+    observations,
+    transient_efficiency,
+    module_rngs,
+    verbose=False,
+):
     """
-    Wrapper function for PPDetectionProbability and PPDropObservations.
+    Wrapper function for DESDetectionProbability and PPDropObservations.
 
     Calculates detection probability based on a fading function, then drops rows where the
     probabilty of detection is less than sample drawn from a uniform distribution.
@@ -17,14 +22,14 @@ def PPFadingFunctionFilter(observations, fillfactor, width, module_rngs, verbose
     observations : Pandas dataframe
         Dataframe of observations with a column containing the probability of detection.
 
-    fillfactor : float
-        Fraction of camera field-of-view covered by detectors
+    transient_efficiency: float
+        overall transient efficiency for moving object detection
 
     module_rngs : PerModuleRNG
         A collection of random number generators (per module).
 
-    verbose : boolean, default=False
-        Verbose logging flag.
+    verbose : boolean, optional
+        Verbose logging flag. Default = False
 
     Returns
     ----------
@@ -36,11 +41,7 @@ def PPFadingFunctionFilter(observations, fillfactor, width, module_rngs, verbose
     verboselog = pplogger.info if verbose else lambda *a, **k: None
 
     verboselog("Calculating probabilities of detections...")
-    observations["detection_probability"] = PPDetectionProbability(
-        observations,
-        fillFactor=fillfactor,
-        w=width,
-    )
+    observations["detection_probability"] = DESDetectionProbability(observations, transient_efficiency)
 
     verboselog("Dropping observations below detection threshold...")
     observations = PPDropObservations(observations, module_rngs, "detection_probability")

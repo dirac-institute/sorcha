@@ -62,6 +62,7 @@ def test_pixeldict(tmp_path):
         "outfilestem": f"out_400k",
         "loglevel": False,
         "stats": None,
+        "visits_database": None,
     }
 
     args = sorchaArguments(cmd_args_dict)

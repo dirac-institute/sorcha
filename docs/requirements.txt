@@ -21,3 +21,4 @@ sorcha-addons
 importlib_resources
 rubin-sim
 seaborn
+shapely
