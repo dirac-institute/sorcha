@@ -795,12 +795,23 @@ def test_linkingfilter_bounds(key_name):
             test_configs = linkingfilterConfigs(**linkingfilter_configs)
 
         assert error_text.value.code == f"ERROR: {key_name} is negative."
-    elif key_name == "ssp_separation_threshold" or key_name == "ssp_number_observations":
+    elif key_name == "ssp_number_observations":
         linkingfilter_configs[key_name] = -5
         with pytest.raises(SystemExit) as error_text:
             test_configs = linkingfilterConfigs(**linkingfilter_configs)
 
         assert error_text.value.code == f"ERROR: {key_name} is zero or negative."
+    elif key_name == "ssp_separation_threshold":
+        linkingfilter_configs[key_name] = -5
+        with pytest.raises(SystemExit) as error_text:
+            test_configs = linkingfilterConfigs(**linkingfilter_configs)
+        assert error_text.value.code == f"ERROR: {key_name} is negative."
+
+        linkingfilter_configs[key_name] = 0
+        with pytest.raises(SystemExit) as error_text:
+            test_configs = linkingfilterConfigs(**linkingfilter_configs)
+        assert error_text.value.code == f"ERROR: {key_name} is zero."
+
     elif key_name == "ssp_number_tracklets":
         linkingfilter_configs[key_name] = -5
         with pytest.raises(SystemExit) as error_text:

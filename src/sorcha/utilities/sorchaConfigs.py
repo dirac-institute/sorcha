@@ -640,6 +640,13 @@ class linkingfilterConfigs:
                 logging.error("ERROR: ssp_number_observations is zero or negative.")
                 sys.exit("ERROR: ssp_number_observations is zero or negative.")
 
+            if self.ssp_number_observations > 1 and self.ssp_separation_threshold == 0.0:
+                logging.error("ERROR: ssp_separation_threshold is zero.")
+                sys.exit("ERROR: ssp_separation_threshold is zero.")
+            if self.ssp_separation_threshold < 0.0:
+                logging.error("ERROR: ssp_separation_threshold is negative.")
+                sys.exit("ERROR: ssp_separation_threshold is negative.")
+
             if self.ssp_number_tracklets < 1:
                 logging.error("ERROR: ssp_number_tracklets is zero or less.")
                 sys.exit("ERROR: ssp_number_tracklets is zero or less.")
@@ -651,10 +658,6 @@ class linkingfilterConfigs:
             if self.ssp_detection_efficiency > 1.0 or self.ssp_detection_efficiency < 0:
                 logging.error("ERROR: ssp_detection_efficiency out of bounds (should be between 0 and 1).")
                 sys.exit("ERROR: ssp_detection_efficiency out of bounds (should be between 0 and 1).")
-
-            if self.ssp_separation_threshold <= 0.0:
-                logging.error("ERROR: ssp_separation_threshold is zero or negative.")
-                sys.exit("ERROR: ssp_separation_threshold is zero or negative.")
 
             if self.ssp_maximum_time < 0:
                 logging.error("ERROR: ssp_maximum_time is negative.")
