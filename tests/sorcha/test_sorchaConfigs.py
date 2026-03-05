@@ -679,6 +679,41 @@ def test_fadingfunctionConfig_on_float(key_name):
         == f"ERROR: expected a float for config parameter {key_name}. Check value in config file."
     )
 
+def test_fadingfunctionConfig_on_float():
+    """
+    Tests that wrong inputs for fadingfunctionConfig float attributes is caught correctly
+    """
+
+    fadingfunction_configs = correct_fadingfunction.copy()
+
+    "set up for des"
+    fadingfunction_configs["survey_name"] = "des"
+    fadingfunction_configs["fading_function_peak_efficiency"] = None
+    fadingfunction_configs["fading_function_width"] = None
+
+
+
+    fadingfunction_configs["des_transient_efficency"]= None
+
+    # transit efficency goes to 1 if None
+    test_configs = fadingfunctionConfigs(**fadingfunction_configs)
+    fadingfunction_configs["des_transient_efficency"]= 1
+
+
+    # test cast as float
+    assert test_configs.__dict__ == fadingfunction_configs
+
+    fadingfunction_configs["des_transient_efficency"] = "ten"
+    with pytest.raises(SystemExit) as error_text:
+        test_configs = fadingfunctionConfigs(**fadingfunction_configs)
+
+    assert (
+        error_text.value.code
+        == f"ERROR: expected a float for config parameter des_transient_efficency. Check value in config file."
+    )
+
+
+
 
 @pytest.mark.parametrize("key_name", ["fading_function_width", "fading_function_peak_efficiency"])
 def test_fadingfunction_outofbounds(key_name):
