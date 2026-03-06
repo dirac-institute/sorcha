@@ -47,7 +47,7 @@ from sorcha.utilities.sorchaCommandLineParser import sorchaCommandLineParser
 from sorcha.utilities.fileAccessUtils import FindFileOrExit
 from sorcha.utilities.citation_text import cite_sorcha
 from sorcha.utilities.sorchaGetLogger import sorchaGetLogger
-
+from sorcha.utilities.loadPointingDatabase import _load_filterpointing
 
 def mem(df):
     """
@@ -113,22 +113,24 @@ def runDESSimulation(args, sconfigs, return_only=False):
 
     # End of config parsing
 
-    verboselog("Reading pointing database...")
+    if sconfigs.simulation.store_pointing:
+        filterpointing = _load_filterpointing(args, sconfigs, verboselog=args.loglevel)
+        verboselog("Loaded cached hdf5 file for pointing information")
+    else:
+        verboselog("Reading pointing database...")
 
-    filterpointing = PPReadPointingDatabase(
-        args.pointing_database,
-        sconfigs.filters.observing_filters,
-        sconfigs.input.pointing_sql_query,
-        args.surveyname,
-        fading_function_on=sconfigs.fadingfunction.fading_function_on,
-    )
+        filterpointing = PPReadPointingDatabase(
+            args.pointing_database,
+            sconfigs.filters.observing_filters,
+            sconfigs.input.pointing_sql_query,
+            args.surveyname,
+        )
 
-    # if we are going to compute the ephemerides, then we should pre-compute all
-    # of the needed values derived from the pointing information.
-
-    if sconfigs.input.ephemerides_type.casefold() != "external":
-        verboselog("Pre-computing pointing information for ephemeris generation")
-        filterpointing = precompute_pointing_information(filterpointing, args, sconfigs)
+        # if we are going to compute the ephemerides, then we should pre-compute all
+        # of the needed values derived from the pointing information.
+        if sconfigs.input.ephemerides_type.casefold() != "external":
+            verboselog("Pre-computing pointing information for ephemeris generation")
+            filterpointing = precompute_pointing_information(filterpointing, args, sconfigs)
 
     # Set up the data readers.
     ephem_type = sconfigs.input.ephemerides_type

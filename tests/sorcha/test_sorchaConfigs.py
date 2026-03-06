@@ -37,6 +37,7 @@ correct_simulation = {
     "ar_obs_code": "X05",
     "ar_healpix_order": 6,
     "ar_n_sub_intervals": 101,
+    "store_pointing":False,
 }
 
 correct_filters_read = {"observing_filters": "r,g,i,z,u,y", "survey_name": "rubin_sim"}

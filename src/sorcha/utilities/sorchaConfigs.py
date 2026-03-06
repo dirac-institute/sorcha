@@ -83,6 +83,9 @@ class simulationConfigs:
     _ephemerides_type: str = None
     """Simulation used for ephemeris input."""
 
+    store_pointing: str = None
+    """flag deciding whether to download pointing information after first compute. If True will create a hdf5 file and fingerprint file on first run into the same location of the ar files. On subsequent runs this will the load pointing information from this file. If False will precompute as normal for every run"""
+
     def __post_init__(self):
         """Automagically validates the simulation configs after initialisation."""
         self._validate_simulation_configs()
@@ -115,6 +118,7 @@ class simulationConfigs:
             self.ar_picket = cast_as_int(self.ar_picket, "ar_picket")
             self.ar_healpix_order = cast_as_int(self.ar_healpix_order, "ar_healpix_order")
             self.ar_n_sub_intervals = cast_as_int(self.ar_n_sub_intervals, "ar_n_sub_intervals")
+            self.store_pointing = cast_as_bool_or_set_default(self.store_pointing, "store_pointing", False)
         elif self._ephemerides_type == "external":
             # makes sure when these are not needed that they are not populated
             check_key_doesnt_exist(self.ar_ang_fov, "ar_ang_fov", "but ephemerides type is external")
@@ -124,6 +128,7 @@ class simulationConfigs:
             check_key_doesnt_exist(
                 self.ar_healpix_order, "ar_healpix_order", "but ephemerides type is external"
             )
+            check_key_doesnt_exist(self.store_pointing, "store_pointing", "but ephemerides type is external")
 
 
 @dataclass
