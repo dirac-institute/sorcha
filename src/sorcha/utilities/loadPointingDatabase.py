@@ -5,7 +5,7 @@ import sys
 import pandas as pd
 import logging
 import pooch
-
+from filelock import FileLock
 from sorcha.ephemeris.simulation_setup import precompute_pointing_information
 from sorcha.modules.PPReadPointingDatabase import PPReadPointingDatabase
 
@@ -50,8 +50,8 @@ def _save_cache(sqlite_path, filterpointing, cache_dir):
     Save the filterpointing DataFrame and pointing database fingerprint to cache/ar directory.
 
     This saves hdf5 file to the cache/directory as well as a "fingerprint". This fingerprint is a SHA256 hash of the pointing database.
-    This fingerprint must match the pointing database given for a Sorcha run, for the cached hdf5 to work. This is essentially my method to stop a user
-    from making a new pointing database file with the same file name and mistakenly using the old cache.
+    This fingerprint must match the pointing database given for a Sorcha run, for the cached hdf5 to work.
+    This is essentially my method to stop a user from making a new pointing database file with the same file name and mistakenly using the old cache.
     """
     hdf5_path, fingerprint_path = _get_cache_paths(sqlite_path, cache_dir)
 
@@ -70,7 +70,8 @@ def _load_filterpointing(args, sconfigs, verboselog=False):
     Either, loads the filterpointing pandas DataFrame from a cached HDF5 file.
 
     If one doesn't exist, function reads and precomputes the pointing database,
-    then saves the result as an HDF5 cache with a SHA256 fingerprint.
+    then saves the result as an HDF5 cache with a SHA256 fingerprint. The cache also stores a .lock file
+    this is an empty file leftover from using filelock.FileLock and is fine to leave in the cache.
 
     On future runs, if the pointing file does not match the cached hdf5 file, Sorcha will
     error out to prevent use of a mismatched cache/pointing from the user.
@@ -100,7 +101,9 @@ def _load_filterpointing(args, sconfigs, verboselog=False):
     # checks if file path is valid
     if _cache_is_valid(args.pointing_database, args.ar_data_file_path):
         pplogger.info(f"Valid HDF5 cache found. Loading filterpointing from: {hdf5_path}")
-        return pd.read_hdf(hdf5_path, key="filterpointing")
+        filterpointing = pd.read_hdf(hdf5_path, key="filterpointing")
+        return filterpointing[filterpointing.optFilter.isin(sconfigs.filters.observing_filters)].copy()
+
     if os.path.exists(hdf5_path):
         # this deals with the case of a user making and usering a pointing database with the same filestem name
         pplogger.error(
@@ -111,18 +114,47 @@ def _load_filterpointing(args, sconfigs, verboselog=False):
         )
 
     pplogger.info("No HDF5 cache found. Reading from SQLite pointing database.")
-    verboselog("Reading pointing database...")
-    filterpointing = PPReadPointingDatabase(
-        args.pointing_database,
-        sconfigs.filters.observing_filters,
-        sconfigs.input.pointing_sql_query,
-        args.surveyname,
-    )
-    if sconfigs.input.ephemerides_type.casefold() != "external":
+
+    # if no valid cache exists and no issues of currently caught user error. precompute and save filterpointing to cache as an hdf5 file and fingerprint.
+    # However if a user ran multiple code at the same time there would be a problem of multiple cores writing to the same hdf5 file.
+    # To solve this im using file lock. This locks the file from other cores and prevents multiple core writing to the same file.
+    lock = FileLock(hdf5_path + ".lock")
+    with lock:
+        # double check inside the lock. first core will write the file. all locked cores do not need to remake file.
+        # So check for valid file again.
+        if _cache_is_valid(args.pointing_database, args.ar_data_file_path):
+            pplogger.info(f"Cache was written by another process. Loading from: {hdf5_path}")
+            filterpointing = pd.read_hdf(hdf5_path, key="filterpointing")
+            return filterpointing[filterpointing.optFilter.isin(sconfigs.filters.observing_filters)].copy()
+
+        verboselog("Reading pointing database...")
+        # Downloaded file will contain all filters and will filter out unneeded filters on returning to main sorcha process
+        if args.surveyname in ["rubin_sim", "RUBIN_SIM", "LSST", "lsst"]:
+            filters = ["u", "g", "r", "i", "z", "y"]
+        elif args.surveyname in ["DES", "des"]:
+            filters = ["g", "r", "i", "z", "Y"]
+        else:
+            pplogger.error(
+                "ERROR: Survey name not recognised. Current allowed surveys are: {}".format(
+                    ["rubin_sim", "RUBIN_SIM", "LSST", "lsst", "DES", "des"]
+                )
+            )
+            sys.exit(
+                "ERROR: Survey name not recognised. Current allowed surveys are: {}".format(
+                    ["rubin_sim", "RUBIN_SIM", "LSST", "lsst", "DES", "des"]
+                )
+            )
+        filterpointing = PPReadPointingDatabase(
+            args.pointing_database,
+            filters,
+            sconfigs.input.pointing_sql_query,
+            args.surveyname,
+        )
+
         verboselog("Pre-computing pointing information for ephemeris generation.")
         filterpointing = precompute_pointing_information(filterpointing, args, sconfigs)
 
-    saved_path = _save_cache(args.pointing_database, filterpointing, args.ar_data_file_path)
-    pplogger.info(f"filterpointing cached to: {saved_path}")
+        saved_path = _save_cache(args.pointing_database, filterpointing, args.ar_data_file_path)
+        pplogger.info(f"filterpointing cached to: {saved_path}")
 
-    return filterpointing
+        return filterpointing[filterpointing.optFilter.isin(sconfigs.filters.observing_filters)].copy()

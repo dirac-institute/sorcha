@@ -124,12 +124,13 @@ def runLSSTSimulation(args, sconfigs, return_only=False):
     PrintConfigsToLog(sconfigs, args)
 
     # End of config parsing
-    if sconfigs.simulation.store_pointing:
-            filterpointing = _load_filterpointing(args, sconfigs, verboselog=args.loglevel)
-            verboselog("Loaded cached hdf5 file for pointing information")
+    if sconfigs.simulation.store_pointing and sconfigs.input.ephemerides_type.casefold() != "external":
+        # when pointing is stored and no external ephemerides
+        filterpointing = _load_filterpointing(args, sconfigs, verboselog=args.loglevel)
+        verboselog("Loaded cached hdf5 file for pointing information")
     else:
         verboselog("Reading pointing database...")
-
+        # read pointing if not loading
         filterpointing = PPReadPointingDatabase(
             args.pointing_database,
             sconfigs.filters.observing_filters,
@@ -139,6 +140,7 @@ def runLSSTSimulation(args, sconfigs, return_only=False):
 
         # if we are going to compute the ephemerides, then we should pre-compute all
         # of the needed values derived from the pointing information.
+        # precommpute as normal here if all is well
         if sconfigs.input.ephemerides_type.casefold() != "external":
             verboselog("Pre-computing pointing information for ephemeris generation")
             filterpointing = precompute_pointing_information(filterpointing, args, sconfigs)
