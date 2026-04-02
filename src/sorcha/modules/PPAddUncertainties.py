@@ -102,7 +102,9 @@ def addUncertainties(detDF, sconfigs, module_rngs, verbose=True):
     )
 
     if sconfigs.expert.trailing_losses_on:
-        _, detDF["PSFMagSigma"], detDF["SNR"] = uncertainties(detDF, sconfigs, filterMagName="PSFMagTrue", model="circularPSF")
+        _, detDF["PSFMagSigma"], detDF["SNR"] = uncertainties(
+            detDF, sconfigs, filterMagName="PSFMagTrue", model="circularPSF"
+        )
     else:
         detDF["PSFMagSigma"] = detDF["trailedSourceMagSigma"]
 
@@ -118,7 +120,7 @@ def uncertainties(
     dra_name="RARateCosDec_deg_day",
     ddec_name="DecRate_deg_day",
     visit_time_name="visitExposureTime",
-    model="trailedSource"
+    model="trailedSource",
 ):
     """
     Add astrometric and photometric uncertainties to observations.
@@ -178,7 +180,7 @@ def uncertainties(
             detDF[ddec_name],
             detDF[seeingName],
             texp=detDF[visit_time_name],
-            model="trailedSource"
+            model="trailedSource",
         )
     else:
         dMag = 0.0
