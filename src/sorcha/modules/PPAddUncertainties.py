@@ -102,7 +102,7 @@ def addUncertainties(detDF, sconfigs, module_rngs, verbose=True):
     )
 
     if sconfigs.expert.trailing_losses_on:
-        _, detDF["PSFMagSigma"], detDF["SNR"] = uncertainties(detDF, sconfigs, filterMagName="PSFMagTrue")
+        _, detDF["PSFMagSigma"], detDF["SNR"] = uncertainties(detDF, sconfigs, filterMagName="PSFMagTrue", model="circularPSF")
     else:
         detDF["PSFMagSigma"] = detDF["trailedSourceMagSigma"]
 
@@ -117,8 +117,8 @@ def uncertainties(
     filterMagName="trailedSourceMagTrue",
     dra_name="RARateCosDec_deg_day",
     ddec_name="DecRate_deg_day",
-    dec_name="Dec_deg",
     visit_time_name="visitExposureTime",
+    model="trailedSource"
 ):
     """
     Add astrometric and photometric uncertainties to observations.
@@ -152,6 +152,14 @@ def uncertainties(
     visit_time_name : string, default="visitExposureTime"
         pandas dataframe column name for exposure length
 
+    model : string, optional, default="trailedSource"
+        Options: 'circularPSF' = DeltaM(PSF+detection) or trailedSource' = DeltaM(PSF)
+        'circularPSF': Trailing loss due to the DM detection algorithm. Limit SNR:
+        5 sigma in a PSF-convolved image with a circular PSF (no trail fitting). Peak
+        fluxes will be lower due to motion of the object
+        'trailedSource': Unavoidable trailing loss due to spreading the PSF
+        over more pixels lowering the SNR in each pixel
+
     Returns
     -------
     astrSigDeg: numpy array
@@ -164,12 +172,13 @@ def uncertainties(
         signal-to-noise ratio.
     """
 
-    if sconfigs.expert.trailing_losses_on:
+    if sconfigs.expert.trailing_losses_on and model == "trailedSource":
         dMag = PPTrailingLoss.calcTrailingLoss(
             detDF[dra_name],
             detDF[ddec_name],
             detDF[seeingName],
             texp=detDF[visit_time_name],
+            model="trailedSource"
         )
     else:
         dMag = 0.0
