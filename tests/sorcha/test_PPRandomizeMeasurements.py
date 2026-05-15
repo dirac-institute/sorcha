@@ -107,7 +107,7 @@ def test_randomizeAstrometryAndPhotometry():
         "PSFMagTrue": 19.659713,
         "PSFMagSigma": 0.006776,
         "astrometricSigma_deg": 0.000003,
-        "SNR": 159.741315,
+        "SNRPSFMag": 159.741315,
     }
 
     observations = pd.DataFrame(data_in, index=[0])

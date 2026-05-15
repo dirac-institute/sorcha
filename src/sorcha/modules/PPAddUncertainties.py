@@ -69,7 +69,8 @@ def addUncertainties(detDF, sconfigs, module_rngs, verbose=True):
     - astrometricSigma_deg
     - trailedSourceMagSigma
     - PSFMagSigma
-    - SNR
+    - SNRPSFMag
+    - SNRTrailedSourceMag
     - trailedSourceMag
     - PSFMag
 
@@ -96,91 +97,35 @@ def addUncertainties(detDF, sconfigs, module_rngs, verbose=True):
 
     pplogger = logging.getLogger(__name__)
     verboselog = pplogger.info if verbose else lambda *a, **k: None
-
-    detDF["astrometricSigma_deg"], detDF["trailedSourceMagSigma"], detDF["SNR"] = uncertainties(
-        detDF, sconfigs, filterMagName="trailedSourceMagTrue"
-    )
-
-    if sconfigs.expert.trailing_losses_on:
-        _, detDF["PSFMagSigma"], detDF["SNR"] = uncertainties(detDF, sconfigs, filterMagName="PSFMagTrue")
-    else:
-        detDF["PSFMagSigma"] = detDF["trailedSourceMagSigma"]
-
-    return detDF
-
-
-def uncertainties(
-    detDF,
-    sconfigs,
-    limMagName="fiveSigmaDepth_mag",
-    seeingName="seeingFwhmGeom_arcsec",
-    filterMagName="trailedSourceMagTrue",
-    dra_name="RARateCosDec_deg_day",
-    ddec_name="DecRate_deg_day",
-    dec_name="Dec_deg",
-    visit_time_name="visitExposureTime",
-):
-    """
-    Add astrometric and photometric uncertainties to observations.
-
-    Parameters
-    ----------
-    detDF : Pandas dataframe
-        dataframe containing observations.
-
-    sconfigs: dataclass
-        Dataclass of configuration file arguments.
-
-    limMagName : string, default="fiveSigmaDepth_mag"
-        pandas dataframe column name of the limiting magnitude.
-
-    seeingName : string, default="seeingFwhmGeom_arcsec"
-        pandas dataframe column name of the seeing
-
-    filterMagName : string, default="trailedSourceMagTrue"
-        pandas dataframe column name of the object magnitude
-
-    dra_name : string, default="RARateCosDec_deg_day"
-        pandas dataframe column name of the object RA rate
-
-    ddec_name: string, default="DecRate_deg_day"
-        pandas dataframe column name of the object declination rate
-
-    dec_name : string, default="Dec_deg"
-        pandas dataframe column name of the object declination
-
-    visit_time_name : string, default="visitExposureTime"
-        pandas dataframe column name for exposure length
-
-    Returns
-    -------
-    astrSigDeg: numpy array
-        astrometric uncertainties in degrees.
-
-    photometric_sigma: numpy array
-        photometric uncertainties in magnitude.
-
-    SNR: numpy array
-        signal-to-noise ratio.
-    """
-
+    
+    
     if sconfigs.expert.trailing_losses_on:
         dMag = PPTrailingLoss.calcTrailingLoss(
-            detDF[dra_name],
-            detDF[ddec_name],
-            detDF[seeingName],
-            texp=detDF[visit_time_name],
+            detDF["RARateCosDec_deg_day"],
+            detDF["DecRate_deg_day"],
+            detDF["seeingFwhmGeom_arcsec"],
+            texp=detDF["visitExposureTime"],
+            model="trailedSource"   
         )
     else:
         dMag = 0.0
 
-    astrSig, SNR, _ = calcAstrometricUncertainty(
-        detDF[filterMagName] + dMag, detDF[limMagName], FWHMeff=detDF[seeingName] * 1000, output_units="mas"
+    
+    detDF["astrometricSigma_deg"], detDF["SNRTrailedSourceMag"], _ = calcAstrometricUncertainty(
+    detDF["trailedSourceMagTrue"] + dMag, detDF["fiveSigmaDepth_mag"], FWHMeff=detDF["seeingFwhmGeom_arcsec"] * 1000, output_units="mas"
     )
-    photometric_sigma = calcPhotometricUncertainty(SNR)
-    astrSigDeg = (astrSig.values * u.mas).to(u.deg).value
+    detDF["trailedSourceMagSigma"] = calcPhotometricUncertainty(detDF["SNRTrailedSourceMag"])
+    detDF["astrometricSigma_deg"] = (detDF["astrometricSigma_deg"].values * u.mas).to(u.deg).value
 
-    return (astrSigDeg, photometric_sigma, SNR)
+
+    _, detDF["SNRPSFMag"], _ = calcAstrometricUncertainty(
+    detDF["PSFMagTrue"], detDF["fiveSigmaDepth_mag"], FWHMeff=detDF["seeingFwhmGeom_arcsec"] * 1000, output_units="mas"
+    )
+    detDF["PSFMagSigma"] = calcPhotometricUncertainty(detDF["SNRPSFMag"])
+
+
+
+    return detDF
 
 
 def calcAstrometricUncertainty(

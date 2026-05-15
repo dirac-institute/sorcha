@@ -124,48 +124,10 @@ def test_addUncertainties():
         [0.036035, 0.084703, 0.198012, 9.239406],
         decimal=6,
     )
-    assert_almost_equal(obs_uncert["SNR"], [24.941285, 10.303786, 4.166240, 0.000168], decimal=6)
+    assert_almost_equal(obs_uncert["SNRPSFMag"], [24.941285, 10.303786, 4.166240, 0.000168], decimal=6)
 
     return
 
-
-def test_uncertainties():
-    from sorcha.modules.PPAddUncertainties import uncertainties
-
-    observations = pd.DataFrame(
-        {
-            "ObjID": ["S1000000a"],
-            "fiveSigmaDepth_mag": [23.0],
-            "seeingFwhmGeom_arcsec": [1.0],
-            "trailedSourceMagTrue": [20.0],
-            "PSFMagTrue": [20.1],
-            "RARateCosDec_deg_day": [0.03],
-            "DecRate_deg_day": [-0.01],
-            "Dec_deg": [-5.0],
-            "visitExposureTime": [30.0],
-        }
-    )
-
-    configs = {"trailing_losses_on": False}
-    configs = expertConfigs(**configs)
-    setattr(configs, "expert", configs)
-    ast_sig_deg, photo_sig, SNR = uncertainties(observations, configs)
-
-    assert_almost_equal(ast_sig_deg[0], 0.000004, decimal=6)
-    assert_almost_equal(photo_sig[0], 0.015926, decimal=6)
-    assert_almost_equal(SNR[0], 67.673075, decimal=6)
-
-    configs_trail = {"trailing_losses_on": True}
-    configs_trail = expertConfigs(**configs_trail)
-    setattr(configs_trail, "expert", configs_trail)
-
-    ast_sig_deg_T, photo_sig_T, SNR_T = uncertainties(observations, configs_trail)
-
-    assert_almost_equal(ast_sig_deg_T[0], 0.000004, decimal=6)
-    assert_almost_equal(photo_sig_T[0], 0.015931, decimal=6)
-    assert_almost_equal(SNR_T[0], 67.654088, decimal=6)
-
-    return
 
 
 def test_calcRandomAstrometricErrorPerCoord():

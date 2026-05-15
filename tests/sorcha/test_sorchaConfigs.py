@@ -1126,7 +1126,7 @@ def test_expert_config_float(key_name):
     )
 
 
-@pytest.mark.parametrize("key_name, error_name", [("snr_limit", "SNR"), ("mag_limit", "magnitude")])
+@pytest.mark.parametrize("key_name, error_name", [("snr_limit", "SNRPSFMag"), ("mag_limit", "magnitude")])
 def test_expert_config_bounds(key_name, error_name):
     """
     Tests that values in expertConfigs are creating error messages when out of bounds

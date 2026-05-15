@@ -237,10 +237,11 @@ def sampleNormalFOV(center, sigma, module_rngs, ndim=3):
     n = len(sigma)
 
     for i in range(ndim):
-        cov[i, i] = 1
+        cov[i, i] = 1.
 
     # create a small hypersphere with npoints around center point (e.g. RADEC vector on unit sphere)
     # the small hypersphere will look like a bubble on the unit sphere
+    print(mean, cov)
     mini_sphere = normaln(mean, cov, n)
 
     # this step allows for vectorization
