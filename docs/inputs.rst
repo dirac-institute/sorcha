@@ -372,7 +372,7 @@ This database contains information about the LSST pointing history and observing
 What we call the LSST pointing database (currently simulated since Rubin Observatory hasn’t started operations) is generated through the Rubin Observatory scheduler (since 2021 referred to as `rubin_sim <https://github.com/lsst/rubin_sim>`_ and previously known as OpSim). This software is currently under active development and is being used to run many simulated iterations of LSST scenarios, showing what the cadence would look like with differing survey strategies. A description of an early version of this Python software can be found in `Delgado et al.(2014) <https://ui.adsabs.harvard.edu/abs/2014SPIE.9150E..15D>`_. The output of rubin_sim is a SQLlite database containing the pointing history and associated metadata of the simulated observation history of LSST.
 
 .. tip::
-   The contents of the observations table in the SQLite LSST pointing database can be found `here <https://rubin-sim.lsst.io/rs_scheduler/output_schema.html>`_
+   The contents of the observations table in the SQLite LSST pointing database can be found `here <https://rubin-scheduler.lsst.io/fbs-output-schema.html>`_
 
 .. warning::
   The pointing databases times are expected to be TAI (Temps Atomique International; French for International Atomic Time),
@@ -391,7 +391,7 @@ The latest version of `rubin_sim <https://github.com/lsst/rubin_sim>`_ cadence s
   :align: center
 
 .. attention::
-   There may be changes to how this information is read in when the Rubin Observatory operations begin in late 2025.
+   There may be changes to how this information is read in when the Rubin Observatory operations begin in mid 2026.
 
 
 .. _database_query:
