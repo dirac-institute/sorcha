@@ -221,7 +221,7 @@ Detections File: Full Output Column Names, Formats, and Descriptions
 +------------------------------------+--------------+----------------------------------------------------------------------------------------------------------+
 | trailedSourceMagTrue               | Float        | Observed apparent magnitude, fit as a trailed source, not adjusted for photometric uncertainty           |
 +------------------------------------+--------------+----------------------------------------------------------------------------------------------------------+
-| PSFMagTrue                         | Float        | Observed PSF magnitude, fit as a trailed source, not adjusted for photometric uncertainty                |
+| PSFMagTrue                         | Float        | Observed apparent magnitude, fit with a point spread function not adjusted for photometric uncertainty   |
 +------------------------------------+--------------+----------------------------------------------------------------------------------------------------------+
 | fiveSigmaDepth_mag                 | Float        | 5-:math:`{\sigma}` limting magnitude at the location of the object on the focal plane                    |
 +------------------------------------+--------------+----------------------------------------------------------------------------------------------------------+
@@ -235,7 +235,7 @@ Detections File: Full Output Column Names, Formats, and Descriptions
 +------------------------------------+--------------+----------------------------------------------------------------------------------------------------------+
 | trailedSourceMag                   | Float        | Observed apparent magnitude, fit as a trailed source                                                     |
 +------------------------------------+--------------+----------------------------------------------------------------------------------------------------------+
-| PSFMag                             | Float        | Observed apparent magnitude, fit with a point spread function                                            |
+| PSFMag                             | Float        | Observed apparent magnitude, fit with a point spread function                            |
 +------------------------------------+--------------+----------------------------------------------------------------------------------------------------------+
 | RA_deg                             | Float        | Measured object Right Ascension (RA) (degrees)                                                           |
 +------------------------------------+--------------+----------------------------------------------------------------------------------------------------------+
