@@ -338,10 +338,15 @@ class Observatory:
                 Geocentric position (x,y,z)
         """
         returned_tuple = (None, None, None)
+        # Test for the *presence* of the parallax constants rather than their
+        # truthiness: a constant that is legitimately 0.0 -- the geocenter
+        # (code 500: Longitude=cos=sin=0), Greenwich (code 000: Longitude=0),
+        # or an equatorial station such as Quito (code 782: sin=0) -- is falsy
+        # and would otherwise be mistaken for a missing position.
         if (
-            obs_location.get("Longitude", False)
-            and obs_location.get("cos", False)
-            and obs_location.get("sin", False)
+            obs_location.get("Longitude") is not None
+            and obs_location.get("cos") is not None
+            and obs_location.get("sin") is not None
         ):
             longitude = obs_location["Longitude"] * np.pi / 180.0
             x = obs_location["cos"] * np.cos(longitude)
