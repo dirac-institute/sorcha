@@ -100,6 +100,11 @@ def addUncertainties(detDF, sconfigs, module_rngs, verbose=True):
     
     
     if sconfigs.expert.trailing_losses_on:
+        # calculate the dMag offset that when added to the trailed apparent magnitude will 
+        # give the equivalent point source with the same SNR. This makes it easier to calculate 
+        #SNR later on and uncertainty. This is because trailed sources cover more pixels and will have lower SNR
+        # than a point source of the same measured flux. It's easier to calculate dMag and use 
+        # the equations for point sources for SNR and uncertainty
         dMag = PPTrailingLoss.calcTrailingLoss(
             detDF["RARateCosDec_deg_day"],
             detDF["DecRate_deg_day"],
@@ -118,6 +123,9 @@ def addUncertainties(detDF, sconfigs, module_rngs, verbose=True):
     detDF["astrometricSigma_deg"] = (detDF["astrometricSigma_deg"].values * u.mas).to(u.deg).value
 
 
+    # we don't happy dMag in this case because we're looking at the uncertainty on the PSF mag 
+    # which already has a different trailing loss applied for the stellar PSF matching/filtering 
+    
     _, detDF["SNRPSFMag"], _ = calcAstrometricUncertainty(
     detDF["PSFMagTrue"], detDF["fiveSigmaDepth_mag"], FWHMeff=detDF["seeingFwhmGeom_arcsec"] * 1000, output_units="mas"
     )
