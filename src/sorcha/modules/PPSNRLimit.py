@@ -21,6 +21,9 @@ def PPSNRLimit(observations, sigma_limit=2.0, snr_name = "SNRPSFMag"):
         "observations" dataframed modified with entries with SNR < the limit removed.
 
     """
+    
+    # By default we filter on the SNR of the PSFMag as this is the measured SNR
+    #the transient detection pipelines measure for each source
 
     observations = observations[observations[snr_name] > sigma_limit]
     observations.reset_index(drop=True, inplace=True)
