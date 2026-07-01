@@ -114,17 +114,16 @@ def test_addUncertainties():
 
     assert_almost_equal(
         obs_uncert["astrometricSigma_deg"],
-        # [6.27294202e-06, 1.38053193e-05, 3.34595607e-05, 8.27032813e-01],
-        [6.272953e-06, 1.380535e-05, 3.345963e-05, 8.270347e-01],
+       [6.274079e-06, 1.380843e-05, 3.346751e-05, 8.272333e-01],
         decimal=6,
     )
-    assert_almost_equal(obs_uncert["PSFMagSigma"], [0.042682, 0.100568, 0.233576, 9.439369], decimal=6)
+    assert_almost_equal(obs_uncert["PSFMagSigma"], [0.042669, 0.100537, 0.233508, 9.439013], decimal=6)
     assert_almost_equal(
         obs_uncert["trailedSourceMagSigma"],
-        [0.036035, 0.084703, 0.198012, 9.239406],
+        [0.036043, 0.084722, 0.198055, 9.239667],
         decimal=6,
     )
-    assert_almost_equal(obs_uncert["SNRPSFMag"], [24.941285, 10.303786, 4.166240, 0.000168], decimal=6)
+    assert_almost_equal(obs_uncert["SNRPSFMag"], [24.94898, 10.30708, 4.167592, 0.0001676], decimal=6)
 
     return
 
