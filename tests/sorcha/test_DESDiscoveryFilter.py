@@ -83,9 +83,9 @@ def test_DESDiscoveryFilter_multiple_objects():
             *[4] * 7,
         ],
         "Obj_Sun_y_LTC_km": [
-            *[0.1,0.4,0.91,1,4,5,10] ,
+            *[0.1, 0.4, 0.91, 1, 4, 5, 10],
             *[0.2] * 7,
-            *[0.3,0.45,0.99,2,4,6,6],
+            *[0.3, 0.45, 0.99, 2, 4, 6, 6],
             *[0.4] * 7,
         ],
         "Obj_Sun_z_LTC_km": [
@@ -95,15 +95,39 @@ def test_DESDiscoveryFilter_multiple_objects():
             *[0.4] * 7,
         ],
         "fieldMJD_TAI": [
-            10.0,50.0,90.0,130.0,170.0,210.0,250.0,  # obj1: pass
-            10.0,11.0,12.0,13.0,14.0,15.0,16.0,  # obj2:  fail arccut
-            20.0,60.0,100.0,140.0,180.0,220.0,260.0,  # obj3: pass
-            10,30,150,180,500,5000,6000,  # obj4: fail triplet
+            10.0,
+            50.0,
+            90.0,
+            130.0,
+            170.0,
+            210.0,
+            250.0,  # obj1: pass
+            10.0,
+            11.0,
+            12.0,
+            13.0,
+            14.0,
+            15.0,
+            16.0,  # obj2:  fail arccut
+            20.0,
+            60.0,
+            100.0,
+            140.0,
+            180.0,
+            220.0,
+            260.0,  # obj3: pass
+            10,
+            30,
+            150,
+            180,
+            500,
+            5000,
+            6000,  # obj4: fail triplet
         ],
     }
 
-    df = pd.DataFrame(obs).sort_values("fieldMJD_TAI").reset_index(drop=True) 
-    df.reset_index(drop=True, inplace=True) # objects previously from linkingfilter will be sorted like this
+    df = pd.DataFrame(obs).sort_values("fieldMJD_TAI").reset_index(drop=True)
+    df.reset_index(drop=True, inplace=True)  # objects previously from linkingfilter will be sorted like this
 
     filtered = DESDiscoveryFilter(df)
 

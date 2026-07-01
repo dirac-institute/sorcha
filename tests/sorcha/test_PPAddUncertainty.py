@@ -114,7 +114,7 @@ def test_addUncertainties():
 
     assert_almost_equal(
         obs_uncert["astrometricSigma_deg"],
-       [6.274079e-06, 1.380843e-05, 3.346751e-05, 8.272333e-01],
+        [6.274079e-06, 1.380843e-05, 3.346751e-05, 8.272333e-01],
         decimal=6,
     )
     assert_almost_equal(obs_uncert["PSFMagSigma"], [0.042669, 0.100537, 0.233508, 9.439013], decimal=6)
@@ -126,7 +126,6 @@ def test_addUncertainties():
     assert_almost_equal(obs_uncert["SNRPSFMag"], [24.94898, 10.30708, 4.167592, 0.0001676], decimal=6)
 
     return
-
 
 
 def test_calcRandomAstrometricErrorPerCoord():
