@@ -895,8 +895,8 @@ class expertConfigs:
             self.snr_limit = cast_as_float(self.snr_limit, "snr_limit")
             self.snr_limit_on = True
             if self.snr_limit < 0:
-                logging.error("ERROR: SNR limit is negative.")
-                sys.exit("ERROR: SNR limit is negative.")
+                logging.error("ERROR: SNRPSFMag limit is negative.")
+                sys.exit("ERROR: SNRPSFMag limit is negative.")
         else:
             self.snr_limit_on = False
 

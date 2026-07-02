@@ -75,13 +75,13 @@ correct_linkingfilter = {
     "ssp_track_window": 15,
     "ssp_night_start_utc": 16.0,
     "survey_name": "rubin_sim",
-    'distance_cut_on': None, 
-    'distance_cut_upper': None, 
-    'distance_cut_lower': None, 
-    'motion_cut_on': None, 
-    'motion_cut_upper': None, 
-    'motion_cut_lower': None,
-    'des_discovery_on': None
+    "distance_cut_on": None,
+    "distance_cut_upper": None,
+    "distance_cut_lower": None,
+    "motion_cut_on": None,
+    "motion_cut_upper": None,
+    "motion_cut_lower": None,
+    "des_discovery_on": None,
 }
 
 correct_fov = {
@@ -92,7 +92,6 @@ correct_fov = {
     "circle_radius": None,
     "footprint_edge_threshold": 2.0,
     "survey_name": "rubin_sim",
-    
 }
 
 correct_fov_read = {"camera_model": "footprint", "footprint_edge_threshold": 2.0, "survey_name": "rubin_sim"}
@@ -119,7 +118,7 @@ correct_expert = {
     "vignetting_on": True,
     "brute_force": True,
     "camera_model": None,
-    "survey_name": "rubin_sim"
+    "survey_name": "rubin_sim",
 }
 
 correct_auxciliary_URLs = {
@@ -590,6 +589,8 @@ def test_fovConfigs_circle_mandatory():
         error_text.value.code
         == 'ERROR: either "fill_factor" or "circle_radius" must be specified for circular footprint.'
     )
+
+
 def test_fovConfigs_visits_footprint():
     """
     Makes sure the code fails when using visits_footprint and having an edge thresh
@@ -610,7 +611,6 @@ def test_fovConfigs_visits_footprint():
 
     fov_configs["visits_query"] = None
 
-    
     with pytest.raises(SystemExit) as error_text:
         test_configs = fovConfigs(**fov_configs)
     assert (
@@ -679,6 +679,7 @@ def test_fadingfunctionConfig_on_float(key_name):
         == f"ERROR: expected a float for config parameter {key_name}. Check value in config file."
     )
 
+
 def test_fadingfunctionConfig_on_float():
     """
     Tests that wrong inputs for fadingfunctionConfig float attributes is caught correctly
@@ -691,14 +692,11 @@ def test_fadingfunctionConfig_on_float():
     fadingfunction_configs["fading_function_peak_efficiency"] = None
     fadingfunction_configs["fading_function_width"] = None
 
-
-
-    fadingfunction_configs["des_transient_efficency"]= None
+    fadingfunction_configs["des_transient_efficency"] = None
 
     # transit efficency goes to 1 if None
     test_configs = fadingfunctionConfigs(**fadingfunction_configs)
-    fadingfunction_configs["des_transient_efficency"]= 1
-
+    fadingfunction_configs["des_transient_efficency"] = 1
 
     # test cast as float
     assert test_configs.__dict__ == fadingfunction_configs
@@ -711,8 +709,6 @@ def test_fadingfunctionConfig_on_float():
         error_text.value.code
         == f"ERROR: expected a float for config parameter des_transient_efficency. Check value in config file."
     )
-
-
 
 
 @pytest.mark.parametrize("key_name", ["fading_function_width", "fading_function_peak_efficiency"])
@@ -906,17 +902,17 @@ def test_linkingfilter_bool():
         == f"ERROR: expected a bool for config parameter drop_unlinked. Check value in config file."
     )
 
+
 @pytest.mark.parametrize(
-    "key_name, prob_name", 
+    "key_name, prob_name",
     [
         ("distance_cut_upper", "distance_cut_lower"),
         ("distance_cut_lower", "distance_cut_upper"),
         ("motion_cut_upper", "motion_cut_lower"),
-        ("motion_cut_lower", "motion_cut_upper")
-    ]
+        ("motion_cut_lower", "motion_cut_upper"),
+    ],
 )
-
-def test_linkingfilter_descuts_exists(key_name,prob_name):
+def test_linkingfilter_descuts_exists(key_name, prob_name):
     """
     tests the descut inputs in the linkingfilter
     """
@@ -930,20 +926,20 @@ def test_linkingfilter_descuts_exists(key_name,prob_name):
 
     assert (
         error_text.value.code
-        ==             f"ERROR: No value found for required key {prob_name} in config file. Please check the file and try again."
-
+        == f"ERROR: No value found for required key {prob_name} in config file. Please check the file and try again."
     )
 
+
 @pytest.mark.parametrize(
-    "key_name, prob_name", 
+    "key_name, prob_name",
     [
         ("distance_cut_upper", "distance_cut_lower"),
         ("distance_cut_lower", "distance_cut_upper"),
         ("motion_cut_upper", "motion_cut_lower"),
-        ("motion_cut_lower", "motion_cut_upper")
-    ]
+        ("motion_cut_lower", "motion_cut_upper"),
+    ],
 )
-def test_linkingfilter_descuts_float(key_name,prob_name):
+def test_linkingfilter_descuts_float(key_name, prob_name):
     """
     tests that the descut inputs are float in the linkingfilter
     """
@@ -958,25 +954,23 @@ def test_linkingfilter_descuts_float(key_name,prob_name):
 
     assert (
         error_text.value.code
-        ==             f"ERROR: expected a float for config parameter {prob_name}. Check value in config file."
-
+        == f"ERROR: expected a float for config parameter {prob_name}. Check value in config file."
     )
+
+
 def test_linkingfilter_wrongsurvey():
     """
     makes sure DEScuts are only used in DES
     """
     linkingfilter_configs = correct_linkingfilter.copy()
     linkingfilter_configs["distance_cut_on"] = True
-    
 
     with pytest.raises(SystemExit) as error_text:
         test_configs = linkingfilterConfigs(**linkingfilter_configs)
 
-    assert (
-        error_text.value.code
-        ==        "ERROR: distance cut and motion cut is a DES only feature"     
+    assert error_text.value.code == "ERROR: distance cut and motion cut is a DES only feature"
 
-    )
+
 ##################################################################################################################################
 
 # output config tests
@@ -1126,7 +1120,7 @@ def test_expert_config_float(key_name):
     )
 
 
-@pytest.mark.parametrize("key_name, error_name", [("snr_limit", "SNR"), ("mag_limit", "magnitude")])
+@pytest.mark.parametrize("key_name, error_name", [("snr_limit", "SNRPSFMag"), ("mag_limit", "magnitude")])
 def test_expert_config_bounds(key_name, error_name):
     """
     Tests that values in expertConfigs are creating error messages when out of bounds
