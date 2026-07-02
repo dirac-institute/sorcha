@@ -123,7 +123,7 @@ def addUncertainties(detDF, sconfigs, module_rngs, verbose=True):
     detDF["trailedSourceMagSigma"] = calcPhotometricUncertainty(detDF["SNRTrailedSourceMag"])
     detDF["astrometricSigma_deg"] = (detDF["astrometricSigma_deg"].values * u.mas).to(u.deg).value
 
-    # we don't happy dMag in this case because we're looking at the uncertainty on the PSF mag
+    # we don't apply dMag in this case because we're looking at the uncertainty on the PSF mag
     # which already has a different trailing loss applied for the stellar PSF matching/filtering
 
     _, detDF["SNRPSFMag"], _ = calcAstrometricUncertainty(
