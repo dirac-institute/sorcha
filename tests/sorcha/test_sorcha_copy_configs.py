@@ -17,7 +17,6 @@ def test_sorcha_copy_configs(tmp_path):
     copy_demo_configs(tmp_path, "rubin_known", False)
     assert os.path.isfile(os.path.join(tmp_path, "Rubin_known_object_prediction.ini"))
 
-
     # remove those files
     os.remove(os.path.join(tmp_path, "Rubin_circular_approximation.ini"))
     os.remove(os.path.join(tmp_path, "Rubin_full_footprint.ini"))
@@ -71,7 +70,6 @@ def test_parse_file_selection():
     test_rubin_known = parse_file_selection("3")
     test_des_configs = parse_file_selection("4")
     test_all = parse_file_selection("5")
-
 
     assert test_rubin_circle == "rubin_circle"
     assert test_rubin_footprint == "rubin_footprint"

@@ -258,7 +258,11 @@ def runLSSTSimulation(args, sconfigs, return_only=False):
         )
 
         if sconfigs.expert.trailing_losses_on:
+            # applying trailing loss due to the PSF filtering/match to the stellar profile at source detection
             verboselog("Calculating trailing losses...")
+            # dmagDetect is the correction to adjust the real apparent magnitude of the object to that
+            # create the equivlanet point source apparent mag the detection algorithms would measure
+            # for the moving Solar System object
             dmagDetect = PPTrailingLoss(observations, "circularPSF")
             observations["PSFMagTrue"] = dmagDetect + observations["trailedSourceMagTrue"]
         else:
