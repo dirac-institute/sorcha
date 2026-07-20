@@ -25,7 +25,7 @@ import pooch
 
 
 def _split_kernel_path_str(abspath: str, split=77):
-    """If abspath string is longer than 79 chars, split it up in the meta kernel by inserting "+',\n'".
+    """If abspath string is longer than 77 chars, split it up in the meta kernel by inserting "+',\n'".
     77 is the default because the character limit in SPICE is 80 before the string needs split.
 
     Parameters
