@@ -147,13 +147,12 @@ def execute(args):
         FindFileOrExit,
         sorchaGetLogger,
         sorchaCommandLineParser,
-        runLSSTSimulation,
+        runSorchaSimulation,
         sorchaArguments,
         sorchaConfigs,
         update_activity_subclasses,
         update_lc_subclasses,
     )
-    from sorcha.des import runDESSimulation
     import sys, os
 
     # Extract the output file path now in order to set up logging.
@@ -204,7 +203,7 @@ def execute(args):
             "ERROR: cmd line arg --vd, --visits-db and config fov varible visits_query must both be specified"
         )
 
-    if cmd_args["surveyname"] in ["rubin_sim", "RUBIN_SIM"]:
+    if cmd_args["surveyname"] in ["rubin_sim", "RUBIN_SIM", "DES", "des"]:
         try:
             args = sorchaArguments(cmd_args)
         except Exception as err:
@@ -215,7 +214,7 @@ def execute(args):
         except Exception as err:
             pplogger.error(err)
             sys.exit(err)
-        runLSSTSimulation(args, sconfigs)
+        runSorchaSimulation(args, sconfigs)
     elif cmd_args["surveyname"] in ["LSST", "lsst"]:
         pplogger.error(
             "ERROR: The LSST has not started yet Current allowed surveys are: {}".format(
@@ -227,19 +226,6 @@ def execute(args):
                 ["rubin_sim", "RUBIN_SIM"]
             )
         )
-    elif cmd_args["surveyname"] in ["DES", "des"]:
-        try:
-            args = sorchaArguments(cmd_args)
-        except Exception as err:
-            pplogger.error(err)
-            sys.exit(err)
-        try:
-            args.validate_arguments()
-        except Exception as err:
-            pplogger.error(err)
-            sys.exit(err)
-
-        runDESSimulation(args, sconfigs)
     else:
         pplogger.error(
             "ERROR: Survey name not recognised. Current allowed surveys are: {}".format(

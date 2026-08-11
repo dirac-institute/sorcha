@@ -571,27 +571,30 @@ class linkingfilterConfigs:
     ssp_night_start_utc: float = None
     """The time in UTC at which it is noon at the observatory location (in standard time). For the LSST, 12pm Chile Standard Time is 4pm UTC."""
 
+    discover_filter_on: bool = None
+    """flag to see if model should run a discovery/linking filter"""
+
     des_discovery_on: bool = None
     """flag to see if model should run des discovery filter"""
 
     survey_name: str = None
     """name of survey"""
 
-    distance_cut_on: bool = None
+    des_distance_cut_on: bool = None
     """flag for DES for object-sun light-time-corrected distance cuts """
 
-    distance_cut_upper: float = None
+    des_distance_cut_upper: float = None
     """The upper distance limit for object-sun light-time-corrected distance for DES to detect objects. in km"""
 
-    distance_cut_lower: float = None
+    des_distance_cut_lower: float = None
     """The lower distance limit for object-sun light-time-corrected distance for DES to detect objects. in km"""
-    motion_cut_on: bool = None
+    des_motion_cut_on: bool = None
     """flag for when DES motion cuts are selected"""
 
-    motion_cut_upper: float = None
+    des_motion_cut_upper: float = None
     """The upper motion limit for DES to detect objects in (deg/day)"""
 
-    motion_cut_lower: float = None
+    des_motion_cut_lower: float = None
     """The lower motion limit for DES to detect objects (deg/day)"""
 
     def __post_init__(self):
@@ -683,22 +686,29 @@ class linkingfilterConfigs:
                 self.des_discovery_on, "des_discovery_on", False
             )
 
-        if self.distance_cut_upper is not None or self.distance_cut_lower is not None:
-            self.distance_cut_on = True
-            check_key_exists(self.distance_cut_upper, "distance_cut_upper")
-            check_key_exists(self.distance_cut_lower, "distance_cut_lower")
-            self.distance_cut_upper = cast_as_float(self.distance_cut_upper, "distance_cut_upper")
-            self.distance_cut_lower = cast_as_float(self.distance_cut_lower, "distance_cut_lower")
-        if self.motion_cut_upper is not None or self.motion_cut_lower is not None:
-            self.motion_cut_on = True
-            check_key_exists(self.motion_cut_upper, "motion_cut_upper")
-            check_key_exists(self.motion_cut_lower, "motion_cut_lower")
-            self.motion_cut_upper = cast_as_float(self.motion_cut_upper, "motion_cut_upper")
-            self.motion_cut_lower = cast_as_float(self.motion_cut_lower, "motion_cut_lower")
-        if self.distance_cut_on or self.motion_cut_on:
+        if self.des_distance_cut_upper is not None or self.des_distance_cut_lower is not None:
+            self.des_distance_cut_on = True
+            check_key_exists(self.des_distance_cut_upper, "des_distance_cut_upper")
+            check_key_exists(self.des_distance_cut_lower, "des_distance_cut_lower")
+            self.des_distance_cut_upper = cast_as_float(self.des_distance_cut_upper, "des_distance_cut_upper")
+            self.des_distance_cut_lower = cast_as_float(self.des_distance_cut_lower, "des_distance_cut_lower")
+        if self.des_motion_cut_upper is not None or self.des_motion_cut_lower is not None:
+            self.des_motion_cut_on = True
+            check_key_exists(self.des_motion_cut_upper, "des_motion_cut_upper")
+            check_key_exists(self.des_motion_cut_lower, "des_motion_cut_lower")
+            self.des_motion_cut_upper = cast_as_float(self.des_motion_cut_upper, "des_motion_cut_upper")
+            self.des_motion_cut_lower = cast_as_float(self.des_motion_cut_lower, "des_motion_cut_lower")
+        if self.des_distance_cut_on or self.des_motion_cut_on:
             if self.survey_name.lower() not in ["des"]:
                 logging.error("ERROR: distance cut and motion cut is a DES only feature")
                 sys.exit("ERROR: distance cut and motion cut is a DES only feature")
+
+        if any(
+            [self.des_distance_cut_on, self.des_motion_cut_on, self.ssp_linking_on, self.des_discovery_on]
+        ):
+            self.discover_filter_on = True
+        else:
+            self.discover_filter_on = False
 
 
 @dataclass
@@ -852,6 +862,9 @@ class expertConfigs:
     mag_limit_on: bool = None
     """flag for when a magnitude limit is given"""
 
+    uncertainties_on: bool = None
+    """flag for generating astrometric and photometric uncertainties. These uncertainties are used to randomize the photometry, calulate SNR and account for trailing losses."""
+
     trailing_losses_on: bool = None
     """flag for trailing losses"""
 
@@ -919,6 +932,9 @@ class expertConfigs:
         self.brute_force = cast_as_bool_or_set_default(self.brute_force, "brute_force", True)
 
         if self.survey_name in ["rubin_sim", "RUBIN_SIM", "LSST", "lsst"]:
+            self.uncertainties_on = cast_as_bool_or_set_default(
+                self.uncertainties_on, "uncertainties_on", True
+            )
             self.randomization_on = cast_as_bool_or_set_default(
                 self.randomization_on, "randomization_on", True
             )
@@ -928,9 +944,11 @@ class expertConfigs:
             )
         if self.survey_name in ["DES", "des"]:
             logging.warning(
-                "WARNING: DES simulation does not support trailing losses, vignetting and randomization. These are off by default"
+                "WARNING: DES simulation does not support uncertainties, trailing losses, vignetting and randomization. These are off by default"
             )
-
+            self.uncertainties_on = cast_as_bool_or_set_default(
+                self.uncertainties_on, "uncertainties_on", False
+            )
             self.randomization_on = cast_as_bool_or_set_default(
                 self.randomization_on, "randomization_on", False
             )
@@ -938,7 +956,12 @@ class expertConfigs:
             self.trailing_losses_on = cast_as_bool_or_set_default(
                 self.trailing_losses_on, "trailing_losses_on", False
             )
-            if self.randomization_on == True or self.vignetting_on == True or self.trailing_losses_on == True:
+            if (
+                self.uncertainties_on == True
+                or self.randomization_on == True
+                or self.vignetting_on == True
+                or self.trailing_losses_on == True
+            ):
                 logging.ERROR(
                     "ERROR: DES simulation does not support trailing losses, vignetting and randomization."
                 )
@@ -1155,7 +1178,7 @@ class auxiliaryConfigs:
 @dataclass
 class basesorchaConfigs:
     """Dataclass which stores configuration file keywords in dataclasses,
-    Usefull for using runLSSTSimulation without a dedicated config file. Use
+    Usefull for using runSorchaSimulation without a dedicated config file. Use
     sorchaConfigs to read config files."""
 
     input: inputConfigs = None

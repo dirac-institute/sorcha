@@ -12,7 +12,6 @@ from sorcha.ephemeris.simulation_driver import create_ephemeris
 from sorcha.ephemeris.simulation_setup import precompute_pointing_information
 
 from sorcha.modules.PPReadPointingDatabase import PPReadPointingDatabase
-from sorcha.modules.PPLinkingFilter import PPLinkingFilter
 from sorcha.modules.PPTrailingLoss import PPTrailingLoss
 from sorcha.modules.PPBrightLimit import PPBrightLimit
 from sorcha.modules.PPCalculateApparentMagnitude import PPCalculateApparentMagnitude
@@ -20,7 +19,10 @@ from sorcha.modules.PPApplyFOVFilter import PPApplyFOVFilter
 from sorcha.modules.PPSNRLimit import PPSNRLimit
 from sorcha.modules import PPAddUncertainties, PPRandomizeMeasurements
 from sorcha.modules import PPVignetting
-from sorcha.modules.PPFadingFunctionFilter import PPFadingFunctionFilter
+
+
+from sorcha.modules.PPDiscoveryFilterWrapper import Discovery_Filter
+from sorcha.modules.PPFadingFunctionFilterWrapper import FadingFunctionFilter
 from sorcha.modules.PPFaintObjectCullingFilter import PPFaintObjectCullingFilter
 
 
@@ -81,11 +83,12 @@ def mem(df):
     return usage
 
 
-def runLSSTSimulation(args, sconfigs, return_only=False):
+def runSorchaSimulation(args, sconfigs, return_only=False):
     """
     Runs the post processing survey simulator functions that apply a series of
     filters to bias a model Solar System small body population to what the
-    Vera C. Rubin Observatory Legacy Survey of Space and Time would observe.
+    Vera C. Rubin Observatory Legacy Survey of Space and Time or
+    the Cerro Tololo observatory Dark Energy Survey  would observe.
 
     Parameters
     -----------
@@ -131,6 +134,7 @@ def runLSSTSimulation(args, sconfigs, return_only=False):
         sconfigs.filters.observing_filters,
         sconfigs.input.pointing_sql_query,
         args.surveyname,
+        fading_function_on=sconfigs.fadingfunction.fading_function_on,
     )
 
     # if we are going to compute the ephemerides, then we should pre-compute all
@@ -275,10 +279,12 @@ def runLSSTSimulation(args, sconfigs, return_only=False):
         # as columns in the observations dataframe.
         # These are the columns that should be used moving forward for filters etc.
         # Do NOT use trailedSourceMagTrue or PSFMagTrue, these are the unrandomised magnitudes.
-        verboselog("Calculating astrometric and photometric uncertainties...")
-        observations = PPAddUncertainties.addUncertainties(
-            observations, sconfigs, args._rngs, verbose=args.loglevel
-        )
+
+        if sconfigs.expert.uncertainties_on:
+            verboselog("Calculating astrometric and photometric uncertainties...")
+            observations = PPAddUncertainties.addUncertainties(
+                observations, sconfigs, args._rngs, verbose=args.loglevel
+            )
 
         if sconfigs.expert.randomization_on:
             verboselog(
@@ -337,11 +343,13 @@ def runLSSTSimulation(args, sconfigs, return_only=False):
         if sconfigs.fadingfunction.fading_function_on and len(observations.index) > 0:
             verboselog("Applying detection efficiency fading function...")
             verboselog("Number of rows BEFORE applying fading function: " + str(len(observations.index)))
-            observations = PPFadingFunctionFilter(
+            observations = FadingFunctionFilter(
                 observations,
-                sconfigs.fadingfunction.fading_function_peak_efficiency,
-                sconfigs.fadingfunction.fading_function_width,
-                args._rngs,
+                fillfactor=sconfigs.fadingfunction.fading_function_peak_efficiency,
+                width=sconfigs.fadingfunction.fading_function_width,
+                transient_efficiency=sconfigs.fadingfunction.des_transient_efficency,
+                survey_name=sconfigs.expert.survey_name,
+                module_rngs=args._rngs,
                 verbose=args.loglevel,
             )
             verboselog("Number of rows AFTER applying fading function: " + str(len(observations.index)))
@@ -354,19 +362,12 @@ def runLSSTSimulation(args, sconfigs, return_only=False):
             )
             verboselog("Number of rows AFTER applying bright limit filter " + str(len(observations.index)))
 
-        if sconfigs.linkingfilter.ssp_linking_on and len(observations.index) > 0:
-            verboselog("Applying SSP linking filter...")
-            verboselog("Number of rows BEFORE applying SSP linking filter: " + str(len(observations.index)))
-            observations = PPLinkingFilter(
+        if sconfigs.linkingfilter.discover_filter_on and len(observations.index) > 0:
+            observations = Discovery_Filter(
                 observations,
-                sconfigs.linkingfilter.ssp_detection_efficiency,
-                sconfigs.linkingfilter.ssp_number_observations,
-                sconfigs.linkingfilter.ssp_number_tracklets,
-                sconfigs.linkingfilter.ssp_track_window,
-                sconfigs.linkingfilter.ssp_separation_threshold,
-                sconfigs.linkingfilter.ssp_maximum_time,
-                sconfigs.linkingfilter.ssp_night_start_utc,
-                drop_unlinked=sconfigs.linkingfilter.drop_unlinked,
+                sconfigs=sconfigs,
+                survey_name=sconfigs.expert.survey_name,
+                verbose=args.loglevel,
             )
             observations.reset_index(drop=True, inplace=True)
             verboselog("Number of rows AFTER applying SSP linking filter: " + str(len(observations.index)))

@@ -65,6 +65,7 @@ correct_fadingfunction = {
 }
 
 correct_linkingfilter = {
+    "discover_filter_on": True,
     "ssp_linking_on": True,
     "drop_unlinked": True,
     "ssp_detection_efficiency": 0.95,
@@ -75,12 +76,12 @@ correct_linkingfilter = {
     "ssp_track_window": 15,
     "ssp_night_start_utc": 16.0,
     "survey_name": "rubin_sim",
-    "distance_cut_on": None,
-    "distance_cut_upper": None,
-    "distance_cut_lower": None,
-    "motion_cut_on": None,
-    "motion_cut_upper": None,
-    "motion_cut_lower": None,
+    "des_distance_cut_on": None,
+    "des_distance_cut_upper": None,
+    "des_distance_cut_lower": None,
+    "des_motion_cut_on": None,
+    "des_motion_cut_upper": None,
+    "des_motion_cut_lower": None,
     "des_discovery_on": None,
 }
 
@@ -113,6 +114,7 @@ correct_expert = {
     "mag_limit": None,
     "mag_limit_on": False,
     "trailing_losses_on": True,
+    "uncertainties_on": True,
     "default_snr_cut": True,
     "randomization_on": True,
     "vignetting_on": True,
@@ -905,10 +907,10 @@ def test_linkingfilter_bool():
 @pytest.mark.parametrize(
     "key_name, prob_name",
     [
-        ("distance_cut_upper", "distance_cut_lower"),
-        ("distance_cut_lower", "distance_cut_upper"),
-        ("motion_cut_upper", "motion_cut_lower"),
-        ("motion_cut_lower", "motion_cut_upper"),
+        ("des_distance_cut_upper", "des_distance_cut_lower"),
+        ("des_distance_cut_lower", "des_distance_cut_upper"),
+        ("des_motion_cut_upper", "des_motion_cut_lower"),
+        ("des_motion_cut_lower", "des_motion_cut_upper"),
     ],
 )
 def test_linkingfilter_descuts_exists(key_name, prob_name):
@@ -932,10 +934,10 @@ def test_linkingfilter_descuts_exists(key_name, prob_name):
 @pytest.mark.parametrize(
     "key_name, prob_name",
     [
-        ("distance_cut_upper", "distance_cut_lower"),
-        ("distance_cut_lower", "distance_cut_upper"),
-        ("motion_cut_upper", "motion_cut_lower"),
-        ("motion_cut_lower", "motion_cut_upper"),
+        ("des_distance_cut_upper", "des_distance_cut_lower"),
+        ("des_distance_cut_lower", "des_distance_cut_upper"),
+        ("des_motion_cut_upper", "des_motion_cut_lower"),
+        ("des_motion_cut_lower", "des_motion_cut_upper"),
     ],
 )
 def test_linkingfilter_descuts_float(key_name, prob_name):
@@ -962,7 +964,7 @@ def test_linkingfilter_wrongsurvey():
     makes sure DEScuts are only used in DES
     """
     linkingfilter_configs = correct_linkingfilter.copy()
-    linkingfilter_configs["distance_cut_on"] = True
+    linkingfilter_configs["des_distance_cut_on"] = True
 
     with pytest.raises(SystemExit) as error_text:
         test_configs = linkingfilterConfigs(**linkingfilter_configs)
