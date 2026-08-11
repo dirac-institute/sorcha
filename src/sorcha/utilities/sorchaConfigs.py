@@ -515,7 +515,6 @@ class fadingfunctionConfigs:
 
             # boundary conditions for both width and peak efficency
             if self.fading_function_width <= 0.0 or self.fading_function_width > 0.5:
-
                 logging.error(
                     "ERROR: fading_function_width out of bounds. Must be greater than zero and less than 0.5."
                 )
@@ -624,7 +623,6 @@ class linkingfilterConfigs:
 
         # the below if-statement explicitly checks for None so a zero triggers the correct error
         if all(v != None for v in sspvariables) and self.survey_name.lower() != "des":
-
             self.ssp_detection_efficiency = cast_as_float(
                 self.ssp_detection_efficiency, "ssp_detection_efficiency"
             )
@@ -966,17 +964,17 @@ class auxiliaryConfigs:
     planet_ephemeris_url: str = "https://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/planets/de440s.bsp"
     """url for planet_ephemeris"""
 
-    earth_predict: str = "earth_2025_250826_2125_predict.bpc"
+    earth_predict: str = "earth_2026_260806_2126_predict.bpc"
     """filename of earth_predict"""
     earth_predict_url: str = (
-        "https://naif.jpl.nasa.gov/pub/naif/generic_kernels/pck/earth_2025_250826_2125_predict.bpc"
+        "https://naif.jpl.nasa.gov/pub/naif/generic_kernels/pck/earth_2026_260806_2126_predict.bpc"
     )
     """url for earth_predict"""
 
-    earth_historical: str = "earth_620120_250826.bpc"
+    earth_historical: str = "earth_620120_260806.bpc"
     """filename of earth_histoical"""
     earth_historical_url: str = (
-        "https://naif.jpl.nasa.gov/pub/naif/generic_kernels/pck/earth_620120_250826.bpc"
+        "https://naif.jpl.nasa.gov/pub/naif/generic_kernels/pck/earth_620120_260806.bpc"
     )
     """url for earth_historical"""
 
@@ -1212,7 +1210,6 @@ class sorchaConfigs(basesorchaConfigs):
 
     # this __init__ overrides a dataclass's inbuilt __init__ because we want to populate this from a file, not explicitly ourselves
     def __init__(self, config_file_location=None, survey_name=None):
-
         # attach the logger object so we can print things to the Sorcha logs
         self.pplogger = logging.getLogger(__name__)
         self.survey_name = survey_name
@@ -1287,7 +1284,6 @@ class sorchaConfigs(basesorchaConfigs):
                 config_instance = config_section(**section_dict, **extra_args)
 
             else:
-
                 config_instance = config_section(
                     **extra_args
                 )  # if section not in config file take default values
@@ -1464,7 +1460,6 @@ def check_value_in_list(value, valuelist, key):
 
 
 def cast_as_bool_or_set_default(value, key, default):
-
     # replaces PPGetBoolOrExit: checks to make sure the value can be cast as a bool.
     """
     Checks to see if value can be cast as a boolen and if not set (equals None) gives default bool.
@@ -1486,7 +1481,6 @@ def cast_as_bool_or_set_default(value, key, default):
     """
 
     if value is not None:
-
         str_value = str(value).strip()
 
         if str_value in ["true", "1", "yes", "y", "True"]:
