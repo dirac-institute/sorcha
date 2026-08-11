@@ -123,8 +123,8 @@ correct_expert = {
 
 correct_auxciliary_URLs = {
     "de440s.bsp": "https://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/planets/de440s.bsp",
-    "earth_2025_250826_2125_predict.bpc": "https://naif.jpl.nasa.gov/pub/naif/generic_kernels/pck/earth_2025_250826_2125_predict.bpc",
-    "earth_620120_250826.bpc": "https://naif.jpl.nasa.gov/pub/naif/generic_kernels/pck/earth_620120_250826.bpc",
+    "earth_2026_260806_2126_predict.bpc": "https://naif.jpl.nasa.gov/pub/naif/generic_kernels/pck/earth_2026_260806_2126_predict.bpc",
+    "earth_620120_260806.bpc": "https://naif.jpl.nasa.gov/pub/naif/generic_kernels/pck/earth_620120_260806.bpc",
     "earth_latest_high_prec.bpc": "https://naif.jpl.nasa.gov/pub/naif/generic_kernels/pck/earth_latest_high_prec.bpc",
     "linux_p1550p2650.440": "https://ssd.jpl.nasa.gov/ftp/eph/planets/Linux/de440/linux_p1550p2650.440",
     "sb441-n16.bsp": "https://ssd.jpl.nasa.gov/ftp/eph/small_bodies/asteroids_de441/sb441-n16.bsp",
@@ -134,8 +134,8 @@ correct_auxciliary_URLs = {
 }
 correct_auxciliary_filenames = [
     "de440s.bsp",
-    "earth_2025_250826_2125_predict.bpc",
-    "earth_620120_250826.bpc",
+    "earth_2026_260806_2126_predict.bpc",
+    "earth_620120_260806.bpc",
     "earth_latest_high_prec.bpc",
     "linux_p1550p2650.440",
     "sb441-n16.bsp",
@@ -629,7 +629,6 @@ def test_fovConfigs_bounds(key_name):
     fov_configs["camera_model"] = "circle"
     fov_configs[key_name] = -0.1
     if key_name == "fill_factor":
-
         with pytest.raises(SystemExit) as error_text:
             test_configs = fovConfigs(**fov_configs)
         assert error_text.value.code == "ERROR: fill_factor out of bounds. Must be between 0 and 1."
@@ -1188,7 +1187,6 @@ def test_expertConfig_bool(key_name):
     ],
 )
 def test_auxiliary_config_url_given_filename_not(file):
-
     aux_configs = {file + "_url": "new_url"}
     with pytest.raises(SystemExit) as error_text:
         test_configs = auxiliaryConfigs(**aux_configs)
