@@ -70,5 +70,5 @@ def motion_cut(observations, motion_upper, motion_lower):
 
     # Keep all detections for objects that have at least one detection within bounds
     observations = observations[observations["ObjID"].isin(objects_within_bounds)]
-  
+
     return observations

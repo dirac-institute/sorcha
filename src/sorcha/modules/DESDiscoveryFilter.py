@@ -59,7 +59,9 @@ def desDiscoveryFilter(
     mask = np.zeros(len(obsv), dtype=bool)
     for obsv_indices in splits:  # loop for each object
         thisObsv = obsv[obsv_indices]
-        thisObsv = thisObsv[thisObsv[band]!="Y"] # remove Y band detections as they were not used in discovery
+        thisObsv = thisObsv[
+            thisObsv[band] != "Y"
+        ]  # remove Y band detections as they were not used in discovery
         if len(thisObsv) == 0:
             continue
 
