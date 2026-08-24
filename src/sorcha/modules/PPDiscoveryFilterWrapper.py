@@ -7,7 +7,7 @@ from sorcha.modules.desDiscoveryFilter import desDiscoveryFilter
 from sorcha.modules.desDistanceandMotionCuts import distance_cut, motion_cut
 
 
-def Discovery_Filter(observations=None, sconfigs=None, survey_name=None, verbose=None):
+def Discovery_Filter(observations=None, sconfigs=None, verbose=None):
     """
     Wrapper function for PPLinkingFilter and desDiscoveryFilter linking filters.
     This checks whether to use the Rubin_sim or DES linking filters.
@@ -24,9 +24,6 @@ def Discovery_Filter(observations=None, sconfigs=None, survey_name=None, verbose
 
     sconfigs: dataclass
         Dataclass of configuration file arguments.
-
-    surveyname : string
-          "Name of survey being simulated"
 
     verbose : boolean, default=False
         Verbose logging flag.

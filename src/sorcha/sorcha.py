@@ -367,7 +367,6 @@ def runSorchaSimulation(args, sconfigs, return_only=False):
             observations = Discovery_Filter(
                 observations,
                 sconfigs=sconfigs,
-                survey_name=sconfigs.expert.survey_name,
                 verbose=args.loglevel,
             )
             observations.reset_index(drop=True, inplace=True)
