@@ -133,8 +133,7 @@ def runSorchaSimulation(args, sconfigs, return_only=False):
         args.pointing_database,
         sconfigs.filters.observing_filters,
         sconfigs.input.pointing_sql_query,
-        args.surveyname,
-        fading_function_on=sconfigs.fadingfunction.fading_function_on,
+        per_obs_fading_function_on=sconfigs.fadingfunction.per_obs_fading_function_on,
     )
 
     # if we are going to compute the ephemerides, then we should pre-compute all
@@ -178,7 +177,9 @@ def runSorchaSimulation(args, sconfigs, return_only=False):
     footprint = None
     if sconfigs.fov.camera_model == "footprint":
         verboselog("Creating sensor footprint object for filtering")
-        footprint = Footprint(sconfigs.fov.footprint_path, args.surveyname)
+        footprint = Footprint(
+            sconfigs.fov.footprint_path, default_camera_config_file=sconfigs.fov.default_camera_config_file
+        )
 
     # Lists to hold results to be concated and returned
     if return_only:
@@ -348,7 +349,7 @@ def runSorchaSimulation(args, sconfigs, return_only=False):
                 fillfactor=sconfigs.fadingfunction.fading_function_peak_efficiency,
                 width=sconfigs.fadingfunction.fading_function_width,
                 transient_efficiency=sconfigs.fadingfunction.des_transient_efficency,
-                survey_name=sconfigs.expert.survey_name,
+                fading_function_type=sconfigs.fadingfunction.fading_function_type,
                 module_rngs=args._rngs,
                 verbose=args.loglevel,
             )
@@ -362,7 +363,7 @@ def runSorchaSimulation(args, sconfigs, return_only=False):
             )
             verboselog("Number of rows AFTER applying bright limit filter " + str(len(observations.index)))
 
-        if sconfigs.linkingfilter.discover_filter_on and len(observations.index) > 0:
+        if sconfigs.linkingfilter.discovery_filter_on and len(observations.index) > 0:
             observations = Discovery_Filter(
                 observations,
                 sconfigs=sconfigs,

@@ -28,6 +28,9 @@ class inputConfigs:
     pointing_sql_query: str = None
     """SQL query for extracting data from pointing database."""
 
+    visits_query: str = None
+    """SQL query for extracting data from visits database."""
+
     def __post_init__(self):
         """Automagically validates the input configs after initialisation."""
         self._validate_input_configs()
@@ -304,10 +307,13 @@ class fovConfigs:
     """Data class for holding FOV section configuration file keys and validating them"""
 
     camera_model: str = None
-    """Choose between circular or actual camera footprint, including chip gaps."""
+    """Choose between circular or general camera footprint or per visit camera footprint, including chip gaps."""
 
     footprint_path: str = None
     """Path to camera footprint file. Uncomment to provide a path to the desired camera detector configuration file if not using the default built-in detector configuration for the actual camera footprint."""
+
+    default_camera_config_file: str = None
+    """The default built-in detector configuration for the camera footprint."""
 
     visits_query: str = None
     """SQL query for extracting data from visits database."""
@@ -366,7 +372,11 @@ class fovConfigs:
         """
         if self.footprint_path is not None:
             FindFileOrExit(self.footprint_path, "footprint_path")
-        elif self.survey_name.lower() not in ["lsst", "rubin_sim", "des"]:
+        elif self.survey_name.lower() in ["lsst", "rubin_sim"]:
+            self.default_camera_config_file = "data/LSST_detector_corners_100123.csv"
+        elif self.survey_name.lower() in ["des"]:
+            self.default_camera_config_file = "data/DES_ccd_corners.csv"
+        else:
             logging.error(
                 "ERROR: a default detector footprint is currently only provided for LSST and DES; please provide your own footprint file."
             )
@@ -448,6 +458,15 @@ class fadingfunctionConfigs:
     fading_function_on: bool = None
     """Detection efficiency fading function on or off. Default True"""
 
+    fading_function_type: str = None
+    """Type of fading function used for sorcha (currently either general or pero_obs)"""
+
+    general_fading_function_on: bool = None
+    """General all footprint detection efficiency fading function on or off. """
+
+    per_obs_fading_function_on: bool = None
+    """Per observation footprint detection efficiency fading function on or off. """
+
     fading_function_width: float = None
     """Width parameter for fading function. Should be greater than zero and less than 0.5."""
 
@@ -461,14 +480,27 @@ class fadingfunctionConfigs:
 
     def __post_init__(self):
         """Automagically validates the fading function configs after initialisation."""
-        if self.survey_name in ["DES", "des"]:
-            self._validate_fadingfunction_configs_DES()
-        else:
-            self._validate_fadingfunction_configs()
 
-    def _validate_fadingfunction_configs_DES(self):
+        # first check if fading function type is per_obs maybe.
+        self.per_obs_fading_function_on = cast_as_bool_or_set_default(
+            self.per_obs_fading_function_on, "fading_function_on", False
+        )
+
+        if self.per_obs_fading_function_on:
+            self.fading_function_type = "per_obs"
+            self._validate_fadingfunction_configs_per_obs()
+        else:
+            self.fading_function_type = "general"
+            self._validate_fadingfunction_configs_general()
+
+        if self.general_fading_function_on or self.per_obs_fading_function_on:
+            self.fading_function_on = True
+        else:
+            self.fading_function_on = False
+
+    def _validate_fadingfunction_configs_per_obs(self):
         """
-        Validates the fadindfunction config attributes after initialisation for DES.
+        Validates the fadindfunction config attributes after initialisation for per observation footprint.
 
         Parameters
         -----------
@@ -478,21 +510,29 @@ class fadingfunctionConfigs:
         ----------
         None
         """
-        check_key_exists(self.fading_function_on, "fadingfunction")
-        self.fading_function_on = cast_as_bool(self.fading_function_on, "fading_function_on")
-        if self.fading_function_on:
-            if self.des_transient_efficency is not None:
-                self.des_transient_efficency = cast_as_float(
-                    self.des_transient_efficency, "des_transient_efficency"
-                )
-            else:
-                self.des_transient_efficency = 1  # won't impact detection efficency when 1
-        check_key_doesnt_exist(
-            self.fading_function_peak_efficiency, "fading_function_peak_efficiency", "but survey is DES."
-        )
-        check_key_doesnt_exist(self.fading_function_width, "fading_function_width", "but survey is DES.")
 
-    def _validate_fadingfunction_configs(self):
+        if self.des_transient_efficency is not None:
+            # des moving source efficency added as a flat constant across all possible detections
+            self.des_transient_efficency = cast_as_float(
+                self.des_transient_efficency, "des_transient_efficency"
+            )
+            if self.des_transient_efficency > 1 or self.des_transient_efficency < 0:
+                sys.exit("Error: des_transient_efficency must be between 0 to 1")
+                logging.error("Error: des_transient_efficency must be between 0 to 1")
+        else:
+            self.des_transient_efficency = 1  # won't impact detection efficency when 1
+        check_key_doesnt_exist(
+            self.fading_function_peak_efficiency,
+            "fading_function_peak_efficiency",
+            "but fading function option is per footprint.",
+        )
+        check_key_doesnt_exist(
+            self.fading_function_width,
+            "fading_function_width",
+            "but fading function option is per footprint.",
+        )
+
+    def _validate_fadingfunction_configs_general(self):
         """
         Validates the fadindfunction config attributes after initialisation.
 
@@ -505,7 +545,7 @@ class fadingfunctionConfigs:
         None
         """
         if self.fading_function_width is not None and self.fading_function_peak_efficiency is not None:
-            self.fading_function_on = True
+            self.general_fading_function_on = True
             # when fading_function_on = true, fading_function_width and fading_function_peak_efficiency now mandatory
 
             self.fading_function_width = cast_as_float(self.fading_function_width, "fading_function_width")
@@ -529,7 +569,7 @@ class fadingfunctionConfigs:
                 sys.exit("ERROR: fading_function_peak_efficiency out of bounds. Must be between 0 and 1.")
 
         elif self.fading_function_width is None and self.fading_function_peak_efficiency is None:
-            self.fading_function_on = False
+            self.general_fading_function_on = False
 
         else:
             logging.error(
@@ -571,7 +611,7 @@ class linkingfilterConfigs:
     ssp_night_start_utc: float = None
     """The time in UTC at which it is noon at the observatory location (in standard time). For the LSST, 12pm Chile Standard Time is 4pm UTC."""
 
-    discover_filter_on: bool = None
+    discovery_filter_on: bool = None
     """flag to see if model should run a discovery/linking filter"""
 
     des_discovery_on: bool = None
@@ -599,9 +639,15 @@ class linkingfilterConfigs:
 
     def __post_init__(self):
         """Automagically validates the linking filter configs after initialisation."""
-        self._validate_linkingfilter_configs()
+        self._validate_ssp_linkingfilter_configs()
+        self._validate_des_linkingfilter_configs()
 
-    def _validate_linkingfilter_configs(self):
+        if any([self.ssp_linking_on, self.des_discovery_on]):
+            self.discovery_filter_on = True
+        else:
+            self.discovery_filter_on = False
+
+    def _validate_ssp_linkingfilter_configs(self):
         """
         Validates the linkingfilter config attributes after initialisation.
 
@@ -625,7 +671,7 @@ class linkingfilterConfigs:
         ]
 
         # the below if-statement explicitly checks for None so a zero triggers the correct error
-        if all(v != None for v in sspvariables) and self.survey_name.lower() != "des":
+        if all(v != None for v in sspvariables):
             self.ssp_detection_efficiency = cast_as_float(
                 self.ssp_detection_efficiency, "ssp_detection_efficiency"
             )
@@ -681,11 +727,21 @@ class linkingfilterConfigs:
                 "ERROR: only some ssp linking variables supplied. Supply all five required variables for ssp linking filter, or none to turn filter off."
             )
         self.drop_unlinked = cast_as_bool_or_set_default(self.drop_unlinked, "drop_unlinked", True)
-        if self.des_discovery_on and self.survey_name.lower() == "des":
-            self.des_discovery_on = cast_as_bool_or_set_default(
-                self.des_discovery_on, "des_discovery_on", False
-            )
 
+    def _validate_des_linkingfilter_configs(self):
+        """
+        Validates the des discovery filter config attributes after initialisation.
+
+        Parameters
+        -----------
+        None.
+
+        Returns
+        ----------
+        None
+        """
+
+        # if discovery or motion varibles on in config then des_discovery_on is True
         if self.des_distance_cut_upper is not None or self.des_distance_cut_lower is not None:
             self.des_distance_cut_on = True
             check_key_exists(self.des_distance_cut_upper, "des_distance_cut_upper")
@@ -698,17 +754,9 @@ class linkingfilterConfigs:
             check_key_exists(self.des_motion_cut_lower, "des_motion_cut_lower")
             self.des_motion_cut_upper = cast_as_float(self.des_motion_cut_upper, "des_motion_cut_upper")
             self.des_motion_cut_lower = cast_as_float(self.des_motion_cut_lower, "des_motion_cut_lower")
-        if self.des_distance_cut_on or self.des_motion_cut_on:
-            if self.survey_name.lower() not in ["des"]:
-                logging.error("ERROR: distance cut and motion cut is a DES only feature")
-                sys.exit("ERROR: distance cut and motion cut is a DES only feature")
 
-        if any(
-            [self.des_distance_cut_on, self.des_motion_cut_on, self.ssp_linking_on, self.des_discovery_on]
-        ):
-            self.discover_filter_on = True
-        else:
-            self.discover_filter_on = False
+        if any([self.des_motion_cut_on, self.des_distance_cut_on]):
+            self.des_discovery_on = True
 
 
 @dataclass
@@ -976,6 +1024,10 @@ class expertConfigs:
             if self.vignetting_on == True:
                 logging.ERROR("ERROR: fov camera model 'visits_footprint' does not support vignetting.")
                 sys.exit("ERROR: fov camera model 'visits_footprint does not support vignetting.")
+
+        if self.uncertainties_on == False and self.randomization_on == True:
+            logging.ERROR("ERROR: uncertainties_on must be true if randomization_on is true.")
+            sys.exit("ERROR: uncertainties_on must be true if randomization_on is true.")
 
 
 @dataclass
@@ -1297,8 +1349,11 @@ class sorchaConfigs(basesorchaConfigs):
                 if section == "SIMULATION":
                     extra_args["_ephemerides_type"] = self.input.ephemerides_type
 
-                elif section == "SATURATION":
+                if section == "SATURATION":
                     extra_args["_observing_filters"] = self.filters.observing_filters
+
+                if section == "FOV":
+                    extra_args["visits_query"] = self.input.visits_query
 
                 if section == "EXPERT":
                     extra_args["camera_model"] = self.fov.camera_model
@@ -1640,14 +1695,18 @@ def PrintConfigsToLog(sconfigs, cmd_args):
 
     if sconfigs.fadingfunction.fading_function_on:
         pplogger.info("The detection efficiency fading function is ON.")
-        pplogger.info(
-            "The width parameter of the fading function has been set to: "
-            + str(sconfigs.fadingfunction.fading_function_width)
-        )
-        pplogger.info(
-            "The peak efficiency of the fading function has been set to: "
-            + str(sconfigs.fadingfunction.fading_function_peak_efficiency)
-        )
+        pplogger.info(f"fading function {sconfigs.fadingfunction.fading_function_type} is selected.")
+        if sconfigs.fadingfunction.general_fading_function_on:
+            pplogger.info(
+                "The width parameter of the fading function has been set to: "
+                + str(sconfigs.fadingfunction.fading_function_width)
+            )
+            pplogger.info(
+                "The peak efficiency of the fading function has been set to: "
+                + str(sconfigs.fadingfunction.fading_function_peak_efficiency)
+            )
+        elif sconfigs.fadingfunction.per_obs_fading_function_on:
+            pplogger.info(f"des_transient_efficency is {sconfigs.fadingfunction.des_transient_efficency}")
     else:
         pplogger.info("The detection efficiency fading function is OFF.")
 

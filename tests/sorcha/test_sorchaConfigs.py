@@ -28,6 +28,7 @@ correct_inputs = {
     "size_serial_chunk": 5000,
     "aux_format": "whitespace",
     "pointing_sql_query": "SELECT observationId, observationStartMJD as observationStartMJD_TAI, visitTime, visitExposureTime, filter, seeingFwhmGeom as seeingFwhmGeom_arcsec, seeingFwhmEff as seeingFwhmEff_arcsec, fiveSigmaDepth as fieldFiveSigmaDepth_mag , fieldRA as fieldRA_deg, fieldDec as fieldDec_deg, rotSkyPos as fieldRotSkyPos_deg FROM observations order by observationId",
+    "visits_query": None,
 }
 correct_simulation = {
     "_ephemerides_type": "ar",
@@ -62,10 +63,13 @@ correct_fadingfunction = {
     "fading_function_peak_efficiency": 1.0,
     "survey_name": "rubin_sim",
     "des_transient_efficency": None,
+    "fading_function_type": "general",
+    "general_fading_function_on": True,
+    "per_obs_fading_function_on": False,
 }
 
 correct_linkingfilter = {
-    "discover_filter_on": True,
+    "discovery_filter_on": True,
     "ssp_linking_on": True,
     "drop_unlinked": True,
     "ssp_detection_efficiency": 0.95,
@@ -93,6 +97,7 @@ correct_fov = {
     "circle_radius": None,
     "footprint_edge_threshold": 2.0,
     "survey_name": "rubin_sim",
+    "default_camera_config_file": "data/LSST_detector_corners_100123.csv",
 }
 
 correct_fov_read = {"camera_model": "footprint", "footprint_edge_threshold": 2.0, "survey_name": "rubin_sim"}
@@ -688,17 +693,18 @@ def test_fadingfunctionConfig_on_float():
 
     fadingfunction_configs = correct_fadingfunction.copy()
 
-    "set up for des"
-    fadingfunction_configs["survey_name"] = "des"
+    # "set up for per_obs"
+    fadingfunction_configs["per_obs_fading_function_on"] = True
     fadingfunction_configs["fading_function_peak_efficiency"] = None
     fadingfunction_configs["fading_function_width"] = None
 
     fadingfunction_configs["des_transient_efficency"] = None
 
-    # transit efficency goes to 1 if None
+    # transit efficency goes to 1 if None and fading_function_type becomes per_obs
     test_configs = fadingfunctionConfigs(**fadingfunction_configs)
-    fadingfunction_configs["des_transient_efficency"] = 1
 
+    fadingfunction_configs["des_transient_efficency"] = 1
+    fadingfunction_configs["fading_function_type"] = "per_obs"
     # test cast as float
     assert test_configs.__dict__ == fadingfunction_configs
 
@@ -957,19 +963,6 @@ def test_linkingfilter_descuts_float(key_name, prob_name):
         error_text.value.code
         == f"ERROR: expected a float for config parameter {prob_name}. Check value in config file."
     )
-
-
-def test_linkingfilter_wrongsurvey():
-    """
-    makes sure DEScuts are only used in DES
-    """
-    linkingfilter_configs = correct_linkingfilter.copy()
-    linkingfilter_configs["des_distance_cut_on"] = True
-
-    with pytest.raises(SystemExit) as error_text:
-        test_configs = linkingfilterConfigs(**linkingfilter_configs)
-
-    assert error_text.value.code == "ERROR: distance cut and motion cut is a DES only feature"
 
 
 ##################################################################################################################################

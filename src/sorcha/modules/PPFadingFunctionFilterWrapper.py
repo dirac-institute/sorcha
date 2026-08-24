@@ -9,9 +9,9 @@ def FadingFunctionFilter(
     observations=None,
     fillfactor=None,
     width=None,
-    module_rngs=None,
     transient_efficiency=None,
-    survey_name=None,
+    fading_function_type=None,
+    module_rngs=None,
     verbose=False,
 ):
     """
@@ -48,7 +48,7 @@ def FadingFunctionFilter(
     pplogger = logging.getLogger(__name__)
     verboselog = pplogger.info if verbose else lambda *a, **k: None
 
-    if survey_name in ["rubin_sim", "RUBIN_SIM"]:
+    if fading_function_type == "general":
         observations = PPFadingFunctionFilter(
             observations,
             fillfactor,
@@ -56,7 +56,7 @@ def FadingFunctionFilter(
             module_rngs,
             verbose=verbose,
         )
-    elif survey_name in ["DES", "des"]:
+    elif fading_function_type == "per_obs":
         observations = desFadingFunctionFilter(
             observations,
             transient_efficiency,
@@ -64,6 +64,10 @@ def FadingFunctionFilter(
             verbose=verbose,
         )
     else:
-        pplogger.error(f"ERROR: Survey {survey_name} does not have a function for Fading functin filter.")
-        sys.exit(f"ERROR: Survey {survey_name} does not have a function for Fading functin filter.")
+        pplogger.error(
+            f"ERROR: fading function type {fading_function_type} does not have a function for Fading functin filter."
+        )
+        sys.exit(
+            f"ERROR: fading function type {fading_function_type} does not have a function for Fading functin filter."
+        )
     return observations

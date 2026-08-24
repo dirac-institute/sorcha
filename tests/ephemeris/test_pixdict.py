@@ -77,7 +77,6 @@ def test_pixeldict(tmp_path):
         args.pointing_database,
         configs.filters.observing_filters,
         configs.input.pointing_sql_query,
-        "rubin_sim",
     )
 
     filterpointing = precompute_pointing_information(filterpointing, args, configs)

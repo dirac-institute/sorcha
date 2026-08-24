@@ -195,6 +195,7 @@ sorcha.utilities.sorchaConfigs INFO     SNR limit is turned OFF.
 sorcha.utilities.sorchaConfigs INFO     Default SNR cut is ON. All observations with SNR < 2.0 will be removed. 
 sorcha.utilities.sorchaConfigs INFO     Magnitude limit is turned OFF. 
 sorcha.utilities.sorchaConfigs INFO     The detection efficiency fading function is ON. 
+sorcha.utilities.sorchaConfigs INFO     fading function general is selected. 
 sorcha.utilities.sorchaConfigs INFO     The width parameter of the fading function has been set to: 0.1 
 sorcha.utilities.sorchaConfigs INFO     The peak efficiency of the fading function has been set to: 1.0 
 sorcha.utilities.sorchaConfigs INFO     Solar System Processing linking filter is turned ON. 

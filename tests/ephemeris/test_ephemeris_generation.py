@@ -133,7 +133,6 @@ def test_ephemeris_end2end(single_synthetic_pointing, tmp_path):
         args.pointing_database,
         configs.filters.observing_filters,
         configs.input.pointing_sql_query,
-        "rubin_sim",
     )
 
     filterpointing = precompute_pointing_information(filterpointing, args, configs)

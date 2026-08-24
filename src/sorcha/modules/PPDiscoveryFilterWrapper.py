@@ -40,7 +40,7 @@ def Discovery_Filter(observations=None, sconfigs=None, survey_name=None, verbose
     pplogger = logging.getLogger(__name__)
     verboselog = pplogger.info if verbose else lambda *a, **k: None
 
-    if survey_name in ["DES", "des"]:
+    if sconfigs.linkingfilter.des_discovery_on:
         if sconfigs.linkingfilter.des_distance_cut_on:
             verboselog("Number of rows BEFORE applying distance cuts: " + str(len(observations.index)))
             observations = distance_cut(
@@ -49,6 +49,7 @@ def Discovery_Filter(observations=None, sconfigs=None, survey_name=None, verbose
                 sconfigs.linkingfilter.des_distance_cut_lower,
             )
             verboselog("Number of rows AFTER applying distance cuts: " + str(len(observations.index)))
+
         if sconfigs.linkingfilter.des_motion_cut_on:
             verboselog("Number of rows BEFORE applying motion cuts: " + str(len(observations.index)))
             observations = motion_cut(
@@ -57,13 +58,14 @@ def Discovery_Filter(observations=None, sconfigs=None, survey_name=None, verbose
                 sconfigs.linkingfilter.des_motion_cut_lower,
             )
             verboselog("Number of rows AFTER applying motion cuts: " + str(len(observations.index)))
-        if sconfigs.linkingfilter.des_discovery_on and len(observations.index) > 0:
+
+        if len(observations.index) > 0:
             verboselog("Applying DES discovery filter...")
             verboselog("Number of rows BEFORE applying DES Discovery filter: " + str(len(observations.index)))
             observations = desDiscoveryFilter(observations)
             verboselog("Number of rows AFTER applying DES Discovery filter: " + str(len(observations.index)))
         return observations
-    elif survey_name in ["rubin_sim", "RUBIN_SIM"] and sconfigs.linkingfilter.ssp_linking_on:
+    if sconfigs.linkingfilter.ssp_linking_on:
         verboselog("Applying SSP linking filter...")
         verboselog("Number of rows BEFORE applying SSP linking filter: " + str(len(observations.index)))
         observations = PPLinkingFilter(
@@ -81,5 +83,5 @@ def Discovery_Filter(observations=None, sconfigs=None, survey_name=None, verbose
         verboselog("Number of rows AFTER applying SSP linking filter: " + str(len(observations.index)))
         return observations
     else:
-        pplogger.error(f"ERROR: Survey {survey_name} does not have a function for Discovery filter.")
-        sys.exit(f"ERROR: Survey {survey_name} does not have a function for Discovery filter.")
+        pplogger.error(f"ERROR: discovery_filter_on is true but no specfic linking is turned on.")
+        sys.exit(f"ERROR: discovery_filter_on is true but no specfic linking is turned on.")
