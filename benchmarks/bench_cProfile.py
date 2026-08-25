@@ -8,7 +8,7 @@ from pathlib import Path
 
 from pstats import SortKey
 from sorcha.sorcha import runSorchaSimulation  # noqa: F401
-from sorcha.utilities.sorchaConfigs import sorchaConfigs
+from sorcha.configs.sorchaConfigs import sorchaConfigs
 from sorcha.utilities.sorchaArguments import sorchaArguments
 import argparse
 

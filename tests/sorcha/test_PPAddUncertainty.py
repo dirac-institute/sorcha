@@ -22,7 +22,7 @@
 import numpy as np
 import pandas as pd
 from numpy.testing import assert_almost_equal, assert_equal
-from sorcha.utilities.sorchaConfigs import sorchaConfigs, expertConfigs
+from sorcha.configs.sorchaConfigs import sorchaConfigs, expertConfigs
 from sorcha.utilities.sorchaModuleRNG import PerModuleRNG
 
 

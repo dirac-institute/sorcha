@@ -14,7 +14,7 @@ from sorcha.ephemeris.pixel_dict import PixelDict
 from sorcha.ephemeris.simulation_parsing import Observatory
 from sorcha.ephemeris.simulation_geometry import ecliptic_to_equatorial
 from sorcha.ephemeris.simulation_constants import SPEED_OF_LIGHT
-from sorcha.utilities.sorchaConfigs import sorchaConfigs
+from sorcha.configs.sorchaConfigs import sorchaConfigs
 
 
 def test_pixeldict(tmp_path):

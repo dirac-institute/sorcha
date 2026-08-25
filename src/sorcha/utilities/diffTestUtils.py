@@ -7,7 +7,7 @@ from sorcha.utilities.sorchaModuleRNG import PerModuleRNG
 from sorcha.sorcha import runSorchaSimulation
 from sorcha.utilities.dataUtilitiesForTests import get_demo_filepath, get_test_filepath
 from sorcha.utilities.sorchaArguments import sorchaArguments
-from sorcha.utilities.sorchaConfigs import sorchaConfigs
+from sorcha.configs.sorchaConfigs import sorchaConfigs
 
 
 def compare_result_files(test_output, golden_output):

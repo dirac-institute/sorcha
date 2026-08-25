@@ -9,7 +9,7 @@ from sorcha.utilities.sorchaArguments import sorchaArguments
 from sorcha.ephemeris.simulation_driver import create_ephemeris, write_out_ephemeris_file
 from sorcha.modules.PPReadPointingDatabase import PPReadPointingDatabase
 from sorcha.ephemeris.simulation_setup import precompute_pointing_information
-from sorcha.utilities.sorchaConfigs import sorchaConfigs, inputConfigs
+from sorcha.configs.sorchaConfigs import sorchaConfigs, inputConfigs
 
 from sorcha.readers.CombinedDataReader import CombinedDataReader
 from sorcha.readers.EphemerisReader import EphemerisDataReader
