@@ -461,12 +461,6 @@ class fadingfunctionConfigs:
     fading_function_type: str = None
     """Type of fading function used for sorcha (currently either general or pero_obs)"""
 
-    general_fading_function_on: bool = None
-    """General all footprint detection efficiency fading function on or off. """
-
-    per_obs_fading_function_on: bool = None
-    """Per observation footprint detection efficiency fading function on or off. """
-
     fading_function_width: float = None
     """Width parameter for fading function. Should be greater than zero and less than 0.5."""
 
@@ -481,24 +475,15 @@ class fadingfunctionConfigs:
     def __post_init__(self):
         """Automagically validates the fading function configs after initialisation."""
 
-        # first check if fading function type is per_obs maybe.
-        self.per_obs_fading_function_on = cast_as_bool_or_set_default(
-            self.per_obs_fading_function_on, "fading_function_on", False
-        )
+        self._validate_fadingfunction_configs_general()
+        self._validate_fadingfunction_configs_des_per_obs()
 
-        if self.per_obs_fading_function_on:
-            self.fading_function_type = "per_obs"
-            self._validate_fadingfunction_configs_per_obs()
-        else:
-            self.fading_function_type = "general"
-            self._validate_fadingfunction_configs_general()
-
-        if self.general_fading_function_on or self.per_obs_fading_function_on:
+        if self.fading_function_type is not None:
             self.fading_function_on = True
         else:
             self.fading_function_on = False
 
-    def _validate_fadingfunction_configs_per_obs(self):
+    def _validate_fadingfunction_configs_des_per_obs(self):
         """
         Validates the fadindfunction config attributes after initialisation for per observation footprint.
 
@@ -512,6 +497,7 @@ class fadingfunctionConfigs:
         """
 
         if self.des_transient_efficency is not None:
+            self.fading_function_type = "des_per_obs"
             # des moving source efficency added as a flat constant across all possible detections
             self.des_transient_efficency = cast_as_float(
                 self.des_transient_efficency, "des_transient_efficency"
@@ -519,18 +505,16 @@ class fadingfunctionConfigs:
             if self.des_transient_efficency > 1 or self.des_transient_efficency < 0:
                 sys.exit("Error: des_transient_efficency must be between 0 to 1")
                 logging.error("Error: des_transient_efficency must be between 0 to 1")
-        else:
-            self.des_transient_efficency = 1  # won't impact detection efficency when 1
-        check_key_doesnt_exist(
-            self.fading_function_peak_efficiency,
-            "fading_function_peak_efficiency",
-            "but fading function option is per footprint.",
-        )
-        check_key_doesnt_exist(
-            self.fading_function_width,
-            "fading_function_width",
-            "but fading function option is per footprint.",
-        )
+            check_key_doesnt_exist(
+                self.fading_function_peak_efficiency,
+                "fading_function_peak_efficiency",
+                "but fading function option is per footprint.",
+            )
+            check_key_doesnt_exist(
+                self.fading_function_width,
+                "fading_function_width",
+                "but fading function option is per footprint.",
+            )
 
     def _validate_fadingfunction_configs_general(self):
         """
@@ -545,14 +529,17 @@ class fadingfunctionConfigs:
         None
         """
         if self.fading_function_width is not None and self.fading_function_peak_efficiency is not None:
-            self.general_fading_function_on = True
+            self.fading_function_type = "general"
+
             # when fading_function_on = true, fading_function_width and fading_function_peak_efficiency now mandatory
 
             self.fading_function_width = cast_as_float(self.fading_function_width, "fading_function_width")
             self.fading_function_peak_efficiency = cast_as_float(
                 self.fading_function_peak_efficiency, "fading_function_peak_efficiency"
             )
-
+            check_key_doesnt_exist(
+                self.des_transient_efficency, "des_transient_efficency", "but fading function option general."
+            )
             # boundary conditions for both width and peak efficency
             if self.fading_function_width <= 0.0 or self.fading_function_width > 0.5:
                 logging.error(
@@ -567,11 +554,9 @@ class fadingfunctionConfigs:
                     "ERROR: fading_function_peak_efficiency out of bounds. Must be between 0 and 1."
                 )
                 sys.exit("ERROR: fading_function_peak_efficiency out of bounds. Must be between 0 and 1.")
-
-        elif self.fading_function_width is None and self.fading_function_peak_efficiency is None:
-            self.general_fading_function_on = False
-
-        else:
+        if (self.fading_function_width is None and self.fading_function_peak_efficiency is not None) or (
+            self.fading_function_width is not None and self.fading_function_peak_efficiency is None
+        ):
             logging.error(
                 "ERROR: Both fading_function_peak_efficiency and fading_function_width are needed to be supplied for fading function"
             )
@@ -1696,7 +1681,7 @@ def PrintConfigsToLog(sconfigs, cmd_args):
     if sconfigs.fadingfunction.fading_function_on:
         pplogger.info("The detection efficiency fading function is ON.")
         pplogger.info(f"fading function {sconfigs.fadingfunction.fading_function_type} is selected.")
-        if sconfigs.fadingfunction.general_fading_function_on:
+        if sconfigs.fadingfunction.fading_function_type == "general":
             pplogger.info(
                 "The width parameter of the fading function has been set to: "
                 + str(sconfigs.fadingfunction.fading_function_width)
@@ -1705,7 +1690,7 @@ def PrintConfigsToLog(sconfigs, cmd_args):
                 "The peak efficiency of the fading function has been set to: "
                 + str(sconfigs.fadingfunction.fading_function_peak_efficiency)
             )
-        elif sconfigs.fadingfunction.per_obs_fading_function_on:
+        elif sconfigs.fadingfunction.fading_function_type == "des_per_obs":
             pplogger.info(f"des_transient_efficency is {sconfigs.fadingfunction.des_transient_efficency}")
     else:
         pplogger.info("The detection efficiency fading function is OFF.")

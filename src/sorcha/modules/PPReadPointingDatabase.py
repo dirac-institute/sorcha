@@ -4,7 +4,7 @@ import logging
 import sys
 
 
-def PPReadPointingDatabase(bsdbname, observing_filters, dbquery, per_obs_fading_function_on=None):
+def PPReadPointingDatabase(bsdbname, observing_filters, dbquery, fading_function_type=None):
     """
     Reads in the pointing database as a Pandas dataframe.
 
@@ -76,8 +76,7 @@ def PPReadPointingDatabase(bsdbname, observing_filters, dbquery, per_obs_fading_
         sys.exit(
             "ERROR: PPReadPointingDatabase: column name observationMidpointMJD_TAI or observationStartMJD_TAI missing from pointing query."
         )
-    print(per_obs_fading_function_on)
-    if per_obs_fading_function_on:
+    if fading_function_type == "des_per_obs":
         missing_cols = [col for col in ["c", "k"] if col not in dfo.columns]
 
         if missing_cols:

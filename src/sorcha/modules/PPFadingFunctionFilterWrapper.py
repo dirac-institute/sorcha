@@ -56,7 +56,7 @@ def FadingFunctionFilter(
             module_rngs,
             verbose=verbose,
         )
-    elif fading_function_type == "per_obs":
+    elif fading_function_type == "des_per_obs":
         observations = desFadingFunctionFilter(
             observations,
             transient_efficiency,

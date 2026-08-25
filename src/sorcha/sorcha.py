@@ -107,6 +107,7 @@ def runSorchaSimulation(args, sconfigs, return_only=False):
 
     """
     pplogger = logging.getLogger(__name__)
+    pplogger.info(f"Sorcha beginning for survey {args.surveyname}")
     pplogger.info("Post-processing begun.")
 
     try:
@@ -133,7 +134,7 @@ def runSorchaSimulation(args, sconfigs, return_only=False):
         args.pointing_database,
         sconfigs.filters.observing_filters,
         sconfigs.input.pointing_sql_query,
-        per_obs_fading_function_on=sconfigs.fadingfunction.per_obs_fading_function_on,
+        fading_function_type=sconfigs.fadingfunction.fading_function_type,
     )
 
     # if we are going to compute the ephemerides, then we should pre-compute all

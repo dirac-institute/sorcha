@@ -64,8 +64,6 @@ correct_fadingfunction = {
     "survey_name": "rubin_sim",
     "des_transient_efficency": None,
     "fading_function_type": "general",
-    "general_fading_function_on": True,
-    "per_obs_fading_function_on": False,
 }
 
 correct_linkingfilter = {
@@ -694,17 +692,15 @@ def test_fadingfunctionConfig_on_float():
     fadingfunction_configs = correct_fadingfunction.copy()
 
     # "set up for per_obs"
-    fadingfunction_configs["per_obs_fading_function_on"] = True
     fadingfunction_configs["fading_function_peak_efficiency"] = None
     fadingfunction_configs["fading_function_width"] = None
 
-    fadingfunction_configs["des_transient_efficency"] = None
+    fadingfunction_configs["des_transient_efficency"] = 0.955
 
-    # transit efficency goes to 1 if None and fading_function_type becomes per_obs
     test_configs = fadingfunctionConfigs(**fadingfunction_configs)
 
-    fadingfunction_configs["des_transient_efficency"] = 1
-    fadingfunction_configs["fading_function_type"] = "per_obs"
+    fadingfunction_configs["des_transient_efficency"] = 0.955
+    fadingfunction_configs["fading_function_type"] = "des_per_obs"
     # test cast as float
     assert test_configs.__dict__ == fadingfunction_configs
 
