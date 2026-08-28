@@ -4,7 +4,7 @@ import logging
 
 
 from sorcha.configs.inputAndOutputConfigs import inputConfigs, outputConfigs
-from sorcha.configs.simulationConfigs import simulationConfigs
+from sorcha.configs.ephemerisConfigs import simulationConfigs
 from sorcha.configs.filtersConfigs import filtersConfigs
 from sorcha.configs.saturationConfigs import saturationConfigs
 from sorcha.configs.phasecuvesConfigs import phasecurvesConfigs
@@ -125,13 +125,7 @@ class sorchaConfigs(basesorchaConfigs):
         # general function that reads in config file sections into there config dataclasses
         for section, config_section in section_list.items():
             extra_args = {}
-            if (
-                section == "FILTERS"
-                or section == "FOV"
-                or section == "EXPERT"
-                or section == "FADINGFUNCTION"
-                or section == "LINKINGFILTER"
-            ):
+            if section == "FILTERS" or section == "FOV" or section == "EXPERT":
                 extra_args["survey_name"] = self.survey_name
 
             if config_object.has_section(section):

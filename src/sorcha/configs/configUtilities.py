@@ -1,6 +1,77 @@
 import logging
 import sys
 
+
+# dict of surveys for a given option, These are currently used in fov,  filters , expert  configs
+# Where the type of survey matters for running Sorcha (i.e. camera footprint, filters and certain features turned off)
+dict_survey_names = {"rubin": ["rubin_sim", "RUBIN_SIM", "LSST", "lsst"], "des": ["DES", "des"]}
+
+
+def check_survey_name_bool(survey_name, expected_survey):
+    """
+    Passes arguments that match the expected survey into if statements in config classes
+
+    Parameters
+    ------------
+
+    survey_name : str
+        The name of the survey.
+
+    expected_survey: str
+        Checks survey_name is in given list in dict (options are ["rubin", "des"]).
+
+    Returns
+    ---------
+    boolen
+
+    """
+
+    return survey_name in dict_survey_names[expected_survey]
+
+
+def check_survey_name_list(survey_name, expected_surveys, key):
+    """
+    Passes arguments that match the expected survey into if statements in config classes
+
+    Parameters
+    ------------
+
+    survey_name : str
+        The name of the survey.
+
+    expected_surveys: list
+        Checks survey_name is in given list in dict (options are ["rubin", "des"]).
+
+    key : string
+        The key being checked.
+
+    Returns
+    ---------
+    None
+
+    """
+    fail_count = 0
+    for expected_survey in expected_surveys:
+        try:
+            check_value_in_list(survey_name, dict_survey_names[expected_survey], key)
+        except SystemExit:
+            fail_count += 1
+
+    if fail_count == len(expected_surveys):
+        valid_values = set()
+        for expected_survey in expected_surveys:
+            valid_values.update(dict_survey_names[expected_survey])
+
+        logging.error(
+            f"ERROR: value {survey_name} for config parameter {key} "
+            f"not recognised. Expecting one of: {sorted(valid_values)}."
+        )
+        sys.exit(
+            f"ERROR: value {survey_name} for config parameter {key} "
+            f"not recognised. Expecting one of: {sorted(valid_values)}."
+        )
+
+
 ## below are the utility functions used to help validate the keywords, add more as needed
 
 
@@ -303,7 +374,9 @@ def PrintConfigsToLog(sconfigs, cmd_args):
             )
     elif sconfigs.fov.camera_model == "visits_footprint":
         pplogger.info("Footprint is the actual camera footprint for each observation.")
-        pplogger.info("Loading camera footprint from " + cmd_args.visits)
+        pplogger.info("Loading camera footprint from sqlite database " + cmd_args.visits)
+        pplogger.info("Visits database required query is: " + sconfigs.input.visits_query)
+
     else:
         pplogger.info("Camera footprint is turned OFF.")
 
@@ -338,7 +411,9 @@ def PrintConfigsToLog(sconfigs, cmd_args):
                 + str(sconfigs.fadingfunction.fading_function_peak_efficiency)
             )
         elif sconfigs.fadingfunction.fading_function_type == "des_per_obs":
-            pplogger.info(f"des_transient_efficency is {sconfigs.fadingfunction.des_transient_efficency}")
+            pplogger.info(
+                f"des_transient_efficency has been set to: {sconfigs.fadingfunction.des_transient_efficency}"
+            )
     else:
         pplogger.info("The detection efficiency fading function is OFF.")
 
@@ -375,6 +450,18 @@ def PrintConfigsToLog(sconfigs, cmd_args):
         )
         if not sconfigs.linkingfilter.drop_unlinked:
             pplogger.info("Unlinked objects will not be dropped.")
+    elif sconfigs.linkingfilter.des_discovery_on:
+        pplogger.info("Outer Solar System DES discovery filter is turned ON.")
+        if sconfigs.linkingfilter.des_distance_cut_on:
+            pplogger.info("Object distance cuts on.")
+            pplogger.info(
+                f"Distance cut bounds are: {sconfigs.linkingfilter.des_distance_cut_lower} to {sconfigs.linkingfilter.des_distance_cut_upper} au."
+            )
+        if sconfigs.linkingfilter.des_motion_cut_on:
+            pplogger.info("Object motion cuts on.")
+            pplogger.info(
+                f"Motion cut bounds are: {sconfigs.linkingfilter.des_motion_cut_lower} to {sconfigs.linkingfilter.des_motion_cut_upper} deg/day."
+            )
     else:
         pplogger.info("Solar System Processing linking filter is turned OFF.")
     pplogger.info("The auxiliary files used for emphemris generation...")

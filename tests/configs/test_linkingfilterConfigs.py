@@ -1,4 +1,4 @@
-import pytest 
+import pytest
 from sorcha.configs.linkingfilterConfigs import linkingfilterConfigs
 
 correct_linkingfilter = {
@@ -12,7 +12,6 @@ correct_linkingfilter = {
     "ssp_number_tracklets": 3,
     "ssp_track_window": 15,
     "ssp_night_start_utc": 16.0,
-    "survey_name": "rubin_sim",
     "des_distance_cut_on": None,
     "des_distance_cut_upper": None,
     "des_distance_cut_lower": None,
@@ -22,6 +21,25 @@ correct_linkingfilter = {
     "des_discovery_on": None,
 }
 
+correct_linkingfilter_des = {
+    "discovery_filter_on": True,
+    "ssp_linking_on": None,
+    "drop_unlinked": None,
+    "ssp_detection_efficiency": None,
+    "ssp_number_observations": None,
+    "ssp_separation_threshold": None,
+    "ssp_maximum_time": None,
+    "ssp_number_tracklets": None,
+    "ssp_track_window": None,
+    "ssp_night_start_utc": None,
+    "des_distance_cut_on": None,
+    "des_distance_cut_upper": None,
+    "des_distance_cut_lower": None,
+    "des_motion_cut_on": None,
+    "des_motion_cut_upper": None,
+    "des_motion_cut_lower": None,
+    "des_discovery_on": None,
+}
 
 
 # linkingfilter tests
@@ -174,6 +192,7 @@ def test_linkingfilter_bool():
     )
 
 
+# DES discovery
 @pytest.mark.parametrize(
     "key_name, prob_name",
     [
@@ -188,7 +207,7 @@ def test_linkingfilter_descuts_exists(key_name, prob_name):
     tests the descut inputs in the linkingfilter
     """
 
-    linkingfilter_configs = correct_linkingfilter.copy()
+    linkingfilter_configs = correct_linkingfilter_des.copy()
 
     linkingfilter_configs[key_name] = 10
 
@@ -215,7 +234,7 @@ def test_linkingfilter_descuts_float(key_name, prob_name):
     tests that the descut inputs are float in the linkingfilter
     """
 
-    linkingfilter_configs = correct_linkingfilter.copy()
+    linkingfilter_configs = correct_linkingfilter_des.copy()
 
     linkingfilter_configs[key_name] = 10.0
     linkingfilter_configs[prob_name] = "str"

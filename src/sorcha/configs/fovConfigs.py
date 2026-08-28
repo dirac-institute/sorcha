@@ -9,6 +9,8 @@ from sorcha.configs.configUtilities import (
     check_value_in_list,
     cast_as_float,
     check_key_doesnt_exist,
+    check_survey_name_bool,
+    check_survey_name_list,
 )
 
 
@@ -60,7 +62,6 @@ class fovConfigs:
         check_value_in_list(
             self.camera_model, ["circle", "footprint", "visits_footprint", "none"], "camera_model"
         )
-
         if self.camera_model == "footprint":
             self._camera_footprint()
         if self.camera_model == "visits_footprint":
@@ -82,9 +83,9 @@ class fovConfigs:
         """
         if self.footprint_path is not None:
             FindFileOrExit(self.footprint_path, "footprint_path")
-        elif self.survey_name.lower() in ["lsst", "rubin_sim"]:
+        if check_survey_name_bool(self.survey_name, "rubin"):
             self.default_camera_config_file = "data/LSST_detector_corners_100123.csv"
-        elif self.survey_name.lower() in ["des"]:
+        elif check_survey_name_bool(self.survey_name, "des"):
             self.default_camera_config_file = "data/DES_ccd_corners.csv"
         else:
             logging.error(
@@ -115,7 +116,8 @@ class fovConfigs:
         ----------
         None
         """
-        check_value_in_list(self.survey_name.lower(), ["des"], "survey_name")
+
+        check_survey_name_list(self.survey_name, ["des"], "survey_name when camera_model = visits_footprint")
         check_key_exists(self.visits_query, "visits_query")
         check_key_doesnt_exist(
             self.footprint_edge_threshold,
@@ -158,4 +160,7 @@ class fovConfigs:
             )
         check_key_doesnt_exist(
             self.footprint_edge_threshold, "footprint_edge_threshold", 'but camera model is not "footprint".'
+        )
+        check_key_doesnt_exist(
+            self.visits_query, "visits_query", 'but camera model is not "visits_footprint".'
         )

@@ -1,7 +1,7 @@
 import logging
 import sys
 from dataclasses import dataclass
-from sorcha.configs.configUtilities import cast_as_bool_or_set_default, cast_as_float
+from sorcha.configs.configUtilities import cast_as_bool_or_set_default, cast_as_float, check_survey_name_bool
 
 
 @dataclass
@@ -89,7 +89,7 @@ class expertConfigs:
         self.default_snr_cut = cast_as_bool_or_set_default(self.default_snr_cut, "default_snr_cut", True)
         self.brute_force = cast_as_bool_or_set_default(self.brute_force, "brute_force", True)
 
-        if self.survey_name in ["rubin_sim", "RUBIN_SIM", "LSST", "lsst"]:
+        if check_survey_name_bool(self.survey_name, "rubin"):
             self.uncertainties_on = cast_as_bool_or_set_default(
                 self.uncertainties_on, "uncertainties_on", True
             )
@@ -100,7 +100,7 @@ class expertConfigs:
             self.trailing_losses_on = cast_as_bool_or_set_default(
                 self.trailing_losses_on, "trailing_losses_on", True
             )
-        if self.survey_name in ["DES", "des"]:
+        if check_survey_name_bool(self.survey_name, "des"):
             logging.warning(
                 "WARNING: DES simulation does not support uncertainties, trailing losses, vignetting and randomization. These are off by default"
             )
@@ -120,21 +120,22 @@ class expertConfigs:
                 or self.vignetting_on == True
                 or self.trailing_losses_on == True
             ):
-                logging.ERROR(
-                    "ERROR: DES simulation does not support trailing losses, vignetting and randomization."
+                logging.error(
+                    "ERROR: DES simulation does not support uncertainties, trailing losses, vignetting and randomization."
                 )
                 sys.exit(
-                    "ERROR: DES simulation does not support trailing losses, vignetting and randomization."
+                    "ERROR: DES simulation does not support uncertainties, trailing losses, vignetting and randomization."
                 )
-        elif self.camera_model == "visits_footprint":
+
+        if self.camera_model == "visits_footprint":
             logging.warning(
                 "WARNING: fov camera model 'visits_footprint' does not support vignetting. This is off by default"
             )
             self.vignetting_on = cast_as_bool_or_set_default(self.vignetting_on, "vignetting_on", False)
             if self.vignetting_on == True:
-                logging.ERROR("ERROR: fov camera model 'visits_footprint' does not support vignetting.")
-                sys.exit("ERROR: fov camera model 'visits_footprint does not support vignetting.")
+                logging.error("ERROR: fov camera model 'visits_footprint' does not support vignetting.")
+                sys.exit("ERROR: fov camera model 'visits_footprint' does not support vignetting.")
 
         if self.uncertainties_on == False and self.randomization_on == True:
-            logging.ERROR("ERROR: uncertainties_on must be true if randomization_on is true.")
+            logging.error("ERROR: uncertainties_on must be true if randomization_on is true.")
             sys.exit("ERROR: uncertainties_on must be true if randomization_on is true.")

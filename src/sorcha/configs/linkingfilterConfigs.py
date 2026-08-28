@@ -47,9 +47,6 @@ class linkingfilterConfigs:
     des_discovery_on: bool = None
     """flag to see if model should run des discovery filter"""
 
-    survey_name: str = None
-    """name of survey"""
-
     des_distance_cut_on: bool = None
     """flag for DES for object-sun light-time-corrected distance cuts """
 

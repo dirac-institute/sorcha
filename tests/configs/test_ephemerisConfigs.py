@@ -1,5 +1,5 @@
 import pytest
-from sorcha.configs.simulationConfigs import simulationConfigs
+from sorcha.configs.ephemerisConfigs import simulationConfigs
 
 correct_simulation = {
     "_ephemerides_type": "ar",
@@ -10,7 +10,6 @@ correct_simulation = {
     "ar_healpix_order": 6,
     "ar_n_sub_intervals": 101,
 }
-
 
 
 # simulation configs test
@@ -59,7 +58,8 @@ def test_simulationConfigs_int(key_name):
 
 
 @pytest.mark.parametrize(
-    "key_name", ["ar_ang_fov", "ar_fov_buffer", "ar_picket", "ar_obs_code", "ar_healpix_order"]
+    "key_name",
+    ["_ephemerides_type", "ar_ang_fov", "ar_fov_buffer", "ar_picket", "ar_obs_code", "ar_healpix_order"],
 )
 def test_simulationConfigs_mandatory(key_name):
     """
@@ -101,3 +101,25 @@ def test_simulationConfigs_notrequired(key_name):
         error_text.value.code == f"ERROR: {key_name} supplied in config file but ephemerides type is external"
     )
 
+
+@pytest.mark.parametrize(
+    "key_name, expected_list",
+    [
+        ("_ephemerides_type", "['ar', 'external']"),
+    ],
+)
+def test_outputConfigs_inlist(key_name, expected_list):
+    """
+    this loops through the keys that need to have one of several set values and makes sure the correct error message triggers when they're not
+    """
+
+    simulation_configs = correct_simulation.copy()
+
+    simulation_configs[key_name] = "definitely_fake_bad_key"
+
+    with pytest.raises(SystemExit) as error_text:
+        test_configs = simulationConfigs(**simulation_configs)
+    assert (
+        error_text.value.code
+        == f"ERROR: value definitely_fake_bad_key for config parameter {key_name} not recognised. Expecting one of: {expected_list}."
+    )

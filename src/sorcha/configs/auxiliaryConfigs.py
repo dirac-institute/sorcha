@@ -135,6 +135,8 @@ class auxiliaryConfigs:
                     self.default_filenames[file] != getattr(self, file)
                     and getattr(self, file + "_url") == self.default_url[file]
                 ):
+                    # if a new file is specified but not a url then the url is set as None.
+                    # i.e. its assumed the file is in the cache ar directory and should not be downloaded.
                     setattr(self, file + "_url", None)
 
     def _create_lists_auxiliary_configs(self):

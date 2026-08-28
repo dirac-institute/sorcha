@@ -69,7 +69,15 @@ def test_expert_config_exclusive():
 
 
 @pytest.mark.parametrize(
-    "key_name", ["trailing_losses_on", "default_snr_cut", "randomization_on", "vignetting_on"]
+    "key_name",
+    [
+        "uncertainties_on",
+        "trailing_losses_on",
+        "default_snr_cut",
+        "randomization_on",
+        "vignetting_on",
+        "brute_force",
+    ],
 )
 def test_expertConfig_bool(key_name):
     """
@@ -85,3 +93,68 @@ def test_expertConfig_bool(key_name):
         error_text.value.code
         == f"ERROR: expected a bool for config parameter {key_name}. Check value in config file."
     )
+
+    # checking this also works inside DES if statement too.
+    expect_configs = correct_expert.copy()
+    expect_configs[key_name] = "fake"
+    expect_configs["survey_name"] = "des"
+    with pytest.raises(SystemExit) as error_text:
+        test_configs = expertConfigs(**expect_configs)
+
+    assert (
+        error_text.value.code
+        == f"ERROR: expected a bool for config parameter {key_name}. Check value in config file."
+    )
+
+
+@pytest.mark.parametrize(
+    "key_name", ["uncertainties_on", "trailing_losses_on", "randomization_on", "vignetting_on"]
+)
+def test_expertConfig_bool_DES(key_name):
+    """
+    Tests that features that should be turned off for DES are turned off.
+    """
+
+    # checking this also works for des,
+    expect_configs = correct_expert.copy()
+    expect_configs[key_name] = True
+    expect_configs["survey_name"] = "des"
+    with pytest.raises(SystemExit) as error_text:
+        test_configs = expertConfigs(**expect_configs)
+
+    assert (
+        error_text.value.code
+        == "ERROR: DES simulation does not support uncertainties, trailing losses, vignetting and randomization."
+    )
+
+
+@pytest.mark.parametrize("key_name", ["vignetting_on"])
+def test_expertConfig_bool_visits_footprint(key_name):
+    """
+    Tests  features that should be turned off for visits footprint are turned off.
+    """
+
+    # checking this also works for des,
+    expect_configs = correct_expert.copy()
+    expect_configs[key_name] = True
+    expect_configs["camera_model"] = "visits_footprint"
+    with pytest.raises(SystemExit) as error_text:
+        test_configs = expertConfigs(**expect_configs)
+
+    assert error_text.value.code == "ERROR: fov camera model 'visits_footprint' does not support vignetting."
+
+
+def test_expertConfig_bool_uncertainties_randomisation_logic():
+    """
+    Tests that should error occurs if uncertainties_on is false when randomization_on is true.
+    """
+
+    # checking this also works for des,
+    expect_configs = correct_expert.copy()
+    expect_configs["randomization_on"] = True
+    expect_configs["uncertainties_on"] = False
+
+    with pytest.raises(SystemExit) as error_text:
+        test_configs = expertConfigs(**expect_configs)
+
+    assert error_text.value.code == "ERROR: uncertainties_on must be true if randomization_on is true."

@@ -24,8 +24,6 @@ class fadingfunctionConfigs:
     des_transient_efficency: float = None
     """Overall transient efficiency for moving object detection"""
 
-    survey_name: str = None
-
     def __post_init__(self):
         """Automagically validates the fading function configs after initialisation."""
 
@@ -57,8 +55,8 @@ class fadingfunctionConfigs:
                 self.des_transient_efficency, "des_transient_efficency"
             )
             if self.des_transient_efficency > 1 or self.des_transient_efficency < 0:
-                sys.exit("Error: des_transient_efficency must be between 0 to 1")
-                logging.error("Error: des_transient_efficency must be between 0 to 1")
+                sys.exit("ERROR: des_transient_efficency out of bounds. Must be between 0 and 1.")
+                logging.error("ERROR: des_transient_efficency out of bounds. Must be between 0 and 1.")
             check_key_doesnt_exist(
                 self.fading_function_peak_efficiency,
                 "fading_function_peak_efficiency",
@@ -92,7 +90,9 @@ class fadingfunctionConfigs:
                 self.fading_function_peak_efficiency, "fading_function_peak_efficiency"
             )
             check_key_doesnt_exist(
-                self.des_transient_efficency, "des_transient_efficency", "but fading function option general."
+                self.des_transient_efficency,
+                "des_transient_efficency",
+                "which is not compatible with fading function fading_function_peak_efficiency and fading_function_width.",
             )
             # boundary conditions for both width and peak efficency
             if self.fading_function_width <= 0.0 or self.fading_function_width > 0.5:

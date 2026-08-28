@@ -58,4 +58,5 @@ def test_demo_command_line(setup_and_teardown_for_demo_command_line):
     # also check to make sure the error log is empty :)
     error_log = glob.glob("*sorcha.err")[0]
 
+    # commom fail for this unit test is if you have left a print statement somewhere
     assert os.stat(error_log).st_size == 0

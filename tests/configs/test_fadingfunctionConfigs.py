@@ -1,11 +1,10 @@
-import pytest 
+import pytest
 from sorcha.configs.fadingfunctionConfigs import fadingfunctionConfigs
 
 correct_fadingfunction = {
     "fading_function_on": True,
     "fading_function_width": 0.1,
     "fading_function_peak_efficiency": 1.0,
-    "survey_name": "rubin_sim",
     "des_transient_efficency": None,
     "fading_function_type": "general",
 }
@@ -64,7 +63,9 @@ def test_fadingfunctionConfig_on_float():
     )
 
 
-@pytest.mark.parametrize("key_name", ["fading_function_width", "fading_function_peak_efficiency"])
+@pytest.mark.parametrize(
+    "key_name", ["fading_function_width", "fading_function_peak_efficiency", "des_transient_efficency"]
+)
 def test_fadingfunction_outofbounds(key_name):
     """
     Tests that values in fadingfunctionConfigs are creating error messages when out of bounds
@@ -86,6 +87,15 @@ def test_fadingfunction_outofbounds(key_name):
             error_text.value.code
             == "ERROR: fading_function_peak_efficiency out of bounds. Must be between 0 and 1."
         )
+    if key_name == "des_transient_efficency":
+        fadingfunction_configs["fading_function_peak_efficiency"] = None
+        fadingfunction_configs["fading_function_width"] = None
+
+        with pytest.raises(SystemExit) as error_text:
+            test_configs = fadingfunctionConfigs(**fadingfunction_configs)
+        assert (
+            error_text.value.code == "ERROR: des_transient_efficency out of bounds. Must be between 0 and 1."
+        )
 
 
 def test_fadingfunction_allnone():
@@ -93,7 +103,6 @@ def test_fadingfunction_allnone():
     This loops through the not required keys and makes sure the code fails correctly when all attributes are none
     """
     fadingfunction_configs = correct_fadingfunction.copy()
-    fadingfunction_configs["fading_function_on"] = None
     fadingfunction_configs["fading_function_width"] = 5.0
     fadingfunction_configs["fading_function_peak_efficiency"] = None
     with pytest.raises(SystemExit) as error_text:
@@ -103,3 +112,13 @@ def test_fadingfunction_allnone():
         == "ERROR: Both fading_function_peak_efficiency and fading_function_width are needed to be supplied for fading function"
     )
 
+
+def test_fadingfunction_check_key_doesnt_exist():
+    fadingfunction_configs = correct_fadingfunction.copy()
+    fadingfunction_configs["des_transient_efficency"] = 5.0
+    with pytest.raises(SystemExit) as error_text:
+        test_configs = fadingfunctionConfigs(**fadingfunction_configs)
+    assert (
+        error_text.value.code
+        == "ERROR: des_transient_efficency supplied in config file which is not compatible with fading function fading_function_peak_efficiency and fading_function_width."
+    )

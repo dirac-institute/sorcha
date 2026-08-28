@@ -5,7 +5,7 @@ from sorcha.configs.sorchaConfigs import *
 
 # these are the results we expect from sorcha_config_demo.ini, in there respective unit tests
 from test_inputAndOutputConfigs import correct_inputs, correct_output
-from test_simulationConfigs import correct_simulation
+from test_ephemerisConfigs import correct_simulation
 from test_filtersConfigs import correct_filters
 from test_saturationConfigs import correct_saturation
 from test_phasecurvesConfigs import correct_phasecurve
@@ -14,7 +14,7 @@ from test_fadingfunctionConfigs import correct_fadingfunction
 from test_linkingfilterConfigs import correct_linkingfilter
 from test_lightcurveAndActivityConfigs import correct_lc_model, correct_activity
 from test_expertConfigs import correct_expert
-from test_auxiliaryConfigs import correct_auxciliary_filenames,correct_auxciliary_URLs
+from test_auxiliaryConfigs import correct_auxciliary_filenames, correct_auxciliary_URLs
 
 
 # SORCHA Configs test
@@ -62,4 +62,3 @@ def test_sorchaConfigs():
         assert correct_expert == test_configs.expert.__dict__
         assert correct_auxciliary_URLs == test_configs.auxiliary.__dict__["urls"]
         assert correct_auxciliary_filenames == test_configs.auxiliary.__dict__["data_file_list"]
-
