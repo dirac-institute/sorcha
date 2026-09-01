@@ -2,7 +2,106 @@ import pytest
 from sorcha.configs.sorchaConfigs import sorchaConfigs
 from sorcha.utilities.sorchaArguments import sorchaArguments
 
+from sorcha.configs.configUtilities import *
 
+
+def test_check_key_exists():
+    key_name = "None"
+    with pytest.raises(SystemExit) as error_text:
+        check_key_exists(None, key_name)
+
+    assert (
+        error_text.value.code
+        == f"ERROR: No value found for required key {key_name} in config file. Please check the file and try again."
+    )
+
+
+def test_check_key_doesnt_exist():
+    key_name = "None"
+    reason = "test reason statement"
+    with pytest.raises(SystemExit) as error_text:
+        check_key_doesnt_exist(1, key_name, reason)
+
+    assert error_text.value.code == f"ERROR: {key_name} supplied in config file {reason}"
+
+
+def test_cast_as_int():
+    key_name = "None"
+    with pytest.raises(SystemExit) as error_text:
+        cast_as_int("ten", key_name)
+
+    assert (
+        error_text.value.code
+        == f"ERROR: expected an int for config parameter {key_name}. Check value in config file."
+    )
+    str_int = "1"
+    cast_int = cast_as_int(str_int, key_name)
+
+    assert type(cast_int) == type(int(1))
+
+
+def test_cast_as_float():
+    key_name = "None"
+    with pytest.raises(SystemExit) as error_text:
+        cast_as_float("ten", key_name)
+
+    assert (
+        error_text.value.code
+        == f"ERROR: expected a float for config parameter {key_name}. Check value in config file."
+    )
+    str_float = "1.5"
+    cast_float = cast_as_float(str_float, key_name)
+
+    assert type(cast_float) == type(float(1.5))
+
+
+def test_cast_as_bool():
+    key_name = "None"
+    with pytest.raises(SystemExit) as error_text:
+        cast_as_bool("ten", key_name)
+
+    assert (
+        error_text.value.code
+        == f"ERROR: expected a bool for config parameter {key_name}. Check value in config file."
+    )
+    str_bool = "True"
+    cast_bool = cast_as_bool(str_bool, key_name)
+
+    assert type(cast_bool) == type(bool(True))
+
+
+def test_cast_as_bool_or_set_default():
+    key_name = "None"
+    with pytest.raises(SystemExit) as error_text:
+        cast_as_bool_or_set_default("ten", key_name, True)
+
+    assert (
+        error_text.value.code
+        == f"ERROR: expected a bool for config parameter {key_name}. Check value in config file."
+    )
+    str_bool = "True"
+    cast_bool = cast_as_bool_or_set_default(str_bool, key_name, True)
+
+    assert type(cast_bool) == type(bool(True))
+
+    cast_bool = cast_as_bool_or_set_default(None, key_name, False)
+
+    assert cast_bool == False
+
+
+def test_check_value_in_list():
+    key_name = "None"
+    value = "ten"
+    value_list = ["five", "six"]
+    with pytest.raises(SystemExit) as error_text:
+        check_value_in_list(value, value_list, key_name)
+
+    assert (
+        error_text.value.code
+        == f"ERROR: value {value} for config parameter {key_name} not recognised. Expecting one of: {value_list}."
+    )
+    value = "five"
+    check_value_in_list(value, value_list, key_name)
 
 
 def test_PrintConfigsToLog(tmp_path):

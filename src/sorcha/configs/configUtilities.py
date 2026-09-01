@@ -1,7 +1,6 @@
 import logging
 import sys
 
-
 # dict of surveys for a given option, These are currently used in fov,  filters , expert  configs
 # Where the type of survey matters for running Sorcha (i.e. camera footprint, filters and certain features turned off)
 dict_survey_names = {"rubin": ["rubin_sim", "RUBIN_SIM", "LSST", "lsst"], "des": ["DES", "des"]}
