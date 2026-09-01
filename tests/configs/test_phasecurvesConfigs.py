@@ -1,6 +1,6 @@
 
 import pytest
-from sorcha.configs.phasecuvesConfigs import phasecurvesConfigs
+from sorcha.configs.inputAndOutputConfigs import phasecurvesConfigs
 
 correct_phasecurve = {"phase_function": "HG"}
 

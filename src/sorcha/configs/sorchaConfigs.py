@@ -3,11 +3,10 @@ import configparser
 import logging
 
 
-from sorcha.configs.inputAndOutputConfigs import inputConfigs, outputConfigs
+from sorcha.configs.inputAndOutputConfigs import inputConfigs, phasecurvesConfigs, outputConfigs
 from sorcha.configs.ephemerisConfigs import simulationConfigs
 from sorcha.configs.filtersConfigs import filtersConfigs
 from sorcha.configs.saturationConfigs import saturationConfigs
-from sorcha.configs.phasecuvesConfigs import phasecurvesConfigs
 from sorcha.configs.fovConfigs import fovConfigs
 from sorcha.configs.fadingfunctionConfigs import fadingfunctionConfigs
 from sorcha.configs.linkingfilterConfigs import linkingfilterConfigs
