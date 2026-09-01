@@ -78,7 +78,7 @@ class sorchaArguments:
         self.stats = args["stats"]
         self.visits = args["visits_database"]
 
-        self.surveyname = args["surveyname"]
+        self.surveyname = args["surveyname"].lower()
 
         if "complex_physical_parameters" in args.keys():
             self.complex_parameters = args["complex_physical_parameters"]

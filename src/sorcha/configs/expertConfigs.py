@@ -1,7 +1,8 @@
 import logging
 import sys
 from dataclasses import dataclass
-from sorcha.configs.configUtilities import cast_as_bool_or_set_default, cast_as_float, check_survey_name_bool
+from sorcha.configs.configUtilities import cast_as_bool_or_set_default, cast_as_float
+from sorcha.utilities.survey_check import is_survey_valid
 
 
 @dataclass
@@ -89,7 +90,7 @@ class expertConfigs:
         self.default_snr_cut = cast_as_bool_or_set_default(self.default_snr_cut, "default_snr_cut", True)
         self.brute_force = cast_as_bool_or_set_default(self.brute_force, "brute_force", True)
 
-        if check_survey_name_bool(self.survey_name, "rubin"):
+        if is_survey_valid(self.survey_name, "rubin"):
             self.uncertainties_on = cast_as_bool_or_set_default(
                 self.uncertainties_on, "uncertainties_on", True
             )
@@ -100,7 +101,7 @@ class expertConfigs:
             self.trailing_losses_on = cast_as_bool_or_set_default(
                 self.trailing_losses_on, "trailing_losses_on", True
             )
-        if check_survey_name_bool(self.survey_name, "des"):
+        if is_survey_valid(self.survey_name, "des"):
             logging.warning(
                 "WARNING: DES simulation does not support uncertainties, trailing losses, vignetting and randomization. These are off by default"
             )

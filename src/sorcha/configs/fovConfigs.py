@@ -9,9 +9,8 @@ from sorcha.configs.configUtilities import (
     check_value_in_list,
     cast_as_float,
     check_key_doesnt_exist,
-    check_survey_name_bool,
-    check_survey_name_list,
 )
+from sorcha.utilities.survey_check import is_survey_valid
 
 
 @dataclass
@@ -83,9 +82,9 @@ class fovConfigs:
         """
         if self.footprint_path is not None:
             FindFileOrExit(self.footprint_path, "footprint_path")
-        if check_survey_name_bool(self.survey_name, "rubin"):
+        if is_survey_valid(self.survey_name, "rubin"):
             self.default_camera_config_file = "data/LSST_detector_corners_100123.csv"
-        elif check_survey_name_bool(self.survey_name, "des"):
+        elif is_survey_valid(self.survey_name, "des"):
             self.default_camera_config_file = "data/DES_ccd_corners.csv"
         else:
             logging.error(
@@ -117,15 +116,22 @@ class fovConfigs:
         None
         """
 
-        check_survey_name_list(self.survey_name, ["des"], "survey_name when camera_model = visits_footprint")
-        check_key_exists(self.visits_query, "visits_query")
-        check_key_doesnt_exist(
-            self.footprint_edge_threshold,
-            "footprint_edge_threshold",
-            "But visits footprint does not use edge threshold",
-        )
-        check_key_doesnt_exist(self.fill_factor, "fill_factor", 'but camera model is not "circle".')
-        check_key_doesnt_exist(self.circle_radius, "circle_radius", 'but camera model is not "circle".')
+        if is_survey_valid(self.survey_name, "des"):
+            check_key_exists(self.visits_query, "visits_query")
+            check_key_doesnt_exist(
+                self.footprint_edge_threshold,
+                "footprint_edge_threshold",
+                "But visits footprint does not use edge threshold",
+            )
+            check_key_doesnt_exist(self.fill_factor, "fill_factor", 'but camera model is not "circle".')
+            check_key_doesnt_exist(self.circle_radius, "circle_radius", 'but camera model is not "circle".')
+        else:
+            logging.error(
+                f"ERROR: survey {self.survey_name} not valid for camera_model = {self.camera_model}, valid surveys are ['des']."
+            )
+            sys.exit(
+                f"ERROR: survey {self.survey_name} not valid for camera_model = {self.camera_model}, valid surveys are ['des']."
+            )
 
     def _camera_circle(self):
         """

@@ -108,7 +108,7 @@ def test_fovConfigs_visits_footprint_check_dont_exist(key_name):
     """
 
     fov_configs = correct_fov.copy()
-    fov_configs["survey_name"] = "DES"
+    fov_configs["survey_name"] = "des"
     fov_configs["camera_model"] = "visits_footprint"
 
     fov_configs["visits_query"] = "something"
@@ -132,7 +132,7 @@ def test_fovConfigs_visits_footprint_check_dont_exist(key_name):
 
 def test_fovConfigs_visits_footprint_check_exist():
     fov_configs = correct_fov.copy()
-    fov_configs["survey_name"] = "DES"
+    fov_configs["survey_name"] = "des"
     fov_configs["camera_model"] = "visits_footprint"
 
     fov_configs["footprint_edge_threshold"] = None
@@ -160,7 +160,8 @@ def test_fovConfigs_visits_footprint_wrong_survey():
         test_configs = fovConfigs(**fov_configs)
     assert (
         error_text.value.code
-        == "ERROR: value bad_survey for config parameter survey_name when camera_model = visits_footprint not recognised. Expecting one of: ['DES', 'des']."
+        ==            f"ERROR: survey {fov_configs['survey_name']} not valid for camera_model = {fov_configs['camera_model']}, valid surveys are ['des']."
+
     )
 
 
