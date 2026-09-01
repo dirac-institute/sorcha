@@ -69,6 +69,10 @@ class linkingfilterConfigs:
         self._validate_ssp_linkingfilter_configs()
         self._validate_des_linkingfilter_configs()
 
+        if all([self.ssp_linking_on, self.des_discovery_on]):
+            logging.error("ERROR: Only one discovery filter can be on at a time.")
+            sys.exit("ERROR: Only one discovery filter can be on at a time.")
+
         if any([self.ssp_linking_on, self.des_discovery_on]):
             self.discovery_filter_on = True
         else:

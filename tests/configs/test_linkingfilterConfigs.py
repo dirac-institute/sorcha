@@ -246,3 +246,25 @@ def test_linkingfilter_descuts_float(key_name, prob_name):
         error_text.value.code
         == f"ERROR: expected a float for config parameter {prob_name}. Check value in config file."
     )
+
+
+
+def test_both_discovery_filters_on():
+    """
+    Code should error out if both ssp and des linking filters are on at the same time.
+    """
+    linkingfilter_configs = correct_linkingfilter.copy()
+
+    linkingfilter_configs["des_distance_cut_upper"] = 10
+    linkingfilter_configs["des_distance_cut_lower"] = 2
+
+
+    with pytest.raises(SystemExit) as error_text:
+        test_configs = linkingfilterConfigs(**linkingfilter_configs)
+
+    assert (
+        error_text.value.code
+        == "ERROR: Only one discovery filter can be on at a time."
+    )
+
+
