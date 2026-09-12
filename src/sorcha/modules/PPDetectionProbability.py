@@ -34,11 +34,11 @@ def calcDetectionProbability(mag, limmag, fillFactor=1.0, w=0.1):
     limmag : float or array of floats
         Limiting magnitude of the field.
 
-    fillFactor : float), default=1.0
-        Fraction of FOV covered by the camera sensor.
+    fillFactor : float), optional
+        Fraction of FOV covered by the camera sensor. Default = 1.0
 
-    w : float, default=0.1
-        Distribution parameter.
+    w : float
+        Distribution parameter. Default = 0.1
 
     Returns
     ----------
@@ -71,26 +71,29 @@ def PPDetectionProbability(
     eph_df : Pandas dataframe
         Dataframe of observations.
 
-    trailing_losses : Boolean, default=False
-        Are trailing losses being applied?
+    trailing_losses : Boolean, optional
+        Are trailing losses being applied?, Default = False
 
-    trailing_loss_name : string, default="dmagDetect"
-        eph_df column name for trailing losses
+    trailing_loss_name : string, optional
+        eph_df column name for trailing losses, Default = dmagDetect
 
-    magnitude_name : string, default="PSFMag"
+    magnitude_name : string, optional
         eph_df column name for observation limiting magnitude
+        Default = PSFMag
 
-    limiting_magnitude_name : string, default="fiveSigmaDepth_mag"
+    limiting_magnitude_name : string, optional
         eph_df column used for observation limiting magnitude.
+        Default = fiveSigmaDepth_mag
 
-    field ID : string, default="FieldID"
+    field ID : string, optional
         eph_df column name for observation field_id
+        Default = FieldID
 
-    fillFactor : float, default=1.0
-        Fraction of FOV covered by the camera sensor.
+    fillFactor : float, optional
+        Fraction of FOV covered by the camera sensor. Default = 1.0
 
-    w : float, default=0.1
-        Distribution parameter.
+    w : float
+        Distribution parameter. Default =0.1
 
     Returns
     ----------
@@ -98,16 +101,5 @@ def PPDetectionProbability(
         Probability of detection.
 
     """
-    if "limMag_perChip" in eph_df.columns:
-        limiting_magnitude_name = "limMag_perChip"
-    if not trailing_losses:
-        return calcDetectionProbability(
-            eph_df[magnitude_name], eph_df[limiting_magnitude_name], fillFactor, w
-        )
-    elif trailing_losses:
-        return calcDetectionProbability(
-            eph_df[magnitude_name] + eph_df[trailing_loss_name],
-            eph_df[limiting_magnitude_name],
-            fillFactor,
-            w,
-        )
+
+    return calcDetectionProbability(eph_df[magnitude_name], eph_df[limiting_magnitude_name], fillFactor, w)
