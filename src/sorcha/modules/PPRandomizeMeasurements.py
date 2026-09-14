@@ -42,6 +42,8 @@ def randomizeAstrometryAndPhotometry(observations, sconfigs, module_rngs, verbos
     - AstRATrue(deg)
     - AstDecTrue(deg)
 
+    When trailing losses are turned off, the output randomized PSFMag and trailedSourceMag are identical
+
     Parameters
     -----------
     observations : pandas dataframe
@@ -53,8 +55,8 @@ def randomizeAstrometryAndPhotometry(observations, sconfigs, module_rngs, verbos
     module_rngs : PerModuleRNG
        A collection of random number generators (per module).
 
-    verbose : bool, default=False
-       Verbosity on or off.
+    verbose : bool
+       Verbosity on or off. Default False.
 
     Returns
     ---------
@@ -123,28 +125,31 @@ def randomizeAstrometry(
     module_rngs : PerModuleRNG
         A collection of random number generators (per module).
 
-    ra_Name : string, default="RA_deg"
+    ra_Name : string, optional
         "df" dataframe column name for the right ascension.
+        Default = "RA_deg"
 
-    dec_Name : string, default="Dec_deg"
-        "df" dataframe column name for the declination.
+    dec_Name : string, optional
+        "df" dataframe column name for the declination. Default = "Dec_deg"
 
-    raOrigName : string, default="RATrue_deg"
+    raOrigName : string, optional
         "df" dataframe column name for where to store original right
-        ascension.
+        ascension. Default = "RATrue_deg"
 
-    decOrigName : string, default="DecTrue_deg"
+    decOrigName : string, optional
         "df" dataframe column name for where to store original declination.
+        Default = "DecTrue_deg"
 
-    sigName : string, default="AstSig(deg)"
+    sigName : string, optional
         "df" dataframe column name for the standard deviation, uncertainty in the
         astrometric position.
+        Default = "AstSig(deg)"
 
-    radecUnits : string, default="deg"
-        Units for RA and Dec ('deg'/'rad'/'mas').
+    radecUnits : string
+        Units for RA and Dec ('deg'/'rad'/'mas'). Default = "deg"
 
-    sigUnits : string, default="mas"
-        Units for standard deviation ('deg'/'rad'/'mas').
+    sigUnits : string
+        Units for standard deviation ('deg'/'rad'/'mas'). Default = "mas"
 
 
     Returns
@@ -215,8 +220,8 @@ def sampleNormalFOV(center, sigma, module_rngs, ndim=3):
     module_rngs : PerModuleRNG
         A collection of random number generators (per module).
 
-    ndim : integer, default=3
-        Dimension of hyper-sphere.
+    ndim : integer, optional
+        Dimension of hyper-sphere. Default = 3
 
     Return
     --------
@@ -237,7 +242,7 @@ def sampleNormalFOV(center, sigma, module_rngs, ndim=3):
     n = len(sigma)
 
     for i in range(ndim):
-        cov[i, i] = 1.0
+        cov[i, i] = 1
 
     # create a small hypersphere with npoints around center point (e.g. RADEC vector on unit sphere)
     # the small hypersphere will look like a bubble on the unit sphere
@@ -267,14 +272,14 @@ def randomizePhotometry(
     module_rngs : PerModuleRNG
         A collection of random number generators (per module).
 
-    magName : string, default="Filtermag"
-        'df' column name of apparent magnitude.
+    magName : string, optional
+        'df' column name of apparent magnitude. Default = "Filtermag"
 
-    magRndName : string, default="FiltermagRnd"
-       'df' column name for storing randomized apparent magnitude,
+    magRndName : string, optional
+       'df' column name for storing randomized apparent magnitude, Default = "FiltermagRnd"
 
-    sigName : float, default="FiltermagSig"
-            'df' column name for magnitude standard deviation.
+    sigName : float, optional
+            'df' column name for magnitude standard deviation. Default = "FiltermagSig"
 
     Returns
     -----------
@@ -311,8 +316,8 @@ def flux2mag(f, f0=3631):
     f : float or array of floats
         flux. [Units : Jy].
 
-    f0: float, default= 3631
-        Zero point flux.
+    f0: float, optional
+        Zero point flux. Default = 3631
 
     Returns
     -----------
@@ -335,8 +340,8 @@ def mag2flux(mag, f0=3631):
     mag : float or rray of floats
         Pogson magnitude. [Units: mag]
 
-    f0 : float, default=3631
-        Zero point flux.
+    f0 : float, optional
+        Zero point flux. Default = 3631
 
     Returns
     -----------
@@ -359,8 +364,8 @@ def icrf2radec(x, y, z, deg=True):
     x, y, z : floats/arrays of floats
         3D vector of unit length (ICRF)
 
-    deg : boolean, default=True
-        True for angles in degrees, False for angles in radians.
+    de : boolean, optional
+        True for angles in degrees, False for angles in radians. Default = True
 
     Returns
     -----------
@@ -416,8 +421,8 @@ def radec2icrf(ra, dec, deg=True):
     dec: float or array of floats
         Declination. [Units deg]
 
-    deg : boolean, default=True
-        True for angles in degrees, False for angles in radians.
+    deg : boolean, optional
+        True for angles in degrees, False for angles in radians. Default = True
 
     Returns
     -----------
