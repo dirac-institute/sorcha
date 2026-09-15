@@ -153,7 +153,7 @@ def execute(args):
         update_activity_subclasses,
         update_lc_subclasses,
     )
-    from sorcha.utilities.survey_check import is_survey_valid
+    from sorcha.utilities.survey_check import check_survey_in_available_config
 
     import sys, os
 
@@ -205,40 +205,21 @@ def execute(args):
             "ERROR: cmd line arg --vd, --visits-db and config fov varible visits_query must both be specified"
         )
 
-    if is_survey_valid(cmd_args["surveyname"], "rubin_sim") or is_survey_valid(cmd_args["surveyname"], "des"):
-        try:
-            args = sorchaArguments(cmd_args)
-        except Exception as err:
-            pplogger.error(err)
-            sys.exit(err)
-        try:
-            args.validate_arguments()
-        except Exception as err:
-            pplogger.error(err)
-            sys.exit(err)
-        runSorchaSimulation(args, sconfigs)
-    elif is_survey_valid(cmd_args["surveyname"], "lsst"):
-        pplogger.error(
-            "ERROR: The LSST has not started yet Current allowed surveys are: {}".format(
-                ["rubin_sim", "RUBIN_SIM"]
-            )
-        )
-        sys.exit(
-            "ERROR: The LSST has not started. Current allowed surveys are: {}".format(
-                ["rubin_sim", "RUBIN_SIM"]
-            )
-        )
-    else:
-        pplogger.error(
-            "ERROR: Survey name not recognised. Current allowed surveys are: {}".format(
-                ["rubin_sim", "RUBIN_SIM", "des", "DES"]
-            )
-        )
-        sys.exit(
-            "ERROR: Survey name not recognised. Current allowed surveys are: {}".format(
-                ["rubin_sim", "RUBIN_SIM", "des", "DES"]
-            )
-        )
+    
+    check_survey_in_available_config(cmd_args["surveyname"], "all")
+    try:
+        args = sorchaArguments(cmd_args)
+    except Exception as err:
+        pplogger.error(err)
+        sys.exit(err)
+    try:
+        args.validate_arguments()
+    except Exception as err:
+        pplogger.error(err)
+        sys.exit(err)
+        
+    runSorchaSimulation(args, sconfigs)
+        
 
 
 if __name__ == "__main__":

@@ -3,7 +3,7 @@ import sys
 from dataclasses import dataclass
 import numpy as np
 from sorcha.configs.configUtilities import check_key_exists
-from sorcha.utilities.survey_check import is_survey_valid
+from sorcha.utilities.survey_check import check_survey_in_available_config
 
 
 @dataclass
@@ -58,7 +58,7 @@ class filtersConfigs:
         None
         """
 
-        if is_survey_valid(self.survey_name, "rubin"):
+        if check_survey_in_available_config(self.survey_name, "rubin"):
             lsst_filters = ["u", "g", "r", "i", "z", "y"]
             filters_ok = all(elem in lsst_filters for elem in self.observing_filters)
 
@@ -76,7 +76,7 @@ class filtersConfigs:
                         bad_list, self.survey_name
                     )
                 )
-        if is_survey_valid(self.survey_name, "des"):
+        if check_survey_in_available_config(self.survey_name, "des"):
             des_filters = ["g", "r", "i", "z", "Y"]
             filters_ok = all(elem in des_filters for elem in self.observing_filters)
 
