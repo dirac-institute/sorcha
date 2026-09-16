@@ -1,7 +1,6 @@
 import sys
 import logging
 
-
 pplogger = logging.getLogger(__name__)
 
 # dict of surveys for a given option, These are currently used in fov,  filters , expert  configs
@@ -9,7 +8,7 @@ pplogger = logging.getLogger(__name__)
 
 
 DICT_SURVEY_NAMES = {
-    "all": ["rubin_sim", "des"], # all available surveys in Sorcha currently
+    "all": ["rubin_sim", "des"],  # all available surveys in Sorcha currently
     "rubin": ["rubin_sim", "lsst"],  # rubin is used for any overall rubin process.
     "rubin_sim": ["rubin_sim"],  # for rubin_sim funcitons
     "lsst": ["lsst"],  # for lsst function
@@ -36,18 +35,17 @@ def check_survey_in_available_config(survey_name, expected_survey):
 
     """
 
-
     if expected_survey == ["all"]:
         if not survey_name in DICT_SURVEY_NAMES[expected_survey]:
             pplogger.error(
-            "ERROR: Survey name not recognised. Current allowed surveys are: {}".format(
-                ["rubin_sim", "RUBIN_SIM", "des", "DES"]
+                "ERROR: Survey name not recognised. Current allowed surveys are: {}".format(
+                    ["rubin_sim", "RUBIN_SIM", "des", "DES"]
+                )
             )
-        )
             sys.exit(
-            "ERROR: Survey name not recognised. Current allowed surveys are: {}".format(
-                ["rubin_sim", "RUBIN_SIM", "des", "DES"]
+                "ERROR: Survey name not recognised. Current allowed surveys are: {}".format(
+                    ["rubin_sim", "RUBIN_SIM", "des", "DES"]
+                )
             )
-        )
-            
+
     return survey_name in DICT_SURVEY_NAMES[expected_survey]

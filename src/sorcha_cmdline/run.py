@@ -205,8 +205,8 @@ def execute(args):
             "ERROR: cmd line arg --vd, --visits-db and config fov varible visits_query must both be specified"
         )
 
-    
     check_survey_in_available_config(cmd_args["surveyname"], "all")
+
     try:
         args = sorchaArguments(cmd_args)
     except Exception as err:
@@ -217,9 +217,8 @@ def execute(args):
     except Exception as err:
         pplogger.error(err)
         sys.exit(err)
-        
+
     runSorchaSimulation(args, sconfigs)
-        
 
 
 if __name__ == "__main__":
