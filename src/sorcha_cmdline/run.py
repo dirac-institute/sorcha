@@ -153,7 +153,7 @@ def execute(args):
         update_activity_subclasses,
         update_lc_subclasses,
     )
-    from sorcha.utilities.survey_check import check_survey_in_available_config
+    from sorcha.utilities.survey_check import check_available_survey_configs
 
     import sys, os
 
@@ -205,7 +205,7 @@ def execute(args):
             "ERROR: cmd line arg --vd, --visits-db and config fov varible visits_query must both be specified"
         )
 
-    check_survey_in_available_config(cmd_args["surveyname"], "all")
+    check_available_survey_configs(cmd_args["surveyname"], "all")
 
     try:
         args = sorchaArguments(cmd_args)

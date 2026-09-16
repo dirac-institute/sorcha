@@ -10,7 +10,7 @@ from sorcha.configs.configUtilities import (
     cast_as_float,
     check_key_doesnt_exist,
 )
-from sorcha.utilities.survey_check import check_survey_in_available_config
+from sorcha.utilities.survey_check import check_available_survey_configs
 
 
 @dataclass
@@ -82,9 +82,9 @@ class fovConfigs:
         """
         if self.footprint_path is not None:
             FindFileOrExit(self.footprint_path, "footprint_path")
-        if check_survey_in_available_config(self.survey_name, "rubin"):
+        if check_available_survey_configs(self.survey_name, "rubin"):
             self.default_camera_config_file = "data/LSST_detector_corners_100123.csv"
-        elif check_survey_in_available_config(self.survey_name, "des"):
+        elif check_available_survey_configs(self.survey_name, "des"):
             self.default_camera_config_file = "data/DES_ccd_corners.csv"
         else:
             logging.error(
@@ -116,7 +116,7 @@ class fovConfigs:
         None
         """
 
-        if check_survey_in_available_config(self.survey_name, "des"):
+        if check_available_survey_configs(self.survey_name, "des"):
             check_key_exists(self.visits_query, "visits_query")
             check_key_doesnt_exist(
                 self.footprint_edge_threshold,

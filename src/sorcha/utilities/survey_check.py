@@ -16,7 +16,7 @@ DICT_SURVEY_NAMES = {
 }
 
 
-def check_survey_in_available_config(survey_name, expected_survey):
+def check_available_survey_configs(survey_name, expected_survey):
     """
     Passes arguments that match the expected survey into if statements in config classes
 
