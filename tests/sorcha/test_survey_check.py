@@ -1,4 +1,21 @@
 from sorcha.utilities.survey_check import check_survey_in_available_config
+import pytest 
+
+
+def test_all_error_out():
+
+    expected_survey = "all"
+
+    survey_name ="fake_survey"
+    with pytest.raises(SystemExit) as error_text:
+            check_survey_in_available_config(survey_name,expected_survey)
+    assert error_text.value.code == "ERROR: Survey name {} not recognised. Current allowed surveys are: {}".format(survey_name,
+                    ["rubin_sim", "RUBIN_SIM", "des", "DES"])
+    
+
+    survey_name ="des"
+    ans = check_survey_in_available_config(survey_name,expected_survey)
+    assert ans == True
 
 
 def test_check_survey_in_available_config():
