@@ -352,6 +352,7 @@ def runSorchaSimulation(args, sconfigs, return_only=False):
                 width=sconfigs.fadingfunction.fading_function_width,
                 transient_efficiency=sconfigs.fadingfunction.des_transient_efficency,
                 fading_function_type=sconfigs.fadingfunction.fading_function_type,
+                fov_camera_model=sconfigs.fov.camera_model,
                 module_rngs=args._rngs,
                 verbose=args.loglevel,
             )

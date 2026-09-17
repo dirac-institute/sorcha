@@ -10,6 +10,7 @@ def desFadingFunctionFilter(
     transient_efficiency,
     module_rngs,
     verbose=False,
+    limiting_magnitude_name="fiveSigmaDepth_mag",
 ):
     """
     Wrapper function for desDetectionProbability and ppDropObservations.
@@ -31,6 +32,10 @@ def desFadingFunctionFilter(
     verbose : boolean, optional
         Verbose logging flag. Default = False
 
+    limiting_magnitude_name : string, optional
+        eph_df column used for observation limiting magnitude.
+        Default = fiveSigmaDepth_mag
+
     Returns
     ----------
     observations_drop : Pandas dataframe)
@@ -41,7 +46,9 @@ def desFadingFunctionFilter(
     verboselog = pplogger.info if verbose else lambda *a, **k: None
 
     verboselog("Calculating probabilities of detections...")
-    observations["detection_probability"] = desDetectionProbability(observations, transient_efficiency)
+    observations["detection_probability"] = desDetectionProbability(
+        observations, transient_efficiency, limiting_magnitude_name=limiting_magnitude_name
+    )
 
     verboselog("Dropping observations below detection threshold...")
     observations = PPDropObservations(observations, module_rngs, "detection_probability")

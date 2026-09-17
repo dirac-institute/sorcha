@@ -98,8 +98,7 @@ def PPDetectionProbability(
         Probability of detection.
 
     """
-    if "limMag_perChip" in eph_df.columns:
-        limiting_magnitude_name = "limMag_perChip"
+
     if not trailing_losses:
         return calcDetectionProbability(
             eph_df[magnitude_name], eph_df[limiting_magnitude_name], fillFactor, w

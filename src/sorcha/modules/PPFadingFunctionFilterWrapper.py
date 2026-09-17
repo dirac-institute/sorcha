@@ -11,6 +11,7 @@ def FadingFunctionFilter(
     width=None,
     transient_efficiency=None,
     fading_function_type=None,
+    fov_camera_model=None,
     module_rngs=None,
     verbose=False,
 ):
@@ -30,6 +31,11 @@ def FadingFunctionFilter(
     transient_efficiency: float
         DES overall transient efficiency for moving object detection
 
+    fading_function_type: string
+        Type of fading function used. Whether it's 'general' or 'des_per_obs'
+
+    fov_camera_model: string
+        Type of camera_model used in fov. Affects the column used for limiting magnitude
 
     module_rngs : PerModuleRNG
         A collection of random number generators (per module).
@@ -48,6 +54,11 @@ def FadingFunctionFilter(
     pplogger = logging.getLogger(__name__)
     verboselog = pplogger.info if verbose else lambda *a, **k: None
 
+    if fov_camera_model == "visits_footprint":
+        limiting_magnitude_name = "limMag_perChip"
+    else:
+        limiting_magnitude_name = "fiveSigmaDepth_mag"
+
     if fading_function_type == "general":
         observations = PPFadingFunctionFilter(
             observations,
@@ -55,6 +66,7 @@ def FadingFunctionFilter(
             width,
             module_rngs,
             verbose=verbose,
+            limiting_magnitude_name=limiting_magnitude_name,
         )
     elif fading_function_type == "des_per_obs":
         observations = desFadingFunctionFilter(
@@ -62,6 +74,7 @@ def FadingFunctionFilter(
             transient_efficiency,
             module_rngs,
             verbose=verbose,
+            limiting_magnitude_name=limiting_magnitude_name,
         )
     else:
         pplogger.error(
