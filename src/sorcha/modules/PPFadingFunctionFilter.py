@@ -22,6 +22,9 @@ def PPFadingFunctionFilter(
     fillfactor : float
         Fraction of camera field-of-view covered by detectors
 
+    width : float
+        Distribution parameter. Default =0.1
+
     module_rngs : PerModuleRNG
         A collection of random number generators (per module).
 

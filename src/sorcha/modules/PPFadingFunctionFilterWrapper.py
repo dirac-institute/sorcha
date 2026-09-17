@@ -27,6 +27,9 @@ def FadingFunctionFilter(
 
     fillfactor : float
         Rubin_sim fraction of camera field-of-view covered by detectors
+    
+    width : float
+        Distribution parameter. Default =0.1
 
     transient_efficiency: float
         DES overall transient efficiency for moving object detection
