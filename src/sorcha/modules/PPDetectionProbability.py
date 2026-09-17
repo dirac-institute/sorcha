@@ -53,11 +53,8 @@ def calcDetectionProbability(mag, limmag, fillFactor=1.0, w=0.1):
 
 def PPDetectionProbability(
     eph_df,
-    trailing_losses=False,
-    trailing_loss_name="dmagDetect",
     magnitude_name="PSFMag",
     limiting_magnitude_name="fiveSigmaDepth_mag",
-    field_id_name="FieldID",
     fillFactor=1.0,
     w=0.1,
 ):
@@ -71,12 +68,6 @@ def PPDetectionProbability(
     eph_df : Pandas dataframe
         Dataframe of observations.
 
-    trailing_losses : Boolean, optional
-        Are trailing losses being applied?, Default = False
-
-    trailing_loss_name : string, optional
-        eph_df column name for trailing losses, Default = dmagDetect
-
     magnitude_name : string, optional
         eph_df column name for observation limiting magnitude
         Default = PSFMag
@@ -84,10 +75,6 @@ def PPDetectionProbability(
     limiting_magnitude_name : string, optional
         eph_df column used for observation limiting magnitude.
         Default = fiveSigmaDepth_mag
-
-    field ID : string, optional
-        eph_df column name for observation field_id
-        Default = FieldID
 
     fillFactor : float, optional
         Fraction of FOV covered by the camera sensor. Default = 1.0
