@@ -22,7 +22,7 @@ def Discovery_Filter(observations=None, linkingfilter_configs=None, verbose=None
     observations : Pandas dataframe
         Dataframe of observations.
 
-    linkingfilter_configs: dataclass
+    linkingfilter_configs: linkingfilterConfigs
         Linking Filter Dataclass of linking filter configuration file arguments.
 
     verbose : boolean, default=False

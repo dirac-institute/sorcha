@@ -22,10 +22,10 @@ def FadingFunctionFilter(
     observations : Pandas dataframe
         Dataframe of observations with a column containing the probability of detection.
 
-    fadingfunction_configs: dataclass
+    fadingfunction_configs: fadingfunctionConfigs
         Fading Function Dataclass of fading function configuration file arguments.
 
-    fov_configs: dataclass
+    fov_configs: fovConfigs
         FOV Dataclass of fov configuration file arguments.
 
 

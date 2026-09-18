@@ -51,10 +51,10 @@ class linkingfilterConfigs:
     """flag for DES for object-sun light-time-corrected distance cuts """
 
     des_distance_cut_upper: float = None
-    """The upper distance limit for object-sun light-time-corrected distance for DES to detect objects. in km"""
+    """The upper distance limit for object-sun light-time-corrected distance for DES to detect objects. in au"""
 
     des_distance_cut_lower: float = None
-    """The lower distance limit for object-sun light-time-corrected distance for DES to detect objects. in km"""
+    """The lower distance limit for object-sun light-time-corrected distance for DES to detect objects. in au"""
     des_motion_cut_on: bool = None
     """flag for when DES motion cuts are selected"""
 
