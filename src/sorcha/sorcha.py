@@ -369,7 +369,7 @@ def runSorchaSimulation(args, sconfigs, return_only=False):
         if sconfigs.linkingfilter.discovery_filter_on and len(observations.index) > 0:
             observations = Discovery_Filter(
                 observations,
-                sconfigs=sconfigs,
+                linkingfilter_configs=sconfigs.linkingfilter,
                 verbose=args.loglevel,
             )
             observations.reset_index(drop=True, inplace=True)

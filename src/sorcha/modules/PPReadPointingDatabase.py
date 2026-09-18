@@ -19,6 +19,9 @@ def PPReadPointingDatabase(bsdbname, observing_filters, dbquery, fading_function
     dbquery : string
         Databse query to perform on pointing database.
 
+    fading_function_type: string
+        fading function type. Used for addional checks in the pointing
+        database when fading_function_type = 'des_per_obs'.
 
     Returns
     -----------
