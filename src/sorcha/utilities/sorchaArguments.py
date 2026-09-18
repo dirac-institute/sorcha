@@ -24,6 +24,8 @@ class sorchaArguments:
     """path where data should be output"""
     outfilestem: str = ""
     """file system for output"""
+    pointing_database: str = ""
+    """path to pointing database"""
 
     loglevel: bool = False
     """logger verbosity"""
