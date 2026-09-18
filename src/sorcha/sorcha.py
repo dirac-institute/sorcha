@@ -142,7 +142,9 @@ def runSorchaSimulation(args: sorchaArguments, sconfigs: sorchaConfigs, return_o
     # of the needed values derived from the pointing information.
     if sconfigs.input.ephemerides_type.casefold() != "external":
         verboselog("Pre-computing pointing information for ephemeris generation")
-        filterpointing = precompute_pointing_information(filterpointing, args, sconfigs)
+        filterpointing = precompute_pointing_information(
+            filterpointing, args, simulation_configs=sconfigs.simulation, auxiliary_configs=sconfigs.auxiliary
+        )
 
     # Set up the data readers.
     ephem_type = sconfigs.input.ephemerides_type

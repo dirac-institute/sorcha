@@ -10,8 +10,8 @@ from sorcha.ephemeris.simulation_driver import create_ephemeris, write_out_ephem
 from sorcha.modules.PPReadPointingDatabase import PPReadPointingDatabase
 from sorcha.ephemeris.simulation_setup import precompute_pointing_information
 from sorcha.configs.sorchaConfigs import sorchaConfigs, inputConfigs, outputConfigs
-
-
+from sorcha.configs.ephemerisConfigs import simulationConfigs 
+from sorcha.configs.auxiliaryConfigs import auxiliaryConfigs
 from sorcha.readers.CombinedDataReader import CombinedDataReader
 from sorcha.readers.EphemerisReader import EphemerisDataReader
 from sorcha.readers.OrbitAuxReader import OrbitAuxReader
@@ -150,8 +150,8 @@ def test_ephemeris_end2end(single_synthetic_pointing, tmp_path):
         configs.filters.observing_filters,
         configs.input.pointing_sql_query,
     )
-
-    filterpointing = precompute_pointing_information(filterpointing, args, configs)
+    
+    filterpointing = precompute_pointing_information(filterpointing, args, configs.simulation, configs.auxiliary)
 
     observations = create_ephemeris(
         single_synthetic_pointing,

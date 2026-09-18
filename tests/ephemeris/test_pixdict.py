@@ -79,7 +79,9 @@ def test_pixeldict(tmp_path):
         configs.input.pointing_sql_query,
     )
 
-    filterpointing = precompute_pointing_information(filterpointing, args, configs)
+    
+    filterpointing = precompute_pointing_information(filterpointing, args, configs.simulation, configs.auxiliary)
+
     args = sorchaArguments(cmd_args_dict)
 
     ephem, gm_sun, gm_total = create_assist_ephemeris(args, configs.auxiliary)
