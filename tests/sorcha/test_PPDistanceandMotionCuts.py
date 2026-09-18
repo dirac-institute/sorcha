@@ -1,5 +1,5 @@
 import pytest
-from sorcha.modules.PPDistanceandMotionCuts import distance_cut, motion_cut
+from sorcha.modules.desDistanceandMotionCuts import distance_cut, motion_cut
 import pandas as pd
 import numpy as np
 import astropy.units as u
@@ -61,6 +61,7 @@ def test_motioncut():
     """
     # when in boundary nothing gets dropped
     observations = {
+        "ObjID": ["0"],
         "RARateCosDec_deg_day": [1],
         "DecRate_deg_day": [0],
     }
@@ -72,6 +73,7 @@ def test_motioncut():
     assert len(observations) == len(test_cut)
     # when out of boundary value gets dropped
     observations = {
+        "ObjID": ["0"],
         "RARateCosDec_deg_day": [3],
         "DecRate_deg_day": [0],
     }
@@ -83,6 +85,7 @@ def test_motioncut():
     assert 0 == len(test_cut)
     # one object dropped the other staying
     observations = {
+        "ObjID": ["0", "1"],
         "RARateCosDec_deg_day": [1, 3],
         "DecRate_deg_day": [0, 0],
     }

@@ -12,7 +12,6 @@ from sorcha.ephemeris.simulation_driver import create_ephemeris
 from sorcha.ephemeris.simulation_setup import precompute_pointing_information
 
 from sorcha.modules.PPReadPointingDatabase import PPReadPointingDatabase
-from sorcha.modules.PPLinkingFilter import PPLinkingFilter
 from sorcha.modules.PPTrailingLoss import PPTrailingLoss
 from sorcha.modules.PPBrightLimit import PPBrightLimit
 from sorcha.modules.PPCalculateApparentMagnitude import PPCalculateApparentMagnitude
@@ -20,7 +19,10 @@ from sorcha.modules.PPApplyFOVFilter import PPApplyFOVFilter
 from sorcha.modules.PPSNRLimit import PPSNRLimit
 from sorcha.modules import PPAddUncertainties, PPRandomizeMeasurements
 from sorcha.modules import PPVignetting
-from sorcha.modules.PPFadingFunctionFilter import PPFadingFunctionFilter
+
+
+from sorcha.modules.PPDiscoveryFilterWrapper import Discovery_Filter
+from sorcha.modules.PPFadingFunctionFilterWrapper import FadingFunctionFilter
 from sorcha.modules.PPFaintObjectCullingFilter import PPFaintObjectCullingFilter
 
 
@@ -40,7 +42,8 @@ from sorcha.activity.activity_registration import update_activity_subclasses
 from sorcha.lightcurves.lightcurve_registration import update_lc_subclasses
 
 from sorcha.utilities.sorchaArguments import sorchaArguments
-from sorcha.utilities.sorchaConfigs import sorchaConfigs, PrintConfigsToLog
+from sorcha.configs.sorchaConfigs import sorchaConfigs
+from sorcha.configs.configUtilities import PrintConfigsToLog
 from sorcha.utilities.sorchaCommandLineParser import sorchaCommandLineParser
 from sorcha.utilities.fileAccessUtils import FindFileOrExit
 from sorcha.utilities.citation_text import cite_sorcha
@@ -81,11 +84,12 @@ def mem(df):
     return usage
 
 
-def runLSSTSimulation(args, sconfigs, return_only=False):
+def runSorchaSimulation(args: sorchaArguments, sconfigs: sorchaConfigs, return_only=False):
     """
     Runs the post processing survey simulator functions that apply a series of
     filters to bias a model Solar System small body population to what the
-    Vera C. Rubin Observatory Legacy Survey of Space and Time would observe.
+    Vera C. Rubin Observatory Legacy Survey of Space and Time or
+    the Cerro Tololo observatory Dark Energy Survey  would observe.
 
     Parameters
     -----------
@@ -104,6 +108,7 @@ def runLSSTSimulation(args, sconfigs, return_only=False):
 
     """
     pplogger = logging.getLogger(__name__)
+    pplogger.info(f"Sorcha beginning for survey {args.surveyname}")
     pplogger.info("Post-processing begun.")
 
     try:
@@ -130,14 +135,16 @@ def runLSSTSimulation(args, sconfigs, return_only=False):
         args.pointing_database,
         sconfigs.filters.observing_filters,
         sconfigs.input.pointing_sql_query,
-        args.surveyname,
+        fading_function_type=sconfigs.fadingfunction.fading_function_type,
     )
 
     # if we are going to compute the ephemerides, then we should pre-compute all
     # of the needed values derived from the pointing information.
     if sconfigs.input.ephemerides_type.casefold() != "external":
         verboselog("Pre-computing pointing information for ephemeris generation")
-        filterpointing = precompute_pointing_information(filterpointing, args, sconfigs)
+        filterpointing = precompute_pointing_information(
+            filterpointing, args, simulation_configs=sconfigs.simulation, auxiliary_configs=sconfigs.auxiliary
+        )
 
     # Set up the data readers.
     ephem_type = sconfigs.input.ephemerides_type
@@ -174,7 +181,9 @@ def runLSSTSimulation(args, sconfigs, return_only=False):
     footprint = None
     if sconfigs.fov.camera_model == "footprint":
         verboselog("Creating sensor footprint object for filtering")
-        footprint = Footprint(sconfigs.fov.footprint_path, args.surveyname)
+        footprint = Footprint(
+            sconfigs.fov.footprint_path, default_camera_config_file=sconfigs.fov.default_camera_config_file
+        )
 
     # Lists to hold results to be concated and returned
     if return_only:
@@ -221,7 +230,15 @@ def runLSSTSimulation(args, sconfigs, return_only=False):
                     continue
 
             verboselog("Starting ephemeris generation")
-            observations = create_ephemeris(orbits_df, filterpointing, args, sconfigs)
+            observations = create_ephemeris(
+                orbits_df,
+                filterpointing,
+                args,
+                input_configs=sconfigs.input,
+                output_configs=sconfigs.output,
+                simulation_configs=sconfigs.simulation,
+                auxiliary_configs=sconfigs.auxiliary,
+            )
             verboselog("Ephemeris generation completed")
 
         verboselog("Start post processing for this chunk")
@@ -275,10 +292,12 @@ def runLSSTSimulation(args, sconfigs, return_only=False):
         # as columns in the observations dataframe.
         # These are the columns that should be used moving forward for filters etc.
         # Do NOT use trailedSourceMagTrue or PSFMagTrue, these are the unrandomised magnitudes.
-        verboselog("Calculating astrometric and photometric uncertainties...")
-        observations = PPAddUncertainties.addUncertainties(
-            observations, sconfigs, args._rngs, verbose=args.loglevel
-        )
+
+        if sconfigs.expert.uncertainties_on:
+            verboselog("Calculating astrometric and photometric uncertainties...")
+            observations = PPAddUncertainties.addUncertainties(
+                observations, sconfigs, args._rngs, verbose=args.loglevel
+            )
 
         if sconfigs.expert.randomization_on:
             verboselog(
@@ -337,11 +356,11 @@ def runLSSTSimulation(args, sconfigs, return_only=False):
         if sconfigs.fadingfunction.fading_function_on and len(observations.index) > 0:
             verboselog("Applying detection efficiency fading function...")
             verboselog("Number of rows BEFORE applying fading function: " + str(len(observations.index)))
-            observations = PPFadingFunctionFilter(
+            observations = FadingFunctionFilter(
                 observations,
-                sconfigs.fadingfunction.fading_function_peak_efficiency,
-                sconfigs.fadingfunction.fading_function_width,
-                args._rngs,
+                fadingfunc_configs=sconfigs.fadingfunction,
+                fov_configs=sconfigs.fov,
+                module_rngs=args._rngs,
                 verbose=args.loglevel,
             )
             verboselog("Number of rows AFTER applying fading function: " + str(len(observations.index)))
@@ -354,19 +373,11 @@ def runLSSTSimulation(args, sconfigs, return_only=False):
             )
             verboselog("Number of rows AFTER applying bright limit filter " + str(len(observations.index)))
 
-        if sconfigs.linkingfilter.ssp_linking_on and len(observations.index) > 0:
-            verboselog("Applying SSP linking filter...")
-            verboselog("Number of rows BEFORE applying SSP linking filter: " + str(len(observations.index)))
-            observations = PPLinkingFilter(
+        if sconfigs.linkingfilter.discovery_filter_on and len(observations.index) > 0:
+            observations = Discovery_Filter(
                 observations,
-                sconfigs.linkingfilter.ssp_detection_efficiency,
-                sconfigs.linkingfilter.ssp_number_observations,
-                sconfigs.linkingfilter.ssp_number_tracklets,
-                sconfigs.linkingfilter.ssp_track_window,
-                sconfigs.linkingfilter.ssp_separation_threshold,
-                sconfigs.linkingfilter.ssp_maximum_time,
-                sconfigs.linkingfilter.ssp_night_start_utc,
-                drop_unlinked=sconfigs.linkingfilter.drop_unlinked,
+                linking_configs=sconfigs.linkingfilter,
+                verbose=args.loglevel,
             )
             observations.reset_index(drop=True, inplace=True)
             verboselog("Number of rows AFTER applying SSP linking filter: " + str(len(observations.index)))

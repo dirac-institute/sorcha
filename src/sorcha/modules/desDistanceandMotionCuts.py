@@ -63,7 +63,12 @@ def motion_cut(observations, motion_upper, motion_lower):
     motion_sq = observations["RARateCosDec_deg_day"] ** 2 + observations["DecRate_deg_day"] ** 2
     motion_upper = motion_upper**2
     motion_lower = motion_lower**2
-    observations = observations.drop(
-        observations[~((motion_sq < motion_upper) & (motion_sq > motion_lower))].index
-    )
+
+    within_bounds = (motion_sq < motion_upper) & (motion_sq > motion_lower)
+
+    objects_within_bounds = observations.loc[within_bounds, "ObjID"].unique()
+
+    # Keep all detections for objects that have at least one detection within bounds
+    observations = observations[observations["ObjID"].isin(objects_within_bounds)]
+
     return observations

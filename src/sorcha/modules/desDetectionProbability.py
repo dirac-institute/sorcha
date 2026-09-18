@@ -20,7 +20,7 @@
 import numpy as np
 
 
-def DEScalcDetectionProbability(mag, limmag, c, k, c_sharp):
+def desCalcDetectionProbability(mag, limmag, c, k, transient_efficiency):
     """
     Find the probability of a detection given a visual magnitude,
     limiting magnitude, a scaling factor c, transition sharpness k and a transient efficiency. Equation from
@@ -40,7 +40,7 @@ def DEScalcDetectionProbability(mag, limmag, c, k, c_sharp):
     k : float or array of floats
         transition sharpness
 
-    c_sharp: float
+    transient_efficiency: float
         transient efficiency.
     Returns
     ----------
@@ -48,12 +48,12 @@ def DEScalcDetectionProbability(mag, limmag, c, k, c_sharp):
         Probability of detection
     """
 
-    P = c_sharp * (c / (1 + np.exp(k * (mag - limmag))))
+    P = transient_efficiency * (c / (1 + np.exp(k * (mag - limmag))))
 
     return P
 
 
-def DESDetectionProbability(
+def desDetectionProbability(
     eph_df,
     transient_efficiency,
     magnitude_name="PSFMag",
@@ -63,7 +63,7 @@ def DESDetectionProbability(
 ):
     """
     Find probability of observations being observable for objectInField output.
-    Wrapper for calcDetectionProbability which takes into account column names. Used by DESFadingFunctionFilter.
+    Wrapper for calcDetectionProbability which takes into account column names. Used by desFadingFunctionFilter.
 
     Parameters
     -----------
@@ -101,7 +101,7 @@ def DESDetectionProbability(
 
     """
 
-    return DEScalcDetectionProbability(
+    return desCalcDetectionProbability(
         eph_df[magnitude_name],
         eph_df[limiting_magnitude_name],
         eph_df[scaling_factor_name],

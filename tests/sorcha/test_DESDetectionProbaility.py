@@ -1,17 +1,17 @@
 import numpy as np
-from sorcha.modules.DESDetectionProbability import DEScalcDetectionProbability, DESDetectionProbability
+from sorcha.modules.desDetectionProbability import desCalcDetectionProbability, desDetectionProbability
 import math
 import pandas as pd
 
 
-def test_DEScalcDetectionProbability():
+def test_desCalcDetectionProbability():
     mag, limmag, c, k = 20, 23.1, 0.90, 4.55
-    P = DEScalcDetectionProbability(mag, limmag, c, k, 0.9555)
+    P = desCalcDetectionProbability(mag, limmag, c, k, 0.9555)
 
     assert math.isclose(P, 0.8599493561841001, rel_tol=1e-10)
 
     mag, limmag, c, k = 24, 23.1, 0.90, 3.99
-    P = DEScalcDetectionProbability(mag, limmag, c, k, 0.9555)
+    P = desCalcDetectionProbability(mag, limmag, c, k, 0.9555)
 
     assert math.isclose(P, 0.0230733144369, rel_tol=1e-10)
 
@@ -25,7 +25,7 @@ def test_DESDectionProbability():
         "k": [4.55, 3.99],
     }
     obs = pd.DataFrame(obs)
-    P = DESDetectionProbability(obs, 0.9555)
+    P = desDetectionProbability(obs, 0.9555)
 
     assert math.isclose(P[0], 0.8599493561841001, rel_tol=1e-10)
 

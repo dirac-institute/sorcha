@@ -2,17 +2,18 @@ import logging
 
 from ..utilities.sorchaModuleRNG import PerModuleRNG
 from .PPDropObservations import PPDropObservations
-from .DESDetectionProbability import DESDetectionProbability
+from .desDetectionProbability import desDetectionProbability
 
 
-def DESFadingFunctionFilter(
+def desFadingFunctionFilter(
     observations,
     transient_efficiency,
     module_rngs,
     verbose=False,
+    limiting_magnitude_name="fiveSigmaDepth_mag",
 ):
     """
-    Wrapper function for DESDetectionProbability and PPDropObservations.
+    Wrapper function for desDetectionProbability and ppDropObservations.
 
     Calculates detection probability based on a fading function, then drops rows where the
     probabilty of detection is less than sample drawn from a uniform distribution.
@@ -31,6 +32,10 @@ def DESFadingFunctionFilter(
     verbose : boolean, optional
         Verbose logging flag. Default = False
 
+    limiting_magnitude_name : string, optional
+        eph_df column used for observation limiting magnitude.
+        Default = fiveSigmaDepth_mag
+
     Returns
     ----------
     observations_drop : Pandas dataframe)
@@ -41,7 +46,9 @@ def DESFadingFunctionFilter(
     verboselog = pplogger.info if verbose else lambda *a, **k: None
 
     verboselog("Calculating probabilities of detections...")
-    observations["detection_probability"] = DESDetectionProbability(observations, transient_efficiency)
+    observations["detection_probability"] = desDetectionProbability(
+        observations, transient_efficiency, limiting_magnitude_name=limiting_magnitude_name
+    )
 
     verboselog("Dropping observations below detection threshold...")
     observations = PPDropObservations(observations, module_rngs, "detection_probability")

@@ -518,7 +518,7 @@ class Detector:
 class Footprint:
     """Camera footprint class"""
 
-    def __init__(self, path=None, surveyname="rubin_sim", detectorName="detector"):
+    def __init__(self, path=None, default_camera_config_file=None, detectorName="detector"):
         """
         Initiates a Footprint object.
 
@@ -552,10 +552,6 @@ class Footprint:
 
         else:
             try:
-                if surveyname.lower() in ["rubin_sim", "lsst"]:
-                    default_camera_config_file = "data/LSST_detector_corners_100123.csv"
-                if surveyname.lower() == "des":
-                    default_camera_config_file = "data/DES_ccd_corners.csv"
                 # stream = pkg_resources.resource_stream(__name__, default_camera_config_file)
                 # stream = importlib_resources.as_file( default_camera_config_file )
                 stream = importlib_resources.files(__name__).joinpath(default_camera_config_file)

@@ -25,6 +25,9 @@ from sorcha.ephemeris.simulation_parsing import (
 
 from sorcha.utilities.generate_meta_kernel import build_meta_kernel_file
 
+from sorcha.configs.ephemerisConfigs import simulationConfigs
+from sorcha.configs.auxiliaryConfigs import auxiliaryConfigs
+
 
 def create_assist_ephemeris(args, auxconfigs) -> tuple:
     """Build the ASSIST ephemeris object
@@ -190,7 +193,9 @@ def generate_simulations(ephem, gm_sun, gm_total, orbits_df, args):
     return sim_dict
 
 
-def precompute_pointing_information(pointings_df, args, sconfigs):
+def precompute_pointing_information(
+    pointings_df, args, simulation_configs: simulationConfigs, auxiliary_configs: auxiliaryConfigs
+):
     """This function is meant to be run once to prime the pointings dataframe
     with additional information that Assist & Rebound needs for it's work.
 
@@ -200,19 +205,22 @@ def precompute_pointing_information(pointings_df, args, sconfigs):
         Contains the telescope pointing database.
     args : dictionary
         Command line arguments needed for initialization.
-    sconfigs: dataclass
-        Dataclass of configuration file arguments.
 
+    simulation_configs: simulationConfigs
+        simulation Dataclass of simulation configuration file arguments.
+
+    auxiliary_configs: auxiliaryConfigs
+        auxiliary Dataclass of auxiliary configuration file arguments.
     Returns
     --------
     pointings_df : pandas dataframe
         The original dataframe with several additional columns of precomputed values.
     """
-    ephem, _, _ = create_assist_ephemeris(args, sconfigs.auxiliary)
+    ephem, _, _ = create_assist_ephemeris(args, auxiliary_configs)
 
-    furnish_spiceypy(args, sconfigs.auxiliary)
-    obsCode = sconfigs.simulation.ar_obs_code
-    observatories = Observatory(args, sconfigs.auxiliary)
+    furnish_spiceypy(args, auxiliary_configs)
+    obsCode = simulation_configs.ar_obs_code
+    observatories = Observatory(args, auxiliary_configs)
 
     # vectorize the calculation to get x,y,z vector from ra/dec
     vectors = ra_dec2vec(
@@ -231,8 +239,8 @@ def precompute_pointing_information(pointings_df, args, sconfigs):
     # create a partial function since most params don't change, and it makes the lambda easier to read
     partial_get_hp_neighbors = partial(
         get_hp_neighbors,
-        search_radius=sconfigs.simulation.ar_ang_fov + sconfigs.simulation.ar_fov_buffer,
-        nside=2**sconfigs.simulation.ar_healpix_order,
+        search_radius=simulation_configs.ar_ang_fov + simulation_configs.ar_fov_buffer,
+        nside=2**simulation_configs.ar_healpix_order,
         nested=True,
     )
 

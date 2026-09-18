@@ -4,10 +4,10 @@ import pandas as pd
 from pandas.api.types import is_numeric_dtype
 
 from sorcha.utilities.sorchaModuleRNG import PerModuleRNG
-from sorcha.sorcha import runLSSTSimulation
+from sorcha.sorcha import runSorchaSimulation
 from sorcha.utilities.dataUtilitiesForTests import get_demo_filepath, get_test_filepath
 from sorcha.utilities.sorchaArguments import sorchaArguments
-from sorcha.utilities.sorchaConfigs import sorchaConfigs
+from sorcha.configs.sorchaConfigs import sorchaConfigs
 
 
 def compare_result_files(test_output, golden_output):
@@ -153,4 +153,4 @@ def override_seed_and_run(outpath, arg_set="baseline"):
     # science results.
     configs = sorchaConfigs(args.configfile, args.surveyname)
     args._rngs = PerModuleRNG(2023)
-    runLSSTSimulation(args, configs)
+    runSorchaSimulation(args, configs)
