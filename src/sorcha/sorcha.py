@@ -348,11 +348,8 @@ def runSorchaSimulation(args, sconfigs, return_only=False):
             verboselog("Number of rows BEFORE applying fading function: " + str(len(observations.index)))
             observations = FadingFunctionFilter(
                 observations,
-                fillfactor=sconfigs.fadingfunction.fading_function_peak_efficiency,
-                width=sconfigs.fadingfunction.fading_function_width,
-                transient_efficiency=sconfigs.fadingfunction.des_transient_efficency,
-                fading_function_type=sconfigs.fadingfunction.fading_function_type,
-                fov_camera_model=sconfigs.fov.camera_model,
+                fadingfunction_configs=sconfigs.fadingfunction,
+                fov_configs=sconfigs.fov,
                 module_rngs=args._rngs,
                 verbose=args.loglevel,
             )

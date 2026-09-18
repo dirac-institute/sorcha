@@ -7,11 +7,8 @@ import sys
 
 def FadingFunctionFilter(
     observations=None,
-    fillfactor=None,
-    width=None,
-    transient_efficiency=None,
-    fading_function_type=None,
-    fov_camera_model=None,
+    fadingfunction_configs=None,
+    fov_configs=None,
     module_rngs=None,
     verbose=False,
 ):
@@ -25,20 +22,12 @@ def FadingFunctionFilter(
     observations : Pandas dataframe
         Dataframe of observations with a column containing the probability of detection.
 
-    fillfactor : float
-        Rubin_sim fraction of camera field-of-view covered by detectors
+    fadingfunction_configs: dataclass
+        Fading Function Dataclass of fading function configuration file arguments.
 
-    width : float
-        Distribution parameter. Default =0.1
+    fov_configs: dataclass
+        FOV Dataclass of fov configuration file arguments.
 
-    transient_efficiency: float
-        DES overall transient efficiency for moving object detection
-
-    fading_function_type: string
-        Type of fading function used. Whether it's 'general' or 'des_per_obs'
-
-    fov_camera_model: string
-        Type of camera_model used in fov. Affects the column used for limiting magnitude
 
     module_rngs : PerModuleRNG
         A collection of random number generators (per module).
@@ -54,10 +43,12 @@ def FadingFunctionFilter(
     observations_drop : Pandas dataframe)
         Modified 'observations' dataframe without observations that could not be observed.
     """
+    fading_function_type = fadingfunction_configs.fading_function_type
+
     pplogger = logging.getLogger(__name__)
     verboselog = pplogger.info if verbose else lambda *a, **k: None
 
-    if fov_camera_model == "visits_footprint":
+    if fov_configs.camera_model == "visits_footprint":
         limiting_magnitude_name = "limMag_perChip"
     else:
         limiting_magnitude_name = "fiveSigmaDepth_mag"
@@ -65,17 +56,17 @@ def FadingFunctionFilter(
     if fading_function_type == "general":
         observations = PPFadingFunctionFilter(
             observations,
-            fillfactor,
-            width,
-            module_rngs,
+            fillfactor=fadingfunction_configs.fading_function_peak_efficiency,
+            width=fadingfunction_configs.fading_function_width,
+            module_rngs=module_rngs,
             verbose=verbose,
             limiting_magnitude_name=limiting_magnitude_name,
         )
     elif fading_function_type == "des_per_obs":
         observations = desFadingFunctionFilter(
             observations,
-            transient_efficiency,
-            module_rngs,
+            transient_efficiency=fadingfunction_configs.des_transient_efficency,
+            module_rngs=module_rngs,
             verbose=verbose,
             limiting_magnitude_name=limiting_magnitude_name,
         )
