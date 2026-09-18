@@ -106,8 +106,8 @@ def create_ephemeris(
         n_sub_intervals: int
             Number of sub-intervals for the Lagrange interpolation (default: 101)
 
-        auxiliary_configs: auxiliaryConfigs
-            auxiliary Dataclass of auxiliary configuration file arguments.
+    auxiliary_configs: auxiliaryConfigs
+        auxiliary Dataclass of auxiliary configuration file arguments.
 
     Returns
     -------
@@ -381,8 +381,11 @@ def write_out_ephemeris_file(
     args: sorchaArguments object or similar
         Command-line arguments from Sorcha.
 
-    sconfigs: dataclass
-        Dataclass of configuration file arguments.
+    input_configs: inputConfigs
+        Inputs Dataclass of input configuration file arguments.
+
+    output_configs: outputConfigs
+        outputs Dataclass of output configuration file arguments.
 
     Returns
     -------
