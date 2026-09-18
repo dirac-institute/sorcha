@@ -84,7 +84,7 @@ def mem(df):
     return usage
 
 
-def runSorchaSimulation(args, sconfigs, return_only=False):
+def runSorchaSimulation(args: sorchaArguments, sconfigs: sorchaConfigs, return_only=False):
     """
     Runs the post processing survey simulator functions that apply a series of
     filters to bias a model Solar System small body population to what the
@@ -348,7 +348,7 @@ def runSorchaSimulation(args, sconfigs, return_only=False):
             verboselog("Number of rows BEFORE applying fading function: " + str(len(observations.index)))
             observations = FadingFunctionFilter(
                 observations,
-                fadingfunction_configs=sconfigs.fadingfunction,
+                fadingfunc_configs=sconfigs.fadingfunction,
                 fov_configs=sconfigs.fov,
                 module_rngs=args._rngs,
                 verbose=args.loglevel,
@@ -366,7 +366,7 @@ def runSorchaSimulation(args, sconfigs, return_only=False):
         if sconfigs.linkingfilter.discovery_filter_on and len(observations.index) > 0:
             observations = Discovery_Filter(
                 observations,
-                linkingfilter_configs=sconfigs.linkingfilter,
+                linking_configs=sconfigs.linkingfilter,
                 verbose=args.loglevel,
             )
             observations.reset_index(drop=True, inplace=True)

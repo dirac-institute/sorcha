@@ -14,7 +14,7 @@ def test_FadingFunctionFilter():
 
 
     with pytest.raises(SystemExit) as error_text:
-        x = FadingFunctionFilter(fadingfunction_configs=fadingfunction_configs, fov_configs=fov_config)
+        x = FadingFunctionFilter(fadingfunc_configs=fadingfunction_configs, fov_configs=fov_config)
 
     assert (
         error_text.value.code

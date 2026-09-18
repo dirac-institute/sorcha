@@ -5,9 +5,10 @@ import sys
 from sorcha.modules.PPLinkingFilter import PPLinkingFilter
 from sorcha.modules.desDiscoveryFilter import desDiscoveryFilter
 from sorcha.modules.desDistanceandMotionCuts import distance_cut, motion_cut
+from sorcha.configs.linkingfilterConfigs import linkingfilterConfigs
 
 
-def Discovery_Filter(observations=None, linkingfilter_configs=None, verbose=None):
+def Discovery_Filter(observations=None, linking_configs: linkingfilterConfigs = None, verbose=None):
     """
     Wrapper function for PPLinkingFilter and desDiscoveryFilter linking filters.
     This checks whether to use the Rubin_sim or DES linking filters.
@@ -37,22 +38,22 @@ def Discovery_Filter(observations=None, linkingfilter_configs=None, verbose=None
     pplogger = logging.getLogger(__name__)
     verboselog = pplogger.info if verbose else lambda *a, **k: None
 
-    if linkingfilter_configs.des_discovery_on:
-        if linkingfilter_configs.des_distance_cut_on:
+    if linking_configs.des_discovery_on:
+        if linking_configs.des_distance_cut_on:
             verboselog("Number of rows BEFORE applying distance cuts: " + str(len(observations.index)))
             observations = distance_cut(
                 observations,
-                linkingfilter_configs.des_distance_cut_upper,
-                linkingfilter_configs.des_distance_cut_lower,
+                linking_configs.des_distance_cut_upper,
+                linking_configs.des_distance_cut_lower,
             )
             verboselog("Number of rows AFTER applying distance cuts: " + str(len(observations.index)))
 
-        if linkingfilter_configs.des_motion_cut_on:
+        if linking_configs.des_motion_cut_on:
             verboselog("Number of rows BEFORE applying motion cuts: " + str(len(observations.index)))
             observations = motion_cut(
                 observations,
-                linkingfilter_configs.des_motion_cut_upper,
-                linkingfilter_configs.des_motion_cut_lower,
+                linking_configs.des_motion_cut_upper,
+                linking_configs.des_motion_cut_lower,
             )
             verboselog("Number of rows AFTER applying motion cuts: " + str(len(observations.index)))
 
@@ -62,19 +63,19 @@ def Discovery_Filter(observations=None, linkingfilter_configs=None, verbose=None
             observations = desDiscoveryFilter(observations)
             verboselog("Number of rows AFTER applying DES Discovery filter: " + str(len(observations.index)))
         return observations
-    if linkingfilter_configs.ssp_linking_on:
+    if linking_configs.ssp_linking_on:
         verboselog("Applying SSP linking filter...")
         verboselog("Number of rows BEFORE applying SSP linking filter: " + str(len(observations.index)))
         observations = PPLinkingFilter(
             observations,
-            linkingfilter_configs.ssp_detection_efficiency,
-            linkingfilter_configs.ssp_number_observations,
-            linkingfilter_configs.ssp_number_tracklets,
-            linkingfilter_configs.ssp_track_window,
-            linkingfilter_configs.ssp_separation_threshold,
-            linkingfilter_configs.ssp_maximum_time,
-            linkingfilter_configs.ssp_night_start_utc,
-            drop_unlinked=linkingfilter_configs.drop_unlinked,
+            linking_configs.ssp_detection_efficiency,
+            linking_configs.ssp_number_observations,
+            linking_configs.ssp_number_tracklets,
+            linking_configs.ssp_track_window,
+            linking_configs.ssp_separation_threshold,
+            linking_configs.ssp_maximum_time,
+            linking_configs.ssp_night_start_utc,
+            drop_unlinked=linking_configs.drop_unlinked,
         )
         observations.reset_index(drop=True, inplace=True)
         verboselog("Number of rows AFTER applying SSP linking filter: " + str(len(observations.index)))
