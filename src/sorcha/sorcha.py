@@ -228,7 +228,15 @@ def runSorchaSimulation(args: sorchaArguments, sconfigs: sorchaConfigs, return_o
                     continue
 
             verboselog("Starting ephemeris generation")
-            observations = create_ephemeris(orbits_df, filterpointing, args, sconfigs)
+            observations = create_ephemeris(
+                orbits_df,
+                filterpointing,
+                args,
+                input_configs=sconfigs.input,
+                output_configs=sconfigs.output,
+                simulation_configs=sconfigs.simulation,
+                auxiliary_configs=sconfigs.auxiliary,
+            )
             verboselog("Ephemeris generation completed")
 
         verboselog("Start post processing for this chunk")
