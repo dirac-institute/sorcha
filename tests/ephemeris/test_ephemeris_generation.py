@@ -11,12 +11,26 @@ from sorcha.modules.PPReadPointingDatabase import PPReadPointingDatabase
 from sorcha.ephemeris.simulation_setup import precompute_pointing_information
 from sorcha.configs.sorchaConfigs import sorchaConfigs, inputConfigs, outputConfigs
 
-from tests.configs.test_inputAndOutputConfigs import correct_inputs, correct_output
 
 from sorcha.readers.CombinedDataReader import CombinedDataReader
 from sorcha.readers.EphemerisReader import EphemerisDataReader
 from sorcha.readers.OrbitAuxReader import OrbitAuxReader
 from sorcha.readers.CSVReader import CSVDataReader
+
+correct_inputs = {
+    "ephemerides_type": "ar",
+    "eph_format": "csv",
+    "size_serial_chunk": 5000,
+    "aux_format": "whitespace",
+    "pointing_sql_query": "SELECT observationId, observationStartMJD as observationStartMJD_TAI, visitTime, visitExposureTime, filter, seeingFwhmGeom as seeingFwhmGeom_arcsec, seeingFwhmEff as seeingFwhmEff_arcsec, fiveSigmaDepth as fieldFiveSigmaDepth_mag , fieldRA as fieldRA_deg, fieldDec as fieldDec_deg, rotSkyPos as fieldRotSkyPos_deg FROM observations order by observationId",
+    "visits_query": None,
+}
+correct_output = {
+    "output_format": "csv",
+    "output_columns": "basic",
+    "position_decimals": None,
+    "magnitude_decimals": None,
+}
 
 
 @pytest.fixture
