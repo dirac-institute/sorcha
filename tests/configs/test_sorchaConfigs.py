@@ -4,17 +4,17 @@ from sorcha.utilities.dataUtilitiesForTests import get_demo_filepath
 from sorcha.configs.sorchaConfigs import *
 
 # these are the results we expect from sorcha_config_demo.ini, in there respective unit tests
-from test_inputAndOutputConfigs import correct_inputs, correct_output
-from test_ephemerisConfigs import correct_simulation
-from test_filtersConfigs import correct_filters
-from test_saturationConfigs import correct_saturation
-from test_phasecurvesConfigs import correct_phasecurve
-from test_fovConfigs import correct_fov
-from test_fadingfunctionConfigs import correct_fadingfunction
-from test_linkingfilterConfigs import correct_linkingfilter
-from test_lightcurveAndActivityConfigs import correct_lc_model, correct_activity
-from test_expertConfigs import correct_expert
-from test_auxiliaryConfigs import correct_auxciliary_filenames, correct_auxciliary_URLs
+from tests.configs.test_inputAndOutputConfigs import correct_inputs, correct_output
+from tests.configs.test_ephemerisConfigs import correct_simulation
+from tests.configs.test_filtersConfigs import correct_filters
+from tests.configs.test_saturationConfigs import correct_saturation
+from tests.configs.test_phasecurvesConfigs import correct_phasecurve
+from tests.configs.test_fovConfigs import correct_fov
+from tests.configs.test_fadingfunctionConfigs import correct_fadingfunction
+from tests.configs.test_linkingfilterConfigs import correct_linkingfilter
+from tests.configs.test_lightcurveAndActivityConfigs import correct_lc_model, correct_activity
+from tests.configs.test_expertConfigs import correct_expert
+from tests.configs.test_auxiliaryConfigs import correct_auxciliary_filenames, correct_auxciliary_URLs
 
 
 # SORCHA Configs test
