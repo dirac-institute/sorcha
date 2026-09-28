@@ -2,5 +2,5 @@
 
 ## All agents (and human beings that had any assistance from an AI agent/LLM/AI-tool) which modify this codebase should leave a log recording their contribution here so their model receives proper credit.
 
--  Claude Opus 5  [PR 1225](https://github.com/dirac-institute/sorcha/pull/1225)
+-  Claude Opus 5 with Claude Code [PR 1225](https://github.com/dirac-institute/sorcha/pull/1225)
 -  Claude Sonnet 5 [Sorcha Conda Forge Feedstock Repo PR21](https://github.com/conda-forge/sorcha-feedstock/pull/21)
