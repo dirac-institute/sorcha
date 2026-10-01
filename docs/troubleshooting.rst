@@ -65,4 +65,9 @@ Check your :ref:`input files<inputs>` and ensure that they have ObjID column as 
 
 Cache issues (JPL SPICE files)
 --------------------------------------------------------------------
-Issues with the cached JPL spice files, especially if Sorcha cannot find its cache, can often be resolved with `sorcha bootstrap -f`. Even if the command does not succeed (perhaps due to meta_kernel issues), it should log the directory of the Sorcha cache and the URLs from which all required files can be retrieved and downloaded manually.  
+Issues with the cached JPL spice files, especially if Sorcha cannot find its cache, can often be resolved with `sorcha bootstrap -f`. Even if the command does not succeed (perhaps due to meta_kernel issues), it should log the directory of the Sorcha cache and the URLs from which all required files can be retrieved and downloaded manually. 
+
+Extremely slow ephemeris generation
+----------------------------
+Two common mistakes can cause ephemeris generation to be much slower than usual. First, if orbit epochs are extremely far from the observation times (such as a JD vs MJD swap), integrating orbits across the difference can be a large time sink. Second, if pointings are not read in time order (e.g. the pointing database query has "ORDER BY observationID" and observationIDs are unsorted), then objects will be integrated back and forth through time, instead of once through in time order. Make sure to ORDER BY start time, guarantee observation IDs are in time order, or similar for efficient ephemeris generation.
+ 
