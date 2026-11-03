@@ -119,6 +119,10 @@ correct_expert = {
     "brute_force": True,
     "camera_model": None,
     "survey_name": "rubin_sim",
+    "ar_initial_dt": 10,
+    "ar_min_dt": 0,
+    "ar_epsilon": 1e-9,
+    "ar_adaptive_mode": 1,
 }
 
 correct_auxciliary_URLs = {

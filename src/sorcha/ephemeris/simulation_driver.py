@@ -126,7 +126,7 @@ def create_ephemeris(orbits_df, pointings_df, args, sconfigs):
     verboselog("Furnishing SPICE kernels.")
     furnish_spiceypy(args, sconfigs.auxiliary)
     verboselog("Generating ASSIST+REBOUND simulations.")
-    sim_dict = generate_simulations(ephem, gm_sun, gm_total, orbits_df, args)
+    sim_dict = generate_simulations(ephem, gm_sun, gm_total, orbits_df, args, sconfigs)
     observatories = Observatory(args, sconfigs.auxiliary)
 
     output = StringIO()
