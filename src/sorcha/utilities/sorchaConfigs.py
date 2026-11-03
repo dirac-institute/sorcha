@@ -930,7 +930,7 @@ class expertConfigs:
 
         self.default_snr_cut = cast_as_bool_or_set_default(self.default_snr_cut, "default_snr_cut", True)
         self.brute_force = cast_as_bool_or_set_default(self.brute_force, "brute_force", True)
-        
+
         if self.survey_name in ["rubin_sim", "RUBIN_SIM", "LSST", "lsst"]:
             self.randomization_on = cast_as_bool_or_set_default(
                 self.randomization_on, "randomization_on", True
