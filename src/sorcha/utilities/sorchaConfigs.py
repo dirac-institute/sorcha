@@ -1726,6 +1726,10 @@ def PrintConfigsToLog(sconfigs, cmd_args):
         pplogger.info("...the observatory code is: " + str(sconfigs.simulation.ar_obs_code))
         pplogger.info("...the healpix order is: " + str(sconfigs.simulation.ar_healpix_order))
         pplogger.info("...the number of sub-intervals is: " + str(sconfigs.simulation.ar_n_sub_intervals))
+        pplogger.info("...the integrator epsilon is: " + str(sconfigs.expert.ar_epsilon))
+        pplogger.info("...the initial time step is: " + str(sconfigs.expert.ar_initial_dt))
+        pplogger.info("...the minimum time step is: " + str(sconfigs.expert.ar_min_dt))
+        pplogger.info("...the adaptive mode is: " + str(sconfigs.expert.ar_adaptive_mode))
     else:
         pplogger.info("ASSIST+REBOUND Simulation is turned OFF.")
 
