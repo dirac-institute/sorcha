@@ -873,6 +873,19 @@ class expertConfigs:
     camera_model: str = None
     """camera model chosen in fovConfigs"""
 
+    ar_initial_dt: float = 10
+    """initial time step for the IAS15 ASSIST+REBOUND integrator"""
+
+    ar_min_dt: float = 0
+    """minimum time step for the IAS15 ASSIST+REBOUND integrator"""
+
+    ar_epsilon: float = 1e-9
+    """error tolerance for the IAS15 ASSIST+REBOUND integrator"""
+
+    # This turns off the iterative timestep introduced in arXiv:2401.02849 and default since rebound 4.0.3
+    ar_adaptive_mode: int = 1
+    """adaptive mode for the IAS15 ASSIST+REBOUND integrator"""
+
     def __post_init__(self):
         """Automagically validates the expert configs after initialisation."""
         self._validate_expert_configs()
@@ -917,7 +930,7 @@ class expertConfigs:
 
         self.default_snr_cut = cast_as_bool_or_set_default(self.default_snr_cut, "default_snr_cut", True)
         self.brute_force = cast_as_bool_or_set_default(self.brute_force, "brute_force", True)
-
+        
         if self.survey_name in ["rubin_sim", "RUBIN_SIM", "LSST", "lsst"]:
             self.randomization_on = cast_as_bool_or_set_default(
                 self.randomization_on, "randomization_on", True
@@ -953,6 +966,11 @@ class expertConfigs:
             if self.vignetting_on == True:
                 logging.ERROR("ERROR: fov camera model 'visits_footprint' does not support vignetting.")
                 sys.exit("ERROR: fov camera model 'visits_footprint does not support vignetting.")
+
+        self.ar_epsilon = cast_as_float(self.ar_epsilon, "ar_epsilon")
+        self.ar_initial_dt = cast_as_float(self.ar_initial_dt, "ar_initial_dt")
+        self.ar_min_dt = cast_as_float(self.ar_min_dt, "ar_min_dt")
+        self.ar_adaptive_mode = cast_as_int(self.ar_adaptive_mode, "ar_adaptive_mode")
 
 
 @dataclass
