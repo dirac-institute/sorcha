@@ -86,7 +86,7 @@ def test_pixeldict(tmp_path):
     ephem, gm_sun, gm_total = create_assist_ephemeris(args, configs.auxiliary)
     furnish_spiceypy(args, configs.auxiliary)
 
-    sim_dict = generate_simulations(ephem, gm_sun, gm_total, orbits_df, args)
+    sim_dict = generate_simulations(ephem, gm_sun, gm_total, orbits_df, args, configs)
     observatory = Observatory(
         auxconfigs=configs.auxiliary, args=None, oc_file=get_test_filepath("ObsCodes_test.json")
     )
