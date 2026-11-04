@@ -153,7 +153,7 @@ For example, you can include the following in the :ref:`configs`, which may be u
     [EXPERT]
     ar_initial_dt = 1e-6
     ar_min_dt = 1e-9
-    ar_epsilon = 1e-8
+    ar_epsilon = 1e-6
     ar_adaptive_mode = 1
 
 
