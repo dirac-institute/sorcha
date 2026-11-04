@@ -171,17 +171,17 @@ def generate_simulations(ephem, gm_sun, gm_total, orbits_df, args, sconfigs):
         sim = rebound.Simulation()
         sim.t = epoch - ephem.jd_ref
 
-        # Read in expert configs for the integrator
-        sim.dt = sconfigs.expert.ar_initial_dt
-        sim.ri_ias15.adaptive_mode = sconfigs.expert.ar_adaptive_mode
-        sim.ri_ias15.epsilon = sconfigs.expert.ar_epsilon
-        sim.ri_ias15.min_dt = sconfigs.expert.ar_min_dt
-
         # Add the particle to the simulation
         sim.add(ic)
 
         # Attach assist extras to the simulation
         ex = assist.Extras(sim, ephem)
+
+        # Read in expert configs for the integrator
+        sim.dt = sconfigs.expert.ar_initial_dt
+        sim.ri_ias15.adaptive_mode = sconfigs.expert.ar_adaptive_mode
+        sim.ri_ias15.epsilon = sconfigs.expert.ar_epsilon
+        sim.ri_ias15.min_dt = sconfigs.expert.ar_min_dt
 
         # Change the GR model for speed
         forces = ex.forces
