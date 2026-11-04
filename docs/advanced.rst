@@ -143,6 +143,20 @@ To implement the faint object culling filter, include the following in the :ref:
     in order to compute the geocentric distance.
 
 
+Changing the Default Propagator Settings in ASSIST
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In rare cases you may want to change the default settings used by the IAS15 integrator inside ASSIST. The user can change the initial time step, the minimum time step, the error tolerance, and the adaptive mode. By default these are 10 days, 0, 1e-9, and 1 (GLOBAL). 
+
+For example, you can include the following in the :ref:`configs`, which may be used for especially close approaches::
+
+    [EXPERT]
+    ar_initial_dt = 1e-6
+    ar_min_dt = 1e-9
+    ar_epsilon = 1e-8
+    ar_adaptive_mode = 1
+
+
 Modifying the Ephemeris Generator Interpolation
 --------------------------------------------------
 
@@ -240,19 +254,5 @@ In the [OUTPUT] section of the :ref:`configs`, you can set the decimal precision
     [OUTPUT]
     # Decimal places to which all magnitudes should be rounded to in output.
     magnitude_decimals = 3
-
-
-Changing the Default Propagator Settings in ASSIST
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-In rare cases you may want to change the default settings used by the IAS15 integrator inside ASSIST. The user can change the initial time step, the minimum time step, the error tolerance, and the adaptive mode. By default these are 10 days, 0, 1e-9, and 1 (GLOBAL). 
-
-For example, you can include the following in the :ref:`configs`, which may be used for especially close approaches::
-
-    [EXPERT]
-    ar_initial_dt = 1e-6
-    ar_min_dt = 1e-9
-    ar_epsilon = 1e-8
-    ar_adaptive_mode = 1
 
 
