@@ -225,6 +225,10 @@ sorcha.utilities.sorchaConfigs INFO     ...the picket interval is: 1
 sorcha.utilities.sorchaConfigs INFO     ...the observatory code is: X05 
 sorcha.utilities.sorchaConfigs INFO     ...the healpix order is: 6 
 sorcha.utilities.sorchaConfigs INFO     ...the number of sub-intervals is: 101 
+sorcha.utilities.sorchaConfigs INFO     ...the integrator epsilon is: 1e-09 
+sorcha.utilities.sorchaConfigs INFO     ...the initial time step is: 10.0 
+sorcha.utilities.sorchaConfigs INFO     ...the minimum time step is: 0.0 
+sorcha.utilities.sorchaConfigs INFO     ...the adaptive mode is: 1 
 sorcha.utilities.sorchaConfigs INFO     No lightcurve model is being applied. 
 sorcha.utilities.sorchaConfigs INFO     Output files will be saved in path: ./ with filestem testout 
 sorcha.utilities.sorchaConfigs INFO     Output files will be saved as format: csv 

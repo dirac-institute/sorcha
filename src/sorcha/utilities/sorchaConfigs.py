@@ -873,6 +873,19 @@ class expertConfigs:
     camera_model: str = None
     """camera model chosen in fovConfigs"""
 
+    ar_initial_dt: float = 10
+    """initial time step for the IAS15 ASSIST+REBOUND integrator"""
+
+    ar_min_dt: float = 0
+    """minimum time step for the IAS15 ASSIST+REBOUND integrator"""
+
+    ar_epsilon: float = 1e-9
+    """error tolerance for the IAS15 ASSIST+REBOUND integrator"""
+
+    # This turns off the iterative timestep introduced in arXiv:2401.02849 and default since rebound 4.0.3
+    ar_adaptive_mode: int = 1
+    """adaptive mode for the IAS15 ASSIST+REBOUND integrator"""
+
     def __post_init__(self):
         """Automagically validates the expert configs after initialisation."""
         self._validate_expert_configs()
@@ -953,6 +966,11 @@ class expertConfigs:
             if self.vignetting_on == True:
                 logging.ERROR("ERROR: fov camera model 'visits_footprint' does not support vignetting.")
                 sys.exit("ERROR: fov camera model 'visits_footprint does not support vignetting.")
+
+        self.ar_epsilon = cast_as_float(self.ar_epsilon, "ar_epsilon")
+        self.ar_initial_dt = cast_as_float(self.ar_initial_dt, "ar_initial_dt")
+        self.ar_min_dt = cast_as_float(self.ar_min_dt, "ar_min_dt")
+        self.ar_adaptive_mode = cast_as_int(self.ar_adaptive_mode, "ar_adaptive_mode")
 
 
 @dataclass
@@ -1708,6 +1726,10 @@ def PrintConfigsToLog(sconfigs, cmd_args):
         pplogger.info("...the observatory code is: " + str(sconfigs.simulation.ar_obs_code))
         pplogger.info("...the healpix order is: " + str(sconfigs.simulation.ar_healpix_order))
         pplogger.info("...the number of sub-intervals is: " + str(sconfigs.simulation.ar_n_sub_intervals))
+        pplogger.info("...the integrator epsilon is: " + str(sconfigs.expert.ar_epsilon))
+        pplogger.info("...the initial time step is: " + str(sconfigs.expert.ar_initial_dt))
+        pplogger.info("...the minimum time step is: " + str(sconfigs.expert.ar_min_dt))
+        pplogger.info("...the adaptive mode is: " + str(sconfigs.expert.ar_adaptive_mode))
     else:
         pplogger.info("ASSIST+REBOUND Simulation is turned OFF.")
 
