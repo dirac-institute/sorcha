@@ -178,6 +178,11 @@ def halley_safe(x1, x2, mu, alpha, r0, r0dot, t, xacc=1e-14, maxit=100):
             dx = 2 * f * fp / (2 * fp * fp - f * fpp)  # halley
             temp = rts
             rts -= dx
+            # The check above is for a Newton step. The Halley step
+            # can still leave the bracket, so bisect if it does.
+            if (rts - xl) * (rts - xh) >= 0.0:
+                dx = 0.5 * (xh - xl)
+                rts = xl + dx
             if np.abs(dx / rts) < xacc:
                 return True, rts, fp
         if np.abs(dx / rts) < xacc:
