@@ -276,3 +276,27 @@ def test_orbit_conversion_realdata():
     assert np.isclose(orbit_types["KEP"]["node"], newlan * 180 / np.pi, 1e-8)
     assert np.isclose(orbit_types["KEP"]["argPeri"], newaop * 180 / np.pi, 1e-8)
     assert np.isclose(orbit_types["KEP"]["ma"] - 360.0, newma * 180 / np.pi, 1e-8)  # same
+
+
+def test_halley_safe_detached_orbit():
+    # issue #1218: a detached orbit where the Halley step left the bracket and the solver did not converge
+    from sorcha.ephemeris.orbit_conversion_utilities import halley_safe, root_function, universal_cartesian
+
+    mu = 0.00029591220828411951  # au^3 / day^2
+    a, e, M = 58.95206713992618, 0.34799850897476037, np.radians(57.375125264038395)
+    q = a * (1 - e)
+    t = M / np.sqrt(mu / a**3)  # days since perihelion
+    alpha = 2 * mu / q - mu * (1 + e) / q
+
+    converged, s, fp = halley_safe(0.0, t / 4, mu, alpha, q, 0.0, t)
+    assert converged
+    assert np.isclose(s, 598.17438, rtol=1e-7)
+    assert np.abs(root_function(s, mu, alpha, q, 0.0, t)[0]) < 1e-8
+
+    # compare with the solution of Kepler's equation for the eccentric anomaly
+    E = M
+    for _ in range(50):
+        E -= (E - e * np.sin(E) - M) / (1 - e * np.cos(E))
+    x, y, z, vx, vy, vz = universal_cartesian(mu, q, e, 0.0, 0.0, 0.0, 0.0, t)
+    assert np.isclose(x, a * (np.cos(E) - e), rtol=1e-10)
+    assert np.isclose(y, a * np.sqrt(1 - e * e) * np.sin(E), rtol=1e-10)

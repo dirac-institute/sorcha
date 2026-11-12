@@ -4,3 +4,4 @@
 
 -  Claude Opus 5 with Claude Code [PR 1225](https://github.com/dirac-institute/sorcha/pull/1225)
 -  Claude Sonnet 5 [Sorcha Conda Forge Feedstock Repo PR21](https://github.com/conda-forge/sorcha-feedstock/pull/21)
+-  Claude Opus 5.5 with Claude Code [PR 1235](https://github.com/dirac-institute/sorcha/pull/1235)
