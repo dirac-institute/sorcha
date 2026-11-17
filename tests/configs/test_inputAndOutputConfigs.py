@@ -7,7 +7,7 @@ correct_inputs = {
     "eph_format": "csv",
     "size_serial_chunk": 5000,
     "aux_format": "whitespace",
-    "pointing_sql_query": "SELECT observationId, observationStartMJD as observationStartMJD_TAI, visitTime, visitExposureTime, filter, seeingFwhmGeom as seeingFwhmGeom_arcsec, seeingFwhmEff as seeingFwhmEff_arcsec, fiveSigmaDepth as fieldFiveSigmaDepth_mag , fieldRA as fieldRA_deg, fieldDec as fieldDec_deg, rotSkyPos as fieldRotSkyPos_deg FROM observations order by observationId",
+    "pointing_sql_query": "SELECT observationId, observationStartMJD as observationStartMJD_TAI, visitTime, visitExposureTime, filter, seeingFwhmGeom as seeingFwhmGeom_arcsec, seeingFwhmEff as seeingFwhmEff_arcsec, fiveSigmaDepth as fieldFiveSigmaDepth_mag , fieldRA as fieldRA_deg, fieldDec as fieldDec_deg, rotSkyPos as fieldRotSkyPos_deg FROM observations order by observationStartMJD_TAI",
     "visits_query": None,
 }
 correct_output = {
@@ -92,7 +92,6 @@ def test_inputConfigs_inlist(key_name, expected_list):
     )
 
 
-
 # output config tests
 
 
@@ -172,4 +171,3 @@ def test_outputConfigs_decimel_check(key_name):
     with pytest.raises(SystemExit) as error_text:
         test_configs = outputConfigs(**output_configs)
     assert error_text.value.code == "ERROR: decimal places config variables cannot be negative."
-
