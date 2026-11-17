@@ -4,7 +4,7 @@ from numpy.testing import assert_equal, assert_almost_equal
 
 from sorcha.utilities.sorchaModuleRNG import PerModuleRNG
 from sorcha.utilities.dataUtilitiesForTests import get_test_filepath
-from sorcha.utilities.sorchaConfigs import sorchaConfigs, fovConfigs
+from sorcha.configs.sorchaConfigs import sorchaConfigs, fovConfigs
 
 
 def test_PPSimpleSensorArea():

@@ -14,7 +14,7 @@ from sorcha.ephemeris.pixel_dict import PixelDict
 from sorcha.ephemeris.simulation_parsing import Observatory
 from sorcha.ephemeris.simulation_geometry import ecliptic_to_equatorial
 from sorcha.ephemeris.simulation_constants import SPEED_OF_LIGHT
-from sorcha.utilities.sorchaConfigs import sorchaConfigs
+from sorcha.configs.sorchaConfigs import sorchaConfigs
 
 
 def test_pixeldict(tmp_path):
@@ -77,10 +77,11 @@ def test_pixeldict(tmp_path):
         args.pointing_database,
         configs.filters.observing_filters,
         configs.input.pointing_sql_query,
-        "rubin_sim",
     )
 
-    filterpointing = precompute_pointing_information(filterpointing, args, configs)
+    
+    filterpointing = precompute_pointing_information(filterpointing, args, configs.simulation, configs.auxiliary)
+
     args = sorchaArguments(cmd_args_dict)
 
     ephem, gm_sun, gm_total = create_assist_ephemeris(args, configs.auxiliary)

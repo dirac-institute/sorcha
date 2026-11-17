@@ -18,13 +18,14 @@ from numba.typed import List
 bound = ((50 * u.au).to(u.km).value) ** 2  # square of the boundary 50au
 
 
-def DESDiscoveryFilter(
+def desDiscoveryFilter(
     observations,
     objectId="ObjID",
     mjdTime="fieldMJD_TAI",
     x_km="Obj_Sun_x_LTC_km",
     y_km="Obj_Sun_y_LTC_km",
     z_km="Obj_Sun_z_LTC_km",
+    band="optFilter",
 ):
     """
     Filter for the DES object discovery requirements. This filter checks for an ARCCUT limit (has to be at least 2 objects not in a triplet discovery season) and
@@ -42,7 +43,7 @@ def DESDiscoveryFilter(
 
     """
     # creating a numpy array of the obervations
-    obsv = observations[[objectId, mjdTime, x_km, y_km, z_km]]  # new dataframe of reduced columns
+    obsv = observations[[objectId, mjdTime, x_km, y_km, z_km, band]]  # new dataframe of reduced columns
     nameLen = obsv[objectId].str.len().max()  # allows strings in objectid to be fixed length for numby array
     obsv = obsv.to_records(
         index=False,
@@ -58,6 +59,12 @@ def DESDiscoveryFilter(
     mask = np.zeros(len(obsv), dtype=bool)
     for obsv_indices in splits:  # loop for each object
         thisObsv = obsv[obsv_indices]
+        thisObsv = thisObsv[
+            thisObsv[band] != "Y"
+        ]  # remove Y band detections as they were not used in discovery
+        if len(thisObsv) == 0:
+            continue
+
         # boundary condition for triplet detection (depends on minimum distance)
         distance_sq = np.min(thisObsv[x_km] ** 2 + thisObsv[y_km] ** 2 + thisObsv[z_km] ** 2)
         window = 90 if distance_sq >= bound else 60

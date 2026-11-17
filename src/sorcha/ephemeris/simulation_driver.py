@@ -19,6 +19,13 @@ from sorcha.ephemeris.pixel_dict import PixelDict
 from sorcha.modules.PPOutput import PPOutWriteCSV, PPOutWriteHDF5
 
 
+from sorcha.configs.ephemerisConfigs import simulationConfigs
+from sorcha.configs.auxiliaryConfigs import auxiliaryConfigs
+from sorcha.configs.inputAndOutputConfigs import inputConfigs, outputConfigs
+
+from sorcha.utilities.sorchaArguments import sorchaArguments
+
+
 @dataclass
 class EphemerisGeometryParameters:
     """Data class for holding parameters related to ephemeris geometry"""
@@ -48,7 +55,15 @@ def get_vec(row, vecname):
     return np.asarray([row[f"{vecname}_x"], row[f"{vecname}_y"], row[f"{vecname}_z"]])
 
 
-def create_ephemeris(orbits_df, pointings_df, args, sconfigs):
+def create_ephemeris(
+    orbits_df,
+    pointings_df,
+    args: sorchaArguments,
+    input_configs: inputConfigs,
+    output_configs: outputConfigs,
+    simulation_configs: simulationConfigs,
+    auxiliary_configs: auxiliaryConfigs,
+):
     """Generate a set of observations given a collection of orbits
     and set of pointings.
 
@@ -60,8 +75,15 @@ def create_ephemeris(orbits_df, pointings_df, args, sconfigs):
         The dataframe containing the collection of telescope/camera pointings.
     args :
         Various arguments necessary for the calculation
-    sconfigs:
-        Dataclass of configuration file arguments.
+
+    input_configs: inputConfigs
+        Inputs Dataclass of input configuration file arguments.
+
+    output_configs: outputConfigs
+        outputs Dataclass of output configuration file arguments.
+
+    simulation_configs: simulationConfigs
+        simulation Dataclass of simulation configuration file arguments.
         Various configuration parameters necessary for the calculation
         ang_fov : float
             The angular size (deg) of the field of view
@@ -83,6 +105,9 @@ def create_ephemeris(orbits_df, pointings_df, args, sconfigs):
             power of 2 (1, 2, 4, ...)  nside=64 is current default.
         n_sub_intervals: int
             Number of sub-intervals for the Lagrange interpolation (default: 101)
+
+    auxiliary_configs: auxiliaryConfigs
+        auxiliary Dataclass of auxiliary configuration file arguments.
 
     Returns
     -------
@@ -107,27 +132,27 @@ def create_ephemeris(orbits_df, pointings_df, args, sconfigs):
     """
     verboselog = args.pplogger.info if args.loglevel else lambda *a, **k: None
 
-    ang_fov = sconfigs.simulation.ar_ang_fov
-    buffer = sconfigs.simulation.ar_fov_buffer
+    ang_fov = simulation_configs.ar_ang_fov
+    buffer = simulation_configs.ar_fov_buffer
 
     ang_fov_buffer = ang_fov + buffer
 
-    picket_interval = sconfigs.simulation.ar_picket
-    obsCode = sconfigs.simulation.ar_obs_code
-    nside = 2**sconfigs.simulation.ar_healpix_order
-    n_sub_intervals = sconfigs.simulation.ar_n_sub_intervals
+    picket_interval = simulation_configs.ar_picket
+    obsCode = simulation_configs.ar_obs_code
+    nside = 2**simulation_configs.ar_healpix_order
+    n_sub_intervals = simulation_configs.ar_n_sub_intervals
 
     ephemeris_csv_filename = None
     if args.output_ephemeris_file and args.outpath:
         ephemeris_csv_filename = os.path.join(args.outpath, args.output_ephemeris_file)
 
     verboselog("Building ASSIST ephemeris object.")
-    ephem, gm_sun, gm_total = create_assist_ephemeris(args, sconfigs.auxiliary)
+    ephem, gm_sun, gm_total = create_assist_ephemeris(args, auxiliary_configs)
     verboselog("Furnishing SPICE kernels.")
-    furnish_spiceypy(args, sconfigs.auxiliary)
+    furnish_spiceypy(args, auxiliary_configs)
     verboselog("Generating ASSIST+REBOUND simulations.")
     sim_dict = generate_simulations(ephem, gm_sun, gm_total, orbits_df, args)
-    observatories = Observatory(args, sconfigs.auxiliary)
+    observatories = Observatory(args, auxiliary_configs)
 
     output = StringIO()
     in_memory_csv = writer(output)
@@ -227,7 +252,7 @@ def create_ephemeris(orbits_df, pointings_df, args, sconfigs):
     # if the user has defined an output file name for the ephemeris results, write out to that file
     if ephemeris_csv_filename:
         verboselog("Writing out ephemeris results to file.")
-        write_out_ephemeris_file(ephemeris_df, ephemeris_csv_filename, args, sconfigs)
+        write_out_ephemeris_file(ephemeris_df, ephemeris_csv_filename, args, input_configs, output_configs)
 
     # join the ephemeris and input orbits dataframe, take special care to make
     # sure the 'ObjID' column types match.
@@ -336,7 +361,13 @@ def calculate_rates_and_geometry(pointing: pd.DataFrame, ephem_geom_params: Ephe
     )
 
 
-def write_out_ephemeris_file(ephemeris_df, ephemeris_csv_filename, args, sconfigs):
+def write_out_ephemeris_file(
+    ephemeris_df,
+    ephemeris_csv_filename,
+    args,
+    input_configs: inputConfigs,
+    output_configs: outputConfigs,
+):
     """Writes the ephemeris out to an external file.
 
     Parameters
@@ -350,8 +381,11 @@ def write_out_ephemeris_file(ephemeris_df, ephemeris_csv_filename, args, sconfig
     args: sorchaArguments object or similar
         Command-line arguments from Sorcha.
 
-    sconfigs: dataclass
-        Dataclass of configuration file arguments.
+    input_configs: inputConfigs
+        Inputs Dataclass of input configuration file arguments.
+
+    output_configs: outputConfigs
+        outputs Dataclass of output configuration file arguments.
 
     Returns
     -------
@@ -360,12 +394,12 @@ def write_out_ephemeris_file(ephemeris_df, ephemeris_csv_filename, args, sconfig
 
     verboselog = args.pplogger.info if args.loglevel else lambda *a, **k: None
 
-    if sconfigs.input.eph_format == "csv":
+    if input_configs.eph_format == "csv":
         verboselog("Outputting ephemeris to CSV file...")
         PPOutWriteCSV(ephemeris_df, ephemeris_csv_filename + ".csv")
-    elif sconfigs.input.eph_format == "whitespace":
+    elif input_configs.eph_format == "whitespace":
         verboselog("Outputting ephemeris to whitespaced CSV file...")
         PPOutWriteCSV(ephemeris_df, ephemeris_csv_filename + ".csv", separator=" ")
-    elif sconfigs.input.eph_format == "hdf5" or sconfigs.output.output_format == "h5":
+    elif input_configs.eph_format == "hdf5" or output_configs.output_format == "h5":
         verboselog("Outputting ephemeris to HDF5 binary file...")
         PPOutWriteHDF5(ephemeris_df, ephemeris_csv_filename + ".h5", "sorcha_ephemeris")

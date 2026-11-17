@@ -8,7 +8,7 @@ from numpy.testing import assert_equal
 from sorcha.utilities.dataUtilitiesForTests import get_test_filepath, get_demo_filepath
 from sorcha.utilities.sorchaArguments import sorchaArguments
 from sorcha.modules.PPOutput import PPWriteOutput
-from sorcha.utilities.sorchaConfigs import outputConfigs, linkingfilterConfigs, sorchaConfigs
+from sorcha.configs.sorchaConfigs import outputConfigs, linkingfilterConfigs, sorchaConfigs
 
 # some global variables used by tests
 observations = pd.read_csv(get_test_filepath("test_input_fullobs.csv"), nrows=1)

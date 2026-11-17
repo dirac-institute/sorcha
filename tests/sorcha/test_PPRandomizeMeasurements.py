@@ -4,7 +4,7 @@ from numpy.testing import assert_almost_equal
 
 from sorcha.utilities.sorchaModuleRNG import PerModuleRNG
 from sorcha.utilities.dataUtilitiesForTests import get_test_filepath
-from sorcha.utilities.sorchaConfigs import expertConfigs
+from sorcha.configs.sorchaConfigs import expertConfigs
 
 
 def test_randomizePhotometry():

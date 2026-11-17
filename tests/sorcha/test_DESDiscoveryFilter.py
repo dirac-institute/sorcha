@@ -1,5 +1,5 @@
 import pytest
-from sorcha.modules.DESDiscoveryFilter import compute_arccut, compute_triplet, DESDiscoveryFilter
+from sorcha.modules.desDiscoveryFilter import compute_arccut, compute_triplet, desDiscoveryFilter
 import pandas as pd
 import numpy as np
 import astropy.units as u
@@ -39,7 +39,7 @@ def test_triplet():
     assert test == False
 
 
-def test_DESDiscoveryFilter():
+def test_desDiscoveryFilter():
     # testing when object not dropped
     obs = {
         "ObjID": ["unique", "unique", "unique", "unique", "unique", "unique", "unique"],
@@ -47,10 +47,11 @@ def test_DESDiscoveryFilter():
         "Obj_Sun_y_LTC_km": [0, 0, 0, 0, 0, 0, 0],
         "Obj_Sun_z_LTC_km": [0, 0, 0, 0, 0, 0, 0],
         "fieldMJD_TAI": [10.0, 30.0, 50.0, 80.0, 100.0, 400.0, 500.0],
+        "optFilter": ["r","r","r","r","r","r","r"]
     }
 
     obs = pd.DataFrame(obs)
-    test = DESDiscoveryFilter(obs)
+    test = desDiscoveryFilter(obs)
     assert len(test) == len(obs)
     # testing when object is dropped
     obs = {
@@ -59,13 +60,27 @@ def test_DESDiscoveryFilter():
         "Obj_Sun_y_LTC_km": [0, 0, 0, 0, 0, 0, 0],
         "Obj_Sun_z_LTC_km": [0, 0, 0, 0, 0, 0, 0],
         "fieldMJD_TAI": [10.0, 30.0, 50.0, 80.0, 100.0, 110.0, 120.0],
+        "optFilter": ["r","r","r","r","r","r","r"]
     }
     obs = pd.DataFrame(obs)
-    test = DESDiscoveryFilter(obs)
+    test = desDiscoveryFilter(obs)
+    assert len(test) == 0
+
+    #test when object is detectable if Y band is used. Should result in a dropped object
+    obs = {
+        "ObjID": ["unique", "unique", "unique", "unique", "unique", "unique", "unique"],
+        "Obj_Sun_x_LTC_km": [1, 1, 1, 1, 1, 1, 1],
+        "Obj_Sun_y_LTC_km": [0, 0, 0, 0, 0, 0, 0],
+        "Obj_Sun_z_LTC_km": [0, 0, 0, 0, 0, 0, 0],
+        "fieldMJD_TAI": [10.0, 30.0, 50.0, 80.0, 100.0, 400.0, 500.0],
+        "optFilter": ["r","Y","r","Y","Y","Y","Y"]
+    }
+    obs = pd.DataFrame(obs)
+    test = desDiscoveryFilter(obs)
     assert len(test) == 0
 
 
-def test_DESDiscoveryFilter_multiple_objects():
+def test_desDiscoveryFilter_multiple_objects():
     """
     testing that when looking at mutiple indexes the expected results occur and that the order of values doesn't change
     """
@@ -124,12 +139,19 @@ def test_DESDiscoveryFilter_multiple_objects():
             5000,
             6000,  # obj4: fail triplet
         ],
+        "optFilter": [
+            *["r"] * 7,
+            *["r"] * 7,
+            *["r"] * 7,
+            *["r"] * 7,
+        ],
+        
     }
 
     df = pd.DataFrame(obs).sort_values("fieldMJD_TAI").reset_index(drop=True)
     df.reset_index(drop=True, inplace=True)  # objects previously from linkingfilter will be sorted like this
 
-    filtered = DESDiscoveryFilter(df)
+    filtered = desDiscoveryFilter(df)
 
     # checking correct objects kept
     remaining_ids = set(filtered["ObjID"].unique())

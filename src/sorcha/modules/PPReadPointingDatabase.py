@@ -4,7 +4,7 @@ import logging
 import sys
 
 
-def PPReadPointingDatabase(bsdbname, observing_filters, dbquery, surveyname, fading_function_on=0):
+def PPReadPointingDatabase(bsdbname, observing_filters, dbquery, fading_function_type=None):
     """
     Reads in the pointing database as a Pandas dataframe.
 
@@ -19,9 +19,9 @@ def PPReadPointingDatabase(bsdbname, observing_filters, dbquery, surveyname, fad
     dbquery : string
         Databse query to perform on pointing database.
 
-
-    surveyname : string
-          "Name of survey being simulated"
+    fading_function_type: string
+        fading function type. Used for addional checks in the pointing
+        database when fading_function_type = 'des_per_obs'.
 
     Returns
     -----------
@@ -61,24 +61,25 @@ def PPReadPointingDatabase(bsdbname, observing_filters, dbquery, surveyname, fad
             "No detections with config file filters in the pointing db. check your specifying the right column for your filters."
         )
     # at the moment the RubinSim pointing databases don't record the observation
-    # midpoint, so we calculate it. the actual pointings might.
+    # midpoint and the opposite for DES, so we calculate the missing column. Depending on what we are given
+    # we calculate the opposite
 
-    # once we have the actual pointings this check could be changed to, eg,
-    # lsst_sim for the RubinSim pointings, and 'lsst' would produce different
-    # behaviour.
-    if surveyname in ["rubin_sim", "RUBIN_SIM"]:
+    if "observationMidpointMJD_TAI" not in dfo.columns:
         dfo["observationMidpointMJD_TAI"] = dfo["observationStartMJD_TAI"] + (
             (dfo["visitTime"] / 2.0) / 86400.0
         )
-    elif surveyname in ["DES", "des"]:
+    elif "observationStartMJD_TAI" not in dfo.columns:
         dfo["observationStartMJD_TAI"] = dfo["observationMidpointMJD_TAI"] - (
             (dfo["visitExposureTime"] / 2.0) / 86400.0
         )
     else:
-        pplogger.error("ERROR: PPReadPointingDatabase: survey name not recognised.")
-        sys.exit("ERROR: PPReadPointingDatabase: survey name not recognised.")
-
-    if fading_function_on and surveyname in ["DES", "des"]:
+        pplogger.error(
+            "ERROR: PPReadPointingDatabase: column name observationMidpointMJD_TAI or observationStartMJD_TAI missing from pointing query."
+        )
+        sys.exit(
+            "ERROR: PPReadPointingDatabase: column name observationMidpointMJD_TAI or observationStartMJD_TAI missing from pointing query."
+        )
+    if fading_function_type == "des_per_obs":
         missing_cols = [col for col in ["c", "k"] if col not in dfo.columns]
 
         if missing_cols:

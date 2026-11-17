@@ -22,7 +22,7 @@ def test_sorchaArguments():
     """make sure that valid args can be parsed"""
     args = sorchaArguments(cmd_args_dict)
 
-    assert args.surveyname == "RUBIN_SIM"
+    assert args.surveyname == "rubin_sim"
 
 
 def test_validate_arguments():

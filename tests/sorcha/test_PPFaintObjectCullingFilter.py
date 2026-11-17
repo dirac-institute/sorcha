@@ -12,7 +12,7 @@ def test_PPFaintObjectCullingFilter():
 
     dbq = "SELECT observationId, observationStartMJD as observationStartMJD_TAI, visitTime, visitExposureTime, filter, seeingFwhmGeom as seeingFwhmGeom_arcsec, seeingFwhmEff as seeingFwhmEff_arcsec, fiveSigmaDepth as fieldFiveSigmaDepth_mag , fieldRA as fieldRA_deg, fieldDec as fieldDec_deg, rotSkyPos as fieldRotSkyPos_deg FROM observations order by observationId"
     filterpointing = PPReadPointingDatabase(
-        get_test_filepath("baseline_10klines_2.0.db"), ["u", "g", "r", "i", "z", "y"], dbq, "rubin_sim"
+        get_test_filepath("baseline_10klines_2.0.db"), ["u", "g", "r", "i", "z", "y"], dbq
     )
 
     # mock objects from centaur model (murtagh et al. 2025)

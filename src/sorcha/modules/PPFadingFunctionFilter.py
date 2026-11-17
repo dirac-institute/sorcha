@@ -5,7 +5,9 @@ from .PPDropObservations import PPDropObservations
 from .PPDetectionProbability import PPDetectionProbability
 
 
-def PPFadingFunctionFilter(observations, fillfactor, width, module_rngs, verbose=False):
+def PPFadingFunctionFilter(
+    observations, fillfactor, width, module_rngs, verbose=False, limiting_magnitude_name="fiveSigmaDepth_mag"
+):
     """
     Wrapper function for PPDetectionProbability and PPDropObservations.
 
@@ -20,11 +22,18 @@ def PPFadingFunctionFilter(observations, fillfactor, width, module_rngs, verbose
     fillfactor : float
         Fraction of camera field-of-view covered by detectors
 
+    width : float
+        Distribution parameter. Default =0.1
+
     module_rngs : PerModuleRNG
         A collection of random number generators (per module).
 
     verbose : boolean, default=False
         Verbose logging flag.
+
+    limiting_magnitude_name : string, optional
+        eph_df column used for observation limiting magnitude.
+        Default = fiveSigmaDepth_mag
 
     Returns
     ----------
@@ -40,6 +49,7 @@ def PPFadingFunctionFilter(observations, fillfactor, width, module_rngs, verbose
         observations,
         fillFactor=fillfactor,
         w=width,
+        limiting_magnitude_name=limiting_magnitude_name,
     )
 
     verboselog("Dropping observations below detection threshold...")

@@ -34,7 +34,6 @@ def test_PPReadAllInput():
         cmd_args["pointing_database"],
         configs["observing_filters"],
         configs["pointing_sql_query"],
-        "rubin_sim",
     )
 
     reader = CombinedDataReader(verbose=True)

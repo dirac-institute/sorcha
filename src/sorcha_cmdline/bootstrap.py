@@ -48,7 +48,7 @@ def execute(args):
     )
     from functools import partial
     import concurrent.futures
-    from sorcha.utilities.sorchaConfigs import auxiliaryConfigs
+    from sorcha.configs.sorchaConfigs import auxiliaryConfigs
 
     # Bootstrap will always take the default filenames and urls (stored in auxiliaryConfigs) for the current version of sorcha.
     # A user can download new files by running sorcha and specifying in the config file under the section [AUXILIARY] a new filename and url.

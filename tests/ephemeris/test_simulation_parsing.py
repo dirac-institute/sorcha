@@ -1,7 +1,7 @@
 import numpy as np
 import sorcha.ephemeris.simulation_parsing as sp
 from sorcha.utilities.dataUtilitiesForTests import get_test_filepath
-from sorcha.utilities.sorchaConfigs import auxiliaryConfigs
+from sorcha.configs.sorchaConfigs import auxiliaryConfigs
 import sorcha.ephemeris.simulation_geometry as sg
 import sorcha.ephemeris.simulation_setup as ss
 

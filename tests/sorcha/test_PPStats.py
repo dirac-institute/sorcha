@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 from numpy.testing import assert_equal
 import pytest
-from sorcha.utilities.sorchaConfigs import linkingfilterConfigs
+from sorcha.configs.sorchaConfigs import linkingfilterConfigs
 from sorcha.modules.PPStats import stats
 
 
